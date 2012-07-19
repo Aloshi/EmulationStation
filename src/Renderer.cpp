@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "GuiComponent.h"
 
 std::vector<GuiComponent*> renderVector;
 
@@ -31,3 +32,4 @@ void Renderer::render()
 		}
 	}
 }
+

@@ -1,12 +1,32 @@
 #include "GuiComponent.h"
 #include "Renderer.h"
+#include <iostream>
 
-GuiComponent::GuiComponent()
+void GuiComponent::addChild(GuiComponent* comp)
 {
-	Renderer::registerComponent(this);
+	mChildren.push_back(comp);
 }
 
-GuiComponent::~GuiComponent()
+void GuiComponent::removeChild(GuiComponent* comp)
 {
-	Renderer::unregisterComponent(this);
+	for(unsigned int i = 0; i < mChildren.size(); i++)
+	{
+		if(mChildren.at(i) == comp)
+		{
+			mChildren.erase(mChildren.begin() + i);
+			break;
+		}
+	}
+
+	std::cerr << "Error - tried to remove GuiComponent child, but couldn't find it!\n";
+}
+
+void GuiComponent::render()
+{
+	onRender();
+
+	for(unsigned int i = 0; i < mChildren.size(); i++)
+	{
+		mChildren.at(i)->render();
+	}
 }

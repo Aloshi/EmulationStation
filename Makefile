@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lSDL
-SRCSOURCES=main.cpp Renderer.cpp GuiComponent.cpp
+SRCSOURCES=main.cpp Renderer.cpp Renderer_draw.cpp GuiComponent.cpp components/GuiTitleScreen.cpp
 SOURCES=$(addprefix src/,$(SRCSOURCES))
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=emulationstation
@@ -15,4 +15,4 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm -rf src/*o $(EXECUTABLE)
+	rm -rf src/*o src/components/*o $(EXECUTABLE)
