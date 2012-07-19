@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+std::vector<GuiComponent*> renderVector;
+
 void Renderer::registerComponent(GuiComponent* comp)
 {
 	renderVector.push_back(comp);

@@ -13,8 +13,6 @@ namespace Renderer
 	void unregisterComponent(GuiComponent* comp);
 
 	void render();
-
-	std::vector<GuiComponent*> renderVector;
 }
 
 #endif
