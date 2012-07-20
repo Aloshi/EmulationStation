@@ -14,7 +14,7 @@ public:
 	void onRender();
 
 	void addObject(std::string name, void* obj);
-	void clearObjects();
+	void clear();
 
 	std::string getSelectedName();
 	void* getSelectedObject();

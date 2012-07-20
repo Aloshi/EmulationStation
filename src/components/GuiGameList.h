@@ -4,15 +4,18 @@
 #include "../GuiComponent.h"
 #include "GuiList.h"
 #include <string>
+#include "../SystemData.h"
+#include "../GameData.h"
 
 class GuiGameList : GuiComponent
 {
 public:
-	GuiGameList(std::string systemName);
+	GuiGameList(SystemData* system);
+	void updateList();
 
 	void onRender();
 private:
-	std::string mSystemName;
+	SystemData* mSystem;
 	GuiList* mList;
 };
 

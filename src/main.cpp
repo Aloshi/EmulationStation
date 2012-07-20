@@ -2,7 +2,8 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include "Renderer.h"
-#include "components/GuiTitleScreen.h"
+#include "components/GuiGameList.h"
+#include "SystemData.h"
 
 int main()
 {
@@ -26,7 +27,11 @@ int main()
 
 	SDL_ShowCursor(false);
 
-	GuiTitleScreen* testGui = new GuiTitleScreen();
+	//GuiTitleScreen* testGui = new GuiTitleScreen();
+
+	//test systemData
+	SystemData* testSystem = new SystemData("Test", "./testdir/", ".smc");
+	GuiGameList* testGui = new GuiGameList(testSystem);
 
 
 	bool running = true;
@@ -55,6 +60,7 @@ int main()
 	}
 
 	delete testGui;
+	delete testSystem;
 
 	std::cout << "EmulationStation cleanly shutting down...\n";
 

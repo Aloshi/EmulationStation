@@ -15,7 +15,7 @@ void Renderer::drawRect(int x, int y, int h, int w, int color)
 
 void Renderer::loadFonts()
 {
-	font = TTF_OpenFont("LinLibertine_R.ttf", 72);
+	font = TTF_OpenFont("LinLibertine_R.ttf", 48);
 	if(!font)
 	{
 		std::cerr << "Error - could not load font!\n";

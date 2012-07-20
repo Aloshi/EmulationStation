@@ -1,4 +1,5 @@
 #include "GuiList.h"
+#include <SDL/SDL.h>
 
 GuiList::GuiList()
 {
@@ -7,7 +8,13 @@ GuiList::GuiList()
 
 void GuiList::onRender()
 {
-	
+	int y = 40;
+	SDL_Color color = {0, 0, 255};
+	for(unsigned int i = 0; i < mNameVector.size(); i++)
+	{
+		Renderer::drawCenteredText(mNameVector.at(i), y, color);
+		y += 35;
+	}
 }
 
 void GuiList::addObject(std::string name, void* obj)
@@ -16,7 +23,7 @@ void GuiList::addObject(std::string name, void* obj)
 	mPointerVector.push_back(obj);
 }
 
-void GuiList::clearObjects()
+void GuiList::clear()
 {
 	mNameVector.clear();
 	mPointerVector.clear();

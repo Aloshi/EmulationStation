@@ -1,16 +1,33 @@
 #include "GuiGameList.h"
+#include <iostream>
 
-GuiGameList::GuiGameList(std::string systemName)
+GuiGameList::GuiGameList(SystemData* system)
 {
-	mSystemName = systemName;
+	mSystem = system;
 
 	mList = new GuiList();
+	updateList();
 
 	addChild(mList);
+
+	Renderer::registerComponent(this);
 }
 
 void GuiGameList::onRender()
 {
-	SDL_Color color = {0, 0, 255};
-	Renderer::drawCenteredText(mSystemName, 2, color);
+	Renderer::drawRect(0, 0, 640, 480, 0xFFFFFF);
+
+	SDL_Color color = {0, 155, 100};
+	Renderer::drawCenteredText(mSystem->getName(), 2, color);
+}
+
+void GuiGameList::updateList()
+{
+	mList->clear();
+
+	for(unsigned int i = 0; i < mSystem->getGameCount(); i++)
+	{
+		GameData* game = mSystem->getGame(i);
+		mList->addObject(game->getName(), game);
+	}
 }
