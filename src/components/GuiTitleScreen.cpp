@@ -12,5 +12,6 @@ GuiTitleScreen::GuiTitleScreen()
 void GuiTitleScreen::onRender()
 {
 	Renderer::drawRect(0, 0, 640, 480, 0xFFFFFF);
-	std::cout << "rendering guititlescreen\n";
+	SDL_Color color = {255, 0, 0};
+	Renderer::drawCenteredText("EmulationStation", 5, color);
 }

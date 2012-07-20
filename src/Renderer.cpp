@@ -3,6 +3,9 @@
 
 std::vector<GuiComponent*> renderVector;
 
+unsigned int Renderer::getScreenWidth() { return 640; }
+unsigned int Renderer::getScreenHeight() { return 480; }
+
 void Renderer::registerComponent(GuiComponent* comp)
 {
 	renderVector.push_back(comp);

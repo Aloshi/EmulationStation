@@ -3,12 +3,14 @@
 
 #include <vector>
 #include "Renderer.h"
+#include "InputManager.h"
 
 class GuiComponent
 {
 public:
 	void render();
 	virtual void onRender() { };
+	virtual void onInput(InputManager::InputButton button, bool keyDown) { };
 	virtual unsigned int getLayer() { return BIT(0); };
 
 	void addChild(GuiComponent* comp);

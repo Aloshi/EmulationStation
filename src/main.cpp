@@ -1,14 +1,19 @@
 #include <iostream>
 #include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 #include "Renderer.h"
 #include "components/GuiTitleScreen.h"
 
 int main()
 {
-	//if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		std::cerr << "Error - could not initialize SDL!\n";
+		return 1;
+	}
+	if(TTF_Init() != 0)
+	{
+		std::cerr << "Error - could not initialize SDL_ttf!\n";
 		return 1;
 	}
 
@@ -19,8 +24,10 @@ int main()
 		return 1;
 	}
 
+	SDL_ShowCursor(false);
 
 	GuiTitleScreen* testGui = new GuiTitleScreen();
+
 
 	bool running = true;
 	while(running)
@@ -31,8 +38,12 @@ int main()
 			switch(event.type)
 			{
 				case SDL_KEYDOWN:
-					running = false;
+					InputManager::processEvent(&event);
 					break;
+				case SDL_KEYUP:
+					InputManager::processEvent(&event);
+					break;
+
 				case SDL_QUIT:
 					running = false;
 					break;
@@ -45,6 +56,9 @@ int main()
 
 	delete testGui;
 
+	std::cout << "EmulationStation cleanly shutting down...\n";
+
+	TTF_Quit();
 	SDL_Quit();
 	return 0;
 }
