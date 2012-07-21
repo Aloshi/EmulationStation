@@ -1,6 +1,7 @@
 #include "GuiGameList.h"
 #include "../InputManager.h"
 #include <iostream>
+#include <SDL/SDL.h>
 
 GuiGameList::GuiGameList(SystemData* system)
 {
@@ -33,7 +34,9 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 {
 	if(button == InputManager::BUTTON1 && keyDown)
 	{
+		SDL_EnableKeyRepeat(0, 0);
 		mSystem->launchGame(mList->getSelection());
+		SDL_EnableKeyRepeat(500, 100);
 	}
 }
 
