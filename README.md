@@ -14,4 +14,5 @@ You can build it by just running `make`.
 Configuring
 ===========
 
-At the moment, the software looks for a file named "systems.cfg" in the directory it is run from. An example is included, though at the moment only one system should be defined.
+At the moment, the software looks for a file named "systems.cfg" in the directory it is run from. An example is included.
+

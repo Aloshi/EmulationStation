@@ -29,7 +29,8 @@ void Renderer::drawText(std::string text, int x, int y, int color)
 	if(!font)
 		loadFonts();
 
-	//SDL_Color sdlcolor = (SDL_Color)color; //SDL_MapRGB(//{(char)color, (char)(*(&color + 1)), (char)(*(&color + 2))};
+	//SDL_Color is a struct of four bytes, with the first three being colors. An int is four bytes.
+	//So, we can just pretend the int is an SDL_Color.
 	SDL_Color* sdlcolor = (SDL_Color*)&color;
 
 	SDL_Surface* textSurf = TTF_RenderText_Blended(font, text.c_str(), *sdlcolor);

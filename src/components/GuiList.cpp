@@ -17,16 +17,20 @@ void GuiList::onRender()
 	const int cutoff = 40;
 	const int entrySize = 40;
 
+	int startEntry = 0;
+
 	//number of entries that can fit on the screen simultaniously
 	int screenCount = (Renderer::getScreenHeight() - cutoff) / entrySize;
 	screenCount -= 1;
 
-	int startEntry = mSelection - (screenCount * 0.5);
-	if(startEntry < 0)
-		startEntry = 0;
-	if(startEntry >= (int)mNameVector.size() - screenCount)
-		startEntry = mNameVector.size() - screenCount;
-
+	if((int)mNameVector.size() >= screenCount)
+	{
+		startEntry = mSelection - (screenCount * 0.5);
+		if(startEntry < 0)
+			startEntry = 0;
+		if(startEntry >= (int)mNameVector.size() - screenCount)
+			startEntry = mNameVector.size() - screenCount;
+	}
 
 	int y = cutoff;
 	int color =  0xFF0000;
@@ -37,7 +41,11 @@ void GuiList::onRender()
 		return;
 	}
 
-	for(int i = startEntry; i < startEntry + screenCount; i++)
+	int listCutoff = startEntry + screenCount;
+	if(listCutoff > (int)mNameVector.size())
+		listCutoff = mNameVector.size();
+
+	for(int i = startEntry; i < listCutoff; i++)
 	{
 		if(mSelection == i)
 		{
@@ -77,6 +85,7 @@ void GuiList::clear()
 {
 	mNameVector.clear();
 	mPointerVector.clear();
+	mSelection = 0;
 }
 
 std::string GuiList::getSelectedName()

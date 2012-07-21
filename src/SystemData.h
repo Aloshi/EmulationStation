@@ -18,7 +18,11 @@ public:
 
 	void buildGameList();
 	void launchGame(unsigned int i);
-	static std::vector<SystemData*> loadConfig(std::string path);
+	//static std::vector<SystemData*> loadConfig(std::string path);
+	static void deleteSystems();
+	static void loadConfig(std::string path);
+
+	static std::vector<SystemData*> sSystemVector;
 private:
 	std::string mName;
 	std::string mStartPath;

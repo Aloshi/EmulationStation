@@ -17,11 +17,11 @@ std::string GameData::getName()
 
 std::string GameData::getValidPath()
 {
-	//a quick and dirty way to insert a backslash before spaces
+	//a quick and dirty way to insert a backslash before most characters that would mess up a bash path
 	std::string path = mPath;
 	for(unsigned int i = 0; i < path.length(); i++)
 	{
-		if(path[i] == *" ")
+		if(path[i] == *" " || path[i] == *"'" || path[i] == *"\"" || path[i] == *"\\")
 		{
 			path.insert(i, "\\");
 			i++;

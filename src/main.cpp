@@ -34,9 +34,8 @@ int main()
 
 	//GuiTitleScreen* testGui = new GuiTitleScreen();
 
-	//test systemData
-	SystemData* testSystem = SystemData::loadConfig("./systems.cfg").at(0);
-	GuiGameList* testGui = new GuiGameList(testSystem);
+	SystemData::loadConfig("./systems.cfg");
+	GuiGameList* testGui = new GuiGameList();
 
 
 	bool running = true;
@@ -65,7 +64,7 @@ int main()
 	}
 
 	delete testGui;
-	delete testSystem;
+	SystemData::deleteSystems();
 
 	std::cout << "EmulationStation cleanly shutting down...\n";
 
