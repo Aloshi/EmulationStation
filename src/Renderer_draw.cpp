@@ -24,14 +24,15 @@ void Renderer::loadFonts()
 	}
 }
 
-void Renderer::drawText(std::string text, int x, int y, SDL_Color& color)
+void Renderer::drawText(std::string text, int x, int y, int color)
 {
 	if(!font)
 		loadFonts();
 
-	//color = {255, 0, 0};
+	//SDL_Color sdlcolor = (SDL_Color)color; //SDL_MapRGB(//{(char)color, (char)(*(&color + 1)), (char)(*(&color + 2))};
+	SDL_Color* sdlcolor = (SDL_Color*)&color;
 
-	SDL_Surface* textSurf = TTF_RenderText_Blended(font, text.c_str(), color);
+	SDL_Surface* textSurf = TTF_RenderText_Blended(font, text.c_str(), *sdlcolor);
 	if(textSurf == NULL)
 	{
 		std::cerr << "Error - could not render text \"" << text << "\" to surface!\n";
@@ -44,7 +45,7 @@ void Renderer::drawText(std::string text, int x, int y, SDL_Color& color)
 	SDL_FreeSurface(textSurf);
 }
 
-void Renderer::drawCenteredText(std::string text, int y, SDL_Color& color)
+void Renderer::drawCenteredText(std::string text, int y, int color)
 {
 	if(!font)
 		loadFonts();

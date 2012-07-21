@@ -24,10 +24,9 @@ GuiGameList::~GuiGameList()
 
 void GuiGameList::onRender()
 {
-	Renderer::drawRect(0, 0, 640, 480, 0xFFFFFF);
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
 
-	SDL_Color color = {0, 155, 100};
-	Renderer::drawCenteredText(mSystem->getName(), 2, color);
+	Renderer::drawCenteredText(mSystem->getName(), 2, 0x0000FF);
 }
 
 void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)

@@ -21,7 +21,7 @@ int main()
 		return 1;
 	}
 
-	Renderer::screen = SDL_SetVideoMode(640, 480, 16, SDL_SWSURFACE);
+	Renderer::screen = SDL_SetVideoMode(Renderer::getScreenWidth(), Renderer::getScreenHeight(), 16, SDL_SWSURFACE);
 	if(Renderer::screen == NULL)
 	{
 		std::cerr << "Error - could not set video mode!\n";
@@ -35,7 +35,7 @@ int main()
 	//GuiTitleScreen* testGui = new GuiTitleScreen();
 
 	//test systemData
-	SystemData* testSystem = SystemData::loadConfig("./systems.cfg").at(0); //= new SystemData("Test", "./testdir/", ".smc");
+	SystemData* testSystem = SystemData::loadConfig("./systems.cfg").at(0);
 	GuiGameList* testGui = new GuiGameList(testSystem);
 
 

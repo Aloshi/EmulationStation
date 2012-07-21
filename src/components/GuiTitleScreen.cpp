@@ -11,7 +11,6 @@ GuiTitleScreen::GuiTitleScreen()
 
 void GuiTitleScreen::onRender()
 {
-	Renderer::drawRect(0, 0, 640, 480, 0xFFFFFF);
-	SDL_Color color = {255, 0, 0};
-	Renderer::drawCenteredText("EmulationStation", 5, color);
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
+	Renderer::drawCenteredText("EmulationStation", 5, 0x00FF00);
 }

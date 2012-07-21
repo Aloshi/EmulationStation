@@ -1,5 +1,4 @@
 #include "GuiList.h"
-#include <SDL/SDL.h>
 #include <iostream>
 
 GuiList::GuiList()
@@ -15,8 +14,22 @@ GuiList::~GuiList()
 
 void GuiList::onRender()
 {
-	int y = 40;
-	SDL_Color color = {0, 0, 255};
+	const int cutoff = 40;
+	const int entrySize = 40;
+
+	//number of entries that can fit on the screen simultaniously
+	int screenCount = (Renderer::getScreenHeight() - cutoff) / entrySize;
+	screenCount -= 1;
+
+	int startEntry = mSelection - (screenCount * 0.5);
+	if(startEntry < 0)
+		startEntry = 0;
+	if(startEntry >= (int)mNameVector.size() - screenCount)
+		startEntry = mNameVector.size() - screenCount;
+
+
+	int y = cutoff;
+	int color =  0xFF0000;
 
 	if(mNameVector.size() == 0)
 	{
@@ -24,14 +37,14 @@ void GuiList::onRender()
 		return;
 	}
 
-	for(unsigned int i = 0; i < mNameVector.size(); i++)
+	for(int i = startEntry; i < startEntry + screenCount; i++)
 	{
-		if(mSelection == (int)i)
+		if(mSelection == i)
 		{
 			Renderer::drawRect(0, y, Renderer::getScreenWidth(), 52, 0x000000);
 		}
 
-		Renderer::drawCenteredText(mNameVector.at(i), y, color);
+		Renderer::drawCenteredText(mNameVector.at((unsigned int)i), y, color);
 		y += 40;
 	}
 }
