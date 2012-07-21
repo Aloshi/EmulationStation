@@ -10,11 +10,14 @@ int main()
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
 		std::cerr << "Error - could not initialize SDL!\n";
+		std::cerr << "	" << SDL_GetError() << "\n";
+		std::cerr << "\nAre you in the 'video', 'audio', and 'input' groups?\n";
 		return 1;
 	}
 	if(TTF_Init() != 0)
 	{
 		std::cerr << "Error - could not initialize SDL_ttf!\n";
+		std::cerr << "	" << TTF_GetError() << "\n";
 		return 1;
 	}
 
@@ -22,15 +25,17 @@ int main()
 	if(Renderer::screen == NULL)
 	{
 		std::cerr << "Error - could not set video mode!\n";
+		std::cerr << "	" << SDL_GetError() << "\n";
 		return 1;
 	}
 
 	SDL_ShowCursor(false);
+	SDL_EnableKeyRepeat(500, 100);
 
 	//GuiTitleScreen* testGui = new GuiTitleScreen();
 
 	//test systemData
-	SystemData* testSystem = new SystemData("Test", "./testdir/", ".smc");
+	SystemData* testSystem = SystemData::loadConfig("./systems.cfg").at(0); //= new SystemData("Test", "./testdir/", ".smc");
 	GuiGameList* testGui = new GuiGameList(testSystem);
 
 

@@ -27,8 +27,6 @@ void InputManager::processEvent(SDL_Event* event)
 	if(event->key.state == SDL_PRESSED)
 		keyDown = true;
 
-	std::cout << "Processing keyboard event\n";
-
 	//get InputButton from the event
 	InputButton button;
 	switch(event->key.keysym.sym)
@@ -45,7 +43,7 @@ void InputManager::processEvent(SDL_Event* event)
 		case SDLK_DOWN:
 			button = DOWN;
 			break;
-		case SDLK_SPACE:
+		case SDLK_RETURN:
 			button = BUTTON1;
 			break;
 

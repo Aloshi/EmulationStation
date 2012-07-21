@@ -11,9 +11,12 @@ class GuiGameList : GuiComponent
 {
 public:
 	GuiGameList(SystemData* system);
+	~GuiGameList();
+
 	void updateList();
 
 	void onRender();
+	void onInput(InputManager::InputButton button, bool keyDown);
 private:
 	SystemData* mSystem;
 	GuiList* mList;

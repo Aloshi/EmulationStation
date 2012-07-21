@@ -10,6 +10,8 @@ public:
 	GameData(SystemData* system, std::string path, std::string name);
 
 	std::string getName();
+	std::string getValidPath();
+
 private:
 	SystemData* mSystem;
 	std::string mPath;

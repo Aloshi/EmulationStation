@@ -1,4 +1,5 @@
 #include "GuiGameList.h"
+#include "../InputManager.h"
 #include <iostream>
 
 GuiGameList::GuiGameList(SystemData* system)
@@ -11,6 +12,13 @@ GuiGameList::GuiGameList(SystemData* system)
 	addChild(mList);
 
 	Renderer::registerComponent(this);
+	InputManager::registerComponent(this);
+}
+
+GuiGameList::~GuiGameList()
+{
+	Renderer::unregisterComponent(this);
+	InputManager::unregisterComponent(this);
 }
 
 void GuiGameList::onRender()
@@ -19,6 +27,14 @@ void GuiGameList::onRender()
 
 	SDL_Color color = {0, 155, 100};
 	Renderer::drawCenteredText(mSystem->getName(), 2, color);
+}
+
+void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
+{
+	if(button == InputManager::BUTTON1 && keyDown)
+	{
+		mSystem->launchGame(mList->getSelection());
+	}
 }
 
 void GuiGameList::updateList()
