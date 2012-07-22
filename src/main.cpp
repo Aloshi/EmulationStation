@@ -5,6 +5,8 @@
 #include "components/GuiGameList.h"
 #include "SystemData.h"
 
+#include "components/GuiInputConfig.h"
+
 int main()
 {
 	if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -31,12 +33,16 @@ int main()
 
 	SDL_ShowCursor(false);
 	SDL_EnableKeyRepeat(500, 100);
+	SDL_JoystickEventState(SDL_ENABLE);
 
 	//GuiTitleScreen* testGui = new GuiTitleScreen();
 
 	SystemData::loadConfig("./systems.cfg");
-	GuiGameList* testGui = new GuiGameList();
 
+	//InputManager::loadConfig("./input.cfg");
+
+	//GuiGameList* testGui = new GuiGameList();
+	GuiInputConfig* testGui = new GuiInputConfig();
 
 	bool running = true;
 	while(running)
@@ -46,6 +52,8 @@ int main()
 		{
 			switch(event.type)
 			{
+				case SDL_JOYBUTTONDOWN:
+				case SDL_JOYBUTTONUP:
 				case SDL_KEYDOWN:
 					InputManager::processEvent(&event);
 					break;
@@ -63,7 +71,7 @@ int main()
 		SDL_Flip(Renderer::screen);
 	}
 
-	delete testGui;
+	Renderer::deleteAll();
 	SystemData::deleteSystems();
 
 	std::cout << "EmulationStation cleanly shutting down...\n";

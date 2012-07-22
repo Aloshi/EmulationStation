@@ -23,6 +23,15 @@ void Renderer::unregisterComponent(GuiComponent* comp)
 	}
 }
 
+void Renderer::deleteAll()
+{
+	for(unsigned int i = 0; i < renderVector.size(); i++)
+	{
+		delete renderVector.at(i);
+	}
+	renderVector.clear();
+}
+
 void Renderer::render()
 {
 	for(unsigned int layer = 0; layer < LAYER_COUNT; layer++)

@@ -16,6 +16,7 @@ namespace Renderer
 {
 	void registerComponent(GuiComponent* comp);
 	void unregisterComponent(GuiComponent* comp);
+	void deleteAll();
 
 	void render();
 
