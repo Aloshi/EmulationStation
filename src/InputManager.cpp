@@ -9,6 +9,8 @@ SDL_Event* InputManager::lastEvent = NULL;
 
 std::map<int, InputManager::InputButton> InputManager::joystickButtonMap, InputManager::joystickAxisMap;
 
+int InputManager::deadzone = 32000;
+
 void InputManager::registerComponent(GuiComponent* comp)
 {
 	inputVector.push_back(comp);
@@ -78,8 +80,22 @@ void InputManager::processEvent(SDL_Event* event)
 			if(event->type == SDL_JOYBUTTONDOWN) //defaults to false, so no else
 				keyDown = true;
 
-			//hurr no config yet durr
 			button = joystickButtonMap[event->jbutton.button];
+		}else{
+			if(event->type == SDL_JOYHATMOTION)
+			{
+				//no keyUp for hat movement yet, but this should be easily accomplished by
+				//keeping the previous hat movement and checking if it moved from centered to anything else (keyDown) or back to centered (keyUp)
+				keyDown = true;
+				if(event->jhat.value & SDL_HAT_UP)
+					button = UP;
+				if(event->jhat.value & SDL_HAT_DOWN)
+					button = DOWN;
+				if(event->jhat.value & SDL_HAT_LEFT)
+					button = LEFT;
+				if(event->jhat.value & SDL_HAT_RIGHT)
+					button = RIGHT;
+			}
 		}
 	}
 
@@ -115,12 +131,12 @@ void InputManager::loadConfig(std::string path)
 
 		while(std::getline(stream, token[tokNum], ' '))
 		{
-			tokNum++;
-			if(tokNum > 3)
+			if(tokNum >= 3)
 			{
 				std::cerr << "Error - input config line \"" << line << "\" has more than three tokens!\n";
-				break;
+				return;
 			}
+			tokNum++;
 		}
 
 
@@ -129,7 +145,7 @@ void InputManager::loadConfig(std::string path)
 			joystickButtonMap[atoi(token[1].c_str())] = (InputButton)atoi(token[2].c_str());
 		}else if(token[0] == "AXIS")
 		{
-			
+			joystickAxisMap[atoi(token[1].c_str())] = (InputButton)atoi(token[2].c_str());
 		}else{
 			std::cerr << "Invalid input type - " << token[0] << "\n";
 			return;

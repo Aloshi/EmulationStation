@@ -69,6 +69,21 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 		mInputNum++;
 	}
 
+	if(event->type == SDL_JOYAXISMOTION)
+	{
+		std::cout << "motion on axis " << event->jaxis.axis << " to value " << event->jaxis.value << "\n";
+
+		if(event->jaxis.value > InputManager::deadzone)
+		{
+			mAxisMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
+			mInputNum++;
+		}else if(event->jaxis.value < -InputManager::deadzone)
+		{
+			mAxisMap[-event->jaxis.axis] = (InputManager::InputButton)mInputNum;
+			mInputNum++;
+		}
+	}
+
 	if(mInputNum >= sInputCount)
 	{
 		mDone = true;

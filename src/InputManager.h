@@ -21,6 +21,7 @@ namespace InputManager {
 
 	extern std::vector<GuiComponent*> inputVector;
 	extern SDL_Event* lastEvent; //mostly for GuiInputConfig
+	extern int deadzone;
 
 	extern std::map<int, InputButton> joystickButtonMap;
 	extern std::map<int, InputButton> joystickAxisMap;
