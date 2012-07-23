@@ -7,7 +7,8 @@
 std::vector<GuiComponent*> InputManager::inputVector;
 SDL_Event* InputManager::lastEvent = NULL;
 
-std::map<int, InputManager::InputButton> InputManager::joystickButtonMap, InputManager::joystickAxisMap;
+std::map<int, InputManager::InputButton> InputManager::joystickButtonMap, InputManager::joystickAxisPosMap, InputManager::joystickAxisNegMap;
+std::map<int, int> InputManager::axisState;
 
 int InputManager::deadzone = 32000;
 
@@ -95,6 +96,38 @@ void InputManager::processEvent(SDL_Event* event)
 					button = LEFT;
 				if(event->jhat.value & SDL_HAT_RIGHT)
 					button = RIGHT;
+			}else{
+				if(event->type == SDL_JOYAXISMOTION)
+				{
+					int axis = event->jaxis.axis;
+					int value = event->jaxis.value;
+
+					//if this axis was previously not centered, it can only keyUp
+					if(axisState[axis] != 0)
+					{
+						if(abs(value) < deadzone) //if it has indeed centered
+						{
+							if(axisState[axis] > 0)
+								button = joystickAxisPosMap[axis];
+							else
+								button = joystickAxisNegMap[axis];
+							axisState[axis] = 0;
+						}
+					}else{
+						if(value > deadzone)
+						{
+							//axisPos keyDown
+							axisState[axis] = 1;
+							keyDown = true;
+							button = joystickAxisPosMap[axis];
+						}else if(value < -deadzone)
+						{
+							axisState[axis] = -1;
+							keyDown = true;
+							button = joystickAxisNegMap[axis];
+						}
+					}
+				}
 			}
 		}
 	}
@@ -109,7 +142,8 @@ void InputManager::loadConfig(std::string path)
 {
 	//clear any old config
 	joystickButtonMap.clear();
-	joystickAxisMap.clear();
+	joystickAxisPosMap.clear();
+	joystickAxisNegMap.clear();
 
 	std::ifstream file(path.c_str());
 
@@ -143,9 +177,12 @@ void InputManager::loadConfig(std::string path)
 		if(token[0] == "BUTTON")
 		{
 			joystickButtonMap[atoi(token[1].c_str())] = (InputButton)atoi(token[2].c_str());
-		}else if(token[0] == "AXIS")
+		}else if(token[0] == "AXISPOS")
 		{
-			joystickAxisMap[atoi(token[1].c_str())] = (InputButton)atoi(token[2].c_str());
+			joystickAxisPosMap[atoi(token[1].c_str())] = (InputButton)atoi(token[2].c_str());
+		}else if(token[0] == "AXISNEG")
+		{
+			joystickAxisNegMap[atoi(token[1].c_str())] = (InputButton)atoi(token[2].c_str());
 		}else{
 			std::cerr << "Invalid input type - " << token[0] << "\n";
 			return;

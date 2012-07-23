@@ -4,13 +4,14 @@
 #include <fstream>
 
 std::string GuiInputConfig::sConfigPath = "./input.cfg";
-std::string GuiInputConfig::sInputs[] = { "UP", "DOWN", "LEFT", "RIGHT", "BUTTON1", "BUTTON2" };
+std::string GuiInputConfig::sInputs[] = { "UNKNOWN", "UP", "DOWN", "LEFT", "RIGHT", "BUTTON1", "BUTTON2" }; //must be same order as InputManager::InputButton enum
 int GuiInputConfig::sInputCount = 6;
 
 GuiInputConfig::GuiInputConfig()
 {
-	mInputNum = 0;
+	mInputNum = 1;
 	mDone = false;
+	mLastAxis = -1;
 
 	Renderer::registerComponent(this);
 	InputManager::registerComponent(this);
@@ -71,16 +72,26 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(event->type == SDL_JOYAXISMOTION)
 	{
-		std::cout << "motion on axis " << event->jaxis.axis << " to value " << event->jaxis.value << "\n";
+		//std::cout << "motion on axis " << event->jaxis.axis << " to value " << event->jaxis.value << "\n";
 
+		if(event->jaxis.axis == mLastAxis)
+		{
+			if(event->jaxis.value < InputManager::deadzone && event->jaxis.value > -InputManager::deadzone)
+				mLastAxis = -1;
+			return;
+		}
 		if(event->jaxis.value > InputManager::deadzone)
 		{
-			mAxisMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
+			mAxisPosMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
 			mInputNum++;
+			mLastAxis = event->jaxis.axis;
+			std::cout << "	Mapping " << sInputs[mInputNum] << " to axis+ " << mLastAxis << "\n";
 		}else if(event->jaxis.value < -InputManager::deadzone)
 		{
-			mAxisMap[-event->jaxis.axis] = (InputManager::InputButton)mInputNum;
+			mAxisNegMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
 			mInputNum++;
+			mLastAxis = event->jaxis.axis;
+			std::cout << "	Mapping " << sInputs[mInputNum] << " to axis- " << mLastAxis << "\n";
 		}
 	}
 
@@ -101,9 +112,13 @@ void GuiInputConfig::writeConfig(std::string path)
 		file << "BUTTON " << iter->first << " " << iter->second << "\n";
 	}
 
-	for(it_type iter = mAxisMap.begin(); iter != mAxisMap.end(); iter++)
+	for(it_type iter = mAxisPosMap.begin(); iter != mAxisPosMap.end(); iter++)
 	{
-		file << "AXIS " << iter->first << " " << iter->second << "\n";
+		file << "AXISPOS " << iter->first << " " << iter->second << "\n";
 	}
 
+	for(it_type iter = mAxisNegMap.begin(); iter != mAxisNegMap.end(); iter++)
+	{
+		file << "AXISNEG " << iter->first << " " << iter->second << "\n";
+	}
 }

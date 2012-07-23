@@ -15,7 +15,7 @@ namespace InputManager {
 	void loadConfig(std::string path);
 
 	//enum for identifying input, regardless of configuration
-	enum InputButton { UP, DOWN, LEFT, RIGHT, BUTTON1, BUTTON2, UNKNOWN};
+	enum InputButton { UNKNOWN, UP, DOWN, LEFT, RIGHT, BUTTON1, BUTTON2 };
 
 	void processEvent(SDL_Event* event);
 
@@ -24,7 +24,8 @@ namespace InputManager {
 	extern int deadzone;
 
 	extern std::map<int, InputButton> joystickButtonMap;
-	extern std::map<int, InputButton> joystickAxisMap;
+	extern std::map<int, InputButton> joystickAxisPosMap, joystickAxisNegMap;
+	extern std::map<int, int> axisState;
 }
 
 #endif

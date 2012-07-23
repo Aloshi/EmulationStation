@@ -52,6 +52,7 @@ int main()
 		{
 			switch(event.type)
 			{
+				case SDL_JOYAXISMOTION:
 				case SDL_JOYBUTTONDOWN:
 				case SDL_JOYBUTTONUP:
 				case SDL_KEYDOWN:
