@@ -9,11 +9,11 @@
 
 int main()
 {
-	if(SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
 	{
 		std::cerr << "Error - could not initialize SDL!\n";
 		std::cerr << "	" << SDL_GetError() << "\n";
-		std::cerr << "\nAre you in the 'video', 'audio', and 'input' groups?\n";
+		std::cerr << "\nAre you in the 'video' and 'input' groups?\n";
 		return 1;
 	}
 	if(TTF_Init() != 0)
