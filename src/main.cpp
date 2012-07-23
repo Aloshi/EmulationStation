@@ -46,17 +46,24 @@ int main()
 	}else{
 		SystemData::loadConfig();
 
-		if(boost::filesystem::exists(InputManager::getConfigPath()))
+		if(SystemData::sSystemVector.size() == 0)
 		{
-			InputManager::loadConfig();
-			new GuiGameList();
+			std::cerr << "A system config file in $HOME/.es_systems.cfg was found, but contained no systems.\n";
+			std::cerr << "You should probably go read that, or delete it.\n";
+			running = false;
 		}else{
-			if(SDL_NumJoysticks() > 0)
+			if(boost::filesystem::exists(InputManager::getConfigPath()))
 			{
-				new GuiInputConfig();
-			}else{
-				std::cout << "Note - it looks like you have no joysticks connected.\n";
+				InputManager::loadConfig();
 				new GuiGameList();
+			}else{
+				if(SDL_NumJoysticks() > 0)
+				{
+					new GuiInputConfig();
+				}else{
+					std::cout << "Note - it looks like you have no joysticks connected.\n";
+					new GuiGameList();
+				}
 			}
 		}
 	}
