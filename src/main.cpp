@@ -4,11 +4,13 @@
 #include "Renderer.h"
 #include "components/GuiGameList.h"
 #include "SystemData.h"
-
+#include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
 
 int main()
 {
+	bool running = true;
+
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
 	{
 		std::cerr << "Error - could not initialize SDL!\n";
@@ -35,16 +37,31 @@ int main()
 	SDL_EnableKeyRepeat(500, 100);
 	SDL_JoystickEventState(SDL_ENABLE);
 
-	//GuiTitleScreen* testGui = new GuiTitleScreen();
+	if(!boost::filesystem::exists(SystemData::getConfigPath()))
+	{
+		std::cerr << "A system config file in $HOME/.es_systems.cfg was not found. An example will be created.\n";
+		SystemData::writeExampleConfig();
+		std::cerr << "Set it up, then re-run EmulationStation.\n";
+		running = false;
+	}else{
+		SystemData::loadConfig();
 
-	SystemData::loadConfig("./systems.cfg");
+		if(boost::filesystem::exists(InputManager::getConfigPath()))
+		{
+			InputManager::loadConfig();
+			new GuiGameList();
+		}else{
+			if(SDL_NumJoysticks() > 0)
+			{
+				new GuiInputConfig();
+			}else{
+				std::cout << "Note - it looks like you have no joysticks connected.\n";
+				new GuiGameList();
+			}
+		}
+	}
 
-	//InputManager::loadConfig("./input.cfg");
 
-	//GuiGameList* testGui = new GuiGameList();
-	GuiInputConfig* testGui = new GuiInputConfig();
-
-	bool running = true;
 	while(running)
 	{
 		SDL_Event event;

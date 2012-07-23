@@ -12,7 +12,7 @@ namespace InputManager {
 	void registerComponent(GuiComponent* comp);
 	void unregisterComponent(GuiComponent* comp);
 
-	void loadConfig(std::string path);
+	void loadConfig();
 
 	//enum for identifying input, regardless of configuration
 	enum InputButton { UNKNOWN, UP, DOWN, LEFT, RIGHT, BUTTON1, BUTTON2 };
@@ -22,6 +22,7 @@ namespace InputManager {
 	extern std::vector<GuiComponent*> inputVector;
 	extern SDL_Event* lastEvent; //mostly for GuiInputConfig
 	extern int deadzone;
+	std::string getConfigPath();
 
 	extern std::map<int, InputButton> joystickButtonMap;
 	extern std::map<int, InputButton> joystickAxisPosMap, joystickAxisNegMap;

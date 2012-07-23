@@ -25,6 +25,12 @@ GuiGameList::~GuiGameList()
 
 void GuiGameList::setSystemId(int id)
 {
+	if(SystemData::sSystemVector.size() == 0)
+	{
+		std::cerr << "Error - no systems found!\n";
+		return;
+	}
+
 	//make sure the id is within range
 	if(id >= (int)SystemData::sSystemVector.size())
 		id -= SystemData::sSystemVector.size();
@@ -48,10 +54,8 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 {
 	if(button == InputManager::BUTTON1 && mSystem->getGameCount() > 0)
 	{
-		//SDL_EnableKeyRepeat(0, 0);
 		if(!keyDown)
 			mSystem->launchGame(mList->getSelection());
-		//SDL_EnableKeyRepeat(500, 100);
 	}
 
 	if(button == InputManager::RIGHT && keyDown)

@@ -38,24 +38,29 @@ void GuiInputConfig::onRender()
 {
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
 
+	Renderer::drawCenteredText("It looks like you have a joystick plugged in!", 2, 0x000000);
+	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 90, 0x000000);
+	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 130, 0x000000);
+	Renderer::drawCenteredText("If you want to remap later, just delete ~/.es_input.cfg.", 170, 0x000000);
+
 	if(mDone)
-		Renderer::drawCenteredText("All done!", 2, 0x000000);
+		Renderer::drawCenteredText("All done! Press a keyboard key to continue.", 250, 0x00BB00);
 	else
-		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 2, 0x000000);
+		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 250, 0x00C000);
 }
 
 void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 {
 	if(mDone)
 	{
-		if(keyDown)
+		if(InputManager::lastEvent->type == SDL_KEYUP)
 		{
-			writeConfig(sConfigPath);
+			writeConfig();
 
 			if(mJoystick)
 				SDL_JoystickClose(mJoystick);
 
-			InputManager::loadConfig(sConfigPath);
+			InputManager::loadConfig();
 			delete this;
 			new GuiGameList();
 		}
@@ -102,8 +107,10 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 	}
 }
 
-void GuiInputConfig::writeConfig(std::string path)
+void GuiInputConfig::writeConfig()
 {
+	std::string path = InputManager::getConfigPath();
+
 	std::ofstream file(path.c_str());
 
 	typedef std::map<int, InputManager::InputButton>::iterator it_type;

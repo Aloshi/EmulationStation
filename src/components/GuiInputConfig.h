@@ -25,7 +25,7 @@ private:
 	std::map<int, InputManager::InputButton> mButtonMap;
 	std::map<int, InputManager::InputButton> mAxisPosMap;
 	std::map<int, InputManager::InputButton> mAxisNegMap;
-	void writeConfig(std::string path);
+	void writeConfig();
 };
 
 #endif

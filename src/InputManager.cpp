@@ -10,7 +10,7 @@ SDL_Event* InputManager::lastEvent = NULL;
 std::map<int, InputManager::InputButton> InputManager::joystickButtonMap, InputManager::joystickAxisPosMap, InputManager::joystickAxisNegMap;
 std::map<int, int> InputManager::axisState;
 
-int InputManager::deadzone = 32000;
+int InputManager::deadzone = 28000;
 
 void InputManager::registerComponent(GuiComponent* comp)
 {
@@ -138,12 +138,14 @@ void InputManager::processEvent(SDL_Event* event)
 	}
 }
 
-void InputManager::loadConfig(std::string path)
+void InputManager::loadConfig()
 {
 	//clear any old config
 	joystickButtonMap.clear();
 	joystickAxisPosMap.clear();
 	joystickAxisNegMap.clear();
+
+	std::string path = getConfigPath();
 
 	std::ifstream file(path.c_str());
 
@@ -194,4 +196,17 @@ void InputManager::loadConfig(std::string path)
 	{
 		SDL_JoystickOpen(0);
 	}
+}
+
+std::string InputManager::getConfigPath()
+{
+	std::string home = getenv("HOME");
+	if(home.empty())
+	{
+		std::cerr << "FATAL ERROR - $HOME environment variable is blank or not defined!\n";
+		exit(1);
+		return "";
+	}
+
+	return(home + "/.es_input.cfg");
 }

@@ -3,6 +3,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <stdlib.h>
+#include <SDL/SDL_joystick.h>
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -33,6 +34,9 @@ void SystemData::launchGame(unsigned int i)
 {
 	std::cout << "Attempting to launch game...\n";
 
+	//suspend SDL joystick events (these'll pile up even while something else is running)
+	SDL_JoystickEventState(0);
+
 	std::string command = mLaunchCommand;
 	GameData* game = mGameVector.at(i);
 
@@ -44,6 +48,9 @@ void SystemData::launchGame(unsigned int i)
 	std::cout << "=====================================================\n";
 
 	std::cout << "...launch terminated!\n";
+
+	//re-enable SDL joystick events
+	SDL_JoystickEventState(1);
 }
 
 void SystemData::deleteGames()
@@ -61,6 +68,21 @@ void SystemData::buildGameList()
 	std::cout << "System " << mName << " building game list...\n";
 
 	deleteGames();
+
+	//expand home symbol if necessary
+	if(mStartPath[0] == '~')
+	{
+		mStartPath.erase(0, 1);
+
+		std::string home = getenv("HOME");
+		if(home.empty())
+		{
+			std::cerr << "ERROR - System start path contains ~ but $HOME is not set!\n";
+			return;
+		}else{
+			mStartPath.insert(0, home);
+		}
+	}
 
 	if(!fs::is_directory(mStartPath))
 	{
@@ -109,9 +131,11 @@ std::string SystemData::getName()
 
 
 //creates systems from information located in a config file
-void SystemData::loadConfig(std::string path)
+void SystemData::loadConfig()
 {
 	deleteSystems();
+
+	std::string path = getConfigPath();
 
 	std::cout << "Loading system config file \"" << path << "\"...\n";
 
@@ -179,6 +203,34 @@ void SystemData::loadConfig(std::string path)
 	return;
 }
 
+void SystemData::writeExampleConfig()
+{
+	std::string path = getConfigPath();
+
+	std::ofstream file(path.c_str());
+
+	file << "# This is the EmulationStation Systems configuration file." << std::endl;
+	file << "# Lines that begin with a hash (#) are ignored, as are empty lines." << std::endl;
+	file << "# A sample system might look like this:" << std::endl;
+	file << "#NAME=Nintendo Entertainment System" << std::endl;
+	file << "#PATH=~/ROMs/nes/" << std::endl;
+	file << "#EXTENSION=.nes" << std::endl;
+	file << "#COMMAND=retroarch -L ~/cores/libretro-fceumm.so %ROM%" << std::endl << std::endl;
+
+	file << "#NAME is just a name to identify the system." << std::endl;
+	file << "#PATH is the path to start the recursive search for ROMs in. ~ will be expanded into the $HOME variable." << std::endl;
+	file << "#EXTENSION is the exact extension to search for. You MUST include the period, and it must be exact - no regex or wildcard support (sorry!)." << std::endl;
+	file << "#COMMAND is the shell command to execute when a game is selected. %ROM% will be replaced with the path to the ROM." << std::endl << std::endl;
+
+	file << "#Now try your own!" << std::endl;
+	file << "NAME=" << std::endl;
+	file << "PATH=" << std::endl;
+	file << "EXTENSION=" << std::endl;
+	file << "COMMAND=" << std::endl;
+
+	file.close();
+}
+
 void SystemData::deleteSystems()
 {
 	for(unsigned int i = 0; i < sSystemVector.size(); i++)
@@ -186,4 +238,17 @@ void SystemData::deleteSystems()
 		delete sSystemVector.at(i);
 	}
 	sSystemVector.clear();
+}
+
+std::string SystemData::getConfigPath()
+{
+	std::string home = getenv("HOME");
+	if(home.empty())
+	{
+		std::cerr << "FATAL ERROR - $HOME environment variable empty or nonexistant!\n";
+		exit(1);
+		return "";
+	}
+
+	return(home + "/.es_systems.cfg");
 }
