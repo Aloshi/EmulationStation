@@ -9,6 +9,7 @@ SDL_Event* InputManager::lastEvent = NULL;
 
 std::map<int, InputManager::InputButton> InputManager::joystickButtonMap, InputManager::joystickAxisPosMap, InputManager::joystickAxisNegMap;
 std::map<int, int> InputManager::axisState;
+InputManager::InputButton InputManager::hatState = InputManager::UNKNOWN;
 
 int InputManager::deadzone = 28000;
 
@@ -85,17 +86,50 @@ void InputManager::processEvent(SDL_Event* event)
 		}else{
 			if(event->type == SDL_JOYHATMOTION)
 			{
-				//no keyUp for hat movement yet, but this should be easily accomplished by
-				//keeping the previous hat movement and checking if it moved from centered to anything else (keyDown) or back to centered (keyUp)
-				keyDown = true;
-				if(event->jhat.value & SDL_HAT_UP)
-					button = UP;
-				if(event->jhat.value & SDL_HAT_DOWN)
-					button = DOWN;
-				if(event->jhat.value & SDL_HAT_LEFT)
+				int hat = event->jhat.value;
+
+				if(hat == 0) //centered
+				{
+					//we need to send a keyUp event for the last hat
+					//keyDown is already false
+					button = hatState;
+				}else{
+					keyDown = true;
+				}
+
+				if(hat & SDL_HAT_LEFT)
 					button = LEFT;
-				if(event->jhat.value & SDL_HAT_RIGHT)
+				if(hat & SDL_HAT_RIGHT)
 					button = RIGHT;
+
+				if(hat & SDL_HAT_UP)
+					button = UP;
+				if(hat & SDL_HAT_DOWN)
+					button = DOWN;
+
+				if(button == hatState && keyDown)
+				{
+					//ignore this hat event since the user most likely just made it a diagonal (but it still is using the old direction)
+					button = UNKNOWN;
+				}else{
+					if(hatState != UNKNOWN && keyDown)
+					{
+						//this will occur if the user went down -> downLeft -> Left or similar
+						button = hatState;
+						keyDown = false;
+						hatState = UNKNOWN;
+						processEvent(event);
+					}else{
+						if(!keyDown)
+							hatState = UNKNOWN;
+						else
+							hatState = button;
+					}
+				}
+
+				if(button != UNKNOWN)
+					std::cout << "hat event, button: " << button << ", keyDown: " << keyDown << "\n";
+
 			}else{
 				if(event->type == SDL_JOYAXISMOTION)
 				{

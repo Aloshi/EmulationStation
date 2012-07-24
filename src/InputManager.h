@@ -27,6 +27,7 @@ namespace InputManager {
 	extern std::map<int, InputButton> joystickButtonMap;
 	extern std::map<int, InputButton> joystickAxisPosMap, joystickAxisNegMap;
 	extern std::map<int, int> axisState;
+	extern InputButton hatState;
 }
 
 #endif
