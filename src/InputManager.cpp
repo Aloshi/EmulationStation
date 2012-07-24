@@ -127,8 +127,9 @@ void InputManager::processEvent(SDL_Event* event)
 					}
 				}
 
-				if(button != UNKNOWN)
-					std::cout << "hat event, button: " << button << ", keyDown: " << keyDown << "\n";
+				//for debugging hats
+				//if(button != UNKNOWN)
+				//	std::cout << "hat event, button: " << button << ", keyDown: " << keyDown << "\n";
 
 			}else{
 				if(event->type == SDL_JOYAXISMOTION)

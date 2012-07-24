@@ -2,6 +2,7 @@ EmulationStation
 ================
 
 A simple front-end for emulators made with SDL, designed for controller navigation. Developed for use with the Raspberry Pi and RetroArch, though it can easily be used for other things.
+
 RetroArch for the Raspberry Pi can be found here: https://github.com/ToadKing/RetroArch-Rpi
 I'm not associated with RetroArch in any way!
 
@@ -22,8 +23,9 @@ When first run, an example systems configuration file will be created at $HOME/.
 
 If an SDL Joystick is detected at startup, and $HOME/.es_input.cfg is nonexistant, an Input Configuration screen will appear instead of the game list. This should be pretty self-explanatory. If you want to reconfigure, just delete $HOME/.es_input.cfg.
 
-Mappings will always be applied to the SDL joystick at index 0. An Xbox 360 controller with the xboxdrv driver was tested. POV hats _should_ be automatically mapped, but might not work.
+Mappings will always be applied to the SDL joystick at index 0. An Xbox 360 controller with the xboxdrv driver was tested. POV hats are automatically mapped to directions (so if you're not using an analog stick, you'll need to skip mapping Up/Down/Left/Right by pressing a keyboard key).
 
-Keep in mind you'll have to set up your emulator separately from EmulationStation. If you're using RetroArch, a handy input tool can be found in the tools/ subdirectory - you can use it with `retroarch-joyconfig -o ~/.retroarch.cfg` or something similar. You may need to tell RetroArch to load this config file with `-c ~/.retroarch.cfg` in your RetroArch launch commands.
+Keep in mind you'll have to set up your emulator separately from EmulationStation. If you're using RetroArch, a handy input config generation tool can be found in the tools/ subdirectory - you can use it with `retroarch-joyconfig -o ~/.retroarch.cfg` or something similar. You may need to tell RetroArch to load this config file with `-c ~/.retroarch.cfg` in your RetroArch launch commands.
 
 -Aloshi
+http://www.aloshi.com
