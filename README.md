@@ -27,5 +27,7 @@ Mappings will always be applied to the SDL joystick at index 0. An Xbox 360 cont
 
 Keep in mind you'll have to set up your emulator separately from EmulationStation. If you're using RetroArch, a handy input config generation tool can be found in the tools/ subdirectory - you can use it with `retroarch-joyconfig -o ~/.retroarch.cfg` or something similar. You may need to tell RetroArch to load this config file with `-c ~/.retroarch.cfg` in your RetroArch launch commands.
 
+EmulationStation will return once your system's command terminates (i.e. your emulator closes). To close EmulationStation itself, you can press the F4 key on the keyboard.
+
 -Aloshi
 http://www.aloshi.com
