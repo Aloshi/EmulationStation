@@ -4,8 +4,10 @@
 #include "../GuiComponent.h"
 #include "GuiList.h"
 #include <string>
+#include <stack>
 #include "../SystemData.h"
 #include "../GameData.h"
+#include "../FolderData.h"
 
 class GuiGameList : GuiComponent
 {
@@ -18,8 +20,11 @@ public:
 
 	void onRender();
 	void onInput(InputManager::InputButton button, bool keyDown);
+
 private:
 	SystemData* mSystem;
+	FolderData* mFolder;
+	std::stack<FolderData*> mFolderStack;
 	int mSystemId;
 	GuiList* mList;
 };

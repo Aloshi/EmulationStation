@@ -7,6 +7,14 @@
 #include <vector>
 #include <string>
 
+struct ListRow
+{
+	std::string name;
+	void* object;
+	int color;
+};
+
+//this should really be a template
 class GuiList : public GuiComponent
 {
 public:
@@ -16,15 +24,14 @@ public:
 	void onRender();
 	void onInput(InputManager::InputButton button, bool keyDown);
 
-	void addObject(std::string name, void* obj);
+	void addObject(std::string name, void* obj, int color = 0xFF0000);
 	void clear();
 
 	std::string getSelectedName();
 	void* getSelectedObject();
 	int getSelection();
 private:
-	std::vector<std::string> mNameVector;
-	std::vector<void*> mPointerVector;
+	std::vector<ListRow> mRowVector;
 	int mSelection;
 };
 

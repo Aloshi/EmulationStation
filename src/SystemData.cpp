@@ -12,15 +12,34 @@ namespace fs = boost::filesystem;
 SystemData::SystemData(std::string name, std::string startPath, std::string extension, std::string command)
 {
 	mName = name;
+
+	//expand home symbol if the startpath contains it
+	if(startPath[0] == '~')
+        {
+                startPath.erase(0, 1);
+
+                std::string home = getenv("HOME");
+                if(home.empty())
+                {
+                        std::cerr << "ERROR - System start path contains ~ but $HOME is not set!\n";
+                        return;
+                }else{
+                        startPath.insert(0, home);
+                }
+        }
+
 	mStartPath = startPath;
 	mSearchExtension = extension;
 	mLaunchCommand = command;
-	buildGameList();
+
+
+	mRootFolder = new FolderData(this, mStartPath, "Search Root");
+	populateFolder(mRootFolder);
 }
 
 SystemData::~SystemData()
 {
-	deleteGames();
+	delete mRootFolder;
 }
 
 std::string strreplace(std::string& str, std::string replace, std::string with)
@@ -30,7 +49,7 @@ std::string strreplace(std::string& str, std::string replace, std::string with)
 	return str.replace(pos, replace.length(), with.c_str(), with.length());
 }
 
-void SystemData::launchGame(unsigned int i)
+void SystemData::launchGame(GameData* game)
 {
 	std::cout << "Attempting to launch game...\n";
 
@@ -38,9 +57,8 @@ void SystemData::launchGame(unsigned int i)
 	SDL_JoystickEventState(0);
 
 	std::string command = mLaunchCommand;
-	GameData* game = mGameVector.at(i);
 
-	command = strreplace(command, "%ROM%", game->getValidPath());
+	command = strreplace(command, "%ROM%", game->getPath());
 
 	std::cout << "	" << command << "\n";
 	std::cout << "=====================================================\n";
@@ -53,74 +71,34 @@ void SystemData::launchGame(unsigned int i)
 	SDL_JoystickEventState(1);
 }
 
-void SystemData::deleteGames()
+void SystemData::populateFolder(FolderData* folder)
 {
-	for(unsigned int i = 0; i < mGameVector.size(); i++)
+	std::string folderPath = folder->getPath();
+	if(!fs::is_directory(folderPath))
 	{
-		delete mGameVector.at(i);
-	}
-
-	mGameVector.clear();
-}
-
-void SystemData::buildGameList()
-{
-	std::cout << "System " << mName << " building game list...\n";
-
-	deleteGames();
-
-	//expand home symbol if necessary
-	if(mStartPath[0] == '~')
-	{
-		mStartPath.erase(0, 1);
-
-		std::string home = getenv("HOME");
-		if(home.empty())
-		{
-			std::cerr << "ERROR - System start path contains ~ but $HOME is not set!\n";
-			return;
-		}else{
-			mStartPath.insert(0, home);
-		}
-	}
-
-	if(!fs::is_directory(mStartPath))
-	{
-		std::cout << "Error - system \"" << mName << "\"'s start path does not exist!\n";
+		std::cerr << "Error - folder with path \"" << folderPath << "\" is not a directory!\n";
 		return;
 	}
 
-	for(fs::recursive_directory_iterator end, dir(mStartPath); dir != end; ++dir)
+	for(fs::directory_iterator end, dir(folderPath); dir != end; ++dir)
 	{
-		//std::cout << "File found: " << *dir << "\n";
+		fs::path filePath = (*dir).path();
 
-		fs::path path = (*dir).path();
-
-		if(fs::is_directory(path))
-			continue;
-
-		std::string name = path.stem().string();
-		std::string extension = path.extension().string();
-
-		if(extension == mSearchExtension)
+		if(fs::is_directory(filePath))
 		{
-			mGameVector.push_back(new GameData(this, path.string(), name));
-			std::cout << "	Added game \"" << name << "\"\n";
+			FolderData* newFolder = new FolderData(this, filePath.string(), filePath.stem().string());
+			populateFolder(newFolder);
+			folder->pushFileData(newFolder);
+		}else{
+			if(filePath.extension().string() == mSearchExtension)
+			{
+				GameData* newGame = new GameData(this, filePath.string(), filePath.stem().string());
+				folder->pushFileData(newGame);
+			}
 		}
 	}
-
-	std::cout << "...done! Found " << mGameVector.size() << " games.\n";
 }
 
-unsigned int SystemData::getGameCount()
-{
-	return mGameVector.size();
-}
-
-GameData* SystemData::getGame(unsigned int i)
-{
-	return mGameVector.at(i);
-}
 
 std::string SystemData::getName()
 {
@@ -251,4 +229,9 @@ std::string SystemData::getConfigPath()
 	}
 
 	return(home + "/.es_systems.cfg");
+}
+
+FolderData* SystemData::getRootFolder()
+{
+	return mRootFolder;
 }

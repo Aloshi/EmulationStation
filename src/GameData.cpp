@@ -1,6 +1,9 @@
 #include "GameData.h"
 #include <iostream>
 
+bool GameData::isFolder() { return false; }
+std::string GameData::getName() { return mName; }
+
 GameData::GameData(SystemData* system, std::string path, std::string name)
 {
 	mSystem = system;
@@ -8,14 +11,7 @@ GameData::GameData(SystemData* system, std::string path, std::string name)
 	mName = name;
 }
 
-std::string GameData::getName()
-{
-	return mName;
-}
-
-
-
-std::string GameData::getValidPath()
+std::string GameData::getPath()
 {
 	//a quick and dirty way to insert a backslash before most characters that would mess up a bash path
 	std::string path = mPath;

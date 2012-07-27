@@ -2,16 +2,17 @@
 #define _GAMEDATA_H_
 
 #include <string>
+#include "FileData.h"
 #include "SystemData.h"
 
-class GameData
+class GameData : public FileData
 {
 public:
 	GameData(SystemData* system, std::string path, std::string name);
 
 	std::string getName();
-	std::string getValidPath();
-
+	std::string getPath();
+	bool isFolder();
 private:
 	SystemData* mSystem;
 	std::string mPath;

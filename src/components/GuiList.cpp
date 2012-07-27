@@ -23,27 +23,27 @@ void GuiList::onRender()
 	int screenCount = (Renderer::getScreenHeight() - cutoff) / entrySize;
 	screenCount -= 1;
 
-	if((int)mNameVector.size() >= screenCount)
+	if((int)mRowVector.size() >= screenCount)
 	{
 		startEntry = mSelection - (screenCount * 0.5);
 		if(startEntry < 0)
 			startEntry = 0;
-		if(startEntry >= (int)mNameVector.size() - screenCount)
-			startEntry = mNameVector.size() - screenCount;
+		if(startEntry >= (int)mRowVector.size() - screenCount)
+			startEntry = mRowVector.size() - screenCount;
 	}
 
 	int y = cutoff;
 	int color =  0xFF0000;
 
-	if(mNameVector.size() == 0)
+	if(mRowVector.size() == 0)
 	{
 		Renderer::drawCenteredText("The list is empty.", y, color);
 		return;
 	}
 
 	int listCutoff = startEntry + screenCount;
-	if(listCutoff > (int)mNameVector.size())
-		listCutoff = mNameVector.size();
+	if(listCutoff > (int)mRowVector.size())
+		listCutoff = mRowVector.size();
 
 	for(int i = startEntry; i < listCutoff; i++)
 	{
@@ -52,14 +52,15 @@ void GuiList::onRender()
 			Renderer::drawRect(0, y, Renderer::getScreenWidth(), 52, 0x000000);
 		}
 
-		Renderer::drawCenteredText(mNameVector.at((unsigned int)i), y, color);
+		ListRow row = mRowVector.at((unsigned int)i);
+		Renderer::drawCenteredText(row.name, y, row.color);
 		y += 40;
 	}
 }
 
 void GuiList::onInput(InputManager::InputButton button, bool keyDown)
 {
-	if(mNameVector.size() > 0 && keyDown)
+	if(mRowVector.size() > 0 && keyDown)
 	{
 		if(button == InputManager::DOWN)
 			mSelection++;
@@ -68,34 +69,33 @@ void GuiList::onInput(InputManager::InputButton button, bool keyDown)
 			mSelection--;
 
 		if(mSelection < 0)
-			mSelection += mNameVector.size();
+			mSelection += mRowVector.size();
 
-		if(mSelection >= (int)mNameVector.size())
-			mSelection -= mNameVector.size();
+		if(mSelection >= (int)mRowVector.size())
+			mSelection -= mRowVector.size();
 	}
 }
 
-void GuiList::addObject(std::string name, void* obj)
+void GuiList::addObject(std::string name, void* obj, int color)
 {
-	mNameVector.push_back(name);
-	mPointerVector.push_back(obj);
+	ListRow row = {name, obj, color};
+	mRowVector.push_back(row);
 }
 
 void GuiList::clear()
 {
-	mNameVector.clear();
-	mPointerVector.clear();
+	mRowVector.clear();
 	mSelection = 0;
 }
 
 std::string GuiList::getSelectedName()
 {
-	return mNameVector.at(mSelection);
+	return mRowVector.at(mSelection).name;
 }
 
 void* GuiList::getSelectedObject()
 {
-	return mPointerVector.at(mSelection);
+	return mRowVector.at(mSelection).object;
 }
 
 int GuiList::getSelection()

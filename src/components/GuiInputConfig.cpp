@@ -4,8 +4,8 @@
 #include <fstream>
 
 std::string GuiInputConfig::sConfigPath = "./input.cfg";
-std::string GuiInputConfig::sInputs[] = { "UNKNOWN", "UP", "DOWN", "LEFT", "RIGHT", "BUTTON1", "BUTTON2" }; //must be same order as InputManager::InputButton enum
-int GuiInputConfig::sInputCount = 6;
+std::string GuiInputConfig::sInputs[] = { "UNKNOWN", "UP", "DOWN", "LEFT", "RIGHT", "BUTTON1 (Accept)", "BUTTON2 (Back)" }; //must be same order as InputManager::InputButton enum
+int GuiInputConfig::sInputCount = 7;
 
 GuiInputConfig::GuiInputConfig()
 {

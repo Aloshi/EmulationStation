@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "FolderData.h"
 
 class GameData;
 
@@ -12,12 +13,10 @@ public:
 	SystemData(std::string name, std::string startPath, std::string extension, std::string command);
 	~SystemData();
 
-	unsigned int getGameCount();
-	GameData* getGame(unsigned int i);
+	FolderData* getRootFolder();
 	std::string getName();
 
-	void buildGameList();
-	void launchGame(unsigned int i);
+	void launchGame(GameData* game);
 	static void deleteSystems();
 	static void loadConfig();
 	static void writeExampleConfig();
@@ -30,9 +29,9 @@ private:
 	std::string mSearchExtension;
 	std::string mLaunchCommand;
 
-	std::vector<GameData*> mGameVector;
+	void populateFolder(FolderData* folder);
 
-	void deleteGames();
+	FolderData* mRootFolder;
 };
 
 #endif

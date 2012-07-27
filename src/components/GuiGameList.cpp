@@ -40,6 +40,11 @@ void GuiGameList::setSystemId(int id)
 	mSystemId = id;
 	mSystem = SystemData::sSystemVector.at(mSystemId);
 
+	//clear the folder stack (I can't look up the proper method right now)
+	while(mFolderStack.size()){ mFolderStack.pop(); }
+
+	mFolder = mSystem->getRootFolder();
+
 	updateList();
 }
 
@@ -52,10 +57,29 @@ void GuiGameList::onRender()
 
 void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 {
-	if(button == InputManager::BUTTON1 && mSystem->getGameCount() > 0)
+	if(button == InputManager::BUTTON1 && mFolder->getFileCount() > 0)
 	{
 		if(!keyDown)
-			mSystem->launchGame(mList->getSelection());
+		{
+			FileData* file = (FileData*)mList->getSelectedObject();
+			if(file->isFolder())
+			{
+				//set current directory to this or something
+				mFolderStack.push(mFolder);
+				mFolder = (FolderData*)file;
+				updateList();
+			}else{
+				mSystem->launchGame((GameData*)file);
+			}
+		}
+	}
+
+	//std::cout << "mFolderStack.size(): " << mFolderStack.size() << "\n";
+	if(button == InputManager::BUTTON2 && keyDown && mFolderStack.size())
+	{
+		mFolder = mFolderStack.top();
+		mFolderStack.pop();
+		updateList();
 	}
 
 	if(button == InputManager::RIGHT && keyDown)
@@ -72,10 +96,13 @@ void GuiGameList::updateList()
 {
 	mList->clear();
 
-	for(unsigned int i = 0; i < mSystem->getGameCount(); i++)
+	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)
 	{
-		GameData* game = mSystem->getGame(i);
+		FileData* file = mFolder->getFile(i);
 
-		mList->addObject(game->getName(), game);
+		if(file->isFolder())
+			mList->addObject(file->getName(), file, 0x00C000);
+		else
+			mList->addObject(file->getName(), file);
 	}
 }

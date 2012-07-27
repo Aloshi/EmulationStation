@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall
 LDFLAGS=-lSDL -lSDL_ttf -lboost_system -lboost_filesystem
-SRCSOURCES=main.cpp Renderer.cpp Renderer_draw.cpp GuiComponent.cpp InputManager.cpp SystemData.cpp GameData.cpp components/GuiTitleScreen.cpp components/GuiList.cpp components/GuiGameList.cpp components/GuiInputConfig.cpp
+SRCSOURCES=main.cpp Renderer.cpp Renderer_draw.cpp GuiComponent.cpp InputManager.cpp SystemData.cpp GameData.cpp FolderData.cpp components/GuiTitleScreen.cpp components/GuiList.cpp components/GuiGameList.cpp components/GuiInputConfig.cpp
 SOURCES=$(addprefix src/,$(SRCSOURCES))
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=emulationstation

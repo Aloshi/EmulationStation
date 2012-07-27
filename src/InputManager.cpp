@@ -61,6 +61,9 @@ void InputManager::processEvent(SDL_Event* event)
 			case SDLK_RETURN:
 				button = BUTTON1;
 				break;
+			case SDLK_ESCAPE:
+				button = BUTTON2;
+				break;
 
 			default:
 				button = UNKNOWN;
