@@ -7,7 +7,7 @@
 #include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
 
-int main()
+int main(int argc, char* argv[])
 {
 	bool running = true;
 
@@ -25,12 +25,35 @@ int main()
 		return 1;
 	}
 
-	Renderer::screen = SDL_SetVideoMode(Renderer::getScreenWidth(), Renderer::getScreenHeight(), 16, SDL_SWSURFACE);
+
+	int width = 0;
+	int height = 0;
+	if(argc > 1)
+	{
+		for(int i = 1; i < argc; i++)
+		{
+			if(strcmp(argv[i], "-w") == 0)
+			{
+				width = atoi(argv[i + 1]);
+				i++;
+			}else if(strcmp(argv[i], "-h") == 0)
+			{
+				height = atoi(argv[i + 1]);
+				i++;
+			}
+		}
+	}
+
+	Renderer::screen = SDL_SetVideoMode(width, height, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
+
 	if(Renderer::screen == NULL)
 	{
 		std::cerr << "Error - could not set video mode!\n";
 		std::cerr << "	" << SDL_GetError() << "\n";
+		std::cerr << "\nYou may want to try using -w and -h to specify a resolution.\n";
 		return 1;
+	}else{
+		std::cout << "Video mode is " << Renderer::screen->w << "x" << Renderer::screen->h << "\n";
 	}
 
 	SDL_ShowCursor(false);
