@@ -15,7 +15,10 @@ public:
 
 private:
 	GuiComponent* mParent;
-	GuiList* mList;
+	GuiList<std::string>* mList;
+
+	void populateList();
+
 	bool mSkippedMenuClose;
 };
 

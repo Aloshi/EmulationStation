@@ -31,7 +31,7 @@ private:
 	int mSystemId;
 	bool mDetailed;
 
-	GuiList* mList;
+	GuiList<FileData*>* mList;
 	GuiImage* mScreenshot;
 };
 

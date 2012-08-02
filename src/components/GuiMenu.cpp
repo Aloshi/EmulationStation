@@ -6,7 +6,7 @@ GuiMenu::GuiMenu(GuiComponent* parent)
 	mParent = parent;
 	parent->pause();
 
-	mList = new GuiList(Renderer::getScreenWidth() * 0.5, 20);
+	mList = new GuiList<std::string>(Renderer::getScreenWidth() * 0.5, 20);
 
 	addChild(mList);
 
@@ -37,11 +37,19 @@ void GuiMenu::onInput(InputManager::InputButton button, bool keyDown)
 			return;
 		}
 	}
+
+	if(button == InputManager::BUTTON1 && keyDown)
+	{
+		system(mList->getSelectedObject().c_str());
+	}
 }
 
 void GuiMenu::populateList()
 {
+	mList->clear();
 
+	mList->addObject("Nothing", "");
+	mList->addObject("Shutdown", "sudo shutdown -h now");
 }
 
 void GuiMenu::onRender()

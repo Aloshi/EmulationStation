@@ -16,12 +16,12 @@ GuiGameList::GuiGameList(bool useDetail)
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
+		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2 - (SCREENSHOTWIDTH / 2), Renderer::getFontHeight(Renderer::LARGE) + 2);
 		addChild(mScreenshot);
 	}else{
-		mList = new GuiList(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
+		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
 		mScreenshot = NULL;
 	}
 
@@ -83,7 +83,7 @@ void GuiGameList::onRender()
 		Renderer::drawRect(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
 
 		//if we have selected a non-folder
-		if(mList->getSelectedObject() && !((FileData*)mList->getSelectedObject())->isFolder())
+		if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 		{
 			GameData* game = (GameData*)mList->getSelectedObject();
 
@@ -100,7 +100,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	{
 		if(!keyDown)
 		{
-			FileData* file = (FileData*)mList->getSelectedObject();
+			FileData* file = mList->getSelectedObject();
 			if(file->isFolder())
 			{
 				//set current directory to this or something
@@ -138,7 +138,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	{
 		if(!keyDown && (button == InputManager::UP || button == InputManager::DOWN))
 		{
-			if(mList->getSelectedObject() && !((FileData*)mList->getSelectedObject())->isFolder())
+			if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 			{
 				mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
 			}else{
@@ -167,6 +167,7 @@ void GuiGameList::updateList()
 }
 
 //these are called when the menu opens/closes
+//the second bit should be moved to GuiList
 void GuiGameList::onPause()
 {
 	InputManager::unregisterComponent(this);

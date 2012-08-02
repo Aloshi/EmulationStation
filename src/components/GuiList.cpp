@@ -1,7 +1,8 @@
 #include "GuiList.h"
 #include <iostream>
 
-GuiList::GuiList(int offsetX, int offsetY)
+template <typename listType>
+GuiList<listType>::GuiList(int offsetX, int offsetY)
 {
 	mSelection = 0;
 	mScrollDir = 0;
@@ -14,12 +15,14 @@ GuiList::GuiList(int offsetX, int offsetY)
 	InputManager::registerComponent(this);
 }
 
-GuiList::~GuiList()
+template <typename listType>
+GuiList<listType>::~GuiList()
 {
 	InputManager::unregisterComponent(this);
 }
 
-void GuiList::onRender()
+template <typename listType>
+void GuiList<listType>::onRender()
 {
 	Renderer::FontSize fontsize = Renderer::MEDIUM;
 
@@ -66,7 +69,8 @@ void GuiList::onRender()
 	}
 }
 
-void GuiList::onInput(InputManager::InputButton button, bool keyDown)
+template <typename listType>
+void GuiList<listType>::onInput(InputManager::InputButton button, bool keyDown)
 {
 	if(mRowVector.size() > 0)
 	{
@@ -100,7 +104,8 @@ void GuiList::onInput(InputManager::InputButton button, bool keyDown)
 	}
 }
 
-void GuiList::onTick(int deltaTime)
+template <typename listType>
+void GuiList<listType>::onTick(int deltaTime)
 {
 	if(mScrollDir != 0)
 	{
@@ -134,29 +139,34 @@ void GuiList::onTick(int deltaTime)
 }
 
 //list management stuff
-void GuiList::addObject(std::string name, void* obj, int color)
+template <typename listType>
+void GuiList<listType>::addObject(std::string name, listType obj, int color)
 {
 	ListRow row = {name, obj, color};
 	mRowVector.push_back(row);
 }
 
-void GuiList::clear()
+template <typename listType>
+void GuiList<listType>::clear()
 {
 	mRowVector.clear();
 	mSelection = 0;
 }
 
-std::string GuiList::getSelectedName()
+template <typename listType>
+std::string GuiList<listType>::getSelectedName()
 {
 	return mRowVector.at(mSelection).name;
 }
 
-void* GuiList::getSelectedObject()
+template <typename listType>
+listType GuiList<listType>::getSelectedObject()
 {
 	return mRowVector.at(mSelection).object;
 }
 
-int GuiList::getSelection()
+template <typename listType>
+int GuiList<listType>::getSelection()
 {
 	return mSelection;
 }
