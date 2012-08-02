@@ -228,7 +228,7 @@ std::string SystemData::getConfigPath()
 		return "";
 	}
 
-	return(home + "/.es_systems.cfg");
+	return(home + "/.emulationstation/es_systems.cfg");
 }
 
 FolderData* SystemData::getRootFolder()

@@ -60,9 +60,39 @@ int main(int argc, char* argv[])
 	SDL_ShowCursor(false);
 	SDL_JoystickEventState(SDL_ENABLE);
 
+
+
+	//make sure the config directory exists
+	std::string home = getenv("HOME");
+	std::string configDir = home + "/.emulationstation";
+	if(!boost::filesystem::exists(configDir))
+	{
+		std::cout << "Creating config directory " << configDir << "\n";
+		boost::filesystem::create_directory(configDir);
+	}
+
+	//check if there are config files in the old places, and if so, move them to the new directory
+	std::string oldSysPath = home + "/.es_systems.cfg";
+	std::string oldInpPath = home + "/.es_input.cfg";
+	if(boost::filesystem::exists(oldSysPath))
+	{
+		std::cout << "Moving old system config file " << oldSysPath << " to new path at " << SystemData::getConfigPath() << "\n";
+		boost::filesystem::copy_file(oldSysPath, SystemData::getConfigPath());
+		boost::filesystem::remove(oldSysPath);
+	}
+	if(boost::filesystem::exists(oldInpPath))
+	{
+		std::cout << "Moving old input config file " << oldInpPath << " to new path at " << InputManager::getConfigPath() << "\n";
+		boost::filesystem::copy_file(oldInpPath, InputManager::getConfigPath());
+		boost::filesystem::remove(oldInpPath);
+	}
+
+
+
+
 	if(!boost::filesystem::exists(SystemData::getConfigPath()))
 	{
-		std::cerr << "A system config file in $HOME/.es_systems.cfg was not found. An example will be created.\n";
+		std::cerr << "A system config file in " << SystemData::getConfigPath() << " was not found. An example will be created.\n";
 		SystemData::writeExampleConfig();
 		std::cerr << "Set it up, then re-run EmulationStation.\n";
 		running = false;
@@ -71,7 +101,7 @@ int main(int argc, char* argv[])
 
 		if(SystemData::sSystemVector.size() == 0)
 		{
-			std::cerr << "A system config file in $HOME/.es_systems.cfg was found, but contained no systems.\n";
+			std::cerr << "A system config file in " << SystemData::getConfigPath() << " was found, but contained no systems.\n";
 			std::cerr << "You should probably go read that, or delete it.\n";
 			running = false;
 		}else{

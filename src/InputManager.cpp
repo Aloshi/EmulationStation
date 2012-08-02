@@ -64,6 +64,9 @@ void InputManager::processEvent(SDL_Event* event)
 			case SDLK_ESCAPE:
 				button = BUTTON2;
 				break;
+			case SDLK_F1:
+				button = MENU;
+				break;
 
 			default:
 				button = UNKNOWN;
@@ -246,5 +249,5 @@ std::string InputManager::getConfigPath()
 		return "";
 	}
 
-	return(home + "/.es_input.cfg");
+	return(home + "/.emulationstation/es_input.cfg");
 }

@@ -3,6 +3,7 @@
 #include <SDL/SDL_ttf.h>
 #include <iostream>
 #include <string>
+#include <boost/filesystem.hpp>
 
 SDL_Surface* Renderer::screen;
 bool Renderer::loadedFonts = false;
@@ -17,7 +18,15 @@ void Renderer::drawRect(int x, int y, int h, int w, int color)
 
 bool Renderer::loadFonts()
 {
-	const char* fontPath = "LinLibertine_R.ttf";
+	std::string fontPath = "LinLibertine_R.ttf";
+
+	//if our font isn't foud, make a last-ditch effort to load a system font
+	if(!boost::filesystem::exists(fontPath))
+	{
+		std::cerr << "Error - " << fontPath << " font not found. Falling back to ";
+		fontPath = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
+		std::cerr << fontPath << " (which may not exist).\n";
+	}
 
 	//int sizeArray[] = {Renderer::getScreenHeight() * 0.025, Renderer::getScreenHeight() * 0.05, Renderer::getScreenHeight() * 0.075};
 	int sizeArray[] = {Renderer::getScreenWidth() * 0.015, Renderer::getScreenWidth() * 0.03, Renderer::getScreenWidth() * 0.05};
@@ -26,7 +35,7 @@ bool Renderer::loadFonts()
 	//the three here should be the font count but, again, I don't remember the syntax
 	for(unsigned int i = 0; i < 3; i++)
 	{
-		TTF_Font* font = TTF_OpenFont(fontPath, sizeArray[i]);
+		TTF_Font* font = TTF_OpenFont(fontPath.c_str(), sizeArray[i]);
 		if(!font)
 		{
 			std::cerr << "Error - could not load font!\n";
