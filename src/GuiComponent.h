@@ -8,16 +8,23 @@
 class GuiComponent
 {
 public:
+	GuiComponent();
+	virtual ~GuiComponent();
+
 	void render();
 	virtual void onRender() { };
+	virtual void onTick(int deltaTime) { };
+
 	virtual void onInput(InputManager::InputButton button, bool keyDown) { };
-	virtual unsigned int getLayer() { return BIT(0); };
 
 	void addChild(GuiComponent* comp);
 	void removeChild(GuiComponent* comp);
 	unsigned int getChildCount() { return mChildren.size(); }
 	GuiComponent* getChild(unsigned int i) { return mChildren.at(i); }
+
+	static void processTicks(int deltaTime);
 private:
+	static std::vector<GuiComponent*> sComponentVector;
 	std::vector<GuiComponent*> mChildren;
 };
 

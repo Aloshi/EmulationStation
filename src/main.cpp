@@ -6,6 +6,7 @@
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
+#include "XMLReader.h"
 
 int main(int argc, char* argv[])
 {
@@ -44,7 +45,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	Renderer::screen = SDL_SetVideoMode(width, height, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
+	Renderer::screen = SDL_SetVideoMode(width, height, 16, SDL_SWSURFACE); //| SDL_FULLSCREEN);
 
 	if(Renderer::screen == NULL)
 	{
@@ -57,7 +58,6 @@ int main(int argc, char* argv[])
 	}
 
 	SDL_ShowCursor(false);
-	SDL_EnableKeyRepeat(500, 100);
 	SDL_JoystickEventState(SDL_ENABLE);
 
 	if(!boost::filesystem::exists(SystemData::getConfigPath()))
@@ -75,23 +75,33 @@ int main(int argc, char* argv[])
 			std::cerr << "You should probably go read that, or delete it.\n";
 			running = false;
 		}else{
+
+			bool useDetail = false;
+
+			//loaded system config, so try parsing the test XML doc
+			if(boost::filesystem::exists("gamelist.xml"))
+			{
+				parseXMLFile("gamelist.xml");
+				useDetail = true;
+			}
+
 			if(boost::filesystem::exists(InputManager::getConfigPath()))
 			{
 				InputManager::loadConfig();
-				new GuiGameList();
+				new GuiGameList(useDetail);
 			}else{
 				if(SDL_NumJoysticks() > 0)
 				{
 					new GuiInputConfig();
 				}else{
 					std::cout << "Note - it looks like you have no joysticks connected.\n";
-					new GuiGameList();
+					new GuiGameList(useDetail);
 				}
 			}
 		}
 	}
 
-
+	int lastTime = 0;
 	while(running)
 	{
 		SDL_Event event;
@@ -104,8 +114,6 @@ int main(int argc, char* argv[])
 				case SDL_JOYBUTTONDOWN:
 				case SDL_JOYBUTTONUP:
 				case SDL_KEYDOWN:
-					InputManager::processEvent(&event);
-					break;
 				case SDL_KEYUP:
 					InputManager::processEvent(&event);
 					break;
@@ -115,6 +123,12 @@ int main(int argc, char* argv[])
 					break;
 			}
 		}
+
+		int curTime = SDL_GetTicks();
+		int deltaTime = curTime - lastTime;
+		lastTime = curTime;
+
+		GuiComponent::processTicks(deltaTime);
 
 		Renderer::render();
 		SDL_Flip(Renderer::screen);

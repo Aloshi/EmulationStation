@@ -3,6 +3,7 @@
 
 #include "../GuiComponent.h"
 #include "GuiList.h"
+#include "GuiImage.h"
 #include <string>
 #include <stack>
 #include "../SystemData.h"
@@ -12,7 +13,7 @@
 class GuiGameList : GuiComponent
 {
 public:
-	GuiGameList();
+	GuiGameList(bool useDetail = false);
 	~GuiGameList();
 
 	void updateList();
@@ -26,7 +27,10 @@ private:
 	FolderData* mFolder;
 	std::stack<FolderData*> mFolderStack;
 	int mSystemId;
+	bool mDetailed;
+
 	GuiList* mList;
+	GuiImage* mScreenshot;
 };
 
 #endif

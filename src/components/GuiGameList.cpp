@@ -2,11 +2,28 @@
 #include "../InputManager.h"
 #include <iostream>
 
-GuiGameList::GuiGameList()
+#define SCREENSHOTWIDTH 256
+#define SCREENSHOTHEIGHT 256
+
+GuiGameList::GuiGameList(bool useDetail)
 {
 	std::cout << "Creating GuiGameList\n";
+	mDetailed = useDetail;
 
-	mList = new GuiList();
+	//The GuiGameList can use the older, simple game list if so desired.
+	//The old view only shows a list in the center of the screen; the new view can display a screenshto and description.
+	//Those with smaller displays may prefer the older view.
+	if(mDetailed)
+	{
+		mList = new GuiList(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
+
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2 - (SCREENSHOTWIDTH / 2), Renderer::getFontHeight(Renderer::LARGE) + 2);
+		addChild(mScreenshot);
+	}else{
+		mList = new GuiList(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
+		mScreenshot = NULL;
+	}
+
 	addChild(mList);
 
 	setSystemId(0);
@@ -19,6 +36,11 @@ GuiGameList::~GuiGameList()
 {
 	Renderer::unregisterComponent(this);
 	delete mList;
+
+	if(mDetailed)
+	{
+		delete mScreenshot;
+	}
 
 	InputManager::unregisterComponent(this);
 }
@@ -52,7 +74,23 @@ void GuiGameList::onRender()
 {
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
 
-	Renderer::drawCenteredText(mSystem->getName(), 2, 0x0000FF);
+	Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0x0000FF, Renderer::LARGE);
+
+
+	if(mDetailed)
+	{
+		Renderer::drawRect(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
+
+		//if we have selected a non-folder
+		if(mList->getSelectedObject() && !((FileData*)mList->getSelectedObject())->isFolder())
+		{
+			GameData* game = (GameData*)mList->getSelectedObject();
+
+			std::string desc = game->getDescription();
+			if(!desc.empty())
+				Renderer::drawWrappedText(desc, 2, Renderer::getFontHeight(Renderer::LARGE) + SCREENSHOTHEIGHT + 12, Renderer::getScreenWidth() * 0.4, 0xFF0000);
+		}
+	}
 }
 
 void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
@@ -74,7 +112,6 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		}
 	}
 
-	//std::cout << "mFolderStack.size(): " << mFolderStack.size() << "\n";
 	if(button == InputManager::BUTTON2 && keyDown && mFolderStack.size())
 	{
 		mFolder = mFolderStack.top();
@@ -90,10 +127,26 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	{
 		setSystemId(mSystemId - 1);
 	}
+
+	if(mDetailed)
+	{
+		if(!keyDown && (button == InputManager::UP || button == InputManager::DOWN))
+		{
+			if(mList->getSelectedObject() && !((FileData*)mList->getSelectedObject())->isFolder())
+			{
+				mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
+			}else{
+				mScreenshot->setImage("");
+			}
+		}
+	}
 }
 
 void GuiGameList::updateList()
 {
+	if(mDetailed)
+		mScreenshot->setImage("");
+
 	mList->clear();
 
 	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)

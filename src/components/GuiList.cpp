@@ -1,9 +1,16 @@
 #include "GuiList.h"
 #include <iostream>
 
-GuiList::GuiList()
+GuiList::GuiList(int offsetX, int offsetY)
 {
 	mSelection = 0;
+	mScrollDir = 0;
+	mScrolling = 0;
+	mScrollAccumulator = 0;
+
+	mOffsetX = offsetX;
+	mOffsetY = offsetY;
+
 	InputManager::registerComponent(this);
 }
 
@@ -14,8 +21,10 @@ GuiList::~GuiList()
 
 void GuiList::onRender()
 {
-	const int cutoff = 40;
-	const int entrySize = 40;
+	Renderer::FontSize fontsize = Renderer::MEDIUM;
+
+	const int cutoff = mOffsetY;
+	const int entrySize = Renderer::getFontHeight(fontsize) + 5;
 
 	int startEntry = 0;
 
@@ -33,11 +42,10 @@ void GuiList::onRender()
 	}
 
 	int y = cutoff;
-	int color =  0xFF0000;
 
 	if(mRowVector.size() == 0)
 	{
-		Renderer::drawCenteredText("The list is empty.", y, color);
+		Renderer::drawCenteredText("The list is empty.", 0, y, 0xFF0000);
 		return;
 	}
 
@@ -49,24 +57,40 @@ void GuiList::onRender()
 	{
 		if(mSelection == i)
 		{
-			Renderer::drawRect(0, y, Renderer::getScreenWidth(), 52, 0x000000);
+			Renderer::drawRect(mOffsetX, y, Renderer::getScreenWidth(), Renderer::getFontHeight(fontsize), 0x000000);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
-		Renderer::drawCenteredText(row.name, y, row.color);
-		y += 40;
+		Renderer::drawCenteredText(row.name, mOffsetX, y, row.color);
+		y += entrySize;
 	}
 }
 
 void GuiList::onInput(InputManager::InputButton button, bool keyDown)
 {
-	if(mRowVector.size() > 0 && keyDown)
+	if(mRowVector.size() > 0)
 	{
-		if(button == InputManager::DOWN)
-			mSelection++;
+		if(keyDown)
+		{
+			if(button == InputManager::DOWN)
+			{
+				mScrollDir = 1;
+				mSelection++;
+			}
 
-		if(button == InputManager::UP)
-			mSelection--;
+			if(button == InputManager::UP)
+			{
+				mScrollDir = -1;
+				mSelection--;
+			}
+		}else{
+			if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0))
+			{
+				mScrollAccumulator = 0;
+				mScrolling = false;
+				mScrollDir = 0;
+			}
+		}
 
 		if(mSelection < 0)
 			mSelection += mRowVector.size();
@@ -76,6 +100,40 @@ void GuiList::onInput(InputManager::InputButton button, bool keyDown)
 	}
 }
 
+void GuiList::onTick(int deltaTime)
+{
+	if(mScrollDir != 0)
+	{
+		mScrollAccumulator += deltaTime;
+
+		if(!mScrolling)
+		{
+			if(mScrollAccumulator >= SCROLLDELAY)
+			{
+				mScrollAccumulator = SCROLLTIME;
+				mScrolling = true;
+			}
+		}
+
+		if(mScrolling)
+		{
+			mScrollAccumulator += deltaTime;
+
+			while(mScrollAccumulator >= SCROLLTIME)
+			{
+				mScrollAccumulator -= SCROLLTIME;
+
+				mSelection += mScrollDir;
+				if(mSelection < 0)
+					mSelection += mRowVector.size();
+				if(mSelection >= (int)mRowVector.size())
+					mSelection -= mRowVector.size();
+			}
+		}
+	}
+}
+
+//list management stuff
 void GuiList::addObject(std::string name, void* obj, int color)
 {
 	ListRow row = {name, obj, color};

@@ -38,15 +38,18 @@ void GuiInputConfig::onRender()
 {
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
 
-	Renderer::drawCenteredText("It looks like you have a joystick plugged in!", 2, 0x000000);
-	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 90, 0x000000);
-	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 130, 0x000000);
-	Renderer::drawCenteredText("If you want to remap later, just delete ~/.es_input.cfg.", 170, 0x000000);
+	int height = Renderer::getFontHeight(Renderer::MEDIUM) + 6;
+
+	Renderer::drawCenteredText("It looks like you have a joystick plugged in!", 0, 2, 0x000000);
+	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 0, height, 0x000000);
+	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 0, height * 2, 0x000000);
+	Renderer::drawCenteredText("If you want to remap later, just delete ~/.es_input.cfg.", 0, height * 3, 0x000000);
+	Renderer::drawCenteredText("Remember - you'll need to set up your emulator separately!", 0, Renderer::getScreenHeight() - height, 0x000000);
 
 	if(mDone)
-		Renderer::drawCenteredText("All done! Press a keyboard key to continue.", 250, 0x00BB00);
+		Renderer::drawCenteredText("All done! Press a keyboard key to continue.", 0, height * 5, 0x00BB00);
 	else
-		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 250, 0x00C000);
+		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 0, height * 5, 0x00C000);
 }
 
 void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
@@ -71,7 +74,7 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 	if(event->type == SDL_JOYBUTTONDOWN)
 	{
 		mButtonMap[event->jbutton.button] = (InputManager::InputButton)mInputNum;
-		std::cout << "	Mapping " << sInputs[mInputNum] << " to button " << event->jbutton.button << "\n";
+		std::cout << "	Mapping " << sInputs[mInputNum] << " to button " << (int)event->jbutton.button << "\n";
 		mInputNum++;
 	}
 
@@ -90,13 +93,13 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 			mAxisPosMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
 			mInputNum++;
 			mLastAxis = event->jaxis.axis;
-			std::cout << "	Mapping " << sInputs[mInputNum] << " to axis+ " << mLastAxis << "\n";
+			std::cout << "	Mapping " << sInputs[mInputNum - 1] << " to axis+ " << mLastAxis << "\n";
 		}else if(event->jaxis.value < -InputManager::deadzone)
 		{
 			mAxisNegMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
 			mInputNum++;
 			mLastAxis = event->jaxis.axis;
-			std::cout << "	Mapping " << sInputs[mInputNum] << " to axis- " << mLastAxis << "\n";
+			std::cout << "	Mapping " << sInputs[mInputNum - 1] << " to axis- " << mLastAxis << "\n";
 		}
 	}
 

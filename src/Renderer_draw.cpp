@@ -2,10 +2,12 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 #include <iostream>
+#include <string>
 
 SDL_Surface* Renderer::screen;
-
-TTF_Font* Renderer::font;
+bool Renderer::loadedFonts = false;
+TTF_Font* Renderer::fonts[3];
+int Renderer::fontHeight[3];
 
 void Renderer::drawRect(int x, int y, int h, int w, int color)
 {
@@ -13,21 +15,46 @@ void Renderer::drawRect(int x, int y, int h, int w, int color)
 	SDL_FillRect(Renderer::screen, &rect, color);
 }
 
-void Renderer::loadFonts()
+bool Renderer::loadFonts()
 {
-	font = TTF_OpenFont("LinLibertine_R.ttf", 36);
-	if(!font)
+	const char* fontPath = "LinLibertine_R.ttf";
+
+	//int sizeArray[] = {Renderer::getScreenHeight() * 0.025, Renderer::getScreenHeight() * 0.05, Renderer::getScreenHeight() * 0.075};
+	int sizeArray[] = {Renderer::getScreenWidth() * 0.015, Renderer::getScreenWidth() * 0.03, Renderer::getScreenWidth() * 0.05};
+
+
+	//the three here should be the font count but, again, I don't remember the syntax
+	for(unsigned int i = 0; i < 3; i++)
 	{
-		std::cerr << "Error - could not load font!\n";
-		std::cerr << TTF_GetError() << "\n";
-		return;
+		TTF_Font* font = TTF_OpenFont(fontPath, sizeArray[i]);
+		if(!font)
+		{
+			std::cerr << "Error - could not load font!\n";
+			std::cerr << TTF_GetError() << "\n";
+			return false;
+		}
+		fonts[i] = font;
+		TTF_SizeText(font, "HEIGHT", NULL, &fontHeight[i]); //gets the height of the string "HEIGHT" in this font (in pixels)
 	}
+
+	loadedFonts = true;
+	return true;
 }
 
-void Renderer::drawText(std::string text, int x, int y, int color)
+int Renderer::getFontHeight(FontSize size)
 {
-	if(!font)
+	if(!loadedFonts)
 		loadFonts();
+
+	return fontHeight[size];
+}
+
+void Renderer::drawText(std::string text, int x, int y, int color, FontSize fontsize)
+{
+	if(!loadedFonts)
+		loadFonts();
+
+	TTF_Font* font = fonts[fontsize];
 
 	//SDL_Color is a struct of four bytes, with the first three being colors. An int is four bytes.
 	//So, we can just pretend the int is an SDL_Color.
@@ -46,10 +73,12 @@ void Renderer::drawText(std::string text, int x, int y, int color)
 	SDL_FreeSurface(textSurf);
 }
 
-void Renderer::drawCenteredText(std::string text, int y, int color)
+void Renderer::drawCenteredText(std::string text, int xOffset, int y, int color, FontSize fontsize)
 {
-	if(!font)
+	if(!loadedFonts)
 		loadFonts();
+
+	TTF_Font* font = fonts[fontsize];
 
 	int w, h;
 	TTF_SizeText(font, text.c_str(), &w, &h);
@@ -57,5 +86,59 @@ void Renderer::drawCenteredText(std::string text, int y, int color)
 	int x = (int)getScreenWidth() - w;
 	x *= 0.5;
 
-	drawText(text, x, y, color);
+	x += xOffset * 0.5;
+
+	drawText(text, x, y, color, fontsize);
+}
+
+//this could probably be optimized
+void Renderer::drawWrappedText(std::string text, int xStart, int yStart, int xLen, int color, FontSize fontsize)
+{
+	if(!loadedFonts)
+		loadFonts();
+
+	TTF_Font* font = fonts[fontsize];
+
+	int y = yStart;
+
+	std::string line, word, temp;
+	int w, h;
+	size_t space;
+
+	while(text.length() > 0 || !line.empty())
+	{
+		space = text.find(' ', 0);
+		if(space == std::string::npos)
+			space = text.length() - 1;
+
+		word = text.substr(0, space + 1);
+		text.erase(0, space + 1);
+
+		temp = line + word;
+
+		TTF_SizeText(font, temp.c_str(), &w, &h);
+
+
+		if(w <= xLen && text.length() == 0)
+		{
+			line = temp;
+			word = "";
+		}
+
+		if(w > xLen || text.length() == 0)
+		{
+			//render line now
+			drawText(line, xStart, y, color, fontsize);
+
+			//increment y by height and some extra padding for the next line
+			y += h + 4;
+
+			//draw the word we skipped on the next line
+			line = word;
+		}else{
+			//there's still space, continue
+			line = temp;
+		}
+
+	}
 }

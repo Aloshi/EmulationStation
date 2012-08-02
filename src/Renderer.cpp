@@ -34,14 +34,9 @@ void Renderer::deleteAll()
 
 void Renderer::render()
 {
-	for(unsigned int layer = 0; layer < LAYER_COUNT; layer++)
+	for(unsigned int i = 0; i < renderVector.size(); i++)
 	{
-		unsigned int layerBit = BIT(layer);
-		for(unsigned int i = 0; i < renderVector.size(); i++)
-		{
-			if(renderVector.at(i)->getLayer() & layerBit)
-				renderVector.at(i)->render();
-		}
+		renderVector.at(i)->render();
 	}
 }
 
