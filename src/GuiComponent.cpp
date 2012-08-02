@@ -57,3 +57,18 @@ void GuiComponent::render()
 	}
 }
 
+void GuiComponent::pause()
+{
+	onPause();
+
+	for(unsigned int i = 0; i < mChildren.size(); i++)
+		mChildren.at(i)->pause();
+}
+
+void GuiComponent::resume()
+{
+	onResume();
+
+	for(unsigned int i = 0; i < mChildren.size(); i++)
+		mChildren.at(i)->resume();
+}

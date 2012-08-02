@@ -97,6 +97,8 @@ void SystemData::populateFolder(FolderData* folder)
 			}
 		}
 	}
+
+	folder->sort();
 }
 
 

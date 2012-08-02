@@ -1,5 +1,6 @@
 #include "FolderData.h"
 #include "SystemData.h"
+#include <algorithm>
 
 bool FolderData::isFolder() { return true; }
 std::string FolderData::getName() { return mName; }
@@ -29,3 +30,32 @@ void FolderData::pushFileData(FileData* file)
 	mFileVector.push_back(file);
 }
 
+//returns if file1 should come before file2
+bool filesort(FileData* file1, FileData* file2)
+{
+	std::string name1 = file1->getName();
+	std::string name2 = file2->getName();
+
+	for(unsigned int i = 0; i < name1.length(); i++)
+	{
+		if(name1[i] != name2[i])
+		{
+			if(name1[i] < name2[i])
+			{
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+
+	if(name1.length() < name2.length())
+		return true;
+	else
+		return false;
+}
+
+void FolderData::sort()
+{
+	std::sort(mFileVector.begin(), mFileVector.end(), filesort);
+}

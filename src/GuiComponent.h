@@ -15,6 +15,11 @@ public:
 	virtual void onRender() { };
 	virtual void onTick(int deltaTime) { };
 
+	void pause();
+	void resume();
+	virtual void onPause() { };
+	virtual void onResume() { };
+
 	virtual void onInput(InputManager::InputButton button, bool keyDown) { };
 
 	void addChild(GuiComponent* comp);

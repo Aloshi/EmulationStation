@@ -20,6 +20,8 @@ public:
 	FileData* getFile(unsigned int i);
 
 	void pushFileData(FileData* file);
+
+	void sort();
 private:
 	SystemData* mSystem;
 	std::string mPath;

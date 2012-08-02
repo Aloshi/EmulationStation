@@ -1,6 +1,7 @@
 #include "GuiGameList.h"
 #include "../InputManager.h"
 #include <iostream>
+#include "GuiMenu.h"
 
 #define SCREENSHOTWIDTH 256
 #define SCREENSHOTHEIGHT 256
@@ -128,6 +129,11 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		setSystemId(mSystemId - 1);
 	}
 
+	if(button == InputManager::MENU && keyDown)
+	{
+		new GuiMenu(this);
+	}
+
 	if(mDetailed)
 	{
 		if(!keyDown && (button == InputManager::UP || button == InputManager::DOWN))
@@ -158,4 +164,17 @@ void GuiGameList::updateList()
 		else
 			mList->addObject(file->getName(), file);
 	}
+}
+
+//these are called when the menu opens/closes
+void GuiGameList::onPause()
+{
+	InputManager::unregisterComponent(this);
+	InputManager::unregisterComponent(mList);
+}
+
+void GuiGameList::onResume()
+{
+	InputManager::registerComponent(this);
+	InputManager::registerComponent(mList);
 }

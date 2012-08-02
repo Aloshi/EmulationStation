@@ -39,4 +39,3 @@ void Renderer::render()
 		renderVector.at(i)->render();
 	}
 }
-

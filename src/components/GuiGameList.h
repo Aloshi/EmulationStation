@@ -21,6 +21,8 @@ public:
 
 	void onRender();
 	void onInput(InputManager::InputButton button, bool keyDown);
+	void onPause();
+	void onResume();
 
 private:
 	SystemData* mSystem;
