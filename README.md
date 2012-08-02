@@ -10,7 +10,8 @@ Building
 ========
 
 EmulationStation has a few dependencies. For building, you'll need SDL 1.2, the SDL TTF library, the SDL image library, and Boost.Filesystem, which can easily be obtained with apt-get:
-```sudo apt-get install libsdl1.2-dev
+```
+sudo apt-get install libsdl1.2-dev
 sudo apt-get install libsdl-ttf2.0-dev
 sudo apt-get install libboost-filesystem-dev
 sudo apt-get install libsdl-image1.2-dev
@@ -38,7 +39,8 @@ gamelist.xml
 If a file named gamelist.xml is found, it will be parsed and the detailed GuiGameList will be used. This means you can define screenshots, descriptions, and alternate names for files.
 Screenshots are meant to be 256x256, but ES won't stop you from using other sizes - they'll just be placed wrong.
 An example gamelist.xml:
-```<gameList>
+```
+<gameList>
 	<game>
 		<path>/home/pi/ROMs/nes/mm2.nes</path>
 		<name>Mega Man 2</name>
