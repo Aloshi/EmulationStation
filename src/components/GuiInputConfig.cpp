@@ -131,4 +131,6 @@ void GuiInputConfig::writeConfig()
 	{
 		file << "AXISNEG " << iter->first << " " << iter->second << "\n";
 	}
+
+	file.close();
 }

@@ -6,14 +6,15 @@ GuiMenu::GuiMenu(GuiComponent* parent)
 	mParent = parent;
 	parent->pause();
 
-	mList = new GuiList<std::string>(Renderer::getScreenWidth() * 0.5, 20);
-
+	mList = new GuiList<std::string>(0, Renderer::getFontHeight(Renderer::LARGE) + 2, Renderer::LARGE);
+	populateList();
 	addChild(mList);
 
 	mSkippedMenuClose = false;
 
 	Renderer::registerComponent(this);
 	InputManager::registerComponent(this);
+
 }
 
 GuiMenu::~GuiMenu()
@@ -48,8 +49,8 @@ void GuiMenu::populateList()
 {
 	mList->clear();
 
-	mList->addObject("Nothing", "");
-	mList->addObject("Shutdown", "sudo shutdown -h now");
+	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FF);
+	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FF);
 }
 
 void GuiMenu::onRender()

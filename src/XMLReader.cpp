@@ -60,9 +60,11 @@ void parseXMLFile(std::string xmlpath)
 		std::string path = pathNode.text().get();
 
 		GameData* game = NULL;
+		SystemData* system = NULL;
 		for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
 		{
-			game = searchFolderByPath(SystemData::sSystemVector.at(i)->getRootFolder(), path);
+			system = SystemData::sSystemVector.at(i);
+			game = searchFolderByPath(system->getRootFolder(), path);
 			if(game != NULL)
 				break;
 		}
@@ -86,4 +88,12 @@ void parseXMLFile(std::string xmlpath)
 	}
 
 	std::cout << "XML parsing complete.\n";
+
+
+
+	//sort all systems
+	for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
+	{
+		SystemData::sSystemVector.at(i)->getRootFolder()->sort();
+	}
 }

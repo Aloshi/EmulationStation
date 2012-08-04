@@ -1,6 +1,6 @@
 August 4
 -Moved configuration files to $HOME/.emulationstation/
--Renderer::loadFonts() will now fall back to /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf if LinLibertine.ttf is not
--Folders should now be sorted alphabetically
+-Renderer::loadFonts() will now fall back to /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf if LinLibertine.ttf is not found.
+-All folders should now be sorted alphabetically
 -Added Menu button
--Added simple menu
+-Added menu consisting of bash commands for "Restart" and "Shutdown"

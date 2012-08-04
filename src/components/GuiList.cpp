@@ -2,7 +2,7 @@
 #include <iostream>
 
 template <typename listType>
-GuiList<listType>::GuiList(int offsetX, int offsetY)
+GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize)
 {
 	mSelection = 0;
 	mScrollDir = 0;
@@ -11,6 +11,8 @@ GuiList<listType>::GuiList(int offsetX, int offsetY)
 
 	mOffsetX = offsetX;
 	mOffsetY = offsetY;
+
+	mFont = fontsize;
 
 	InputManager::registerComponent(this);
 }
@@ -24,10 +26,8 @@ GuiList<listType>::~GuiList()
 template <typename listType>
 void GuiList<listType>::onRender()
 {
-	Renderer::FontSize fontsize = Renderer::MEDIUM;
-
 	const int cutoff = mOffsetY;
-	const int entrySize = Renderer::getFontHeight(fontsize) + 5;
+	const int entrySize = Renderer::getFontHeight(mFont) + 5;
 
 	int startEntry = 0;
 
@@ -48,7 +48,7 @@ void GuiList<listType>::onRender()
 
 	if(mRowVector.size() == 0)
 	{
-		Renderer::drawCenteredText("The list is empty.", 0, y, 0xFF0000);
+		Renderer::drawCenteredText("The list is empty.", 0, y, 0xFF0000, mFont);
 		return;
 	}
 
@@ -60,11 +60,11 @@ void GuiList<listType>::onRender()
 	{
 		if(mSelection == i)
 		{
-			Renderer::drawRect(mOffsetX, y, Renderer::getScreenWidth(), Renderer::getFontHeight(fontsize), 0x000000);
+			Renderer::drawRect(mOffsetX, y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), 0x000000);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
-		Renderer::drawCenteredText(row.name, mOffsetX, y, row.color);
+		Renderer::drawCenteredText(row.name, mOffsetX, y, row.color, mFont);
 		y += entrySize;
 	}
 }

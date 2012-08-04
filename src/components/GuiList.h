@@ -15,7 +15,7 @@ template <typename listType>
 class GuiList : public GuiComponent
 {
 public:
-	GuiList(int offsetX = 0, int offsetY = 0);
+	GuiList(int offsetX = 0, int offsetY = 0, Renderer::FontSize fontsize = Renderer::MEDIUM);
 	~GuiList();
 
 	void onRender();
@@ -31,6 +31,8 @@ public:
 private:
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
+
+	Renderer::FontSize mFont;
 
 	int mOffsetX, mOffsetY;
 

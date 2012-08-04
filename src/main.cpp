@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 	std::string configDir = home + "/.emulationstation";
 	if(!boost::filesystem::exists(configDir))
 	{
-		std::cout << "Creating config directory " << configDir << "\n";
+		std::cout << "Creating config directory \"" << configDir << "\"\n";
 		boost::filesystem::create_directory(configDir);
 	}
 
@@ -82,8 +82,7 @@ int main(int argc, char* argv[])
 	}
 	if(boost::filesystem::exists(oldInpPath))
 	{
-		std::cout << "Moving old input config file " << oldInpPath << " to new path at " << InputManager::getConfigPath() << "\n";
-		boost::filesystem::copy_file(oldInpPath, InputManager::getConfigPath());
+		std::cout << "Deleting old input config file\n";
 		boost::filesystem::remove(oldInpPath);
 	}
 
