@@ -15,8 +15,12 @@ public:
 
 	FolderData* getRootFolder();
 	std::string getName();
+	std::string getStartPath();
+	std::string getExtension();
+	bool hasGamelist();
 
 	void launchGame(GameData* game);
+
 	static void deleteSystems();
 	static void loadConfig();
 	static void writeExampleConfig();

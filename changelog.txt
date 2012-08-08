@@ -1,3 +1,10 @@
+August 7
+-gamelist.xml files are now read from each system's individual search directory.
+-The switch --gamelist-only was added. Use it to skip automatic searching and only use files defined in gamelist.xml.
+-A gamelist.xml file can now specify a file that wasn't previously found by the automatic search.
+-Fixed alphabetizing uppercase and lowercase letters differently (woops!)
+-When loading the system config file, if a system doesn't contain any games, it will be automatically deleted.
+
 August 4
 -Moved configuration files to $HOME/.emulationstation/
 -Renderer::loadFonts() will now fall back to /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf if LinLibertine.ttf is not found.

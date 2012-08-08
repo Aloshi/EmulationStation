@@ -36,8 +36,8 @@ EmulationStation will return once your system's command terminates (i.e. your em
 gamelist.xml
 ============
 
-If a file named gamelist.xml is found, it will be parsed and the detailed GuiGameList will be used. This means you can define screenshots, descriptions, and alternate names for files.
-Screenshots are meant to be 256x256, but ES won't stop you from using other sizes - they'll just be placed wrong.
+If a file named gamelist.xml is found in the root of a system's search directory, it will be parsed and the detailed GuiGameList will be used. This means you can define images, descriptions, and different names for files.
+Images are meant to be 256x256, but ES won't stop you from using other sizes - they'll just be placed wrong. I'd like to add automatic scaling (with SDL_gfx) in a future update.
 An example gamelist.xml:
 ```
 <gameList>
@@ -50,8 +50,9 @@ An example gamelist.xml:
 </gameList>
 ```
 
-The path element should be the absolute path of the ROM. Special characters SHOULD NOT be escaped. The image element is the absolute path to an image to use (like a screenshot or boxart). Most formats can be used (including png, jpg, gif, etc.). Look up the SDL_image library for a full list. Not all elements need to be used.
+The path element should be the absolute path of the ROM. Special characters SHOULD NOT be escaped. The image element is the absolute path to an image to display above the description (like a screenshot or boxart). Most formats can be used (including png, jpg, gif, etc.). Not all elements need to be used.
 
+The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 
 -Aloshi
 http://www.aloshi.com

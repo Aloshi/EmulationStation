@@ -27,8 +27,78 @@ GameData* searchFolderByPath(FolderData* folder, std::string const& path)
 	return NULL;
 }
 
-void parseXMLFile(std::string xmlpath)
+GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 {
+	std::string gamePath = gameAbsPath;
+	std::string sysPath = system->getStartPath();
+
+	//strip out the system path stuff so it's relative to the system root folder
+	for(unsigned int i = 0; i < gamePath.length(); i++)
+	{
+		if(gamePath[i] != sysPath[i])
+		{
+			gamePath = gamePath.substr(i, gamePath.length() - i);
+			break;
+		}
+	}
+
+	if(gamePath[0] != '/')
+		gamePath.insert(0, "/");
+
+
+	//make our way through the directory tree finding each folder in our path or creating it if it doesn't exist
+	FolderData* folder = system->getRootFolder();
+
+	unsigned int separator = 0;
+	unsigned int nextSeparator = 0;
+	while(nextSeparator != std::string::npos)
+	{
+		//determine which chunk of the path we're testing right now
+		nextSeparator = gamePath.find('/', separator + 1);
+		if(nextSeparator == std::string::npos)
+			break;
+
+		std::string checkName = gamePath.substr(separator + 1, nextSeparator - separator - 1);
+		separator = nextSeparator;
+
+		//see if the folder already exists
+		bool foundFolder = false;
+		for(unsigned int i = 0; i < folder->getFileCount(); i++)
+		{
+			FileData* checkFolder = folder->getFile(i);
+			if(checkFolder->isFolder() && checkFolder->getName() == checkName)
+			{
+				folder = (FolderData*)checkFolder;
+				foundFolder = true;
+				break;
+			}
+		}
+
+		//the folder didn't already exist, so create it
+		if(!foundFolder)
+		{
+			FolderData* newFolder = new FolderData(system, folder->getPath() + "/" + checkName, checkName);
+			folder->pushFileData(newFolder);
+			folder = newFolder;
+		}
+	}
+
+
+	//find gameName
+	std::string gameName = gamePath.substr(separator + 1, gamePath.find(system->getExtension(), separator) - separator - 1);
+
+	GameData* game = new GameData(system, gameAbsPath, gameName);
+	folder->pushFileData(game);
+	return game;
+}
+
+void parseGamelist(SystemData* system)
+{
+	if(!system->hasGamelist())
+		return;
+
+	std::string xmlpath = system->getRootFolder()->getPath() + "/gamelist.xml";
+
 	std::cout << "Parsing XML file \"" << xmlpath << "\"...\n";
 
 	pugi::xml_document doc;
@@ -59,20 +129,13 @@ void parseXMLFile(std::string xmlpath)
 
 		std::string path = pathNode.text().get();
 
-		GameData* game = NULL;
-		SystemData* system = NULL;
-		for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
+		if(boost::filesystem::exists(path))
 		{
-			system = SystemData::sSystemVector.at(i);
-			game = searchFolderByPath(system->getRootFolder(), path);
-			if(game != NULL)
-				break;
-		}
+			GameData* game = searchFolderByPath(system->getRootFolder(), path);
 
-		if(game == NULL)
-		{
-			std::cerr << "Error - game of path \"" << path << "\" was not found by the system's search. Ignoring.\n";
-		}else{
+			if(game == NULL)
+				game = createGameFromPath(path, system);
+
 			//actually gather the information in the XML doc, then pass it to the game's set method
 			std::string newName, newDesc, newImage;
 
@@ -84,16 +147,11 @@ void parseXMLFile(std::string xmlpath)
 				newImage = gameNode.child("image").text().get();
 
 			game->set(newName, newDesc, newImage);
+
+		}else{
+			std::cerr << "Game at \"" << path << "\" does not exist!\n";
 		}
 	}
 
 	std::cout << "XML parsing complete.\n";
-
-
-
-	//sort all systems
-	for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
-	{
-		SystemData::sSystemVector.at(i)->getRootFolder()->sort();
-	}
 }

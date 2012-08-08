@@ -4,6 +4,6 @@
 #include <string>
 class SystemData;
 
-void parseXMLFile(std::string xmlpath);
+void parseGamelist(SystemData* system);
 
 #endif

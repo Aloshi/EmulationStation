@@ -1,6 +1,7 @@
 #include "FolderData.h"
 #include "SystemData.h"
 #include <algorithm>
+#include <iostream>
 
 bool FolderData::isFolder() { return true; }
 std::string FolderData::getName() { return mName; }
@@ -38,9 +39,9 @@ bool filesort(FileData* file1, FileData* file2)
 
 	for(unsigned int i = 0; i < name1.length(); i++)
 	{
-		if(name1[i] != name2[i])
+		if(toupper(name1[i]) != toupper(name2[i]))
 		{
-			if(name1[i] < name2[i])
+			if(toupper(name1[i]) < toupper(name2[i]))
 			{
 				return true;
 			}else{
@@ -55,7 +56,14 @@ bool filesort(FileData* file1, FileData* file2)
 		return false;
 }
 
+//sort this folder and any subfolders
 void FolderData::sort()
 {
 	std::sort(mFileVector.begin(), mFileVector.end(), filesort);
+
+	for(unsigned int i = 0; i < mFileVector.size(); i++)
+	{
+		if(mFileVector.at(i)->isFolder())
+			((FolderData*)mFileVector.at(i))->sort();
+	}
 }

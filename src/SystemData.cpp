@@ -1,5 +1,6 @@
 #include "SystemData.h"
 #include "GameData.h"
+#include "XMLReader.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <stdlib.h>
@@ -8,6 +9,11 @@
 std::vector<SystemData*> SystemData::sSystemVector;
 
 namespace fs = boost::filesystem;
+
+extern bool PARSEGAMELISTONLY;
+
+std::string SystemData::getStartPath() { return mStartPath; }
+std::string SystemData::getExtension() { return mSearchExtension; }
 
 SystemData::SystemData(std::string name, std::string startPath, std::string extension, std::string command)
 {
@@ -34,7 +40,13 @@ SystemData::SystemData(std::string name, std::string startPath, std::string exte
 
 
 	mRootFolder = new FolderData(this, mStartPath, "Search Root");
-	populateFolder(mRootFolder);
+
+	if(!PARSEGAMELISTONLY)
+		populateFolder(mRootFolder);
+
+	parseGamelist(this);
+
+	mRootFolder->sort();
 }
 
 SystemData::~SystemData()
@@ -97,8 +109,6 @@ void SystemData::populateFolder(FolderData* folder)
 			}
 		}
 	}
-
-	folder->sort();
 }
 
 
@@ -164,7 +174,14 @@ void SystemData::loadConfig()
 				//we have all our variables - create the system object
 				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())
 				{
-					sSystemVector.push_back(new SystemData(sysName, sysPath, sysExtension, sysCommand));
+					SystemData* newSystem = new SystemData(sysName, sysPath, sysExtension, sysCommand);
+					if(newSystem->getRootFolder()->getFileCount() == 0)
+					{
+						std::cerr << "Error - system \"" << sysName << "\" has no games! Deleting.\n";
+						delete newSystem;
+					}else{
+						sSystemVector.push_back(newSystem);
+					}
 
 					//reset the variables for the next block (should there be one)
 					sysName = ""; sysPath = ""; sysExtension = ""; sysCommand = "";
@@ -236,4 +253,9 @@ std::string SystemData::getConfigPath()
 FolderData* SystemData::getRootFolder()
 {
 	return mRootFolder;
+}
+
+bool SystemData::hasGamelist()
+{
+	return fs::exists(mRootFolder->getPath() + "/gamelist.xml");
 }

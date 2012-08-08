@@ -6,7 +6,8 @@
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
-#include "XMLReader.h"
+
+bool PARSEGAMELISTONLY = false;
 
 int main(int argc, char* argv[])
 {
@@ -41,6 +42,9 @@ int main(int argc, char* argv[])
 			{
 				height = atoi(argv[i + 1]);
 				i++;
+			}else if(strcmp(argv[i], "--gamelist-only") == 0)
+			{
+				PARSEGAMELISTONLY = true;
 			}
 		}
 	}
@@ -88,8 +92,8 @@ int main(int argc, char* argv[])
 
 
 
-
-	if(!boost::filesystem::exists(SystemData::getConfigPath()))
+	//try loading the system config file
+	if(!boost::filesystem::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit
 	{
 		std::cerr << "A system config file in " << SystemData::getConfigPath() << " was not found. An example will be created.\n";
 		SystemData::writeExampleConfig();
@@ -98,7 +102,7 @@ int main(int argc, char* argv[])
 	}else{
 		SystemData::loadConfig();
 
-		if(SystemData::sSystemVector.size() == 0)
+		if(SystemData::sSystemVector.size() == 0) //if it exists but was empty, notify the user and quit
 		{
 			std::cerr << "A system config file in " << SystemData::getConfigPath() << " was found, but contained no systems.\n";
 			std::cerr << "You should probably go read that, or delete it.\n";
@@ -107,13 +111,18 @@ int main(int argc, char* argv[])
 
 			bool useDetail = false;
 
-			//loaded system config, so try parsing the test XML doc
-			if(boost::filesystem::exists("gamelist.xml"))
+			//see if any systems had gamelists present, if so we'll use the detailed GuiGameList
+			for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
 			{
-				parseXMLFile("gamelist.xml");
-				useDetail = true;
+				if(SystemData::sSystemVector.at(i)->hasGamelist())
+				{
+					useDetail = true;
+					break;
+				}
 			}
 
+
+			//choose which Gui to open up
 			if(boost::filesystem::exists(InputManager::getConfigPath()))
 			{
 				InputManager::loadConfig();
