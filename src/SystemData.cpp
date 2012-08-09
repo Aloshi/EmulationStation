@@ -168,8 +168,8 @@ void SystemData::loadConfig()
 					sysExtension = varValue;
 				else if(varName == "COMMAND")
 					sysCommand = varValue;
-				else
-					std::cerr << "Error reading config file - unknown variable name \"" << varName << "\"!\n";
+				//else
+				//	std::cerr << "Error reading config file - unknown variable name \"" << varName << "\"!\n";
 
 				//we have all our variables - create the system object
 				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())

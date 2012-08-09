@@ -9,12 +9,9 @@ I'm not associated with RetroArch in any way!
 Building
 ========
 
-EmulationStation has a few dependencies. For building, you'll need SDL 1.2, the SDL TTF library, the SDL image library, and Boost.Filesystem, which can easily be obtained with apt-get:
+EmulationStation has quite a few dependencies. For building, you'll need SDL 1.2, the SDL TTF library, the SDL image library, the SDL_gfx library, and Boost.Filesystem, which can easily be obtained with apt-get:
 ```
-sudo apt-get install libsdl1.2-dev
-sudo apt-get install libsdl-ttf2.0-dev
-sudo apt-get install libboost-filesystem-dev
-sudo apt-get install libsdl-image1.2-dev
+sudo apt-get install libsdl1.2-dev libsdl-ttf2.0-dev libboost-filesystem-dev libsdl-image1.2-dev libsdl-gfx1.2-dev
 ```
 
 You can build EmulationStation by simply running `make`.
@@ -24,7 +21,7 @@ Configuring
 
 When first run, an example systems configuration file will be created at $HOME/.emulationstation/es_systems.cfg. This example has some comments explaining how to write the configuration file, and an example RetroArch launch command. Keep in mind you can define more than one system! Just use all the variables again.
 
-If an SDL Joystick is detected at startup, and $HOME/.es_input.cfg is nonexistant, an Input Configuration screen will appear instead of the game list. This should be pretty self-explanatory. If you want to reconfigure, just delete $HOME/.emulationstation/es_input.cfg.
+If an SDL Joystick is detected at startup, and $HOME/.emulationstation/es_input.cfg is nonexistant, an Input Configuration screen will appear instead of the game list. This should be pretty self-explanatory. If you want to reconfigure, just delete $HOME/.emulationstation/es_input.cfg.
 
 Mappings will always be applied to the SDL joystick at index 0. An Xbox 360 controller with the xboxdrv driver was tested. POV hats are automatically mapped to directions (so if you're not using an analog stick, you'll need to skip mapping Up/Down/Left/Right by pressing a keyboard key).
 

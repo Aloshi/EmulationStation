@@ -1,3 +1,8 @@
+August 8
+-Added automatic resizing of images using SDL_gfx
+-Multithreaded image loading for the GuiImage class!
+-Removed warning if an unknown variable is found in a systems config file (useful for additional utilities)
+
 August 7
 -gamelist.xml files are now read from each system's individual search directory.
 -The switch --gamelist-only was added. Use it to skip automatic searching and only use files defined in gamelist.xml.

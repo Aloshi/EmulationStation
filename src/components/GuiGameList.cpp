@@ -18,7 +18,7 @@ GuiGameList::GuiGameList(bool useDetail)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2 - (SCREENSHOTWIDTH / 2), Renderer::getFontHeight(Renderer::LARGE) + 2);
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * 0.3);
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
@@ -87,6 +87,7 @@ void GuiGameList::onRender()
 		{
 			GameData* game = (GameData*)mList->getSelectedObject();
 
+			//todo: cache this
 			std::string desc = game->getDescription();
 			if(!desc.empty())
 				Renderer::drawWrappedText(desc, 2, Renderer::getFontHeight(Renderer::LARGE) + SCREENSHOTHEIGHT + 12, Renderer::getScreenWidth() * 0.4, 0xFF0000);

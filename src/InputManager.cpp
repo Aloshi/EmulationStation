@@ -74,7 +74,7 @@ void InputManager::processEvent(SDL_Event* event)
 		}
 
 		//catch emergency quit event
-		if(event->key.keysym.sym == SDLK_F4)
+		if(event->key.keysym.sym == SDLK_F4 && keyDown)
 		{
 			//I have no idea if SDL will delete this event, but we're quitting, so I don't think it really matters
 			SDL_Event* quit = new SDL_Event();
