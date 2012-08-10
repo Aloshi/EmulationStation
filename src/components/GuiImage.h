@@ -19,26 +19,16 @@ public:
 
 	void onRender();
 
-	//this should really never be called by anything except setImage
-	//but it was either make this function public or make mSurface public
-	//so just don't use this, okay?
-	int runImageLoadThread();
-
 private:
 	int mMaxWidth, mMaxHeight;
 
-	std::string mPath, mLoadedPath;
+	void loadImage(std::string path);
+
+	std::string mPath;
 
 	SDL_Surface* mSurface;
 	int mOffsetX, mOffsetY;
 	SDL_Rect mRect;
-
-	SDL_Thread* mLoadThread;
-	void setPathThreadSafe(std::string path);
-	std::string getPathThreadSafe();
-	SDL_mutex* mPathMutex;
-	SDL_mutex* mSurfaceMutex;
-	bool mDeleting;
 };
 
 #endif
