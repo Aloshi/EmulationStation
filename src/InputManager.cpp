@@ -33,7 +33,7 @@ void InputManager::unregisterComponent(GuiComponent* comp)
 void InputManager::processEvent(SDL_Event* event)
 {
 	bool keyDown = false;
-	InputButton button;
+	InputButton button = UNKNOWN;
 
 	lastEvent = event;
 

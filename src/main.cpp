@@ -8,6 +8,7 @@
 #include "components/GuiInputConfig.h"
 
 bool PARSEGAMELISTONLY = false;
+float FRAMERATE = 0;
 
 int main(int argc, char* argv[])
 {
@@ -166,6 +167,7 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
+		FRAMERATE = 1/((float)deltaTime)*1000;
 		GuiComponent::processTicks(deltaTime);
 
 		Renderer::render();

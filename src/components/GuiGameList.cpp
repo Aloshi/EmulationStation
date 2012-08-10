@@ -2,9 +2,14 @@
 #include "../InputManager.h"
 #include <iostream>
 #include "GuiMenu.h"
+#include <boost/filesystem.hpp>
 
-#define SCREENSHOTWIDTH 256
-#define SCREENSHOTHEIGHT 256
+//#define DRAWFRAMERATE
+
+#ifdef DRAWFRAMERATE
+	#include <sstream>
+	extern float FRAMERATE;
+#endif
 
 GuiGameList::GuiGameList(bool useDetail)
 {
@@ -12,17 +17,22 @@ GuiGameList::GuiGameList(bool useDetail)
 	mDetailed = useDetail;
 
 	//The GuiGameList can use the older, simple game list if so desired.
-	//The old view only shows a list in the center of the screen; the new view can display a screenshto and description.
+	//The old view only shows a list in the center of the screen; the new view can display an image and description.
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
+
+		mTheme = new GuiTheme();
+		//addChild(mTheme);
+		updateTheme();
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * 0.3);
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
 		mScreenshot = NULL;
+		mTheme = NULL;
 	}
 
 	addChild(mList);
@@ -41,6 +51,7 @@ GuiGameList::~GuiGameList()
 	if(mDetailed)
 	{
 		delete mScreenshot;
+		delete mTheme;
 	}
 
 	InputManager::unregisterComponent(this);
@@ -73,10 +84,22 @@ void GuiGameList::setSystemId(int id)
 
 void GuiGameList::onRender()
 {
-	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
+	if(mTheme)
+		mTheme->render();
+	else
+		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
+
+
+	#ifdef DRAWFRAMERATE
+		std::stringstream ss;
+		ss << FRAMERATE;
+		std::string fps;
+		ss >> fps;
+		Renderer::drawText(fps, 0, 0, 0x00FF00);
+	#endif
+
 
 	Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0x0000FF, Renderer::LARGE);
-
 
 	if(mDetailed)
 	{
@@ -90,7 +113,7 @@ void GuiGameList::onRender()
 			//todo: cache this
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, 2, Renderer::getFontHeight(Renderer::LARGE) + SCREENSHOTHEIGHT + 12, Renderer::getScreenWidth() * 0.4, 0xFF0000);
+				Renderer::drawWrappedText(desc, 2, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * 0.4, 0xFF0000, Renderer::SMALL);
 		}
 	}
 }
@@ -164,6 +187,17 @@ void GuiGameList::updateList()
 			mList->addObject(file->getName(), file, 0x00C000);
 		else
 			mList->addObject(file->getName(), file);
+	}
+}
+
+void GuiGameList::updateTheme()
+{
+	std::string themePath = getenv("HOME");
+	themePath += "/.emulationstation/theme.xml";
+
+	if(boost::filesystem::exists(themePath))
+	{
+		mTheme->readXML(themePath);
 	}
 }
 

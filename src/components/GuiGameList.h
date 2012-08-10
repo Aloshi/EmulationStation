@@ -4,6 +4,7 @@
 #include "../GuiComponent.h"
 #include "GuiList.h"
 #include "GuiImage.h"
+#include "GuiTheme.h"
 #include <string>
 #include <stack>
 #include "../SystemData.h"
@@ -25,6 +26,8 @@ public:
 	void onResume();
 
 private:
+	void updateTheme();
+
 	SystemData* mSystem;
 	FolderData* mFolder;
 	std::stack<FolderData*> mFolderStack;
@@ -33,6 +36,7 @@ private:
 
 	GuiList<FileData*>* mList;
 	GuiImage* mScreenshot;
+	GuiTheme* mTheme;
 };
 
 #endif

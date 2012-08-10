@@ -1,6 +1,11 @@
+August 9
+-Removed multithreaded image loading
+-Improved GuiImage rendering speed by adding additional processing at load time (SDL_DisplayFormat)
+-Began work on the GuiTheme class, allowing custom theming with an XML file
+
 August 8
 -Added automatic resizing of images using SDL_gfx
--Multithreaded image loading for the GuiImage class!
+-Experimenting with multithreaded image loading for the GuiImage class
 -Removed warning if an unknown variable is found in a systems config file (useful for additional utilities)
 
 August 7

@@ -9,7 +9,7 @@
 class GuiImage : public GuiComponent
 {
 public:
-	GuiImage(int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0);
+	GuiImage(int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool resizeExact = false);
 	~GuiImage();
 
 	void setImage(std::string path);
@@ -21,6 +21,7 @@ public:
 
 private:
 	int mMaxWidth, mMaxHeight;
+	bool mResizeExact;
 
 	void loadImage(std::string path);
 

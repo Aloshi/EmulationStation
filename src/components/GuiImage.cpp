@@ -7,12 +7,8 @@
 int GuiImage::getWidth() { if(mSurface) return mSurface->w; else return 0; }
 int GuiImage::getHeight() { if(mSurface) return mSurface->h; else return 0; }
 
-int startImageLoadThread(void*);
-
-GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxWidth, unsigned int maxHeight)
+GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxWidth, unsigned int maxHeight, bool resizeExact)
 {
-	std::cout << "Creating GuiImage\n";
-
 	mSurface = NULL;
 
 	mOffsetX = offsetX;
@@ -20,6 +16,7 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxW
 
 	mMaxWidth = maxWidth;
 	mMaxHeight = maxHeight;
+	mResizeExact = resizeExact;
 
 	if(!path.empty())
 		setImage(path);
@@ -47,23 +44,40 @@ void GuiImage::loadImage(std::string path)
 
 
 		//resize it
-		if(mMaxWidth && newSurf->w > mMaxWidth)
+		if(mResizeExact)
 		{
-			double scale = (double)mMaxWidth / (double)newSurf->w;
+			double scaleX = (double)mMaxWidth / (double)newSurf->w;
+			double scaleY = (double)mMaxHeight / (double)newSurf->h;
 
-			SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
+			SDL_Surface* resSurf = zoomSurface(newSurf, scaleX, scaleY, SMOOTHING_OFF);
 			SDL_FreeSurface(newSurf);
 			newSurf = resSurf;
-        	}
+		}else{
+			if(mMaxWidth && newSurf->w > mMaxWidth)
+			{
+				double scale = (double)mMaxWidth / (double)newSurf->w;
 
-		if(mMaxHeight && newSurf->h > mMaxHeight)
-	      	{
-			double scale = (double)mMaxHeight / (double)newSurf->h;
+				SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
+				SDL_FreeSurface(newSurf);
+				newSurf = resSurf;
+        		}
 
-			SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
-			SDL_FreeSurface(newSurf);
-			newSurf = resSurf;
+			if(mMaxHeight && newSurf->h > mMaxHeight)
+		      	{
+				double scale = (double)mMaxHeight / (double)newSurf->h;
+
+				SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
+				SDL_FreeSurface(newSurf);
+				newSurf = resSurf;
+			}
 		}
+
+
+		//convert it into display format for faster rendering
+		SDL_Surface* dispSurf = SDL_DisplayFormat(newSurf);
+		SDL_FreeSurface(newSurf);
+		newSurf = dispSurf;
+
 
 		//finally set the image and delete the old one
 		if(mSurface)
@@ -74,8 +88,8 @@ void GuiImage::loadImage(std::string path)
 		//Also update the rect
 		mRect.x = mOffsetX - (mSurface->w / 2);
 		mRect.y = mOffsetY;
-		mRect.w = 0;
-		mRect.h = 0;
+		mRect.w = mSurface->w;
+		mRect.h = mSurface->h;
 	}else{
 		std::cerr << "File \"" << path << "\" not found!\n";
 	}
