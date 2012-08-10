@@ -51,5 +51,27 @@ The path element should be the absolute path of the ROM. Special characters SHOU
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 
+
+Themes
+======
+
+At the moment, theming is still in flux. But if you want to play around with what's here, you can edit ~/.emulationstation/theme.xml. It will be automatically loaded if present (and you're using the detailed view - any system has a gamelist.xml set up). In the future themes will be loaded like gamelists.
+Themes are drawn before the rest of the game list. Here's the example I've been using to test a background:
+
+```
+<theme>
+        <component>
+                <type>image</type>
+                <path>/home/aloshi/EmulationStation/theme/background.png</path>
+                <pos>0 0</pos>
+                <dim>1 1</dim>
+        </component>
+</theme>
+```
+
+You can add more than one component. You can use more than one component and components can be nested for your own personal use (but they won't inherit positions or anything). The only type thus far is image. Pos is short for position and dim is short for dimensions. Both work in screen percentages - a decimal from 0 to 1. A single space separates X/Y or width/height. 
+Variable support is present, but the only variable defined right now is $headerHeight. You should be able to use addition/subtraction/multiplication/division. More will be added in time.
+
 -Aloshi
 http://www.aloshi.com
+
