@@ -96,6 +96,9 @@ void SystemData::populateFolder(FolderData* folder)
 	{
 		fs::path filePath = (*dir).path();
 
+		if(filePath.stem().string().empty())
+			continue;
+
 		if(fs::is_directory(filePath))
 		{
 			FolderData* newFolder = new FolderData(this, filePath.string(), filePath.stem().string());
