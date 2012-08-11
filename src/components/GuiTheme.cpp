@@ -2,6 +2,7 @@
 #include "../MathExp.h"
 #include <iostream>
 #include "GuiImage.h"
+#include <boost/filesystem.hpp>
 
 GuiTheme::GuiTheme(std::string path)
 {
@@ -22,6 +23,8 @@ void GuiTheme::deleteComponents()
 	}
 
 	mComponentVector.clear();
+
+	clearChildren();
 }
 
 
@@ -29,6 +32,11 @@ void GuiTheme::deleteComponents()
 void GuiTheme::readXML(std::string path)
 {
 	deleteComponents();
+
+	mPath = path;
+
+	if(path.empty())
+		return;
 
 	std::cout << "Loading theme \"" << path << "\"...\n";
 
@@ -58,7 +66,14 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 
 	if(type == "image")
 	{
-		std::string path = data.child("path").text().get();
+		std::string path = expandPath(data.child("path").text().get());
+
+		if(!boost::filesystem::exists(path))
+		{
+			std::cerr << "Error - theme image \"" << path << "\" does not exist.\n";
+			return NULL;
+		}
+
 		std::string pos = data.child("pos").text().get();
 		std::string dim = data.child("dim").text().get();
 
@@ -79,7 +94,7 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		int w = resolveExp(dimW) * Renderer::getScreenWidth();
 		int h = resolveExp(dimH) * Renderer::getScreenHeight();
 
-		std::cout << "w: " << w << " h: " << h << "\n";
+		std::cout << "w: " << w << "px, h: " << h << "px\n";
 
 		GuiComponent* comp = new GuiImage(x, y, path, w, h, true);
 		parent->addChild(comp);
@@ -92,7 +107,17 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 	return NULL;
 }
 
-int GuiTheme::resolveExp(std::string str)
+std::string GuiTheme::expandPath(std::string path)
+{
+	if(path[0] == '~')
+		path = getenv("HOME") + path.substr(1, path.length() - 1);
+	else if(path[0] == '.')
+		path = boost::filesystem::path(mPath).parent_path().string() + path.substr(1, path.length() - 1);
+
+	return path;
+}
+
+float GuiTheme::resolveExp(std::string str)
 {
 	MathExp exp;
 	exp.setExpression(str);
@@ -100,5 +125,5 @@ int GuiTheme::resolveExp(std::string str)
 	//set variables
 	exp.setVariable("headerHeight", Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight());
 
-	return (int)exp.eval();
+	return exp.eval();
 }

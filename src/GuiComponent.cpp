@@ -39,6 +39,11 @@ void GuiComponent::removeChild(GuiComponent* comp)
 	std::cerr << "Error - tried to remove GuiComponent child, but couldn't find it!\n";
 }
 
+void GuiComponent::clearChildren()
+{
+	mChildren.clear();
+}
+
 void GuiComponent::processTicks(int deltaTime)
 {
 	for(unsigned int i = 0; i < sComponentVector.size(); i++)
@@ -72,3 +77,4 @@ void GuiComponent::resume()
 	for(unsigned int i = 0; i < mChildren.size(); i++)
 		mChildren.at(i)->resume();
 }
+

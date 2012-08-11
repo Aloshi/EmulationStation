@@ -24,6 +24,7 @@ public:
 
 	void addChild(GuiComponent* comp);
 	void removeChild(GuiComponent* comp);
+	void clearChildren();
 	unsigned int getChildCount() { return mChildren.size(); }
 	GuiComponent* getChild(unsigned int i) { return mChildren.at(i); }
 

@@ -8,6 +8,7 @@
 #include "components/GuiInputConfig.h"
 
 bool PARSEGAMELISTONLY = false;
+bool IGNOREGAMELIST = false;
 float FRAMERATE = 0;
 
 int main(int argc, char* argv[])
@@ -46,6 +47,9 @@ int main(int argc, char* argv[])
 			}else if(strcmp(argv[i], "--gamelist-only") == 0)
 			{
 				PARSEGAMELISTONLY = true;
+			}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
+			{
+				IGNOREGAMELIST = true;
 			}
 		}
 	}
@@ -113,15 +117,17 @@ int main(int argc, char* argv[])
 			bool useDetail = false;
 
 			//see if any systems had gamelists present, if so we'll use the detailed GuiGameList
-			for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
+			if(!IGNOREGAMELIST)
 			{
-				if(SystemData::sSystemVector.at(i)->hasGamelist())
+				for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
 				{
-					useDetail = true;
-					break;
+					if(SystemData::sSystemVector.at(i)->hasGamelist())
+					{
+						useDetail = true;
+						break;
+					}
 				}
 			}
-
 
 			//choose which Gui to open up
 			if(boost::filesystem::exists(InputManager::getConfigPath()))

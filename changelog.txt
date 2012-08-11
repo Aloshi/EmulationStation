@@ -1,3 +1,10 @@
+August 10
+-Themes now load from system directories (and thus you can set a different theme for each system)
+-Theme paths now expand . (to directory of this theme.xml) and ~ (to $HOME).
+-Added --ignore-gamelist switch. Does as it says, and forces the simple GuiGameList.
+-Folders that do not contain games will not be added.
+-Fixed float percentages in GuiTheme being converted to integers before they were converted to pixels...woops!
+
 August 9
 -Removed multithreaded image loading
 -Improved GuiImage rendering speed by adding additional processing at load time (SDL_DisplayFormat)

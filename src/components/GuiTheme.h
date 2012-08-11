@@ -14,11 +14,12 @@ public:
 
 private:
 	void deleteComponents();
-
 	GuiComponent* createElement(pugi::xml_node data, GuiComponent* parent);
-	int resolveExp(std::string str);
+	std::string expandPath(std::string path);
+	float resolveExp(std::string str);
 
 	std::vector<GuiComponent*> mComponentVector;
+	std::string mPath;
 };
 
 #endif

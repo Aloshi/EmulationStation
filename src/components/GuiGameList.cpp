@@ -4,7 +4,7 @@
 #include "GuiMenu.h"
 #include <boost/filesystem.hpp>
 
-//#define DRAWFRAMERATE
+#define DRAWFRAMERATE
 
 #ifdef DRAWFRAMERATE
 	#include <sstream>
@@ -24,8 +24,8 @@ GuiGameList::GuiGameList(bool useDetail)
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
 		mTheme = new GuiTheme();
-		//addChild(mTheme);
-		updateTheme();
+		//addChild(mTheme); //currently manually rendered before everything else in GuiGameList::onRender
+		//updateTheme();
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * 0.3);
 		addChild(mScreenshot);
@@ -79,16 +79,16 @@ void GuiGameList::setSystemId(int id)
 
 	mFolder = mSystem->getRootFolder();
 
+	updateTheme();
 	updateList();
 }
 
 void GuiGameList::onRender()
 {
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
+
 	if(mTheme)
 		mTheme->render();
-	else
-		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
-
 
 	#ifdef DRAWFRAMERATE
 		std::stringstream ss;
@@ -192,13 +192,15 @@ void GuiGameList::updateList()
 
 void GuiGameList::updateTheme()
 {
-	std::string themePath = getenv("HOME");
-	themePath += "/.emulationstation/theme.xml";
+	if(!mTheme)
+		return;
+
+	std::string themePath = mSystem->getStartPath() + "/theme.xml";
 
 	if(boost::filesystem::exists(themePath))
-	{
 		mTheme->readXML(themePath);
-	}
+	else
+		mTheme->readXML(""); //clears any current theme
 }
 
 //these are called when the menu opens/closes

@@ -11,6 +11,7 @@ std::vector<SystemData*> SystemData::sSystemVector;
 namespace fs = boost::filesystem;
 
 extern bool PARSEGAMELISTONLY;
+extern bool IGNOREGAMELIST;
 
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
@@ -44,7 +45,8 @@ SystemData::SystemData(std::string name, std::string startPath, std::string exte
 	if(!PARSEGAMELISTONLY)
 		populateFolder(mRootFolder);
 
-	parseGamelist(this);
+	if(!IGNOREGAMELIST)
+		parseGamelist(this);
 
 	mRootFolder->sort();
 }
@@ -103,7 +105,12 @@ void SystemData::populateFolder(FolderData* folder)
 		{
 			FolderData* newFolder = new FolderData(this, filePath.string(), filePath.stem().string());
 			populateFolder(newFolder);
-			folder->pushFileData(newFolder);
+
+			//ignore folders that do not contain games
+			if(newFolder->getFileCount() == 0)
+				delete newFolder;
+			else
+				folder->pushFileData(newFolder);
 		}else{
 			if(filePath.extension().string() == mSearchExtension)
 			{
