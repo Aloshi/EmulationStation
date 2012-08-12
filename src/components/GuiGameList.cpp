@@ -23,17 +23,14 @@ GuiGameList::GuiGameList(bool useDetail)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
-		mTheme = new GuiTheme();
-		//addChild(mTheme); //currently manually rendered before everything else in GuiGameList::onRender
-		//updateTheme();
-
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * 0.3);
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
 		mScreenshot = NULL;
-		mTheme = NULL;
 	}
+
+	mTheme = new GuiTheme(); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
 
 	addChild(mList);
 
@@ -81,6 +78,7 @@ void GuiGameList::setSystemId(int id)
 
 	updateTheme();
 	updateList();
+	updateDetailData();
 }
 
 void GuiGameList::onRender()
@@ -142,6 +140,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		mFolder = mFolderStack.top();
 		mFolderStack.pop();
 		updateList();
+		updateDetailData();
 	}
 
 	if(button == InputManager::RIGHT && keyDown)
@@ -162,12 +161,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	{
 		if(!keyDown && (button == InputManager::UP || button == InputManager::DOWN))
 		{
-			if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
-			{
-				mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
-			}else{
-				mScreenshot->setImage("");
-			}
+			updateDetailData();
 		}
 	}
 }
@@ -195,24 +189,38 @@ void GuiGameList::updateTheme()
 	if(!mTheme)
 		return;
 
+	std::string defaultPath = getenv("HOME");
+	defaultPath += "/.emulationstation/es_theme.xml";
 	std::string themePath = mSystem->getStartPath() + "/theme.xml";
 
 	if(boost::filesystem::exists(themePath))
 		mTheme->readXML(themePath);
+	else if(boost::filesystem::exists(defaultPath))
+		mTheme->readXML(defaultPath);
 	else
 		mTheme->readXML(""); //clears any current theme
 }
 
+void GuiGameList::updateDetailData()
+{
+	if(!mDetailed)
+		return;
+
+	if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
+	{
+		mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
+	}else{
+		mScreenshot->setImage("");
+	}
+}
+
 //these are called when the menu opens/closes
-//the second bit should be moved to GuiList
 void GuiGameList::onPause()
 {
 	InputManager::unregisterComponent(this);
-	InputManager::unregisterComponent(mList);
 }
 
 void GuiGameList::onResume()
 {
 	InputManager::registerComponent(this);
-	InputManager::registerComponent(mList);
 }

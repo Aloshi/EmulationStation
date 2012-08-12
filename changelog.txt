@@ -1,3 +1,9 @@
+August 12
+-If a theme.xml is not found in a system's directory, ES will now check for $HOME/.emulationstation/es_theme.xml. If present, it will load that.
+-Themes can now be used without the detailed GuiGameList.
+-Fixed GuiGameList image data not updating on system change/initial startup (finally!)
+-Made the GuiList code a little bit less likely to crash on empty lists
+
 August 10
 -Themes now load from system directories (and thus you can set a different theme for each system)
 -Theme paths now expand . (to directory of this theme.xml) and ~ (to $HOME).

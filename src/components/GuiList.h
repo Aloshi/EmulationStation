@@ -25,6 +25,9 @@ public:
 	void addObject(std::string name, listType obj, int color = 0xFF0000);
 	void clear();
 
+	void onPause();
+	void onResume();
+
 	std::string getSelectedName();
 	listType getSelectedObject();
 	int getSelection();

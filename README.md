@@ -34,7 +34,7 @@ gamelist.xml
 ============
 
 If a file named gamelist.xml is found in the root of a system's search directory, it will be parsed and the detailed GuiGameList will be used. This means you can define images, descriptions, and different names for files.
-Images are meant to be 256x256, but ES won't stop you from using other sizes - they'll just be placed wrong. I'd like to add automatic scaling (with SDL_gfx) in a future update.
+Images will be automatically resized to fit within the left column of the screen. Smaller images will load faster, so try to keep your resolution low.
 An example gamelist.xml:
 ```
 <gameList>
@@ -55,7 +55,7 @@ The switch `--gamelist-only` can be used to skip automatic searching, and only d
 Themes
 ======
 
-At the moment, theming is still in flux. But if you want to play around with what's here, you can place a theme.xml file in a system's directory. It will be automatically loaded if present (and you're using the detailed view - any system has a gamelist.xml set up).
+At the moment, theming is still in flux. But if you want to play around with what's here, feel free. ES will first check a system's search directory for a file named theme.xml. If that's not found, it'll check $HOME/.emulationstation/es_theme.xml.
 Themes are drawn before the rest of the game list. Here's the example I've been using to test a background:
 
 ```
@@ -75,4 +75,3 @@ Variable support is present, but the only variable defined right now is $headerH
 
 -Aloshi
 http://www.aloshi.com
-

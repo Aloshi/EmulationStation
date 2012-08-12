@@ -17,7 +17,6 @@ public:
 	GuiGameList(bool useDetail = false);
 	~GuiGameList();
 
-	void updateList();
 	void setSystemId(int id);
 
 	void onRender();
@@ -26,7 +25,9 @@ public:
 	void onResume();
 
 private:
+	void updateList();
 	void updateTheme();
+	void updateDetailData();
 
 	SystemData* mSystem;
 	FolderData* mFolder;

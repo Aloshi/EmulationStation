@@ -31,6 +31,9 @@ void GuiTheme::deleteComponents()
 
 void GuiTheme::readXML(std::string path)
 {
+	if(mPath == path)
+		return;
+
 	deleteComponents();
 
 	mPath = path;

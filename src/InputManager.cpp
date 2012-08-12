@@ -242,12 +242,6 @@ void InputManager::loadConfig()
 std::string InputManager::getConfigPath()
 {
 	std::string home = getenv("HOME");
-	if(home.empty())
-	{
-		std::cerr << "FATAL ERROR - $HOME environment variable is blank or not defined!\n";
-		exit(1);
-		return "";
-	}
-
-	return(home + "/.emulationstation/es_input.cfg");
+	home += "/.emulationstation/es_input.cfg";
+	return home;
 }

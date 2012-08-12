@@ -156,17 +156,35 @@ void GuiList<listType>::clear()
 template <typename listType>
 std::string GuiList<listType>::getSelectedName()
 {
-	return mRowVector.at(mSelection).name;
+	if((int)mRowVector.size() > mSelection)
+		return mRowVector.at(mSelection).name;
+	else
+		return "";
 }
 
 template <typename listType>
 listType GuiList<listType>::getSelectedObject()
 {
-	return mRowVector.at(mSelection).object;
+	if((int)mRowVector.size() > mSelection)
+		return mRowVector.at(mSelection).object;
+	else
+		return NULL;
 }
 
 template <typename listType>
 int GuiList<listType>::getSelection()
 {
 	return mSelection;
+}
+
+template <typename listType>
+void GuiList<listType>::onPause()
+{
+	InputManager::unregisterComponent(this);
+}
+
+template <typename listType>
+void GuiList<listType>::onResume()
+{
+	InputManager::registerComponent(this);
 }

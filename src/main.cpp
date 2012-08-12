@@ -11,6 +11,8 @@ bool PARSEGAMELISTONLY = false;
 bool IGNOREGAMELIST = false;
 float FRAMERATE = 0;
 
+namespace fs = boost::filesystem;
+
 int main(int argc, char* argv[])
 {
 	bool running = true;
@@ -19,7 +21,7 @@ int main(int argc, char* argv[])
 	{
 		std::cerr << "Error - could not initialize SDL!\n";
 		std::cerr << "	" << SDL_GetError() << "\n";
-		std::cerr << "\nAre you in the 'video' and 'input' groups?\n";
+		std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed?\n";
 		return 1;
 	}
 	if(TTF_Init() != 0)
@@ -74,31 +76,31 @@ int main(int argc, char* argv[])
 	//make sure the config directory exists
 	std::string home = getenv("HOME");
 	std::string configDir = home + "/.emulationstation";
-	if(!boost::filesystem::exists(configDir))
+	if(!fs::exists(configDir))
 	{
 		std::cout << "Creating config directory \"" << configDir << "\"\n";
-		boost::filesystem::create_directory(configDir);
+		fs::create_directory(configDir);
 	}
 
 	//check if there are config files in the old places, and if so, move them to the new directory
 	std::string oldSysPath = home + "/.es_systems.cfg";
 	std::string oldInpPath = home + "/.es_input.cfg";
-	if(boost::filesystem::exists(oldSysPath))
+	if(fs::exists(oldSysPath))
 	{
 		std::cout << "Moving old system config file " << oldSysPath << " to new path at " << SystemData::getConfigPath() << "\n";
-		boost::filesystem::copy_file(oldSysPath, SystemData::getConfigPath());
-		boost::filesystem::remove(oldSysPath);
+		fs::copy_file(oldSysPath, SystemData::getConfigPath());
+		fs::remove(oldSysPath);
 	}
-	if(boost::filesystem::exists(oldInpPath))
+	if(fs::exists(oldInpPath))
 	{
 		std::cout << "Deleting old input config file\n";
-		boost::filesystem::remove(oldInpPath);
+		fs::remove(oldInpPath);
 	}
 
 
 
 	//try loading the system config file
-	if(!boost::filesystem::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit
+	if(!fs::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit
 	{
 		std::cerr << "A system config file in " << SystemData::getConfigPath() << " was not found. An example will be created.\n";
 		SystemData::writeExampleConfig();
@@ -130,7 +132,7 @@ int main(int argc, char* argv[])
 			}
 
 			//choose which Gui to open up
-			if(boost::filesystem::exists(InputManager::getConfigPath()))
+			if(fs::exists(InputManager::getConfigPath()))
 			{
 				InputManager::loadConfig();
 				new GuiGameList(useDetail);
