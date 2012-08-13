@@ -1,3 +1,8 @@
+August 13
+-Tons of new theming features!
+-I've added a THEMES.md file for documentation on theming.
+-A CREDITS.md file.
+
 August 12
 -If a theme.xml is not found in a system's directory, ES will now check for $HOME/.emulationstation/es_theme.xml. If present, it will load that.
 -Themes can now be used without the detailed GuiGameList.

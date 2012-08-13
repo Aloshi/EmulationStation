@@ -31,11 +31,14 @@ public:
 	std::string getSelectedName();
 	listType getSelectedObject();
 	int getSelection();
+
+	void setSelectorColor(int selectorColor);
 private:
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
 
 	Renderer::FontSize mFont;
+	int mSelectorColor;
 
 	int mOffsetX, mOffsetY;
 

@@ -14,9 +14,17 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxW
 	mOffsetX = offsetX;
 	mOffsetY = offsetY;
 
+	//default origin (center of image)
+	mOriginX = 0;
+	mOriginY = 0;
+
+	mTiled = false;
+
 	mMaxWidth = maxWidth;
 	mMaxHeight = maxHeight;
+
 	mResizeExact = resizeExact;
+	mUseAlpha = false;
 
 	if(!path.empty())
 		setImage(path);
@@ -43,38 +51,15 @@ void GuiImage::loadImage(std::string path)
 		}
 
 
-		//resize it
-		if(mResizeExact)
-		{
-			double scaleX = (double)mMaxWidth / (double)newSurf->w;
-			double scaleY = (double)mMaxHeight / (double)newSurf->h;
-
-			SDL_Surface* resSurf = zoomSurface(newSurf, scaleX, scaleY, SMOOTHING_OFF);
-			SDL_FreeSurface(newSurf);
-			newSurf = resSurf;
-		}else{
-			if(mMaxWidth && newSurf->w > mMaxWidth)
-			{
-				double scale = (double)mMaxWidth / (double)newSurf->w;
-
-				SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
-				SDL_FreeSurface(newSurf);
-				newSurf = resSurf;
-        		}
-
-			if(mMaxHeight && newSurf->h > mMaxHeight)
-		      	{
-				double scale = (double)mMaxHeight / (double)newSurf->h;
-
-				SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
-				SDL_FreeSurface(newSurf);
-				newSurf = resSurf;
-			}
-		}
-
+		resizeSurface(&newSurf);
 
 		//convert it into display format for faster rendering
-		SDL_Surface* dispSurf = SDL_DisplayFormat(newSurf);
+		SDL_Surface* dispSurf;
+		if(mUseAlpha)
+			dispSurf = SDL_DisplayFormatAlpha(newSurf);
+		else
+ 			dispSurf = SDL_DisplayFormat(newSurf);
+
 		SDL_FreeSurface(newSurf);
 		newSurf = dispSurf;
 
@@ -85,14 +70,54 @@ void GuiImage::loadImage(std::string path)
 
 		mSurface = newSurf;
 
-		//Also update the rect
-		mRect.x = mOffsetX - (mSurface->w / 2);
-		mRect.y = mOffsetY;
-		mRect.w = mSurface->w;
-		mRect.h = mSurface->h;
+		updateRect();
+
 	}else{
 		std::cerr << "File \"" << path << "\" not found!\n";
 	}
+}
+
+//enjoy this overly-complicated pointer stuff that results from splitting a function too late
+void GuiImage::resizeSurface(SDL_Surface** surfRef)
+{
+	if(mTiled)
+		return;
+
+	SDL_Surface* newSurf = *surfRef;
+	if(mResizeExact)
+	{
+		double scaleX = (double)mMaxWidth / (double)newSurf->w;
+		double scaleY = (double)mMaxHeight / (double)newSurf->h;
+
+		if(scaleX == 0)
+			scaleX = scaleY;
+		if(scaleY == 0)
+			scaleY = scaleX;
+
+		SDL_Surface* resSurf = zoomSurface(newSurf, scaleX, scaleY, SMOOTHING_OFF);
+		SDL_FreeSurface(newSurf);
+		newSurf = resSurf;
+	}else{
+		if(mMaxWidth && newSurf->w > mMaxWidth)
+		{
+			double scale = (double)mMaxWidth / (double)newSurf->w;
+
+			SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
+			SDL_FreeSurface(newSurf);
+			newSurf = resSurf;
+       		}
+
+		if(mMaxHeight && newSurf->h > mMaxHeight)
+	      	{
+			double scale = (double)mMaxHeight / (double)newSurf->h;
+
+			SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
+			SDL_FreeSurface(newSurf);
+			newSurf = resSurf;
+		}
+	}
+
+	*surfRef = newSurf;
 }
 
 void GuiImage::setImage(std::string path)
@@ -113,8 +138,64 @@ void GuiImage::setImage(std::string path)
 
 }
 
+void GuiImage::updateRect()
+{
+	mRect.x = mOffsetX /*- mSurface->w*/ - (mSurface->w * mOriginX);
+	mRect.y = mOffsetY + (mSurface->h * mOriginY);
+	mRect.w = mSurface->w;
+	mRect.h = mSurface->h;
+}
+
+void GuiImage::setOrigin(float originX, float originY)
+{
+	mOriginX = originX;
+	mOriginY = originY;
+
+	if(mSurface)
+		updateRect();
+}
+
+void GuiImage::setTiling(bool tile)
+{
+	mTiled = tile;
+
+	if(mTiled)
+		mResizeExact = false;
+}
+
+void GuiImage::setAlpha(bool useAlpha)
+{
+	mUseAlpha = useAlpha;
+
+	if(mSurface)
+	{
+		SDL_FreeSurface(mSurface);
+		mSurface = NULL;
+		loadImage(mPath);
+	}
+}
+
+bool dbg = false;
+
 void GuiImage::onRender()
 {
 	if(mSurface)
-		SDL_BlitSurface(mSurface, NULL, Renderer::screen, &mRect);
+	{
+		if(mTiled)
+		{
+			SDL_Rect rect = mRect;
+			for(int x = 0; x < mMaxWidth / mSurface->w + 0.5; x++)
+			{
+				for(int y = 0; y < mMaxHeight / mSurface->h + 0.5; y++)
+				{
+					SDL_BlitSurface(mSurface, NULL, Renderer::screen, &rect);
+					rect.y += mSurface->h;
+				}
+				rect.x += mSurface->w;
+				rect.y = mRect.y;
+			}
+		}else{
+			SDL_BlitSurface(mSurface, NULL, Renderer::screen, &mRect);
+		}
+	}
 }

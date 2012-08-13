@@ -12,14 +12,27 @@ public:
 
 	void readXML(std::string path);
 
+	int getPrimaryColor();
+	int getSecondaryColor();
+	int getSelectorColor();
+	int getDescColor();
+	bool getHeaderHidden();
+	bool getDividersHidden();
 private:
 	void deleteComponents();
 	GuiComponent* createElement(pugi::xml_node data, GuiComponent* parent);
+
+	//utility functions
 	std::string expandPath(std::string path);
 	float resolveExp(std::string str);
+	int resolveColor(std::string str, int defaultColor = 0x000000);
+	void splitString(std::string str, char delim, std::string* before, std::string* after);
+	int strToInt(std::string str);
 
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
+	int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mDescColor;
+	bool mHideHeader, mHideDividers;
 };
 
 #endif

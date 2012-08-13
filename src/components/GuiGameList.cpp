@@ -24,6 +24,7 @@ GuiGameList::GuiGameList(bool useDetail)
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * 0.3);
+		mScreenshot->setOrigin(0.5, 0.0);
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
@@ -96,12 +97,14 @@ void GuiGameList::onRender()
 		Renderer::drawText(fps, 0, 0, 0x00FF00);
 	#endif
 
-
-	Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0x0000FF, Renderer::LARGE);
+	//header
+	if(!mTheme->getHeaderHidden())
+		Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0xFF0000, Renderer::LARGE);
 
 	if(mDetailed)
 	{
-		Renderer::drawRect(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
+		if(!mTheme->getDividersHidden())
+			Renderer::drawRect(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
 
 		//if we have selected a non-folder
 		if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
@@ -111,7 +114,7 @@ void GuiGameList::onRender()
 			//todo: cache this
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, 2, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * 0.4, 0xFF0000, Renderer::SMALL);
+				Renderer::drawWrappedText(desc, 2, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * 0.4, mTheme->getDescColor(), Renderer::SMALL);
 		}
 	}
 }
@@ -178,9 +181,9 @@ void GuiGameList::updateList()
 		FileData* file = mFolder->getFile(i);
 
 		if(file->isFolder())
-			mList->addObject(file->getName(), file, 0x00C000);
+			mList->addObject(file->getName(), file, mTheme->getSecondaryColor());
 		else
-			mList->addObject(file->getName(), file);
+			mList->addObject(file->getName(), file, mTheme->getPrimaryColor());
 	}
 }
 
@@ -199,6 +202,8 @@ void GuiGameList::updateTheme()
 		mTheme->readXML(defaultPath);
 	else
 		mTheme->readXML(""); //clears any current theme
+
+	mList->setSelectorColor(mTheme->getSelectorColor());
 }
 
 void GuiGameList::updateDetailData()

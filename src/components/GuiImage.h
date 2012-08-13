@@ -13,6 +13,9 @@ public:
 	~GuiImage();
 
 	void setImage(std::string path);
+	void setOrigin(float originX, float originY);
+	void setTiling(bool tile);
+	void setAlpha(bool useAlpha);
 
 	int getWidth();
 	int getHeight();
@@ -21,9 +24,12 @@ public:
 
 private:
 	int mMaxWidth, mMaxHeight;
-	bool mResizeExact;
+	float mOriginX, mOriginY;
+	bool mResizeExact, mTiled, mUseAlpha;
 
 	void loadImage(std::string path);
+	void resizeSurface(SDL_Surface** surfRef);
+	void updateRect();
 
 	std::string mPath;
 

@@ -13,6 +13,7 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize
 	mOffsetY = offsetY;
 
 	mFont = fontsize;
+	mSelectorColor = 0x000000;
 
 	InputManager::registerComponent(this);
 }
@@ -48,7 +49,7 @@ void GuiList<listType>::onRender()
 
 	if(mRowVector.size() == 0)
 	{
-		Renderer::drawCenteredText("The list is empty.", 0, y, 0xFF0000, mFont);
+		Renderer::drawCenteredText("The list is empty.", 0, y, 0x0000FF, mFont);
 		return;
 	}
 
@@ -60,7 +61,7 @@ void GuiList<listType>::onRender()
 	{
 		if(mSelection == i)
 		{
-			Renderer::drawRect(mOffsetX, y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), 0x000000);
+			Renderer::drawRect(mOffsetX, y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
@@ -187,4 +188,10 @@ template <typename listType>
 void GuiList<listType>::onResume()
 {
 	InputManager::registerComponent(this);
+}
+
+template <typename listType>
+void GuiList<listType>::setSelectorColor(int selectorColor)
+{
+	mSelectorColor = selectorColor;
 }

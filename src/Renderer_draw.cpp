@@ -10,6 +10,21 @@ bool Renderer::loadedFonts = false;
 TTF_Font* Renderer::fonts[3];
 int Renderer::fontHeight[3];
 
+
+SDL_Color getSDLColor(int& color)
+{
+	char* c = (char*)(&color);
+
+	SDL_Color ret;
+	ret.r = *(c + 2);
+	ret.g = *(c + 1);
+	ret.b = *(c + 0);
+
+	return ret;
+}
+
+
+
 void Renderer::drawRect(int x, int y, int h, int w, int color)
 {
 	SDL_Rect rect = {x, y, h, w};
@@ -67,9 +82,10 @@ void Renderer::drawText(std::string text, int x, int y, int color, FontSize font
 
 	//SDL_Color is a struct of four bytes, with the first three being colors. An int is four bytes.
 	//So, we can just pretend the int is an SDL_Color.
-	SDL_Color* sdlcolor = (SDL_Color*)&color;
+	//SDL_Color* sdlcolor = (SDL_Color*)&color;
+	SDL_Color sdlcolor = getSDLColor(color);
 
-	SDL_Surface* textSurf = TTF_RenderText_Blended(font, text.c_str(), *sdlcolor);
+	SDL_Surface* textSurf = TTF_RenderText_Blended(font, text.c_str(), sdlcolor);
 	if(textSurf == NULL)
 	{
 		std::cerr << "Error - could not render text \"" << text << "\" to surface!\n";

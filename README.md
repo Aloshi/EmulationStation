@@ -55,23 +55,8 @@ The switch `--gamelist-only` can be used to skip automatic searching, and only d
 Themes
 ======
 
-At the moment, theming is still in flux. But if you want to play around with what's here, feel free. ES will first check a system's search directory for a file named theme.xml. If that's not found, it'll check $HOME/.emulationstation/es_theme.xml.
-Themes are drawn before the rest of the game list. Here's the example I've been using to test a background:
+If you want to know more about themes, read THEMES.md!
 
-```
-<theme>
-        <component>
-                <type>image</type>
-                <path>/home/aloshi/EmulationStation/theme/background.png</path>
-                <pos>0 0</pos>
-                <dim>1 1</dim>
-        </component>
-</theme>
-```
-
-You can add more than one component. You can use more than one component and components can be nested for your own personal use (but they won't inherit positions or anything). The only type thus far is image. Pos is short for position and dim is short for dimensions. Both work in screen percentages - a decimal from 0 to 1. A single space separates X/Y or width/height.
-At the moment the X position is the horizontal center point for the image and Y is the top of the image.
-Variable support is present, but the only variable defined right now is $headerHeight. You should be able to use addition/subtraction/multiplication/division.
 
 -Aloshi
 http://www.aloshi.com

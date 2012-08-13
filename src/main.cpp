@@ -17,6 +17,8 @@ int main(int argc, char* argv[])
 {
 	bool running = true;
 
+	//by the way, if anyone ever tries to port this to a different renderer but leave SDL as input -
+	//KEEP INITIALIZING VIDEO. It starts SDL's event system, and without it, input won't work.
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
 	{
 		std::cerr << "Error - could not initialize SDL!\n";
