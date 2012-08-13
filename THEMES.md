@@ -41,11 +41,16 @@ The "image" component
 Used to display an image.
 
 `<path>` - path to the image file. Most common file types are supported, and . and ~ are properly expanded.
+
 `<pos>` - the position, as two screen percentage, at which to display the image.
-`<dim>` - the dimensions, as two screen percentages, that the image will be resized to. Leave one percentage 0 to keep the aspect ratio.
+
+`<dim>` - the dimensions, as two screen percentages, that the image will be resized to. Make one axis 0 to keep the aspect ratio.
+
 `<origin>` - the point on the image that <pos> defines, as an image percentage. "0.5 0.5", the center of the image, by default.
 
+
 `<tiled />` - if present, the image is tiled instead of resized. Tiling isn't exact at the moment, but good enough for backgrounds.
+
 `<useAlpha />` - if present, the image will not be stripped of its alpha channel. It will render much slower, but should have transparency.
 
 
@@ -54,10 +59,15 @@ Display tags
 Display tags must be at the root of the <theme> tree - for example, they can't be inside a component tag. They are not required.
 
 `<listPrimaryColor>` - the hex font color to use for games on the GuiGameList.
+
 `<listSecondaryColor>` - the hex font color to use for folders on the GuiGameList.
+
 `<descColor>` - the hex font color to use for the description on the GuiGameList.
+
 `<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList.
+
 `<hideHeader />` - if present, the system name header won't be displayed (useful for replacing it with an image).
+
 `<hideDividers />` - if present, the divider between games on the detailed GuiGameList won't be displayed.
 
 
