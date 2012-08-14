@@ -3,6 +3,15 @@ August 13
 -I've added a THEMES.md file for documentation on theming.
 -A CREDITS.md file.
 
+-Fixed theme defaults not resetting when theme changes.
+-The game image on the GuiGameList now maintains its alpha channel.
+-Descriptions can now contain newline characters.
+-Changed the size of the game info column to be 50% of the screen (previously 40%).
+-Adjusted description to have a 3% left and right margins.
+-Added $infoWidth variable for playing with the size of the game info column.
+-Added <listLeftAlign /> tag that makes the game list left aligned instead of centered.
+-Made Renderer::LARGE (header) fontsize slightly bigger
+
 August 12
 -If a theme.xml is not found in a system's directory, ES will now check for $HOME/.emulationstation/es_theme.xml. If present, it will load that.
 -Themes can now be used without the detailed GuiGameList.

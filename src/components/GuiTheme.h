@@ -18,7 +18,9 @@ public:
 	int getDescColor();
 	bool getHeaderHidden();
 	bool getDividersHidden();
+	bool getListCentered();
 private:
+	void setDefaults();
 	void deleteComponents();
 	GuiComponent* createElement(pugi::xml_node data, GuiComponent* parent);
 
@@ -32,7 +34,7 @@ private:
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
 	int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mDescColor;
-	bool mHideHeader, mHideDividers;
+	bool mHideHeader, mHideDividers, mListCentered;
 };
 
 #endif

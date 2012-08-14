@@ -33,12 +33,14 @@ public:
 	int getSelection();
 
 	void setSelectorColor(int selectorColor);
+	void setCentered(bool centered);
 private:
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
 
 	Renderer::FontSize mFont;
 	int mSelectorColor;
+	bool mDrawCentered;
 
 	int mOffsetX, mOffsetY;
 

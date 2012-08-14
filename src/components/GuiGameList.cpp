@@ -11,6 +11,8 @@
 	extern float FRAMERATE;
 #endif
 
+const float GuiGameList::sInfoWidth = 0.5;
+
 GuiGameList::GuiGameList(bool useDetail)
 {
 	std::cout << "Creating GuiGameList\n";
@@ -21,10 +23,11 @@ GuiGameList::GuiGameList(bool useDetail)
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2);
+		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * 0.3);
 		mScreenshot->setOrigin(0.5, 0.0);
+		mScreenshot->setAlpha(true); //slower, but requested
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
@@ -103,8 +106,9 @@ void GuiGameList::onRender()
 
 	if(mDetailed)
 	{
+		//divider
 		if(!mTheme->getDividersHidden())
-			Renderer::drawRect(Renderer::getScreenWidth() * 0.4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
+			Renderer::drawRect(Renderer::getScreenWidth() * sInfoWidth - 4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
 
 		//if we have selected a non-folder
 		if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
@@ -114,7 +118,7 @@ void GuiGameList::onRender()
 			//todo: cache this
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, 2, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * 0.4, mTheme->getDescColor(), Renderer::SMALL);
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * 0.47, mTheme->getDescColor(), Renderer::SMALL);
 		}
 	}
 }
@@ -126,9 +130,8 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		if(!keyDown)
 		{
 			FileData* file = mList->getSelectedObject();
-			if(file->isFolder())
+			if(file->isFolder()) //if you selected a folder, add this directory to the stack, and use the selected one
 			{
-				//set current directory to this or something
 				mFolderStack.push(mFolder);
 				mFolder = (FolderData*)file;
 				updateList();
@@ -138,6 +141,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		}
 	}
 
+	//if there's something on the directory stack, return to it
 	if(button == InputManager::BUTTON2 && keyDown && mFolderStack.size())
 	{
 		mFolder = mFolderStack.top();
@@ -204,6 +208,7 @@ void GuiGameList::updateTheme()
 		mTheme->readXML(""); //clears any current theme
 
 	mList->setSelectorColor(mTheme->getSelectorColor());
+	mList->setCentered(mTheme->getListCentered());
 }
 
 void GuiGameList::updateDetailData()

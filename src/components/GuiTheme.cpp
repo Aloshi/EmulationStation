@@ -1,6 +1,7 @@
 #include "GuiTheme.h"
 #include "../MathExp.h"
 #include <iostream>
+#include "GuiGameList.h"
 #include "GuiImage.h"
 #include <boost/filesystem.hpp>
 #include <sstream>
@@ -11,15 +12,11 @@ int GuiTheme::getSelectorColor() { return mListSelectorColor; }
 int GuiTheme::getDescColor() { return mDescColor; }
 bool GuiTheme::getHeaderHidden() { return mHideHeader; }
 bool GuiTheme::getDividersHidden() { return mHideDividers; }
+bool GuiTheme::getListCentered() { return mListCentered; }
 
 GuiTheme::GuiTheme(std::string path)
 {
-	mListPrimaryColor = 0x0000FF;
-	mListSecondaryColor = 0x00FF00;
-	mListSelectorColor = 0x000000;
-	mDescColor = 0x0000FF;
-	mHideHeader = false;
-	mHideDividers = false;
+	setDefaults();
 
 	if(!path.empty())
 		readXML(path);
@@ -28,6 +25,17 @@ GuiTheme::GuiTheme(std::string path)
 GuiTheme::~GuiTheme()
 {
 	deleteComponents();
+}
+
+void GuiTheme::setDefaults()
+{
+	mListPrimaryColor = 0x0000FF;
+	mListSecondaryColor = 0x00FF00;
+	mListSelectorColor = 0x000000;
+	mDescColor = 0x0000FF;
+	mHideHeader = false;
+	mHideDividers = false;
+	mListCentered = true;
 }
 
 void GuiTheme::deleteComponents()
@@ -49,6 +57,7 @@ void GuiTheme::readXML(std::string path)
 	if(mPath == path)
 		return;
 
+	setDefaults();
 	deleteComponents();
 
 	mPath = path;
@@ -77,6 +86,7 @@ void GuiTheme::readXML(std::string path)
 	mDescColor = resolveColor(root.child("descColor").text().get(), 0x0000FF);
 	mHideHeader = root.child("hideHeader");
 	mHideDividers = root.child("hideDividers");
+	mListCentered = !root.child("listLeftAlign");
 
 	for(pugi::xml_node data = root.child("component"); data; data = data.next_sibling("component"))
 	{
@@ -163,6 +173,7 @@ float GuiTheme::resolveExp(std::string str)
 
 	//set variables
 	exp.setVariable("headerHeight", Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight());
+	exp.setVariable("infoWidth", GuiGameList::sInfoWidth);
 
 	return exp.eval();
 }
@@ -177,7 +188,6 @@ int GuiTheme::resolveColor(std::string str, int defaultColor)
 	ss << std::hex << str;
 	ss >> ret;
 
-	std::cout << "resolved " << str << " to " << ret << "\n";
 	return ret;
 }
 

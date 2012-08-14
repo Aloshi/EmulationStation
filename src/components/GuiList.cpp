@@ -14,6 +14,7 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize
 
 	mFont = fontsize;
 	mSelectorColor = 0x000000;
+	mDrawCentered = true;
 
 	InputManager::registerComponent(this);
 }
@@ -65,7 +66,12 @@ void GuiList<listType>::onRender()
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
-		Renderer::drawCenteredText(row.name, mOffsetX, y, row.color, mFont);
+
+		if(mDrawCentered)
+			Renderer::drawCenteredText(row.name, mOffsetX, y, row.color, mFont);
+		else
+			Renderer::drawText(row.name, mOffsetX, y, row.color, mFont);
+
 		y += entrySize;
 	}
 }
@@ -194,4 +200,10 @@ template <typename listType>
 void GuiList<listType>::setSelectorColor(int selectorColor)
 {
 	mSelectorColor = selectorColor;
+}
+
+template<typename listType>
+void GuiList<listType>::setCentered(bool centered)
+{
+	mDrawCentered = centered;
 }

@@ -6,6 +6,8 @@ A simple front-end for emulators made with SDL, designed for controller navigati
 RetroArch for the Raspberry Pi can be found here: https://github.com/ToadKing/RetroArch-Rpi
 I'm not associated with RetroArch in any way!
 
+If you're lazy, a cool guy named petrockblog made a script which automatically installs RetroArch, its cores, and ES: https://github.com/petrockblog/RetroPie-Setup
+
 Building
 ========
 
@@ -51,6 +53,7 @@ The path element should be the absolute path of the ROM. Special characters SHOU
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 
+A cool guy named Pendor made a scraper which automatically generates a gamelist.xml for you, with boxart automatically downloaded: https://github.com/jpzapa/ES-thegamesdb-scraper
 
 Themes
 ======

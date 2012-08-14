@@ -66,6 +66,8 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 `<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList.
 
+`<listLeftAlign />` - if present, the games list names will be left aligned to $infoWidth.
+
 `<hideHeader />` - if present, the system name header won't be displayed (useful for replacing it with an image).
 
 `<hideDividers />` - if present, the divider between games on the detailed GuiGameList won't be displayed.
@@ -74,11 +76,10 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 List of variables
 =================
 
-Variables can be used in position and dimension definitions. They can be added, subtracted, multiplied, and divided. Parenthesis are valid.
+Variables can be used in position and dimension definitions. They can be added, subtracted, multiplied, and divided. Parenthesis are valid. They are a percentage of the screen.
 
-Currently, there's only one variable defined:
 `$headerHeight` - height of the system name header.
-
+`$infoWidth` - where the center of the horizontal divider is drawn.
 
 -Aloshi
 http://www.aloshi.com

@@ -24,6 +24,7 @@ public:
 	void onPause();
 	void onResume();
 
+	static const float sInfoWidth;
 private:
 	void updateList();
 	void updateTheme();

@@ -11,6 +11,7 @@ TTF_Font* Renderer::fonts[3];
 int Renderer::fontHeight[3];
 
 
+//a utility function to convert an int (usually defined as hex) to the SDL color struct
 SDL_Color getSDLColor(int& color)
 {
 	char* c = (char*)(&color);
@@ -22,8 +23,6 @@ SDL_Color getSDLColor(int& color)
 
 	return ret;
 }
-
-
 
 void Renderer::drawRect(int x, int y, int h, int w, int color)
 {
@@ -43,8 +42,7 @@ bool Renderer::loadFonts()
 		std::cerr << fontPath << " (which may not exist).\n";
 	}
 
-	//int sizeArray[] = {Renderer::getScreenHeight() * 0.025, Renderer::getScreenHeight() * 0.05, Renderer::getScreenHeight() * 0.075};
-	int sizeArray[] = {Renderer::getScreenWidth() * 0.015, Renderer::getScreenWidth() * 0.03, Renderer::getScreenWidth() * 0.05};
+	int sizeArray[] = {Renderer::getScreenWidth() * 0.015, Renderer::getScreenWidth() * 0.03, Renderer::getScreenWidth() * 0.062};
 
 
 	//the three here should be the font count but, again, I don't remember the syntax
@@ -117,6 +115,7 @@ void Renderer::drawCenteredText(std::string text, int xOffset, int y, int color,
 }
 
 //this could probably be optimized
+//draws text and ensures it's never longer than xLen
 void Renderer::drawWrappedText(std::string text, int xStart, int yStart, int xLen, int color, FontSize fontsize)
 {
 	if(!loadedFonts)
@@ -128,40 +127,53 @@ void Renderer::drawWrappedText(std::string text, int xStart, int yStart, int xLe
 
 	std::string line, word, temp;
 	int w, h;
-	size_t space;
+	size_t space, newline;
 
-	while(text.length() > 0 || !line.empty())
+	while(text.length() > 0 || !line.empty()) //while there's text or we still have text to render
 	{
 		space = text.find(' ', 0);
 		if(space == std::string::npos)
 			space = text.length() - 1;
 
+
 		word = text.substr(0, space + 1);
-		text.erase(0, space + 1);
+
+		//check if the next word contains a newline
+		newline = word.find('\n', 0);
+		if(newline != std::string::npos)
+		{
+			word = word.substr(0, newline);
+			text.erase(0, newline + 1);
+		}else{
+			text.erase(0, space + 1);
+		}
 
 		temp = line + word;
 
 		TTF_SizeText(font, temp.c_str(), &w, &h);
 
-
-		if(w <= xLen && text.length() == 0)
+		//if we're on the last word and it'll fit on the line, just add it to the line
+		if((w <= xLen && text.length() == 0) || newline != std::string::npos)
 		{
 			line = temp;
 			word = "";
 		}
 
-		if(w > xLen || text.length() == 0)
+
+		//if the next line will be too long or we're on the last of the text, render it
+		if(w > xLen || text.length() == 0 || newline != std::string::npos)
 		{
 			//render line now
-			drawText(line, xStart, y, color, fontsize);
+			if(w > 0) //make sure it's not blank
+				drawText(line, xStart, y, color, fontsize);
 
 			//increment y by height and some extra padding for the next line
 			y += h + 4;
 
-			//draw the word we skipped on the next line
+			//move the word we skipped to the next line
 			line = word;
 		}else{
-			//there's still space, continue
+			//there's still space, continue building the line
 			line = temp;
 		}
 
