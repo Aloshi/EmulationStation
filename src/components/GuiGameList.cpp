@@ -4,7 +4,7 @@
 #include "GuiMenu.h"
 #include <boost/filesystem.hpp>
 
-#define DRAWFRAMERATE
+//#define DRAWFRAMERATE
 
 #ifdef DRAWFRAMERATE
 	#include <sstream>
