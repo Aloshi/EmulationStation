@@ -118,7 +118,7 @@ void GuiGameList::onRender()
 			//todo: cache this
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * 0.47, mTheme->getDescColor(), Renderer::SMALL);
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * (sInfoWidth - 0.03), mTheme->getDescColor(), Renderer::SMALL);
 		}
 	}
 }
