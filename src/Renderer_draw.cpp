@@ -12,14 +12,14 @@ int Renderer::fontHeight[3];
 
 
 //a utility function to convert an int (usually defined as hex) to the SDL color struct
-SDL_Color getSDLColor(int& color)
+SDL_Color getSDLColor(int& int_color)
 {
-	char* c = (char*)(&color);
-
-	SDL_Color ret;
-	ret.r = *(c + 2);
-	ret.g = *(c + 1);
-	ret.b = *(c + 0);
+	//taken off a forum post
+	//#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		SDL_Color ret={(int_color & 0x00ff0000)/0x10000,(int_color & 0x0000ff00)/0x100,(int_color & 0x000000ff),0};
+	//#else
+	//	SDL_Color ret={(int_color & 0x000000ff),(int_color & 0x0000ff00)/0x100,(int_color & 0x00ff0000)/0x10000,0};
+	//#endif
 
 	return ret;
 }
@@ -27,6 +27,13 @@ SDL_Color getSDLColor(int& color)
 void Renderer::drawRect(int x, int y, int h, int w, int color)
 {
 	SDL_Rect rect = {x, y, h, w};
+
+	//this is really dumb - FillRect takes a uint32, everything else uses getSDLColor
+	//the internal ints that we use (e.g. 0x999999) are rendered wrong
+	//i'm really bad at bitshifting so I don't know how to do this in a more efficient way
+	SDL_Color conv = getSDLColor(color);
+	color = SDL_MapRGB(Renderer::screen->format, conv.r, conv.g, conv.b);
+
 	SDL_FillRect(Renderer::screen, &rect, color);
 }
 
