@@ -33,7 +33,7 @@ All themes must be enclosed in a `<theme>` tag.
 
 Components
 ==========
-A theme is made up of components, which have various types. At the moment, the only type is `image`. Components can be nested for your own organization. In the future, you may be able to get data from a parent.
+A theme is made up of components, which have various types. At the moment, the only type is `image`. Components can be nested for your own organization. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
 
 
 The "image" component
@@ -42,12 +42,11 @@ Used to display an image.
 
 `<path>` - path to the image file. Most common file types are supported, and . and ~ are properly expanded.
 
-`<pos>` - the position, as two screen percentage, at which to display the image.
+`<pos>` - the position, as two screen percentages, at which to display the image.
 
 `<dim>` - the dimensions, as two screen percentages, that the image will be resized to. Make one axis 0 to keep the aspect ratio.
 
-`<origin>` - the point on the image that <pos> defines, as an image percentage. "0.5 0.5", the center of the image, by default.
-
+`<origin>` - the point on the image that `<pos>` defines, as an image percentage. "0.5 0.5", the center of the image, by default.
 
 `<tiled />` - if present, the image is tiled instead of resized. Tiling isn't exact at the moment, but good enough for backgrounds.
 
@@ -79,7 +78,15 @@ List of variables
 Variables can be used in position and dimension definitions. They can be added, subtracted, multiplied, and divided. Parenthesis are valid. They are a percentage of the screen.
 
 `$headerHeight` - height of the system name header.
+
 `$infoWidth` - where the center of the horizontal divider is drawn.
+
+
+Bugs
+====
+
+Hexidecimal colors might be read in backwards. Woops. I'll get around to fixing this eventually.
+
 
 -Aloshi
 http://www.aloshi.com
