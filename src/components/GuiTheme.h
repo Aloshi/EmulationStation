@@ -29,7 +29,7 @@ private:
 	float resolveExp(std::string str);
 	int resolveColor(std::string str, int defaultColor = 0x000000);
 	void splitString(std::string str, char delim, std::string* before, std::string* after);
-	int strToInt(std::string str);
+	float strToFloat(std::string str);
 
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;

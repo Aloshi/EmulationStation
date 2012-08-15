@@ -135,8 +135,8 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		int w = resolveExp(dimW) * Renderer::getScreenWidth();
 		int h = resolveExp(dimH) * Renderer::getScreenHeight();
 
-		int ox = strToInt(originX);
-		int oy = strToInt(originY);
+		float ox = strToFloat(originX);
+		float oy = strToFloat(originY);
 
 		std::cout << "w: " << w << "px, h: " << h << "px\n";
 
@@ -201,12 +201,12 @@ void GuiTheme::splitString(std::string str, char delim, std::string* before, std
 	*after = str.substr(split + 1, str.length() - split - 1);
 }
 
-int GuiTheme::strToInt(std::string str)
+float GuiTheme::strToFloat(std::string str)
 {
 	if(str.empty())
 		return 0;
 
-	int ret;
+	float ret;
 	std::stringstream ss;
 	ss << str;
 	ss >> ret;

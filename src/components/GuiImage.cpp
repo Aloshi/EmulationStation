@@ -15,8 +15,8 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxW
 	mOffsetY = offsetY;
 
 	//default origin (center of image)
-	mOriginX = 0;
-	mOriginY = 0;
+	mOriginX = 0.5;
+	mOriginY = 0.5;
 
 	mTiled = false;
 
@@ -141,7 +141,7 @@ void GuiImage::setImage(std::string path)
 void GuiImage::updateRect()
 {
 	mRect.x = mOffsetX /*- mSurface->w*/ - (mSurface->w * mOriginX);
-	mRect.y = mOffsetY + (mSurface->h * mOriginY);
+	mRect.y = mOffsetY - (mSurface->h * mOriginY);
 	mRect.w = mSurface->w;
 	mRect.h = mSurface->h;
 }
