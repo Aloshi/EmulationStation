@@ -9,7 +9,10 @@
 
 bool PARSEGAMELISTONLY = false;
 bool IGNOREGAMELIST = false;
-float FRAMERATE = 0;
+
+#ifdef DRAWFRAMERATE
+	float FRAMERATE = 0;
+#endif
 
 namespace fs = boost::filesystem;
 
@@ -177,7 +180,10 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
-		FRAMERATE = 1/((float)deltaTime)*1000;
+		#ifdef DRAWFRAMERATE
+			FRAMERATE = 1/((float)deltaTime)*1000;
+		#endif
+
 		GuiComponent::processTicks(deltaTime);
 
 		Renderer::render();

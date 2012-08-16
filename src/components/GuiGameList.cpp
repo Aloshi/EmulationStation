@@ -13,6 +13,7 @@
 
 const float GuiGameList::sInfoWidth = 0.5;
 
+
 GuiGameList::GuiGameList(bool useDetail)
 {
 	std::cout << "Creating GuiGameList\n";
@@ -25,7 +26,7 @@ GuiGameList::GuiGameList(bool useDetail)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * 0.2, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * 0.3);
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * sInfoWidth * 0.7);
 		mScreenshot->setOrigin(0.5, 0.0);
 		mScreenshot->setAlpha(true); //slower, but requested
 		addChild(mScreenshot);
@@ -110,8 +111,8 @@ void GuiGameList::onRender()
 		if(!mTheme->getDividersHidden())
 			Renderer::drawRect(Renderer::getScreenWidth() * sInfoWidth - 4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
 
-		//if we have selected a non-folder
-		if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
+		//if we're not scrolling and we have selected a non-folder
+		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 		{
 			GameData* game = (GameData*)mList->getSelectedObject();
 
@@ -166,9 +167,12 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(mDetailed)
 	{
-		if(!keyDown && (button == InputManager::UP || button == InputManager::DOWN))
+		if(button == InputManager::UP || button == InputManager::DOWN)
 		{
-			updateDetailData();
+			if(!keyDown)
+				updateDetailData();
+			else
+				mScreenshot->setImage(""); //clear the image when we start scrolling
 		}
 	}
 }

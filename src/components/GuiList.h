@@ -8,7 +8,7 @@
 #include <string>
 
 #define SCROLLDELAY 507
-#define SCROLLTIME (57*6)
+#define SCROLLTIME (57*5)
 
 //this should really be a template
 template <typename listType>
@@ -31,6 +31,7 @@ public:
 	std::string getSelectedName();
 	listType getSelectedObject();
 	int getSelection();
+	bool isScrolling();
 
 	void setSelectorColor(int selectorColor);
 	void setCentered(bool centered);
