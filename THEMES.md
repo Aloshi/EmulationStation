@@ -82,11 +82,5 @@ Variables can be used in position and dimension definitions. They can be added, 
 `$infoWidth` - where the center of the horizontal divider is drawn.
 
 
-Bugs
-====
-
-Hexidecimal colors might be read in backwards. Woops. I'll get around to fixing this eventually.
-
-
 -Aloshi
 http://www.aloshi.com
