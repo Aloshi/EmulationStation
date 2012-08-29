@@ -163,7 +163,7 @@ namespace Renderer
 
 		glViewport(0, 0, 1680, 1050);
 		glOrthof(0, 1680, 1050, 0, -1.0, 1.0);
-		glClearColor(0.5f, 1.0f, 1.0f, 1.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		return true;
 	}

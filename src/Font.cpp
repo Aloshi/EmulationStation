@@ -168,6 +168,7 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	int pointCount = text.length() * 2;
 	point* points = new point[pointCount];
 	tex* texs = new tex[pointCount];
+	GLubyte* colors = new GLubyte[pointCount * 3 * 4];
 
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -215,7 +216,6 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		x += charData[letter].advX;
 	}
 
-	GLubyte* colors = new GLubyte[pointCount * 3 * 4];
 	Renderer::buildGLColorArray(colors, color, pointCount * 3);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -235,8 +235,9 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
 
-	//not sure if this properly deletes or not
 	delete[] points;
+	delete[] texs;
+	delete[] colors;
 }
 
 void Font::sizeText(std::string text, int* w, int* h)

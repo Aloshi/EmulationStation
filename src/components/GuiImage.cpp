@@ -3,7 +3,7 @@
 #include <boost/filesystem.hpp>
 
 int GuiImage::getWidth() { return mWidth; }
-int GuiImage::getHeight() { return 100; }
+int GuiImage::getHeight() { return mHeight; }
 
 GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxWidth, unsigned int maxHeight, bool resizeExact)
 {
@@ -79,6 +79,11 @@ void GuiImage::loadImage(std::string path)
 		return;
 	}
 
+	//convert to 32bit
+	FIBITMAP* imgConv = FreeImage_ConvertTo32Bits(image);
+	FreeImage_Unload(image);
+	image = imgConv;
+
 	imageData = FreeImage_GetBits(image);
 	if(!imageData)
 	{
@@ -97,19 +102,38 @@ void GuiImage::loadImage(std::string path)
 		return;
 	}
 
+
+	//convert from BGRA to RGBA
+	GLubyte* imageRGBA = new GLubyte[4*width*height];
+	for(unsigned int i = 0; i < width*height; i++)
+	{
+		imageRGBA[i*4+0] = imageData[i*4+2];
+		imageRGBA[i*4+1] = imageData[i*4+1];
+		imageRGBA[i*4+2] = imageData[i*4+0];
+		imageRGBA[i*4+3] = imageData[i*4+3];
+	}
+
+
+
 	//force power of two for testing
-	width = 512; height = 512;
+	//width = 512; height = 512;
 
 	//now for the openGL texture stuff
 	glGenTextures(1, &mTextureID);
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageRGBA);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
 	mWidth = width;
 	mHeight = height;
 
 	//free the image data
 	FreeImage_Unload(image);
+
+	//free the memory from that pointer
+	delete[] imageRGBA;
 
 	std::cout << "Image load successful, w: " << mWidth << " h: " << mHeight << " texID: " << mTextureID << "\n";
 }
@@ -178,13 +202,13 @@ void GuiImage::onRender()
 		//std::cout << "(w: " << mWidth << " h: " << mHeight << ")" << std::endl;
 
 		GLfloat texs[12];
-		texs[0] = 0;	texs[1] = 0;
-		texs[2] = 0;	texs[3] = 1;
-		texs[4] = 1;	texs[5] = 0;
+		texs[0] = 0;	texs[1] = 1;
+		texs[2] = 0;	texs[3] = 0;
+		texs[4] = 1;	texs[5] = 1;
 
-		texs[6] = 1;	texs[7] = 0;
-		texs[8] = 0;	texs[9] = 1;
-		texs[10] = 1;	texs[11] = 1;
+		texs[6] = 1;	texs[7] = 1;
+		texs[8] = 0;	texs[9] = 0;
+		texs[10] = 1;	texs[11] = 0;
 
 
 
