@@ -5,6 +5,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <SDL/SDL_joystick.h>
+#include "Renderer.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -70,6 +71,8 @@ void SystemData::launchGame(GameData* game)
 	//suspend SDL joystick events (these'll pile up even while something else is running)
 	SDL_JoystickEventState(0);
 
+	Renderer::deinit();
+
 	std::string command = mLaunchCommand;
 
 	command = strreplace(command, "%ROM%", game->getBashPath());
@@ -80,6 +83,8 @@ void SystemData::launchGame(GameData* game)
 	std::cout << "=====================================================\n";
 
 	std::cout << "...launch terminated!\n";
+
+	Renderer::init(0, 0);
 
 	//re-enable SDL joystick events
 	SDL_JoystickEventState(1);

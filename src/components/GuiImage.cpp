@@ -1,15 +1,13 @@
 #include "GuiImage.h"
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_rotozoom.h>
 #include <iostream>
 #include <boost/filesystem.hpp>
 
-int GuiImage::getWidth() { if(mSurface) return mSurface->w; else return 0; }
-int GuiImage::getHeight() { if(mSurface) return mSurface->h; else return 0; }
+int GuiImage::getWidth() { return mWidth; }
+int GuiImage::getHeight() { return 100; }
 
 GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxWidth, unsigned int maxHeight, bool resizeExact)
 {
-	mSurface = NULL;
+	mTextureID = 0;
 
 	mOffsetX = offsetX;
 	mOffsetY = offsetY;
@@ -17,6 +15,9 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxW
 	//default origin (center of image)
 	mOriginX = 0.5;
 	mOriginY = 0.5;
+
+	mWidth = 0;
+	mHeight = 0;
 
 	mTiled = false;
 
@@ -32,92 +33,96 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxW
 
 GuiImage::~GuiImage()
 {
-	if(mSurface)
-		SDL_FreeSurface(mSurface);
+	unloadImage();
 }
 
 void GuiImage::loadImage(std::string path)
 {
-	if(boost::filesystem::exists(path))
+	//make sure the file *exists*
+	if(!boost::filesystem::exists(path))
 	{
-		//start loading the image
-		SDL_Surface* newSurf = IMG_Load(path.c_str());
-
-		//if we started loading something else or failed to load, don't bother resizing
-		if(newSurf == NULL)
-		{
-			std::cerr << "Error loading image.\n";
-			return;
-		}
-
-
-		resizeSurface(&newSurf);
-
-		//convert it into display format for faster rendering
-		SDL_Surface* dispSurf;
-		if(mUseAlpha)
-			dispSurf = SDL_DisplayFormatAlpha(newSurf);
-		else
- 			dispSurf = SDL_DisplayFormat(newSurf);
-
-		SDL_FreeSurface(newSurf);
-		newSurf = dispSurf;
-
-
-		//finally set the image and delete the old one
-		if(mSurface)
-			SDL_FreeSurface(mSurface);
-
-		mSurface = newSurf;
-
-		updateRect();
-
-	}else{
 		std::cerr << "File \"" << path << "\" not found!\n";
+		return;
 	}
+
+	FREE_IMAGE_FORMAT format = FIF_UNKNOWN;
+	FIBITMAP* image = NULL;
+	BYTE* imageData = NULL;
+	unsigned int width, height;
+
+	//detect the filetype
+	//format = FreeImage_GetFileType(path.c_str(), 0);
+	if(format == FIF_UNKNOWN)
+		format = FreeImage_GetFIFFromFilename(path.c_str());
+	if(format == FIF_UNKNOWN)
+	{
+		std::cerr << "Error - could not detect filetype for image \"" << path << "\"!\n";
+		return;
+	}
+
+
+	//make sure we can read this filetype first, then load it
+	if(FreeImage_FIFSupportsReading(format))
+	{
+		std::cout << "Loading image...";
+		image = FreeImage_Load(format, path.c_str());
+		std::cout << "success\n";
+	}else{
+		std::cerr << "Error - file format reading not supported for image \"" << path << "\"!\n";
+		return;
+	}
+
+	//make sure it loaded properly
+	if(!image)
+	{
+		std::cerr << "Error loading image \"" << path << "\"!\n";
+		return;
+	}
+
+	imageData = FreeImage_GetBits(image);
+	if(!imageData)
+	{
+		std::cerr << "Error retriving bits from image \"" << path << "\"!\n";
+		return;
+	}
+
+
+
+	width = FreeImage_GetWidth(image);
+	height = FreeImage_GetHeight(image);
+
+	if(!width || !height)
+	{
+		std::cerr << "Width or height are zero for image \"" << path << "\"!\n";
+		return;
+	}
+
+	//force power of two for testing
+	width = 512; height = 512;
+
+	//now for the openGL texture stuff
+	glGenTextures(1, &mTextureID);
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
+	mWidth = width;
+	mHeight = height;
+
+	//free the image data
+	FreeImage_Unload(image);
+
+	std::cout << "Image load successful, w: " << mWidth << " h: " << mHeight << " texID: " << mTextureID << "\n";
 }
 
-//enjoy this overly-complicated pointer stuff that results from splitting a function too late
-void GuiImage::resizeSurface(SDL_Surface** surfRef)
+void GuiImage::unloadImage()
 {
-	if(mTiled)
-		return;
-
-	SDL_Surface* newSurf = *surfRef;
-	if(mResizeExact)
+	if(mTextureID)
 	{
-		double scaleX = (double)mMaxWidth / (double)newSurf->w;
-		double scaleY = (double)mMaxHeight / (double)newSurf->h;
+		std::cout << "deleting texture\n";
+		glDeleteTextures(1, &mTextureID);
 
-		if(scaleX == 0)
-			scaleX = scaleY;
-		if(scaleY == 0)
-			scaleY = scaleX;
-
-		SDL_Surface* resSurf = zoomSurface(newSurf, scaleX, scaleY, SMOOTHING_OFF);
-		SDL_FreeSurface(newSurf);
-		newSurf = resSurf;
-	}else{
-		if(mMaxWidth && newSurf->w > mMaxWidth)
-		{
-			double scale = (double)mMaxWidth / (double)newSurf->w;
-
-			SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
-			SDL_FreeSurface(newSurf);
-			newSurf = resSurf;
-       		}
-
-		if(mMaxHeight && newSurf->h > mMaxHeight)
-	      	{
-			double scale = (double)mMaxHeight / (double)newSurf->h;
-
-			SDL_Surface* resSurf = zoomSurface(newSurf, scale, scale, SMOOTHING_OFF);
-			SDL_FreeSurface(newSurf);
-			newSurf = resSurf;
-		}
+		mTextureID = 0;
 	}
-
-	*surfRef = newSurf;
 }
 
 void GuiImage::setImage(std::string path)
@@ -127,32 +132,16 @@ void GuiImage::setImage(std::string path)
 
 	mPath = path;
 
-	if(mSurface)
-	{
-		SDL_FreeSurface(mSurface);
-		mSurface = NULL;
-	}
-
+	unloadImage();
 	if(!path.empty())
 		loadImage(path);
 
-}
-
-void GuiImage::updateRect()
-{
-	mRect.x = mOffsetX /*- mSurface->w*/ - (mSurface->w * mOriginX);
-	mRect.y = mOffsetY - (mSurface->h * mOriginY);
-	mRect.w = mSurface->w;
-	mRect.h = mSurface->h;
 }
 
 void GuiImage::setOrigin(float originX, float originY)
 {
 	mOriginX = originX;
 	mOriginY = originY;
-
-	if(mSurface)
-		updateRect();
 }
 
 void GuiImage::setTiling(bool tile)
@@ -166,36 +155,51 @@ void GuiImage::setTiling(bool tile)
 void GuiImage::setAlpha(bool useAlpha)
 {
 	mUseAlpha = useAlpha;
-
-	if(mSurface)
-	{
-		SDL_FreeSurface(mSurface);
-		mSurface = NULL;
-		loadImage(mPath);
-	}
 }
-
-bool dbg = false;
 
 void GuiImage::onRender()
 {
-	if(mSurface)
+	if(mTextureID)
 	{
-		if(mTiled)
-		{
-			SDL_Rect rect = mRect;
-			for(int x = 0; x < mMaxWidth / mSurface->w + 0.5; x++)
-			{
-				for(int y = 0; y < mMaxHeight / mSurface->h + 0.5; y++)
-				{
-					SDL_BlitSurface(mSurface, NULL, Renderer::screen, &rect);
-					rect.y += mSurface->h;
-				}
-				rect.x += mSurface->w;
-				rect.y = mRect.y;
-			}
-		}else{
-			SDL_BlitSurface(mSurface, NULL, Renderer::screen, &mRect);
-		}
+		glBindTexture(GL_TEXTURE_2D, mTextureID);
+		glEnable(GL_TEXTURE_2D);
+
+
+		GLfloat points[12];
+		points[0] = mOffsetX - (mWidth * mOriginX);		points[1] = mOffsetY - (mHeight * mOriginY);
+		points[2] = mOffsetX - (mWidth * mOriginX);		points[3] = mOffsetY + (mHeight * (1 - mOriginY));
+		points[4] = mOffsetX + (mWidth * (1 - mOriginX));	points[5] = mOffsetY - (mHeight * mOriginY);
+
+		points[6] = mOffsetX + (mWidth * (1 - mOriginX));	points[7] = mOffsetY - (mHeight * mOriginY);
+		points[8] = mOffsetX - (mWidth * mOriginX);		points[9] = mOffsetY + (mHeight * (1 - mOriginY));
+		points[10] = mOffsetX + (mWidth * (1 -mOriginX));	points[11] = mOffsetY + (mHeight * (1 - mOriginY));
+
+		//std::cout << "x: " << points[0] << " y: " << points[1] << " to x: " << points[10] << " y: " << points[11] << std::endl;
+		//std::cout << "(w: " << mWidth << " h: " << mHeight << ")" << std::endl;
+
+		GLfloat texs[12];
+		texs[0] = 0;	texs[1] = 0;
+		texs[2] = 0;	texs[3] = 1;
+		texs[4] = 1;	texs[5] = 0;
+
+		texs[6] = 1;	texs[7] = 0;
+		texs[8] = 0;	texs[9] = 1;
+		texs[10] = 1;	texs[11] = 1;
+
+
+
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glVertexPointer(2, GL_FLOAT, 0, points);
+		glTexCoordPointer(2, GL_FLOAT, 0, texs);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		glDisable(GL_TEXTURE_2D);
 	}
 }

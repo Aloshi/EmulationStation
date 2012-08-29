@@ -1,11 +1,10 @@
 #include <iostream>
-#include <SDL/SDL.h>
-#include <SDL/SDL_ttf.h>
 #include "Renderer.h"
 #include "components/GuiGameList.h"
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
+#include <SDL.h>
 
 bool PARSEGAMELISTONLY = false;
 bool IGNOREGAMELIST = false;
@@ -29,13 +28,9 @@ int main(int argc, char* argv[])
 		std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed?\n";
 		return 1;
 	}
-	if(TTF_Init() != 0)
-	{
-		std::cerr << "Error - could not initialize SDL_ttf!\n";
-		std::cerr << "	" << TTF_GetError() << "\n";
-		return 1;
-	}
 
+	SDL_Surface* sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
+	std::cout << "Fake SDL window is " << sdlScreen->w << "x" << sdlScreen->h << "\n";
 
 	int width = 0;
 	int height = 0;
@@ -61,21 +56,14 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	Renderer::screen = SDL_SetVideoMode(width, height, 16, SDL_SWSURFACE); //| SDL_FULLSCREEN);
-
-	if(Renderer::screen == NULL)
+	if(!Renderer::init(width, height))
 	{
-		std::cerr << "Error - could not set video mode!\n";
-		std::cerr << "	" << SDL_GetError() << "\n";
-		std::cerr << "\nYou may want to try using -w and -h to specify a resolution.\n";
+		std::cerr << "Error initializing renderer!\n";
 		return 1;
-	}else{
-		std::cout << "Video mode is " << Renderer::screen->w << "x" << Renderer::screen->h << "\n";
 	}
 
-	SDL_ShowCursor(false);
-	SDL_JoystickEventState(SDL_ENABLE);
 
+	SDL_JoystickEventState(SDL_ENABLE);
 
 
 	//make sure the config directory exists
@@ -187,15 +175,16 @@ int main(int argc, char* argv[])
 		GuiComponent::processTicks(deltaTime);
 
 		Renderer::render();
-		SDL_Flip(Renderer::screen);
+		Renderer::swapBuffers();
 	}
 
+
 	Renderer::deleteAll();
+	Renderer::deinit();
 	SystemData::deleteSystems();
 
 	std::cout << "EmulationStation cleanly shutting down...\n";
 
-	TTF_Quit();
 	SDL_Quit();
 	return 0;
 }

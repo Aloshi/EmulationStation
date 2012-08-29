@@ -11,6 +11,8 @@
 #include "../GameData.h"
 #include "../FolderData.h"
 
+#define DRAWFRAMERATE
+
 class GuiGameList : GuiComponent
 {
 public:

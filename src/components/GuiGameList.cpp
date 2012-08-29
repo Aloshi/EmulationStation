@@ -4,8 +4,6 @@
 #include "GuiMenu.h"
 #include <boost/filesystem.hpp>
 
-//#define DRAWFRAMERATE
-
 #ifdef DRAWFRAMERATE
 	#include <sstream>
 	extern float FRAMERATE;
@@ -88,7 +86,7 @@ void GuiGameList::setSystemId(int id)
 
 void GuiGameList::onRender()
 {
-	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
+	//Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
 
 	if(mTheme)
 		mTheme->render();

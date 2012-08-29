@@ -1,7 +1,7 @@
 CC=g++
-CFLAGS=-c -Wall
-LDFLAGS=-lSDL -lSDL_ttf -lSDL_image -lSDL_gfx -lboost_system -lboost_filesystem
-SRCSOURCES=main.cpp Renderer.cpp Renderer_draw.cpp GuiComponent.cpp InputManager.cpp SystemData.cpp GameData.cpp FolderData.cpp XMLReader.cpp MathExp.cpp components/GuiGameList.cpp components/GuiInputConfig.cpp components/GuiImage.cpp components/GuiMenu.cpp components/GuiTheme.cpp pugiXML/pugixml.cpp
+CFLAGS=-c -Wall -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/usr/include/freetype2 -I/usr/include/SDL -I/usr/include
+LDFLAGS=-L/opt/vc/lib -lbcm_host -lEGL -lGLESv2 -lfreetype -lSDL -lboost_system -lboost_filesystem -lfreeimage
+SRCSOURCES=main.cpp Renderer.cpp Renderer_init_rpi.cpp Font.cpp Renderer_draw_gl.cpp GuiComponent.cpp InputManager.cpp SystemData.cpp GameData.cpp FolderData.cpp XMLReader.cpp MathExp.cpp components/GuiGameList.cpp components/GuiInputConfig.cpp components/GuiImage.cpp components/GuiMenu.cpp components/GuiTheme.cpp pugiXML/pugixml.cpp
 SOURCES=$(addprefix src/,$(SRCSOURCES))
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=emulationstation

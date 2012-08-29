@@ -2,9 +2,9 @@
 #define _GUIIMAGE_H_
 
 #include "../GuiComponent.h"
-#include <SDL/SDL.h>
-#include <SDL/SDL_thread.h>
 #include <string>
+#include <FreeImage.h>
+#include <GLES/gl.h>
 
 class GuiImage : public GuiComponent
 {
@@ -28,14 +28,14 @@ private:
 	bool mResizeExact, mTiled, mUseAlpha;
 
 	void loadImage(std::string path);
-	void resizeSurface(SDL_Surface** surfRef);
-	void updateRect();
+	void unloadImage();
 
 	std::string mPath;
 
-	SDL_Surface* mSurface;
 	int mOffsetX, mOffsetY;
-	SDL_Rect mRect;
+	unsigned int mWidth, mHeight;
+
+	GLuint mTextureID;
 };
 
 #endif
