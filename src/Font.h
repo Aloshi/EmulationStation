@@ -46,6 +46,7 @@ private:
 
 	int textureWidth;
 	int textureHeight;
+	int mMaxGlyphHeight;
 };
 
 #endif

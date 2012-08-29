@@ -23,11 +23,12 @@ public:
 	void onRender();
 
 private:
-	int mMaxWidth, mMaxHeight;
+	unsigned int mResizeWidth, mResizeHeight;
 	float mOriginX, mOriginY;
 	bool mResizeExact, mTiled, mUseAlpha;
 
 	void loadImage(std::string path);
+	void drawImage(int x, int y);
 	void unloadImage();
 
 	std::string mPath;

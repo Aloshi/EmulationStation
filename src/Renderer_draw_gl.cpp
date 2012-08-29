@@ -6,8 +6,11 @@
 namespace Renderer {
 	bool loadedFonts = false;
 
-	unsigned int getScreenWidth() { return 1680; }
-	unsigned int getScreenHeight() { return 1050; }
+	//defined and set in Renderer_init_rpi.cpp
+	extern unsigned int display_width;
+	extern unsigned int display_height;
+	unsigned int getScreenWidth() { return display_width; }
+	unsigned int getScreenHeight() { return display_height; }
 
 	void setColor4bArray(GLubyte* array, int color)
 	{
@@ -52,25 +55,29 @@ namespace Renderer {
 		glDisableClientState(GL_COLOR_ARRAY);
 	}
 
-	Font* defaultFont = NULL;
+
+
+
+	Font* fonts[3] = {NULL, NULL, NULL};
 	void loadFonts()
 	{
 		std::cout << "loading fonts\n";
 
-		if(defaultFont != NULL)
-			delete defaultFont;
-
-		defaultFont = new Font("LinLibertine_R.ttf", 12);
+		unsigned int fontSizes[] = {10, 12, 22};
+		for(unsigned int i = 0; i < 3; i++)
+		{
+			fonts[i] = new Font("LinLibertine_R.ttf", fontSizes[i]);
+		}
 
 		loadedFonts = true;
 	}
 
 	void unloadFonts()
 	{
-		if(defaultFont)
+		for(unsigned int i = 0; i < 3; i++)
 		{
-			delete defaultFont;
-			defaultFont = NULL;
+			delete fonts[i];
+			fonts[i] = NULL;
 		}
 
 		loadedFonts = false;
@@ -78,7 +85,10 @@ namespace Renderer {
 
 	Font* getFont(FontSize size)
 	{
-		return defaultFont;
+		if(!loadedFonts)
+			loadFonts();
+
+		return fonts[size];
 	}
 
 
@@ -88,7 +98,7 @@ namespace Renderer {
 			loadFonts();
 
 		int h;
-		getFont(size)->sizeText("", NULL, &h);
+		getFont(size)->sizeText("HEIGHT", NULL, &h);
 
 		return h;
 	}

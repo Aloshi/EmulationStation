@@ -15,7 +15,10 @@ namespace Renderer
 
 	static EGL_DISPMANX_WINDOW_T nativewindow;
 
-	bool createSurface()
+	unsigned int display_width = 0;
+	unsigned int display_height = 0;
+
+	bool createSurface() //unsigned int display_width, unsigned int display_height)
 	{
 		std::cout << "Creating surface...\n";
 
@@ -83,16 +86,15 @@ namespace Renderer
 
 
 
-
-		unsigned int display_width;
-		unsigned int display_height;
-
-		bool success = graphics_get_display_size(0, &display_width, &display_height); //0 = LCD
-
-		if(success < 0)
+		if(!display_width || !display_height)
 		{
-			std::cerr << "Error getting display size!\n";
-			return false;
+			bool success = graphics_get_display_size(0, &display_width, &display_height); //0 = LCD
+
+			if(success < 0)
+			{
+				std::cerr << "Error getting display size!\n";
+				return false;
+			}
 		}
 
 		std::cout << "Display size is " << display_width << "x" << display_height << "\n";
@@ -139,7 +141,7 @@ namespace Renderer
 	void swapBuffers()
 	{
 		eglSwapBuffers(display, surface);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	void destroySurface()
@@ -154,15 +156,21 @@ namespace Renderer
 	bool init(int w, int h)
 	{
 		bcm_host_init();
-		bool surface = createSurface();
 
-		if(!surface)
+		if(w)
+			display_width = w;
+		if(h)
+			display_height = h;
+
+		bool createdSurface = createSurface();
+
+		if(!createdSurface)
 			return false;
 
 		Font::initLibrary();
 
-		glViewport(0, 0, 1680, 1050);
-		glOrthof(0, 1680, 1050, 0, -1.0, 1.0);
+		glViewport(0, 0, display_width, display_height);
+		glOrthof(0, display_width, display_height, 0, -1.0, 1.0);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		return true;

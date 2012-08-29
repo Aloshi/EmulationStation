@@ -19,6 +19,8 @@ void Font::initLibrary()
 
 Font::Font(std::string path, int size)
 {
+	mMaxGlyphHeight = 0;
+
 	if(FT_New_Face(sLibrary, path.c_str(), 0, &face))
 	{
 		std::cout << "Error creating font face! (path: " << path.c_str() << "\n";
@@ -49,10 +51,9 @@ void Font::buildAtlas()
 		h = std::max(h, g->bitmap.rows);
 	}*/
 
-	//GLES requires a power of two
-	//the max size (GL_MAX_TEXTURE_SIZE) is pretty small too, like 3300, so just force it
+	//the max size (GL_MAX_TEXTURE_SIZE) is like 3300
 	w = 2048;
-	h = 2048;
+	h = 512;
 
 	textureWidth = w;
 	textureHeight = h;
@@ -99,22 +100,28 @@ void Font::buildAtlas()
 		{
 			x = 0;
 			y += maxHeight;
+
+			std::cout << "looping to next row, maxHeight: " << maxHeight << std::endl;
+
 			maxHeight = 0;
 		}
 
 		if(g->bitmap.rows > maxHeight)
 			maxHeight = g->bitmap.rows;
 
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, 0, g->bitmap.width, g->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, g->bitmap.buffer);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, g->bitmap.width, g->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, g->bitmap.buffer);
 
 
 		charData[i].texX = x;
-		charData[i].texY = 0;
+		charData[i].texY = y;
 		charData[i].texW = g->bitmap.width;
 		charData[i].texH = g->bitmap.rows;
 		charData[i].advX = g->metrics.horiAdvance >> 6;
 		charData[i].advY = g->advance.y >> 6;
 		charData[i].bearingY = g->metrics.horiBearingY >> 6;
+
+		if(charData[i].texH > mMaxGlyphHeight)
+			mMaxGlyphHeight = charData[i].texH;
 
 		x += g->bitmap.width;
 	}
@@ -138,6 +145,8 @@ Font::~Font()
 //openGL reads these in the order they are in memory
 //if I use an array, it will be 4 x values then 4 y values
 //it'll read XX, XX, YY instead of XY, XY, XY
+//...
+//that was the thinking at the time and honestly an array would have been smarter wow I'm dumb
 struct point {
 	GLfloat pos0x;
 	GLfloat pos0y;
@@ -162,8 +171,11 @@ struct tex {
 
 void Font::drawText(std::string text, int startx, int starty, int color)
 {
+	starty += mMaxGlyphHeight;
 
-	starty += (face->height / face->units_per_EM) << 6; //(face->height / face->units_per_EM) << 6;
+	//padding (another 0.5% is added to the bottom through the sizeText function)
+	starty += Renderer::getScreenHeight() * 0.005;
+
 
 	int pointCount = text.length() * 2;
 	point* points = new point[pointCount];
@@ -193,24 +205,24 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		if(letter < 32 || letter >= 128)
 			continue;
 
-		points[p].pos0x = x;										points[p].pos0y = y + charData[letter].texH - charData[letter].bearingY;
-		points[p].pos1x = x + charData[letter].texW;			points[p].pos1y = y - charData[letter].bearingY;
-		points[p].pos2x = x;										points[p].pos2y = y - charData[letter].bearingY;
+		points[p].pos0x = x;								points[p].pos0y = y + charData[letter].texH - charData[letter].bearingY;
+		points[p].pos1x = x + charData[letter].texW;					points[p].pos1y = y - charData[letter].bearingY;
+		points[p].pos2x = x;								points[p].pos2y = y - charData[letter].bearingY;
 
-		texs[p].tex0x = charData[letter].texX / tw;									texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
-		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;	texs[p].tex1y = charData[letter].texY / th;
-		texs[p].tex2x = charData[letter].texX / tw;									texs[p].tex2y = charData[letter].texY / th;
+		texs[p].tex0x = charData[letter].texX / tw;					texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
+		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;		texs[p].tex1y = charData[letter].texY / th;
+		texs[p].tex2x = charData[letter].texX / tw;					texs[p].tex2y = charData[letter].texY / th;
 
 
 		p++;
 
-		points[p].pos0x = x;										points[p].pos0y = y + charData[letter].texH  - charData[letter].bearingY;
+		points[p].pos0x = x;						points[p].pos0y = y + charData[letter].texH  - charData[letter].bearingY;
 		points[p].pos1x = x + charData[letter].texW;			points[p].pos1y = y  - charData[letter].bearingY;
 		points[p].pos2x = x + charData[letter].texW;			points[p].pos2y = y + charData[letter].texH  - charData[letter].bearingY;
 
-		texs[p].tex0x = charData[letter].texX / tw;									texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
-		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;	texs[p].tex1y = charData[letter].texY / th;
-		texs[p].tex2x = texs[p].tex1x;														texs[p].tex2y = texs[p].tex0y;
+		texs[p].tex0x = charData[letter].texX / tw;					texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
+		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;		texs[p].tex1y = charData[letter].texY / th;
+		texs[p].tex2x = texs[p].tex1x;							texs[p].tex2y = texs[p].tex0y;
 
 
 		x += charData[letter].advX;
@@ -242,17 +254,16 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 
 void Font::sizeText(std::string text, int* w, int* h)
 {
-	if(w != NULL)
+	int cwidth = 0;
+	for(unsigned int i = 0; i < text.length(); i++)
 	{
-		int cwidth = 0;
-		for(unsigned int i = 0; i < text.length(); i++)
-		{
-			cwidth += charData[(int)text[i]].advX;
-		}
-
-		*w = cwidth;
+		cwidth += charData[(int)text[i]].advX;
 	}
 
+
+	if(w != NULL)
+		*w = cwidth;
+
 	if(h != NULL)
-		*h = (face->height / face->units_per_EM) << 6;
+		*h = mMaxGlyphHeight + Renderer::getScreenWidth() * 0.01;
 }

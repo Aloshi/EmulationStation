@@ -26,7 +26,6 @@ GuiGameList::GuiGameList(bool useDetail)
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * sInfoWidth * 0.7);
 		mScreenshot->setOrigin(0.5, 0.0);
-		mScreenshot->setAlpha(true); //slower, but requested
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
@@ -96,7 +95,7 @@ void GuiGameList::onRender()
 		ss << FRAMERATE;
 		std::string fps;
 		ss >> fps;
-		Renderer::drawText(fps, 0, 0, 0x00FF00);
+		Renderer::drawText(fps, 100, 0, 0x00FF00);
 	#endif
 
 	//header

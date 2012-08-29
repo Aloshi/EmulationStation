@@ -5,7 +5,7 @@
 int GuiImage::getWidth() { return mWidth; }
 int GuiImage::getHeight() { return mHeight; }
 
-GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxWidth, unsigned int maxHeight, bool resizeExact)
+GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact)
 {
 	mTextureID = 0;
 
@@ -21,8 +21,8 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int maxW
 
 	mTiled = false;
 
-	mMaxWidth = maxWidth;
-	mMaxHeight = maxHeight;
+	mResizeWidth = resizeWidth;
+	mResizeHeight = resizeHeight;
 
 	mResizeExact = resizeExact;
 	mUseAlpha = false;
@@ -115,9 +115,6 @@ void GuiImage::loadImage(std::string path)
 
 
 
-	//force power of two for testing
-	//width = 512; height = 512;
-
 	//now for the openGL texture stuff
 	glGenTextures(1, &mTextureID);
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
@@ -134,6 +131,36 @@ void GuiImage::loadImage(std::string path)
 
 	//free the memory from that pointer
 	delete[] imageRGBA;
+
+	//a simple way to resize: lie about our real texture size!
+	//(we don't resize tiled images)
+	if(!mTiled)
+	{
+		float resizeScaleX = 0, resizeScaleY = 0;
+		if(mResizeExact)
+		{
+			if(mResizeWidth)
+				resizeScaleX = (float)mResizeWidth / mWidth;
+			if(mResizeHeight)
+				resizeScaleY = (float)mResizeHeight / mHeight;
+		}else{
+			if(mResizeWidth && mWidth > mResizeWidth)
+				resizeScaleX = (float)mResizeWidth / mWidth;
+
+			if(mResizeHeight && mHeight > mResizeHeight)
+				resizeScaleY = (float)mResizeHeight / mHeight;
+		}
+
+		if(resizeScaleX && !resizeScaleY)
+			resizeScaleY = resizeScaleX;
+		if(resizeScaleY && !resizeScaleX)
+			resizeScaleX = resizeScaleY;
+
+		if(resizeScaleX)
+			mWidth *= resizeScaleX;
+		if(resizeScaleY)
+			mHeight *= resizeScaleY;
+	}
 
 	std::cout << "Image load successful, w: " << mWidth << " h: " << mHeight << " texID: " << mTextureID << "\n";
 }
@@ -185,45 +212,60 @@ void GuiImage::onRender()
 {
 	if(mTextureID)
 	{
-		glBindTexture(GL_TEXTURE_2D, mTextureID);
-		glEnable(GL_TEXTURE_2D);
-
-
-		GLfloat points[12];
-		points[0] = mOffsetX - (mWidth * mOriginX);		points[1] = mOffsetY - (mHeight * mOriginY);
-		points[2] = mOffsetX - (mWidth * mOriginX);		points[3] = mOffsetY + (mHeight * (1 - mOriginY));
-		points[4] = mOffsetX + (mWidth * (1 - mOriginX));	points[5] = mOffsetY - (mHeight * mOriginY);
-
-		points[6] = mOffsetX + (mWidth * (1 - mOriginX));	points[7] = mOffsetY - (mHeight * mOriginY);
-		points[8] = mOffsetX - (mWidth * mOriginX);		points[9] = mOffsetY + (mHeight * (1 - mOriginY));
-		points[10] = mOffsetX + (mWidth * (1 -mOriginX));	points[11] = mOffsetY + (mHeight * (1 - mOriginY));
-
-		//std::cout << "x: " << points[0] << " y: " << points[1] << " to x: " << points[10] << " y: " << points[11] << std::endl;
-		//std::cout << "(w: " << mWidth << " h: " << mHeight << ")" << std::endl;
-
-		GLfloat texs[12];
-		texs[0] = 0;	texs[1] = 1;
-		texs[2] = 0;	texs[3] = 0;
-		texs[4] = 1;	texs[5] = 1;
-
-		texs[6] = 1;	texs[7] = 1;
-		texs[8] = 0;	texs[9] = 0;
-		texs[10] = 1;	texs[11] = 0;
-
-
-
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		glVertexPointer(2, GL_FLOAT, 0, points);
-		glTexCoordPointer(2, GL_FLOAT, 0, texs);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		glDisable(GL_TEXTURE_2D);
+		if(mTiled)
+		{
+			for(unsigned int x = 0; x < (unsigned int)((float)mResizeWidth/mWidth + 1.5); x++)
+			{
+				for(unsigned int y = 0; y < (unsigned int)((float)mResizeHeight/mHeight + 1.5); y++)
+				{
+					drawImage(mOffsetX + x*mWidth, mOffsetY + y*mHeight);
+				}
+			}
+		}else{
+			drawImage(mOffsetX, mOffsetY);
+		}
 	}
+}
+
+void GuiImage::drawImage(int posX, int posY)
+{
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+
+	GLfloat points[12];
+	points[0] = posX - (mWidth * mOriginX);		points[1] = posY - (mHeight * mOriginY);
+	points[2] = posX - (mWidth * mOriginX);		points[3] = posY + (mHeight * (1 - mOriginY));
+	points[4] = posX + (mWidth * (1 - mOriginX));	points[5] = posY - (mHeight * mOriginY);
+
+	points[6] = posX + (mWidth * (1 - mOriginX));	points[7] = posY - (mHeight * mOriginY);
+	points[8] = posX - (mWidth * mOriginX);		points[9] = posY + (mHeight * (1 - mOriginY));
+	points[10] = posX + (mWidth * (1 -mOriginX));	points[11] = posY + (mHeight * (1 - mOriginY));
+
+	//std::cout << "x: " << points[0] << " y: " << points[1] << " to x: " << points[10] << " y: " << points[11] << std::endl;
+	//std::cout << "(w: " << mWidth << " h: " << mHeight << ")" << std::endl;
+
+	GLfloat texs[12];
+	texs[0] = 0;	texs[1] = 1;
+	texs[2] = 0;	texs[3] = 0;
+	texs[4] = 1;	texs[5] = 1;
+
+	texs[6] = 1;	texs[7] = 1;
+	texs[8] = 0;	texs[9] = 0;
+	texs[10] = 1;	texs[11] = 0;
+
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glVertexPointer(2, GL_FLOAT, 0, points);
+	glTexCoordPointer(2, GL_FLOAT, 0, texs);
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
 }

@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
 	SDL_Surface* sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
 	std::cout << "Fake SDL window is " << sdlScreen->w << "x" << sdlScreen->h << "\n";
 
-	int width = 0;
-	int height = 0;
+	unsigned int width = 0;
+	unsigned int height = 0;
 	if(argc > 1)
 	{
 		for(int i = 1; i < argc; i++)
@@ -56,7 +56,8 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	if(!Renderer::init(width, height))
+	bool renderInit = Renderer::init(width, height);
+	if(!renderInit)
 	{
 		std::cerr << "Error initializing renderer!\n";
 		return 1;
