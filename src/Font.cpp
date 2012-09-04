@@ -13,7 +13,7 @@ void Font::initLibrary()
 {
 	if(FT_Init_FreeType(&sLibrary))
 	{
-		std::cout << "Error initializing FreeType!\n";
+		std::cerr << "Error initializing FreeType!\n";
 	}
 }
 
@@ -23,7 +23,7 @@ Font::Font(std::string path, int size)
 
 	if(FT_New_Face(sLibrary, path.c_str(), 0, &face))
 	{
-		std::cout << "Error creating font face! (path: " << path.c_str() << "\n";
+		std::cerr << "Error creating font face! (path: " << path.c_str() << "\n";
 		while(true);
 	}
 
@@ -100,9 +100,6 @@ void Font::buildAtlas()
 		{
 			x = 0;
 			y += maxHeight;
-
-			std::cout << "looping to next row, maxHeight: " << maxHeight << std::endl;
-
 			maxHeight = 0;
 		}
 
@@ -128,8 +125,7 @@ void Font::buildAtlas()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	std::cout << "generated texture \"" << textureID << "\" (w: " << w << " h: " << h << ")" << std::endl;
-	std::cout << "(final x: " << x << " y: " << y << ")" << std::endl;
+	//std::cout << "generated texture \"" << textureID << "\" (w: " << w << " h: " << h << ")" << std::endl;
 }
 
 Font::~Font()
@@ -174,7 +170,8 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	starty += mMaxGlyphHeight;
 
 	//padding (another 0.5% is added to the bottom through the sizeText function)
-	starty += Renderer::getScreenHeight() * 0.005;
+	//starty += Renderer::getScreenHeight() * 0.01;
+	starty += mMaxGlyphHeight * 0.1;
 
 
 	int pointCount = text.length() * 2;
@@ -200,7 +197,7 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	float y = starty;
 	for(; p < pointCount; i++, p++)
 	{
-		int letter = text[i];
+		unsigned char letter = text[i];
 
 		if(letter < 32 || letter >= 128)
 			continue;
@@ -257,7 +254,11 @@ void Font::sizeText(std::string text, int* w, int* h)
 	int cwidth = 0;
 	for(unsigned int i = 0; i < text.length(); i++)
 	{
-		cwidth += charData[(int)text[i]].advX;
+		unsigned char letter = text[i];
+		if(letter < 32 || letter >= 128)
+			continue;
+
+		cwidth += charData[letter].advX;
 	}
 
 
@@ -265,5 +266,5 @@ void Font::sizeText(std::string text, int* w, int* h)
 		*w = cwidth;
 
 	if(h != NULL)
-		*h = mMaxGlyphHeight + Renderer::getScreenWidth() * 0.01;
+		*h = mMaxGlyphHeight + mMaxGlyphHeight * 0.5;
 }

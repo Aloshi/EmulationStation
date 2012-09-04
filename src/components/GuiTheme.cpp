@@ -114,7 +114,6 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		std::string dim = data.child("dim").text().get();
 		std::string origin = data.child("origin").text().get();
 
-		bool useAlpha = data.child("useAlpha");
 		bool tiled = data.child("tiled");
 
 		//split position and dimension information
@@ -127,7 +126,7 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		std::string originX, originY;
 		splitString(origin, ' ', &originX, &originY);
 
-		std::cout << "image, x: " << posX << " y: " << posY << " w: " << dimW << " h: " << dimH << " ox: " << originX << " oy: " << originY << " alpha: " << useAlpha << " tiled: " << tiled << "\n";
+		std::cout << "image, x: " << posX << " y: " << posY << " w: " << dimW << " h: " << dimH << " ox: " << originX << " oy: " << originY << " tiled: " << tiled << "\n";
 
 		//resolve to pixels from percentages/variables
 		int x = resolveExp(posX) * Renderer::getScreenWidth();
@@ -142,7 +141,6 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 
 		GuiImage* comp = new GuiImage(x, y, "", w, h, true);
 		comp->setOrigin(ox, oy);
-		comp->setAlpha(useAlpha);
 		comp->setTiling(tiled);
 		comp->setImage(path);
 

@@ -95,7 +95,7 @@ void GuiGameList::onRender()
 		ss << FRAMERATE;
 		std::string fps;
 		ss >> fps;
-		Renderer::drawText(fps, 100, 0, 0x00FF00);
+		Renderer::drawText(fps, 100, 50, 0x00FF00);
 	#endif
 
 	//header
@@ -234,4 +234,14 @@ void GuiGameList::onPause()
 void GuiGameList::onResume()
 {
 	InputManager::registerComponent(this);
+}
+
+void GuiGameList::onDeinit()
+{
+	mTheme->deinit();
+}
+
+void GuiGameList::onInit()
+{
+	mTheme->onInit();
 }

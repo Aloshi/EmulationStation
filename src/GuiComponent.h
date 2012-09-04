@@ -20,6 +20,11 @@ public:
 	virtual void onPause() { };
 	virtual void onResume() { };
 
+	void init();
+	void deinit();
+	virtual void onInit() { };
+	virtual void onDeinit() { };
+
 	virtual void onInput(InputManager::InputButton button, bool keyDown) { };
 
 	void addChild(GuiComponent* comp);

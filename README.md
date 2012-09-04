@@ -1,22 +1,22 @@
 EmulationStation
 ================
 
-A simple front-end for emulators made with SDL, designed for controller navigation. Developed for use with the Raspberry Pi and RetroArch, though it can easily be used for other things.
+A graphical front-end for emulators with controller navigation. Developed both on and for the Raspbery Pi. Intended for use with RetroArch, but it can easily be used with other emulators.
 
 RetroArch for the Raspberry Pi can be found here: https://github.com/ToadKing/RetroArch-Rpi
 I'm not associated with RetroArch in any way!
 
-If you're lazy, a cool guy named petrockblog made a script which automatically installs RetroArch, its cores, and ES: https://github.com/petrockblog/RetroPie-Setup
+A cool guy named petrockblog made a script which automatically installs RetroArch, its cores, and ES. It also includes options for configuring your RPi and setting it up to boot directly into ES. You can find it here: https://github.com/petrockblog/RetroPie-Setup
 
 Building
 ========
 
-EmulationStation has quite a few dependencies. For building, you'll need SDL 1.2, the SDL TTF library, the SDL image library, the SDL_gfx library, and Boost.Filesystem, which can easily be obtained with apt-get:
+EmulationStation has a few dependencies. For building, you'll need SDL 1.2, FreeImage, FreeType, and Boost.Filesystem, which can easily be obtained with apt-get:
 ```
-sudo apt-get install libsdl1.2-dev libsdl-ttf2.0-dev libboost-filesystem-dev libsdl-image1.2-dev libsdl-gfx1.2-dev
+sudo apt-get install libsdl1.2-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev
 ```
 
-You can build EmulationStation by simply running `make`.
+There are also a few libraries already on the RPi (located in /opt/vc/, like the Broadcom libraries, EGL, and GLES). You can build EmulationStation by simply running `make`.
 
 Configuring
 ===========
@@ -53,12 +53,12 @@ The path element should be the absolute path of the ROM. Special characters SHOU
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 
-A cool guy named Pendor made a scraper which automatically generates a gamelist.xml for you, with boxart automatically downloaded: https://github.com/jpzapa/ES-thegamesdb-scraper
+**Making a gamelist.xml by hand sucks, so a cool guy named Pendor made a python script which automatically generates a gamelist.xml for you, with boxart automatically downloaded. I highly recommend it. It can be found here:** https://github.com/elpendor/ES-scraper
 
 Themes
 ======
 
-If you want to know more about themes, read THEMES.md!
+By default, EmulationStation looks pretty ugly. You can fix that. If you want to know more, read THEMES.md!
 
 
 -Aloshi

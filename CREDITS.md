@@ -5,7 +5,7 @@ Programming
 Resources
 =========
 
-LinLibertine.ttf
+LinLibertine_R.ttf
 	The Libertine Font Project - http://www.linuxlibertine.org/
 
 PugiXML
@@ -14,11 +14,8 @@ PugiXML
 SDL 1.2
 	http://www.libsdl.org/
 
-SDL TTF
-	http://www.libsdl.org/projects/SDL_ttf/
+FreeImage
+	http://www.freeimage.sourceforge.net
 
-SDL_image
-	http://www.libsdl.org/projects/SDL_image/
-
-SDL_gfx
-	http://sourceforge.net/projects/sdlgfx/
+FreeType
+	http://www.freetype.org

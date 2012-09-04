@@ -167,7 +167,6 @@ void SystemData::loadConfig()
 					lineValid = true;
 					varName = line.substr(0, i);
 					varValue = line.substr(i + 1, line.length() - 1);
-					std::cout << "	" << varName << " = " << varValue << "\n";
 					break;
 				}
 			}
@@ -184,7 +183,7 @@ void SystemData::loadConfig()
 				else if(varName == "COMMAND")
 					sysCommand = varValue;
 				//else
-				//	std::cerr << "Error reading config file - unknown variable name \"" << varName << "\"!\n";
+				//	std::cout << "Warning reading config file - unknown variable name \"" << varName << "\", ignoring.\n";
 
 				//we have all our variables - create the system object
 				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())

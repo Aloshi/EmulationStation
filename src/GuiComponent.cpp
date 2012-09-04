@@ -78,3 +78,22 @@ void GuiComponent::resume()
 		mChildren.at(i)->resume();
 }
 
+void GuiComponent::init()
+{
+	onInit();
+
+	for(unsigned int i = 0; i < mChildren.size(); i++)
+	{
+		mChildren.at(i)->init();
+	}
+}
+
+void GuiComponent::deinit()
+{
+	onDeinit();
+
+	for(unsigned int i = 0; i < mChildren.size(); i++)
+	{
+		mChildren.at(i)->deinit();
+	}
+}

@@ -2,6 +2,7 @@
 #include <GLES/gl.h>
 #include <iostream>
 #include "Font.h"
+#include <boost/filesystem.hpp>
 
 namespace Renderer {
 	bool loadedFonts = false;
@@ -63,10 +64,23 @@ namespace Renderer {
 	{
 		std::cout << "loading fonts\n";
 
-		unsigned int fontSizes[] = {10, 12, 22};
+		std::string fontPath = "LinLibertine_R.ttf";
+
+		//make sure our font exists
+		if(!boost::filesystem::exists(fontPath))
+		{
+			std::cout << "Default font \"" << fontPath << "\" does not exist! Attempting to default to a system font...\n";
+			fontPath = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
+			if(!boost::filesystem::exists(fontPath))
+			{
+				std::cerr << "System font \"" << fontPath << "\" wasn't found either! Well, you're kind of screwed. Sorry.\n";
+			}
+		}
+
+		float fontSizes[] = {0.004, 0.006, 0.009};
 		for(unsigned int i = 0; i < 3; i++)
 		{
-			fonts[i] = new Font("LinLibertine_R.ttf", fontSizes[i]);
+			fonts[i] = new Font(fontPath, (unsigned int)(fontSizes[i] * getScreenWidth()));
 		}
 
 		loadedFonts = true;
@@ -107,6 +121,9 @@ namespace Renderer {
 	{
 		if(!loadedFonts)
 			loadFonts();
+
+		if(x < 0)
+			std::cout << "drawing at " << x << std::endl;
 
 		getFont(font)->drawText(text, x, y, color);
 	}

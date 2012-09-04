@@ -5,6 +5,7 @@
 #include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
 #include <SDL.h>
+#include <bcm_host.h>
 
 bool PARSEGAMELISTONLY = false;
 bool IGNOREGAMELIST = false;
@@ -17,6 +18,8 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char* argv[])
 {
+	bcm_host_init();
+
 	bool running = true;
 
 	//by the way, if anyone ever tries to port this to a different renderer but leave SDL as input -
@@ -187,5 +190,8 @@ int main(int argc, char* argv[])
 	std::cout << "EmulationStation cleanly shutting down...\n";
 
 	SDL_Quit();
+
+	bcm_host_deinit();
+
 	return 0;
 }

@@ -1,3 +1,4 @@
+#include "Renderer.h"
 #include <bcm_host.h>
 #include <iostream>
 #include <bcm_host.h>
@@ -71,7 +72,6 @@ namespace Renderer
 			std::cerr << "Error choosing config!\n";
 			return false;
 		}
-		std::cout << "numConfigs: " << numConfigs << "\n";
 
 
 		context = eglCreateContext(display, config, EGL_NO_CONTEXT, NULL);
@@ -97,7 +97,7 @@ namespace Renderer
 			}
 		}
 
-		std::cout << "Display size is " << display_width << "x" << display_height << "\n";
+		std::cout << "Display size is " << display_width << "x" << display_height << ".\n";
 
 
 		dst_rect.x = 0; dst_rect.y = 0;
@@ -133,7 +133,7 @@ namespace Renderer
 		}
 
 
-		std::cout << "success!\n";
+		std::cout << "Success!\n";
 
 		return true;
 	}
@@ -151,12 +151,14 @@ namespace Renderer
 		eglDestroySurface(display, surface);
 		eglDestroyContext(display, context);
 		eglTerminate(display);
+
+		display = EGL_NO_DISPLAY;
+		surface = EGL_NO_SURFACE;
+		context = EGL_NO_CONTEXT;
 	}
 
 	bool init(int w, int h)
 	{
-		bcm_host_init();
-
 		if(w)
 			display_width = w;
 		if(h)
@@ -173,14 +175,17 @@ namespace Renderer
 		glOrthof(0, display_width, display_height, 0, -1.0, 1.0);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+		onInit();
+
 		return true;
 	}
 
-	void unloadFonts();
+	void unloadFonts(); //defined in Renderer_draw_gl.cpp
 	void deinit()
 	{
+		onDeinit();
+
 		unloadFonts();
 		destroySurface();
-		bcm_host_deinit();
 	}
 };

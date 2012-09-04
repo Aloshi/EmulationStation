@@ -25,7 +25,6 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resi
 	mResizeHeight = resizeHeight;
 
 	mResizeExact = resizeExact;
-	mUseAlpha = false;
 
 	if(!path.empty())
 		setImage(path);
@@ -44,6 +43,10 @@ void GuiImage::loadImage(std::string path)
 		std::cerr << "File \"" << path << "\" not found!\n";
 		return;
 	}
+
+	//make sure we don't already have an image
+	unloadImage();
+
 
 	FREE_IMAGE_FORMAT format = FIF_UNKNOWN;
 	FIBITMAP* image = NULL;
@@ -64,9 +67,7 @@ void GuiImage::loadImage(std::string path)
 	//make sure we can read this filetype first, then load it
 	if(FreeImage_FIFSupportsReading(format))
 	{
-		std::cout << "Loading image...";
 		image = FreeImage_Load(format, path.c_str());
-		std::cout << "success\n";
 	}else{
 		std::cerr << "Error - file format reading not supported for image \"" << path << "\"!\n";
 		return;
@@ -162,14 +163,13 @@ void GuiImage::loadImage(std::string path)
 			mHeight *= resizeScaleY;
 	}
 
-	std::cout << "Image load successful, w: " << mWidth << " h: " << mHeight << " texID: " << mTextureID << "\n";
+	//std::cout << "Image load successful, w: " << mWidth << " h: " << mHeight << " texID: " << mTextureID << "\n";
 }
 
 void GuiImage::unloadImage()
 {
 	if(mTextureID)
 	{
-		std::cout << "deleting texture\n";
 		glDeleteTextures(1, &mTextureID);
 
 		mTextureID = 0;
@@ -203,11 +203,6 @@ void GuiImage::setTiling(bool tile)
 		mResizeExact = false;
 }
 
-void GuiImage::setAlpha(bool useAlpha)
-{
-	mUseAlpha = useAlpha;
-}
-
 void GuiImage::onRender()
 {
 	if(mTextureID)
@@ -232,6 +227,7 @@ void GuiImage::drawImage(int posX, int posY)
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	GLfloat points[12];
 	points[0] = posX - (mWidth * mOriginX);		points[1] = posY - (mHeight * mOriginY);
@@ -268,4 +264,17 @@ void GuiImage::drawImage(int posX, int posY)
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
+}
+
+void GuiImage::onInit()
+{
+	if(!mPath.empty())
+	{
+		loadImage(mPath);
+	}
+}
+
+void GuiImage::onDeinit()
+{
+	unloadImage();
 }

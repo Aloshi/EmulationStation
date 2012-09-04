@@ -14,7 +14,9 @@ namespace Renderer
 	void deleteAll();
 
 	bool init(int w, int h);
+	void onInit();
 	void deinit();
+	void onDeinit();
 
 	void render();
 

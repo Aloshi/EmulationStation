@@ -15,17 +15,19 @@ public:
 	void setImage(std::string path);
 	void setOrigin(float originX, float originY);
 	void setTiling(bool tile);
-	void setAlpha(bool useAlpha);
 
 	int getWidth();
 	int getHeight();
 
 	void onRender();
 
+	void onInit();
+	void onDeinit();
+
 private:
 	unsigned int mResizeWidth, mResizeHeight;
 	float mOriginX, mOriginY;
-	bool mResizeExact, mTiled, mUseAlpha;
+	bool mResizeExact, mTiled;
 
 	void loadImage(std::string path);
 	void drawImage(int x, int y);

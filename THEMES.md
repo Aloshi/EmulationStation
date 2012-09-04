@@ -50,8 +50,6 @@ Used to display an image.
 
 `<tiled />` - if present, the image is tiled instead of resized. Tiling isn't exact at the moment, but good enough for backgrounds.
 
-`<useAlpha />` - if present, the image will not be stripped of its alpha channel. It will render much slower, but should have transparency.
-
 
 Display tags
 ============

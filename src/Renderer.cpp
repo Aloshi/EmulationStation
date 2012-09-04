@@ -36,3 +36,19 @@ void Renderer::render()
 		renderVector.at(i)->render();
 	}
 }
+
+void Renderer::onInit()
+{
+	for(unsigned int i = 0; i < renderVector.size(); i++)
+	{
+		renderVector.at(i)->init();
+	}
+}
+
+void Renderer::onDeinit()
+{
+	for(unsigned int i = 0; i < renderVector.size(); i++)
+	{
+		renderVector.at(i)->deinit();
+	}
+}

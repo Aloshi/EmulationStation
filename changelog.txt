@@ -1,3 +1,6 @@
+September 3
+-Everything is now rendered with OpenGL, leading to a (roughly) 600%+ speedup!
+
 August 13
 -Tons of new theming features!
 -I've added a THEMES.md file for documentation on theming.

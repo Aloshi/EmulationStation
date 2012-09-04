@@ -25,6 +25,8 @@ public:
 	void onInput(InputManager::InputButton button, bool keyDown);
 	void onPause();
 	void onResume();
+	void onInit();
+	void onDeinit();
 
 	static const float sInfoWidth;
 private:
