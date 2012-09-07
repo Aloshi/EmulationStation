@@ -19,22 +19,6 @@ namespace fs = boost::filesystem;
 
 int main(int argc, char* argv[])
 {
-	bcm_host_init();
-
-	bool running = true;
-
-	//ALWAYS INITIALIZE VIDEO. It starts SDL's event system, and without it, input won't work.
-	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
-	{
-		std::cerr << "Error - could not initialize SDL!\n";
-		std::cerr << "	" << SDL_GetError() << "\n";
-		std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed? Is your firmware up to date?\n";
-		return 1;
-	}
-
-	SDL_Surface* sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
-	std::cout << "Fake SDL window is " << sdlScreen->w << "x" << sdlScreen->h << "\n";
-
 	unsigned int width = 0;
 	unsigned int height = 0;
 	if(argc > 1)
@@ -62,17 +46,35 @@ int main(int argc, char* argv[])
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
 				std::cout << "Command line arguments:\n";
-				std::cout << "-w [width in pixels]	set screen width\n";
-				std::cout << "-h [height in pixels]	set screen height\n";
-				std::cout << "--gamelist-only		skip automatic game detection, only read from gamelist.xml\n";
+				std::cout << "-w [width in pixels]		set screen width\n";
+				std::cout << "-h [height in pixels]		set screen height\n";
+				std::cout << "--gamelist-only			skip automatic game detection, only read from gamelist.xml\n";
 				std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
 				std::cout << "--draw-framerate		display the framerate\n";
-				std::cout << "--help			summon a sentient, angry tuba\n\n";
+				std::cout << "--help				summon a sentient, angry tuba\n\n";
 				std::cout << "More information available in README.md.\n";
 				return 0;
 			}
 		}
 	}
+
+
+
+	bcm_host_init();
+
+	bool running = true;
+
+	//ALWAYS INITIALIZE VIDEO. It starts SDL's event system, and without it, input won't work.
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
+	{
+		std::cerr << "Error - could not initialize SDL!\n";
+		std::cerr << "	" << SDL_GetError() << "\n";
+		std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed? Is your firmware up to date?\n";
+		return 1;
+	}
+
+	SDL_Surface* sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
+	std::cout << "Fake SDL window is " << sdlScreen->w << "x" << sdlScreen->h << "\n";
 
 	bool renderInit = Renderer::init(width, height);
 	if(!renderInit)
