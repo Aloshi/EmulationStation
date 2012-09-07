@@ -4,6 +4,7 @@
 #include "../GuiComponent.h"
 #include "../pugiXML/pugixml.hpp"
 
+//This class loads an XML-defined list of GuiComponents.
 class GuiTheme : public GuiComponent
 {
 public:

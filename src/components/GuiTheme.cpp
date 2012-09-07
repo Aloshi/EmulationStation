@@ -137,8 +137,6 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		float ox = strToFloat(originX);
 		float oy = strToFloat(originY);
 
-		std::cout << "w: " << w << "px, h: " << h << "px\n";
-
 		GuiImage* comp = new GuiImage(x, y, "", w, h, true);
 		comp->setOrigin(ox, oy);
 		comp->setTiling(tiled);

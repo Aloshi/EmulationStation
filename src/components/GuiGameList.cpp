@@ -4,10 +4,6 @@
 #include "GuiMenu.h"
 #include <boost/filesystem.hpp>
 
-#ifdef DRAWFRAMERATE
-	#include <sstream>
-	extern float FRAMERATE;
-#endif
 
 const float GuiGameList::sInfoWidth = 0.5;
 
@@ -85,18 +81,8 @@ void GuiGameList::setSystemId(int id)
 
 void GuiGameList::onRender()
 {
-	//Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFF);
-
 	if(mTheme)
 		mTheme->render();
-
-	#ifdef DRAWFRAMERATE
-		std::stringstream ss;
-		ss << FRAMERATE;
-		std::string fps;
-		ss >> fps;
-		Renderer::drawText(fps, 100, 50, 0x00FF00);
-	#endif
 
 	//header
 	if(!mTheme->getHeaderHidden())
@@ -148,13 +134,17 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		updateDetailData();
 	}
 
-	if(button == InputManager::RIGHT && keyDown)
+	//only allow switching systems if more than one exists (otherwise it'll reset your position when you switch and it's annoying)
+	if(SystemData::sSystemVector.size() > 1)
 	{
-		setSystemId(mSystemId + 1);
-	}
-	if(button == InputManager::LEFT && keyDown)
-	{
-		setSystemId(mSystemId - 1);
+		if(button == InputManager::RIGHT && keyDown)
+		{
+			setSystemId(mSystemId + 1);
+		}
+		if(button == InputManager::LEFT && keyDown)
+		{
+			setSystemId(mSystemId - 1);
+		}
 	}
 
 	if(button == InputManager::MENU && keyDown)
@@ -236,6 +226,8 @@ void GuiGameList::onResume()
 	InputManager::registerComponent(this);
 }
 
+//called when the renderer shuts down/returns
+//we have to manually call init/deinit on mTheme because it is not our child
 void GuiGameList::onDeinit()
 {
 	mTheme->deinit();
@@ -243,5 +235,5 @@ void GuiGameList::onDeinit()
 
 void GuiGameList::onInit()
 {
-	mTheme->onInit();
+	mTheme->init();
 }

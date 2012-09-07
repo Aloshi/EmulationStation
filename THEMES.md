@@ -33,7 +33,7 @@ All themes must be enclosed in a `<theme>` tag.
 
 Components
 ==========
-A theme is made up of components, which have various types. At the moment, the only type is `image`. Components can be nested for your own organization. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
+A theme is made up of components, which have various types. At the moment, the only type is `image`. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
 
 
 The "image" component
@@ -48,7 +48,7 @@ Used to display an image.
 
 `<origin>` - the point on the image that `<pos>` defines, as an image percentage. "0.5 0.5", the center of the image, by default.
 
-`<tiled />` - if present, the image is tiled instead of resized. Tiling isn't exact at the moment, but good enough for backgrounds.
+`<tiled />` - if present, the image is tiled instead of resized. A smaller image tiled many times is **slower** than a larger immage tiled few times.
 
 
 Display tags

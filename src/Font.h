@@ -1,4 +1,3 @@
-//A truetype font loader and renderer, using FreeType 2 and OpenGL.
 
 #ifndef _FONT_H_
 #define _FONT_H_
@@ -8,6 +7,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+//A TrueType Font renderer that uses FreeType and OpenGL. initLibrary() MUST be called before using it.
 class Font
 {
 public:
@@ -18,6 +18,7 @@ public:
 
 	FT_Face face;
 
+	//contains sizing information for every glyph.
 	struct charPosData {
 		int texX;
 		int texY;
@@ -34,18 +35,18 @@ public:
 
 	GLuint textureID;
 
-	void drawText(std::string text, int startx, int starty, int color);
-	void sizeText(std::string text, int* w, int* h);
-private:
+	void drawText(std::string text, int startx, int starty, int color); //Render some text using this font.
+	void sizeText(std::string text, int* w, int* h); //Sets the width and height of a given string to given pointers. Skipped if pointer is NULL.
 
+private:
 	static int getDpiX();
 	static int getDpiY();
 	static FT_Library sLibrary;
 
-	void buildAtlas();
+	void buildAtlas(); //Builds a "texture atlas," one big OpenGL texture with glyphs 32 to 128.
 
-	int textureWidth;
-	int textureHeight;
+	int textureWidth; //OpenGL texture width
+	int textureHeight; //OpenGL texture height
 	int mMaxGlyphHeight;
 };
 

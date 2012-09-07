@@ -1,9 +1,10 @@
 #include "GuiImage.h"
 #include <iostream>
 #include <boost/filesystem.hpp>
+#include <math.h>
 
-int GuiImage::getWidth() { return mWidth; }
-int GuiImage::getHeight() { return mHeight; }
+unsigned int GuiImage::getWidth() { return mWidth; }
+unsigned int GuiImage::getHeight() { return mHeight; }
 
 GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact)
 {
@@ -12,7 +13,7 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resi
 	mOffsetX = offsetX;
 	mOffsetY = offsetY;
 
-	//default origin (center of image)
+	//default origin is the center of image
 	mOriginX = 0.5;
 	mOriginY = 0.5;
 
@@ -54,7 +55,7 @@ void GuiImage::loadImage(std::string path)
 	unsigned int width, height;
 
 	//detect the filetype
-	//format = FreeImage_GetFileType(path.c_str(), 0);
+	format = FreeImage_GetFileType(path.c_str(), 0);
 	if(format == FIF_UNKNOWN)
 		format = FreeImage_GetFIFFromFilename(path.c_str());
 	if(format == FIF_UNKNOWN)
@@ -85,6 +86,7 @@ void GuiImage::loadImage(std::string path)
 	FreeImage_Unload(image);
 	image = imgConv;
 
+	//get a pointer to the image data as BGRA
 	imageData = FreeImage_GetBits(image);
 	if(!imageData)
 	{
@@ -97,11 +99,35 @@ void GuiImage::loadImage(std::string path)
 	width = FreeImage_GetWidth(image);
 	height = FreeImage_GetHeight(image);
 
+	//if width or height are zero then something is clearly wrong
 	if(!width || !height)
 	{
 		std::cerr << "Width or height are zero for image \"" << path << "\"!\n";
+		FreeImage_Unload(image);
 		return;
 	}
+
+
+	/*
+	//set width/height to powers of 2 for OpenGL
+	for(unsigned int i = 0; i < 22; i++)
+	{
+		unsigned int pwrOf2 = pow(2, i);
+		if(!widthPwrOf2 && pwrOf2 >= width)
+			widthPwrOf2 = pwrOf2;
+		if(!heightPwrOf2 && pwrOf2 >= height)
+			heightPwrOf2 = pwrOf2;
+
+		if(widthPwrOf2 && heightPwrOf2)
+			break;
+	}
+
+	if(!widthPwrOf2 || !heightPwrOf2)
+	{
+		std::cerr << "Error assigning power of two for width or height of image!\n";
+		FreeImage_Unload(image);
+		return;
+	}*/
 
 
 	//convert from BGRA to RGBA
@@ -133,7 +159,6 @@ void GuiImage::loadImage(std::string path)
 	//free the memory from that pointer
 	delete[] imageRGBA;
 
-	//a simple way to resize: lie about our real texture size!
 	//(we don't resize tiled images)
 	if(!mTiled)
 	{
@@ -209,27 +234,33 @@ void GuiImage::onRender()
 	{
 		if(mTiled)
 		{
-			for(unsigned int x = 0; x < (unsigned int)((float)mResizeWidth/mWidth + 1.5); x++)
+			unsigned int xCount = (unsigned int)((float)mResizeWidth/mWidth + 1.5);
+			unsigned int yCount = (unsigned int)((float)mResizeHeight/mHeight + 1.5);
+
+			//std::cout << "Array size: " << xCount << "x" << yCount << "\n";
+
+			GLfloat* points = new GLfloat[xCount * yCount * 12];
+			GLfloat* texs = new GLfloat[xCount * yCount * 12];
+			for(unsigned int x = 0; x < xCount; x++)
 			{
-				for(unsigned int y = 0; y < (unsigned int)((float)mResizeHeight/mHeight + 1.5); y++)
+				for(unsigned int y = 0; y < yCount; y++)
 				{
-					drawImage(mOffsetX + x*mWidth, mOffsetY + y*mHeight);
+					buildImageArray(mOffsetX + x*mWidth, mOffsetY + y*mHeight, points + (12 * (x*yCount + y)), texs + (12 * (x*yCount + y)));
 				}
 			}
+			drawImageArray(points, texs, xCount * yCount * 6);
+			delete[] points;
+			delete[] texs;
 		}else{
-			drawImage(mOffsetX, mOffsetY);
+			GLfloat points[12], texs[12];
+			buildImageArray(mOffsetX, mOffsetY, points, texs);
+			drawImageArray(points, texs, 6);
 		}
 	}
 }
 
-void GuiImage::drawImage(int posX, int posY)
+void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs)
 {
-	glBindTexture(GL_TEXTURE_2D, mTextureID);
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	GLfloat points[12];
 	points[0] = posX - (mWidth * mOriginX);		points[1] = posY - (mHeight * mOriginY);
 	points[2] = posX - (mWidth * mOriginX);		points[3] = posY + (mHeight * (1 - mOriginY));
 	points[4] = posX + (mWidth * (1 - mOriginX));	points[5] = posY - (mHeight * mOriginY);
@@ -238,10 +269,8 @@ void GuiImage::drawImage(int posX, int posY)
 	points[8] = posX - (mWidth * mOriginX);		points[9] = posY + (mHeight * (1 - mOriginY));
 	points[10] = posX + (mWidth * (1 -mOriginX));	points[11] = posY + (mHeight * (1 - mOriginY));
 
-	//std::cout << "x: " << points[0] << " y: " << points[1] << " to x: " << points[10] << " y: " << points[11] << std::endl;
-	//std::cout << "(w: " << mWidth << " h: " << mHeight << ")" << std::endl;
 
-	GLfloat texs[12];
+
 	texs[0] = 0;	texs[1] = 1;
 	texs[2] = 0;	texs[3] = 0;
 	texs[4] = 1;	texs[5] = 1;
@@ -249,6 +278,14 @@ void GuiImage::drawImage(int posX, int posY)
 	texs[6] = 1;	texs[7] = 1;
 	texs[8] = 0;	texs[9] = 0;
 	texs[10] = 1;	texs[11] = 0;
+}
+
+void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, unsigned int numArrays)
+{
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -257,7 +294,7 @@ void GuiImage::drawImage(int posX, int posY)
 	glVertexPointer(2, GL_FLOAT, 0, points);
 	glTexCoordPointer(2, GL_FLOAT, 0, texs);
 
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawArrays(GL_TRIANGLES, 0, numArrays);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -269,9 +306,7 @@ void GuiImage::drawImage(int posX, int posY)
 void GuiImage::onInit()
 {
 	if(!mPath.empty())
-	{
 		loadImage(mPath);
-	}
 }
 
 void GuiImage::onDeinit()

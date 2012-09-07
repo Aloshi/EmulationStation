@@ -5,6 +5,8 @@
 #include <stack>
 #include <map>
 
+//A reusable class that evaluates simple mathematical expressions.
+//Includes variable support - just use setVariable(name, value), and any instance of $name will be replaced with value.
 class MathExp {
 public:
 

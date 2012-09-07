@@ -6,6 +6,7 @@
 
 class SystemData;
 
+//This class lets us hold a vector of FileDatas within under a common name.
 class FolderData : public FileData
 {
 public:

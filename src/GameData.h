@@ -5,6 +5,7 @@
 #include "FileData.h"
 #include "SystemData.h"
 
+//This class holds information about a game: at the least, its name, system, and path. Additional information is optional and read by other classes.
 class GameData : public FileData
 {
 public:

@@ -7,6 +7,8 @@
 
 class GuiComponent;
 
+//The Renderer provides several higher-level functions for drawing (rectangles, text, etc.).
+//Defined in multiple files - Renderer.cpp has the GuiComponent stuff, Renderer_draw_* includes renderer-specific drawing implementations, and Renderer_init_* includes renderer-specific init/deinit.
 namespace Renderer
 {
 	void registerComponent(GuiComponent* comp);

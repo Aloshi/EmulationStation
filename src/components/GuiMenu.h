@@ -4,6 +4,7 @@
 #include "../GuiComponent.h"
 #include "GuiList.h"
 
+//This is a very simple menu that is opened by pressing the Menu key.
 class GuiMenu : public GuiComponent
 {
 public:

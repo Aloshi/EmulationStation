@@ -8,9 +8,10 @@
 #include <string>
 
 #define SCROLLDELAY 507
-#define SCROLLTIME (57*5)
+#define SCROLLTIME 200
 
-//this should really be a template
+//A graphical list. Supports multiple colors for rows and scrolling.
+//TODO - add truncation to text rendering if name exceeds a maximum width (a trailing elipses, perhaps).
 template <typename listType>
 class GuiList : public GuiComponent
 {

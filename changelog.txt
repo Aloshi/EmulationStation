@@ -1,3 +1,10 @@
+September 7
+-Tiling is now much faster.
+-Added --draw-framerate and --help/-h command-line parameters.
+-Fixed themes not properly re-initializing.
+-Commented most headers. Things should be kind of understandable now.
+-Finally increased scrolling speed.
+
 September 3
 -Everything is now rendered with OpenGL, leading to a (roughly) 600%+ speedup!
 

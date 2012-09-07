@@ -1,3 +1,5 @@
+//EmulationStation, a graphical front-end for ROM browsing. Created by Alec "Aloshi" Lofquist.
+
 #include <iostream>
 #include "Renderer.h"
 #include "components/GuiGameList.h"
@@ -6,13 +8,12 @@
 #include "components/GuiInputConfig.h"
 #include <SDL.h>
 #include <bcm_host.h>
+#include <sstream>
 
+//these can be set by command-line arguments
 bool PARSEGAMELISTONLY = false;
 bool IGNOREGAMELIST = false;
-
-#ifdef DRAWFRAMERATE
-	float FRAMERATE = 0;
-#endif
+bool DRAWFRAMERATE = false;
 
 namespace fs = boost::filesystem;
 
@@ -22,13 +23,12 @@ int main(int argc, char* argv[])
 
 	bool running = true;
 
-	//by the way, if anyone ever tries to port this to a different renderer but leave SDL as input -
-	//KEEP INITIALIZING VIDEO. It starts SDL's event system, and without it, input won't work.
+	//ALWAYS INITIALIZE VIDEO. It starts SDL's event system, and without it, input won't work.
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
 	{
 		std::cerr << "Error - could not initialize SDL!\n";
 		std::cerr << "	" << SDL_GetError() << "\n";
-		std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed?\n";
+		std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed? Is your firmware up to date?\n";
 		return 1;
 	}
 
@@ -55,6 +55,21 @@ int main(int argc, char* argv[])
 			}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
 			{
 				IGNOREGAMELIST = true;
+			}else if(strcmp(argv[i], "--draw-framerate") == 0)
+			{
+				DRAWFRAMERATE = true;
+			}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+			{
+				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
+				std::cout << "Command line arguments:\n";
+				std::cout << "-w [width in pixels]	set screen width\n";
+				std::cout << "-h [height in pixels]	set screen height\n";
+				std::cout << "--gamelist-only		skip automatic game detection, only read from gamelist.xml\n";
+				std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
+				std::cout << "--draw-framerate		display the framerate\n";
+				std::cout << "--help			summon a sentient, angry tuba\n\n";
+				std::cout << "More information available in README.md.\n";
+				return 0;
 			}
 		}
 	}
@@ -79,22 +94,6 @@ int main(int argc, char* argv[])
 		fs::create_directory(configDir);
 	}
 
-	//check if there are config files in the old places, and if so, move them to the new directory
-	std::string oldSysPath = home + "/.es_systems.cfg";
-	std::string oldInpPath = home + "/.es_input.cfg";
-	if(fs::exists(oldSysPath))
-	{
-		std::cout << "Moving old system config file " << oldSysPath << " to new path at " << SystemData::getConfigPath() << "\n";
-		fs::copy_file(oldSysPath, SystemData::getConfigPath());
-		fs::remove(oldSysPath);
-	}
-	if(fs::exists(oldInpPath))
-	{
-		std::cout << "Deleting old input config file\n";
-		fs::remove(oldInpPath);
-	}
-
-
 
 	//try loading the system config file
 	if(!fs::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit
@@ -109,7 +108,7 @@ int main(int argc, char* argv[])
 		if(SystemData::sSystemVector.size() == 0) //if it exists but was empty, notify the user and quit
 		{
 			std::cerr << "A system config file in " << SystemData::getConfigPath() << " was found, but contained no systems.\n";
-			std::cerr << "You should probably go read that, or delete it.\n";
+			std::cerr << "Does at least one system have a game presesnt?\n";
 			running = false;
 		}else{
 
@@ -128,19 +127,19 @@ int main(int argc, char* argv[])
 				}
 			}
 
-			//choose which Gui to open up
+			//choose which GUI to open depending on Input configuration
 			if(fs::exists(InputManager::getConfigPath()))
 			{
+				//an input config already exists - load it and proceed to the gamelist as usual.
 				InputManager::loadConfig();
 				new GuiGameList(useDetail);
 			}else{
+				//if no input.cfg is present, but a joystick is connected, launch the input config GUI
 				if(SDL_NumJoysticks() > 0)
-				{
 					new GuiInputConfig();
-				}else{
-					std::cout << "Note - it looks like you have no joysticks connected.\n";
+				else
 					new GuiGameList(useDetail);
-				}
+
 			}
 		}
 	}
@@ -172,13 +171,20 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
-		#ifdef DRAWFRAMERATE
-			FRAMERATE = 1/((float)deltaTime)*1000;
-		#endif
-
 		GuiComponent::processTicks(deltaTime);
-
 		Renderer::render();
+
+		if(DRAWFRAMERATE)
+		{
+			float framerate = 1/((float)deltaTime)*1000;
+			std::stringstream ss;
+			ss << framerate;
+			std::string fps;
+			ss >> fps;
+			Renderer::drawText(fps, 50, 50, 0x00FF00);
+		}
+
+
 		Renderer::swapBuffers();
 	}
 

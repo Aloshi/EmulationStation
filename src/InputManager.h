@@ -8,6 +8,8 @@
 
 class GuiComponent;
 
+//The InputManager takes native system input and abstracts it into InputButtons.
+//GuiComponents can be registered to receive onInput() events.
 namespace InputManager {
 	void registerComponent(GuiComponent* comp);
 	void unregisterComponent(GuiComponent* comp);

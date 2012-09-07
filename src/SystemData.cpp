@@ -191,7 +191,7 @@ void SystemData::loadConfig()
 					SystemData* newSystem = new SystemData(sysName, sysPath, sysExtension, sysCommand);
 					if(newSystem->getRootFolder()->getFileCount() == 0)
 					{
-						std::cerr << "Error - system \"" << sysName << "\" has no games! Deleting.\n";
+						std::cout << "System \"" << sysName << "\" has no games! Deleting.\n";
 						delete newSystem;
 					}else{
 						sSystemVector.push_back(newSystem);
