@@ -1,3 +1,7 @@
+September 8
+-Added support for multiple filetypes for systems - just separate them with a space.
+-Updated example systems config to include example for multiple filetypes and be a little clearer.
+
 September 7
 -Tiling is now much faster.
 -Added --draw-framerate and --help/-h command-line parameters.

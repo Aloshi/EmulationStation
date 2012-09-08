@@ -85,7 +85,7 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 
 
 	//find gameName
-	std::string gameName = gamePath.substr(separator + 1, gamePath.find(system->getExtension(), separator) - separator - 1);
+	std::string gameName = gamePath.substr(separator + 1, gamePath.find(".", separator) - separator - 1);
 
 	GameData* game = new GameData(system, gameAbsPath, gameName);
 	folder->pushFileData(game);

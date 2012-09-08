@@ -117,11 +117,29 @@ void SystemData::populateFolder(FolderData* folder)
 			else
 				folder->pushFileData(newFolder);
 		}else{
-			if(filePath.extension().string() == mSearchExtension)
-			{
-				GameData* newGame = new GameData(this, filePath.string(), filePath.stem().string());
-				folder->pushFileData(newGame);
-			}
+			//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
+			//we first get the extension of the file itself:
+			std::string extension = filePath.extension().string();
+			std::string chkExt;
+			size_t extPos = 0;
+			do {
+				//now we loop through every extension in the list
+				size_t cpos = extPos;
+				extPos = mSearchExtension.find(" ", extPos);
+				chkExt = mSearchExtension.substr(cpos, ((extPos == std::string::npos) ? mSearchExtension.length() - cpos: extPos - cpos));
+
+				//if it matches, add it
+				if(chkExt == mSearchExtension)
+				{
+					GameData* newGame = new GameData(this, filePath.string(), filePath.stem().string());
+					folder->pushFileData(newGame);
+					break;
+				}else if(extPos != std::string::npos) //if not, add one to the "next position" marker to skip the space when reading the next extension
+				{
+					extPos++;
+				}
+
+			} while(extPos != std::string::npos && chkExt != "");
 		}
 	}
 }
@@ -225,13 +243,13 @@ void SystemData::writeExampleConfig()
 	file << "# A sample system might look like this:" << std::endl;
 	file << "#NAME=Nintendo Entertainment System" << std::endl;
 	file << "#PATH=~/ROMs/nes/" << std::endl;
-	file << "#EXTENSION=.nes" << std::endl;
+	file << "#EXTENSION=.nes .NES" << std::endl;
 	file << "#COMMAND=retroarch -L ~/cores/libretro-fceumm.so %ROM%" << std::endl << std::endl;
 
 	file << "#NAME is just a name to identify the system." << std::endl;
 	file << "#PATH is the path to start the recursive search for ROMs in. ~ will be expanded into the $HOME variable." << std::endl;
-	file << "#EXTENSION is the exact extension to search for. You MUST include the period, and it must be exact - no regex or wildcard support (sorry!)." << std::endl;
-	file << "#COMMAND is the shell command to execute when a game is selected. %ROM% will be replaced with the path to the ROM." << std::endl << std::endl;
+	file << "#EXTENSION is a list of extensions to search for, separated by spaces. You MUST include the period, and it must be exact - it's case sensitive, and no wildcards." << std::endl;
+	file << "#COMMAND is the shell command to execute when a game is selected. %ROM% will be replaced with the (bash special-character escaped) path to the ROM." << std::endl << std::endl;
 
 	file << "#Now try your own!" << std::endl;
 	file << "NAME=" << std::endl;
