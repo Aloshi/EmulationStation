@@ -1,5 +1,6 @@
 #include "Renderer.h"
-#include <GLES/gl.h>
+#include "platform.h"
+#include GLHEADER
 #include <iostream>
 #include "Font.h"
 #include <boost/filesystem.hpp>
@@ -122,8 +123,8 @@ namespace Renderer {
 		if(!loadedFonts)
 			loadFonts();
 
-		if(x < 0)
-			std::cout << "drawing at " << x << std::endl;
+		//if(x < 0)
+		//	std::cout << "drawing at " << x << std::endl;
 
 		getFont(font)->drawText(text, x, y, color);
 	}

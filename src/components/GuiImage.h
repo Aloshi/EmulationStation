@@ -4,7 +4,8 @@
 #include "../GuiComponent.h"
 #include <string>
 #include <FreeImage.h>
-#include <GLES/gl.h>
+#include "../platform.h"
+#include GLHEADER
 
 class GuiImage : public GuiComponent
 {

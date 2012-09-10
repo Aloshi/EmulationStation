@@ -51,6 +51,7 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 
 	unsigned int separator = 0;
 	unsigned int nextSeparator = 0;
+	unsigned int loops = 0;
 	while(nextSeparator != std::string::npos)
 	{
 		//determine which chunk of the path we're testing right now
@@ -81,6 +82,13 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 			folder->pushFileData(newFolder);
 			folder = newFolder;
 		}
+
+		if(loops > gamePath.length())
+		{
+			std::cerr << "breaking out of loop for path \"" << gamePath << "\"\n";
+			break;
+		}
+		loops++;
 	}
 
 

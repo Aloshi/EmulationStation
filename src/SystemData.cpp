@@ -122,6 +122,7 @@ void SystemData::populateFolder(FolderData* folder)
 			std::string extension = filePath.extension().string();
 			std::string chkExt;
 			size_t extPos = 0;
+
 			do {
 				//now we loop through every extension in the list
 				size_t cpos = extPos;
@@ -129,7 +130,7 @@ void SystemData::populateFolder(FolderData* folder)
 				chkExt = mSearchExtension.substr(cpos, ((extPos == std::string::npos) ? mSearchExtension.length() - cpos: extPos - cpos));
 
 				//if it matches, add it
-				if(chkExt == mSearchExtension)
+				if(chkExt == extension)
 				{
 					GameData* newGame = new GameData(this, filePath.string(), filePath.stem().string());
 					folder->pushFileData(newGame);
@@ -139,7 +140,7 @@ void SystemData::populateFolder(FolderData* folder)
 					extPos++;
 				}
 
-			} while(extPos != std::string::npos && chkExt != "");
+			} while(extPos != std::string::npos && chkExt != "" && chkExt.find(".") != std::string::npos);
 		}
 	}
 }

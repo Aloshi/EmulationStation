@@ -7,7 +7,13 @@
 #include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
 #include <SDL.h>
-#include <bcm_host.h>
+
+#include "platform.h"
+
+#ifdef _RPI_
+	#include <bcm_host.h>
+#endif
+
 #include <sstream>
 
 //these can be set by command-line arguments
@@ -59,22 +65,27 @@ int main(int argc, char* argv[])
 	}
 
 
-
-	bcm_host_init();
+	#ifdef _RPI_
+		bcm_host_init();
+	#endif
 
 	bool running = true;
 
-	//ALWAYS INITIALIZE VIDEO. It starts SDL's event system, and without it, input won't work.
-	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
-	{
-		std::cerr << "Error - could not initialize SDL!\n";
-		std::cerr << "	" << SDL_GetError() << "\n";
-		std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed? Is your firmware up to date?\n";
-		return 1;
-	}
+	//desktop uses SDL to set up an OpenGL context, and has its own SDL window...so I #ifdefed here.
 
-	SDL_Surface* sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
-	std::cout << "Fake SDL window is " << sdlScreen->w << "x" << sdlScreen->h << "\n";
+	//ALWAYS INITIALIZE VIDEO. It starts SDL's event system, and without it, input won't work.
+	#ifdef _RPI_
+		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
+		{
+			std::cerr << "Error - could not initialize SDL!\n";
+			std::cerr << "	" << SDL_GetError() << "\n";
+			std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed? Is your firmware up to date?\n";
+			return 1;
+		}
+
+		SDL_Surface* sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
+		std::cout << "Fake SDL window is " << sdlScreen->w << "x" << sdlScreen->h << "\n";
+	#endif
 
 	bool renderInit = Renderer::init(width, height);
 	if(!renderInit)
@@ -199,7 +210,9 @@ int main(int argc, char* argv[])
 
 	SDL_Quit();
 
-	bcm_host_deinit();
+	#ifdef _RPI_
+		bcm_host_deinit();
+	#endif
 
 	return 0;
 }

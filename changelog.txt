@@ -1,3 +1,7 @@
+September 10
+-Fixed multiple extensions breaking things.
+-Added Makefile.x86 for building on a desktop (acquire OpenGL context through SDL instead of EGL).
+
 September 8
 -Added support for multiple filetypes for systems - just separate them with a space.
 -Updated example systems config to include example for multiple filetypes and be a little clearer.

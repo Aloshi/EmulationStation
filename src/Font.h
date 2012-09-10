@@ -1,9 +1,9 @@
-
 #ifndef _FONT_H_
 #define _FONT_H_
 
 #include <string>
-#include <GLES/gl.h>
+#include "platform.h"
+#include GLHEADER
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
