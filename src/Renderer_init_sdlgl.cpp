@@ -4,6 +4,7 @@
 #include GLHEADER
 #include "Font.h"
 #include <SDL/SDL.h>
+#include "InputManager.h"
 
 namespace Renderer
 {
@@ -33,6 +34,9 @@ namespace Renderer
 			std::cout << "Error creating SDL video surface!\n";
 			return false;
 		}
+
+		//we need to reload input too since SDL shut down
+		InputManager::loadConfig();
 
 		//usually display width/height are not specified, i.e. zero, which SDL automatically takes as "native resolution"
 		//so, since other things rely on the size of the screen (damn currently unnormalized coordinate system), we set it here

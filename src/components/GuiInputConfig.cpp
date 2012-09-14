@@ -23,7 +23,7 @@ GuiInputConfig::GuiInputConfig()
 		mDone = true;
 		return;
 	}else{
-		std::cout << "Opening joystick \"" << SDL_JoystickName(0) << "\"\n";
+		std::cout << "Opening joystick \"" << SDL_JoystickName(0) << "\" for configuration...\n";
 		mJoystick = SDL_JoystickOpen(0);
 	}
 }
@@ -44,10 +44,11 @@ void GuiInputConfig::onRender()
 	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 0, height, 0x000000);
 	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 0, height * 2, 0x000000);
 	Renderer::drawCenteredText("If you want to remap later, just delete ~/.es_input.cfg.", 0, height * 3, 0x000000);
+	Renderer::drawCenteredText("This interface only configures the first joystick plugged in.", 0, height * 4, 0x000000);
 	Renderer::drawCenteredText("Remember - you'll need to set up your emulator separately!", 0, Renderer::getScreenHeight() - height, 0x000000);
 
 	if(mDone)
-		Renderer::drawCenteredText("All done! Press a keyboard key to continue.", 0, height * 5, 0x00BB00);
+		Renderer::drawCenteredText("All done! Press a keyboard key to save.", 0, height * 5, 0x00BB00);
 	else
 		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 0, height * 5, 0x00C000);
 }
@@ -115,6 +116,9 @@ void GuiInputConfig::writeConfig()
 	std::string path = InputManager::getConfigPath();
 
 	std::ofstream file(path.c_str());
+
+	if(SDL_JoystickName(0))
+		file << "JOYNAME " << SDL_JoystickName(0) << "\n";
 
 	typedef std::map<int, InputManager::InputButton>::iterator it_type;
 	for(it_type iter = mButtonMap.begin(); iter != mButtonMap.end(); iter++)

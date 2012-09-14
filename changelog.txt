@@ -1,3 +1,8 @@
+September 14
+-Joystick names are now saved during input configuration to es_input.cfg.
+-When loading an input config, if JOYNAME is defined, load the first joystick with that name. If it is not present, load the first joystick (old behavior).
+-Joysticks should re-initialize properly with SDL on the desktop configuration.
+
 September 10
 -Fixed multiple extensions breaking things.
 -Added Makefile.x86 for building on a desktop (acquire OpenGL context through SDL instead of EGL).

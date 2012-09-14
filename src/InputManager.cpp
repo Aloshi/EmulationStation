@@ -190,6 +190,8 @@ void InputManager::loadConfig()
 
 	std::ifstream file(path.c_str());
 
+	std::string joystickName = "";
+
 	while(file.good())
 	{
 		std::string line;
@@ -208,12 +210,17 @@ void InputManager::loadConfig()
 
 		while(std::getline(stream, token[tokNum], ' '))
 		{
-			if(tokNum >= 3)
-			{
-				std::cerr << "Error - input config line \"" << line << "\" has more than three tokens!\n";
-				return;
-			}
 			tokNum++;
+
+			//JOYNAME can have spaces
+			if(tokNum == 1 && token[0] == "JOYNAME")
+			{
+				std::getline(stream, token[1]);
+				break;
+			}
+
+			if(tokNum >= 3)
+				break;
 		}
 
 
@@ -226,6 +233,9 @@ void InputManager::loadConfig()
 		}else if(token[0] == "AXISNEG")
 		{
 			joystickAxisNegMap[atoi(token[1].c_str())] = (InputButton)atoi(token[2].c_str());
+		}else if(token[0] == "JOYNAME")
+		{
+			joystickName = token[1];
 		}else{
 			std::cerr << "Invalid input type - " << token[0] << "\n";
 			return;
@@ -233,9 +243,23 @@ void InputManager::loadConfig()
 
 	}
 
+	//if any joystick is plugged in
 	if(SDL_NumJoysticks() > 0)
 	{
-		SDL_JoystickOpen(0);
+		if(!joystickName.empty())
+		{
+			for(int i = 0; i < SDL_NumJoysticks(); i++)
+			{
+				if(strcmp(SDL_JoystickName(i), joystickName.c_str()) == 0)
+				{
+					std::cout << "opening joystick " << joystickName << "\n";
+					SDL_JoystickOpen(i);
+					break;
+				}
+			}
+		}else{
+			SDL_JoystickOpen(0);  //if we don't have a specific joystick in mind, take the first
+		}
 	}
 }
 
