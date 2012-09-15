@@ -7,6 +7,9 @@ std::vector<GuiComponent*> GuiComponent::sComponentVector;
 GuiComponent::GuiComponent()
 {
 	sComponentVector.push_back(this);
+
+	mOffsetX = 0;
+	mOffsetY = 0;
 }
 
 GuiComponent::~GuiComponent()
@@ -97,3 +100,8 @@ void GuiComponent::deinit()
 		mChildren.at(i)->deinit();
 	}
 }
+
+void GuiComponent::setOffsetX(int val) { mOffsetX = val; }
+void GuiComponent::setOffsetY(int val) { mOffsetY = val; }
+int GuiComponent::getOffsetX() { return mOffsetX; }
+int GuiComponent::getOffsetY() { return mOffsetY; }

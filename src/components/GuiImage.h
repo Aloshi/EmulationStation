@@ -41,7 +41,6 @@ private:
 
 	std::string mPath;
 
-	int mOffsetX, mOffsetY;
 	unsigned int mWidth, mHeight; //Our rendered size.
 
 	GLuint mTextureID;

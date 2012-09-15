@@ -170,7 +170,6 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	starty += mMaxGlyphHeight;
 
 	//padding (another 0.5% is added to the bottom through the sizeText function)
-	//starty += Renderer::getScreenHeight() * 0.01;
 	starty += mMaxGlyphHeight * 0.1;
 
 

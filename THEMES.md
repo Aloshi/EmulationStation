@@ -63,12 +63,17 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 `<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList.
 
-`<listLeftAlign />` - if present, the games list names will be left aligned to $infoWidth.
+`<listLeftAlign />` - if present, the games list names will be left aligned to the value of `<listOffsetX>` (default 0.5).
 
 `<hideHeader />` - if present, the system name header won't be displayed (useful for replacing it with an image).
 
 `<hideDividers />` - if present, the divider between games on the detailed GuiGameList won't be displayed.
 
+`<listOffsetX>` - the percentage to offset the list by. Default is 0.5 (half the screen). **Will also move the selector bar**.
+
+`<listTextOffsetX>` - the percentage to offset the text in the list by. Default is 0.005. Only works in combination with `<listLeftAlign />`.
+
+`<gameImageOffsetY>` - the percentage to offset the displayed game image by. Default is the height of the header font.
 
 List of variables
 =================

@@ -5,6 +5,7 @@
 #include "GuiImage.h"
 #include <boost/filesystem.hpp>
 #include <sstream>
+#include "../Renderer.h"
 
 int GuiTheme::getPrimaryColor() { return mListPrimaryColor; }
 int GuiTheme::getSecondaryColor() { return mListSecondaryColor; }
@@ -13,6 +14,11 @@ int GuiTheme::getDescColor() { return mDescColor; }
 bool GuiTheme::getHeaderHidden() { return mHideHeader; }
 bool GuiTheme::getDividersHidden() { return mHideDividers; }
 bool GuiTheme::getListCentered() { return mListCentered; }
+
+//not yet implemented
+float GuiTheme::getListOffsetX() { return mListOffsetX; }
+float GuiTheme::getGameImageOffsetY() { return mGameImageOffsetY; }
+float GuiTheme::getListTextOffsetX() { return mListTextOffsetX; }
 
 GuiTheme::GuiTheme(std::string path)
 {
@@ -36,6 +42,10 @@ void GuiTheme::setDefaults()
 	mHideHeader = false;
 	mHideDividers = false;
 	mListCentered = true;
+
+	mListOffsetX = 0.5;
+	mListTextOffsetX = 0.005;
+	mGameImageOffsetY = (float)Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight();
 }
 
 void GuiTheme::deleteComponents()
@@ -80,20 +90,33 @@ void GuiTheme::readXML(std::string path)
 	pugi::xml_node root = doc.child("theme");
 
 	//load non-component theme stuff
-	mListPrimaryColor = resolveColor(root.child("listPrimaryColor").text().get(), 0x0000FF);
-	mListSecondaryColor = resolveColor(root.child("listSecondaryColor").text().get(), 0x00FF00);
-	mListSelectorColor = resolveColor(root.child("listSelectorColor").text().get(), 0x000000);
-	mDescColor = resolveColor(root.child("descColor").text().get(), 0x0000FF);
+	mListPrimaryColor = resolveColor(root.child("listPrimaryColor").text().get(), mListPrimaryColor);
+	mListSecondaryColor = resolveColor(root.child("listSecondaryColor").text().get(), mListSecondaryColor);
+	mListSelectorColor = resolveColor(root.child("listSelectorColor").text().get(), mListSelectorColor);
+	mDescColor = resolveColor(root.child("descColor").text().get(), mDescColor);
 	mHideHeader = root.child("hideHeader");
 	mHideDividers = root.child("hideDividers");
 	mListCentered = !root.child("listLeftAlign");
 
-	for(pugi::xml_node data = root.child("component"); data; data = data.next_sibling("component"))
-	{
-		createElement(data, this);
-	}
+	mListOffsetX = strToFloat(root.child("listOffsetX").text().get(), mListOffsetX);
+	mGameImageOffsetY = strToFloat(root.child("gameImageOffsetY").text().get(), mGameImageOffsetY);
+	mListTextOffsetX = strToFloat(root.child("listTextOffsetX").text().get(), mListTextOffsetX);
+
+	//recursively create children for all <components> with proper parenting
+	createComponentChildren(root, this);
 
 	std::cout << "Finished parsing theme.\n";
+}
+
+void GuiTheme::createComponentChildren(pugi::xml_node node, GuiComponent* parent)
+{
+	for(pugi::xml_node data = node.child("component"); data; data = data.next_sibling("component"))
+	{
+		GuiComponent* nextComp = createElement(data, parent);
+
+		if(nextComp)
+			createComponentChildren(data, nextComp);
+	}
 }
 
 GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
@@ -197,10 +220,10 @@ void GuiTheme::splitString(std::string str, char delim, std::string* before, std
 	*after = str.substr(split + 1, str.length() - split - 1);
 }
 
-float GuiTheme::strToFloat(std::string str)
+float GuiTheme::strToFloat(std::string str, float defaultVal)
 {
 	if(str.empty())
-		return 0;
+		return defaultVal;
 
 	float ret;
 	std::stringstream ss;

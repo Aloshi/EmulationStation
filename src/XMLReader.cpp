@@ -49,8 +49,8 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 	//make our way through the directory tree finding each folder in our path or creating it if it doesn't exist
 	FolderData* folder = system->getRootFolder();
 
-	unsigned int separator = 0;
-	unsigned int nextSeparator = 0;
+	size_t separator = 0;
+	size_t nextSeparator = 0;
 	unsigned int loops = 0;
 	while(nextSeparator != std::string::npos)
 	{
@@ -83,7 +83,8 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 			folder = newFolder;
 		}
 
-		if(loops > gamePath.length())
+		//if for some reason this function is broken, break out of this while instead of freezing
+		if(loops > gamePath.length() * 2)
 		{
 			std::cerr << "breaking out of loop for path \"" << gamePath << "\"\n";
 			break;

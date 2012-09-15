@@ -1,3 +1,5 @@
+//This is *actually* part of the GuiList header and not meant to be compiled.
+
 #include "GuiList.h"
 #include <iostream>
 
@@ -9,8 +11,10 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize
 	mScrolling = 0;
 	mScrollAccumulator = 0;
 
-	mOffsetX = offsetX;
-	mOffsetY = offsetY;
+	setOffsetX(offsetX);
+	setOffsetY(offsetY);
+
+	mTextOffsetX = 0;
 
 	mFont = fontsize;
 	mSelectorColor = 0x000000;
@@ -28,7 +32,7 @@ GuiList<listType>::~GuiList()
 template <typename listType>
 void GuiList<listType>::onRender()
 {
-	const int cutoff = mOffsetY;
+	const int cutoff = getOffsetY();
 	const int entrySize = Renderer::getFontHeight(mFont) + 5;
 
 	int startEntry = 0;
@@ -62,15 +66,15 @@ void GuiList<listType>::onRender()
 	{
 		if(mSelection == i)
 		{
-			Renderer::drawRect(mOffsetX, y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor);
+			Renderer::drawRect(getOffsetX(), y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
 
 		if(mDrawCentered)
-			Renderer::drawCenteredText(row.name, mOffsetX, y, row.color, mFont);
+			Renderer::drawCenteredText(row.name, getOffsetX(), y, row.color, mFont);
 		else
-			Renderer::drawText(row.name, mOffsetX, y, row.color, mFont);
+			Renderer::drawText(row.name, getOffsetX() + mTextOffsetX, y, row.color, mFont);
 
 		y += entrySize;
 	}
@@ -212,4 +216,10 @@ template<typename listType>
 void GuiList<listType>::setCentered(bool centered)
 {
 	mDrawCentered = centered;
+}
+
+template<typename listType>
+void GuiList<listType>::setTextOffsetX(int textoffsetx)
+{
+	mTextOffsetX = textoffsetx;
 }

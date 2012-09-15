@@ -10,8 +10,8 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resi
 {
 	mTextureID = 0;
 
-	mOffsetX = offsetX;
-	mOffsetY = offsetY;
+	setOffsetX(offsetX);
+	setOffsetY(offsetY);
 
 	//default origin is the center of image
 	mOriginX = 0.5;
@@ -245,7 +245,7 @@ void GuiImage::onRender()
 			{
 				for(unsigned int y = 0; y < yCount; y++)
 				{
-					buildImageArray(mOffsetX + x*mWidth, mOffsetY + y*mHeight, points + (12 * (x*yCount + y)), texs + (12 * (x*yCount + y)));
+					buildImageArray(getOffsetX() + x*mWidth, getOffsetY() + y*mHeight, points + (12 * (x*yCount + y)), texs + (12 * (x*yCount + y)));
 				}
 			}
 			drawImageArray(points, texs, xCount * yCount * 6);
@@ -253,7 +253,7 @@ void GuiImage::onRender()
 			delete[] texs;
 		}else{
 			GLfloat points[12], texs[12];
-			buildImageArray(mOffsetX, mOffsetY, points, texs);
+			buildImageArray(getOffsetX(), getOffsetY(), points, texs);
 			drawImageArray(points, texs, 6);
 		}
 	}

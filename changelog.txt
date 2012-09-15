@@ -1,3 +1,7 @@
+September 15
+-Added <listOffsetX>, <listTextOffsetX>, and <gameImageOffsetY> theme tags. See THEMES.md for details.
+-Fixed a bug causing gamelists to be read incorrectly.
+
 September 14
 -Joystick names are now saved during input configuration to es_input.cfg.
 -When loading an input config, if JOYNAME is defined, load the first joystick with that name. If it is not present, load the first joystick (old behavior).

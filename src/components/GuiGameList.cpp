@@ -13,6 +13,9 @@ GuiGameList::GuiGameList(bool useDetail)
 	std::cout << "Creating GuiGameList\n";
 	mDetailed = useDetail;
 
+
+	mTheme = new GuiTheme(); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
+
 	//The GuiGameList can use the older, simple game list if so desired.
 	//The old view only shows a list in the center of the screen; the new view can display an image and description.
 	//Those with smaller displays may prefer the older view.
@@ -20,15 +23,13 @@ GuiGameList::GuiGameList(bool useDetail)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getFontHeight(Renderer::LARGE) + 2, "", Renderer::getScreenWidth() * sInfoWidth * 0.7);
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7);
 		mScreenshot->setOrigin(0.5, 0.0);
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
 		mScreenshot = NULL;
 	}
-
-	mTheme = new GuiTheme(); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
 
 	addChild(mList);
 
@@ -99,10 +100,9 @@ void GuiGameList::onRender()
 		{
 			GameData* game = (GameData*)mList->getSelectedObject();
 
-			//todo: cache this
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, Renderer::getFontHeight(Renderer::LARGE) + mScreenshot->getHeight() + 10, Renderer::getScreenWidth() * (sInfoWidth - 0.03), mTheme->getDescColor(), Renderer::SMALL);
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 8, Renderer::getScreenWidth() * (sInfoWidth - 0.03), mTheme->getDescColor(), Renderer::SMALL);
 		}
 	}
 }
@@ -200,6 +200,13 @@ void GuiGameList::updateTheme()
 
 	mList->setSelectorColor(mTheme->getSelectorColor());
 	mList->setCentered(mTheme->getListCentered());
+
+	if(mDetailed)
+	{
+		mList->setOffsetX(mTheme->getListOffsetX() * Renderer::getScreenWidth());
+		mList->setTextOffsetX(mTheme->getListTextOffsetX() * Renderer::getScreenWidth());
+		mScreenshot->setOffsetY(mTheme->getGameImageOffsetY() * Renderer::getScreenHeight());
+	}
 }
 
 void GuiGameList::updateDetailData()

@@ -44,8 +44,16 @@ public:
 	unsigned int getChildCount() { return mChildren.size(); }
 	GuiComponent* getChild(unsigned int i) { return mChildren.at(i); }
 
+
+	int getOffsetX();
+	int getOffsetY();
+	void setOffsetX(int val);
+	void setOffsetY(int val);
+
 	static void processTicks(int deltaTime);
 private:
+	int mOffsetX, mOffsetY;
+
 	static std::vector<GuiComponent*> sComponentVector;
 	std::vector<GuiComponent*> mChildren;
 };

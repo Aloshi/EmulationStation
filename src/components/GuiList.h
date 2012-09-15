@@ -36,6 +36,9 @@ public:
 
 	void setSelectorColor(int selectorColor);
 	void setCentered(bool centered);
+
+	void setTextOffsetX(int textoffsetx);
+
 private:
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
@@ -44,7 +47,7 @@ private:
 	int mSelectorColor;
 	bool mDrawCentered;
 
-	int mOffsetX, mOffsetY;
+	int mTextOffsetX;
 
 	struct ListRow
 	{
