@@ -1,3 +1,6 @@
+September 16
+-Fixed a bug with skipping over unicode characters. [X] will be displayed if the character is not standard ASCII (characters 32 to 127).
+
 September 15
 -Added <listOffsetX>, <listTextOffsetX>, and <gameImageOffsetY> theme tags. See THEMES.md for details.
 -Fixed a bug causing gamelists to be read incorrectly.

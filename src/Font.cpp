@@ -199,7 +199,7 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		unsigned char letter = text[i];
 
 		if(letter < 32 || letter >= 128)
-			continue;
+			letter = 127; //print [X] if character is not standard ASCII
 
 		points[p].pos0x = x;								points[p].pos0y = y + charData[letter].texH - charData[letter].bearingY;
 		points[p].pos1x = x + charData[letter].texW;					points[p].pos1y = y - charData[letter].bearingY;

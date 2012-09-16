@@ -8,13 +8,17 @@
 
 namespace Renderer
 {
-	unsigned int display_width = 0, display_height = 0;
+	unsigned int display_width = 0;
+	unsigned int display_height = 0;
+
+	unsigned int getScreenWidth() { return display_width; }
+	unsigned int getScreenHeight() { return display_height; }
 
 	SDL_Surface* sdlScreen = NULL;
 
 	bool createSurface() //unsigned int display_width, unsigned int display_height)
 	{
-		std::cout << "Creating surface...\n";
+		std::cout << "Creating surface...";
 
 		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
 		{
@@ -27,7 +31,7 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | SDL_FULLSCREEN);
+		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL); //SDL_FULLSCREEN
 
 		if(sdlScreen == NULL)
 		{
@@ -44,7 +48,7 @@ namespace Renderer
 		display_width = sdlScreen->w;
 		display_height = sdlScreen->h;
 
-		std::cout << "Success!\n";
+		std::cout << "success!\n";
 
 		return true;
 	}

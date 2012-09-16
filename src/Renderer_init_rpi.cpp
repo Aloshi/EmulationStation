@@ -19,10 +19,12 @@ namespace Renderer
 	unsigned int display_width = 0;
 	unsigned int display_height = 0;
 
+	unsigned int getScreenWidth() { return display_width; }
+	unsigned int getScreenHeight() { return display_height; }
+
 	bool createSurface() //unsigned int display_width, unsigned int display_height)
 	{
-		std::cout << "Creating surface...\n";
-
+		std::cout << "Creating surface...";
 
 		DISPMANX_ELEMENT_HANDLE_T dispman_element;
 		DISPMANX_DISPLAY_HANDLE_T dispman_display;
@@ -97,7 +99,7 @@ namespace Renderer
 			}
 		}
 
-		std::cout << "Display size is " << display_width << "x" << display_height << ".\n";
+		std::cout << display_width << "x" << display_height << "...";
 
 
 		dst_rect.x = 0; dst_rect.y = 0;
@@ -133,7 +135,7 @@ namespace Renderer
 		}
 
 
-		std::cout << "Success!\n";
+		std::cout << "success!\n";
 
 		return true;
 	}

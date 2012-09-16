@@ -8,12 +8,6 @@
 namespace Renderer {
 	bool loadedFonts = false;
 
-	//defined and set in Renderer_init_rpi.cpp
-	extern unsigned int display_width;
-	extern unsigned int display_height;
-	unsigned int getScreenWidth() { return display_width; }
-	unsigned int getScreenHeight() { return display_height; }
-
 	void setColor4bArray(GLubyte* array, int color)
 	{
 		array[0] = (color & 0x00ff0000) / 0x10000;
@@ -63,7 +57,7 @@ namespace Renderer {
 	Font* fonts[3] = {NULL, NULL, NULL};
 	void loadFonts()
 	{
-		std::cout << "loading fonts\n";
+		std::cout << "loading fonts...";
 
 		std::string fontPath = "LinLibertine_R.ttf";
 
@@ -85,10 +79,14 @@ namespace Renderer {
 		}
 
 		loadedFonts = true;
+
+		std::cout << "done\n";
 	}
 
 	void unloadFonts()
 	{
+		std::cout << "unloading fonts...";
+
 		for(unsigned int i = 0; i < 3; i++)
 		{
 			delete fonts[i];
@@ -96,6 +94,8 @@ namespace Renderer {
 		}
 
 		loadedFonts = false;
+
+		std::cout << "done.\n";
 	}
 
 	Font* getFont(FontSize size)
