@@ -72,6 +72,7 @@ int main(int argc, char* argv[])
 	bool running = true;
 
 	//desktop uses SDL to set up an OpenGL context, and has its own SDL window...so I #ifdefed here.
+	//this should be moved to the RPi init/deinit file
 
 	//ALWAYS INITIALIZE VIDEO. It starts SDL's event system, and without it, input won't work.
 	#ifdef _RPI_
@@ -79,12 +80,16 @@ int main(int argc, char* argv[])
 		{
 			std::cerr << "Error - could not initialize SDL!\n";
 			std::cerr << "	" << SDL_GetError() << "\n";
-			std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed? Is your firmware up to date?\n";
+			std::cerr << "Are you in the 'video' and 'input' groups? Are you running with X closed? Is your firmware up to date? Are you using at least the 192/64 memory split?\n";
 			return 1;
 		}
 
 		SDL_Surface* sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
-		std::cout << "Fake SDL window is " << sdlScreen->w << "x" << sdlScreen->h << "\n";
+		if(sdlScreen == NULL)
+		{
+			std::cerr << "Error initializing SDL screen!\n";
+			running = false;
+		}
 	#endif
 
 	bool renderInit = Renderer::init(width, height);

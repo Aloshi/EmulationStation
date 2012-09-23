@@ -5,7 +5,6 @@
 #include <boost/filesystem.hpp>
 
 //this is obviously an incredibly inefficient way to go about searching
-//some day I may change this to use hash tables or something
 //but I don't think it'll matter too much with the size of most collections
 GameData* searchFolderByPath(FolderData* folder, std::string const& path)
 {
@@ -138,6 +137,13 @@ void parseGamelist(SystemData* system)
 
 		std::string path = pathNode.text().get();
 
+		//expand "."
+		if(path[0] == '.')
+		{
+			path.erase(0, 1);
+			path.insert(0, system->getRootFolder()->getPath());
+		}
+
 		if(boost::filesystem::exists(path))
 		{
 			GameData* game = searchFolderByPath(system->getRootFolder(), path);
@@ -153,7 +159,16 @@ void parseGamelist(SystemData* system)
 			if(gameNode.child("desc"))
 				newDesc = gameNode.child("desc").text().get();
 			if(gameNode.child("image"))
+			{
 				newImage = gameNode.child("image").text().get();
+
+				//expand "."
+				if(newImage[0] == '.')
+				{
+					newImage.erase(0, 1);
+					newImage.insert(0, system->getRootFolder()->getPath());
+				}
+			}
 
 			game->set(newName, newDesc, newImage);
 

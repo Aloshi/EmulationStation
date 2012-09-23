@@ -61,7 +61,10 @@ std::string strreplace(std::string& str, std::string replace, std::string with)
 {
 	size_t pos = str.find(replace);
 
-	return str.replace(pos, replace.length(), with.c_str(), with.length());
+	if(pos != std::string::npos)
+		return str.replace(pos, replace.length(), with.c_str(), with.length());
+	else
+		return str;
 }
 
 void SystemData::launchGame(GameData* game)
@@ -196,13 +199,15 @@ void SystemData::loadConfig()
 				if(varName == "NAME")
 					sysName = varValue;
 				else if(varName == "PATH")
-					sysPath = varValue;
-				else if(varName == "EXTENSION")
+				{
+					if(varValue[varValue.length() - 1] == '/')
+						sysPath = varValue.substr(0, varValue.length() - 1);
+					else
+						sysPath = varValue;
+				}else if(varName == "EXTENSION")
 					sysExtension = varValue;
 				else if(varName == "COMMAND")
 					sysCommand = varValue;
-				//else
-				//	std::cout << "Warning reading config file - unknown variable name \"" << varName << "\", ignoring.\n";
 
 				//we have all our variables - create the system object
 				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())

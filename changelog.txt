@@ -1,3 +1,7 @@
+September 23
+-Fixed crash when "%ROM%" isn't present in a launch command. Not sure why you'd ever do this on purpose, but hey.
+-Added relative path operator ("./") support for gamelist.xml, for both game paths and image paths.
+
 September 16
 -Fixed a bug with skipping over unicode characters. [X] will be displayed if the character is not standard ASCII (characters 32 to 127).
 
