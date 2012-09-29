@@ -6,9 +6,13 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 #include "Font.h"
+#include <SDL/SDL.h>
+#include "InputManager.h"
 
 namespace Renderer
 {
+	SDL_Surface* sdlScreen;
+
 	EGLDisplay display;
 	EGLSurface surface;
 	EGLContext context;
@@ -24,6 +28,26 @@ namespace Renderer
 
 	bool createSurface() //unsigned int display_width, unsigned int display_height)
 	{
+		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
+		{
+			std::cerr << "Error initializing SDL!\n";
+			std::cerr << SDL_GetError() << "\n";
+			std::cerr << "Are you in the 'video' and 'input' groups? Is X closed? Is your firmware up to date? Are you using at least the 192/64 memory split?\n";
+			return false;
+		}
+
+		sdlScreen = SDL_SetVideoMode(1, 1, 0, SDL_SWSURFACE);
+		if(sdlScreen == NULL)
+		{
+			std::cerr << "Error creating SDL window for input!\n";
+			return false;
+		}
+
+		//have to reload config to re-open SDL joysticks
+		InputManager::loadConfig();
+
+
+
 		std::cout << "Creating surface...";
 
 		DISPMANX_ELEMENT_HANDLE_T dispman_element;
@@ -148,6 +172,10 @@ namespace Renderer
 
 	void destroySurface()
 	{
+		SDL_FreeSurface(sdlScreen);
+		sdlScreen = NULL;
+		SDL_Quit();
+
 		eglSwapBuffers(display, surface);
 		eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 		eglDestroySurface(display, surface);
