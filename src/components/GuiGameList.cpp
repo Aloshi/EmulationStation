@@ -2,6 +2,7 @@
 #include "../InputManager.h"
 #include <iostream>
 #include "GuiMenu.h"
+#include "GuiFastSelect.h"
 #include <boost/filesystem.hpp>
 
 
@@ -12,7 +13,6 @@ GuiGameList::GuiGameList(bool useDetail)
 {
 	std::cout << "Creating GuiGameList\n";
 	mDetailed = useDetail;
-
 
 	mTheme = new GuiTheme(); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
 
@@ -152,6 +152,12 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		new GuiMenu(this);
 	}
 
+	if(button == InputManager::SELECT && keyDown)
+	{
+		std::cout << "Creating GuiFastSelect\n";
+		new GuiFastSelect(this, mSystem, mList->getSelectedObject()->getName()[0]);
+	}
+
 	if(mDetailed)
 	{
 		if(button == InputManager::UP || button == InputManager::DOWN)
@@ -199,6 +205,7 @@ void GuiGameList::updateTheme()
 		mTheme->readXML(""); //clears any current theme
 
 	mList->setSelectorColor(mTheme->getSelectorColor());
+	mList->setSelectedTextColor(mTheme->getSelectedTextColor());
 	mList->setCentered(mTheme->getListCentered());
 
 	if(mDetailed)

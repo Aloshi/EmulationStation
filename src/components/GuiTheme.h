@@ -16,6 +16,7 @@ public:
 	int getPrimaryColor();
 	int getSecondaryColor();
 	int getSelectorColor();
+	int getSelectedTextColor();
 	int getDescColor();
 	bool getHeaderHidden();
 	bool getDividersHidden();
@@ -39,7 +40,7 @@ private:
 
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
-	int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mDescColor;
+	int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mListSelectedColor, mDescColor;
 	bool mHideHeader, mHideDividers, mListCentered;
 
 	float mListOffsetX, mGameImageOffsetY, mListTextOffsetX;

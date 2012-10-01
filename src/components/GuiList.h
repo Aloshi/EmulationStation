@@ -7,9 +7,6 @@
 #include <vector>
 #include <string>
 
-#define SCROLLDELAY 507
-#define SCROLLTIME 200
-
 //A graphical list. Supports multiple colors for rows and scrolling.
 //TODO - add truncation to text rendering if name exceeds a maximum width (a trailing elipses, perhaps).
 template <typename listType>
@@ -35,16 +32,20 @@ public:
 	bool isScrolling();
 
 	void setSelectorColor(int selectorColor);
+	void setSelectedTextColor(int selectedColor);
 	void setCentered(bool centered);
 
 	void setTextOffsetX(int textoffsetx);
 
 private:
+	static const int SCROLLDELAY = 507;
+	static const int SCROLLTIME = 200;
+
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
 
 	Renderer::FontSize mFont;
-	int mSelectorColor;
+	int mSelectorColor, mSelectedTextColorOverride;
 	bool mDrawCentered;
 
 	int mTextOffsetX;

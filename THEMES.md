@@ -63,6 +63,8 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 `<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList.
 
+`<listSelectedColor>` - the hex color to use for selected text on the GuiGameList. Default is -1, which will not change the color.
+
 `<listLeftAlign />` - if present, the games list names will be left aligned to the value of `<listOffsetX>` (default 0.5).
 
 `<hideHeader />` - if present, the system name header won't be displayed (useful for replacing it with an image).

@@ -1,3 +1,8 @@
+September 30
+-Began implementing GuiFastSelect, currently invoked by holding F2. Unfortunately, it doesn't do anything yet.
+-Added <listSelectedColor>.
+-Fixed OpenGL mipmap generation not setting a magnification filter. Hopefully this fixes the weird scaling. If not, I can switch from nearest neighbor to linear.
+
 September 29
 -SDL is now completely shut down on both the RPi and SDL GL renderer. You may see the flicker of a terminal when you launch a game. This was done in preparation for audio.
 

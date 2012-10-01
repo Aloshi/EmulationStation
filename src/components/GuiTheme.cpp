@@ -15,10 +15,11 @@ bool GuiTheme::getHeaderHidden() { return mHideHeader; }
 bool GuiTheme::getDividersHidden() { return mHideDividers; }
 bool GuiTheme::getListCentered() { return mListCentered; }
 
-//not yet implemented
 float GuiTheme::getListOffsetX() { return mListOffsetX; }
 float GuiTheme::getGameImageOffsetY() { return mGameImageOffsetY; }
 float GuiTheme::getListTextOffsetX() { return mListTextOffsetX; }
+
+int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
 
 GuiTheme::GuiTheme(std::string path)
 {
@@ -38,6 +39,7 @@ void GuiTheme::setDefaults()
 	mListPrimaryColor = 0x0000FF;
 	mListSecondaryColor = 0x00FF00;
 	mListSelectorColor = 0x000000;
+	mListSelectedColor = -1; //-1 = use original list color when selected
 	mDescColor = 0x0000FF;
 	mHideHeader = false;
 	mHideDividers = false;
@@ -93,6 +95,7 @@ void GuiTheme::readXML(std::string path)
 	mListPrimaryColor = resolveColor(root.child("listPrimaryColor").text().get(), mListPrimaryColor);
 	mListSecondaryColor = resolveColor(root.child("listSecondaryColor").text().get(), mListSecondaryColor);
 	mListSelectorColor = resolveColor(root.child("listSelectorColor").text().get(), mListSelectorColor);
+	mListSelectedColor = resolveColor(root.child("listSelectedColor").text().get(), mListSelectedColor);
 	mDescColor = resolveColor(root.child("descColor").text().get(), mDescColor);
 	mHideHeader = root.child("hideHeader");
 	mHideDividers = root.child("hideDividers");

@@ -67,6 +67,9 @@ void InputManager::processEvent(SDL_Event* event)
 			case SDLK_F1:
 				button = MENU;
 				break;
+			case SDLK_F2:
+				button = SELECT;
+				break;
 
 			default:
 				button = UNKNOWN;
