@@ -109,34 +109,18 @@ int main(int argc, char* argv[])
 			std::cerr << "Does at least one system have a game presesnt?\n";
 			running = false;
 		}else{
-
-			bool useDetail = false;
-
-			//see if any systems had gamelists present, if so we'll use the detailed GuiGameList
-			if(!IGNOREGAMELIST)
-			{
-				for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
-				{
-					if(SystemData::sSystemVector.at(i)->hasGamelist())
-					{
-						useDetail = true;
-						break;
-					}
-				}
-			}
-
 			//choose which GUI to open depending on Input configuration
 			if(fs::exists(InputManager::getConfigPath()))
 			{
 				//an input config already exists - load it and proceed to the gamelist as usual.
 				InputManager::loadConfig();
-				new GuiGameList(useDetail);
+				GuiGameList::create();
 			}else{
 				//if no input.cfg is present, but a joystick is connected, launch the input config GUI
 				if(SDL_NumJoysticks() > 0)
 					new GuiInputConfig();
 				else
-					new GuiGameList(useDetail);
+					GuiGameList::create();
 
 			}
 		}

@@ -66,7 +66,7 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 
 			InputManager::loadConfig();
 			delete this;
-			new GuiGameList();
+			GuiGameList::create();
 		}
 		return;
 	}

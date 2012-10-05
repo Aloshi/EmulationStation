@@ -29,6 +29,8 @@ public:
 	void onInit();
 	void onDeinit();
 
+	static GuiGameList* create();
+
 	static const float sInfoWidth;
 private:
 	void updateList();

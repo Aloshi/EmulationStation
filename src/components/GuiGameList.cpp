@@ -251,3 +251,24 @@ void GuiGameList::onInit()
 {
 	mTheme->init();
 }
+
+
+extern bool IGNOREGAMELIST; //defined in main.cpp (as a command line argument)
+GuiGameList* GuiGameList::create()
+{
+	bool detailed = false;
+
+	if(!IGNOREGAMELIST)
+	{
+		for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
+		{
+			if(SystemData::sSystemVector.at(i)->hasGamelist())
+			{
+				detailed = true;
+				break;
+			}
+		}
+	}
+
+	return new GuiGameList(detailed);
+}
