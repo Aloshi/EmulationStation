@@ -22,6 +22,13 @@ GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, cha
 	mScrollTimer = 0;
 	mScrollOffset = 0;
 
+	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
+	mBox = new GuiBox(sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6);
+	addChild(mBox);
+
+	//set test mBox info
+	//mBox->setHorizontalImage("test.jpg");
+
 	mParent->pause();
 }
 
@@ -30,12 +37,15 @@ GuiFastSelect::~GuiFastSelect()
 	Renderer::unregisterComponent(this);
 	InputManager::unregisterComponent(this);
 
+	removeChild(mBox);
+	delete mBox;
+
 	mParent->resume();
 }
 
 void GuiFastSelect::onRender()
 {
-	int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
+	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 
 	Renderer::drawRect(sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6, 0x000FF0);
 	Renderer::drawCenteredText(LETTERS.substr(mLetterID, 1), 0, sh * 0.5 - (Renderer::getFontHeight(Renderer::LARGE) * 0.5), 0xFF0000, Renderer::LARGE);

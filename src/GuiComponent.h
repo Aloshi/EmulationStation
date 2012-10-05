@@ -51,6 +51,7 @@ public:
 	void setOffsetY(int val);
 
 	static void processTicks(int deltaTime);
+
 private:
 	int mOffsetX, mOffsetY;
 

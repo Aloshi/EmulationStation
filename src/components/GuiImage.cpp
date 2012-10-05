@@ -17,8 +17,8 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resi
 	mOriginX = 0.5;
 	mOriginY = 0.5;
 
-	mWidth = 0;
-	mHeight = 0;
+	mWidth = mDrawWidth = 0;
+	mHeight = mDrawHeight = 0;
 
 	mTiled = false;
 
@@ -160,6 +160,14 @@ void GuiImage::loadImage(std::string path)
 	//free the memory from that pointer
 	delete[] imageRGBA;
 
+	resize();
+}
+
+void GuiImage::resize()
+{
+	mDrawWidth = mWidth;
+	mDrawHeight = mHeight;
+
 	//(we don't resize tiled images)
 	if(!mTiled)
 	{
@@ -184,12 +192,10 @@ void GuiImage::loadImage(std::string path)
 			resizeScaleX = resizeScaleY;
 
 		if(resizeScaleX)
-			mWidth *= resizeScaleX;
+			mDrawWidth *= resizeScaleX;
 		if(resizeScaleY)
-			mHeight *= resizeScaleY;
+			mDrawHeight *= resizeScaleY;
 	}
-
-	//std::cout << "Image load successful, w: " << mWidth << " h: " << mHeight << " texID: " << mTextureID << "\n";
 }
 
 void GuiImage::unloadImage()
@@ -229,6 +235,14 @@ void GuiImage::setTiling(bool tile)
 		mResizeExact = false;
 }
 
+void GuiImage::setResize(unsigned int width, unsigned int height, bool resizeExact)
+{
+	mResizeWidth = width;
+	mResizeHeight = height;
+	mResizeExact = resizeExact;
+	resize();
+}
+
 void GuiImage::onRender()
 {
 	if(mTextureID)
@@ -246,7 +260,7 @@ void GuiImage::onRender()
 			{
 				for(unsigned int y = 0; y < yCount; y++)
 				{
-					buildImageArray(getOffsetX() + x*mWidth, getOffsetY() + y*mHeight, points + (12 * (x*yCount + y)), texs + (12 * (x*yCount + y)));
+					buildImageArray(getOffsetX() + x*mDrawWidth, getOffsetY() + y*mDrawHeight, points + (12 * (x*yCount + y)), texs + (12 * (x*yCount + y)));
 				}
 			}
 			drawImageArray(points, texs, xCount * yCount * 6);
@@ -262,13 +276,13 @@ void GuiImage::onRender()
 
 void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs)
 {
-	points[0] = posX - (mWidth * mOriginX);		points[1] = posY - (mHeight * mOriginY);
-	points[2] = posX - (mWidth * mOriginX);		points[3] = posY + (mHeight * (1 - mOriginY));
-	points[4] = posX + (mWidth * (1 - mOriginX));	points[5] = posY - (mHeight * mOriginY);
+	points[0] = posX - (mDrawWidth * mOriginX);		points[1] = posY - (mDrawHeight * mOriginY);
+	points[2] = posX - (mDrawWidth * mOriginX);		points[3] = posY + (mDrawHeight * (1 - mOriginY));
+	points[4] = posX + (mDrawWidth * (1 - mOriginX));	points[5] = posY - (mDrawHeight * mOriginY);
 
-	points[6] = posX + (mWidth * (1 - mOriginX));	points[7] = posY - (mHeight * mOriginY);
-	points[8] = posX - (mWidth * mOriginX);		points[9] = posY + (mHeight * (1 - mOriginY));
-	points[10] = posX + (mWidth * (1 -mOriginX));	points[11] = posY + (mHeight * (1 - mOriginY));
+	points[6] = posX + (mDrawWidth * (1 - mOriginX));	points[7] = posY - (mDrawHeight * mOriginY);
+	points[8] = posX - (mDrawWidth * mOriginX);		points[9] = posY + (mDrawHeight * (1 - mOriginY));
+	points[10] = posX + (mDrawWidth * (1 -mOriginX));	points[11] = posY + (mDrawHeight * (1 - mOriginY));
 
 
 

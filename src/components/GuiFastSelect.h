@@ -5,6 +5,7 @@
 #include "../SystemData.h"
 #include "../FolderData.h"
 #include "GuiList.h"
+#include "GuiBox.h"
 
 class GuiFastSelect : GuiComponent
 {
@@ -28,6 +29,8 @@ private:
 
 	size_t mLetterID;
 	GuiComponent* mParent;
+
+	GuiBox* mBox;
 
 	int mScrollTimer, mScrollOffset;
 	bool mScrolling;

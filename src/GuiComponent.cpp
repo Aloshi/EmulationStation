@@ -35,7 +35,7 @@ void GuiComponent::removeChild(GuiComponent* comp)
 		if(mChildren.at(i) == comp)
 		{
 			mChildren.erase(mChildren.begin() + i);
-			break;
+			return;
 		}
 	}
 

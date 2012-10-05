@@ -19,6 +19,7 @@ public:
 	void setImage(std::string path); //Loads the image at the given filepath.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
+	void setResize(unsigned int width, unsigned int height, bool resizeExact);
 
 	unsigned int getWidth(); //Returns render width in pixels. May be different than actual texture width.
 	unsigned int getHeight(); //Returns render height in pixels. May be different than actual texture height.
@@ -35,6 +36,7 @@ private:
 	bool mResizeExact, mTiled;
 
 	void loadImage(std::string path);
+	void resize();
 	void buildImageArray(int x, int y, GLfloat* points, GLfloat* texs); //writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position
 	void drawImageArray(GLfloat* points, GLfloat* texs, unsigned int count = 6); //draws the given set of points and texture coordinates, number of coordinate pairs may be specified (default 6)
 	void unloadImage();
@@ -42,6 +44,7 @@ private:
 	std::string mPath;
 
 	unsigned int mWidth, mHeight; //Our rendered size.
+	unsigned int mDrawWidth, mDrawHeight;
 
 	GLuint mTextureID;
 };

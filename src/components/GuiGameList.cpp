@@ -236,6 +236,7 @@ void GuiGameList::onPause()
 
 void GuiGameList::onResume()
 {
+	updateDetailData();
 	InputManager::registerComponent(this);
 }
 

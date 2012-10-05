@@ -1,5 +1,6 @@
 October 5
 -GuiFastSelect is working, but ugly.
+-Began work on GuiBox for theming the fast select dialog.
 
 September 30
 -Began implementing GuiFastSelect, currently invoked by holding F2. Unfortunately, it doesn't do anything yet.
