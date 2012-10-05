@@ -5,7 +5,7 @@
 
 std::string GuiInputConfig::sConfigPath = "./input.cfg";
 std::string GuiInputConfig::sInputs[] = { "UNKNOWN", "UP", "DOWN", "LEFT", "RIGHT", "BUTTON1 (Accept)", "BUTTON2 (Back)", "START (Menu)", "SELECT (Jump-to-letter)" }; //must be same order as InputManager::InputButton enum
-int GuiInputConfig::sInputCount = 8; //set to 9 after fast select is in
+int GuiInputConfig::sInputCount = 9;
 
 GuiInputConfig::GuiInputConfig()
 {

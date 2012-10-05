@@ -154,8 +154,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(button == InputManager::SELECT && keyDown)
 	{
-		std::cout << "Creating GuiFastSelect\n";
-		new GuiFastSelect(this, mSystem, mList->getSelectedObject()->getName()[0]);
+		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0]);
 	}
 
 	if(mDetailed)

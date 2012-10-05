@@ -3,10 +3,10 @@
 #include <iostream>
 
 const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const int GuiFastSelect::SCROLLSPEED = 120;
+const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
-GuiFastSelect::GuiFastSelect(GuiComponent* parent, SystemData* system, char startLetter)
+GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter)
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
 	if(mLetterID == std::string::npos)
@@ -16,7 +16,7 @@ GuiFastSelect::GuiFastSelect(GuiComponent* parent, SystemData* system, char star
 	InputManager::registerComponent(this);
 
 	mParent = parent;
-	mSystem = system;
+	mList = list;
 
 	mScrolling = false;
 	mScrollTimer = 0;
@@ -64,6 +64,7 @@ void GuiFastSelect::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(button == InputManager::SELECT && !keyDown)
 	{
+		setListPos();
 		delete this;
 		return;
 	}
@@ -97,4 +98,34 @@ void GuiFastSelect::setLetterID(int id)
 		id -= LETTERS.length();
 
 	mLetterID = (size_t)id;
+}
+
+void GuiFastSelect::setListPos()
+{
+	char letter = LETTERS[mLetterID];
+
+	int min = 0;
+	int max = mList->getObjectCount() - 1;
+
+	int mid;
+
+	while(max >= min)
+	{
+		mid = ((max - min) / 2) + min;
+
+		char checkLetter = toupper(mList->getObject(mid)->getName()[0]);
+
+		if(checkLetter < letter)
+		{
+			min = mid + 1;
+		}else if(checkLetter > letter)
+		{
+			max = mid - 1;
+		}else{
+			//exact match found
+			break;
+		}
+	}
+
+	mList->setSelection(mid);
 }

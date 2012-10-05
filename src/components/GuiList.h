@@ -37,6 +37,10 @@ public:
 
 	void setTextOffsetX(int textoffsetx);
 
+	int getObjectCount();
+	listType getObject(int i);
+	void setSelection(int i);
+
 private:
 	static const int SCROLLDELAY = 507;
 	static const int SCROLLTIME = 200;

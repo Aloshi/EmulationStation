@@ -231,3 +231,21 @@ void GuiList<listType>::setTextOffsetX(int textoffsetx)
 {
 	mTextOffsetX = textoffsetx;
 }
+
+template <typename listType>
+int GuiList<listType>::getObjectCount()
+{
+	return mRowVector.size();
+}
+
+template <typename listType>
+listType GuiList<listType>::getObject(int i)
+{
+	return mRowVector.at(i).object;
+}
+
+template <typename listType>
+void GuiList<listType>::setSelection(int i)
+{
+	mSelection = i;
+}

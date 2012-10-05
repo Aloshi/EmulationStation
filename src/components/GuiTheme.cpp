@@ -77,7 +77,7 @@ void GuiTheme::readXML(std::string path)
 	if(path.empty())
 		return;
 
-	std::cout << "Loading theme \"" << path << "\"...\n";
+	//std::cout << "Loading theme \"" << path << "\"...\n";
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(path.c_str());
@@ -108,7 +108,7 @@ void GuiTheme::readXML(std::string path)
 	//recursively create children for all <components> with proper parenting
 	createComponentChildren(root, this);
 
-	std::cout << "Finished parsing theme.\n";
+	//std::cout << "Finished parsing theme.\n";
 }
 
 void GuiTheme::createComponentChildren(pugi::xml_node node, GuiComponent* parent)
@@ -152,7 +152,7 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		std::string originX, originY;
 		splitString(origin, ' ', &originX, &originY);
 
-		std::cout << "image, x: " << posX << " y: " << posY << " w: " << dimW << " h: " << dimH << " ox: " << originX << " oy: " << originY << " tiled: " << tiled << "\n";
+		//std::cout << "image, x: " << posX << " y: " << posY << " w: " << dimW << " h: " << dimH << " ox: " << originX << " oy: " << originY << " tiled: " << tiled << "\n";
 
 		//resolve to pixels from percentages/variables
 		int x = resolveExp(posX) * Renderer::getScreenWidth();

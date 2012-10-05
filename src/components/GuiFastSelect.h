@@ -3,11 +3,13 @@
 
 #include "../GuiComponent.h"
 #include "../SystemData.h"
+#include "../FolderData.h"
+#include "GuiList.h"
 
 class GuiFastSelect : GuiComponent
 {
 public:
-	GuiFastSelect(GuiComponent* parent, SystemData* system, char startLetter);
+	GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter);
 	~GuiFastSelect();
 
 	void onRender();
@@ -18,11 +20,15 @@ private:
 	static const int SCROLLSPEED;
 	static const int SCROLLDELAY;
 
+	void setListPos();
+
 	void setLetterID(int id);
 
-	SystemData* mSystem;
+	GuiList<FileData*>* mList;
+
 	size_t mLetterID;
 	GuiComponent* mParent;
+
 	int mScrollTimer, mScrollOffset;
 	bool mScrolling;
 };

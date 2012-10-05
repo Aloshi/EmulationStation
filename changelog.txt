@@ -1,3 +1,6 @@
+October 5
+-GuiFastSelect is working, but ugly.
+
 September 30
 -Began implementing GuiFastSelect, currently invoked by holding F2. Unfortunately, it doesn't do anything yet.
 -Added <listSelectedColor>.
