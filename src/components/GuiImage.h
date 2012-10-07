@@ -21,6 +21,9 @@ public:
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
 	void setResize(unsigned int width, unsigned int height, bool resizeExact);
 
+	void setFlipX(bool flip);
+	void setFlipY(bool flip);
+
 	unsigned int getWidth(); //Returns render width in pixels. May be different than actual texture width.
 	unsigned int getHeight(); //Returns render height in pixels. May be different than actual texture height.
 
@@ -33,7 +36,7 @@ public:
 private:
 	unsigned int mResizeWidth, mResizeHeight;
 	float mOriginX, mOriginY;
-	bool mResizeExact, mTiled;
+	bool mResizeExact, mTiled, mFlipX, mFlipY;
 
 	void loadImage(std::string path);
 	void resize();

@@ -27,6 +27,9 @@ GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resi
 
 	mResizeExact = resizeExact;
 
+	mFlipX = false;
+	mFlipY = false;
+
 	if(!path.empty())
 		setImage(path);
 }
@@ -243,6 +246,16 @@ void GuiImage::setResize(unsigned int width, unsigned int height, bool resizeExa
 	resize();
 }
 
+void GuiImage::setFlipX(bool flip)
+{
+	mFlipX = flip;
+}
+
+void GuiImage::setFlipY(bool flip)
+{
+	mFlipY = flip;
+}
+
 void GuiImage::onRender()
 {
 	if(mTextureID)
@@ -293,6 +306,17 @@ void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* tex
 	texs[6] = 1;	texs[7] = 1;
 	texs[8] = 0;	texs[9] = 0;
 	texs[10] = 1;	texs[11] = 0;
+
+	if(mFlipX)
+	{
+		for(int i = 0; i < 11; i += 2)
+			texs[i] = !texs[i];
+	}
+	if(mFlipY)
+	{
+		for(int i = 1; i < 12; i += 2)
+			texs[i] = !texs[i];
+	}
 }
 
 void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, unsigned int numArrays)
