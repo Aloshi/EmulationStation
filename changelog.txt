@@ -2,6 +2,7 @@ October 7
 -Fixed borders for GuiBox. The right and bottom borders are flipped, too.
 -Added corners for GuiBox.
 -Added setFlipX() and setFlipY() to the GuiImage class.
+-Added theming options for the Fast Select GuiBox! See THEMES.md for more details.
 
 October 5
 -GuiFastSelect is working, but ugly.

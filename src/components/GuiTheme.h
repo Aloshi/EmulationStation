@@ -3,6 +3,7 @@
 
 #include "../GuiComponent.h"
 #include "../pugiXML/pugixml.hpp"
+#include "GuiBox.h"
 
 //This class loads an XML-defined list of GuiComponents.
 class GuiTheme : public GuiComponent
@@ -25,6 +26,8 @@ public:
 	float getListOffsetX();
 	float getListTextOffsetX();
 	float getGameImageOffsetY();
+
+	GuiBoxData getBoxData();
 private:
 	void setDefaults();
 	void deleteComponents();
@@ -44,6 +47,8 @@ private:
 	bool mHideHeader, mHideDividers, mListCentered;
 
 	float mListOffsetX, mGameImageOffsetY, mListTextOffsetX;
+
+	GuiBoxData mBoxData;
 };
 
 #endif

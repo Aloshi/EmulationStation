@@ -1,4 +1,5 @@
 #include "GuiBox.h"
+#include <iostream>
 
 GuiBox::GuiBox(int offsetX, int offsetY, unsigned int width, unsigned int height)
 {
@@ -7,6 +8,14 @@ GuiBox::GuiBox(int offsetX, int offsetY, unsigned int width, unsigned int height
 
 	mWidth = width;
 	mHeight = height;
+}
+
+void GuiBox::setData(GuiBoxData data)
+{
+	setBackgroundImage(data.backgroundPath, data.backgroundTiled);
+	setHorizontalImage(data.horizontalPath, data.horizontalTiled);
+	setVerticalImage(data.verticalPath, data.verticalTiled);
+	setCornerImage(data.cornerPath);
 }
 
 void GuiBox::setHorizontalImage(std::string path, bool tiled)

@@ -154,7 +154,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(button == InputManager::SELECT && keyDown)
 	{
-		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0]);
+		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData());
 	}
 
 	if(mDetailed)

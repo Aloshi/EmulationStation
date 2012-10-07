@@ -10,7 +10,7 @@
 class GuiFastSelect : GuiComponent
 {
 public:
-	GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter);
+	GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data);
 	~GuiFastSelect();
 
 	void onRender();

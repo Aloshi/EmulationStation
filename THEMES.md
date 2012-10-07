@@ -77,6 +77,24 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 `<gameImageOffsetY>` - the percentage to offset the displayed game image by. Default is the height of the header font.
 
+
+
+The Fast Select box can be themed with these tags:
+
+`<boxBackground>` - path to a background image file. ~ and . are expanded.
+
+`<boxBackgroundTiled />` - if present, the background will be tiled instead of stretched.
+
+`<boxHorizontal>` - path to the "left" border image file. It will be flipped for the right border. ~ and . are expanded.
+
+`<boxHorizontalTiled />` - if present, the horizontal image will be tiled instead of stretched downwards.
+
+`<boxVertical>` - path to the "top" border image file. It will be flipped for the bottom border. ~ and . are expanded.
+
+`<boxVerticalTiled />` - if present, the vertical image will be tiled instead of stretched to the right.
+
+`<boxCorner>` - path to the "top left corner" image file. It will be flipped for the top right, bottom right, and bottom left corners. ~ and . are expanded.
+
 List of variables
 =================
 

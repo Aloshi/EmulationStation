@@ -6,7 +6,7 @@ const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
-GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter)
+GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data)
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
 	if(mLetterID == std::string::npos)
@@ -24,12 +24,8 @@ GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, cha
 
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 	mBox = new GuiBox(sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6);
+	mBox->setData(data);
 	addChild(mBox);
-
-	//set test mBox info
-	mBox->setHorizontalImage("left.jpg", false);
-	mBox->setVerticalImage("top.jpg", false);
-	mBox->setCornerImage("corner.jpg");
 
 	mParent->pause();
 }

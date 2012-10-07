@@ -5,10 +5,22 @@
 #include "GuiImage.h"
 #include <string>
 
+struct GuiBoxData {
+	std::string backgroundPath;
+	bool backgroundTiled;
+	std::string horizontalPath;
+	bool horizontalTiled;
+	std::string verticalPath;
+	bool verticalTiled;
+	std::string cornerPath;
+};
+
 class GuiBox : public GuiComponent
 {
 public:
 	GuiBox(int offsetX, int offsetY, unsigned int width, unsigned int height);
+
+	void setData(GuiBoxData data);
 
 	void setBackgroundImage(std::string path, bool tiled = true);
 	void setHorizontalImage(std::string path, bool tiled = false);

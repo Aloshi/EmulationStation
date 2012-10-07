@@ -21,6 +21,8 @@ float GuiTheme::getListTextOffsetX() { return mListTextOffsetX; }
 
 int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
 
+GuiBoxData GuiTheme::getBoxData() { return mBoxData; }
+
 GuiTheme::GuiTheme(std::string path)
 {
 	setDefaults();
@@ -48,6 +50,14 @@ void GuiTheme::setDefaults()
 	mListOffsetX = 0.5;
 	mListTextOffsetX = 0.005;
 	mGameImageOffsetY = (float)Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight();
+
+	mBoxData.backgroundPath = "";
+	mBoxData.backgroundTiled = false;
+	mBoxData.horizontalPath = "";
+	mBoxData.horizontalTiled = false;
+	mBoxData.verticalPath = "";
+	mBoxData.verticalTiled = false;
+	mBoxData.cornerPath = "";
 }
 
 void GuiTheme::deleteComponents()
@@ -100,6 +110,15 @@ void GuiTheme::readXML(std::string path)
 	mHideHeader = root.child("hideHeader");
 	mHideDividers = root.child("hideDividers");
 	mListCentered = !root.child("listLeftAlign");
+
+	//GuiBox theming data
+	mBoxData.backgroundPath = expandPath(root.child("boxBackground").text().get());
+	mBoxData.backgroundTiled = root.child("boxBackgroundTiled");
+	mBoxData.horizontalPath = expandPath(root.child("boxHorizontal").text().get());
+	mBoxData.horizontalTiled = root.child("boxHorizontalTiled");
+	mBoxData.verticalPath = expandPath(root.child("boxVertical").text().get());
+	mBoxData.verticalTiled = root.child("boxVerticalTiled");
+	mBoxData.cornerPath = expandPath(root.child("boxCorner").text().get());
 
 	mListOffsetX = strToFloat(root.child("listOffsetX").text().get(), mListOffsetX);
 	mGameImageOffsetY = strToFloat(root.child("gameImageOffsetY").text().get(), mGameImageOffsetY);
