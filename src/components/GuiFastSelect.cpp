@@ -27,7 +27,8 @@ GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, cha
 	addChild(mBox);
 
 	//set test mBox info
-	//mBox->setHorizontalImage("test.jpg");
+	//mBox->setHorizontalImage("test.jpg", false);
+	//mBox->setVerticalImage("test.jpg", false);
 
 	mParent->pause();
 }

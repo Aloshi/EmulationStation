@@ -1,3 +1,6 @@
+October 7
+-Fixed borders for GuiBox. Still need to flip the right border and bottom border.
+
 October 5
 -GuiFastSelect is working, but ugly.
 -Began work on GuiBox for theming the fast select dialog.

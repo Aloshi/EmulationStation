@@ -11,7 +11,7 @@ const float GuiGameList::sInfoWidth = 0.5;
 
 GuiGameList::GuiGameList(bool useDetail)
 {
-	std::cout << "Creating GuiGameList\n";
+	//std::cout << "Creating GuiGameList\n";
 	mDetailed = useDetail;
 
 	mTheme = new GuiTheme(); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)

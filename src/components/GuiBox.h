@@ -13,13 +13,17 @@ public:
 	void setBackgroundImage(std::string path, bool tiled = true);
 	void setHorizontalImage(std::string path, bool tiled = false);
 	void setVerticalImage(std::string path, bool tiled = false);
+	void setCornerImage(std::string path);
 
 	void onRender();
 
 	void onInit();
 	void onDeinit();
 private:
-	GuiImage mBackgroundImage, mHorizontalImage, mVerticalImage;
+	GuiImage mBackgroundImage, mHorizontalImage, mVerticalImage, mCornerImage;
+
+	int getHorizontalBorderWidth();
+	int getVerticalBorderWidth();
 
 	unsigned int mWidth, mHeight;
 };

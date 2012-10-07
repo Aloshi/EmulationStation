@@ -107,7 +107,7 @@ void parseGamelist(SystemData* system)
 
 	std::string xmlpath = system->getRootFolder()->getPath() + "/gamelist.xml";
 
-	std::cout << "Parsing XML file \"" << xmlpath << "\"...\n";
+	std::cout << "Parsing XML file \"" << xmlpath << "\"...";
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
@@ -177,5 +177,5 @@ void parseGamelist(SystemData* system)
 		}
 	}
 
-	std::cout << "XML parsing complete.\n";
+	std::cout << "done.\n";
 }
