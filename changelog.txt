@@ -1,5 +1,6 @@
 October 10
 -Added a theming tag for the Fast Select box's text.
+-Fixed GuiBox background being positioned wrong.
 
 October 7
 -Fixed borders for GuiBox. The right and bottom borders are flipped, too.

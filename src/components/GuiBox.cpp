@@ -37,6 +37,7 @@ void GuiBox::setVerticalImage(std::string path, bool tiled)
 
 void GuiBox::setBackgroundImage(std::string path, bool tiled)
 {
+	mBackgroundImage.setOrigin(0, 0);
 	mBackgroundImage.setResize(mWidth, mHeight, true);
 	mBackgroundImage.setTiling(tiled);
 	mBackgroundImage.setOffsetX(getOffsetX());
