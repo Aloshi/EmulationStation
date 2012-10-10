@@ -27,6 +27,8 @@ public:
 	unsigned int getWidth(); //Returns render width in pixels. May be different than actual texture width.
 	unsigned int getHeight(); //Returns render height in pixels. May be different than actual texture height.
 
+	bool hasImage();
+
 	void onRender();
 
 	//Image textures will be deleted on renderer deinitialization, and recreated on reinitialization (if mPath is not empty).

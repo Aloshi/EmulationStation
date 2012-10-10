@@ -1,5 +1,4 @@
 #include "GuiBox.h"
-#include <iostream>
 
 GuiBox::GuiBox(int offsetX, int offsetY, unsigned int width, unsigned int height)
 {
@@ -20,20 +19,20 @@ void GuiBox::setData(GuiBoxData data)
 
 void GuiBox::setHorizontalImage(std::string path, bool tiled)
 {
-	mHorizontalImage.setResize(12, mHeight, true);
 	mHorizontalImage.setTiling(tiled);
 	mHorizontalImage.setOrigin(0, 0);
 
 	mHorizontalImage.setImage(path);
+	mHorizontalImage.setResize(mHorizontalImage.getHeight(), mHeight, true);
 }
 
 void GuiBox::setVerticalImage(std::string path, bool tiled)
 {
-	mVerticalImage.setResize(mWidth, 12, true);
 	mVerticalImage.setTiling(tiled);
 	mVerticalImage.setOrigin(0, 0);
 
 	mVerticalImage.setImage(path);
+	mVerticalImage.setResize(mWidth, mVerticalImage.getHeight(), true);
 }
 
 void GuiBox::setBackgroundImage(std::string path, bool tiled)
@@ -56,6 +55,8 @@ void GuiBox::setCornerImage(std::string path)
 
 void GuiBox::onRender()
 {
+	mBackgroundImage.render();
+
 	//left border
 	mHorizontalImage.setOffsetX(getOffsetX() - getHorizontalBorderWidth());
 	mHorizontalImage.setOffsetY(getOffsetY());
@@ -123,10 +124,15 @@ void GuiBox::onDeinit()
 
 int GuiBox::getHorizontalBorderWidth()
 {
-	return 12;
+	return mHorizontalImage.getWidth();
 }
 
 int GuiBox::getVerticalBorderWidth()
 {
-	return 12;
+	return mVerticalImage.getHeight();
+}
+
+bool GuiBox::hasBackground()
+{
+	return mBackgroundImage.hasImage();
 }

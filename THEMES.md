@@ -81,6 +81,8 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 The Fast Select box can be themed with these tags:
 
+`<fastSelectColor>` - the hex color to use for the letter display on the Fast Select box.
+
 `<boxBackground>` - path to a background image file. ~ and . are expanded.
 
 `<boxBackgroundTiled />` - if present, the background will be tiled instead of stretched.
@@ -94,6 +96,10 @@ The Fast Select box can be themed with these tags:
 `<boxVerticalTiled />` - if present, the vertical image will be tiled instead of stretched to the right.
 
 `<boxCorner>` - path to the "top left corner" image file. It will be flipped for the top right, bottom right, and bottom left corners. ~ and . are expanded.
+
+
+**NOTE:** The tiling tags are in and will tile, but will not properly cut off where they should. This should be fixed in a later commit.
+
 
 List of variables
 =================

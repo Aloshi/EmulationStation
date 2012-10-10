@@ -3,8 +3,8 @@
 #include <boost/filesystem.hpp>
 #include <math.h>
 
-unsigned int GuiImage::getWidth() { return mWidth; }
-unsigned int GuiImage::getHeight() { return mHeight; }
+unsigned int GuiImage::getWidth() { return mDrawWidth; }
+unsigned int GuiImage::getHeight() { return mDrawHeight; }
 
 GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact)
 {
@@ -351,4 +351,9 @@ void GuiImage::onInit()
 void GuiImage::onDeinit()
 {
 	unloadImage();
+}
+
+bool GuiImage::hasImage()
+{
+	return !mPath.empty();
 }

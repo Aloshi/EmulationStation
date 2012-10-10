@@ -27,6 +27,8 @@ public:
 	void setVerticalImage(std::string path, bool tiled = false);
 	void setCornerImage(std::string path);
 
+	bool hasBackground();
+
 	void onRender();
 
 	void onInit();
