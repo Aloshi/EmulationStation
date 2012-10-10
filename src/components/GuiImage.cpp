@@ -284,11 +284,8 @@ void GuiImage::onRender()
 	}
 }
 
-void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float percentageX, float percentageY)
+void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
 {
-	float px = percentageX;
-	float py = percentageY;
-
 	points[0] = posX - (mDrawWidth * mOriginX) * px;		points[1] = posY - (mDrawHeight * mOriginY) * py;
 	points[2] = posX - (mDrawWidth * mOriginX) * px;		points[3] = posY + (mDrawHeight * (1 - mOriginY)) * py;
 	points[4] = posX + (mDrawWidth * (1 - mOriginX)) * px;		points[5] = posY - (mDrawHeight * mOriginY) * py;
@@ -299,29 +296,29 @@ void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* tex
 
 
 
-	texs[0] = 0;		texs[1] = percentageY;
+	texs[0] = 0;		texs[1] = py;
 	texs[2] = 0;		texs[3] = 0;
-	texs[4] = percentageX;	texs[5] = percentageY;
+	texs[4] = px;		texs[5] = py;
 
-	texs[6] = percentageX;	texs[7] = percentageY;
+	texs[6] = px;		texs[7] = py;
 	texs[8] = 0;		texs[9] = 0;
-	texs[10] = percentageX;	texs[11] = 0;
+	texs[10] = px;		texs[11] = 0;
 
 	if(mFlipX)
 	{
 		for(int i = 0; i < 11; i += 2)
-			if(texs[i] == percentageX)
+			if(texs[i] == px)
 				texs[i] = 0;
 			else
-				texs[i] = percentageX;
+				texs[i] = px;
 	}
 	if(mFlipY)
 	{
 		for(int i = 1; i < 12; i += 2)
-			if(texs[i] == percentageY)
+			if(texs[i] == py)
 				texs[i] = 0;
 			else
-				texs[i] = percentageY;
+				texs[i] = py;
 	}
 }
 

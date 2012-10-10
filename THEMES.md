@@ -48,7 +48,7 @@ Used to display an image.
 
 `<origin>` - the point on the image that `<pos>` defines, as an image percentage. "0.5 0.5", the center of the image, by default.
 
-`<tiled />` - if present, the image is tiled instead of resized. A smaller image tiled many times is **slower** than a larger immage tiled few times.
+`<tiled />` - if present, the image is tiled instead of resized.
 
 
 Display tags
@@ -96,9 +96,6 @@ The Fast Select box can be themed with these tags:
 `<boxVerticalTiled />` - if present, the vertical image will be tiled instead of stretched to the right.
 
 `<boxCorner>` - path to the "top left corner" image file. It will be flipped for the top right, bottom right, and bottom left corners. ~ and . are expanded.
-
-
-**NOTE:** The tiling tags are in and will tile, but will not properly cut off where they should. This should be fixed in a later commit.
 
 
 List of variables
