@@ -2,6 +2,7 @@ October 10
 -Added a theming tag for the Fast Select box's text.
 -Fixed GuiBox background being positioned wrong.
 -Fixed GuiBox/GuiFastSelect render order.
+-Redid tiling to use only 6 verticies (instead of tilecount-dependent) with wrapped textures. Tiling is also precise now (cuts off when it should).
 
 October 7
 -Fixed borders for GuiBox. The right and bottom borders are flipped, too.

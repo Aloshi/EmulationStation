@@ -154,6 +154,9 @@ void GuiImage::loadImage(std::string path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 	mWidth = width;
 	mHeight = height;
 
@@ -262,21 +265,15 @@ void GuiImage::onRender()
 	{
 		if(mTiled)
 		{
-			unsigned int xCount = (unsigned int)((float)mResizeWidth/mWidth + 1.5);
-			unsigned int yCount = (unsigned int)((float)mResizeHeight/mHeight + 1.5);
+			float xCount = ((float)mResizeWidth/mWidth);
+			float yCount = ((float)mResizeHeight/mHeight);
 
 			//std::cout << "Array size: " << xCount << "x" << yCount << "\n";
 
-			GLfloat* points = new GLfloat[xCount * yCount * 12];
-			GLfloat* texs = new GLfloat[xCount * yCount * 12];
-			for(unsigned int x = 0; x < xCount; x++)
-			{
-				for(unsigned int y = 0; y < yCount; y++)
-				{
-					buildImageArray(getOffsetX() + x*mDrawWidth, getOffsetY() + y*mDrawHeight, points + (12 * (x*yCount + y)), texs + (12 * (x*yCount + y)));
-				}
-			}
-			drawImageArray(points, texs, xCount * yCount * 6);
+			GLfloat* points = new GLfloat[12];
+			GLfloat* texs = new GLfloat[12];
+			buildImageArray(getOffsetX(), getOffsetY(), points, texs, xCount, yCount);
+			drawImageArray(points, texs, 6);
 			delete[] points;
 			delete[] texs;
 		}else{
@@ -287,35 +284,44 @@ void GuiImage::onRender()
 	}
 }
 
-void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs)
+void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float percentageX, float percentageY)
 {
-	points[0] = posX - (mDrawWidth * mOriginX);		points[1] = posY - (mDrawHeight * mOriginY);
-	points[2] = posX - (mDrawWidth * mOriginX);		points[3] = posY + (mDrawHeight * (1 - mOriginY));
-	points[4] = posX + (mDrawWidth * (1 - mOriginX));	points[5] = posY - (mDrawHeight * mOriginY);
+	float px = percentageX;
+	float py = percentageY;
 
-	points[6] = posX + (mDrawWidth * (1 - mOriginX));	points[7] = posY - (mDrawHeight * mOriginY);
-	points[8] = posX - (mDrawWidth * mOriginX);		points[9] = posY + (mDrawHeight * (1 - mOriginY));
-	points[10] = posX + (mDrawWidth * (1 -mOriginX));	points[11] = posY + (mDrawHeight * (1 - mOriginY));
+	points[0] = posX - (mDrawWidth * mOriginX) * px;		points[1] = posY - (mDrawHeight * mOriginY) * py;
+	points[2] = posX - (mDrawWidth * mOriginX) * px;		points[3] = posY + (mDrawHeight * (1 - mOriginY)) * py;
+	points[4] = posX + (mDrawWidth * (1 - mOriginX)) * px;		points[5] = posY - (mDrawHeight * mOriginY) * py;
+
+	points[6] = posX + (mDrawWidth * (1 - mOriginX)) * px;		points[7] = posY - (mDrawHeight * mOriginY) * py;
+	points[8] = posX - (mDrawWidth * mOriginX) * px;		points[9] = posY + (mDrawHeight * (1 - mOriginY)) * py;
+	points[10] = posX + (mDrawWidth * (1 -mOriginX)) * px;		points[11] = posY + (mDrawHeight * (1 - mOriginY)) * py;
 
 
 
-	texs[0] = 0;	texs[1] = 1;
-	texs[2] = 0;	texs[3] = 0;
-	texs[4] = 1;	texs[5] = 1;
+	texs[0] = 0;		texs[1] = percentageY;
+	texs[2] = 0;		texs[3] = 0;
+	texs[4] = percentageX;	texs[5] = percentageY;
 
-	texs[6] = 1;	texs[7] = 1;
-	texs[8] = 0;	texs[9] = 0;
-	texs[10] = 1;	texs[11] = 0;
+	texs[6] = percentageX;	texs[7] = percentageY;
+	texs[8] = 0;		texs[9] = 0;
+	texs[10] = percentageX;	texs[11] = 0;
 
 	if(mFlipX)
 	{
 		for(int i = 0; i < 11; i += 2)
-			texs[i] = !texs[i];
+			if(texs[i] == percentageX)
+				texs[i] = 0;
+			else
+				texs[i] = percentageX;
 	}
 	if(mFlipY)
 	{
 		for(int i = 1; i < 12; i += 2)
-			texs[i] = !texs[i];
+			if(texs[i] == percentageY)
+				texs[i] = 0;
+			else
+				texs[i] = percentageY;
 	}
 }
 
