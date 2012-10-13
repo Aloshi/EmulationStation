@@ -15,9 +15,7 @@ int GuiTheme::getFastSelectColor() { return mFastSelectColor; }
 bool GuiTheme::getHeaderHidden() { return mHideHeader; }
 bool GuiTheme::getDividersHidden() { return mHideDividers; }
 bool GuiTheme::getListCentered() { return mListCentered; }
-
 float GuiTheme::getListOffsetX() { return mListOffsetX; }
-float GuiTheme::getGameImageOffsetY() { return mGameImageOffsetY; }
 float GuiTheme::getListTextOffsetX() { return mListTextOffsetX; }
 
 int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
@@ -28,6 +26,13 @@ Sound* GuiTheme::getMenuScrollSound() { return &mMenuScrollSound; }
 Sound* GuiTheme::getMenuSelectSound() { return &mMenuSelectSound; }
 Sound* GuiTheme::getMenuBackSound() { return &mMenuBackSound; }
 Sound* GuiTheme::getMenuOpenSound() { return &mMenuOpenSound; }
+
+float GuiTheme::getGameImageOffsetX() { return mGameImageOffsetX; }
+float GuiTheme::getGameImageOffsetY() { return mGameImageOffsetY; }
+float GuiTheme::getGameImageWidth() { return mGameImageWidth; }
+float GuiTheme::getGameImageHeight() { return mGameImageHeight; }
+float GuiTheme::getGameImageOriginX() { return mGameImageOriginX; }
+float GuiTheme::getGameImageOriginY() { return mGameImageOriginY; }
 
 GuiTheme::GuiTheme(std::string path)
 {
@@ -56,7 +61,13 @@ void GuiTheme::setDefaults()
 
 	mListOffsetX = 0.5;
 	mListTextOffsetX = 0.005;
+
+	mGameImageOriginX = 0.5;
+	mGameImageOriginY = 0;
+	mGameImageOffsetX = mListOffsetX / 2;
 	mGameImageOffsetY = (float)Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight();
+	mGameImageWidth = 0;
+	mGameImageHeight = 0;
 
 	mBoxData.backgroundPath = "";
 	mBoxData.backgroundTiled = false;
@@ -122,7 +133,6 @@ void GuiTheme::readXML(std::string path)
 	mFastSelectColor = resolveColor(root.child("fastSelectColor").text().get(), mFastSelectColor);
 	mHideHeader = root.child("hideHeader");
 	mHideDividers = root.child("hideDividers");
-	mListCentered = !root.child("listLeftAlign");
 
 	//GuiBox theming data
 	mBoxData.backgroundPath = expandPath(root.child("boxBackground").text().get());
@@ -133,9 +143,28 @@ void GuiTheme::readXML(std::string path)
 	mBoxData.verticalTiled = root.child("boxVerticalTiled");
 	mBoxData.cornerPath = expandPath(root.child("boxCorner").text().get());
 
+	//list stuff
+	mListCentered = !root.child("listLeftAlign");
 	mListOffsetX = strToFloat(root.child("listOffsetX").text().get(), mListOffsetX);
-	mGameImageOffsetY = strToFloat(root.child("gameImageOffsetY").text().get(), mGameImageOffsetY);
 	mListTextOffsetX = strToFloat(root.child("listTextOffsetX").text().get(), mListTextOffsetX);
+
+
+	//game image stuff
+	std::string artPos = root.child("gameImagePos").text().get();
+	std::string artDim = root.child("gameImageDim").text().get();
+	std::string artOrigin = root.child("gameImageOrigin").text().get();
+
+	std::string artPosX, artPosY, artWidth, artHeight, artOriginX, artOriginY;
+	splitString(artPos, ' ', &artPosX, &artPosY);
+	splitString(artDim, ' ', &artWidth, &artHeight);
+	splitString(artOrigin, ' ', &artOriginX, &artOriginY);
+
+	mGameImageOffsetX = resolveExp(artPosX, mGameImageOffsetX);
+	mGameImageOffsetY = resolveExp(artPosY, mGameImageOffsetY);
+	mGameImageWidth = resolveExp(artWidth, mGameImageWidth);
+	mGameImageHeight = resolveExp(artHeight, mGameImageHeight);
+	mGameImageOriginX = resolveExp(artOriginX, mGameImageOriginX);
+	mGameImageOriginY = resolveExp(artOriginY, mGameImageOriginY);
 
 	//sounds
 	mMenuScrollSound.loadFile(expandPath(root.child("menuScrollSound").text().get()));
@@ -143,10 +172,11 @@ void GuiTheme::readXML(std::string path)
 	mMenuBackSound.loadFile(expandPath(root.child("menuBackSound").text().get()));
 	mMenuOpenSound.loadFile(expandPath(root.child("menuOpenSound").text().get()));
 
-	//recursively create children for all <components> with proper parenting
+	//actually read the components
 	createComponentChildren(root, this);
 }
 
+//recursively creates components (with proper parenting)
 void GuiTheme::createComponentChildren(pugi::xml_node node, GuiComponent* parent)
 {
 	for(pugi::xml_node data = node.child("component"); data; data = data.next_sibling("component"))
@@ -158,6 +188,7 @@ void GuiTheme::createComponentChildren(pugi::xml_node node, GuiComponent* parent
 	}
 }
 
+//takes an XML element definition and creates an object from it
 GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 {
 	std::string type = data.child("type").text().get();
@@ -188,8 +219,6 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		std::string originX, originY;
 		splitString(origin, ' ', &originX, &originY);
 
-		//std::cout << "image, x: " << posX << " y: " << posY << " w: " << dimW << " h: " << dimH << " ox: " << originX << " oy: " << originY << " tiled: " << tiled << "\n";
-
 		//resolve to pixels from percentages/variables
 		int x = resolveExp(posX) * Renderer::getScreenWidth();
 		int y = resolveExp(posY) * Renderer::getScreenHeight();
@@ -210,10 +239,11 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 	}
 
 
-	std::cerr << "Type \"" << type << "\" unknown!\n";
+	std::cerr << "Theme component type \"" << type << "\" unknown!\n";
 	return NULL;
 }
 
+//expands a file path (./ becomes the directory of this theme file, ~/ becomes $HOME/)
 std::string GuiTheme::expandPath(std::string path)
 {
 	if(path[0] == '~')
@@ -224,18 +254,23 @@ std::string GuiTheme::expandPath(std::string path)
 	return path;
 }
 
-float GuiTheme::resolveExp(std::string str)
+//takes a string containing a mathematical expression (possibly including variables) and resolves it to a float value
+float GuiTheme::resolveExp(std::string str, float defaultVal)
 {
+	if(str.empty())
+		return defaultVal;
+
 	MathExp exp;
 	exp.setExpression(str);
 
 	//set variables
 	exp.setVariable("headerHeight", Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight());
-	exp.setVariable("infoWidth", GuiGameList::sInfoWidth);
+	exp.setVariable("infoWidth", mListOffsetX);
 
 	return exp.eval();
 }
 
+//takes a string of hex and resolves it to an integer
 int GuiTheme::resolveColor(std::string str, int defaultColor)
 {
 	if(str.empty())
@@ -249,16 +284,23 @@ int GuiTheme::resolveColor(std::string str, int defaultColor)
 	return ret;
 }
 
+//splits a string in two at the first instance of the delimiter
 void GuiTheme::splitString(std::string str, char delim, std::string* before, std::string* after)
 {
 	if(str.empty())
 		return;
 
 	size_t split = str.find(delim);
-	*before = str.substr(0, split);
-	*after = str.substr(split + 1, str.length() - split - 1);
+	if(split != std::string::npos)
+	{
+		*before = str.substr(0, split);
+		*after = str.substr(split + 1, str.length() - split - 1);
+	}else{
+		std::cerr << " Error: tried to splt string \"" << str << "\" with delimiter '" << delim << "', but delimiter was not found!\n";
+	}
 }
 
+//converts a string to a float
 float GuiTheme::strToFloat(std::string str, float defaultVal)
 {
 	if(str.empty())

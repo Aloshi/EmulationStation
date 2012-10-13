@@ -5,8 +5,7 @@ EmulationStation allows each system to have its own "theme." A theme is a collec
 
 ES will check two places for a theme: first, the system's search directory for theme.xml. Then, if that's not found, $HOME/.emulationstation/es_theme.xml.
 
-Almost all positions, dimensions, etc. work in percentages - that is, they are a decimal between 0 and 1, representing the percentage of the screen on that axis to use.
-This ensures that themes look similar at every resolution.
+Almost all positions, dimensions, origins, etc. work in percentages - that is, they are a decimal between 0 and 1, representing the percentage of the screen on that axis to use. This ensures that themes look similar at every resolution.
 
 
 Example
@@ -61,13 +60,13 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 `<descColor>` - the hex font color to use for the description on the GuiGameList.
 
-`<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList.
+`<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList. Default is `000000`.
 
 `<listSelectedColor>` - the hex color to use for selected text on the GuiGameList. Default is -1, which will not change the color.
 
 `<listLeftAlign />` - if present, the games list names will be left aligned to the value of `<listOffsetX>` (default 0.5).
 
-`<hideHeader />` - if present, the system name header won't be displayed (useful for replacing it with an image).
+`<hideHeader />` - if present, the system name header won't be displayed (useful for replacing it with an image). If you're making a complete custom theme, you probably want to use this.
 
 `<hideDividers />` - if present, the divider between games on the detailed GuiGameList won't be displayed.
 
@@ -75,11 +74,17 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 `<listTextOffsetX>` - the percentage to offset the text in the list by. Default is 0.005. Only works in combination with `<listLeftAlign />`.
 
-`<gameImageOffsetY>` - the percentage to offset the displayed game image by. Default is the height of the header font.
+~~`<gameImageOffsetY>` - the percentage to offset the displayed game image by. Default is the height of the header font.~~
+
+`<gameImagePos>` - two values for the position of the game art, in the form of `[x] [y]`, as a percentage. Default is `$infoWidth/2 $headerHeight`. 
+
+`<gameImageDim>' - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `0 0` (not resized). The image will only be resized if at least one axis is nonzero *and* exceeded by the image's size. You should always leave at least one axis as zero to preserve the aspect ratio.
+
+`<gameImageOrigin>` two values for the origin of the game art, in the form of `[x] [y]`, as a percentage. Default is `0.5 0`.
 
 
 
-The Fast Select box can be themed with these tags:
+**The Fast Select box can be themed with these tags:**
 
 `<fastSelectColor>` - the hex color to use for the letter display on the Fast Select box.
 
@@ -117,9 +122,11 @@ List of variables
 
 Variables can be used in position and dimension definitions. They can be added, subtracted, multiplied, and divided. Parenthesis are valid. They are a percentage of the screen.
 
+For example, if you wanted to place an image that covered the left half of the screen, up to the game list, you could use `<dim>$infoWidth 1</dim>`.
+
 `$headerHeight` - height of the system name header.
 
-`$infoWidth` - where the center of the horizontal divider is drawn.
+`$infoWidth` - where the left of the game list begins. Will follow `<listOffsetX>`.
 
 
 -Aloshi

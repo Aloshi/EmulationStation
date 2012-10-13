@@ -1,6 +1,7 @@
 October 13
 -Added sound support through SDL_mixer.
 -Added new theme tags for defining menu sounds. See THEMES.md for details.
+-Added new theme tags for defining game art information. See THEMES.md for details.
 
 October 10
 -Added a theming tag for the Fast Select box's text.

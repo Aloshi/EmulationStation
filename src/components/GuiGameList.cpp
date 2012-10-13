@@ -5,7 +5,7 @@
 #include "GuiFastSelect.h"
 #include <boost/filesystem.hpp>
 
-
+//this is just a default value; the true value is in mTheme->getListOffsetX();
 const float GuiGameList::sInfoWidth = 0.5;
 
 
@@ -23,8 +23,8 @@ GuiGameList::GuiGameList(bool useDetail)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getFontHeight(Renderer::LARGE) + 2);
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7);
-		mScreenshot->setOrigin(0.5, 0.0);
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7, 0, false);
+		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
 		addChild(mScreenshot);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
@@ -70,7 +70,7 @@ void GuiGameList::setSystemId(int id)
 	mSystemId = id;
 	mSystem = SystemData::sSystemVector.at(mSystemId);
 
-	//clear the folder stack (I can't look up the proper method right now)
+	//clear the folder stack
 	while(mFolderStack.size()){ mFolderStack.pop(); }
 
 	mFolder = mSystem->getRootFolder();
@@ -93,7 +93,7 @@ void GuiGameList::onRender()
 	{
 		//divider
 		if(!mTheme->getDividersHidden())
-			Renderer::drawRect(Renderer::getScreenWidth() * sInfoWidth - 4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
+			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getListOffsetX() - 4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF);
 
 		//if we're not scrolling and we have selected a non-folder
 		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
@@ -102,7 +102,7 @@ void GuiGameList::onRender()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 8, Renderer::getScreenWidth() * (sInfoWidth - 0.03), mTheme->getDescColor(), Renderer::SMALL);
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), Renderer::SMALL);
 		}
 	}
 }
@@ -223,7 +223,10 @@ void GuiGameList::updateTheme()
 	{
 		mList->setOffsetX(mTheme->getListOffsetX() * Renderer::getScreenWidth());
 		mList->setTextOffsetX(mTheme->getListTextOffsetX() * Renderer::getScreenWidth());
+
+		mScreenshot->setOffsetX(mTheme->getGameImageOffsetX() * Renderer::getScreenWidth());
 		mScreenshot->setOffsetY(mTheme->getGameImageOffsetY() * Renderer::getScreenHeight());
+		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
 	}
 }
 

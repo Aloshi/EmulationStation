@@ -197,7 +197,7 @@ int GuiList<listType>::getSelection()
 template <typename listType>
 bool GuiList<listType>::isScrolling()
 {
-	return mScrolling;
+	return mScrollDir != 0;
 }
 
 template <typename listType>

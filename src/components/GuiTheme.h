@@ -27,7 +27,13 @@ public:
 
 	float getListOffsetX();
 	float getListTextOffsetX();
+
+	float getGameImageOffsetX();
 	float getGameImageOffsetY();
+	float getGameImageWidth();
+	float getGameImageHeight();
+	float getGameImageOriginX();
+	float getGameImageOriginY();
 
 	GuiBoxData getBoxData();
 
@@ -43,7 +49,7 @@ private:
 
 	//utility functions
 	std::string expandPath(std::string path);
-	float resolveExp(std::string str);
+	float resolveExp(std::string str, float defaultVal = 0.0);
 	int resolveColor(std::string str, int defaultColor = 0x000000);
 	void splitString(std::string str, char delim, std::string* before, std::string* after);
 	float strToFloat(std::string str, float defaultVal = 0.0f);
@@ -53,7 +59,7 @@ private:
 	int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mListSelectedColor, mDescColor, mFastSelectColor;
 	bool mHideHeader, mHideDividers, mListCentered;
 
-	float mListOffsetX, mGameImageOffsetY, mListTextOffsetX;
+	float mListOffsetX, mListTextOffsetX, mGameImageOffsetX, mGameImageOffsetY, mGameImageWidth, mGameImageHeight, mGameImageOriginX, mGameImageOriginY;
 
 	GuiBoxData mBoxData;
 

@@ -109,7 +109,7 @@ void MathExp::doNextOperation()
 	{
 		val = mOperands.top();
 		mOperands.pop();
-		val -= mOperands.top();
+		val = mOperands.top() - val;
 		mOperands.pop();
 	}
 	if(top == *"*")
@@ -123,7 +123,7 @@ void MathExp::doNextOperation()
 	{
 		val = mOperands.top();
 		mOperands.pop();
-		val /= mOperands.top();
+		val = mOperands.top() / val;
 		mOperands.pop();
 	}
 
