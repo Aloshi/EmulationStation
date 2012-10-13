@@ -28,11 +28,11 @@ namespace Renderer
 
 	bool createSurface() //unsigned int display_width, unsigned int display_height)
 	{
-		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0)
+		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) != 0)
 		{
 			std::cerr << "Error initializing SDL!\n";
 			std::cerr << SDL_GetError() << "\n";
-			std::cerr << "Are you in the 'video' and 'input' groups? Is X closed? Is your firmware up to date? Are you using at least the 192/64 memory split?\n";
+			std::cerr << "Are you in the 'video', 'audio', and 'input' groups? Is X closed? Is your firmware up to date? Are you using at least the 192/64 memory split?\n";
 			return false;
 		}
 
