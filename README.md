@@ -13,9 +13,9 @@ Building
 
 **On the Raspberry Pi:**
 
-EmulationStation has a few dependencies. For building, you'll need SDL 1.2, FreeImage, FreeType, and Boost.Filesystem, which can easily be obtained with apt-get:
+EmulationStation has a few dependencies. For building, you'll need SDL 1.2, SDL_mixer, FreeImage, FreeType, and Boost.Filesystem, which can easily be obtained with apt-get:
 ```
-sudo apt-get install libsdl1.2-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev
+sudo apt-get install libsdl1.2-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev libsdl-mixer1.2-dev
 ```
 
 There are also a few libraries already on the RPi (located in /opt/vc/, like the Broadcom libraries, EGL, and GLES). You can build EmulationStation by simply running `make`.
@@ -25,7 +25,7 @@ There are also a few libraries already on the RPi (located in /opt/vc/, like the
 
 EmulationStation can also be built on a "normal" Linux system. You'll need the same libraries listed above:
 ```
-sudo apt-get install libsdl1.2-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev
+sudo apt-get install libsdl1.2-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev libsdl-mixer1.2-dev
 ```
 
 You'll also need OpenGL. I don't know the proper package name, but you'll need `/usr/include/GL/gl.h` and `libGL`. You probably already have it. You can build with `make -f Makefile.x86` (badly named Makefile, I know).
