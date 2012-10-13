@@ -64,11 +64,12 @@ namespace Renderer {
 		//make sure our font exists
 		if(!boost::filesystem::exists(fontPath))
 		{
-			std::cout << "Default font \"" << fontPath << "\" does not exist! Attempting to default to a system font...\n";
+			std::cout << "Default font \"" << fontPath << "\" does not exist! Attempting to default to a system font...";
 			fontPath = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
 			if(!boost::filesystem::exists(fontPath))
 			{
 				std::cerr << "System font \"" << fontPath << "\" wasn't found either! Well, you're kind of screwed. Sorry.\n";
+				return;
 			}
 		}
 

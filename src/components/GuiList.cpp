@@ -19,7 +19,7 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize
 	mFont = fontsize;
 	mSelectorColor = 0x000000;
 	mSelectedTextColorOverride = -1;
-
+	mScrollSound = NULL;
 	mDrawCentered = true;
 
 	InputManager::registerComponent(this);
@@ -92,13 +92,13 @@ void GuiList<listType>::onInput(InputManager::InputButton button, bool keyDown)
 			if(button == InputManager::DOWN)
 			{
 				mScrollDir = 1;
-				mSelection++;
+				scroll();
 			}
 
 			if(button == InputManager::UP)
 			{
 				mScrollDir = -1;
-				mSelection--;
+				scroll();
 			}
 		}else{
 			if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0))
@@ -108,12 +108,6 @@ void GuiList<listType>::onInput(InputManager::InputButton button, bool keyDown)
 				mScrollDir = 0;
 			}
 		}
-
-		if(mSelection < 0)
-			mSelection += mRowVector.size();
-
-		if(mSelection >= (int)mRowVector.size())
-			mSelection -= mRowVector.size();
 	}
 }
 
@@ -141,14 +135,24 @@ void GuiList<listType>::onTick(int deltaTime)
 			{
 				mScrollAccumulator -= SCROLLTIME;
 
-				mSelection += mScrollDir;
-				if(mSelection < 0)
-					mSelection += mRowVector.size();
-				if(mSelection >= (int)mRowVector.size())
-					mSelection -= mRowVector.size();
+				scroll();
 			}
 		}
 	}
+}
+
+template <typename listType>
+void GuiList<listType>::scroll()
+{
+	mSelection += mScrollDir;
+
+	if(mSelection < 0)
+		mSelection += mRowVector.size();
+	if(mSelection >= (int)mRowVector.size())
+		mSelection -= mRowVector.size();
+
+	if(mScrollSound)
+		mScrollSound->play();
 }
 
 //list management stuff
@@ -248,4 +252,10 @@ template <typename listType>
 void GuiList<listType>::setSelection(int i)
 {
 	mSelection = i;
+}
+
+template <typename listType>
+void GuiList<listType>::setScrollSound(Sound* sound)
+{
+	mScrollSound = sound;
 }

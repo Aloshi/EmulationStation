@@ -7,6 +7,7 @@
 #include <boost/filesystem.hpp>
 #include "components/GuiInputConfig.h"
 #include <SDL.h>
+#include "AudioManager.h"
 
 #include "platform.h"
 
@@ -71,7 +72,7 @@ int main(int argc, char* argv[])
 
 	bool running = true;
 
-	//the renderer also takes care of setting up SDL for input
+	//the renderer also takes care of setting up SDL for input and sound
 	bool renderInit = Renderer::init(width, height);
 	if(!renderInit)
 	{
@@ -80,8 +81,11 @@ int main(int argc, char* argv[])
 	}
 
 
-	SDL_JoystickEventState(SDL_ENABLE);
+	//initialize audio
+	AudioManager::init();
 
+
+	SDL_JoystickEventState(SDL_ENABLE);
 
 	//make sure the config directory exists
 	std::string home = getenv("HOME");
@@ -171,6 +175,7 @@ int main(int argc, char* argv[])
 	}
 
 
+	AudioManager::deinit();
 	Renderer::deleteAll();
 	Renderer::deinit();
 	SystemData::deleteSystems();

@@ -4,6 +4,7 @@
 #include "../GuiComponent.h"
 #include "../pugiXML/pugixml.hpp"
 #include "GuiBox.h"
+#include "../Sound.h"
 
 //This class loads an XML-defined list of GuiComponents.
 class GuiTheme : public GuiComponent
@@ -29,6 +30,8 @@ public:
 	float getGameImageOffsetY();
 
 	GuiBoxData getBoxData();
+
+	Sound* getMenuScrollSound();
 private:
 	void setDefaults();
 	void deleteComponents();
@@ -50,6 +53,8 @@ private:
 	float mListOffsetX, mGameImageOffsetY, mListTextOffsetX;
 
 	GuiBoxData mBoxData;
+
+	Sound mMenuScrollSound;
 };
 
 #endif

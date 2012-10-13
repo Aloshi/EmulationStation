@@ -11,7 +11,6 @@
 #include "../GameData.h"
 #include "../FolderData.h"
 
-
 //This is where the magic happens - GuiGameList is the parent of almost every graphical element in ES at the moment.
 //It has a GuiList child that handles the game list, a GuiTheme that handles the theming system, and a GuiImage for game images.
 class GuiGameList : GuiComponent

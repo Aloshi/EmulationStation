@@ -98,6 +98,14 @@ The Fast Select box can be themed with these tags:
 `<boxCorner>` - path to the "top left corner" image file. It will be flipped for the top right, bottom right, and bottom left corners. ~ and . are expanded.
 
 
+Audio
+=====
+
+Themes can also define menu sounds. Sounds should be in the .wav format.
+
+`<menuScrollSound>` - path to the sound to play when the game list is scrolling.
+
+
 List of variables
 =================
 

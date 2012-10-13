@@ -6,6 +6,7 @@
 #include "../InputManager.h"
 #include <vector>
 #include <string>
+#include "../Sound.h"
 
 //A graphical list. Supports multiple colors for rows and scrolling.
 //TODO - add truncation to text rendering if name exceeds a maximum width (a trailing elipses, perhaps).
@@ -34,7 +35,7 @@ public:
 	void setSelectorColor(int selectorColor);
 	void setSelectedTextColor(int selectedColor);
 	void setCentered(bool centered);
-
+	void setScrollSound(Sound* sound);
 	void setTextOffsetX(int textoffsetx);
 
 	int getObjectCount();
@@ -44,6 +45,8 @@ public:
 private:
 	static const int SCROLLDELAY = 507;
 	static const int SCROLLTIME = 200;
+
+	void scroll(); //helper method, scrolls in whatever direction scrollDir is
 
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
@@ -63,6 +66,7 @@ private:
 
 	std::vector<ListRow> mRowVector;
 	int mSelection;
+	Sound* mScrollSound;
 };
 
 #include "GuiList.cpp"

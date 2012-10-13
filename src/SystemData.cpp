@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <SDL/SDL_joystick.h>
 #include "Renderer.h"
+#include "AudioManager.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -74,6 +75,7 @@ void SystemData::launchGame(GameData* game)
 	//suspend SDL joystick events (these'll pile up even while something else is running)
 	SDL_JoystickEventState(0);
 
+	AudioManager::deinit();
 	Renderer::deinit();
 
 	std::string command = mLaunchCommand;
@@ -88,6 +90,7 @@ void SystemData::launchGame(GameData* game)
 	std::cout << "...launch terminated!\n";
 
 	Renderer::init(0, 0);
+	AudioManager::init();
 
 	//re-enable SDL joystick events
 	SDL_JoystickEventState(1);

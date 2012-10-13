@@ -24,6 +24,8 @@ int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
 
 GuiBoxData GuiTheme::getBoxData() { return mBoxData; }
 
+Sound* GuiTheme::getMenuScrollSound() { return &mMenuScrollSound; }
+
 GuiTheme::GuiTheme(std::string path)
 {
 	setDefaults();
@@ -60,6 +62,8 @@ void GuiTheme::setDefaults()
 	mBoxData.verticalPath = "";
 	mBoxData.verticalTiled = false;
 	mBoxData.cornerPath = "";
+
+	mMenuScrollSound.loadFile("");
 }
 
 void GuiTheme::deleteComponents()
@@ -127,10 +131,11 @@ void GuiTheme::readXML(std::string path)
 	mGameImageOffsetY = strToFloat(root.child("gameImageOffsetY").text().get(), mGameImageOffsetY);
 	mListTextOffsetX = strToFloat(root.child("listTextOffsetX").text().get(), mListTextOffsetX);
 
+	//sounds
+	mMenuScrollSound.loadFile(root.child("menuScrollSound").text().get());
+
 	//recursively create children for all <components> with proper parenting
 	createComponentChildren(root, this);
-
-	//std::cout << "Finished parsing theme.\n";
 }
 
 void GuiTheme::createComponentChildren(pugi::xml_node node, GuiComponent* parent)
