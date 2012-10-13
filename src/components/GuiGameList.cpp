@@ -216,11 +216,12 @@ void GuiGameList::updateTheme()
 
 	mList->setSelectorColor(mTheme->getSelectorColor());
 	mList->setSelectedTextColor(mTheme->getSelectedTextColor());
-	mList->setCentered(mTheme->getListCentered());
 	mList->setScrollSound(mTheme->getMenuScrollSound());
 
 	if(mDetailed)
 	{
+		mList->setCentered(mTheme->getListCentered());
+
 		mList->setOffsetX(mTheme->getListOffsetX() * Renderer::getScreenWidth());
 		mList->setTextOffsetX(mTheme->getListTextOffsetX() * Renderer::getScreenWidth());
 
