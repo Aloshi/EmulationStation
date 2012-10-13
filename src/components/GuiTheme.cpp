@@ -25,6 +25,9 @@ int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
 GuiBoxData GuiTheme::getBoxData() { return mBoxData; }
 
 Sound* GuiTheme::getMenuScrollSound() { return &mMenuScrollSound; }
+Sound* GuiTheme::getMenuSelectSound() { return &mMenuSelectSound; }
+Sound* GuiTheme::getMenuBackSound() { return &mMenuBackSound; }
+Sound* GuiTheme::getMenuOpenSound() { return &mMenuOpenSound; }
 
 GuiTheme::GuiTheme(std::string path)
 {
@@ -64,6 +67,9 @@ void GuiTheme::setDefaults()
 	mBoxData.cornerPath = "";
 
 	mMenuScrollSound.loadFile("");
+	mMenuSelectSound.loadFile("");
+	mMenuBackSound.loadFile("");
+	mMenuOpenSound.loadFile("");
 }
 
 void GuiTheme::deleteComponents()
@@ -132,7 +138,10 @@ void GuiTheme::readXML(std::string path)
 	mListTextOffsetX = strToFloat(root.child("listTextOffsetX").text().get(), mListTextOffsetX);
 
 	//sounds
-	mMenuScrollSound.loadFile(root.child("menuScrollSound").text().get());
+	mMenuScrollSound.loadFile(expandPath(root.child("menuScrollSound").text().get()));
+	mMenuSelectSound.loadFile(expandPath(root.child("menuSelectSound").text().get()));
+	mMenuBackSound.loadFile(expandPath(root.child("menuBackSound").text().get()));
+	mMenuOpenSound.loadFile(expandPath(root.child("menuOpenSound").text().get()));
 
 	//recursively create children for all <components> with proper parenting
 	createComponentChildren(root, this);

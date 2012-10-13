@@ -103,7 +103,13 @@ Audio
 
 Themes can also define menu sounds. Sounds should be in the .wav format.
 
-`<menuScrollSound>` - path to the sound to play when the game list is scrolling.
+`<menuScrollSound>` - path to the sound to play when the game list or fast select menu is scrolling.
+
+`<menuSelectSound>` - path to the sound to play when the user selects something from the game list.
+
+`<menuBackSound>` - path to the sound to play when the user "goes up" from a folder in the game list.
+
+`<menuOpenSound>` - path to the sound to play when the user opens a menu (either the "main menu" or the fast select menu).
 
 
 List of variables

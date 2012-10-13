@@ -6,7 +6,7 @@ const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
-GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor)
+GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound)
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
 	if(mLetterID == std::string::npos)
@@ -17,6 +17,7 @@ GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, cha
 
 	mParent = parent;
 	mList = list;
+	mScrollSound = scrollsound;
 
 	mScrolling = false;
 	mScrollTimer = 0;
@@ -25,7 +26,6 @@ GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, cha
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 	mBox = new GuiBox(sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6);
 	mBox->setData(data);
-	//addChild(mBox);
 
 	mTextColor = textcolor;
 
@@ -58,14 +58,14 @@ void GuiFastSelect::onInput(InputManager::InputButton button, bool keyDown)
 {
 	if(button == InputManager::UP && keyDown)
 	{
-		setLetterID(mLetterID - 1);
 		mScrollOffset = -1;
+		scroll();
 	}
 
 	if(button == InputManager::DOWN && keyDown)
 	{
-		setLetterID(mLetterID + 1);
 		mScrollOffset = 1;
+		scroll();
 	}
 
 	if((button == InputManager::UP || button == InputManager::DOWN) && !keyDown)
@@ -98,9 +98,15 @@ void GuiFastSelect::onTick(int deltaTime)
 		if(mScrolling && mScrollTimer >= SCROLLSPEED)
 		{
 			mScrollTimer = 0;
-			setLetterID(mLetterID + mScrollOffset);
+			scroll();
 		}
 	}
+}
+
+void GuiFastSelect::scroll()
+{
+	setLetterID(mLetterID + mScrollOffset);
+	mScrollSound->play();
 }
 
 void GuiFastSelect::setLetterID(int id)

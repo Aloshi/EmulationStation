@@ -113,6 +113,9 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	{
 		if(!keyDown)
 		{
+			//play select sound
+			mTheme->getMenuSelectSound()->play();
+
 			FileData* file = mList->getSelectedObject();
 			if(file->isFolder()) //if you selected a folder, add this directory to the stack, and use the selected one
 			{
@@ -120,6 +123,9 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 				mFolder = (FolderData*)file;
 				updateList();
 			}else{
+				//wait for the sound to finish or we'll never hear it...
+				while(mTheme->getMenuSelectSound()->isPlaying());
+
 				mSystem->launchGame((GameData*)file);
 			}
 		}
@@ -132,6 +138,9 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		mFolderStack.pop();
 		updateList();
 		updateDetailData();
+
+		//play the back sound
+		mTheme->getMenuBackSound()->play();
 	}
 
 	//only allow switching systems if more than one exists (otherwise it'll reset your position when you switch and it's annoying)
@@ -147,14 +156,16 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		}
 	}
 
+	//open the "start menu"
 	if(button == InputManager::MENU && keyDown)
 	{
 		new GuiMenu(this);
 	}
 
+	//open the fast select menu
 	if(button == InputManager::SELECT && keyDown)
 	{
-		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getFastSelectColor());
+		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getFastSelectColor(), mTheme->getMenuScrollSound());
 	}
 
 	if(mDetailed)
@@ -232,6 +243,7 @@ void GuiGameList::updateDetailData()
 //these are called when the menu opens/closes
 void GuiGameList::onPause()
 {
+	mTheme->getMenuOpenSound()->play();
 	InputManager::unregisterComponent(this);
 }
 

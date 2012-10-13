@@ -32,6 +32,9 @@ public:
 	GuiBoxData getBoxData();
 
 	Sound* getMenuScrollSound();
+	Sound* getMenuSelectSound();
+	Sound* getMenuBackSound();
+	Sound* getMenuOpenSound();
 private:
 	void setDefaults();
 	void deleteComponents();
@@ -54,7 +57,7 @@ private:
 
 	GuiBoxData mBoxData;
 
-	Sound mMenuScrollSound;
+	Sound mMenuScrollSound, mMenuSelectSound, mMenuBackSound, mMenuOpenSound;
 };
 
 #endif
