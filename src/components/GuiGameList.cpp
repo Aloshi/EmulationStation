@@ -228,6 +228,7 @@ void GuiGameList::updateTheme()
 		mScreenshot->setOffsetX(mTheme->getGameImageOffsetX() * Renderer::getScreenWidth());
 		mScreenshot->setOffsetY(mTheme->getGameImageOffsetY() * Renderer::getScreenHeight());
 		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
+		mScreenshot->setResize(mTheme->getGameImageWidth(), mTheme->getGameImageHeight(), false);
 	}
 }
 

@@ -66,7 +66,7 @@ void GuiTheme::setDefaults()
 	mGameImageOriginY = 0;
 	mGameImageOffsetX = mListOffsetX / 2;
 	mGameImageOffsetY = (float)Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight();
-	mGameImageWidth = 0;
+	mGameImageWidth = mListOffsetX;
 	mGameImageHeight = 0;
 
 	mBoxData.backgroundPath = "";
