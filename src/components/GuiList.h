@@ -30,6 +30,7 @@ public:
 	std::string getSelectedName();
 	listType getSelectedObject();
 	int getSelection();
+	void stopScrolling();
 	bool isScrolling();
 
 	void setSelectorColor(int selectorColor);

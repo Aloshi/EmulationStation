@@ -123,6 +123,8 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 				mFolder = (FolderData*)file;
 				updateList();
 			}else{
+				mList->stopScrolling();
+
 				//wait for the sound to finish or we'll never hear it...
 				while(mTheme->getMenuSelectSound()->isPlaying());
 
@@ -248,6 +250,7 @@ void GuiGameList::updateDetailData()
 //these are called when the menu opens/closes
 void GuiGameList::onPause()
 {
+	mList->stopScrolling();
 	mTheme->getMenuOpenSound()->play();
 	InputManager::unregisterComponent(this);
 }

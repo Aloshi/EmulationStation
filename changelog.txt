@@ -1,3 +1,6 @@
+October 14
+-Fixed game list continuing to scroll when a menu is opened or a game is started.
+
 October 13
 -Added sound support through SDL_mixer.
 -Added new theme tags for defining menu sounds. See THEMES.md for details.

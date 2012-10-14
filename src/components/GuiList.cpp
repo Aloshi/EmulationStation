@@ -103,12 +103,18 @@ void GuiList<listType>::onInput(InputManager::InputButton button, bool keyDown)
 		}else{
 			if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0))
 			{
-				mScrollAccumulator = 0;
-				mScrolling = false;
-				mScrollDir = 0;
+				stopScrolling();
 			}
 		}
 	}
+}
+
+template <typename listType>
+void GuiList<listType>::stopScrolling()
+{
+	mScrollAccumulator = 0;
+	mScrolling = false;
+	mScrollDir = 0;
 }
 
 template <typename listType>
