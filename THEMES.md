@@ -52,7 +52,7 @@ Used to display an image.
 
 Display tags
 ============
-Display tags must be at the root of the <theme> tree - for example, they can't be inside a component tag. They are not required.
+Display tags define some "meta" display attributes about your theme. Display tags must be at the root of the `<theme>` tree - for example, they can't be inside a component tag. They are not required.
 
 `<listPrimaryColor>` - the hex font color to use for games on the GuiGameList.
 
@@ -78,9 +78,9 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 
 `<gameImagePos>` - two values for the position of the game art, in the form of `[x] [y]`, as a percentage. Default is `$infoWidth/2 $headerHeight`. 
 
-`<gameImageDim>' - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `0 0` (not resized). The image will only be resized if at least one axis is nonzero *and* exceeded by the image's size. You should always leave at least one axis as zero to preserve the aspect ratio.
+`<gameImageDim>` - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `$infoWidth/2 0` (width fits within the info column). The image will only be resized if at least one axis is nonzero *and* exceeded by the image's size. You should always leave at least one axis as zero to preserve the aspect ratio.
 
-`<gameImageOrigin>` two values for the origin of the game art, in the form of `[x] [y]`, as a percentage. Default is `0.5 0`.
+`<gameImageOrigin>` two values for the origin of the game art, in the form of `[x] [y]`, as a percentage. Default is `0.5 0` (top-center of the image).
 
 
 
@@ -106,7 +106,7 @@ Display tags must be at the root of the <theme> tree - for example, they can't b
 Audio
 =====
 
-Themes can also define menu sounds. Sounds should be in the .wav format.
+Themes can also define menu sounds. These tags go in the root of the `<theme>` tree, just like Display tags. Sounds should be in the .wav format. The relative path operator (.) and home operator (~) are properly expanded.
 
 `<menuScrollSound>` - path to the sound to play when the game list or fast select menu is scrolling.
 
