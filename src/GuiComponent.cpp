@@ -10,6 +10,7 @@ GuiComponent::GuiComponent()
 
 	mOffsetX = 0;
 	mOffsetY = 0;
+	mOpacity = 255;
 }
 
 GuiComponent::~GuiComponent()
@@ -103,5 +104,9 @@ void GuiComponent::deinit()
 
 void GuiComponent::setOffsetX(int val) { mOffsetX = val; }
 void GuiComponent::setOffsetY(int val) { mOffsetY = val; }
+void GuiComponent::setOffset(int x, int y) { mOffsetX = x; mOffsetY = y; }
 int GuiComponent::getOffsetX() { return mOffsetX; }
 int GuiComponent::getOffsetY() { return mOffsetY; }
+
+void GuiComponent::setOpacity(unsigned char opacity) { mOpacity = opacity; }
+unsigned char GuiComponent::getOpacity() { return mOpacity; }

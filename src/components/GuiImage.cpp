@@ -261,26 +261,24 @@ void GuiImage::setFlipY(bool flip)
 
 void GuiImage::onRender()
 {
-	if(mTextureID)
+	if(mTextureID && getOpacity() > 0)
 	{
+		GLfloat points[12], texs[12];
+		GLubyte colors[6*4];
+
 		if(mTiled)
 		{
 			float xCount = ((float)mResizeWidth/mWidth);
 			float yCount = ((float)mResizeHeight/mHeight);
 
-			//std::cout << "Array size: " << xCount << "x" << yCount << "\n";
-
-			GLfloat* points = new GLfloat[12];
-			GLfloat* texs = new GLfloat[12];
+			Renderer::buildGLColorArray(colors, 0xFFFFFF, getOpacity(), 6);
 			buildImageArray(getOffsetX(), getOffsetY(), points, texs, xCount, yCount);
-			drawImageArray(points, texs, 6);
-			delete[] points;
-			delete[] texs;
 		}else{
-			GLfloat points[12], texs[12];
+			Renderer::buildGLColorArray(colors, 0xFFFFFF, getOpacity(), 6);
 			buildImageArray(getOffsetX(), getOffsetY(), points, texs);
-			drawImageArray(points, texs, 6);
 		}
+
+		drawImageArray(points, texs, colors, 6);
 	}
 }
 
@@ -322,7 +320,7 @@ void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* tex
 	}
 }
 
-void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, unsigned int numArrays)
+void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int numArrays)
 {
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 	glEnable(GL_TEXTURE_2D);
@@ -333,6 +331,12 @@ void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, unsigned int numAr
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+	if(colors != NULL)
+	{
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+	}
+
 	glVertexPointer(2, GL_FLOAT, 0, points);
 	glTexCoordPointer(2, GL_FLOAT, 0, texs);
 
@@ -340,6 +344,9 @@ void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, unsigned int numAr
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if(colors != NULL)
+		glDisableClientState(GL_COLOR_ARRAY);
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);

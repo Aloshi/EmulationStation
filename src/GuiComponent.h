@@ -49,11 +49,17 @@ public:
 	int getOffsetY();
 	void setOffsetX(int val);
 	void setOffsetY(int val);
+	void setOffset(int x, int y);
+
+	unsigned char getOpacity();
+	void setOpacity(unsigned char opacity);
 
 	static void processTicks(int deltaTime);
 
 private:
 	int mOffsetX, mOffsetY;
+
+	unsigned char mOpacity;
 
 	static std::vector<GuiComponent*> sComponentVector;
 	std::vector<GuiComponent*> mChildren;

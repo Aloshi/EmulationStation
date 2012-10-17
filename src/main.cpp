@@ -8,7 +8,6 @@
 #include "components/GuiInputConfig.h"
 #include <SDL.h>
 #include "AudioManager.h"
-
 #include "platform.h"
 
 #ifdef _RPI_

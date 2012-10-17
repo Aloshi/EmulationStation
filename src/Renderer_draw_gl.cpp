@@ -8,24 +8,24 @@
 namespace Renderer {
 	bool loadedFonts = false;
 
-	void setColor4bArray(GLubyte* array, int color)
+	void setColor4bArray(GLubyte* array, int color, unsigned char opacity)
 	{
 		array[0] = (color & 0x00ff0000) / 0x10000;
 		array[1] = (color & 0x0000ff00) / 0x100;
 		array[2] = (color & 0x000000ff);
-		array[3] = 255;
+		array[3] = opacity;
 	}
 
-	void buildGLColorArray(GLubyte* ptr, int color, unsigned int vertCount)
+	void buildGLColorArray(GLubyte* ptr, int color, unsigned char opacity, unsigned int vertCount)
 	{
 		for(unsigned int i = 0; i < vertCount; i++)
 		{
-			setColor4bArray(ptr, color);
+			setColor4bArray(ptr, color, opacity);
 			ptr += 4;
 		}
 	}
 
-	void drawRect(int x, int y, int w, int h, int color)
+	void drawRect(int x, int y, int w, int h, int color, unsigned char opacity)
 	{
 		GLfloat points[12];
 
@@ -38,7 +38,7 @@ namespace Renderer {
 		points[10] = x + w; points[11] = y + h;
 
 		GLubyte colors[6*4];
-		buildGLColorArray(colors, color, 6);
+		buildGLColorArray(colors, color, opacity, 6);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
@@ -119,7 +119,7 @@ namespace Renderer {
 		return h;
 	}
 
-	void drawText(std::string text, int x, int y, int color, FontSize font)
+	void drawText(std::string text, int x, int y, int color, unsigned char opacity, FontSize font)
 	{
 		if(!loadedFonts)
 			loadFonts();
@@ -127,10 +127,10 @@ namespace Renderer {
 		//if(x < 0)
 		//	std::cout << "drawing at " << x << std::endl;
 
-		getFont(font)->drawText(text, x, y, color);
+		getFont(font)->drawText(text, x, y, color, opacity);
 	}
 
-	void drawCenteredText(std::string text, int xOffset, int y, int color, FontSize fontsize)
+	void drawCenteredText(std::string text, int xOffset, int y, int color, unsigned char opacity, FontSize fontsize)
 	{
 		if(!loadedFonts)
 			loadFonts();
@@ -145,12 +145,12 @@ namespace Renderer {
 
 		x += xOffset * 0.5;
 
-		drawText(text, x, y, color, fontsize);
+		drawText(text, x, y, color, opacity, fontsize);
 	}
 
 	//this could probably be optimized
 	//draws text and ensures it's never longer than xLen
-	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, int color, FontSize fontsize)
+	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, int color, unsigned char opacity, FontSize fontsize)
 	{
 		if(!loadedFonts)
 			loadFonts();
@@ -199,7 +199,7 @@ namespace Renderer {
 			{
 				//render line now
 				if(w > 0) //make sure it's not blank
-					drawText(line, xStart, y, color, fontsize);
+					drawText(line, xStart, y, color, opacity, fontsize);
 
 				//increment y by height and some extra padding for the next line
 				y += h + 4;

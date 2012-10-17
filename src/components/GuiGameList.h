@@ -5,6 +5,7 @@
 #include "GuiList.h"
 #include "GuiImage.h"
 #include "GuiTheme.h"
+#include "GuiAnimation.h"
 #include <string>
 #include <stack>
 #include "../SystemData.h"
@@ -35,6 +36,7 @@ private:
 	void updateList();
 	void updateTheme();
 	void updateDetailData();
+	void clearDetailData();
 
 	SystemData* mSystem;
 	FolderData* mFolder;
@@ -44,6 +46,7 @@ private:
 
 	GuiList<FileData*>* mList;
 	GuiImage* mScreenshot;
+	GuiAnimation* mImageAnimation;
 	GuiTheme* mTheme;
 };
 

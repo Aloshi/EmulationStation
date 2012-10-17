@@ -56,7 +56,7 @@ void GuiList<listType>::onRender()
 
 	if(mRowVector.size() == 0)
 	{
-		Renderer::drawCenteredText("The list is empty.", 0, y, 0x0000FF, mFont);
+		Renderer::drawCenteredText("The list is empty.", 0, y, 0x0000FF, 255, mFont);
 		return;
 	}
 
@@ -68,7 +68,7 @@ void GuiList<listType>::onRender()
 	{
 		if(mSelection == i)
 		{
-			Renderer::drawRect(getOffsetX(), y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor);
+			Renderer::drawRect(getOffsetX(), y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor, 255);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
@@ -76,7 +76,7 @@ void GuiList<listType>::onRender()
 		if(mDrawCentered)
 			Renderer::drawCenteredText(row.name, getOffsetX(), y, row.color, mFont);
 		else
-			Renderer::drawText(row.name, getOffsetX() + mTextOffsetX, y, (mSelectedTextColorOverride != -1 && mSelection == i ? mSelectedTextColorOverride : row.color), mFont);
+			Renderer::drawText(row.name, getOffsetX() + mTextOffsetX, y, (mSelectedTextColorOverride != -1 && mSelection == i ? mSelectedTextColorOverride : row.color), 255, mFont);
 
 		y += entrySize;
 	}

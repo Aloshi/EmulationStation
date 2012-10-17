@@ -43,7 +43,7 @@ private:
 	void loadImage(std::string path);
 	void resize();
 	void buildImageArray(int x, int y, GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1); //writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position
-	void drawImageArray(GLfloat* points, GLfloat* texs, unsigned int count = 6); //draws the given set of points and texture coordinates, number of coordinate pairs may be specified (default 6)
+	void drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int count = 6); //draws the given set of points and texture coordinates, number of coordinate pairs may be specified (default 6)
 	void unloadImage();
 
 	std::string mPath;
