@@ -35,7 +35,7 @@ public:
 
 	GLuint textureID;
 
-	void drawText(std::string text, int startx, int starty, int color, char opacity); //Render some text using this font.
+	void drawText(std::string text, int startx, int starty, int color); //Render some text using this font.
 	void sizeText(std::string text, int* w, int* h); //Sets the width and height of a given string to given pointers. Skipped if pointer is NULL.
 
 private:

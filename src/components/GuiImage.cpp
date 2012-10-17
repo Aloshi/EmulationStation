@@ -271,10 +271,10 @@ void GuiImage::onRender()
 			float xCount = ((float)mResizeWidth/mWidth);
 			float yCount = ((float)mResizeHeight/mHeight);
 
-			Renderer::buildGLColorArray(colors, 0xFFFFFF, getOpacity(), 6);
+			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
 			buildImageArray(getOffsetX(), getOffsetY(), points, texs, xCount, yCount);
 		}else{
-			Renderer::buildGLColorArray(colors, 0xFFFFFF, getOpacity(), 6);
+			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
 			buildImageArray(getOffsetX(), getOffsetY(), points, texs);
 		}
 

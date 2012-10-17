@@ -15,12 +15,12 @@ public:
 
 	void readXML(std::string path);
 
-	int getPrimaryColor();
-	int getSecondaryColor();
-	int getSelectorColor();
-	int getSelectedTextColor();
-	int getDescColor();
-	int getFastSelectColor();
+	unsigned int getPrimaryColor();
+	unsigned int getSecondaryColor();
+	unsigned int getSelectorColor();
+	unsigned int getSelectedTextColor();
+	unsigned int getDescColor();
+	unsigned int getFastSelectColor();
 	bool getHeaderHidden();
 	bool getDividersHidden();
 	bool getListCentered();
@@ -50,13 +50,13 @@ private:
 	//utility functions
 	std::string expandPath(std::string path);
 	float resolveExp(std::string str, float defaultVal = 0.0);
-	int resolveColor(std::string str, int defaultColor = 0x000000);
+	unsigned int resolveColor(std::string str, unsigned int defaultColor = 0x000000FF);
 	void splitString(std::string str, char delim, std::string* before, std::string* after);
 	float strToFloat(std::string str, float defaultVal = 0.0f);
 
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
-	int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mListSelectedColor, mDescColor, mFastSelectColor;
+	unsigned int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mListSelectedColor, mDescColor, mFastSelectColor;
 	bool mHideHeader, mHideDividers, mListCentered;
 
 	float mListOffsetX, mListTextOffsetX, mGameImageOffsetX, mGameImageOffsetY, mGameImageWidth, mGameImageHeight, mGameImageOriginX, mGameImageOriginY;

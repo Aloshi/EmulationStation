@@ -49,8 +49,8 @@ void GuiMenu::populateList()
 {
 	mList->clear();
 
-	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FF);
-	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FF);
+	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FFFF);
+	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FFFF);
 }
 
 void GuiMenu::onRender()

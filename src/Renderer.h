@@ -27,14 +27,14 @@ namespace Renderer
 
 	enum FontSize { SMALL, MEDIUM, LARGE };
 	int getFontHeight(FontSize size); //sometimes font size is needed before fonts have been loaded; this takes care of that
-	void buildGLColorArray(GLubyte* ptr, int color, unsigned char opacity, unsigned int vertCount);
+	void buildGLColorArray(GLubyte* ptr, unsigned int color, unsigned int vertCount);
 
 	//drawing commands
 	void swapBuffers();
-	void drawRect(int x, int y, int w, int h, int color, unsigned char opacity = 255);
-	void drawText(std::string text, int x, int y, int color, unsigned char opacity = 255, FontSize fontsize = MEDIUM);
-	void drawCenteredText(std::string text, int xOffset, int y, int color, unsigned char opacity = 255, FontSize fontsize = MEDIUM);
-	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, int color, unsigned char opacity = 255, FontSize fontsize = MEDIUM);
+	void drawRect(int x, int y, int w, int h, unsigned int color);
+	void drawText(std::string text, int x, int y, unsigned int color, FontSize fontsize = MEDIUM);
+	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color, FontSize fontsize = MEDIUM);
+	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, unsigned int color, FontSize fontsize = MEDIUM);
 }
 
 #endif

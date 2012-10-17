@@ -7,18 +7,18 @@
 #include <sstream>
 #include "../Renderer.h"
 
-int GuiTheme::getPrimaryColor() { return mListPrimaryColor; }
-int GuiTheme::getSecondaryColor() { return mListSecondaryColor; }
-int GuiTheme::getSelectorColor() { return mListSelectorColor; }
-int GuiTheme::getDescColor() { return mDescColor; }
-int GuiTheme::getFastSelectColor() { return mFastSelectColor; }
+unsigned int GuiTheme::getPrimaryColor() { return mListPrimaryColor; }
+unsigned int GuiTheme::getSecondaryColor() { return mListSecondaryColor; }
+unsigned int GuiTheme::getSelectorColor() { return mListSelectorColor; }
+unsigned int GuiTheme::getDescColor() { return mDescColor; }
+unsigned int GuiTheme::getFastSelectColor() { return mFastSelectColor; }
 bool GuiTheme::getHeaderHidden() { return mHideHeader; }
 bool GuiTheme::getDividersHidden() { return mHideDividers; }
 bool GuiTheme::getListCentered() { return mListCentered; }
 float GuiTheme::getListOffsetX() { return mListOffsetX; }
 float GuiTheme::getListTextOffsetX() { return mListTextOffsetX; }
 
-int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
+unsigned int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
 
 GuiBoxData GuiTheme::getBoxData() { return mBoxData; }
 
@@ -49,12 +49,12 @@ GuiTheme::~GuiTheme()
 
 void GuiTheme::setDefaults()
 {
-	mListPrimaryColor = 0x0000FF;
-	mListSecondaryColor = 0x00FF00;
-	mListSelectorColor = 0x000000;
-	mListSelectedColor = -1; //-1 = use original list color when selected
-	mDescColor = 0x0000FF;
-	mFastSelectColor = 0xFF0000;
+	mListPrimaryColor = 0x0000FFFF;
+	mListSecondaryColor = 0x00FF00FF;
+	mListSelectorColor = 0x000000FF;
+	mListSelectedColor = 0xFF0000FF;
+	mDescColor = 0x0000FFFF;
+	mFastSelectColor = 0xFF0000FF;
 	mHideHeader = false;
 	mHideDividers = false;
 	mListCentered = true;
@@ -128,7 +128,7 @@ void GuiTheme::readXML(std::string path)
 	mListPrimaryColor = resolveColor(root.child("listPrimaryColor").text().get(), mListPrimaryColor);
 	mListSecondaryColor = resolveColor(root.child("listSecondaryColor").text().get(), mListSecondaryColor);
 	mListSelectorColor = resolveColor(root.child("listSelectorColor").text().get(), mListSelectorColor);
-	mListSelectedColor = resolveColor(root.child("listSelectedColor").text().get(), mListSelectedColor);
+	mListSelectedColor = resolveColor(root.child("listSelectedColor").text().get(), mListPrimaryColor);
 	mDescColor = resolveColor(root.child("descColor").text().get(), mDescColor);
 	mFastSelectColor = resolveColor(root.child("fastSelectColor").text().get(), mFastSelectColor);
 	mHideHeader = root.child("hideHeader");
@@ -271,12 +271,22 @@ float GuiTheme::resolveExp(std::string str, float defaultVal)
 }
 
 //takes a string of hex and resolves it to an integer
-int GuiTheme::resolveColor(std::string str, int defaultColor)
+unsigned int GuiTheme::resolveColor(std::string str, unsigned int defaultColor)
 {
 	if(str.empty())
 		return defaultColor;
 
-	int ret;
+	if(str.length() != 6 && str.length() != 8)
+	{
+		std::cerr << "Error - color \"" << str << "\" is not a valid hex color! Must be 6 or 8 characters.\n";
+		return defaultColor;
+	}
+
+	//if there's no alpha specified, assume FF
+	if(str.length() == 6)
+		str += "FF";
+
+	unsigned int ret;
 	std::stringstream ss;
 	ss << std::hex << str;
 	ss >> ret;

@@ -93,13 +93,13 @@ void GuiGameList::onRender()
 
 	//header
 	if(!mTheme->getHeaderHidden())
-		Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0xFF0000, 255, Renderer::LARGE);
+		Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0xFF0000FF, Renderer::LARGE);
 
 	if(mDetailed)
 	{
 		//divider
 		if(!mTheme->getDividersHidden())
-			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getListOffsetX() - 4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FF, 255);
+			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getListOffsetX() - 4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
 
 		//if we're not scrolling and we have selected a non-folder
 		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
@@ -108,7 +108,7 @@ void GuiGameList::onRender()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), 255, Renderer::SMALL);
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), Renderer::SMALL);
 		}
 	}
 }
@@ -223,6 +223,8 @@ void GuiGameList::updateTheme()
 		mTheme->readXML(""); //clears any current theme
 
 	mList->setSelectorColor(mTheme->getSelectorColor());
+	std::cout << "selector alpha: " << (mTheme->getSelectorColor() & 0x000000ff) << "\n";
+
 	mList->setSelectedTextColor(mTheme->getSelectedTextColor());
 	mList->setScrollSound(mTheme->getMenuScrollSound());
 

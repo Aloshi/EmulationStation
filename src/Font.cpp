@@ -165,7 +165,7 @@ struct tex {
 	GLfloat tex2y;
 };
 
-void Font::drawText(std::string text, int startx, int starty, int color, char opacity)
+void Font::drawText(std::string text, int startx, int starty, int color)
 {
 	starty += mMaxGlyphHeight;
 
@@ -224,7 +224,7 @@ void Font::drawText(std::string text, int startx, int starty, int color, char op
 		x += charData[letter].advX;
 	}
 
-	Renderer::buildGLColorArray(colors, color, opacity, pointCount * 3);
+	Renderer::buildGLColorArray(colors, color, pointCount * 3);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);

@@ -21,7 +21,7 @@ public:
 	void onTick(int deltaTime);
 	void onInput(InputManager::InputButton button, bool keyDown);
 
-	void addObject(std::string name, listType obj, int color = 0xFF0000);
+	void addObject(std::string name, listType obj, unsigned int color = 0xFF0000);
 	void clear();
 
 	void onPause();
@@ -33,8 +33,8 @@ public:
 	void stopScrolling();
 	bool isScrolling();
 
-	void setSelectorColor(int selectorColor);
-	void setSelectedTextColor(int selectedColor);
+	void setSelectorColor(unsigned int selectorColor);
+	void setSelectedTextColor(unsigned int selectedColor);
 	void setCentered(bool centered);
 	void setScrollSound(Sound* sound);
 	void setTextOffsetX(int textoffsetx);
@@ -53,7 +53,7 @@ private:
 	bool mScrolling;
 
 	Renderer::FontSize mFont;
-	int mSelectorColor, mSelectedTextColorOverride;
+	unsigned int mSelectorColor, mSelectedTextColorOverride;
 	bool mDrawCentered;
 
 	int mTextOffsetX;
@@ -62,7 +62,7 @@ private:
 	{
 		std::string name;
 		listType object;
-		int color;
+		unsigned int color;
 	};
 
 	std::vector<ListRow> mRowVector;

@@ -17,8 +17,8 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize
 	mTextOffsetX = 0;
 
 	mFont = fontsize;
-	mSelectorColor = 0x000000;
-	mSelectedTextColorOverride = -1;
+	mSelectorColor = 0x000000FF;
+	mSelectedTextColorOverride = 0x0000FF;
 	mScrollSound = NULL;
 	mDrawCentered = true;
 
@@ -56,7 +56,7 @@ void GuiList<listType>::onRender()
 
 	if(mRowVector.size() == 0)
 	{
-		Renderer::drawCenteredText("The list is empty.", 0, y, 0x0000FF, 255, mFont);
+		Renderer::drawCenteredText("The list is empty.", 0, y, 0xFF0000FF, mFont);
 		return;
 	}
 
@@ -66,17 +66,18 @@ void GuiList<listType>::onRender()
 
 	for(int i = startEntry; i < listCutoff; i++)
 	{
+		//draw selector bar
 		if(mSelection == i)
 		{
-			Renderer::drawRect(getOffsetX(), y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor, 255);
+			Renderer::drawRect(getOffsetX(), y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
 
 		if(mDrawCentered)
-			Renderer::drawCenteredText(row.name, getOffsetX(), y, row.color, mFont);
+			Renderer::drawCenteredText(row.name, getOffsetX(), y, (mSelection == i) ? mSelectedTextColorOverride : row.color, mFont);
 		else
-			Renderer::drawText(row.name, getOffsetX() + mTextOffsetX, y, (mSelectedTextColorOverride != -1 && mSelection == i ? mSelectedTextColorOverride : row.color), 255, mFont);
+			Renderer::drawText(row.name, getOffsetX() + mTextOffsetX, y, (mSelection == i) ? mSelectedTextColorOverride : row.color, mFont);
 
 		y += entrySize;
 	}
@@ -163,7 +164,7 @@ void GuiList<listType>::scroll()
 
 //list management stuff
 template <typename listType>
-void GuiList<listType>::addObject(std::string name, listType obj, int color)
+void GuiList<listType>::addObject(std::string name, listType obj, unsigned int color)
 {
 	ListRow row = {name, obj, color};
 	mRowVector.push_back(row);
@@ -219,13 +220,14 @@ void GuiList<listType>::onResume()
 }
 
 template <typename listType>
-void GuiList<listType>::setSelectorColor(int selectorColor)
+void GuiList<listType>::setSelectorColor(unsigned int selectorColor)
 {
 	mSelectorColor = selectorColor;
+	std::cout << "mSelectorColor alpha: " << (mSelectorColor & 0x000000ff) << "\n";
 }
 
 template <typename listType>
-void GuiList<listType>::setSelectedTextColor(int selectedColor)
+void GuiList<listType>::setSelectedTextColor(unsigned int selectedColor)
 {
 	mSelectedTextColorOverride = selectedColor;
 }
