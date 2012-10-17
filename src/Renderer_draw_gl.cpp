@@ -40,15 +40,19 @@ namespace Renderer {
 		GLubyte colors[6*4];
 		buildGLColorArray(colors, color, 6);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
+
 		glVertexPointer(2, GL_FLOAT, 0, points);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
+		glDisableClientState(GL_BLEND);
 		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
+		glDisable(GL_COLOR_ARRAY);
 	}
 
 

@@ -7,6 +7,8 @@ ES will check two places for a theme: first, the system's search directory for t
 
 Almost all positions, dimensions, origins, etc. work in percentages - that is, they are a decimal between 0 and 1, representing the percentage of the screen on that axis to use. This ensures that themes look similar at every resolution.
 
+Colors are hex values, either 6 or 8 characters, defined as RRGGBB or RRGGBBAA. If alpha is not included, a default value of FF will be assumed (not transparent).
+
 
 Example
 =======
@@ -60,9 +62,9 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<descColor>` - the hex font color to use for the description on the GuiGameList.
 
-`<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList. Default is `000000`.
+`<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList. Default is `000000FF`.
 
-`<listSelectedColor>` - the hex color to use for selected text on the GuiGameList. Default is -1, which will not change the color.
+`<listSelectedColor>` - the hex color to use for selected text on the GuiGameList. Default is the value of `<listPrimaryColor>`.
 
 `<listLeftAlign />` - if present, the games list names will be left aligned to the value of `<listOffsetX>` (default 0.5).
 

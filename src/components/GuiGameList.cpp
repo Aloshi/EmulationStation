@@ -223,8 +223,6 @@ void GuiGameList::updateTheme()
 		mTheme->readXML(""); //clears any current theme
 
 	mList->setSelectorColor(mTheme->getSelectorColor());
-	std::cout << "selector alpha: " << (mTheme->getSelectorColor() & 0x000000ff) << "\n";
-
 	mList->setSelectedTextColor(mTheme->getSelectedTextColor());
 	mList->setScrollSound(mTheme->getMenuScrollSound());
 

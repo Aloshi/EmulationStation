@@ -223,7 +223,6 @@ template <typename listType>
 void GuiList<listType>::setSelectorColor(unsigned int selectorColor)
 {
 	mSelectorColor = selectorColor;
-	std::cout << "mSelectorColor alpha: " << (mSelectorColor & 0x000000ff) << "\n";
 }
 
 template <typename listType>

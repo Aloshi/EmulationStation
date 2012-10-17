@@ -1,6 +1,7 @@
 October 17
 -Added GuiAnimation class which animates its children.
 -The game image on the game list now slides/fades in and out.
+-You can now define alpha in hex colors (add two characters) - e.g. FFFFFF2F
 
 October 14
 -Fixed game list continuing to scroll when a menu is opened or a game is started.
