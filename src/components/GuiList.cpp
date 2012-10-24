@@ -16,7 +16,7 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize
 
 	mTextOffsetX = 0;
 
-	mFont = fontsize;
+	mFont = Renderer::getDefaultFont(fontsize);
 	mSelectorColor = 0x000000FF;
 	mSelectedTextColorOverride = 0x0000FF;
 	mScrollSound = NULL;
@@ -35,7 +35,7 @@ template <typename listType>
 void GuiList<listType>::onRender()
 {
 	const int cutoff = getOffsetY();
-	const int entrySize = Renderer::getFontHeight(mFont) + 5;
+	const int entrySize = mFont->getHeight() + 5;
 
 	int startEntry = 0;
 
@@ -69,7 +69,7 @@ void GuiList<listType>::onRender()
 		//draw selector bar
 		if(mSelection == i)
 		{
-			Renderer::drawRect(getOffsetX(), y, Renderer::getScreenWidth(), Renderer::getFontHeight(mFont), mSelectorColor);
+			Renderer::drawRect(getOffsetX(), y, Renderer::getScreenWidth(), mFont->getHeight(), mSelectorColor);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);

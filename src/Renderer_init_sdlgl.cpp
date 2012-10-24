@@ -79,7 +79,7 @@ namespace Renderer
 		if(!createdSurface)
 			return false;
 
-		Font::initLibrary();
+		//Font::initLibrary();
 
 		glViewport(0, 0, display_width, display_height);
 		glOrtho(0, display_width, display_height, 0, -1.0, 1.0);
@@ -95,7 +95,7 @@ namespace Renderer
 	{
 		onDeinit();
 
-		unloadFonts();
+		//unloadFonts();
 		destroySurface();
 	}
 };

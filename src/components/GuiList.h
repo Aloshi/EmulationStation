@@ -2,6 +2,7 @@
 #define _GUILIST_H_
 
 #include "../Renderer.h"
+#include "../Font.h"
 #include "../GuiComponent.h"
 #include "../InputManager.h"
 #include <vector>
@@ -52,7 +53,7 @@ private:
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
 
-	Renderer::FontSize mFont;
+	Font* mFont;
 	unsigned int mSelectorColor, mSelectedTextColorOverride;
 	bool mDrawCentered;
 

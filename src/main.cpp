@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
 			ss << framerate;
 			std::string fps;
 			ss >> fps;
-			Renderer::drawText(fps, 50, 50, 0x00FF00);
+			Renderer::drawText(fps, 50, 50, 0x00FF00, Renderer::getDefaultFont(Renderer::MEDIUM));
 		}
 
 

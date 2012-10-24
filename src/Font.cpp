@@ -5,31 +5,57 @@
 #include "Renderer.h"
 
 FT_Library Font::sLibrary;
+bool Font::libraryInitialized = false;
 
-int Font::getDpiX() { return 300; }
-int Font::getDpiY() { return 300; }
+int Font::getDpiX() { return 96; }
+int Font::getDpiY() { return 96; }
 
 void Font::initLibrary()
 {
 	if(FT_Init_FreeType(&sLibrary))
 	{
 		std::cerr << "Error initializing FreeType!\n";
+	}else{
+		libraryInitialized = true;
 	}
 }
 
 Font::Font(std::string path, int size)
 {
+	//register to receive init/deinit callbacks
+	Renderer::registerComponent(this);
+
+	mPath = path;
+	mSize = size;
+
+	onInit();
+}
+
+void Font::onInit()
+{
+	if(!libraryInitialized)
+		initLibrary();
+
 	mMaxGlyphHeight = 0;
 
-	if(FT_New_Face(sLibrary, path.c_str(), 0, &face))
+	if(FT_New_Face(sLibrary, mPath.c_str(), 0, &face))
 	{
-		std::cerr << "Error creating font face! (path: " << path.c_str() << "\n";
-		while(true);
+		std::cerr << "Error creating font face! (path: " << mPath.c_str() << "\n";
+		return;
 	}
 
-	FT_Set_Char_Size(face, 0, size * 64, getDpiX(), getDpiY());
+	//FT_Set_Char_Size(face, 0, size * 64, getDpiX(), getDpiY());
+	FT_Set_Pixel_Sizes(face, 0, mSize);
 
 	buildAtlas();
+
+	FT_Done_Face(face);
+}
+
+void Font::onDeinit()
+{
+	if(textureID)
+		glDeleteTextures(1, &textureID);
 }
 
 void Font::buildAtlas()
@@ -130,9 +156,10 @@ void Font::buildAtlas()
 
 Font::~Font()
 {
-	FT_Done_Face(face);
+	Renderer::unregisterComponent(this);
 
-	glDeleteTextures(1, &textureID);
+	if(textureID)
+		glDeleteTextures(1, &textureID);
 }
 
 
@@ -167,6 +194,13 @@ struct tex {
 
 void Font::drawText(std::string text, int startx, int starty, int color)
 {
+	if(!textureID)
+	{
+		std::cerr << "Error - tried to draw with Font that has no texture loaded!\n";
+		return;
+	}
+
+
 	starty += mMaxGlyphHeight;
 
 	//padding (another 0.5% is added to the bottom through the sizeText function)
@@ -255,7 +289,7 @@ void Font::sizeText(std::string text, int* w, int* h)
 	{
 		unsigned char letter = text[i];
 		if(letter < 32 || letter >= 128)
-			continue;
+			letter = 127;
 
 		cwidth += charData[letter].advX;
 	}
@@ -266,4 +300,9 @@ void Font::sizeText(std::string text, int* w, int* h)
 
 	if(h != NULL)
 		*h = mMaxGlyphHeight + mMaxGlyphHeight * 0.5;
+}
+
+int Font::getHeight()
+{
+	return mMaxGlyphHeight * 1.5;
 }

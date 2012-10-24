@@ -6,7 +6,7 @@ GuiMenu::GuiMenu(GuiComponent* parent)
 	mParent = parent;
 	parent->pause();
 
-	mList = new GuiList<std::string>(0, Renderer::getFontHeight(Renderer::LARGE) + 2, Renderer::LARGE);
+	mList = new GuiList<std::string>(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::LARGE);
 	populateList();
 	addChild(mList);
 

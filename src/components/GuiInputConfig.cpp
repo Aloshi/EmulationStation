@@ -38,19 +38,22 @@ void GuiInputConfig::onRender()
 {
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFFFF);
 
-	int height = Renderer::getFontHeight(Renderer::MEDIUM) + 6;
+	Font* font = Renderer::getDefaultFont(Renderer::MEDIUM);
 
-	Renderer::drawCenteredText("It looks like you have a joystick plugged in!", 0, 2, 0x000000FF);
-	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 0, height, 0x000000FF);
-	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 0, height * 2, 0x000000FF);
-	Renderer::drawCenteredText("If you want to remap later, just delete ~/.es_input.cfg.", 0, height * 3, 0x000000FF);
-	Renderer::drawCenteredText("This interface only configures the first joystick plugged in.", 0, height * 4, 0x000000FF);
-	Renderer::drawCenteredText("Remember - you'll need to set up your emulator separately!", 0, Renderer::getScreenHeight() - height, 0x000000FF);
+	int height = font->getHeight() + 6;
+
+
+	Renderer::drawCenteredText("It looks like you have a joystick plugged in!", 0, 2, 0x000000FF, font);
+	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 0, height, 0x000000FF, font);
+	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 0, height * 2, 0x000000FF, font);
+	Renderer::drawCenteredText("If you want to remap later, just delete ~/.es_input.cfg.", 0, height * 3, 0x000000FF, font);
+	Renderer::drawCenteredText("This interface only configures the first joystick plugged in.", 0, height * 4, 0x000000FF, font);
+	Renderer::drawCenteredText("Remember - you'll need to set up your emulator separately!", 0, Renderer::getScreenHeight() - height, 0x000000FF, font);
 
 	if(mDone)
-		Renderer::drawCenteredText("All done! Press a keyboard key to save.", 0, height * 5, 0x00BB00FF);
+		Renderer::drawCenteredText("All done! Press a keyboard key to save.", 0, height * 5, 0x00BB00FF, font);
 	else
-		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 0, height * 5, 0x00C000FF);
+		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 0, height * 5, 0x00C000FF, font);
 }
 
 void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)

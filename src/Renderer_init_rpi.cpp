@@ -215,7 +215,7 @@ namespace Renderer
 	{
 		onDeinit();
 
-		unloadFonts();
+		//unloadFonts();
 		destroySurface();
 	}
 };

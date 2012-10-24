@@ -65,7 +65,7 @@ void GuiTheme::setDefaults()
 	mGameImageOriginX = 0.5;
 	mGameImageOriginY = 0;
 	mGameImageOffsetX = mListOffsetX / 2;
-	mGameImageOffsetY = (float)Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight();
+	mGameImageOffsetY = (float)Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / Renderer::getScreenHeight();
 	mGameImageWidth = mListOffsetX;
 	mGameImageHeight = 0;
 
@@ -264,7 +264,7 @@ float GuiTheme::resolveExp(std::string str, float defaultVal)
 	exp.setExpression(str);
 
 	//set variables
-	exp.setVariable("headerHeight", Renderer::getFontHeight(Renderer::LARGE) / Renderer::getScreenHeight());
+	exp.setVariable("headerHeight", Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / Renderer::getScreenHeight());
 	exp.setVariable("infoWidth", mListOffsetX);
 
 	return exp.eval();

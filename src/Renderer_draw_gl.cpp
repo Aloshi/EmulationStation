@@ -57,10 +57,29 @@ namespace Renderer {
 
 
 
-
 	Font* fonts[3] = {NULL, NULL, NULL};
+
+	//this is never really used, but is here "just in case"
+	void unloadFonts()
+	{
+		std::cout << "unloading fonts...";
+
+		for(unsigned int i = 0; i < 3; i++)
+		{
+			delete fonts[i];
+			fonts[i] = NULL;
+		}
+
+		loadedFonts = false;
+
+		std::cout << "done.\n";
+	}
+
 	void loadFonts()
 	{
+		if(loadedFonts)
+			unloadFonts();
+
 		std::cout << "loading fonts...";
 
 		std::string fontPath = "LinLibertine_R.ttf";
@@ -77,10 +96,10 @@ namespace Renderer {
 			}
 		}
 
-		float fontSizes[] = {0.004, 0.006, 0.009};
+		float fontSizes[] = {0.035, 0.05, 0.1};
 		for(unsigned int i = 0; i < 3; i++)
 		{
-			fonts[i] = new Font(fontPath, (unsigned int)(fontSizes[i] * getScreenWidth()));
+			fonts[i] = new Font(fontPath, (unsigned int)(fontSizes[i] * getScreenHeight()));
 		}
 
 		loadedFonts = true;
@@ -88,22 +107,7 @@ namespace Renderer {
 		std::cout << "done\n";
 	}
 
-	void unloadFonts()
-	{
-		std::cout << "unloading fonts...";
-
-		for(unsigned int i = 0; i < 3; i++)
-		{
-			delete fonts[i];
-			fonts[i] = NULL;
-		}
-
-		loadedFonts = false;
-
-		std::cout << "done.\n";
-	}
-
-	Font* getFont(FontSize size)
+	Font* getDefaultFont(FontSize size)
 	{
 		if(!loadedFonts)
 			loadFonts();
@@ -111,36 +115,13 @@ namespace Renderer {
 		return fonts[size];
 	}
 
-
-	int getFontHeight(FontSize size)
+	void drawText(std::string text, int x, int y, unsigned int color, Font* font)
 	{
-		if(!loadedFonts)
-			loadFonts();
-
-		int h;
-		getFont(size)->sizeText("HEIGHT", NULL, &h);
-
-		return h;
+		font->drawText(text, x, y, color);
 	}
 
-	void drawText(std::string text, int x, int y, unsigned int color, FontSize font)
+	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color, Font* font)
 	{
-		if(!loadedFonts)
-			loadFonts();
-
-		//if(x < 0)
-		//	std::cout << "drawing at " << x << std::endl;
-
-		getFont(font)->drawText(text, x, y, color);
-	}
-
-	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color, FontSize fontsize)
-	{
-		if(!loadedFonts)
-			loadFonts();
-
-		Font* font = getFont(fontsize);
-
 		int w, h;
 		font->sizeText(text, &w, &h);
 
@@ -149,18 +130,13 @@ namespace Renderer {
 
 		x += xOffset * 0.5;
 
-		drawText(text, x, y, color, fontsize);
+		drawText(text, x, y, color, font);
 	}
 
 	//this could probably be optimized
 	//draws text and ensures it's never longer than xLen
-	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, unsigned int color, FontSize fontsize)
+	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, unsigned int color, Font* font)
 	{
-		if(!loadedFonts)
-			loadFonts();
-
-		Font* font = getFont(fontsize);
-
 		int y = yStart;
 
 		std::string line, word, temp;
@@ -203,7 +179,7 @@ namespace Renderer {
 			{
 				//render line now
 				if(w > 0) //make sure it's not blank
-					drawText(line, xStart, y, color, fontsize);
+					drawText(line, xStart, y, color, font);
 
 				//increment y by height and some extra padding for the next line
 				y += h + 4;

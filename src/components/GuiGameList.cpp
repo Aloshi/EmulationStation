@@ -21,7 +21,7 @@ GuiGameList::GuiGameList(bool useDetail)
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getFontHeight(Renderer::LARGE) + 2);
+		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2);
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7, 0, false);
 		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
@@ -31,7 +31,7 @@ GuiGameList::GuiGameList(bool useDetail)
 		mImageAnimation->addChild(mScreenshot);
 		addChild(mImageAnimation);
 	}else{
-		mList = new GuiList<FileData*>(0, Renderer::getFontHeight(Renderer::LARGE) + 2);
+		mList = new GuiList<FileData*>(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2);
 		mScreenshot = NULL;
 		mImageAnimation = NULL;
 	}
@@ -93,13 +93,13 @@ void GuiGameList::onRender()
 
 	//header
 	if(!mTheme->getHeaderHidden())
-		Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0xFF0000FF, Renderer::LARGE);
+		Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0xFF0000FF, Renderer::getDefaultFont(Renderer::LARGE));
 
 	if(mDetailed)
 	{
 		//divider
 		if(!mTheme->getDividersHidden())
-			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getListOffsetX() - 4, Renderer::getFontHeight(Renderer::LARGE) + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
+			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getListOffsetX() - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
 
 		//if we're not scrolling and we have selected a non-folder
 		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
@@ -108,7 +108,7 @@ void GuiGameList::onRender()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), Renderer::SMALL);
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), Renderer::getDefaultFont(Renderer::SMALL));
 		}
 	}
 }
