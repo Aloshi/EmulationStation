@@ -59,8 +59,7 @@ namespace Renderer {
 
 	Font* fonts[3] = {NULL, NULL, NULL};
 
-	//this is never really used, but is here "just in case"
-	void unloadFonts()
+	/*void unloadFonts()
 	{
 		std::cout << "unloading fonts...";
 
@@ -73,12 +72,13 @@ namespace Renderer {
 		loadedFonts = false;
 
 		std::cout << "done.\n";
-	}
+	}*/
 
+	//creates the default fonts (which shouldn't ever be deleted)
 	void loadFonts()
 	{
 		if(loadedFonts)
-			unloadFonts();
+			return;
 
 		std::cout << "loading fonts...";
 

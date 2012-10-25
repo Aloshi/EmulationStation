@@ -5,6 +5,7 @@
 Sound::Sound(std::string path)
 {
 	mSound = NULL;
+	mChannel = -1;
 
 	AudioManager::registerSound(this);
 
