@@ -23,7 +23,7 @@ GuiGameList::GuiGameList(bool useDetail)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2);
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * sInfoWidth * 0.5, Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7, 0, false);
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * mTheme->getGameImageOffsetX(), Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7, 0, false);
 		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
 		//addChild(mScreenshot);
 
@@ -248,7 +248,12 @@ void GuiGameList::updateDetailData()
 	if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 	{
 		mScreenshot->setOffset((mTheme->getGameImageOffsetX() - 0.05) * Renderer::getScreenWidth(), mTheme->getGameImageOffsetY() * Renderer::getScreenHeight());
-		mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
+
+		if(((GameData*)mList->getSelectedObject())->getImagePath().empty())
+			mScreenshot->setImage(mTheme->getImageNotFoundPath());
+		else
+			mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
+
 		mImageAnimation->fadeIn(15);
 		mImageAnimation->move((int)(0.05 * Renderer::getScreenWidth()), 0, 5);
 	}else{

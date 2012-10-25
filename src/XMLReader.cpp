@@ -168,6 +168,10 @@ void parseGamelist(SystemData* system)
 					newImage.erase(0, 1);
 					newImage.insert(0, system->getRootFolder()->getPath());
 				}
+
+				//if the image doesn't exist, forget it
+				if(!boost::filesystem::exists(newImage))
+					newImage = "";
 			}
 
 			game->set(newName, newDesc, newImage);

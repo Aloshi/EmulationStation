@@ -3,7 +3,7 @@ Themes
 
 EmulationStation allows each system to have its own "theme." A theme is a collection of display settings and images defined in an XML document.
 
-ES will check two places for a theme: first, the system's search directory for theme.xml. Then, if that's not found, $HOME/.emulationstation/es_theme.xml.
+ES will check two places for a theme: first, the system's search directory for theme.xml. Then, if that's not found, $HOME/.emulationstation/es_theme.xml will be used.
 
 Almost all positions, dimensions, origins, etc. work in percentages - that is, they are a decimal between 0 and 1, representing the percentage of the screen on that axis to use. This ensures that themes look similar at every resolution.
 
@@ -56,6 +56,9 @@ Display tags
 ============
 Display tags define some "meta" display attributes about your theme. Display tags must be at the root of the `<theme>` tree - for example, they can't be inside a component tag. They are not required.
 
+
+**Game list attributes:**
+
 `<listPrimaryColor>` - the hex font color to use for games on the GuiGameList.
 
 `<listSecondaryColor>` - the hex font color to use for folders on the GuiGameList.
@@ -78,15 +81,21 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 ~~`<gameImageOffsetY>` - the percentage to offset the displayed game image by. Default is the height of the header font.~~
 
+
+
+**Game image attributes:**
+
 `<gameImagePos>` - two values for the position of the game art, in the form of `[x] [y]`, as a percentage. Default is `$infoWidth/2 $headerHeight`. 
 
 `<gameImageDim>` - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `$infoWidth/2 0` (width fits within the info column). The image will only be resized if at least one axis is nonzero *and* exceeded by the image's size. You should always leave at least one axis as zero to preserve the aspect ratio.
 
-`<gameImageOrigin>` two values for the origin of the game art, in the form of `[x] [y]`, as a percentage. Default is `0.5 0` (top-center of the image).
+`<gameImageOrigin>` - two values for the origin of the game art, in the form of `[x] [y]`, as a percentage. Default is `0.5 0` (top-center of the image).
+
+`<gameImageNotFound>` - path to the image to display if a game's image is missing. '.' and '~' are expanded.
 
 
 
-**The Fast Select box can be themed with these tags:**
+**Fast Select box attributes:**
 
 `<fastSelectColor>` - the hex color to use for the letter display on the Fast Select box.
 

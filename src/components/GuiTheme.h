@@ -5,6 +5,7 @@
 #include "../pugiXML/pugixml.hpp"
 #include "GuiBox.h"
 #include "../Sound.h"
+#include "../Font.h"
 
 //This class loads an XML-defined list of GuiComponents.
 class GuiTheme : public GuiComponent
@@ -41,6 +42,8 @@ public:
 	Sound* getMenuSelectSound();
 	Sound* getMenuBackSound();
 	Sound* getMenuOpenSound();
+
+	std::string getImageNotFoundPath();
 private:
 	void setDefaults();
 	void deleteComponents();
@@ -53,17 +56,17 @@ private:
 	unsigned int resolveColor(std::string str, unsigned int defaultColor = 0x000000FF);
 	void splitString(std::string str, char delim, std::string* before, std::string* after);
 	float strToFloat(std::string str, float defaultVal = 0.0f);
+	Font* resolveFont(pugi::xml_node node, Font* def);
 
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
+
 	unsigned int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mListSelectedColor, mDescColor, mFastSelectColor;
 	bool mHideHeader, mHideDividers, mListCentered;
-
 	float mListOffsetX, mListTextOffsetX, mGameImageOffsetX, mGameImageOffsetY, mGameImageWidth, mGameImageHeight, mGameImageOriginX, mGameImageOriginY;
-
 	GuiBoxData mBoxData;
-
 	Sound mMenuScrollSound, mMenuSelectSound, mMenuBackSound, mMenuOpenSound;
+	std::string mImageNotFoundPath;
 };
 
 #endif

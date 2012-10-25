@@ -34,6 +34,8 @@ float GuiTheme::getGameImageHeight() { return mGameImageHeight; }
 float GuiTheme::getGameImageOriginX() { return mGameImageOriginX; }
 float GuiTheme::getGameImageOriginY() { return mGameImageOriginY; }
 
+std::string GuiTheme::getImageNotFoundPath() { return mImageNotFoundPath; }
+
 GuiTheme::GuiTheme(std::string path)
 {
 	setDefaults();
@@ -81,6 +83,8 @@ void GuiTheme::setDefaults()
 	mMenuSelectSound.loadFile("");
 	mMenuBackSound.loadFile("");
 	mMenuOpenSound.loadFile("");
+
+	mImageNotFoundPath = "";
 }
 
 void GuiTheme::deleteComponents()
@@ -148,7 +152,6 @@ void GuiTheme::readXML(std::string path)
 	mListOffsetX = strToFloat(root.child("listOffsetX").text().get(), mListOffsetX);
 	mListTextOffsetX = strToFloat(root.child("listTextOffsetX").text().get(), mListTextOffsetX);
 
-
 	//game image stuff
 	std::string artPos = root.child("gameImagePos").text().get();
 	std::string artDim = root.child("gameImageDim").text().get();
@@ -166,11 +169,16 @@ void GuiTheme::readXML(std::string path)
 	mGameImageOriginX = resolveExp(artOriginX, mGameImageOriginX);
 	mGameImageOriginY = resolveExp(artOriginY, mGameImageOriginY);
 
+	mImageNotFoundPath = expandPath(root.child("gameImageNotFound").text().get());
+
 	//sounds
 	mMenuScrollSound.loadFile(expandPath(root.child("menuScrollSound").text().get()));
 	mMenuSelectSound.loadFile(expandPath(root.child("menuSelectSound").text().get()));
 	mMenuBackSound.loadFile(expandPath(root.child("menuBackSound").text().get()));
 	mMenuOpenSound.loadFile(expandPath(root.child("menuOpenSound").text().get()));
+
+	//fonts
+	//mListFont = resolveFont(root.child("listFont"), NULL);
 
 	//actually read the components
 	createComponentChildren(root, this);
@@ -321,4 +329,15 @@ float GuiTheme::strToFloat(std::string str, float defaultVal)
 	ss << str;
 	ss >> ret;
 	return ret;
+}
+
+Font* GuiTheme::resolveFont(pugi::xml_node node, Font* def)
+{
+	if(!node)
+		return def;
+
+	std::string path = expandPath(node.child("path").text().get());
+	int size = (int)(strToFloat(node.child("size").value()) * Renderer::getScreenHeight());
+
+	return new Font(path, size);
 }

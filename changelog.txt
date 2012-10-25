@@ -1,3 +1,6 @@
+October 25
+-Added gameImageNotFound tag for an image to display if a game image is not found/defined.
+
 October 17
 -Added GuiAnimation class which animates its children.
 -The game image on the game list now slides/fades in and out.
