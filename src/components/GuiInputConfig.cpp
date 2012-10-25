@@ -46,7 +46,7 @@ void GuiInputConfig::onRender()
 	Renderer::drawCenteredText("It looks like you have a joystick plugged in!", 0, 2, 0x000000FF, font);
 	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 0, height, 0x000000FF, font);
 	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 0, height * 2, 0x000000FF, font);
-	Renderer::drawCenteredText("If you want to remap later, just delete ~/.es_input.cfg.", 0, height * 3, 0x000000FF, font);
+	Renderer::drawCenteredText("If you want to remap later, delete ~/.emulationstation/es_input.cfg.", 0, height * 3, 0x000000FF, font);
 	Renderer::drawCenteredText("This interface only configures the first joystick plugged in.", 0, height * 4, 0x000000FF, font);
 	Renderer::drawCenteredText("Remember - you'll need to set up your emulator separately!", 0, Renderer::getScreenHeight() - height, 0x000000FF, font);
 
@@ -75,6 +75,12 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 	}
 
 	SDL_Event* event = InputManager::lastEvent;
+	if(event->type == SDL_KEYUP)
+	{
+		//keyboard key pressed; skip and continue
+		mInputNum++;
+	}
+
 	if(event->type == SDL_JOYBUTTONDOWN)
 	{
 		mButtonMap[event->jbutton.button] = (InputManager::InputButton)mInputNum;
