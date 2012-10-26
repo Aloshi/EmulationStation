@@ -1,3 +1,6 @@
+October 26
+-Hopefully fixed the black screen bug with certain programs.
+
 October 25
 -Added gameImageNotFound tag for an image to display if a game image is not found/defined.
 -Fixed keyboard not skipping joystick input configuration.

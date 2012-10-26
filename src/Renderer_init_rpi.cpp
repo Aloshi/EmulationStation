@@ -172,10 +172,6 @@ namespace Renderer
 
 	void destroySurface()
 	{
-		SDL_FreeSurface(sdlScreen);
-		sdlScreen = NULL;
-		SDL_Quit();
-
 		eglSwapBuffers(display, surface);
 		eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 		eglDestroySurface(display, surface);
@@ -185,6 +181,10 @@ namespace Renderer
 		display = EGL_NO_DISPLAY;
 		surface = EGL_NO_SURFACE;
 		context = EGL_NO_CONTEXT;
+
+		SDL_FreeSurface(sdlScreen);
+		sdlScreen = NULL;
+		SDL_Quit();
 	}
 
 	bool init(int w, int h)
