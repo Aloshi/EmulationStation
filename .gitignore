@@ -11,5 +11,8 @@
 *.la
 *.a
 
+# Dependency makefiles
+*.d
+
 #Compiled executable
 emulationstation

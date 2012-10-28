@@ -1,18 +1,4 @@
-CC=g++
-CFLAGS=-c -Wall -I/usr/include/freetype2 -I/usr/include/SDL -I/usr/include -D_DESKTOP_ -g
-LDFLAGS=-lGL -lfreetype -lSDL -lboost_system -lboost_filesystem -lfreeimage -lSDL_mixer
-SRCSOURCES=main.cpp Renderer.cpp Renderer_init.cpp Font.cpp Renderer_draw_gl.cpp GuiComponent.cpp InputManager.cpp SystemData.cpp GameData.cpp FolderData.cpp XMLReader.cpp MathExp.cpp components/GuiGameList.cpp components/GuiInputConfig.cpp components/GuiImage.cpp components/GuiMenu.cpp components/GuiTheme.cpp components/GuiFastSelect.cpp components/GuiBox.cpp components/GuiAnimation.cpp Sound.cpp AudioManager.cpp pugiXML/pugixml.cpp
-SOURCES=$(addprefix src/,$(SRCSOURCES))
-OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=emulationstation
+CPPFLAGS=-I/usr/include/freetype2 -I/usr/include/SDL -D_DESKTOP_
+LIBS=-lGL -lfreetype -lSDL -lboost_system -lboost_filesystem -lfreeimage -lSDL_mixer
 
-all: $(SOURCES) $(EXECUTABLE)
-
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
-
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
-
-clean:
-	rm -rf src/*o src/components/*o $(EXECUTABLE)
+include Makefile.common
