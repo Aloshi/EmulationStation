@@ -149,6 +149,8 @@ void Font::buildAtlas()
 		x += g->bitmap.width;
 	}
 
+	std::cout << "Final texture coords: " << x << ", " << y << "\n";
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	//std::cout << "generated texture \"" << textureID << "\" (w: " << w << " h: " << h << ")" << std::endl;

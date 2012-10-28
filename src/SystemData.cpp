@@ -84,10 +84,11 @@ void SystemData::launchGame(GameData* game)
 
 	std::cout << "	" << command << "\n";
 	std::cout << "=====================================================\n";
-	system(command.c_str());
+	int exitCode = system(command.c_str());
 	std::cout << "=====================================================\n";
 
-	std::cout << "...launch terminated!\n";
+	if(exitCode != 0)
+		std::cout << "...launch terminated with nonzero exit code!\n";
 
 	Renderer::init(0, 0);
 	AudioManager::init();

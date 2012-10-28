@@ -126,7 +126,7 @@ void GuiFastSelect::setListPos()
 	int min = 0;
 	int max = mList->getObjectCount() - 1;
 
-	int mid;
+	int mid = 0;
 
 	while(max >= min)
 	{

@@ -8,6 +8,7 @@
 class FileData
 {
 public:
+	virtual ~FileData() { };
 	virtual bool isFolder() = 0;
 	virtual std::string getName() = 0;
 	virtual std::string getPath() = 0;
