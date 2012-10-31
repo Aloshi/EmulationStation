@@ -44,6 +44,9 @@ public:
 	Sound* getMenuOpenSound();
 
 	std::string getImageNotFoundPath();
+
+	Font* getListFont();
+	Font* getDescriptionFont();
 private:
 	void setDefaults();
 	void deleteComponents();
@@ -56,7 +59,7 @@ private:
 	unsigned int resolveColor(std::string str, unsigned int defaultColor = 0x000000FF);
 	void splitString(std::string str, char delim, std::string* before, std::string* after);
 	float strToFloat(std::string str, float defaultVal = 0.0f);
-	Font* resolveFont(pugi::xml_node node, Font* def);
+	Font* resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize);
 
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
@@ -67,6 +70,8 @@ private:
 	GuiBoxData mBoxData;
 	Sound mMenuScrollSound, mMenuSelectSound, mMenuBackSound, mMenuOpenSound;
 	std::string mImageNotFoundPath;
+	Font* mListFont;
+	Font* mDescFont;
 };
 
 #endif

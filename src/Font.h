@@ -45,6 +45,9 @@ public:
 	void onInit();
 	void onDeinit();
 
+	int getSize();
+
+	static std::string getDefaultPath();
 private:
 	static int getDpiX();
 	static int getDpiY();

@@ -36,8 +36,27 @@ float GuiTheme::getGameImageOriginY() { return mGameImageOriginY; }
 
 std::string GuiTheme::getImageNotFoundPath() { return mImageNotFoundPath; }
 
+Font* GuiTheme::getListFont()
+{
+	if(mListFont == NULL)
+		return Renderer::getDefaultFont(Renderer::MEDIUM);
+	else
+		return mListFont;
+}
+
+Font* GuiTheme::getDescriptionFont()
+{
+	if(mDescFont == NULL)
+		return Renderer::getDefaultFont(Renderer::SMALL);
+	else
+		return mDescFont;
+}
+
 GuiTheme::GuiTheme(std::string path)
 {
+	mListFont = NULL;
+	mDescFont = NULL;
+
 	setDefaults();
 
 	if(!path.empty())
@@ -85,6 +104,18 @@ void GuiTheme::setDefaults()
 	mMenuOpenSound.loadFile("");
 
 	mImageNotFoundPath = "";
+
+	if(mListFont != NULL)
+	{
+		delete mListFont;
+		mListFont = NULL;
+	}
+
+	if(mDescFont != NULL)
+	{
+		delete mDescFont;
+		mDescFont = NULL;
+	}
 }
 
 void GuiTheme::deleteComponents()
@@ -178,7 +209,8 @@ void GuiTheme::readXML(std::string path)
 	mMenuOpenSound.loadFile(expandPath(root.child("menuOpenSound").text().get()));
 
 	//fonts
-	//mListFont = resolveFont(root.child("listFont"), NULL);
+	mListFont = resolveFont(root.child("listFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::MEDIUM)->getSize());
+	mDescFont = resolveFont(root.child("descriptionFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::SMALL)->getSize());
 
 	//actually read the components
 	createComponentChildren(root, this);
@@ -331,13 +363,23 @@ float GuiTheme::strToFloat(std::string str, float defaultVal)
 	return ret;
 }
 
-Font* GuiTheme::resolveFont(pugi::xml_node node, Font* def)
+Font* GuiTheme::resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize)
 {
 	if(!node)
-		return def;
+		return NULL;
 
 	std::string path = expandPath(node.child("path").text().get());
-	int size = (int)(strToFloat(node.child("size").value()) * Renderer::getScreenHeight());
+	unsigned int size = (unsigned int)(strToFloat(node.child("size").text().get()) * Renderer::getScreenHeight());
+
+	if(!boost::filesystem::exists(path))
+	{
+		path = defaultPath;
+	}
+
+	if(size == 0)
+	{
+		size = defaultSize;
+	}
 
 	return new Font(path, size);
 }

@@ -10,6 +10,13 @@ bool Font::libraryInitialized = false;
 int Font::getDpiX() { return 96; }
 int Font::getDpiY() { return 96; }
 
+int Font::getSize() { return mSize; }
+
+std::string Font::getDefaultPath()
+{
+	return "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf";
+}
+
 void Font::initLibrary()
 {
 	if(FT_Init_FreeType(&sLibrary))
@@ -149,7 +156,10 @@ void Font::buildAtlas()
 		x += g->bitmap.width;
 	}
 
-	std::cout << "Final texture coords: " << x << ", " << y << "\n";
+	if(y >= textureHeight)
+	{
+		std::cerr << "Error - font size exceeded texture size! If you were doing something reasonable, tell Aloshi to fix it!\n";
+	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 

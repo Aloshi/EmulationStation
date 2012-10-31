@@ -21,17 +21,18 @@ GuiGameList::GuiGameList(bool useDetail)
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2);
+		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
 		mScreenshot = new GuiImage(Renderer::getScreenWidth() * mTheme->getGameImageOffsetX(), Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7, 0, false);
 		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
 		//addChild(mScreenshot);
 
+		//the animation renders the screenshot
 		mImageAnimation = new GuiAnimation();
 		mImageAnimation->addChild(mScreenshot);
 		addChild(mImageAnimation);
 	}else{
-		mList = new GuiList<FileData*>(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2);
+		mList = new GuiList<FileData*>(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 		mScreenshot = NULL;
 		mImageAnimation = NULL;
 	}
@@ -108,7 +109,7 @@ void GuiGameList::onRender()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), Renderer::getDefaultFont(Renderer::SMALL));
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), mTheme->getDescriptionFont());
 		}
 	}
 }
@@ -225,6 +226,9 @@ void GuiGameList::updateTheme()
 	mList->setSelectorColor(mTheme->getSelectorColor());
 	mList->setSelectedTextColor(mTheme->getSelectedTextColor());
 	mList->setScrollSound(mTheme->getMenuScrollSound());
+
+	//fonts
+	mList->setFont(mTheme->getListFont());
 
 	if(mDetailed)
 	{

@@ -15,7 +15,7 @@ template <typename listType>
 class GuiList : public GuiComponent
 {
 public:
-	GuiList(int offsetX = 0, int offsetY = 0, Renderer::FontSize fontsize = Renderer::MEDIUM);
+	GuiList(int offsetX, int offsetY, Font* font);
 	~GuiList();
 
 	void onRender();
@@ -44,6 +44,7 @@ public:
 	listType getObject(int i);
 	void setSelection(int i);
 
+	void setFont(Font* f);
 private:
 	static const int SCROLLDELAY = 507;
 	static const int SCROLLTIME = 200;

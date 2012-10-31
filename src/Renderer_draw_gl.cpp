@@ -87,8 +87,9 @@ namespace Renderer {
 		//make sure our font exists
 		if(!boost::filesystem::exists(fontPath))
 		{
-			std::cout << "Default font \"" << fontPath << "\" does not exist! Attempting to default to a system font...";
-			fontPath = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
+			//std::cout << "Default font \"" << fontPath << "\" does not exist! Attempting to default to a system font...";
+			//fontPath = "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf";
+			fontPath = Font::getDefaultPath();
 			if(!boost::filesystem::exists(fontPath))
 			{
 				std::cerr << "System font \"" << fontPath << "\" wasn't found either! Well, you're kind of screwed. Sorry.\n";
@@ -96,7 +97,7 @@ namespace Renderer {
 			}
 		}
 
-		float fontSizes[] = {0.035, 0.05, 0.1};
+		float fontSizes[] = {0.035, 0.045, 0.1};
 		for(unsigned int i = 0; i < 3; i++)
 		{
 			fonts[i] = new Font(fontPath, (unsigned int)(fontSizes[i] * getScreenHeight()));

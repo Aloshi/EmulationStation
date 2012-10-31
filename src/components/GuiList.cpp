@@ -4,7 +4,7 @@
 #include <iostream>
 
 template <typename listType>
-GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize)
+GuiList<listType>::GuiList(int offsetX, int offsetY, Font* font)
 {
 	mSelection = 0;
 	mScrollDir = 0;
@@ -16,7 +16,7 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Renderer::FontSize fontsize
 
 	mTextOffsetX = 0;
 
-	mFont = Renderer::getDefaultFont(fontsize);
+	mFont = font;
 	mSelectorColor = 0x000000FF;
 	mSelectedTextColorOverride = 0x0000FF;
 	mScrollSound = NULL;
@@ -265,4 +265,10 @@ template <typename listType>
 void GuiList<listType>::setScrollSound(Sound* sound)
 {
 	mScrollSound = sound;
+}
+
+template <typename listType>
+void GuiList<listType>::setFont(Font* font)
+{
+	mFont = font;
 }

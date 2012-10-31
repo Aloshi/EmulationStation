@@ -1,3 +1,7 @@
+October 31
+-Added custom font support. Check out THEMES.md.
+-Happy halloween!
+
 October 26
 -Hopefully fixed the black screen bug with certain programs.
 

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 			}else if(strcmp(argv[i], "--draw-framerate") == 0)
 			{
 				DRAWFRAMERATE = true;
-			}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
 				std::cout << "Command line arguments:\n";
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
 			ss << framerate;
 			std::string fps;
 			ss >> fps;
-			Renderer::drawText(fps, 50, 50, 0x00FF00, Renderer::getDefaultFont(Renderer::MEDIUM));
+			Renderer::drawText(fps, 50, 50, 0x00FF00FF, Renderer::getDefaultFont(Renderer::MEDIUM));
 		}
 
 
