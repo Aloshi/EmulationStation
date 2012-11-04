@@ -97,9 +97,9 @@ The switch `--ignore-gamelist` can be used to ignore the gamelist and use the no
 Themes
 ======
 
-By default, EmulationStation looks pretty ugly. You can fix that. If you want to know more, read THEMES.md!
+By default, EmulationStation looks pretty ugly. You can fix that. If you want to know more about making your own themes (or editing existing ones), read THEMES.md!
 
-There is no special place to download themes right now, but you might be able to find some old ones in the GitHub "Theme Support" issue. The RetroPie setup script also automatically installs a few.
+I've put some themes up for download on my EmulationStation webpage: http://aloshi.com/emulationstation#themes
 
 -Aloshi
 http://www.aloshi.com
