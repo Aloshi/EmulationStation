@@ -18,7 +18,7 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Font* font)
 
 	mFont = font;
 	mSelectorColor = 0x000000FF;
-	mSelectedTextColorOverride = 0x0000FF;
+	mSelectedTextColorOverride = 0x0000FFFF;
 	mScrollSound = NULL;
 	mDrawCentered = true;
 

@@ -5,9 +5,6 @@ Programming
 Resources
 =========
 
-LinLibertine_R.ttf
-	The Libertine Font Project - http://www.linuxlibertine.org/
-
 PugiXML
 	http://pugixml.org/
 
