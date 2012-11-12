@@ -17,7 +17,7 @@ namespace InputManager {
 	void loadConfig();
 
 	//enum for identifying input, regardless of configuration
-	enum InputButton { UNKNOWN, UP, DOWN, LEFT, RIGHT, BUTTON1, BUTTON2, MENU, SELECT};
+	enum InputButton { UNKNOWN, UP, DOWN, PAGEUP, PAGEDOWN, LEFT, RIGHT, BUTTON1, BUTTON2, MENU, SELECT};
 
 	void processEvent(SDL_Event* event);
 
