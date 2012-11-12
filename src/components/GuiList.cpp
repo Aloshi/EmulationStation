@@ -101,8 +101,19 @@ void GuiList<listType>::onInput(InputManager::InputButton button, bool keyDown)
 				mScrollDir = -1;
 				scroll();
 			}
+			if(button == InputManager::PAGEDOWN)
+			{
+				mScrollDir = 10;
+				scroll();
+			}
+
+			if(button == InputManager::PAGEUP)
+			{
+				mScrollDir = -10;
+				scroll();
+			}
 		}else{
-			if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0))
+			if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::PAGEDOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0) || (button == InputManager::PAGEUP && mScrollDir < 0))
 			{
 				stopScrolling();
 			}
@@ -154,9 +165,19 @@ void GuiList<listType>::scroll()
 	mSelection += mScrollDir;
 
 	if(mSelection < 0)
-		mSelection += mRowVector.size();
+	{
+		if(mScrollDir == -10)
+			mSelection = 0;
+		else
+			mSelection += mRowVector.size();
+	}
 	if(mSelection >= (int)mRowVector.size())
-		mSelection -= mRowVector.size();
+	{
+		if(mScrollDir == 10)
+			mSelection = (int)mRowVector.size() - 1;
+		else
+			mSelection -= mRowVector.size();
+	}
 
 	if(mScrollSound)
 		mScrollSound->play();
