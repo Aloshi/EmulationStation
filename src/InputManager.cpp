@@ -58,6 +58,12 @@ void InputManager::processEvent(SDL_Event* event)
 			case SDLK_DOWN:
 				button = DOWN;
 				break;
+			case SDLK_PAGEUP:
+				button = PAGEUP;
+				break;
+			case SDLK_PAGEDOWN:
+				button = PAGEDOWN;
+				break;
 			case SDLK_RETURN:
 				button = BUTTON1;
 				break;
