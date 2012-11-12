@@ -166,14 +166,14 @@ void GuiList<listType>::scroll()
 
 	if(mSelection < 0)
 	{
-		if(mScrollDir == -10)
+		if(mScrollDir < -1)
 			mSelection = 0;
 		else
 			mSelection += mRowVector.size();
 	}
 	if(mSelection >= (int)mRowVector.size())
 	{
-		if(mScrollDir == 10)
+		if(mScrollDir > 1)
 			mSelection = (int)mRowVector.size() - 1;
 		else
 			mSelection -= mRowVector.size();
