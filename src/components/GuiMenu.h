@@ -19,6 +19,7 @@ private:
 	GuiList<std::string>* mList;
 
 	void populateList();
+	void executeCommand(std::string command);
 
 	bool mSkippedMenuClose;
 };

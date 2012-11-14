@@ -1,5 +1,6 @@
 #include "GuiMenu.h"
 #include <iostream>
+#include <SDL/SDL.h>
 
 GuiMenu::GuiMenu(GuiComponent* parent)
 {
@@ -41,10 +42,21 @@ void GuiMenu::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(button == InputManager::BUTTON1 && keyDown)
 	{
-		if(system(mList->getSelectedObject().c_str()) != 0)
-		{
-			std::cout << "(menu command terminated with a nonzero errorcode)\n";
-		}
+		executeCommand(mList->getSelectedObject());
+	}
+}
+
+void GuiMenu::executeCommand(std::string command)
+{
+	if(command == "exit")
+	{
+		//push SDL quit event
+		SDL_Event* event = new SDL_Event();
+		event->type = SDL_QUIT;
+		SDL_PushEvent(event);
+	}else{
+		if(system(command.c_str()) != 0)
+			std::cout << "(warning: command terminated with nonzero result!)\n";
 	}
 }
 
@@ -56,8 +68,10 @@ void GuiMenu::populateList()
 	//commands added here are called with system() when selected (so are executed as shell commands)
 	//the method is GuiList::addObject(std::string displayString, std::string commandString, unsigned int displayHexColor);
 	//the list will automatically adjust as items are added to it, this should be the only area you need to change
+	//if you want to do something special within ES, override your command in the executeComand() method
 	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FFFF);
 	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FFFF);
+	mList->addObject("Exit", "exit", 0xFF0000FF); //a special case; pushes an SDL quit event to the event stack instead of being called by system()
 }
 
 void GuiMenu::onRender()

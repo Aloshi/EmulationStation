@@ -1,3 +1,6 @@
+November 14
+-Added Exit command to the menu.
+
 October 31
 -Added custom font support. Check out THEMES.md.
 -Happy halloween!
