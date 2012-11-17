@@ -1,3 +1,6 @@
+November 17
+-Fixed default game image resizing if none is defined.
+
 November 14
 -Added Exit command to the menu.
 

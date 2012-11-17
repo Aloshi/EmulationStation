@@ -23,7 +23,7 @@ GuiGameList::GuiGameList(bool useDetail)
 	{
 		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * mTheme->getGameImageOffsetX(), Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", Renderer::getScreenWidth() * sInfoWidth * 0.7, 0, false);
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * mTheme->getGameImageOffsetX(), Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", mTheme->getGameImageWidth(), mTheme->getGameImageHeight(), false);
 		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
 		//addChild(mScreenshot);
 
