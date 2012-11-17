@@ -7,34 +7,35 @@
 #include <sstream>
 #include "../Renderer.h"
 
-unsigned int GuiTheme::getPrimaryColor() { return mListPrimaryColor; }
-unsigned int GuiTheme::getSecondaryColor() { return mListSecondaryColor; }
-unsigned int GuiTheme::getSelectorColor() { return mListSelectorColor; }
-unsigned int GuiTheme::getDescColor() { return mDescColor; }
-unsigned int GuiTheme::getFastSelectColor() { return mFastSelectColor; }
-bool GuiTheme::getHeaderHidden() { return mHideHeader; }
-bool GuiTheme::getDividersHidden() { return mHideDividers; }
-bool GuiTheme::getListCentered() { return mListCentered; }
-float GuiTheme::getListOffsetX() { return mListOffsetX; }
-float GuiTheme::getListTextOffsetX() { return mListTextOffsetX; }
+//really, this should all be refactored into "getColor("attribName")" and such,
+//but it's a little late now.
 
-unsigned int GuiTheme::getSelectedTextColor() { return mListSelectedColor; }
+unsigned int GuiTheme::getColor(std::string name)
+{
+	return mColorMap[name];
+}
+
+bool GuiTheme::getBool(std::string name)
+{
+	return mBoolMap[name];
+}
+
+float GuiTheme::getFloat(std::string name)
+{
+	return mFloatMap[name];
+}
+
+Sound* GuiTheme::getSound(std::string name)
+{
+	return mSoundMap[name];
+}
+
+std::string GuiTheme::getString(std::string name)
+{
+	return mStringMap[name];
+}
 
 GuiBoxData GuiTheme::getBoxData() { return mBoxData; }
-
-Sound* GuiTheme::getMenuScrollSound() { return &mMenuScrollSound; }
-Sound* GuiTheme::getMenuSelectSound() { return &mMenuSelectSound; }
-Sound* GuiTheme::getMenuBackSound() { return &mMenuBackSound; }
-Sound* GuiTheme::getMenuOpenSound() { return &mMenuOpenSound; }
-
-float GuiTheme::getGameImageOffsetX() { return mGameImageOffsetX; }
-float GuiTheme::getGameImageOffsetY() { return mGameImageOffsetY; }
-float GuiTheme::getGameImageWidth() { return mGameImageWidth; }
-float GuiTheme::getGameImageHeight() { return mGameImageHeight; }
-float GuiTheme::getGameImageOriginX() { return mGameImageOriginX; }
-float GuiTheme::getGameImageOriginY() { return mGameImageOriginY; }
-
-std::string GuiTheme::getImageNotFoundPath() { return mImageNotFoundPath; }
 
 Font* GuiTheme::getListFont()
 {
@@ -54,6 +55,11 @@ Font* GuiTheme::getDescriptionFont()
 
 GuiTheme::GuiTheme(std::string path)
 {
+	mSoundMap["menuScroll"] = new Sound();
+	mSoundMap["menuSelect"] = new Sound();
+	mSoundMap["menuBack"] = new Sound();
+	mSoundMap["menuOpen"] = new Sound();
+
 	mListFont = NULL;
 	mDescFont = NULL;
 
@@ -70,25 +76,32 @@ GuiTheme::~GuiTheme()
 
 void GuiTheme::setDefaults()
 {
-	mListPrimaryColor = 0x0000FFFF;
-	mListSecondaryColor = 0x00FF00FF;
-	mListSelectorColor = 0x000000FF;
-	mListSelectedColor = 0xFF0000FF;
-	mDescColor = 0x0000FFFF;
-	mFastSelectColor = 0xFF0000FF;
-	mHideHeader = false;
-	mHideDividers = false;
-	mListCentered = true;
+	mColorMap["primary"] = 0x0000FFFF;
+	mColorMap["secondary"] = 0x00FF00FF;
+	mColorMap["selector"] = 0x000000FF;
+	mColorMap["selected"] = 0xFF0000FF;
+	mColorMap["description"] = 0x0000FFFF;
+	mColorMap["fastSelect"] = 0xFF0000FF;
 
-	mListOffsetX = 0.5;
-	mListTextOffsetX = 0.005;
+	mBoolMap["hideHeader"] = false;
+	mBoolMap["hideDividers"] = false;
+	mBoolMap["listCentered"] = true;
 
-	mGameImageOriginX = 0.5;
-	mGameImageOriginY = 0;
-	mGameImageOffsetX = mListOffsetX / 2;
-	mGameImageOffsetY = (float)Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / Renderer::getScreenHeight();
-	mGameImageWidth = mListOffsetX;
-	mGameImageHeight = 0;
+	mFloatMap["listOffsetX"] = 0.5;
+	mFloatMap["listTextOffsetX"] = 0.005;
+	mFloatMap["gameImageOriginX"] = 0.5;
+	mFloatMap["gameImageOriginY"] = 0;
+	mFloatMap["gameImageOffsetX"] = mFloatMap["listOffsetX"] / 2;
+	mFloatMap["gameImageOffsetY"] = (float)Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / (float)Renderer::getScreenHeight();
+	mFloatMap["gameImageWidth"] = mFloatMap["listOffsetX"];
+	mFloatMap["gameImageHeight"] = 0;
+
+	mSoundMap["menuScroll"]->loadFile("");
+	mSoundMap["menuSelect"]->loadFile("");
+	mSoundMap["menuBack"]->loadFile("");
+	mSoundMap["menuOpen"]->loadFile("");
+
+	mStringMap["imageNotFoundPath"] = "";
 
 	mBoxData.backgroundPath = "";
 	mBoxData.backgroundTiled = false;
@@ -97,13 +110,6 @@ void GuiTheme::setDefaults()
 	mBoxData.verticalPath = "";
 	mBoxData.verticalTiled = false;
 	mBoxData.cornerPath = "";
-
-	mMenuScrollSound.loadFile("");
-	mMenuSelectSound.loadFile("");
-	mMenuBackSound.loadFile("");
-	mMenuOpenSound.loadFile("");
-
-	mImageNotFoundPath = "";
 
 	if(mListFont != NULL)
 	{
@@ -160,14 +166,15 @@ void GuiTheme::readXML(std::string path)
 	pugi::xml_node root = doc.child("theme");
 
 	//load non-component theme stuff
-	mListPrimaryColor = resolveColor(root.child("listPrimaryColor").text().get(), mListPrimaryColor);
-	mListSecondaryColor = resolveColor(root.child("listSecondaryColor").text().get(), mListSecondaryColor);
-	mListSelectorColor = resolveColor(root.child("listSelectorColor").text().get(), mListSelectorColor);
-	mListSelectedColor = resolveColor(root.child("listSelectedColor").text().get(), mListPrimaryColor);
-	mDescColor = resolveColor(root.child("descColor").text().get(), mDescColor);
-	mFastSelectColor = resolveColor(root.child("fastSelectColor").text().get(), mFastSelectColor);
-	mHideHeader = root.child("hideHeader");
-	mHideDividers = root.child("hideDividers");
+	mColorMap["primary"] = resolveColor(root.child("listPrimaryColor").text().get(), mColorMap["primary"]);
+	mColorMap["secondary"] = resolveColor(root.child("listSecondaryColor").text().get(), mColorMap["secondary"]);
+	mColorMap["selector"] = resolveColor(root.child("listSelectorColor").text().get(), mColorMap["selector"]);
+	mColorMap["selected"] = resolveColor(root.child("listSelectedColor").text().get(), mColorMap["primary"]);
+	mColorMap["description"] = resolveColor(root.child("descColor").text().get(), mColorMap["description"]);
+	mColorMap["fastSelect"] = resolveColor(root.child("fastSelectColor").text().get(), mColorMap["fastSelect"]);
+
+	mBoolMap["hideHeader"] = root.child("hideHeader");
+	mBoolMap["hideDividers"] = root.child("hideDividers");
 
 	//GuiBox theming data
 	mBoxData.backgroundPath = expandPath(root.child("boxBackground").text().get());
@@ -179,9 +186,9 @@ void GuiTheme::readXML(std::string path)
 	mBoxData.cornerPath = expandPath(root.child("boxCorner").text().get());
 
 	//list stuff
-	mListCentered = !root.child("listLeftAlign");
-	mListOffsetX = strToFloat(root.child("listOffsetX").text().get(), mListOffsetX);
-	mListTextOffsetX = strToFloat(root.child("listTextOffsetX").text().get(), mListTextOffsetX);
+	mBoolMap["listCentered"] = !root.child("listLeftAlign");
+	mFloatMap["listOffsetX"] = strToFloat(root.child("listOffsetX").text().get(), mFloatMap["listOffsetX"]);
+	mFloatMap["listTextOffsetX"] = strToFloat(root.child("listTextOffsetX").text().get(), mFloatMap["listTextOffsetX"]);
 
 	//game image stuff
 	std::string artPos = root.child("gameImagePos").text().get();
@@ -193,20 +200,20 @@ void GuiTheme::readXML(std::string path)
 	splitString(artDim, ' ', &artWidth, &artHeight);
 	splitString(artOrigin, ' ', &artOriginX, &artOriginY);
 
-	mGameImageOffsetX = resolveExp(artPosX, mGameImageOffsetX);
-	mGameImageOffsetY = resolveExp(artPosY, mGameImageOffsetY);
-	mGameImageWidth = resolveExp(artWidth, mGameImageWidth);
-	mGameImageHeight = resolveExp(artHeight, mGameImageHeight);
-	mGameImageOriginX = resolveExp(artOriginX, mGameImageOriginX);
-	mGameImageOriginY = resolveExp(artOriginY, mGameImageOriginY);
+	mFloatMap["gameImageOffsetX"] = resolveExp(artPosX, mFloatMap["gameImageOffsetX"]);
+	mFloatMap["gameImageOffsetY"] = resolveExp(artPosY, mFloatMap["gameImageOffsetY"]);
+	mFloatMap["gameImageWidth"] = resolveExp(artWidth, mFloatMap["gameImageWidth"]);
+	mFloatMap["gameImageHeight"] = resolveExp(artHeight, mFloatMap["gameImageHeight"]);
+	mFloatMap["gameImageOriginX"] = resolveExp(artOriginX, mFloatMap["gameImageOriginX"]);
+	mFloatMap["gameImageOriginY"] = resolveExp(artOriginY, mFloatMap["gameImageOriginY"]);
 
-	mImageNotFoundPath = expandPath(root.child("gameImageNotFound").text().get());
+	mStringMap["imageNotFoundPath"] = expandPath(root.child("gameImageNotFound").text().get());
 
 	//sounds
-	mMenuScrollSound.loadFile(expandPath(root.child("menuScrollSound").text().get()));
-	mMenuSelectSound.loadFile(expandPath(root.child("menuSelectSound").text().get()));
-	mMenuBackSound.loadFile(expandPath(root.child("menuBackSound").text().get()));
-	mMenuOpenSound.loadFile(expandPath(root.child("menuOpenSound").text().get()));
+	mSoundMap["menuScroll"]->loadFile(expandPath(root.child("menuScrollSound").text().get()));
+	mSoundMap["menuSelect"]->loadFile(expandPath(root.child("menuSelectSound").text().get()));
+	mSoundMap["menuBack"]->loadFile(expandPath(root.child("menuBackSound").text().get()));
+	mSoundMap["menuOpen"]->loadFile(expandPath(root.child("menuOpenSound").text().get()));
 
 	//fonts
 	mListFont = resolveFont(root.child("listFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::MEDIUM)->getSize());
@@ -305,7 +312,7 @@ float GuiTheme::resolveExp(std::string str, float defaultVal)
 
 	//set variables
 	exp.setVariable("headerHeight", Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / Renderer::getScreenHeight());
-	exp.setVariable("infoWidth", mListOffsetX);
+	exp.setVariable("infoWidth", mFloatMap["listOffsetX"]);
 
 	return exp.eval();
 }

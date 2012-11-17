@@ -16,34 +16,13 @@ public:
 
 	void readXML(std::string path);
 
-	unsigned int getPrimaryColor();
-	unsigned int getSecondaryColor();
-	unsigned int getSelectorColor();
-	unsigned int getSelectedTextColor();
-	unsigned int getDescColor();
-	unsigned int getFastSelectColor();
-	bool getHeaderHidden();
-	bool getDividersHidden();
-	bool getListCentered();
-
-	float getListOffsetX();
-	float getListTextOffsetX();
-
-	float getGameImageOffsetX();
-	float getGameImageOffsetY();
-	float getGameImageWidth();
-	float getGameImageHeight();
-	float getGameImageOriginX();
-	float getGameImageOriginY();
-
 	GuiBoxData getBoxData();
 
-	Sound* getMenuScrollSound();
-	Sound* getMenuSelectSound();
-	Sound* getMenuBackSound();
-	Sound* getMenuOpenSound();
-
-	std::string getImageNotFoundPath();
+	unsigned int getColor(std::string name);
+	bool getBool(std::string name);
+	float getFloat(std::string name);
+	Sound* getSound(std::string name);
+	std::string getString(std::string name);
 
 	Font* getListFont();
 	Font* getDescriptionFont();
@@ -64,12 +43,13 @@ private:
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
 
-	unsigned int mListPrimaryColor, mListSecondaryColor, mListSelectorColor, mListSelectedColor, mDescColor, mFastSelectColor;
-	bool mHideHeader, mHideDividers, mListCentered;
-	float mListOffsetX, mListTextOffsetX, mGameImageOffsetX, mGameImageOffsetY, mGameImageWidth, mGameImageHeight, mGameImageOriginX, mGameImageOriginY;
+	std::map<std::string, unsigned int> mColorMap;
+	std::map<std::string, bool> mBoolMap;
+	std::map<std::string, float> mFloatMap;
+	std::map<std::string, Sound*> mSoundMap;
+	std::map<std::string, std::string> mStringMap;
+
 	GuiBoxData mBoxData;
-	Sound mMenuScrollSound, mMenuSelectSound, mMenuBackSound, mMenuOpenSound;
-	std::string mImageNotFoundPath;
 	Font* mListFont;
 	Font* mDescFont;
 };

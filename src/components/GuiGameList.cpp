@@ -5,9 +5,6 @@
 #include "GuiFastSelect.h"
 #include <boost/filesystem.hpp>
 
-//this is just a default value; the true value is in mTheme->getListOffsetX();
-const float GuiGameList::sInfoWidth = 0.5;
-
 
 GuiGameList::GuiGameList(bool useDetail)
 {
@@ -21,10 +18,10 @@ GuiGameList::GuiGameList(bool useDetail)
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * sInfoWidth, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
+		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX"), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * mTheme->getGameImageOffsetX(), Renderer::getScreenHeight() * mTheme->getGameImageOffsetY(), "", mTheme->getGameImageWidth(), mTheme->getGameImageHeight(), false);
-		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
+		mScreenshot = new GuiImage(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), "", mTheme->getFloat("gameImageWidth"), mTheme->getFloat("gameImageHeight"), false);
+		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 		//addChild(mScreenshot);
 
 		//the animation renders the screenshot
@@ -93,14 +90,14 @@ void GuiGameList::onRender()
 		mTheme->render();
 
 	//header
-	if(!mTheme->getHeaderHidden())
+	if(!mTheme->getBool("hideHeader"))
 		Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0xFF0000FF, Renderer::getDefaultFont(Renderer::LARGE));
 
 	if(mDetailed)
 	{
 		//divider
-		if(!mTheme->getDividersHidden())
-			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getListOffsetX() - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
+		if(!mTheme->getBool("hideDividers"))
+			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX") - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
 
 		//if we're not scrolling and we have selected a non-folder
 		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
@@ -109,7 +106,7 @@ void GuiGameList::onRender()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getListOffsetX() - 0.03), mTheme->getDescColor(), mTheme->getDescriptionFont());
+				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03), mTheme->getColor("description"), mTheme->getDescriptionFont());
 		}
 	}
 }
@@ -121,7 +118,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		if(!keyDown)
 		{
 			//play select sound
-			mTheme->getMenuSelectSound()->play();
+			mTheme->getSound("menuSelect")->play();
 
 			FileData* file = mList->getSelectedObject();
 			if(file->isFolder()) //if you selected a folder, add this directory to the stack, and use the selected one
@@ -133,7 +130,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 				mList->stopScrolling();
 
 				//wait for the sound to finish or we'll never hear it...
-				while(mTheme->getMenuSelectSound()->isPlaying());
+				while(mTheme->getSound("menuSelect")->isPlaying());
 
 				mSystem->launchGame((GameData*)file);
 			}
@@ -149,7 +146,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 		updateDetailData();
 
 		//play the back sound
-		mTheme->getMenuBackSound()->play();
+		mTheme->getSound("menuBack")->play();
 	}
 
 	//only allow switching systems if more than one exists (otherwise it'll reset your position when you switch and it's annoying)
@@ -174,7 +171,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	//open the fast select menu
 	if(button == InputManager::SELECT && keyDown)
 	{
-		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getFastSelectColor(), mTheme->getMenuScrollSound());
+		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"));
 	}
 
 	if(mDetailed)
@@ -201,9 +198,9 @@ void GuiGameList::updateList()
 		FileData* file = mFolder->getFile(i);
 
 		if(file->isFolder())
-			mList->addObject(file->getName(), file, mTheme->getSecondaryColor());
+			mList->addObject(file->getName(), file, mTheme->getColor("secondary"));
 		else
-			mList->addObject(file->getName(), file, mTheme->getPrimaryColor());
+			mList->addObject(file->getName(), file, mTheme->getColor("primary"));
 	}
 }
 
@@ -223,24 +220,24 @@ void GuiGameList::updateTheme()
 	else
 		mTheme->readXML(""); //clears any current theme
 
-	mList->setSelectorColor(mTheme->getSelectorColor());
-	mList->setSelectedTextColor(mTheme->getSelectedTextColor());
-	mList->setScrollSound(mTheme->getMenuScrollSound());
+	mList->setSelectorColor(mTheme->getColor("selector"));
+	mList->setSelectedTextColor(mTheme->getColor("selected"));
+	mList->setScrollSound(mTheme->getSound("menuScroll"));
 
 	//fonts
 	mList->setFont(mTheme->getListFont());
 
 	if(mDetailed)
 	{
-		mList->setCentered(mTheme->getListCentered());
+		mList->setCentered(mTheme->getBool("listCentered"));
 
-		mList->setOffsetX(mTheme->getListOffsetX() * Renderer::getScreenWidth());
-		mList->setTextOffsetX(mTheme->getListTextOffsetX() * Renderer::getScreenWidth());
+		mList->setOffsetX(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth());
+		mList->setTextOffsetX(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth());
 
-		mScreenshot->setOffsetX(mTheme->getGameImageOffsetX() * Renderer::getScreenWidth());
-		mScreenshot->setOffsetY(mTheme->getGameImageOffsetY() * Renderer::getScreenHeight());
-		mScreenshot->setOrigin(mTheme->getGameImageOriginX(), mTheme->getGameImageOriginY());
-		mScreenshot->setResize(mTheme->getGameImageWidth(), mTheme->getGameImageHeight(), false);
+		mScreenshot->setOffsetX(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth());
+		mScreenshot->setOffsetY(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
+		mScreenshot->setResize(mTheme->getFloat("gameImageWidth"), mTheme->getFloat("gameImageHeight"), false);
 	}
 }
 
@@ -251,10 +248,10 @@ void GuiGameList::updateDetailData()
 
 	if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 	{
-		mScreenshot->setOffset((mTheme->getGameImageOffsetX() - 0.05) * Renderer::getScreenWidth(), mTheme->getGameImageOffsetY() * Renderer::getScreenHeight());
+		mScreenshot->setOffset((mTheme->getFloat("gameImageOffsetX") - 0.05) * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
 
 		if(((GameData*)mList->getSelectedObject())->getImagePath().empty())
-			mScreenshot->setImage(mTheme->getImageNotFoundPath());
+			mScreenshot->setImage(mTheme->getString("imageNotFoundPath"));
 		else
 			mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
 
@@ -277,7 +274,7 @@ void GuiGameList::clearDetailData()
 void GuiGameList::onPause()
 {
 	mList->stopScrolling();
-	mTheme->getMenuOpenSound()->play();
+	mTheme->getSound("menuOpenSound")->play();
 	InputManager::unregisterComponent(this);
 }
 

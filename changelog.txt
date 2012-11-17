@@ -1,5 +1,6 @@
 November 17
 -Fixed default game image resizing if none is defined.
+-Heavily refactored theming. You shouldn't notice any changes, but if something broke, let me know!
 
 November 14
 -Added Exit command to the menu.
