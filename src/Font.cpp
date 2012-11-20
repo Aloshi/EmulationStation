@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include "Renderer.h"
+#include <boost/filesystem.hpp>
 
 FT_Library Font::sLibrary;
 bool Font::libraryInitialized = false;
@@ -14,7 +15,19 @@ int Font::getSize() { return mSize; }
 
 std::string Font::getDefaultPath()
 {
-	return "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf";
+	int fontCount = 2;
+	std::string fonts[] = {"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
+		"/usr/share/fonts/TTF/DejaVuSerif.ttf" };
+
+	for(int i = 0; i < fontCount; i++)
+	{
+		if(boost::filesystem::exists(fonts[i]))
+			return fonts[i];
+	}
+
+	std::cerr << "Error - could not find a font!\n";
+
+	return "";
 }
 
 void Font::initLibrary()
