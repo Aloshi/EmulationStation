@@ -54,7 +54,11 @@ Up - Scroll up
 
 Down - Scroll down
 
-Left - Last system (if it exists)
+PageUp or ] - Page up
+
+PageDown or [ - Page down
+
+Left - Previous system (if it exists)
 
 Right - Next system (if it exists)
 
