@@ -1,3 +1,8 @@
+December 8, 2012
+-Fixed a segfault when opening the menu (related to sounds). Woops!
+-Fixed PAGEDOWN/PAGEUP not appearing in the input config GUI.
+-Fixed PAGEDOWN/PAGEUP not properly clearing/updating detail data.
+
 November 19
 -Added Arch Linux's DejaVuSeriff.ttf path to the list of fonts to check for.
 

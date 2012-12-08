@@ -176,7 +176,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(mDetailed)
 	{
-		if(button == InputManager::UP || button == InputManager::DOWN)
+		if(button == InputManager::UP || button == InputManager::DOWN || button == InputManager::PAGEUP || button == InputManager::PAGEDOWN)
 		{
 			if(!keyDown)
 				updateDetailData();
@@ -274,7 +274,7 @@ void GuiGameList::clearDetailData()
 void GuiGameList::onPause()
 {
 	mList->stopScrolling();
-	mTheme->getSound("menuOpenSound")->play();
+	mTheme->getSound("menuOpen")->play();
 	InputManager::unregisterComponent(this);
 }
 
