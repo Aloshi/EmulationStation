@@ -1,3 +1,6 @@
+December 14, 2012
+-Added %BASENAME% tag for launch commands. Useful for AdvMAME.
+
 December 8, 2012
 -Fixed a segfault when opening the menu (related to sounds). Woops!
 -Fixed PAGEDOWN/PAGEUP not appearing in the input config GUI.

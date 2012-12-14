@@ -81,6 +81,7 @@ void SystemData::launchGame(GameData* game)
 	std::string command = mLaunchCommand;
 
 	command = strreplace(command, "%ROM%", game->getBashPath());
+	command = strreplace(command, "%BASENAME%", game->getBaseName());
 
 	std::cout << "	" << command << "\n";
 	std::cout << "=====================================================\n";

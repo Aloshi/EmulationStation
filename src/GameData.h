@@ -16,6 +16,7 @@ public:
 	std::string getName();
 	std::string getPath();
 	std::string getBashPath();
+	std::string getBaseName();
 
 	std::string getDescription();
 	std::string getImagePath();

@@ -74,6 +74,24 @@ F4 - Close EmulationStation (should work as long as ES hasn't frozen)
 
 Unfortunately, there is no built-in way to change keyboard mappings - if you need to, check out `src/InputManager.cpp`. There's a switch statement with a list of keys; it should be pretty simple to change them.
 
+Writing an es_systems.cfg
+=========================
+The file `~/.emulationstation/es_systems.cfg` contains the system configuration data for EmulationStation. A system is a NAME, PATH, EXTENSION, and COMMAND. You can define any number of systems. You can switch between them by pressing left and right. They will cycle in the order they are defined.
+
+The NAME is what ES will show in the header if you're not using a theme.
+
+The PATH is where ES will start the search for ROMs. All subdirectories (and links!) will be included.
+
+**NOTE:** A system *must* have at least one game present in its PATH directory, or ES will ignore it.
+
+The EXTENSION is a list of extensions ES will consider valid and add to the list when searching. Each extension *must* start with a period. The list is delimited by a space.
+
+The COMMAND is the shell command ES will execute to start your emulator. As it is evaluated by the shell (i.e. bash), you can do some clever tricks if need be.
+
+The following "tags" are replaced by ES in COMMANDs:
+%ROM%		- Replaced with absolute path to the selected ROM.
+%BASENAME%	- Replaced with the "base" name of the path to the selected ROM. For example, a path of "/foo/bar.rom", this tag would be "bar". This tag is useful for setting up AdvanceMAME.
+
 gamelist.xml
 ============
 

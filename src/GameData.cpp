@@ -42,6 +42,13 @@ std::string GameData::getBashPath()
 	return path;
 }
 
+//returns the boost::filesystem stem of our path - e.g. for "/foo/bar.rom" returns "bar"
+std::string GameData::getBaseName()
+{
+	boost::filesystem::path path(mPath);
+	return path.stem().string();
+}
+
 void GameData::set(std::string name, std::string description, std::string imagePath)
 {
 	if(!name.empty())
