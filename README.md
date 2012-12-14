@@ -89,8 +89,10 @@ The EXTENSION is a list of extensions ES will consider valid and add to the list
 The COMMAND is the shell command ES will execute to start your emulator. As it is evaluated by the shell (i.e. bash), you can do some clever tricks if need be.
 
 The following "tags" are replaced by ES in COMMANDs:
-%ROM%		- Replaced with absolute path to the selected ROM.
-%BASENAME%	- Replaced with the "base" name of the path to the selected ROM. For example, a path of "/foo/bar.rom", this tag would be "bar". This tag is useful for setting up AdvanceMAME.
+
+`%ROM%`		- Replaced with absolute path to the selected ROM.
+
+`%BASENAME%`	- Replaced with the "base" name of the path to the selected ROM. For example, a path of "/foo/bar.rom", this tag would be "bar". This tag is useful for setting up AdvanceMAME.
 
 gamelist.xml
 ============
