@@ -151,7 +151,7 @@ void GuiTheme::readXML(std::string path)
 	if(path.empty())
 		return;
 
-	//std::cout << "Loading theme \"" << path << "\"...\n";
+	std::cout << "Loading theme \"" << path << "\"...\n";
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(path.c_str());

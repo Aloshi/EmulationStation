@@ -37,6 +37,7 @@ private:
 	void updateTheme();
 	void updateDetailData();
 	void clearDetailData();
+	std::string getThemeFile();
 
 	SystemData* mSystem;
 	FolderData* mFolder;
