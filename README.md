@@ -76,9 +76,11 @@ Unfortunately, there is no built-in way to change keyboard mappings - if you nee
 
 Writing an es_systems.cfg
 =========================
-The file `~/.emulationstation/es_systems.cfg` contains the system configuration data for EmulationStation. A system is a NAME, PATH, EXTENSION, and COMMAND. You can define any number of systems. You can switch between them by pressing left and right. They will cycle in the order they are defined.
+The file `~/.emulationstation/es_systems.cfg` contains the system configuration data for EmulationStation. A system is a NAME, DESCNAME, PATH, EXTENSION, and COMMAND. You can define any number of systems. You can switch between them by pressing left and right. They will cycle in the order they are defined.
 
-The NAME is what ES will show in the header if you're not using a theme.
+The NAME is what ES will use to internally identify the system. Theme.xml and gamelist.xml files will also be searched for in `~/.emulationstation/NAME/` if not found at the root of PATH. It is recommended that you abbreviate here if necessary, e.g. "nes".
+
+The DESCNAME is a "pretty" name for the system - it show up in a header if one is displayed. It is optional; if not supplied, it will copy NAME (note: DESCNAME must also *not* be the last tag you define for a system! This is due to the nature of how optional tags are implemented.).
 
 The PATH is where ES will start the search for ROMs. All subdirectories (and links!) will be included.
 
@@ -97,7 +99,7 @@ The following "tags" are replaced by ES in COMMANDs:
 gamelist.xml
 ============
 
-If a file named gamelist.xml is found in the root of a system's search directory, it will be parsed and the detailed GuiGameList will be used. This means you can define images, descriptions, and different names for files. Note that only standard ASCII characters are supported (if you see a weird [X] symbol, you're probably using unicode!).
+If a file named gamelist.xml is found in the root of a system's search directory OR within `~/.emulationstation/%NAME%/`, it will be parsed and the detailed GuiGameList will be used. This means you can define images, descriptions, and different names for files. Note that only standard ASCII characters are supported (if you see a weird [X] symbol, you're probably using unicode!).
 Images will be automatically resized to fit within the left column of the screen. Smaller images will load faster, so try to keep your resolution low.
 An example gamelist.xml:
 ```

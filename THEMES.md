@@ -4,7 +4,7 @@ Themes
 EmulationStation allows each system to have its own "theme." A theme is a collection of display settings and images defined in an XML document.
 
 ES will check 3 places for a theme, in the following order:
- - a theme.xml file in the sysytem's %PATH% directory.
+ - a theme.xml file in the root of a system's %PATH% directory.
  - $HOME/.emulationstation/%NAME%/theme.xml
  - $HOME/.emulationstation/es_theme.xml
 

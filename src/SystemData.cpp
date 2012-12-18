@@ -18,10 +18,10 @@ extern bool IGNOREGAMELIST;
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
 
-SystemData::SystemData(std::string name, std::string desc, std::string startPath, std::string extension, std::string command)
+SystemData::SystemData(std::string name, std::string descName, std::string startPath, std::string extension, std::string command)
 {
 	mName = name;
-	mDesc = desc;
+	mDescName = descName;
 
 	//expand home symbol if the startpath contains it
 	if(startPath[0] == '~')
@@ -158,9 +158,9 @@ std::string SystemData::getName()
 	return mName;
 }
 
-std::string SystemData::getDesc()
+std::string SystemData::getDescName()
 {
-	return mDesc;
+	return mDescName;
 }
 
 //creates systems from information located in a config file
@@ -176,7 +176,7 @@ void SystemData::loadConfig()
 	if(file.is_open())
 	{
 		std::string line;
-		std::string sysName, sysDesc, sysPath, sysExtension, sysCommand;
+		std::string sysName, sysDescName, sysPath, sysExtension, sysCommand;
 		while(file.good())
 		{
 			std::getline(file, line);
@@ -204,8 +204,8 @@ void SystemData::loadConfig()
 				//map the value to the appropriate variable
 				if(varName == "NAME")
 					sysName = varValue;
-				else if(varName == "DESC")
-					sysDesc = varValue;
+				else if(varName == "DESCNAME")
+					sysDescName = varValue;
 				else if(varName == "PATH")
 				{
 					if(varValue[varValue.length() - 1] == '/')
@@ -218,9 +218,12 @@ void SystemData::loadConfig()
 					sysCommand = varValue;
 
 				//we have all our variables - create the system object
-				if(!sysName.empty() && !sysDesc.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())
+				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())
 				{
-					SystemData* newSystem = new SystemData(sysName, sysDesc, sysPath, sysExtension, sysCommand);
+					if(sysDescName.empty())
+						sysDescName = sysName;
+
+					SystemData* newSystem = new SystemData(sysName, sysDescName, sysPath, sysExtension, sysCommand);
 					if(newSystem->getRootFolder()->getFileCount() == 0)
 					{
 						std::cout << "System \"" << sysName << "\" has no games! Deleting.\n";
@@ -230,7 +233,7 @@ void SystemData::loadConfig()
 					}
 
 					//reset the variables for the next block (should there be one)
-					sysName = ""; sysDesc = ""; sysPath = ""; sysExtension = ""; sysCommand = "" ;
+					sysName = ""; sysDescName = ""; sysPath = ""; sysExtension = ""; sysCommand = "" ;
 				}
 			}else{
 				std::cerr << "Error reading config file \"" << path << "\" - no equals sign found on line \"" << line << "\"!\n";
@@ -256,20 +259,20 @@ void SystemData::writeExampleConfig()
 	file << "# Lines that begin with a hash (#) are ignored, as are empty lines." << std::endl;
 	file << "# A sample system might look like this:" << std::endl;
 	file << "#NAME=nes" << std::endl;
-	file << "#DESC=Nintendo Entertainment System" << std::endl;
+	file << "#DESCNAME=Nintendo Entertainment System" << std::endl;
 	file << "#PATH=~/ROMs/nes/" << std::endl;
 	file << "#EXTENSION=.nes .NES" << std::endl;
 	file << "#COMMAND=retroarch -L ~/cores/libretro-fceumm.so %ROM%" << std::endl << std::endl;
 
-	file << "#NAME is a short name used internaly." << std::endl;
-	file << "#DESC is just a pretty desciption to identify the system." << std::endl;
+	file << "#NAME is a short name used internally (and in alternative paths)." << std::endl;
+	file << "#DESCNAME is a descriptive name to identify the system. It may be displayed in a header." << std::endl;
 	file << "#PATH is the path to start the recursive search for ROMs in. ~ will be expanded into the $HOME variable." << std::endl;
 	file << "#EXTENSION is a list of extensions to search for, separated by spaces. You MUST include the period, and it must be exact - it's case sensitive, and no wildcards." << std::endl;
 	file << "#COMMAND is the shell command to execute when a game is selected. %ROM% will be replaced with the (bash special-character escaped) path to the ROM." << std::endl << std::endl;
 
 	file << "#Now try your own!" << std::endl;
 	file << "NAME=" << std::endl;
-	file << "DESC=" << std::endl;
+	file << "DESCNAME=" << std::endl;
 	file << "PATH=" << std::endl;
 	file << "EXTENSION=" << std::endl;
 	file << "COMMAND=" << std::endl;
