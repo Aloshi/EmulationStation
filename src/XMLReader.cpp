@@ -102,10 +102,10 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 
 void parseGamelist(SystemData* system)
 {
-	if(!system->hasGamelist())
-		return;
+	std::string xmlpath = system->getGamelistPath();
 
-	std::string xmlpath = system->getRootFolder()->getPath() + "/gamelist.xml";
+	if(xmlpath.empty())
+		return;
 
 	std::cout << "Parsing XML file \"" << xmlpath << "\"...";
 
@@ -166,7 +166,8 @@ void parseGamelist(SystemData* system)
 				if(newImage[0] == '.')
 				{
 					newImage.erase(0, 1);
-					newImage.insert(0, system->getRootFolder()->getPath());
+					boost::filesystem::path pathname(xmlpath);
+					newImage.insert(0, pathname.parent_path().string() );
 				}
 
 				//if the image doesn't exist, forget it

@@ -91,7 +91,7 @@ void GuiGameList::onRender()
 
 	//header
 	if(!mTheme->getBool("hideHeader"))
-		Renderer::drawCenteredText(mSystem->getName(), 0, 1, 0xFF0000FF, Renderer::getDefaultFont(Renderer::LARGE));
+		Renderer::drawCenteredText(mSystem->getDesc(), 0, 1, 0xFF0000FF, Renderer::getDefaultFont(Renderer::LARGE));
 
 	if(mDetailed)
 	{
@@ -204,21 +204,33 @@ void GuiGameList::updateList()
 	}
 }
 
+std::string GuiGameList::getThemeFile() {
+
+	std::string themePath;
+
+	themePath = getenv("HOME");
+	themePath += "/.emulationstation/" +  mSystem->getName() + "/theme.xml";
+	if(boost::filesystem::exists(themePath))
+		return themePath;
+
+	themePath = mSystem->getStartPath() + "/theme.xml";
+	if(boost::filesystem::exists(themePath))
+		return themePath;
+
+	themePath = getenv("HOME");
+	themePath += "/.emulationstation/es_theme.xml";
+	if(boost::filesystem::exists(themePath))
+		return themePath;
+
+	return "";
+}
+
 void GuiGameList::updateTheme()
 {
 	if(!mTheme)
 		return;
 
-	std::string defaultPath = getenv("HOME");
-	defaultPath += "/.emulationstation/es_theme.xml";
-	std::string themePath = mSystem->getStartPath() + "/theme.xml";
-
-	if(boost::filesystem::exists(themePath))
-		mTheme->readXML(themePath);
-	else if(boost::filesystem::exists(defaultPath))
-		mTheme->readXML(defaultPath);
-	else
-		mTheme->readXML(""); //clears any current theme
+	mTheme->readXML( getThemeFile() );
 
 	mList->setSelectorColor(mTheme->getColor("selector"));
 	mList->setSelectedTextColor(mTheme->getColor("selected"));
@@ -295,7 +307,6 @@ void GuiGameList::onInit()
 {
 	mTheme->init();
 }
-
 
 extern bool IGNOREGAMELIST; //defined in main.cpp (as a command line argument)
 GuiGameList* GuiGameList::create()

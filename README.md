@@ -111,7 +111,7 @@ An example gamelist.xml:
 </gameList>
 ```
 
-The path element should be the absolute path of the ROM. Special characters SHOULD NOT be escaped. The image element is the absolute path to an image to display above the description (like a screenshot or boxart). Most formats can be used (including png, jpg, gif, etc.). Not all elements need to be used.
+The path element should be the absolute path of the ROM. Special characters SHOULD NOT be escaped. The image element is the path to an image to display above the description (like a screenshot or boxart). Most formats can be used (including png, jpg, gif, etc.). Not all elements need to be used.
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 The switch `--ignore-gamelist` can be used to ignore the gamelist and use the non-detailed view.

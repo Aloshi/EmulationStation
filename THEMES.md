@@ -3,7 +3,10 @@ Themes
 
 EmulationStation allows each system to have its own "theme." A theme is a collection of display settings and images defined in an XML document.
 
-ES will check two places for a theme: first, the system's search directory for theme.xml. Then, if that's not found, $HOME/.emulationstation/es_theme.xml will be used.
+ES will check 3 places for a theme, in the following order:
+ - a theme.xml file in the sysytem's %PATH% directory.
+ - $HOME/.emulationstation/%NAME%/theme.xml
+ - $HOME/.emulationstation/es_theme.xml
 
 Almost all positions, dimensions, origins, etc. work in percentages - that is, they are a decimal between 0 and 1, representing the percentage of the screen on that axis to use. This ensures that themes look similar at every resolution.
 
