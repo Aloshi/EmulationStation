@@ -49,7 +49,7 @@ EmulationStation will return once your system's command terminates (i.e. your em
 
 
 **Keyboard mappings:**
-
+```
 Up - Scroll up
 
 Down - Scroll down
@@ -71,8 +71,19 @@ F1 - Open the restart/shutdown system menu
 F2 - Open the fast select dialog
 
 F4 - Close EmulationStation (should work as long as ES hasn't frozen)
+```
 
 Unfortunately, there is no built-in way to change keyboard mappings - if you need to, check out `src/InputManager.cpp`. There's a switch statement with a list of keys; it should be pretty simple to change them.
+
+You can use `--help` to view a list of command-line options. Briefly outlined here:
+```
+-w [width]		- specify resolution width.
+-h [height]		- specify resolution height.
+--gamelist-only		- only display games defined in a gamelist.xml file.
+--ignore-gamelist	- do not parse any gamelist.xml files.
+--draw-framerate	- draw the framerate.
+--no-exit		- do not display 'exit' in the ES menu.
+```
 
 Writing an es_systems.cfg
 =========================

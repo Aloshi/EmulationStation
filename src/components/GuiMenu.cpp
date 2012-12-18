@@ -2,6 +2,9 @@
 #include <iostream>
 #include <SDL/SDL.h>
 
+//defined in main.cpp
+extern bool DONTSHOWEXIT;
+
 GuiMenu::GuiMenu(GuiComponent* parent)
 {
 	mParent = parent;
@@ -71,7 +74,9 @@ void GuiMenu::populateList()
 	//if you want to do something special within ES, override your command in the executeComand() method
 	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FFFF);
 	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FFFF);
-	mList->addObject("Exit", "exit", 0xFF0000FF); //a special case; pushes an SDL quit event to the event stack instead of being called by system()
+
+	if(!DONTSHOWEXIT)
+		mList->addObject("Exit", "exit", 0xFF0000FF); //a special case; pushes an SDL quit event to the event stack instead of being called by system()
 }
 
 void GuiMenu::onRender()
