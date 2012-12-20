@@ -83,6 +83,7 @@ You can use `--help` to view a list of command-line options. Briefly outlined he
 --ignore-gamelist	- do not parse any gamelist.xml files.
 --draw-framerate	- draw the framerate.
 --no-exit		- do not display 'exit' in the ES menu.
+--debug			- print additional output to the console, primarily about input.
 ```
 
 Writing an es_systems.cfg

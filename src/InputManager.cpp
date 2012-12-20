@@ -4,6 +4,8 @@
 #include <fstream>
 #include <sstream>
 
+extern bool DEBUG; //defined in main.cpp
+
 std::vector<GuiComponent*> InputManager::inputVector;
 SDL_Event* InputManager::lastEvent = NULL;
 
@@ -196,6 +198,9 @@ void InputManager::processEvent(SDL_Event* event)
 
 void InputManager::loadConfig()
 {
+	if(DEBUG)
+		std::cout << "Loading input config...\n";
+
 	//clear any old config
 	joystickButtonMap.clear();
 	joystickAxisPosMap.clear();
@@ -263,18 +268,35 @@ void InputManager::loadConfig()
 	{
 		if(!joystickName.empty())
 		{
+			if(DEBUG)
+				std::cout << "	attempting to open joystick of name \"" << joystickName << "\"\n";
+
+			bool found = false;
 			for(int i = 0; i < SDL_NumJoysticks(); i++)
 			{
 				if(strcmp(SDL_JoystickName(i), joystickName.c_str()) == 0)
 				{
-					std::cout << "opening joystick " << joystickName << "\n";
+					if(DEBUG)
+						std::cout << "	found, opening joystick " << joystickName << "\n";
+
 					SDL_JoystickOpen(i);
+					found = true;
 					break;
 				}
 			}
+
+			if(DEBUG && !found)
+				std::cout << "	could not find named joystick! You could try manually removing the joystick name entry in the input config file.\n";
+
 		}else{
+			if(DEBUG)
+				std::cout << "	opening first joystick\n";
+
 			SDL_JoystickOpen(0);  //if we don't have a specific joystick in mind, take the first
 		}
+	}else{
+		if(DEBUG)
+			std::cout << "	no joysticks detected by SDL_NumJoysticks(), input loaded but no joystick opened\n";
 	}
 }
 

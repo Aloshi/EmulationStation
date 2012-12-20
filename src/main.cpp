@@ -21,6 +21,7 @@ bool PARSEGAMELISTONLY = false;
 bool IGNOREGAMELIST = false;
 bool DRAWFRAMERATE = false;
 bool DONTSHOWEXIT = false;
+bool DEBUG = false;
 
 namespace fs = boost::filesystem;
 
@@ -52,6 +53,9 @@ int main(int argc, char* argv[])
 			}else if(strcmp(argv[i], "--no-exit") == 0)
 			{
 				DONTSHOWEXIT = true;
+			}else if(strcmp(argv[i], "--debug") == 0)
+			{
+				DEBUG = true;
 			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
@@ -62,6 +66,7 @@ int main(int argc, char* argv[])
 				std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
 				std::cout << "--draw-framerate		display the framerate\n";
 				std::cout << "--no-exit			don't show the exit option in the menu\n";
+				std::cout << "--debug				print additional output to console\n";
 				std::cout << "--help				summon a sentient, angry tuba\n\n";
 				std::cout << "More information available in README.md.\n";
 				return 0;
@@ -120,15 +125,29 @@ int main(int argc, char* argv[])
 			//choose which GUI to open depending on Input configuration
 			if(fs::exists(InputManager::getConfigPath()))
 			{
+				if(DEBUG)
+					std::cout << "Found input config in " << InputManager::getConfigPath() << "\n";
+
 				//an input config already exists - load it and proceed to the gamelist as usual.
 				InputManager::loadConfig();
 				GuiGameList::create();
 			}else{
+				if(DEBUG)
+					std::cout << "SDL_NumJoysticks() reports " << SDL_NumJoysticks() << " present.\n";
+
 				//if no input.cfg is present, but a joystick is connected, launch the input config GUI
 				if(SDL_NumJoysticks() > 0)
+				{
+					if(DEBUG)
+						std::cout << "	at least one joystick detected, launching config GUI...\n";
+
 					new GuiInputConfig();
-				else
+				}else{
+					if(DEBUG)
+						std::cout << "	no joystick detected, ignoring...\n";
+
 					GuiGameList::create();
+				}
 
 			}
 		}

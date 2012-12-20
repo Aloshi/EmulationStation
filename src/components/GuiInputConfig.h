@@ -20,7 +20,6 @@ private:
 	SDL_Joystick* mJoystick;
 	static std::string sInputs[];
 	static int sInputCount;
-	static std::string sConfigPath;
 
 	std::map<int, InputManager::InputButton> mButtonMap;
 	std::map<int, InputManager::InputButton> mAxisPosMap;
