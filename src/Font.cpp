@@ -15,9 +15,10 @@ int Font::getSize() { return mSize; }
 
 std::string Font::getDefaultPath()
 {
-	int fontCount = 2;
+	int fontCount = 3;
 	std::string fonts[] = {"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
-		"/usr/share/fonts/TTF/DejaVuSerif.ttf" };
+		"/usr/share/fonts/TTF/DejaVuSerif.ttf",
+		"/usr/share/fonts/dejavu/DejaVuSerif.ttf" };
 
 	for(int i = 0; i < fontCount; i++)
 	{
