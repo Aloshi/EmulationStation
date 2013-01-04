@@ -6,9 +6,7 @@
 #include <boost/filesystem.hpp>
 #include <sstream>
 #include "../Renderer.h"
-
-//really, this should all be refactored into "getColor("attribName")" and such,
-//but it's a little late now.
+#include "../Log.h"
 
 unsigned int GuiTheme::getColor(std::string name)
 {
@@ -151,15 +149,14 @@ void GuiTheme::readXML(std::string path)
 	if(path.empty())
 		return;
 
-	std::cout << "Loading theme \"" << path << "\"...\n";
+	LOG(LogInfo) << "Loading theme \"" << path << "\"...";
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(path.c_str());
 
 	if(!result)
 	{
-		std::cerr << "Error parsing theme \"" << path << "\"!\n";
-		std::cerr << "	" << result.description() << "\n";
+		LOG(LogError) << "Error parsing theme \"" << path << "\"!\n" << "	" << result.description();
 		return;
 	}
 
@@ -221,6 +218,8 @@ void GuiTheme::readXML(std::string path)
 
 	//actually read the components
 	createComponentChildren(root, this);
+
+	LOG(LogInfo) << "Loading complete.";
 }
 
 //recursively creates components (with proper parenting)
@@ -246,7 +245,7 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 
 		if(!boost::filesystem::exists(path))
 		{
-			std::cerr << "Error - theme image \"" << path << "\" does not exist.\n";
+			LOG(LogError) << "Error - theme image \"" << path << "\" does not exist.";
 			return NULL;
 		}
 
@@ -286,7 +285,7 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 	}
 
 
-	std::cerr << "Theme component type \"" << type << "\" unknown!\n";
+	LOG(LogError) << "Theme component type \"" << type << "\" unknown!";
 	return NULL;
 }
 
@@ -325,7 +324,7 @@ unsigned int GuiTheme::resolveColor(std::string str, unsigned int defaultColor)
 
 	if(str.length() != 6 && str.length() != 8)
 	{
-		std::cerr << "Error - color \"" << str << "\" is not a valid hex color! Must be 6 or 8 characters.\n";
+		LOG(LogError) << "Color \"" << str << "\" is not a valid hex color! Must be 6 or 8 characters.";
 		return defaultColor;
 	}
 
@@ -353,7 +352,7 @@ void GuiTheme::splitString(std::string str, char delim, std::string* before, std
 		*before = str.substr(0, split);
 		*after = str.substr(split + 1, str.length() - split - 1);
 	}else{
-		std::cerr << " Error: tried to splt string \"" << str << "\" with delimiter '" << delim << "', but delimiter was not found!\n";
+		LOG(LogError) << "Tried to splt string \"" << str << "\" with delimiter '" << delim << "', but delimiter was not found!";
 	}
 }
 

@@ -9,6 +9,7 @@
 #include <SDL.h>
 #include "AudioManager.h"
 #include "platform.h"
+#include "Log.h"
 
 #ifdef _RPI_
 	#include <bcm_host.h>
@@ -66,14 +67,13 @@ int main(int argc, char* argv[])
 				std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
 				std::cout << "--draw-framerate		display the framerate\n";
 				std::cout << "--no-exit			don't show the exit option in the menu\n";
-				std::cout << "--debug				print additional output to console\n";
+				std::cout << "--debug				even more logging\n";
 				std::cout << "--help				summon a sentient, angry tuba\n\n";
 				std::cout << "More information available in README.md.\n";
 				return 0;
 			}
 		}
 	}
-
 
 	#ifdef _RPI_
 		bcm_host_init();
@@ -86,6 +86,7 @@ int main(int argc, char* argv[])
 	if(!renderInit)
 	{
 		std::cerr << "Error initializing renderer!\n";
+		Log::close();
 		return 1;
 	}
 
@@ -195,8 +196,8 @@ int main(int argc, char* argv[])
 
 
 		Renderer::swapBuffers();
+		Log::flush();
 	}
-
 
 	AudioManager::deinit();
 	Renderer::deleteAll();
@@ -205,7 +206,7 @@ int main(int argc, char* argv[])
 
 	std::cout << "EmulationStation cleanly shutting down...\n";
 
-	SDL_Quit();
+	Log::close();
 
 	#ifdef _RPI_
 		bcm_host_deinit();

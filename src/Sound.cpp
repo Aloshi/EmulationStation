@@ -1,6 +1,7 @@
 #include "Sound.h"
 #include <iostream>
 #include "AudioManager.h"
+#include "Log.h"
 
 Sound::Sound(std::string path)
 {
@@ -40,8 +41,7 @@ void Sound::init()
 
 	if(mSound == NULL)
 	{
-		std::cerr << "Error loading sound \"" << mPath << "\"!\n";
-		std::cerr << "	" << Mix_GetError() << "\n";
+		LOG(LogError) << "Error loading sound \"" << mPath << "\"!\n" << "	" << Mix_GetError();
 	}
 }
 
@@ -64,8 +64,7 @@ void Sound::play()
 	mChannel = Mix_PlayChannel(-1, mSound, 0);
 	if(mChannel == -1)
 	{
-		std::cerr << "Error playing sound!\n";
-		std::cerr << "	" << Mix_GetError() << "\n";
+		LOG(LogError) << "Error playing sound!\n	" << Mix_GetError();
 	}
 }
 

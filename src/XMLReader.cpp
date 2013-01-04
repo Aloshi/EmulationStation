@@ -3,6 +3,7 @@
 #include "GameData.h"
 #include "pugiXML/pugixml.hpp"
 #include <boost/filesystem.hpp>
+#include "Log.h"
 
 //this is obviously an incredibly inefficient way to go about searching
 //but I don't think it'll matter too much with the size of most collections

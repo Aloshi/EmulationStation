@@ -5,6 +5,7 @@
 #include "Font.h"
 #include <SDL/SDL.h>
 #include "InputManager.h"
+#include "Log.h"
 
 namespace Renderer
 {
@@ -18,12 +19,11 @@ namespace Renderer
 
 	bool createSurface() //unsigned int display_width, unsigned int display_height)
 	{
-		std::cout << "Creating surface...";
+		LOG(LogInfo) << "Creating surface...";
 
 		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) != 0)
 		{
-			std::cerr << "Error initializing SDL!\n";
-			std::cerr << "	" << SDL_GetError() << "\n";
+			LOG(LogError) << "Error initializing SDL!\n	" << SDL_GetError();
 			return false;
 		}
 
@@ -36,7 +36,7 @@ namespace Renderer
 
 		if(sdlScreen == NULL)
 		{
-			std::cout << "Error creating SDL video surface!\n";
+			LOG(LogError) << "Error creating SDL video surface!";
 			return false;
 		}
 
@@ -49,7 +49,7 @@ namespace Renderer
 		display_width = sdlScreen->w;
 		display_height = sdlScreen->h;
 
-		std::cout << "success!\n";
+		LOG(LogInfo) << "Created surface successfully.";
 
 		return true;
 	}

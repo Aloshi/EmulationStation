@@ -2,6 +2,7 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <math.h>
+#include "../Log.h"
 
 unsigned int GuiImage::getWidth() { return mDrawWidth; }
 unsigned int GuiImage::getHeight() { return mDrawHeight; }
@@ -44,7 +45,7 @@ void GuiImage::loadImage(std::string path)
 	//make sure the file *exists*
 	if(!boost::filesystem::exists(path))
 	{
-		std::cerr << "File \"" << path << "\" not found!\n";
+		LOG(LogError) << "File \"" << path << "\" not found!";
 		return;
 	}
 
@@ -63,7 +64,7 @@ void GuiImage::loadImage(std::string path)
 		format = FreeImage_GetFIFFromFilename(path.c_str());
 	if(format == FIF_UNKNOWN)
 	{
-		std::cerr << "Error - could not detect filetype for image \"" << path << "\"!\n";
+		LOG(LogError) << "Error - could not detect filetype for image \"" << path << "\"!";
 		return;
 	}
 
@@ -73,14 +74,14 @@ void GuiImage::loadImage(std::string path)
 	{
 		image = FreeImage_Load(format, path.c_str());
 	}else{
-		std::cerr << "Error - file format reading not supported for image \"" << path << "\"!\n";
+		LOG(LogError) << "Error - file format reading not supported for image \"" << path << "\"!";
 		return;
 	}
 
 	//make sure it loaded properly
 	if(!image)
 	{
-		std::cerr << "Error loading image \"" << path << "\"!\n";
+		LOG(LogError) << "Error loading image \"" << path << "\"!";
 		return;
 	}
 
@@ -93,7 +94,7 @@ void GuiImage::loadImage(std::string path)
 	imageData = FreeImage_GetBits(image);
 	if(!imageData)
 	{
-		std::cerr << "Error retriving bits from image \"" << path << "\"!\n";
+		LOG(LogError) << "Error retriving bits from image \"" << path << "\"!";
 		return;
 	}
 
@@ -105,7 +106,7 @@ void GuiImage::loadImage(std::string path)
 	//if width or height are zero then something is clearly wrong
 	if(!width || !height)
 	{
-		std::cerr << "Width or height are zero for image \"" << path << "\"!\n";
+		LOG(LogError) << "Width or height are zero for image \"" << path << "\"!";
 		FreeImage_Unload(image);
 		return;
 	}
@@ -127,7 +128,7 @@ void GuiImage::loadImage(std::string path)
 
 	if(!widthPwrOf2 || !heightPwrOf2)
 	{
-		std::cerr << "Error assigning power of two for width or height of image!\n";
+		LOG(LogError) << "Error assigning power of two for width or height of image!";
 		FreeImage_Unload(image);
 		return;
 	}*/

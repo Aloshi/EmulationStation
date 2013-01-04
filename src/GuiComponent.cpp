@@ -1,6 +1,7 @@
 #include "GuiComponent.h"
 #include "Renderer.h"
 #include <iostream>
+#include "Log.h"
 
 std::vector<GuiComponent*> GuiComponent::sComponentVector;
 
@@ -40,7 +41,7 @@ void GuiComponent::removeChild(GuiComponent* comp)
 		}
 	}
 
-	std::cerr << "Error - tried to remove GuiComponent child, but couldn't find it!\n";
+	LOG(LogError) << "Error - tried to remove GuiComponent child, but couldn't find it!";
 }
 
 void GuiComponent::clearChildren()

@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Font.h"
 #include <boost/filesystem.hpp>
+#include "Log.h"
 
 namespace Renderer {
 	bool loadedFonts = false;
@@ -80,14 +81,12 @@ namespace Renderer {
 		if(loadedFonts)
 			return;
 
-		std::cout << "loading fonts...";
-
 		std::string fontPath = Font::getDefaultPath();
 
 		//make sure our font exists
 		if(!boost::filesystem::exists(fontPath))
 		{
-			std::cerr << "System font \"" << fontPath << "\" wasn't found! Well, you're kind of screwed. Sorry. Report this to Aloshi, please.\n";
+			LOG(LogError) << "System font \"" << fontPath << "\" wasn't found! Well, you're kind of screwed. Sorry. Report this to Aloshi, please.";
 			return;
 		}
 
@@ -99,7 +98,7 @@ namespace Renderer {
 
 		loadedFonts = true;
 
-		std::cout << "done\n";
+		LOG(LogInfo) << "Loaded fonts successfully.";
 	}
 
 	Font* getDefaultFont(FontSize size)

@@ -3,8 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-extern bool DEBUG; //defined in main.cpp
+#include "Log.h"
 
 std::vector<GuiComponent*> InputManager::inputVector;
 SDL_Event* InputManager::lastEvent = NULL;
@@ -97,7 +96,7 @@ void InputManager::processEvent(SDL_Event* event)
 			SDL_Event* quit = new SDL_Event();
 			quit->type = SDL_QUIT;
 			SDL_PushEvent(quit);
-			std::cout << "Pushing quit event\n";
+			LOG(LogInfo) << "Pushing quit event.";
 		}
 	}else{
 		if(event->type == SDL_JOYBUTTONDOWN || event->type == SDL_JOYBUTTONUP) //joystick button events
@@ -150,10 +149,6 @@ void InputManager::processEvent(SDL_Event* event)
 					}
 				}
 
-				//for debugging hats
-				//if(button != UNKNOWN)
-				//	std::cout << "hat event, button: " << button << ", keyDown: " << keyDown << "\n";
-
 			}else{
 				if(event->type == SDL_JOYAXISMOTION)
 				{
@@ -198,8 +193,7 @@ void InputManager::processEvent(SDL_Event* event)
 
 void InputManager::loadConfig()
 {
-	if(DEBUG)
-		std::cout << "Loading input config...\n";
+	LOG(LogDebug) << "Loading input config...";
 
 	//clear any old config
 	joystickButtonMap.clear();
@@ -257,7 +251,7 @@ void InputManager::loadConfig()
 		{
 			joystickName = token[1];
 		}else{
-			std::cerr << "Invalid input type - " << token[0] << "\n";
+			LOG(LogWarning) << "Invalid input type - " << token[0];
 			return;
 		}
 
@@ -268,16 +262,14 @@ void InputManager::loadConfig()
 	{
 		if(!joystickName.empty())
 		{
-			if(DEBUG)
-				std::cout << "	attempting to open joystick of name \"" << joystickName << "\"\n";
+			LOG(LogDebug) << "	attempting to open joystick of name \"" << joystickName << "\"";
 
 			bool found = false;
 			for(int i = 0; i < SDL_NumJoysticks(); i++)
 			{
 				if(strcmp(SDL_JoystickName(i), joystickName.c_str()) == 0)
 				{
-					if(DEBUG)
-						std::cout << "	found, opening joystick " << joystickName << "\n";
+					LOG(LogDebug) << "	found, opening joystick " << joystickName << " at " << i;
 
 					SDL_JoystickOpen(i);
 					found = true;
@@ -285,18 +277,17 @@ void InputManager::loadConfig()
 				}
 			}
 
-			if(DEBUG && !found)
-				std::cout << "	could not find named joystick! You could try manually removing the joystick name entry in the input config file.\n";
-
+			if(!found)
+			{
+				LOG(LogWarning) << "	could not find named joystick! You could try manually removing the joystick name entry in the input config file.";
+			}
 		}else{
-			if(DEBUG)
-				std::cout << "	opening first joystick\n";
+			LOG(LogDebug) << "	opening first joystick";
 
 			SDL_JoystickOpen(0);  //if we don't have a specific joystick in mind, take the first
 		}
 	}else{
-		if(DEBUG)
-			std::cout << "	no joysticks detected by SDL_NumJoysticks(), input loaded but no joystick opened\n";
+		LOG(LogDebug) << "	no joysticks detected by SDL_NumJoysticks(), input loaded but no joystick opened";
 	}
 }
 

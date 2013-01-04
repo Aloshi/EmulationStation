@@ -4,11 +4,10 @@
 #include "GuiMenu.h"
 #include "GuiFastSelect.h"
 #include <boost/filesystem.hpp>
-
+#include "../Log.h"
 
 GuiGameList::GuiGameList(bool useDetail)
 {
-	//std::cout << "Creating GuiGameList\n";
 	mDetailed = useDetail;
 
 	mTheme = new GuiTheme(); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
@@ -61,7 +60,7 @@ void GuiGameList::setSystemId(int id)
 {
 	if(SystemData::sSystemVector.size() == 0)
 	{
-		std::cerr << "Error - no systems found!\n";
+		LOG(LogError) << "Error - no systems found!";
 		return;
 	}
 

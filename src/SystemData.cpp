@@ -7,6 +7,7 @@
 #include <SDL/SDL_joystick.h>
 #include "Renderer.h"
 #include "AudioManager.h"
+#include "Log.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -23,19 +24,12 @@ SystemData::SystemData(std::string name, std::string descName, std::string start
 	mName = name;
 	mDescName = descName;
 
-	//expand home symbol if the startpath contains it
+	//expand home symbol if the startpath contains ~
 	if(startPath[0] == '~')
-        {
-                startPath.erase(0, 1);
-
-                std::string home = getenv("HOME");
-                if(home.empty())
-                {
-                        std::cerr << "ERROR - System start path contains ~ but $HOME is not set!\n";
-                        return;
-                }else{
-                        startPath.insert(0, home);
-                }
+	{
+		startPath.erase(0, 1);
+		std::string home = getenv("HOME");
+		startPath.insert(0, home);
         }
 
 	mStartPath = startPath;
@@ -70,7 +64,7 @@ std::string strreplace(std::string& str, std::string replace, std::string with)
 
 void SystemData::launchGame(GameData* game)
 {
-	std::cout << "Attempting to launch game...\n";
+	LOG(LogInfo) << "Attempting to launch game...";
 
 	//suspend SDL joystick events (these'll pile up even while something else is running)
 	SDL_JoystickEventState(0);
@@ -83,13 +77,15 @@ void SystemData::launchGame(GameData* game)
 	command = strreplace(command, "%ROM%", game->getBashPath());
 	command = strreplace(command, "%BASENAME%", game->getBaseName());
 
-	std::cout << "	" << command << "\n";
-	std::cout << "=====================================================\n";
+	LOG(LogInfo) << "	" << command;
+	LOG(LogInfo) << "==============================================";
 	int exitCode = system(command.c_str());
-	std::cout << "=====================================================\n";
+	LOG(LogInfo) << "==============================================";
 
 	if(exitCode != 0)
-		std::cout << "...launch terminated with nonzero exit code!\n";
+	{
+		LOG(LogWarning) << "...launch terminated with nonzero exit code " << exitCode << "!";
+	}
 
 	Renderer::init(0, 0);
 	AudioManager::init();
@@ -103,7 +99,7 @@ void SystemData::populateFolder(FolderData* folder)
 	std::string folderPath = folder->getPath();
 	if(!fs::is_directory(folderPath))
 	{
-		std::cerr << "Error - folder with path \"" << folderPath << "\" is not a directory!\n";
+		LOG(LogError) << "Error - folder with path \"" << folderPath << "\" is not a directory!";
 		return;
 	}
 
@@ -170,7 +166,7 @@ void SystemData::loadConfig()
 
 	std::string path = getConfigPath();
 
-	std::cout << "Loading system config file \"" << path << "\"...\n";
+	LOG(LogInfo) << "Loading system config file...";
 
 	std::ifstream file(path.c_str());
 	if(file.is_open())
@@ -226,7 +222,7 @@ void SystemData::loadConfig()
 					SystemData* newSystem = new SystemData(sysName, sysDescName, sysPath, sysExtension, sysCommand);
 					if(newSystem->getRootFolder()->getFileCount() == 0)
 					{
-						std::cout << "System \"" << sysName << "\" has no games! Deleting.\n";
+						LOG(LogWarning) << "System \"" << sysName << "\" has no games! Ignoring it.";
 						delete newSystem;
 					}else{
 						sSystemVector.push_back(newSystem);
@@ -236,16 +232,16 @@ void SystemData::loadConfig()
 					sysName = ""; sysDescName = ""; sysPath = ""; sysExtension = ""; sysCommand = "" ;
 				}
 			}else{
-				std::cerr << "Error reading config file \"" << path << "\" - no equals sign found on line \"" << line << "\"!\n";
+				LOG(LogError) << "Error reading config file \"" << path << "\" - no equals sign found on line \"" << line << "\"!";
 				return;
 			}
 		}
 	}else{
-		std::cerr << "Error - could not load config file \"" << path << "\"!\n";
+		LOG(LogError) << "Error - could not load config file \"" << path << "\"!";
 		return;
 	}
 
-	std::cout << "Finished loading config file - created " << sSystemVector.size() << " systems.\n";
+	LOG(LogInfo) << "Finished loading config file - created " << sSystemVector.size() << " systems.";
 	return;
 }
 
@@ -294,7 +290,7 @@ std::string SystemData::getConfigPath()
 	std::string home = getenv("HOME");
 	if(home.empty())
 	{
-		std::cerr << "FATAL ERROR - $HOME environment variable empty or nonexistant!\n";
+		LOG(LogError) << "$HOME environment variable empty or nonexistant!";
 		exit(1);
 		return "";
 	}

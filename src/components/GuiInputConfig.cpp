@@ -2,6 +2,7 @@
 #include "GuiGameList.h"
 #include <iostream>
 #include <fstream>
+#include "../Log.h"
 
 extern bool DEBUG; //defined in main.cpp
 
@@ -24,7 +25,7 @@ GuiInputConfig::GuiInputConfig()
 		mDone = true;
 		return;
 	}else{
-		std::cout << "Opening joystick \"" << SDL_JoystickName(0) << "\" for configuration...\n";
+		LOG(LogInfo) << "Opening joystick \"" << SDL_JoystickName(0) << "\" for configuration...";
 		mJoystick = SDL_JoystickOpen(0);
 	}
 }
@@ -63,16 +64,14 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 	{
 		if(InputManager::lastEvent->type == SDL_KEYUP || InputManager::lastEvent->type == SDL_JOYBUTTONDOWN)
 		{
-			if(DEBUG)
-				std::cout << "	finishing configuration...\n";
+			LOG(LogDebug) << "	finishing configuration...";
 
 			writeConfig();
 
 			if(mJoystick)
 				SDL_JoystickClose(mJoystick);
 
-			if(DEBUG)
-				std::cout << "Config complete. Closed joystick, loading input then opening GuiGameList.\n";
+			LOG(LogDebug) << "Config complete. Closed joystick, loading input then opening GuiGameList.";
 
 			InputManager::loadConfig();
 			delete this;
@@ -84,8 +83,7 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 	SDL_Event* event = InputManager::lastEvent;
 	if(event->type == SDL_KEYUP)
 	{
-		if(DEBUG)
-			std::cout << "	[KEYUP] (skipping)\n";
+		LOG(LogDebug) << "	[KEYUP] (skipping)";
 
 		//keyboard key pressed; skip and continue
 		mInputNum++;
@@ -93,21 +91,16 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 
 	if(event->type == SDL_JOYBUTTONDOWN)
 	{
-		if(DEBUG)
-			std::cout << "	[JOYBUTTONDOWN] button " << event->jbutton.button << "\n";
-
+		LOG(LogDebug) << "	[JOYBUTTONDOWN] button " << event->jbutton.button;
 
 		mButtonMap[event->jbutton.button] = (InputManager::InputButton)mInputNum;
-		std::cout << "	Mapping " << sInputs[mInputNum] << " to button " << (int)event->jbutton.button << "\n";
+		LOG(LogInfo) << "	Mapping " << sInputs[mInputNum] << " to button " << (int)event->jbutton.button;
 		mInputNum++;
 	}
 
 	if(event->type == SDL_JOYAXISMOTION)
 	{
-		if(DEBUG)
-			std::cout << "	[JOYAXISMOTION] axis " << event->jaxis.axis << ", value " << event->jaxis.value << "\n";
-
-		//std::cout << "motion on axis " << event->jaxis.axis << " to value " << event->jaxis.value << "\n";
+		LOG(LogDebug) << "	[JOYAXISMOTION] axis " << event->jaxis.axis << ", value " << event->jaxis.value;
 
 		if(event->jaxis.axis == mLastAxis)
 		{
@@ -120,13 +113,13 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 			mAxisPosMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
 			mInputNum++;
 			mLastAxis = event->jaxis.axis;
-			std::cout << "	Mapping " << sInputs[mInputNum - 1] << " to axis+ " << mLastAxis << "\n";
+			LOG(LogInfo) << "	Mapping " << sInputs[mInputNum - 1] << " to axis+ " << mLastAxis;
 		}else if(event->jaxis.value < -InputManager::deadzone)
 		{
 			mAxisNegMap[event->jaxis.axis] = (InputManager::InputButton)mInputNum;
 			mInputNum++;
 			mLastAxis = event->jaxis.axis;
-			std::cout << "	Mapping " << sInputs[mInputNum - 1] << " to axis- " << mLastAxis << "\n";
+			LOG(LogInfo) << "	Mapping " << sInputs[mInputNum - 1] << " to axis- " << mLastAxis;
 		}
 	}
 
@@ -139,8 +132,7 @@ void GuiInputConfig::onInput(InputManager::InputButton button, bool keyDown)
 
 void GuiInputConfig::writeConfig()
 {
-	if(DEBUG)
-		std::cout << "	writing config...";
+	LOG(LogDebug) << "	Writing config...";
 
 	std::string path = InputManager::getConfigPath();
 
@@ -167,6 +159,5 @@ void GuiInputConfig::writeConfig()
 
 	file.close();
 
-	if(DEBUG)
-		std::cout << "done.\n";
+	LOG(LogDebug) << "	Write complete.\n";
 }

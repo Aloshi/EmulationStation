@@ -11,7 +11,6 @@ namespace AudioManager
 	bool isInitialized();
 
 	void init();
-	void test();
 	void deinit();
 }
 

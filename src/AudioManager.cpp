@@ -1,5 +1,6 @@
 #include "AudioManager.h"
 
+#include "Log.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
 #include <iostream>
@@ -18,8 +19,7 @@ namespace AudioManager
 
 		if(result == -1)
 		{
-			std::cerr << "Error initializing AudioManager!\n";
-			std::cerr << "	" << Mix_GetError() << "\n";
+			LOG(LogError) << "Error initializing AudioManager!\n	" << Mix_GetError();
 			return;
 		}
 
@@ -47,36 +47,7 @@ namespace AudioManager
 			}
 		}
 
-		std::cerr << "AudioManager Error - tried to unregister a sound that wasn't registered!\n";
-	}
-
-	void test()
-	{
-		Mix_Chunk* sound = NULL;
-		sound = Mix_LoadWAV("test.wav");
-
-		if(sound == NULL)
-		{
-			std::cerr << "Error loading test sound!\n";
-			std::cerr << "	" << Mix_GetError() << "\n";
-			return;
-		}
-
-		int channel = -1;
-
-		//third argument is play count, -1 = infinite loop, 0 = once
-		channel = Mix_PlayChannel(-1, sound, 0);
-
-		if(channel == -1)
-		{
-			std::cerr << "Error playing sound!\n";
-			std::cerr << "	" << Mix_GetError() << "\n";
-			return;
-		}
-
-		while(Mix_Playing(channel) != 0);
-		Mix_FreeChunk(sound);
-
+		LOG(LogError) << "AudioManager Error - tried to unregister a sound that wasn't registered!";
 	}
 
 	void deinit()

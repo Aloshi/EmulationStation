@@ -1,6 +1,7 @@
 #include "GuiMenu.h"
 #include <iostream>
 #include <SDL/SDL.h>
+#include "../Log.h"
 
 //defined in main.cpp
 extern bool DONTSHOWEXIT;
@@ -59,7 +60,9 @@ void GuiMenu::executeCommand(std::string command)
 		SDL_PushEvent(event);
 	}else{
 		if(system(command.c_str()) != 0)
-			std::cout << "(warning: command terminated with nonzero result!)\n";
+		{
+			LOG(LogWarning) << "(warning: command terminated with nonzero result!)";
+		}
 	}
 }
 

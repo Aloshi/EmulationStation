@@ -4,6 +4,7 @@
 #include <vector>
 #include "Renderer.h"
 #include <boost/filesystem.hpp>
+#include "Log.h"
 
 FT_Library Font::sLibrary;
 bool Font::libraryInitialized = false;
@@ -26,7 +27,7 @@ std::string Font::getDefaultPath()
 			return fonts[i];
 	}
 
-	std::cerr << "Error - could not find a font!\n";
+	LOG(LogError) << "Error - could not find a font!";
 
 	return "";
 }
@@ -35,7 +36,7 @@ void Font::initLibrary()
 {
 	if(FT_Init_FreeType(&sLibrary))
 	{
-		std::cerr << "Error initializing FreeType!\n";
+		LOG(LogError) << "Error initializing FreeType!";
 	}else{
 		libraryInitialized = true;
 	}
@@ -61,7 +62,7 @@ void Font::onInit()
 
 	if(FT_New_Face(sLibrary, mPath.c_str(), 0, &face))
 	{
-		std::cerr << "Error creating font face! (path: " << mPath.c_str() << "\n";
+		LOG(LogError) << "Error creating font face! (path: " << mPath.c_str();
 		return;
 	}
 
@@ -172,7 +173,7 @@ void Font::buildAtlas()
 
 	if(y >= textureHeight)
 	{
-		std::cerr << "Error - font size exceeded texture size! If you were doing something reasonable, tell Aloshi to fix it!\n";
+		LOG(LogError) << "Error - font size exceeded texture size! If you were doing something reasonable, tell Aloshi to fix it!";
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -222,7 +223,7 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 {
 	if(!textureID)
 	{
-		std::cerr << "Error - tried to draw with Font that has no texture loaded!\n";
+		LOG(LogError) << "Error - tried to draw with Font that has no texture loaded!";
 		return;
 	}
 

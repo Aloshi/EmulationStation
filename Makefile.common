@@ -2,7 +2,7 @@ CXX=g++
 CXXFLAGS=-Wall -g -O2
 LDFLAGS=
 
-SRC_SOURCES=AudioManager.cpp FolderData.cpp Font.cpp GameData.cpp GuiComponent.cpp InputManager.cpp main.cpp MathExp.cpp Renderer.cpp Renderer_draw_gl.cpp Renderer_init.cpp Sound.cpp SystemData.cpp XMLReader.cpp components/GuiAnimation.cpp components/GuiBox.cpp components/GuiFastSelect.cpp components/GuiGameList.cpp components/GuiImage.cpp components/GuiInputConfig.cpp components/GuiMenu.cpp components/GuiTheme.cpp pugiXML/pugixml.cpp
+SRC_SOURCES=AudioManager.cpp Log.cpp FolderData.cpp Font.cpp GameData.cpp GuiComponent.cpp InputManager.cpp main.cpp MathExp.cpp Renderer.cpp Renderer_draw_gl.cpp Renderer_init.cpp Sound.cpp SystemData.cpp XMLReader.cpp components/GuiAnimation.cpp components/GuiBox.cpp components/GuiFastSelect.cpp components/GuiGameList.cpp components/GuiImage.cpp components/GuiInputConfig.cpp components/GuiMenu.cpp components/GuiTheme.cpp pugiXML/pugixml.cpp
 SOURCES=$(addprefix src/,$(SRC_SOURCES))
 OBJECTS=$(SOURCES:.cpp=.o)
 DEPS=$(SOURCES:.cpp=.d)
