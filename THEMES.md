@@ -16,7 +16,7 @@ Colors are hex values, either 6 or 8 characters, defined as RRGGBB or RRGGBBAA. 
 Example
 =======
 
-Here's a simple theme that defines some colors and displays a background:
+Here's a theme that defines some colors, displays a background, and displays a logo in the top left corner:
 ```
 <theme>
 	<listPrimaryColor>0000FF</listPrimaryColor>
@@ -29,10 +29,36 @@ Here's a simple theme that defines some colors and displays a background:
 		<dim>1 1</dim>
 		<origin>0 0</origin>
 	</component>
+
+	<component>
+		<type>image</type>
+		<path>./theme/logo.png</path>
+		<pos>0 0</pos>
+		<dim>0.4 0</dim>
+		<origin>0 0</origin>
+	</component>
 </theme>
+
+<!-- You can also optionally define a "basic" theme, which is used instead if ES is in the "basic" view (no box art) -->
+<basicTheme>
+	<listPrimaryColor>0000FF</listPrimaryColor>
+	<listSecondaryColor>00FF00</listSecondaryColor>
+
+	<component>
+		<type>image</type>
+		<path>./theme/background.png</path>
+		<pos>0 0</pos>
+		<dim>1 1</dim>
+		<origin>0 0</origin>
+	</component>
+
+</basicTheme>
 ```
 
-All themes must be enclosed in a `<theme>` tag.
+Themes can be defined with two tags: `<theme>` and `<themeBasic>`. 
+You can define both a normal and basic theme in the same file.
+
+If EmulationStation is running in "basic" mode, it will try to use `<themeBasic>`. If that doesn't exist or ES is running in "detailed" mode (a gamelist.xml is present), `<theme>` will be used.
 
 
 Components
@@ -81,8 +107,6 @@ Display tags define some "meta" display attributes about your theme. Display tag
 `<listOffsetX>` - the percentage to offset the list by. Default is 0.5 (half the screen). **Will also move the selector bar**.
 
 `<listTextOffsetX>` - the percentage to offset the text in the list by. Default is 0.005. Only works in combination with `<listLeftAlign />`.
-
-~~`<gameImageOffsetY>` - the percentage to offset the displayed game image by. Default is the height of the header font.~~
 
 
 

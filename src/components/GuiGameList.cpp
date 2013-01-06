@@ -10,7 +10,7 @@ GuiGameList::GuiGameList(bool useDetail)
 {
 	mDetailed = useDetail;
 
-	mTheme = new GuiTheme(); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
+	mTheme = new GuiTheme(mDetailed); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
 
 	//The GuiGameList can use the older, simple game list if so desired.
 	//The old view only shows a list in the center of the screen; the new view can display an image and description.

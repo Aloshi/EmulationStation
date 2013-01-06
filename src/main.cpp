@@ -57,6 +57,7 @@ int main(int argc, char* argv[])
 			}else if(strcmp(argv[i], "--debug") == 0)
 			{
 				DEBUG = true;
+				Log::setReportingLevel(LogDebug);
 			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";

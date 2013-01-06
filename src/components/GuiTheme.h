@@ -11,7 +11,7 @@
 class GuiTheme : public GuiComponent
 {
 public:
-	GuiTheme(std::string path = "");
+	GuiTheme(bool detailed, std::string path = "");
 	~GuiTheme();
 
 	void readXML(std::string path);
@@ -42,6 +42,7 @@ private:
 
 	std::vector<GuiComponent*> mComponentVector;
 	std::string mPath;
+	bool mDetailed;
 
 	std::map<std::string, unsigned int> mColorMap;
 	std::map<std::string, bool> mBoolMap;

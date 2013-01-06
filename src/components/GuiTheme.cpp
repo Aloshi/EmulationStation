@@ -51,8 +51,10 @@ Font* GuiTheme::getDescriptionFont()
 		return mDescFont;
 }
 
-GuiTheme::GuiTheme(std::string path)
+GuiTheme::GuiTheme(bool detailed, std::string path)
 {
+	mDetailed = detailed;
+
 	mSoundMap["menuScroll"] = new Sound();
 	mSoundMap["menuSelect"] = new Sound();
 	mSoundMap["menuBack"] = new Sound();
@@ -160,7 +162,24 @@ void GuiTheme::readXML(std::string path)
 		return;
 	}
 
-	pugi::xml_node root = doc.child("theme");
+	pugi::xml_node root;
+
+	if(!mDetailed)
+	{
+		//if we're using the basic view, check if there's a basic version of the theme
+		root = doc.child("basicTheme");
+	}
+
+	if(!root)
+	{
+		root = doc.child("theme");
+	}
+
+	if(!root)
+	{
+		LOG(LogError) << "No theme tag found in theme \"" << path << "\"!";
+		return;
+	}
 
 	//load non-component theme stuff
 	mColorMap["primary"] = resolveColor(root.child("listPrimaryColor").text().get(), mColorMap["primary"]);
@@ -219,7 +238,7 @@ void GuiTheme::readXML(std::string path)
 	//actually read the components
 	createComponentChildren(root, this);
 
-	LOG(LogInfo) << "Loading complete.";
+	LOG(LogInfo) << "Theme loading complete.";
 }
 
 //recursively creates components (with proper parenting)

@@ -132,6 +132,11 @@ The switch `--ignore-gamelist` can be used to ignore the gamelist and use the no
 
 **Making a gamelist.xml by hand sucks, so a cool guy named Pendor made a python script which automatically generates a gamelist.xml for you, with boxart automatically downloaded. It can be found here:** https://github.com/elpendor/ES-scraper
 
+I found a bug!
+==============
+
+The best way to report a bug is to post an issue on GitHub. Try to post the simplest steps possible to reproduce the bug. Include files you think might be related (except for ROMs, of course). If you haven't re-run ES since the crash, the log file `~/.emulationstation/es_log.txt` is also helpful.
+
 Themes
 ======
 

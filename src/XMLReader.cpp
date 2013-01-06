@@ -86,7 +86,7 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 		//if for some reason this function is broken, break out of this while instead of freezing
 		if(loops > gamePath.length() * 2)
 		{
-			std::cerr << "breaking out of loop for path \"" << gamePath << "\"\n";
+			LOG(LogError) << "createGameFromPath breaking out of loop for path \"" << gamePath << "\" to prevent infinite loop (please report this)";
 			break;
 		}
 		loops++;
@@ -108,22 +108,21 @@ void parseGamelist(SystemData* system)
 	if(xmlpath.empty())
 		return;
 
-	std::cout << "Parsing XML file \"" << xmlpath << "\"...";
+	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\"...";
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
 
 	if(!result)
 	{
-		std::cerr << "Error parsing XML file \"" << xmlpath << "\"!\n";
-		std::cerr << "	" << result.description() << "\n";
+		LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
 		return;
 	}
 
 	pugi::xml_node root = doc.child("gameList");
 	if(!root)
 	{
-		std::cerr << "Error - could not find <gameList> node in XML document!\n";
+		LOG(LogError) << "Could not find <gameList> node in gamelist \"" << xmlpath << "\"!";
 		return;
 	}
 
@@ -132,8 +131,8 @@ void parseGamelist(SystemData* system)
 		pugi::xml_node pathNode = gameNode.child("path");
 		if(!pathNode)
 		{
-			std::cerr << "Error - <game> node contains no <path> child!\n";
-			return;
+			LOG(LogError) << "<game> node contains no <path> child!";
+			continue;
 		}
 
 		std::string path = pathNode.text().get();
@@ -179,9 +178,7 @@ void parseGamelist(SystemData* system)
 			game->set(newName, newDesc, newImage);
 
 		}else{
-			std::cerr << "Game at \"" << path << "\" does not exist!\n";
+			LOG(LogWarning) << "Game at \"" << path << "\" does not exist!";
 		}
 	}
-
-	std::cout << "done.\n";
 }

@@ -1,3 +1,6 @@
+January 6, 2012
+-Added <basicTheme> tag support.
+
 December 20, 2012
 -Added --debug command-line option. Useful if you're having input config problems.
 -Changed things so you can finish configuring without a keyboard. You should no longer need a keyboard to set up ES; SSH access should be sufficient.
