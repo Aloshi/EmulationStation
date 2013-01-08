@@ -96,7 +96,7 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<listSelectorColor>` - the hex color to use for the "selector bar" on the GuiGameList. Default is `000000FF`.
 
-`<listSelectedColor>` - the hex color to use for selected text on the GuiGameList. Default is the value of `<listPrimaryColor>`.
+`<listSelectedColor>` - the hex color to use for selected text on the GuiGameList. Default is zero, which means no change.
 
 `<listLeftAlign />` - if present, the games list names will be left aligned to the value of `<listOffsetX>` (default 0.5).
 

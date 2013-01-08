@@ -79,7 +79,7 @@ void GuiTheme::setDefaults()
 	mColorMap["primary"] = 0x0000FFFF;
 	mColorMap["secondary"] = 0x00FF00FF;
 	mColorMap["selector"] = 0x000000FF;
-	mColorMap["selected"] = 0xFF0000FF;
+	mColorMap["selected"] = 0x00000000;
 	mColorMap["description"] = 0x0000FFFF;
 	mColorMap["fastSelect"] = 0xFF0000FF;
 
@@ -185,7 +185,7 @@ void GuiTheme::readXML(std::string path)
 	mColorMap["primary"] = resolveColor(root.child("listPrimaryColor").text().get(), mColorMap["primary"]);
 	mColorMap["secondary"] = resolveColor(root.child("listSecondaryColor").text().get(), mColorMap["secondary"]);
 	mColorMap["selector"] = resolveColor(root.child("listSelectorColor").text().get(), mColorMap["selector"]);
-	mColorMap["selected"] = resolveColor(root.child("listSelectedColor").text().get(), mColorMap["primary"]);
+	mColorMap["selected"] = resolveColor(root.child("listSelectedColor").text().get(), mColorMap["selected"]);
 	mColorMap["description"] = resolveColor(root.child("descColor").text().get(), mColorMap["description"]);
 	mColorMap["fastSelect"] = resolveColor(root.child("fastSelectColor").text().get(), mColorMap["fastSelect"]);
 
