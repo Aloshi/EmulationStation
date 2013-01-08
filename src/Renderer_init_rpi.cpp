@@ -44,10 +44,6 @@ namespace Renderer
 			return false;
 		}
 
-		//have to reload config to re-open SDL joysticks
-		InputManager::loadConfig();
-
-
 
 		LOG(LogInfo) << "Creating surface...";
 

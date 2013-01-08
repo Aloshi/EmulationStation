@@ -4,7 +4,7 @@
 #include <iostream>
 
 LogLevel Log::reportingLevel = LogInfo;
-FILE* Log::file = fopen(getLogPath().c_str(), "w");
+FILE* Log::file = NULL; //fopen(getLogPath().c_str(), "w");
 
 LogLevel Log::getReportingLevel()
 {
@@ -20,6 +20,11 @@ std::string Log::getLogPath()
 void Log::setReportingLevel(LogLevel level)
 {
 	reportingLevel = level;
+}
+
+void Log::open()
+{
+	file = fopen(getLogPath().c_str(), "w");
 }
 
 std::ostringstream& Log::get(LogLevel level)
@@ -49,6 +54,13 @@ FILE* Log::getOutput()
 Log::~Log()
 {
 	os << std::endl;
+
+	if(getOutput() == NULL)
+	{
+		std::cerr << "ERROR - tried to write to log file before it was open!\n";
+		return;
+	}
+
 	fprintf(getOutput(), "%s", os.str().c_str());
 
 	//if it's an error, also print to console

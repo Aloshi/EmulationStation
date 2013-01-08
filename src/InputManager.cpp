@@ -11,6 +11,7 @@ SDL_Event* InputManager::lastEvent = NULL;
 std::map<int, InputManager::InputButton> InputManager::joystickButtonMap, InputManager::joystickAxisPosMap, InputManager::joystickAxisNegMap;
 std::map<int, int> InputManager::axisState;
 InputManager::InputButton InputManager::hatState = InputManager::UNKNOWN;
+std::string InputManager::joystickName = "";
 
 int InputManager::deadzone = 28000;
 
@@ -204,7 +205,7 @@ void InputManager::loadConfig()
 
 	std::ifstream file(path.c_str());
 
-	std::string joystickName = "";
+	joystickName = "";
 
 	while(file.good())
 	{
@@ -257,6 +258,13 @@ void InputManager::loadConfig()
 
 	}
 
+	LOG(LogDebug) << "Finished loading input config";
+
+	openJoystick();
+}
+
+void InputManager::openJoystick()
+{
 	//if any joystick is plugged in
 	if(SDL_NumJoysticks() > 0)
 	{
@@ -282,12 +290,12 @@ void InputManager::loadConfig()
 				LOG(LogWarning) << "	could not find named joystick! You could try manually removing the joystick name entry in the input config file.";
 			}
 		}else{
-			LOG(LogDebug) << "	opening first joystick";
+			LOG(LogDebug) << "	opening first joystick (no name saved)";
 
 			SDL_JoystickOpen(0);  //if we don't have a specific joystick in mind, take the first
 		}
 	}else{
-		LOG(LogDebug) << "	no joysticks detected by SDL_NumJoysticks(), input loaded but no joystick opened";
+		LOG(LogDebug) << "	no joysticks detected by SDL_NumJoysticks(), so no joystick opened";
 	}
 }
 

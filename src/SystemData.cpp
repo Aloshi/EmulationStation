@@ -8,6 +8,7 @@
 #include "Renderer.h"
 #include "AudioManager.h"
 #include "Log.h"
+#include "InputManager.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -88,6 +89,7 @@ void SystemData::launchGame(GameData* game)
 	}
 
 	Renderer::init(0, 0);
+	InputManager::openJoystick();
 	AudioManager::init();
 
 	//re-enable SDL joystick events

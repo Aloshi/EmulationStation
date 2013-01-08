@@ -15,6 +15,7 @@ namespace InputManager {
 	void unregisterComponent(GuiComponent* comp);
 
 	void loadConfig();
+	void openJoystick();
 
 	//enum for identifying input, regardless of configuration
 	enum InputButton { UNKNOWN, UP, DOWN, LEFT, RIGHT, BUTTON1, BUTTON2, MENU, SELECT, PAGEUP, PAGEDOWN};
@@ -30,6 +31,7 @@ namespace InputManager {
 	extern std::map<int, InputButton> joystickAxisPosMap, joystickAxisNegMap;
 	extern std::map<int, int> axisState;
 	extern InputButton hatState;
+	extern std::string joystickName;
 }
 
 #endif

@@ -82,6 +82,18 @@ int main(int argc, char* argv[])
 
 	bool running = true;
 
+	//make sure the config directory exists
+	std::string home = getenv("HOME");
+	std::string configDir = home + "/.emulationstation";
+	if(!fs::exists(configDir))
+	{
+		std::cout << "Creating config directory \"" << configDir << "\"\n";
+		fs::create_directory(configDir);
+	}
+
+	//start the logger
+	Log::open();
+
 	//the renderer also takes care of setting up SDL for input and sound
 	bool renderInit = Renderer::init(width, height);
 	if(!renderInit)
@@ -97,15 +109,6 @@ int main(int argc, char* argv[])
 
 
 	SDL_JoystickEventState(SDL_ENABLE);
-
-	//make sure the config directory exists
-	std::string home = getenv("HOME");
-	std::string configDir = home + "/.emulationstation";
-	if(!fs::exists(configDir))
-	{
-		std::cout << "Creating config directory \"" << configDir << "\"\n";
-		fs::create_directory(configDir);
-	}
 
 
 	//try loading the system config file
