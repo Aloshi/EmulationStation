@@ -77,7 +77,7 @@ void GuiList<listType>::onRender()
 		if(mDrawCentered)
 			Renderer::drawCenteredText(row.name, getOffsetX(), y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
 		else
-			Renderer::drawText(row.name, getOffsetX() + mTextOffsetX, y, (mSelection == i) ? mSelectedTextColorOverride : row.color, mFont);
+			Renderer::drawText(row.name, getOffsetX() + mTextOffsetX, y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
 
 		y += entrySize;
 	}
