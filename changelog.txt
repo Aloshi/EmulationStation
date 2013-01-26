@@ -1,7 +1,10 @@
-January 8, 2012
+January 26, 2013
+-Added "Reload" option to the menu. This option reloads all game data.
+
+January 8, 2013
 -Made a value of zero for "list selected color" mean no change.
 
-January 6, 2012
+January 6, 2013
 -Added <basicTheme> tag support.
 
 December 20, 2012

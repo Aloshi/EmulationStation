@@ -4,18 +4,20 @@
 #include "../GuiComponent.h"
 #include "GuiList.h"
 
+class GuiGameList;
+
 //This is a very simple menu that is opened by pressing the Menu key.
 class GuiMenu : public GuiComponent
 {
 public:
-	GuiMenu(GuiComponent* parent);
+	GuiMenu(GuiGameList* parent);
 	~GuiMenu();
 
 	void onInput(InputManager::InputButton button, bool keyDown);
 	void onRender();
 
 private:
-	GuiComponent* mParent;
+	GuiGameList* mParent;
 	GuiList<std::string>* mList;
 
 	void populateList();

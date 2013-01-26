@@ -2,11 +2,13 @@
 #include <iostream>
 #include <SDL/SDL.h>
 #include "../Log.h"
+#include "../SystemData.h"
+#include "GuiGameList.h"
 
 //defined in main.cpp
 extern bool DONTSHOWEXIT;
 
-GuiMenu::GuiMenu(GuiComponent* parent)
+GuiMenu::GuiMenu(GuiGameList* parent)
 {
 	mParent = parent;
 	parent->pause();
@@ -58,6 +60,11 @@ void GuiMenu::executeCommand(std::string command)
 		SDL_Event* event = new SDL_Event();
 		event->type = SDL_QUIT;
 		SDL_PushEvent(event);
+	}else if(command == "es_reload")
+	{
+		//reload the game list
+		SystemData::loadConfig();
+		mParent->setSystemId(0);
 	}else{
 		if(system(command.c_str()) != 0)
 		{
@@ -77,6 +84,8 @@ void GuiMenu::populateList()
 	//if you want to do something special within ES, override your command in the executeComand() method
 	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FFFF);
 	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FFFF);
+
+	mList->addObject("Reload", "es_reload", 0x0000FFFF);
 
 	if(!DONTSHOWEXIT)
 		mList->addObject("Exit", "exit", 0xFF0000FF); //a special case; pushes an SDL quit event to the event stack instead of being called by system()
