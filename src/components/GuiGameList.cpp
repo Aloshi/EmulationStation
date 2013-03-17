@@ -170,7 +170,7 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	//open the fast select menu
 	if(button == InputManager::SELECT && keyDown)
 	{
-		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"));
+		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont());
 	}
 
 	if(mDetailed)

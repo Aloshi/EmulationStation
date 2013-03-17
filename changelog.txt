@@ -1,3 +1,6 @@
+March 17, 2013
+-Added Fast Select font tag.
+
 January 26, 2013
 -Added "Reload" option to the menu. This option reloads all game data.
 

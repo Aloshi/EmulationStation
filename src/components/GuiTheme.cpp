@@ -51,6 +51,14 @@ Font* GuiTheme::getDescriptionFont()
 		return mDescFont;
 }
 
+Font* GuiTheme::getFastSelectFont()
+{
+	if(mFastSelectFont == NULL)
+		return Renderer::getDefaultFont(Renderer::LARGE);
+	else
+		return mFastSelectFont;
+}
+
 GuiTheme::GuiTheme(bool detailed, std::string path)
 {
 	mDetailed = detailed;
@@ -62,6 +70,7 @@ GuiTheme::GuiTheme(bool detailed, std::string path)
 
 	mListFont = NULL;
 	mDescFont = NULL;
+	mFastSelectFont = NULL;
 
 	setDefaults();
 
@@ -122,6 +131,11 @@ void GuiTheme::setDefaults()
 		delete mDescFont;
 		mDescFont = NULL;
 	}
+	if(mFastSelectFont != NULL)
+	{
+		delete mFastSelectFont;
+		mFastSelectFont = NULL;
+	}
 }
 
 void GuiTheme::deleteComponents()
@@ -134,6 +148,9 @@ void GuiTheme::deleteComponents()
 	mComponentVector.clear();
 
 	clearChildren();
+
+	//deletes fonts if any were created
+	setDefaults();
 }
 
 
@@ -234,6 +251,7 @@ void GuiTheme::readXML(std::string path)
 	//fonts
 	mListFont = resolveFont(root.child("listFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::MEDIUM)->getSize());
 	mDescFont = resolveFont(root.child("descriptionFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::SMALL)->getSize());
+	mFastSelectFont = resolveFont(root.child("fastSelectFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::LARGE)->getSize());
 
 	//actually read the components
 	createComponentChildren(root, this);

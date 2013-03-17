@@ -140,6 +140,7 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<boxCorner>` - path to the "top left corner" image file. It will be flipped for the top right, bottom right, and bottom left corners. ~ and . are expanded.
 
+There is also a `<fastSelectFont>` font tag (see the Fonts section for more info).
 
 
 Fonts
@@ -156,12 +157,15 @@ Fonts are defined like so:
 
 You can leave off any tags you don't want to use, and they'll use the default. Size is defined as a percentage of the screen height. "." and "~" are expanded for paths.
 
+NOTE: If your font size is too big, it'll overrun the maximum texture size.
+
 **Font tags:**
 
 `<listFont>` - font to use for the game list.
 
 `<descriptionFont>` - font to use for description text.
 
+`<fastSelectFont>` - font to use for the fast select letter.
 
 Audio
 =====

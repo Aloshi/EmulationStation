@@ -26,6 +26,7 @@ public:
 
 	Font* getListFont();
 	Font* getDescriptionFont();
+	Font* getFastSelectFont();
 private:
 	void setDefaults();
 	void deleteComponents();
@@ -53,6 +54,7 @@ private:
 	GuiBoxData mBoxData;
 	Font* mListFont;
 	Font* mDescFont;
+	Font* mFastSelectFont;
 };
 
 #endif
