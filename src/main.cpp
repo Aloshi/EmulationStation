@@ -23,6 +23,7 @@ bool IGNOREGAMELIST = false;
 bool DRAWFRAMERATE = false;
 bool DONTSHOWEXIT = false;
 bool DEBUG = false;
+unsigned int DIMTIME = 30*1000;
 
 namespace fs = boost::filesystem;
 
@@ -58,6 +59,10 @@ int main(int argc, char* argv[])
 			{
 				DEBUG = true;
 				Log::setReportingLevel(LogDebug);
+			}else if(strcmp(argv[i], "--dimtime") == 0)
+			{
+				DIMTIME = atoi(argv[i + 1]) * 1000;
+				i++;
 			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
@@ -69,6 +74,7 @@ int main(int argc, char* argv[])
 				std::cout << "--draw-framerate		display the framerate\n";
 				std::cout << "--no-exit			don't show the exit option in the menu\n";
 				std::cout << "--debug				even more logging\n";
+				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
 				std::cout << "--help				summon a sentient, angry tuba\n\n";
 				std::cout << "More information available in README.md.\n";
 				return 0;
@@ -158,6 +164,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	bool sleeping = false;
+	unsigned int timeSinceLastEvent = 0;
+
 	int lastTime = 0;
 	while(running)
 	{
@@ -167,11 +176,13 @@ int main(int argc, char* argv[])
 			switch(event.type)
 			{
 				case SDL_JOYHATMOTION:
-				case SDL_JOYAXISMOTION:
 				case SDL_JOYBUTTONDOWN:
 				case SDL_JOYBUTTONUP:
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
+					sleeping = false;
+					timeSinceLastEvent = 0;
+				case SDL_JOYAXISMOTION:
 					InputManager::processEvent(&event);
 					break;
 
@@ -179,6 +190,13 @@ int main(int argc, char* argv[])
 					running = false;
 					break;
 			}
+		}
+
+		if(sleeping)
+		{
+			lastTime = SDL_GetTicks();
+			sleep(1); //this doesn't need to accurate
+			continue;
 		}
 
 		int curTime = SDL_GetTicks();
@@ -198,6 +216,16 @@ int main(int argc, char* argv[])
 			Renderer::drawText(fps, 50, 50, 0x00FF00FF, Renderer::getDefaultFont(Renderer::MEDIUM));
 		}
 
+		//sleep if we're past our threshold
+		//sleeping entails setting a flag to start skipping frames
+		//and initially drawing a black semi-transparent rect to dim the screen
+		timeSinceLastEvent += deltaTime;
+		if(timeSinceLastEvent >= DIMTIME && DIMTIME != 0)
+		{
+			sleeping = true;
+			timeSinceLastEvent = 0;
+			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000A0);
+		}
 
 		Renderer::swapBuffers();
 		Log::flush();

@@ -1,3 +1,6 @@
+March 19, 2013
+-Finally added a "dim" or sleep mode. Change behavior with "--dimtime [positive integer time in seconds]", with 0 for off.
+
 March 17, 2013
 -Added Fast Select font tag.
 
