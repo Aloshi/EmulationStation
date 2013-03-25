@@ -1,3 +1,6 @@
+March 25, 2013
+-Hopefully fixed waking up from sleep with axes.
+
 March 19, 2013
 -Finally added a "dim" or sleep mode. Change behavior with "--dimtime [positive integer time in seconds]", with 0 for off.
 

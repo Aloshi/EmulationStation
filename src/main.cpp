@@ -10,6 +10,7 @@
 #include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"
+#include "InputManager.h"
 
 #ifdef _RPI_
 	#include <bcm_host.h>
@@ -180,10 +181,12 @@ int main(int argc, char* argv[])
 				case SDL_JOYBUTTONUP:
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
-					sleeping = false;
-					timeSinceLastEvent = 0;
 				case SDL_JOYAXISMOTION:
-					InputManager::processEvent(&event);
+					if(InputManager::processEvent(&event) != InputManager::UNKNOWN)
+					{
+						sleeping = false;
+						timeSinceLastEvent = 0;
+					}
 					break;
 
 				case SDL_QUIT:

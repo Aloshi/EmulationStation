@@ -32,7 +32,7 @@ void InputManager::unregisterComponent(GuiComponent* comp)
 	}
 }
 
-void InputManager::processEvent(SDL_Event* event)
+InputManager::InputButton InputManager::processEvent(SDL_Event* event)
 {
 	bool keyDown = false;
 	InputButton button = UNKNOWN;
@@ -190,6 +190,8 @@ void InputManager::processEvent(SDL_Event* event)
 	{
 		inputVector.at(i)->onInput(button, keyDown);
 	}
+
+	return button;
 }
 
 void InputManager::loadConfig()

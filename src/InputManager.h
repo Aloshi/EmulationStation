@@ -20,7 +20,7 @@ namespace InputManager {
 	//enum for identifying input, regardless of configuration
 	enum InputButton { UNKNOWN, UP, DOWN, LEFT, RIGHT, BUTTON1, BUTTON2, MENU, SELECT, PAGEUP, PAGEDOWN};
 
-	void processEvent(SDL_Event* event);
+	InputButton processEvent(SDL_Event* event);
 
 	extern std::vector<GuiComponent*> inputVector;
 	extern SDL_Event* lastEvent; //mostly for GuiInputConfig
