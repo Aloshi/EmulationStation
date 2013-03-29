@@ -28,6 +28,8 @@ GuiInputConfig::GuiInputConfig()
 		LOG(LogInfo) << "Opening joystick \"" << SDL_JoystickName(0) << "\" for configuration...";
 		mJoystick = SDL_JoystickOpen(0);
 	}
+
+	SDL_JoystickEventState(SDL_ENABLE);
 }
 
 GuiInputConfig::~GuiInputConfig()
