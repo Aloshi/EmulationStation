@@ -299,6 +299,8 @@ void InputManager::openJoystick()
 	}else{
 		LOG(LogDebug) << "	no joysticks detected by SDL_NumJoysticks(), so no joystick opened";
 	}
+
+	SDL_JoystickEventState(SDL_ENABLE);
 }
 
 std::string InputManager::getConfigPath()

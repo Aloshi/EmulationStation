@@ -114,10 +114,6 @@ int main(int argc, char* argv[])
 	//initialize audio
 	AudioManager::init();
 
-
-	SDL_JoystickEventState(SDL_ENABLE);
-
-
 	//try loading the system config file
 	if(!fs::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit
 	{
@@ -137,27 +133,23 @@ int main(int argc, char* argv[])
 			//choose which GUI to open depending on Input configuration
 			if(fs::exists(InputManager::getConfigPath()))
 			{
-				if(DEBUG)
-					std::cout << "Found input config in " << InputManager::getConfigPath() << "\n";
+				LOG(LogDebug) << "Found input config in " << InputManager::getConfigPath() << "\n";
 
 				//an input config already exists - load it and proceed to the gamelist as usual.
 				InputManager::loadConfig();
 				GuiGameList::create();
 			}else{
+
 				if(DEBUG)
 					std::cout << "SDL_NumJoysticks() reports " << SDL_NumJoysticks() << " present.\n";
 
 				//if no input.cfg is present, but a joystick is connected, launch the input config GUI
 				if(SDL_NumJoysticks() > 0)
 				{
-					if(DEBUG)
-						std::cout << "	at least one joystick detected, launching config GUI...\n";
-
+					LOG(LogDebug) << "	at least one joystick detected, launching config GUI...\n";
 					new GuiInputConfig();
 				}else{
-					if(DEBUG)
-						std::cout << "	no joystick detected, ignoring...\n";
-
+					LOG(LogDebug) << "	no joystick detected, ignoring...\n";
 					GuiGameList::create();
 				}
 
