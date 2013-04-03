@@ -161,6 +161,7 @@ int main(int argc, char* argv[])
 	unsigned int timeSinceLastEvent = 0;
 
 	int lastTime = 0;
+	int deltaTime = 0;
 	while(running)
 	{
 		SDL_Event event;
@@ -187,6 +188,16 @@ int main(int argc, char* argv[])
 			}
 		}
 
+    // XXX: consider using a libudev monitor to catch an event instead of checking if NumJoysticks is 0.
+    // check every 10 seconds for now.
+    if (deltaTime > 10*1000 && SDL_NumJoysticks() == 0) {
+      SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+      SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+      InputManager::loadConfig();
+      if(DEBUG)
+        LOG(LogDebug) << "  joystick reinit: " << SDL_NumJoysticks() << " present.\n";
+    }
+
 		if(sleeping)
 		{
 			lastTime = SDL_GetTicks();
@@ -195,7 +206,7 @@ int main(int argc, char* argv[])
 		}
 
 		int curTime = SDL_GetTicks();
-		int deltaTime = curTime - lastTime;
+		deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
 		GuiComponent::processTicks(deltaTime);
