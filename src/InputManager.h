@@ -1,37 +1,46 @@
 #ifndef _INPUTMANAGER_H_
 #define _INPUTMANAGER_H_
 
+#include <SDL.h>
 #include <vector>
-#include <SDL/SDL.h>
 #include <map>
-#include <string>
 
-class GuiComponent;
+class InputConfig;
+class Window;
 
-//The InputManager takes native system input and abstracts it into InputButtons.
-//GuiComponents can be registered to receive onInput() events.
-namespace InputManager {
-	void registerComponent(GuiComponent* comp);
-	void unregisterComponent(GuiComponent* comp);
+//you should only ever instantiate one of these, by the way
+class InputManager
+{
+public:
+	InputManager(Window* window);
+	~InputManager();
 
-	void loadConfig();
-	void openJoystick();
+	void init();
+	void deinit();
 
-	//enum for identifying input, regardless of configuration
-	enum InputButton { UNKNOWN, UP, DOWN, LEFT, RIGHT, BUTTON1, BUTTON2, MENU, SELECT, PAGEUP, PAGEDOWN};
+	void setNumPlayers(int num);
+	int getNumPlayers();
 
-	InputButton processEvent(SDL_Event* event);
+	int getNumJoysticks();
 
-	extern std::vector<GuiComponent*> inputVector;
-	extern SDL_Event* lastEvent; //mostly for GuiInputConfig
-	extern int deadzone;
-	std::string getConfigPath();
+	void parseEvent(const SDL_Event& ev);
 
-	extern std::map<int, InputButton> joystickButtonMap;
-	extern std::map<int, InputButton> joystickAxisPosMap, joystickAxisNegMap;
-	extern std::map<int, int> axisState;
-	extern InputButton hatState;
-	extern std::string joystickName;
-}
+	InputConfig* getInputConfigByPlayer(int player);
+
+private:
+	static const int DEADZONE = 23000;
+
+	Window* mWindow;
+
+	//non-InputManager classes shouldn't use this, as you can easily miss the keyboard
+	InputConfig* getInputConfigByDevice(int device);
+
+	int mNumJoysticks;
+	int mNumPlayers;
+	SDL_Joystick** mJoysticks;
+	InputConfig** mInputConfigs;
+	InputConfig* mKeyboardInputConfig;
+	std::map<int, int>* mPrevAxisValues;
+};
 
 #endif
