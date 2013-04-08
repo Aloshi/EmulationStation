@@ -14,16 +14,8 @@ class Font;
 //Defined in multiple files - Renderer.cpp has the GuiComponent stuff, Renderer_draw_* includes renderer-specific drawing implementations, and Renderer_init_* includes renderer-specific init/deinit.
 namespace Renderer
 {
-	void registerComponent(GuiComponent* comp);
-	void unregisterComponent(GuiComponent* comp);
-	void deleteAll();
-
 	bool init(int w, int h);
-	void onInit();
 	void deinit();
-	void onDeinit();
-
-	void render();
 
 	unsigned int getScreenWidth();
 	unsigned int getScreenHeight();

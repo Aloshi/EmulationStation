@@ -11,47 +11,15 @@ int GuiInputConfig::sInputCount = 10;
 
 GuiInputConfig::GuiInputConfig(Window* window) : Gui(window)
 {
-	mInputNum = 0;
-	mDone = false;
-
-	if(SDL_NumJoysticks() < 1)
-	{
-		std::cerr << "Error - GuiInputConfig found no SDL joysticks!\n";
-		mJoystick = NULL;
-		mDone = true;
-		return;
-	}else{
-		LOG(LogInfo) << "Opening joystick \"" << SDL_JoystickName(0) << "\" for configuration...";
-		mJoystick = SDL_JoystickOpen(0);
-	}
-
-	SDL_JoystickEventState(SDL_ENABLE);
 }
 
 GuiInputConfig::~GuiInputConfig()
 {
 }
 
-void GuiInputConfig::onRender()
+void GuiInputConfig::render()
 {
-	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFFFF);
-
-	Font* font = Renderer::getDefaultFont(Renderer::MEDIUM);
-
-	int height = font->getHeight() + 6;
-
-
-	Renderer::drawCenteredText("It looks like you have a joystick plugged in!", 0, 2, 0x000000FF, font);
-	Renderer::drawCenteredText("POV hats (some D-Pads) are automatically mapped to directions.", 0, height, 0x000000FF, font);
-	Renderer::drawCenteredText("You can press a keyboard key to skip any input.", 0, height * 2, 0x000000FF, font);
-	Renderer::drawCenteredText("If you want to remap later, delete ~/.emulationstation/es_input.cfg.", 0, height * 3, 0x000000FF, font);
-	Renderer::drawCenteredText("This interface only configures the first joystick plugged in.", 0, height * 4, 0x000000FF, font);
-	Renderer::drawCenteredText("Remember - you'll need to set up your emulator separately!", 0, Renderer::getScreenHeight() - height, 0x000000FF, font);
-
-	if(mDone)
-		Renderer::drawCenteredText("All done! Press a key or button to save.", 0, height * 5, 0x00BB00FF, font);
-	else
-		Renderer::drawCenteredText("Please press the axis/button for " + sInputs[mInputNum], 0, height * 5, 0x00C000FF, font);
+	Renderer::drawCenteredText("IN DEVELOPMENT", 0, 2, 0x000000FF, Renderer::getDefaultFont(Renderer::MEDIUM));
 }
 
 void GuiInputConfig::input(InputConfig* config, Input input)

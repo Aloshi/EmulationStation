@@ -17,7 +17,7 @@
 class GuiGameList : public Gui
 {
 public:
-	GuiGameList(bool useDetail = false);
+	GuiGameList(Window* window, bool useDetail = false);
 	~GuiGameList();
 
 	void setSystemId(int id);
@@ -28,13 +28,14 @@ public:
 	void onInit();
 	void onDeinit();
 
+	void updateDetailData();
+
 	static GuiGameList* create(Window* window);
 
 	static const float sInfoWidth;
 private:
 	void updateList();
 	void updateTheme();
-	void updateDetailData();
 	void clearDetailData();
 	std::string getThemeFile();
 

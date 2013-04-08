@@ -80,14 +80,11 @@ namespace Renderer
 		glOrtho(0, display_width, display_height, 0, -1.0, 1.0);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-		onInit();
-
 		return true;
 	}
 
 	void deinit()
 	{
-		onDeinit();
 		destroySurface();
 	}
 };

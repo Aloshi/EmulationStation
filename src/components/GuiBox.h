@@ -16,10 +16,10 @@ struct GuiBoxData
 	std::string cornerPath;
 };
 
-class GuiBox
+class GuiBox : public Gui
 {
 public:
-	GuiBox(int offsetX, int offsetY, unsigned int width, unsigned int height);
+	GuiBox(Window* window, int offsetX, int offsetY, unsigned int width, unsigned int height);
 
 	void setData(GuiBoxData data);
 

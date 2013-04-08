@@ -147,8 +147,6 @@ void GuiTheme::deleteComponents()
 
 	mComponentVector.clear();
 
-	clearChildren();
-
 	//deletes fonts if any were created
 	setDefaults();
 }
@@ -260,11 +258,11 @@ void GuiTheme::readXML(std::string path)
 }
 
 //recursively creates components (with proper parenting)
-void GuiTheme::createComponentChildren(pugi::xml_node node, GuiComponent* parent)
+void GuiTheme::createComponentChildren(pugi::xml_node node, Gui* parent)
 {
 	for(pugi::xml_node data = node.child("component"); data; data = data.next_sibling("component"))
 	{
-		GuiComponent* nextComp = createElement(data, parent);
+		Gui* nextComp = createElement(data, parent);
 
 		if(nextComp)
 			createComponentChildren(data, nextComp);
@@ -272,7 +270,7 @@ void GuiTheme::createComponentChildren(pugi::xml_node node, GuiComponent* parent
 }
 
 //takes an XML element definition and creates an object from it
-GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
+Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
 {
 	std::string type = data.child("type").text().get();
 
@@ -316,7 +314,6 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		comp->setTiling(tiled);
 		comp->setImage(path);
 
-		parent->addChild(comp);
 		mComponentVector.push_back(comp);
 		return comp;
 	}
@@ -425,4 +422,12 @@ Font* GuiTheme::resolveFont(pugi::xml_node node, std::string defaultPath, unsign
 	}
 
 	return new Font(path, size);
+}
+
+void GuiTheme::render()
+{
+	for(unsigned int i = 0; i < mComponentVector.size(); i++)
+	{
+		mComponentVector.at(i)->render();
+	}
 }

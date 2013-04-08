@@ -19,6 +19,9 @@ public:
 	void update(int deltaTime);
 	void render();
 
+	void init();
+	void deinit();
+
 	InputManager* getInputManager();
 
 private:

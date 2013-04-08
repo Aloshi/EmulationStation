@@ -1,12 +1,13 @@
 #include "GuiFastSelect.h"
 #include "../Renderer.h"
 #include <iostream>
+#include "GuiGameList.h"
 
 const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
-GuiFastSelect::GuiFastSelect(Window* window, GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, 
+GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, 
 	int textcolor, Sound* scrollsound, Font* font) : Gui(window)
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
@@ -23,7 +24,7 @@ GuiFastSelect::GuiFastSelect(Window* window, GuiComponent* parent, GuiList<FileD
 	mScrollOffset = 0;
 
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
-	mBox = new GuiBox(sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6);
+	mBox = new GuiBox(window, sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6);
 	mBox->setData(data);
 
 	mTextColor = textcolor;
@@ -31,6 +32,7 @@ GuiFastSelect::GuiFastSelect(Window* window, GuiComponent* parent, GuiList<FileD
 
 GuiFastSelect::~GuiFastSelect()
 {
+	mParent->updateDetailData();
 	delete mBox;
 }
 

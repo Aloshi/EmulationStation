@@ -14,7 +14,19 @@ public:
 	virtual void input(InputConfig* config, Input input) { };
 	virtual void update(int deltaTime) { };
 	virtual void render() { };
+
+	virtual void init() { };
+	virtual void deinit() { };
+
+	void setOffsetX(int x);
+	void setOffsetY(int y);
+	void setOffset(int x, int y);
+	int getOffsetX();
+	int getOffsetY();
 protected:
+	int mOffsetX;
+	int mOffsetY;
+
 	Window* mWindow;
 };
 

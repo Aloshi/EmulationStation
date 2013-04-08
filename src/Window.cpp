@@ -47,6 +47,22 @@ void Window::render()
 	}
 }
 
+void Window::init()
+{
+	for(unsigned int i = 0; i < mGuiStack.size(); i++)
+	{
+		mGuiStack.at(i)->init();
+	}
+}
+
+void Window::deinit()
+{
+	for(unsigned int i = 0; i < mGuiStack.size(); i++)
+	{
+		mGuiStack.at(i)->deinit();
+	}
+}
+
 void Window::input(InputConfig* config, Input input)
 {
 	if(peekGui())
@@ -62,9 +78,4 @@ void Window::update(int deltaTime)
 InputManager* Window::getInputManager()
 {
 	return mInputManager;
-}
-
-asIScriptEngine* Window::getScriptEngine()
-{
-	return mScriptEngine;
 }

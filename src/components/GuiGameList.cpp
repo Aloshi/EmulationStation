@@ -22,11 +22,10 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : Gui(window)
 		mScreenshot = new GuiImage(mWindow, Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), "", mTheme->getFloat("gameImageWidth"), mTheme->getFloat("gameImageHeight"), false);
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 
-		//the animation renders the screenshot
 		mImageAnimation = new GuiAnimation();
 		mImageAnimation->addChild(mScreenshot);
 	}else{
-		mList = new GuiList<FileData*>(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
+		mList = new GuiList<FileData*>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 		mScreenshot = NULL;
 		mImageAnimation = NULL;
 	}
@@ -97,7 +96,11 @@ void GuiGameList::render()
 			if(!desc.empty())
 				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03), mTheme->getColor("description"), mTheme->getDescriptionFont());
 		}
+
+		mScreenshot->render();
 	}
+
+	mList->render();
 }
 
 void GuiGameList::input(InputConfig* config, Input input)
@@ -119,7 +122,7 @@ void GuiGameList::input(InputConfig* config, Input input)
 			//wait for the sound to finish or we'll never hear it...
 			while(mTheme->getSound("menuSelect")->isPlaying());
 
-			mSystem->launchGame((GameData*)file);
+			mSystem->launchGame(mWindow, (GameData*)file);
 		}
 	}
 
@@ -151,7 +154,7 @@ void GuiGameList::input(InputConfig* config, Input input)
 	//open the "start menu"
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
-		new GuiMenu(this);
+		new GuiMenu(mWindow, this);
 	}
 
 	//open the fast select menu
@@ -297,5 +300,7 @@ GuiGameList* GuiGameList::create(Window* window)
 		}
 	}
 
-	return new GuiGameList(window, detailed);
+	GuiGameList* list = new GuiGameList(window, detailed);
+	window->pushGui(list);
+	return list;
 }

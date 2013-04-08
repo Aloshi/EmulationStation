@@ -1,6 +1,7 @@
 #include "GuiBox.h"
 
-GuiBox::GuiBox(int offsetX, int offsetY, unsigned int width, unsigned int height)
+GuiBox::GuiBox(Window* window, int offsetX, int offsetY, unsigned int width, unsigned int height) : Gui(window), mBackgroundImage(window), 
+	mHorizontalImage(window), mVerticalImage(window), mCornerImage(window)
 {
 	setOffsetX(offsetX);
 	setOffsetY(offsetY);
@@ -112,14 +113,10 @@ void GuiBox::render()
 
 void GuiBox::onInit()
 {
-	mHorizontalImage.init();
-	mVerticalImage.init();
 }
 
 void GuiBox::onDeinit()
 {
-	mHorizontalImage.deinit();
-	mVerticalImage.deinit();
 }
 
 int GuiBox::getHorizontalBorderWidth()

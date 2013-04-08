@@ -8,10 +8,12 @@
 #include "GuiList.h"
 #include "GuiBox.h"
 
+class GuiGameList;
+
 class GuiFastSelect : Gui
 {
 public:
-	GuiFastSelect(Window* window, GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound, Font* font);
+	GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound, Font* font);
 	~GuiFastSelect();
 
 	void input(InputConfig* config, Input input);
@@ -29,7 +31,7 @@ private:
 	GuiList<FileData*>* mList;
 
 	size_t mLetterID;
-	GuiComponent* mParent;
+	GuiGameList* mParent;
 
 	GuiBox* mBox;
 	int mTextColor;

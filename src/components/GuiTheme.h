@@ -7,8 +7,8 @@
 #include "../Sound.h"
 #include "../Font.h"
 
-//This class loads an XML-defined list of GuiComponents.
-class GuiTheme : Gui
+//This class loads an XML-defined list of Guis.
+class GuiTheme : public Gui
 {
 public:
 	GuiTheme(Window* window, bool detailed, std::string path = "");
@@ -17,6 +17,8 @@ public:
 	void readXML(std::string path);
 
 	GuiBoxData getBoxData();
+
+	void render();
 
 	unsigned int getColor(std::string name);
 	bool getBool(std::string name);
@@ -30,8 +32,8 @@ public:
 private:
 	void setDefaults();
 	void deleteComponents();
-	void createComponentChildren(pugi::xml_node node, GuiComponent* parent);
-	GuiComponent* createElement(pugi::xml_node data, GuiComponent* parent);
+	void createComponentChildren(pugi::xml_node node, Gui* parent);
+	Gui* createElement(pugi::xml_node data, Gui* parent);
 
 	//utility functions
 	std::string expandPath(std::string path);

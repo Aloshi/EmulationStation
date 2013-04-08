@@ -35,11 +35,8 @@ public:
 	void onInit();
 	void onDeinit();
 
-	int getOffsetX();
-	int getOffsetY();
 	unsigned char getOpacity();
 	void setOpacity(unsigned char opacity);
-	void setOffset(int x, int y);
 private:
 	unsigned int mResizeWidth, mResizeHeight;
 	float mOriginX, mOriginY;
