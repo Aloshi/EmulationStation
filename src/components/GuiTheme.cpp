@@ -59,7 +59,7 @@ Font* GuiTheme::getFastSelectFont()
 		return mFastSelectFont;
 }
 
-GuiTheme::GuiTheme(bool detailed, std::string path)
+GuiTheme::GuiTheme(Window* window, bool detailed, std::string path) : Gui(window)
 {
 	mDetailed = detailed;
 
@@ -311,7 +311,7 @@ GuiComponent* GuiTheme::createElement(pugi::xml_node data, GuiComponent* parent)
 		float ox = strToFloat(originX);
 		float oy = strToFloat(originY);
 
-		GuiImage* comp = new GuiImage(x, y, "", w, h, true);
+		GuiImage* comp = new GuiImage(mWindow, x, y, "", w, h, true);
 		comp->setOrigin(ox, oy);
 		comp->setTiling(tiled);
 		comp->setImage(path);

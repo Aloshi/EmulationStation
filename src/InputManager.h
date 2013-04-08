@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <vector>
 #include <map>
+#include <string>
 
 class InputConfig;
 class Window;
@@ -15,6 +16,9 @@ public:
 	InputManager(Window* window);
 	~InputManager();
 
+	void loadConfig();
+	static std::string getConfigPath();
+
 	void init();
 	void deinit();
 
@@ -23,7 +27,7 @@ public:
 
 	int getNumJoysticks();
 
-	void parseEvent(const SDL_Event& ev);
+	bool parseEvent(const SDL_Event& ev);
 
 	InputConfig* getInputConfigByPlayer(int player);
 

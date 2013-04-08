@@ -6,44 +6,36 @@
 #include <boost/filesystem.hpp>
 #include "../Log.h"
 
-GuiGameList::GuiGameList(bool useDetail)
+GuiGameList::GuiGameList(Window* window, bool useDetail) : Gui(window)
 {
 	mDetailed = useDetail;
 
-	mTheme = new GuiTheme(mDetailed); //not a child because it's rendered manually by GuiGameList::onRender (to make sure it's rendered first)
+	mTheme = new GuiTheme(mWindow, mDetailed);
 
 	//The GuiGameList can use the older, simple game list if so desired.
 	//The old view only shows a list in the center of the screen; the new view can display an image and description.
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX"), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
+		mList = new GuiList<FileData*>(mWindow, Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX"), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
-		mScreenshot = new GuiImage(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), "", mTheme->getFloat("gameImageWidth"), mTheme->getFloat("gameImageHeight"), false);
+		mScreenshot = new GuiImage(mWindow, Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), "", mTheme->getFloat("gameImageWidth"), mTheme->getFloat("gameImageHeight"), false);
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
-		//addChild(mScreenshot);
 
 		//the animation renders the screenshot
 		mImageAnimation = new GuiAnimation();
 		mImageAnimation->addChild(mScreenshot);
-		addChild(mImageAnimation);
 	}else{
 		mList = new GuiList<FileData*>(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 		mScreenshot = NULL;
 		mImageAnimation = NULL;
 	}
 
-	addChild(mList);
-
 	setSystemId(0);
-
-	Renderer::registerComponent(this);
-	InputManager::registerComponent(this);
 }
 
 GuiGameList::~GuiGameList()
 {
-	Renderer::unregisterComponent(this);
 	delete mList;
 
 	if(mDetailed)
@@ -52,8 +44,6 @@ GuiGameList::~GuiGameList()
 		delete mScreenshot;
 		delete mTheme;
 	}
-
-	InputManager::unregisterComponent(this);
 }
 
 void GuiGameList::setSystemId(int id)
@@ -83,7 +73,7 @@ void GuiGameList::setSystemId(int id)
 	updateDetailData();
 }
 
-void GuiGameList::onRender()
+void GuiGameList::render()
 {
 	if(mTheme)
 		mTheme->render();
@@ -110,34 +100,31 @@ void GuiGameList::onRender()
 	}
 }
 
-void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
+void GuiGameList::input(InputConfig* config, Input input)
 {
-	if(button == InputManager::BUTTON1 && mFolder->getFileCount() > 0)
+	if(config->isMappedTo("a", input) && mFolder->getFileCount() > 0 && input.value != 0)
 	{
-		if(!keyDown)
+		//play select sound
+		mTheme->getSound("menuSelect")->play();
+
+		FileData* file = mList->getSelectedObject();
+		if(file->isFolder()) //if you selected a folder, add this directory to the stack, and use the selected one
 		{
-			//play select sound
-			mTheme->getSound("menuSelect")->play();
+			mFolderStack.push(mFolder);
+			mFolder = (FolderData*)file;
+			updateList();
+		}else{
+			mList->stopScrolling();
 
-			FileData* file = mList->getSelectedObject();
-			if(file->isFolder()) //if you selected a folder, add this directory to the stack, and use the selected one
-			{
-				mFolderStack.push(mFolder);
-				mFolder = (FolderData*)file;
-				updateList();
-			}else{
-				mList->stopScrolling();
+			//wait for the sound to finish or we'll never hear it...
+			while(mTheme->getSound("menuSelect")->isPlaying());
 
-				//wait for the sound to finish or we'll never hear it...
-				while(mTheme->getSound("menuSelect")->isPlaying());
-
-				mSystem->launchGame((GameData*)file);
-			}
+			mSystem->launchGame((GameData*)file);
 		}
 	}
 
 	//if there's something on the directory stack, return to it
-	if(button == InputManager::BUTTON2 && keyDown && mFolderStack.size())
+	if(config->isMappedTo("b", input) && input.value != 0 && mFolderStack.size())
 	{
 		mFolder = mFolderStack.top();
 		mFolderStack.pop();
@@ -149,35 +136,35 @@ void GuiGameList::onInput(InputManager::InputButton button, bool keyDown)
 	}
 
 	//only allow switching systems if more than one exists (otherwise it'll reset your position when you switch and it's annoying)
-	if(SystemData::sSystemVector.size() > 1)
+	if(SystemData::sSystemVector.size() > 1 && input.value != 0)
 	{
-		if(button == InputManager::RIGHT && keyDown)
+		if(config->isMappedTo("right", input))
 		{
 			setSystemId(mSystemId + 1);
 		}
-		if(button == InputManager::LEFT && keyDown)
+		if(config->isMappedTo("left", input))
 		{
 			setSystemId(mSystemId - 1);
 		}
 	}
 
 	//open the "start menu"
-	if(button == InputManager::MENU && keyDown)
+	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		new GuiMenu(this);
 	}
 
 	//open the fast select menu
-	if(button == InputManager::SELECT && keyDown)
+	if(config->isMappedTo("select", input) && input.value != 0)
 	{
-		new GuiFastSelect(this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont());
+		new GuiFastSelect(mWindow, this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont());
 	}
 
 	if(mDetailed)
 	{
-		if(button == InputManager::UP || button == InputManager::DOWN || button == InputManager::PAGEUP || button == InputManager::PAGEDOWN)
+		if(config->isMappedTo("up", input) || config->isMappedTo("down", input) || config->isMappedTo("pageup", input) || config->isMappedTo("pagedown", input))
 		{
-			if(!keyDown)
+			if(input.value == 0)
 				updateDetailData();
 			else
 				clearDetailData();
@@ -203,8 +190,8 @@ void GuiGameList::updateList()
 	}
 }
 
-std::string GuiGameList::getThemeFile() {
-
+std::string GuiGameList::getThemeFile()
+{
 	std::string themePath;
 
 	themePath = getenv("HOME");
@@ -281,20 +268,6 @@ void GuiGameList::clearDetailData()
 	}
 }
 
-//these are called when the menu opens/closes
-void GuiGameList::onPause()
-{
-	mList->stopScrolling();
-	mTheme->getSound("menuOpen")->play();
-	InputManager::unregisterComponent(this);
-}
-
-void GuiGameList::onResume()
-{
-	updateDetailData();
-	InputManager::registerComponent(this);
-}
-
 //called when the renderer shuts down/returns
 //we have to manually call init/deinit on mTheme because it is not our child
 void GuiGameList::onDeinit()
@@ -308,7 +281,7 @@ void GuiGameList::onInit()
 }
 
 extern bool IGNOREGAMELIST; //defined in main.cpp (as a command line argument)
-GuiGameList* GuiGameList::create()
+GuiGameList* GuiGameList::create(Window* window)
 {
 	bool detailed = false;
 
@@ -324,5 +297,5 @@ GuiGameList* GuiGameList::create()
 		}
 	}
 
-	return new GuiGameList(detailed);
+	return new GuiGameList(window, detailed);
 }

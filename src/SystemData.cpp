@@ -63,14 +63,12 @@ std::string strreplace(std::string& str, std::string replace, std::string with)
 		return str;
 }
 
-void SystemData::launchGame(GameData* game)
+void SystemData::launchGame(Window* window, GameData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
-	//suspend SDL joystick events (these'll pile up even while something else is running)
-	SDL_JoystickEventState(0);
-
 	AudioManager::deinit();
+	window->getInputManager()->deinit();
 	Renderer::deinit();
 
 	std::string command = mLaunchCommand;
@@ -89,11 +87,8 @@ void SystemData::launchGame(GameData* game)
 	}
 
 	Renderer::init(0, 0);
-	InputManager::openJoystick();
+	window->getInputManager()->init();
 	AudioManager::init();
-
-	//re-enable SDL joystick events
-	SDL_JoystickEventState(1);
 }
 
 void SystemData::populateFolder(FolderData* folder)

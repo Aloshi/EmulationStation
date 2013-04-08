@@ -1,22 +1,22 @@
 #ifndef _GUIFASTSELECT_H_
 #define _GUIFASTSELECT_H_
 
-#include "../GuiComponent.h"
+#include "../Gui.h"
 #include "../SystemData.h"
 #include "../FolderData.h"
 #include "../Sound.h"
 #include "GuiList.h"
 #include "GuiBox.h"
 
-class GuiFastSelect : GuiComponent
+class GuiFastSelect : Gui
 {
 public:
-	GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound, Font* font);
+	GuiFastSelect(Window* window, GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound, Font* font);
 	~GuiFastSelect();
 
-	void onRender();
-	void onInput(InputManager::InputButton button, bool keyDown);
-	void onTick(int deltaTime);
+	void input(InputConfig* config, Input input);
+	void update(int deltaTime);
+	void render();
 private:
 	static const std::string LETTERS;
 	static const int SCROLLSPEED;

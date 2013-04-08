@@ -7,12 +7,12 @@
 unsigned int GuiImage::getWidth() { return mDrawWidth; }
 unsigned int GuiImage::getHeight() { return mDrawHeight; }
 
-GuiImage::GuiImage(int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact)
+GuiImage::GuiImage(GuiWindow* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact) : Gui(window)
 {
 	mTextureID = 0;
 
-	setOffsetX(offsetX);
-	setOffsetY(offsetY);
+	mOffsetX = offsetX;
+	mOffsetY = offsetY;
 
 	//default origin is the center of image
 	mOriginX = 0.5;
@@ -260,7 +260,7 @@ void GuiImage::setFlipY(bool flip)
 	mFlipY = flip;
 }
 
-void GuiImage::onRender()
+void GuiImage::render()
 {
 	if(mTextureID && getOpacity() > 0)
 	{
@@ -368,3 +368,9 @@ bool GuiImage::hasImage()
 {
 	return !mPath.empty();
 }
+
+int GuiImage::getOffsetX() { return mOffsetX; }
+int GuiImage::getOffsetY() { return mOffsetY; }
+unsigned char GuiImage::getOpacity() { return mOpacity; }
+void GuiImage::setOffset(int x, int y) { mOffsetX = x; mOffsetY = y; }
+void GuiImage::setOpacity(unsigned char opacity) { mOpacity = opacity; }

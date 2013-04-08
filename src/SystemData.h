@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "FolderData.h"
+#include "Window.h"
 
 class GameData;
 
@@ -21,7 +22,7 @@ public:
 	std::string getGamelistPath();
 	bool hasGamelist();
 
-	void launchGame(GameData* game);
+	void launchGame(Window* window, GameData* game);
 
 	static void deleteSystems();
 	static void loadConfig();

@@ -8,45 +8,29 @@
 //defined in main.cpp
 extern bool DONTSHOWEXIT;
 
-GuiMenu::GuiMenu(GuiGameList* parent)
+GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : Gui(window)
 {
 	mParent = parent;
-	parent->pause();
 
-	mList = new GuiList<std::string>(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::LARGE));
+	mList = new GuiList<std::string>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::LARGE));
 	mList->setSelectedTextColor(0x0000FFFF);
 	populateList();
-	addChild(mList);
-
-	mSkippedMenuClose = false;
-
-	Renderer::registerComponent(this);
-	InputManager::registerComponent(this);
 }
 
 GuiMenu::~GuiMenu()
 {
-	Renderer::unregisterComponent(this);
-	InputManager::unregisterComponent(this);
-
 	delete mList;
-	mParent->resume();
 }
 
-void GuiMenu::onInput(InputManager::InputButton button, bool keyDown)
+void GuiMenu::input(InputConfig* config, Input input)
 {
-	if(button == InputManager::MENU && !keyDown)
+	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
-		if(!mSkippedMenuClose)
-		{
-			mSkippedMenuClose = true;
-		}else{
-			delete this;
-			return;
-		}
+		delete this;
+		return;
 	}
 
-	if(button == InputManager::BUTTON1 && keyDown)
+	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		executeCommand(mList->getSelectedObject());
 	}
@@ -91,7 +75,13 @@ void GuiMenu::populateList()
 		mList->addObject("Exit", "exit", 0xFF0000FF); //a special case; pushes an SDL quit event to the event stack instead of being called by system()
 }
 
-void GuiMenu::onRender()
+void GuiMenu::update(int deltaTime)
+{
+	mList->update(deltaTime);
+}
+
+void GuiMenu::render()
 {
 	Renderer::drawRect(Renderer::getScreenWidth() * 0.25, 0, Renderer::getScreenWidth() * 0.5, Renderer::getScreenHeight(), 0x999999);
+	mList->render();
 }

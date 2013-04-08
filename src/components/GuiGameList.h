@@ -1,7 +1,7 @@
 #ifndef _GUIGAMELIST_H_
 #define _GUIGAMELIST_H_
 
-#include "../GuiComponent.h"
+#include "../Gui.h"
 #include "GuiList.h"
 #include "GuiImage.h"
 #include "GuiTheme.h"
@@ -14,7 +14,7 @@
 
 //This is where the magic happens - GuiGameList is the parent of almost every graphical element in ES at the moment.
 //It has a GuiList child that handles the game list, a GuiTheme that handles the theming system, and a GuiImage for game images.
-class GuiGameList : public GuiComponent
+class GuiGameList : public Gui
 {
 public:
 	GuiGameList(bool useDetail = false);
@@ -22,14 +22,13 @@ public:
 
 	void setSystemId(int id);
 
-	void onRender();
-	void onInput(InputManager::InputButton button, bool keyDown);
-	void onPause();
-	void onResume();
+	void render();
+	void input(InputConfig* config, Input input);
+
 	void onInit();
 	void onDeinit();
 
-	static GuiGameList* create();
+	static GuiGameList* create(Window* window);
 
 	static const float sInfoWidth;
 private:

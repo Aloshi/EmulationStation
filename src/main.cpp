@@ -10,7 +10,7 @@
 #include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"
-#include "InputManager.h"
+#include "Window.h"
 
 #ifdef _RPI_
 	#include <bcm_host.h>
@@ -114,6 +114,8 @@ int main(int argc, char* argv[])
 	//initialize audio
 	AudioManager::init();
 
+	Window window;
+
 	//try loading the system config file
 	if(!fs::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit
 	{
@@ -136,8 +138,8 @@ int main(int argc, char* argv[])
 				LOG(LogDebug) << "Found input config in " << InputManager::getConfigPath() << "\n";
 
 				//an input config already exists - load it and proceed to the gamelist as usual.
-				InputManager::loadConfig();
-				GuiGameList::create();
+				window.getInputManager()->loadConfig();
+				GuiGameList::create(&window);
 			}else{
 
 				if(DEBUG)
@@ -147,10 +149,10 @@ int main(int argc, char* argv[])
 				if(SDL_NumJoysticks() > 0)
 				{
 					LOG(LogDebug) << "	at least one joystick detected, launching config GUI...\n";
-					new GuiInputConfig();
+					window.pushGui(new GuiInputConfig(&window));
 				}else{
 					LOG(LogDebug) << "	no joystick detected, ignoring...\n";
-					GuiGameList::create();
+					GuiGameList::create(&window);
 				}
 
 			}
@@ -174,7 +176,7 @@ int main(int argc, char* argv[])
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
 				case SDL_JOYAXISMOTION:
-					if(InputManager::processEvent(&event) != InputManager::UNKNOWN)
+					if(window.getInputManager()->parseEvent(event))
 					{
 						sleeping = false;
 						timeSinceLastEvent = 0;
@@ -198,8 +200,8 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
-		GuiComponent::processTicks(deltaTime);
-		Renderer::render();
+		window.update(deltaTime);
+		window.render();
 
 		if(DRAWFRAMERATE)
 		{
@@ -227,7 +229,6 @@ int main(int argc, char* argv[])
 	}
 
 	AudioManager::deinit();
-	Renderer::deleteAll();
 	Renderer::deinit();
 	SystemData::deleteSystems();
 

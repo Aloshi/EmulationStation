@@ -54,7 +54,7 @@ void GuiBox::setCornerImage(std::string path)
 	mCornerImage.setImage(path);
 }
 
-void GuiBox::onRender()
+void GuiBox::render()
 {
 	mBackgroundImage.render();
 
@@ -121,7 +121,6 @@ void GuiBox::onDeinit()
 	mHorizontalImage.deinit();
 	mVerticalImage.deinit();
 }
-
 
 int GuiBox::getHorizontalBorderWidth()
 {

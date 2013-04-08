@@ -1,17 +1,17 @@
 #ifndef _GUITHEME_H_
 #define _GUITHEME_H_
 
-#include "../GuiComponent.h"
+#include "../Gui.h"
 #include "../pugiXML/pugixml.hpp"
 #include "GuiBox.h"
 #include "../Sound.h"
 #include "../Font.h"
 
 //This class loads an XML-defined list of GuiComponents.
-class GuiTheme : public GuiComponent
+class GuiTheme : Gui
 {
 public:
-	GuiTheme(bool detailed, std::string path = "");
+	GuiTheme(Window* window, bool detailed, std::string path = "");
 	~GuiTheme();
 
 	void readXML(std::string path);
@@ -41,7 +41,7 @@ private:
 	float strToFloat(std::string str, float defaultVal = 0.0f);
 	Font* resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize);
 
-	std::vector<GuiComponent*> mComponentVector;
+	std::vector<Gui*> mComponentVector;
 	std::string mPath;
 	bool mDetailed;
 

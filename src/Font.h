@@ -2,16 +2,14 @@
 #define _FONT_H_
 
 #include <string>
-#include "GuiComponent.h"
 #include "platform.h"
 #include GLHEADER
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
 //A TrueType Font renderer that uses FreeType and OpenGL.
-//Subclass of GuiComponent to catch ::onInit and ::onDeinit.
 //The library is automatically initialized when it's needed.
-class Font : GuiComponent
+class Font
 {
 public:
 	static void initLibrary();

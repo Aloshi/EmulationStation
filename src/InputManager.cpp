@@ -100,8 +100,9 @@ InputConfig* InputManager::getInputConfigByPlayer(int player)
 	return NULL;
 }
 
-void InputManager::parseEvent(const SDL_Event& ev)
+bool InputManager::parseEvent(const SDL_Event& ev)
 {
+	bool causedEvent = false;
 	switch(ev.type)
 	{
 	case SDL_JOYAXISMOTION:
@@ -118,19 +119,20 @@ void InputManager::parseEvent(const SDL_Event& ev)
 					normValue = -1;
 
 			mWindow->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, TYPE_AXIS, ev.jaxis.axis, normValue, false));
+			causedEvent = true;
 		}
 
 		mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis] = ev.jaxis.value;
-		break;
+		return causedEvent;
 
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
 		mWindow->input(getInputConfigByDevice(ev.jbutton.which), Input(ev.jbutton.which, TYPE_BUTTON, ev.jbutton.button, ev.jbutton.state == SDL_PRESSED, false));
-		break;
+		return true;
 
 	case SDL_JOYHATMOTION:
 		mWindow->input(getInputConfigByDevice(ev.jhat.which), Input(ev.jhat.which, TYPE_HAT, ev.jhat.hat, ev.jhat.value, false));
-		break;
+		return true;
 
 	case SDL_KEYDOWN:
 		if(ev.key.keysym.sym == SDLK_F4)
@@ -138,14 +140,29 @@ void InputManager::parseEvent(const SDL_Event& ev)
 			SDL_Event* quit = new SDL_Event();
 			quit->type = SDL_QUIT;
 			SDL_PushEvent(quit);
-			return;
+			return false;
 		}
 
 		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 1, false));
-		break;
+		return true;
 
 	case SDL_KEYUP:
 		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
-		break;
+		return true;
 	}
+
+	return false;
 }
+
+void InputManager::loadConfig()
+{
+
+}
+
+std::string InputManager::getConfigPath()
+{
+	std::string path = getenv("HOME");
+	path += "/.emulationstation/es_input.cfg";
+	return path;
+}
+

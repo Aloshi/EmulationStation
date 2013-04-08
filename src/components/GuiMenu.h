@@ -1,20 +1,20 @@
 #ifndef _GUIMENU_H_
 #define _GUIMENU_H_
 
-#include "../GuiComponent.h"
+#include "../Gui.h"
 #include "GuiList.h"
 
 class GuiGameList;
 
-//This is a very simple menu that is opened by pressing the Menu key.
-class GuiMenu : public GuiComponent
+class GuiMenu : public Gui
 {
 public:
-	GuiMenu(GuiGameList* parent);
+	GuiMenu(Window* window, GuiGameList* parent);
 	~GuiMenu();
 
-	void onInput(InputManager::InputButton button, bool keyDown);
-	void onRender();
+	void input(InputConfig* config, Input input);
+	void update(int deltaTime);
+	void render();
 
 private:
 	GuiGameList* mParent;
@@ -22,8 +22,6 @@ private:
 
 	void populateList();
 	void executeCommand(std::string command);
-
-	bool mSkippedMenuClose;
 };
 
 #endif

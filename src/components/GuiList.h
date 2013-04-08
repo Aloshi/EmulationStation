@@ -3,7 +3,7 @@
 
 #include "../Renderer.h"
 #include "../Font.h"
-#include "../GuiComponent.h"
+#include "../Gui.h"
 #include "../InputManager.h"
 #include <vector>
 #include <string>
@@ -12,21 +12,18 @@
 //A graphical list. Supports multiple colors for rows and scrolling.
 //TODO - add truncation to text rendering if name exceeds a maximum width (a trailing elipses, perhaps).
 template <typename listType>
-class GuiList : public GuiComponent
+class GuiList : public Gui
 {
 public:
-	GuiList(int offsetX, int offsetY, Font* font);
+	GuiList(Window* window, int offsetX, int offsetY, Font* font);
 	~GuiList();
 
-	void onRender();
-	void onTick(int deltaTime);
-	void onInput(InputManager::InputButton button, bool keyDown);
+	void input(InputConfig* config, Input input);
+	void update(int deltaTime);
+	void render();
 
 	void addObject(std::string name, listType obj, unsigned int color = 0xFF0000);
 	void clear();
-
-	void onPause();
-	void onResume();
 
 	std::string getSelectedName();
 	listType getSelectedObject();
@@ -45,9 +42,14 @@ public:
 	void setSelection(int i);
 
 	void setFont(Font* f);
+
+	int getOffsetX();
+	int getOffsetY();
 private:
 	static const int SCROLLDELAY = 507;
 	static const int SCROLLTIME = 200;
+
+	int mOffsetX, mOffsetY;
 
 	void scroll(); //helper method, scrolls in whatever direction scrollDir is
 

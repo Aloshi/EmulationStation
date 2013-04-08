@@ -4,15 +4,15 @@
 #include <iostream>
 
 template <typename listType>
-GuiList<listType>::GuiList(int offsetX, int offsetY, Font* font)
+GuiList<listType>::GuiList(Window* window, int offsetX, int offsetY, Font* font) : Gui(window)
 {
 	mSelection = 0;
 	mScrollDir = 0;
 	mScrolling = 0;
 	mScrollAccumulator = 0;
 
-	setOffsetX(offsetX);
-	setOffsetY(offsetY);
+	mOffsetX = offsetX;
+	mOffsetY = offsetY;
 
 	mTextOffsetX = 0;
 
@@ -21,18 +21,15 @@ GuiList<listType>::GuiList(int offsetX, int offsetY, Font* font)
 	mSelectedTextColorOverride = 0;
 	mScrollSound = NULL;
 	mDrawCentered = true;
-
-	InputManager::registerComponent(this);
 }
 
 template <typename listType>
 GuiList<listType>::~GuiList()
 {
-	InputManager::unregisterComponent(this);
 }
 
 template <typename listType>
-void GuiList<listType>::onRender()
+void GuiList<listType>::render()
 {
 	const int cutoff = getOffsetY();
 	const int entrySize = mFont->getHeight() + 5;
@@ -84,36 +81,37 @@ void GuiList<listType>::onRender()
 }
 
 template <typename listType>
-void GuiList<listType>::onInput(InputManager::InputButton button, bool keyDown)
+void GuiList<listType>::input(InputConfig* config, Input input)
 {
 	if(mRowVector.size() > 0)
 	{
-		if(keyDown)
+		if(input.value != 0)
 		{
-			if(button == InputManager::DOWN)
+			if(config->isMappedTo("down", input))
 			{
 				mScrollDir = 1;
 				scroll();
 			}
 
-			if(button == InputManager::UP)
+			if(config->isMappedTo("up", input))
 			{
 				mScrollDir = -1;
 				scroll();
 			}
-			if(button == InputManager::PAGEDOWN)
+			if(config->isMappedTo("pagedown", input))
 			{
 				mScrollDir = 10;
 				scroll();
 			}
 
-			if(button == InputManager::PAGEUP)
+			if(config->isMappedTo("pageup", input))
 			{
 				mScrollDir = -10;
 				scroll();
 			}
 		}else{
-			if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::PAGEDOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0) || (button == InputManager::PAGEUP && mScrollDir < 0))
+			//if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::PAGEDOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0) || (button == InputManager::PAGEUP && mScrollDir < 0))
+			if(config->isMappedTo("down", input) || config->isMappedTo("up", input) || config->isMappedTo("pagedown", input) || config->isMappedTo("pageup", input))
 			{
 				stopScrolling();
 			}
@@ -130,7 +128,7 @@ void GuiList<listType>::stopScrolling()
 }
 
 template <typename listType>
-void GuiList<listType>::onTick(int deltaTime)
+void GuiList<listType>::update(int deltaTime)
 {
 	if(mScrollDir != 0)
 	{
@@ -229,18 +227,6 @@ bool GuiList<listType>::isScrolling()
 }
 
 template <typename listType>
-void GuiList<listType>::onPause()
-{
-	InputManager::unregisterComponent(this);
-}
-
-template <typename listType>
-void GuiList<listType>::onResume()
-{
-	InputManager::registerComponent(this);
-}
-
-template <typename listType>
 void GuiList<listType>::setSelectorColor(unsigned int selectorColor)
 {
 	mSelectorColor = selectorColor;
@@ -292,4 +278,16 @@ template <typename listType>
 void GuiList<listType>::setFont(Font* font)
 {
 	mFont = font;
+}
+
+template <typename listType>
+int GuiList<listType>::getOffsetX()
+{
+	return mOffsetX;
+}
+
+template <typename listType>
+int GuiList<listType>::getOffsetY()
+{
+	return mOffsetY;
 }

@@ -6,14 +6,12 @@ const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
-GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound, Font* font)
+GuiFastSelect::GuiFastSelect(Window* window, GuiComponent* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, 
+	int textcolor, Sound* scrollsound, Font* font) : Gui(window)
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
 	if(mLetterID == std::string::npos)
 		mLetterID = 0;
-
-	Renderer::registerComponent(this);
-	InputManager::registerComponent(this);
 
 	mParent = parent;
 	mList = list;
@@ -29,21 +27,14 @@ GuiFastSelect::GuiFastSelect(GuiComponent* parent, GuiList<FileData*>* list, cha
 	mBox->setData(data);
 
 	mTextColor = textcolor;
-
-	mParent->pause();
 }
 
 GuiFastSelect::~GuiFastSelect()
 {
-	Renderer::unregisterComponent(this);
-	InputManager::unregisterComponent(this);
-
 	delete mBox;
-
-	mParent->resume();
 }
 
-void GuiFastSelect::onRender()
+void GuiFastSelect::render()
 {
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 
@@ -55,28 +46,28 @@ void GuiFastSelect::onRender()
 	Renderer::drawCenteredText(LETTERS.substr(mLetterID, 1), 0, sh * 0.5 - (mFont->getHeight() * 0.5), mTextColor, mFont);
 }
 
-void GuiFastSelect::onInput(InputManager::InputButton button, bool keyDown)
+void GuiFastSelect::input(InputConfig* config, Input input)
 {
-	if(button == InputManager::UP && keyDown)
+	if(config->isMappedTo("up", input) && input.value != 0)
 	{
 		mScrollOffset = -1;
 		scroll();
 	}
 
-	if(button == InputManager::DOWN && keyDown)
+	if(config->isMappedTo("down", input) && input.value != 0)
 	{
 		mScrollOffset = 1;
 		scroll();
 	}
 
-	if((button == InputManager::UP || button == InputManager::DOWN) && !keyDown)
+	if((config->isMappedTo("up", input) || config->isMappedTo("down", input)) && input.value == 0)
 	{
 		mScrolling = false;
 		mScrollTimer = 0;
 		mScrollOffset = 0;
 	}
 
-	if(button == InputManager::SELECT && !keyDown)
+	if(config->isMappedTo("select", input) && input.value == 0)
 	{
 		setListPos();
 		delete this;
@@ -84,7 +75,7 @@ void GuiFastSelect::onInput(InputManager::InputButton button, bool keyDown)
 	}
 }
 
-void GuiFastSelect::onTick(int deltaTime)
+void GuiFastSelect::update(int deltaTime)
 {
 	if(mScrollOffset != 0)
 	{

@@ -1,11 +1,12 @@
 #ifndef _GUIBOX_H_
 #define _GUIBOX_H_
 
-#include "../GuiComponent.h"
+#include "../Gui.h"
 #include "GuiImage.h"
 #include <string>
 
-struct GuiBoxData {
+struct GuiBoxData
+{
 	std::string backgroundPath;
 	bool backgroundTiled;
 	std::string horizontalPath;
@@ -15,7 +16,7 @@ struct GuiBoxData {
 	std::string cornerPath;
 };
 
-class GuiBox : public GuiComponent
+class GuiBox
 {
 public:
 	GuiBox(int offsetX, int offsetY, unsigned int width, unsigned int height);
@@ -29,7 +30,7 @@ public:
 
 	bool hasBackground();
 
-	void onRender();
+	void render();
 
 	void onInit();
 	void onDeinit();

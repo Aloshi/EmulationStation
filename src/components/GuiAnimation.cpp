@@ -17,7 +17,7 @@ void GuiAnimation::move(int x, int y, int speed)
 
 void GuiAnimation::fadeIn(int time)
 {
-	setOpacity(0);
+	mOpacity = 0;
 	setChildrenOpacity(0);
 
 	mFadeRate = time;
@@ -25,13 +25,13 @@ void GuiAnimation::fadeIn(int time)
 
 void GuiAnimation::fadeOut(int time)
 {
-	setOpacity(255);
+	mOpacity = 255;
 	setChildrenOpacity(255);
 
 	mFadeRate = -time;
 }
 
-void GuiAnimation::onTick(int deltaTime)
+void GuiAnimation::update(int deltaTime)
 {
 	float mult = deltaTime * 0.05;
 
@@ -51,7 +51,7 @@ void GuiAnimation::onTick(int deltaTime)
 
 	if(mFadeRate != 0)
 	{
-		int opacity = getOpacity() + mFadeRate;
+		int opacity = (int)mOpacity + mFadeRate;
 		if(opacity > 255)
 		{
 			mFadeRate = 0;
@@ -64,24 +64,29 @@ void GuiAnimation::onTick(int deltaTime)
 			opacity = 0;
 		}
 
-		setOpacity((unsigned char)opacity);
+		mOpacity = (unsigned char)opacity;
 		setChildrenOpacity((unsigned char)opacity);
 	}
 }
 
+void GuiAnimation::addChild(GuiImage* gui)
+{
+	mChildren.push_back(gui);
+}
+
 void GuiAnimation::moveChildren(int offsetx, int offsety)
 {
-	for(unsigned int i = 0; i < getChildCount(); i++)
+	for(unsigned int i = 0; i < mChildren.size(); i++)
 	{
-		GuiComponent* comp = getChild(i);
+		GuiImage* comp = mChildren.at(i);
 		comp->setOffset(comp->getOffsetX() + offsetx, comp->getOffsetY() + offsety);
 	}
 }
 
 void GuiAnimation::setChildrenOpacity(unsigned char opacity)
 {
-	for(unsigned int i = 0; i < getChildCount(); i++)
+	for(unsigned int i = 0; i < mChildren.size(); i++)
 	{
-		getChild(i)->setOpacity(opacity);
+		mChildren.at(i)->setOpacity(opacity);
 	}
 }

@@ -1,30 +1,23 @@
 #ifndef _GUIINPUTCONFIG_H_
 #define _GUIINPUTCONFIG_H_
 
-#include "../GuiComponent.h"
-#include "../InputManager.h"
+#include "../Gui.h"
 #include <map>
 #include <SDL/SDL.h>
 
-class GuiInputConfig : GuiComponent {
+class GuiInputConfig : public Gui
+{
 public:
-	GuiInputConfig();
+	GuiInputConfig(Window* window);
 	~GuiInputConfig();
 
-	void onRender();
-	void onInput(InputManager::InputButton button, bool keyDown);
+	void render();
+	void input(InputConfig* config, Input input);
 private:
 	bool mDone;
 	int mInputNum;
-	int mLastAxis;
-	SDL_Joystick* mJoystick;
 	static std::string sInputs[];
 	static int sInputCount;
-
-	std::map<int, InputManager::InputButton> mButtonMap;
-	std::map<int, InputManager::InputButton> mAxisPosMap;
-	std::map<int, InputManager::InputButton> mAxisNegMap;
-	void writeConfig();
 };
 
 #endif

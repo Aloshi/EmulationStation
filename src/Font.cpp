@@ -44,9 +44,6 @@ void Font::initLibrary()
 
 Font::Font(std::string path, int size)
 {
-	//register to receive init/deinit callbacks
-	Renderer::registerComponent(this);
-
 	mPath = path;
 	mSize = size;
 
@@ -183,8 +180,6 @@ void Font::buildAtlas()
 
 Font::~Font()
 {
-	Renderer::unregisterComponent(this);
-
 	if(textureID)
 		glDeleteTextures(1, &textureID);
 }
