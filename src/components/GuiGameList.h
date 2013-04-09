@@ -22,8 +22,9 @@ public:
 
 	void setSystemId(int id);
 
-	void render();
 	void input(InputConfig* config, Input input);
+	void update(int deltaTime);
+	void render();
 
 	void onInit();
 	void onDeinit();

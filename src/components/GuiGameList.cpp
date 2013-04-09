@@ -105,6 +105,8 @@ void GuiGameList::render()
 
 void GuiGameList::input(InputConfig* config, Input input)
 {
+	mList->input(config, input);
+
 	if(config->isMappedTo("a", input) && mFolder->getFileCount() > 0 && input.value != 0)
 	{
 		//play select sound
@@ -154,13 +156,13 @@ void GuiGameList::input(InputConfig* config, Input input)
 	//open the "start menu"
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
-		new GuiMenu(mWindow, this);
+		mWindow->pushGui(new GuiMenu(mWindow, this));
 	}
 
 	//open the fast select menu
 	if(config->isMappedTo("select", input) && input.value != 0)
 	{
-		new GuiFastSelect(mWindow, this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont());
+		mWindow->pushGui(new GuiFastSelect(mWindow, this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont()));
 	}
 
 	if(mDetailed)
@@ -303,4 +305,10 @@ GuiGameList* GuiGameList::create(Window* window)
 	GuiGameList* list = new GuiGameList(window, detailed);
 	window->pushGui(list);
 	return list;
+}
+
+void GuiGameList::update(int deltaTime)
+{
+	mImageAnimation->update(deltaTime);
+	mList->update(deltaTime);
 }

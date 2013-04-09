@@ -17,6 +17,7 @@ GuiImage::GuiImage(Window* window, int offsetX, int offsetY, std::string path, u
 	//default origin is the center of image
 	mOriginX = 0.5;
 	mOriginY = 0.5;
+	mOpacity = 255;
 
 	mWidth = mDrawWidth = 0;
 	mHeight = mDrawHeight = 0;

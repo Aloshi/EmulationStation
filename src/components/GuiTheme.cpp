@@ -257,7 +257,7 @@ void GuiTheme::readXML(std::string path)
 	LOG(LogInfo) << "Theme loading complete.";
 }
 
-//recursively creates components (with proper parenting)
+//recursively creates components
 void GuiTheme::createComponentChildren(pugi::xml_node node, Gui* parent)
 {
 	for(pugi::xml_node data = node.child("component"); data; data = data.next_sibling("component"))

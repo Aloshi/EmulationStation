@@ -10,7 +10,7 @@
 
 class GuiGameList;
 
-class GuiFastSelect : Gui
+class GuiFastSelect : public Gui
 {
 public:
 	GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound, Font* font);

@@ -4,6 +4,7 @@
 Window::Window()
 {
 	mInputManager = new InputManager(this);
+	mInputManager->init();
 }
 
 Window::~Window()

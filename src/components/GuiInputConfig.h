@@ -2,22 +2,21 @@
 #define _GUIINPUTCONFIG_H_
 
 #include "../Gui.h"
-#include <map>
-#include <SDL/SDL.h>
+#include <string>
 
 class GuiInputConfig : public Gui
 {
 public:
-	GuiInputConfig(Window* window);
-	~GuiInputConfig();
+	GuiInputConfig(Window* window, InputConfig* target);
 
-	void render();
 	void input(InputConfig* config, Input input);
+	void update(int deltaTime);
+	void render();
+
 private:
-	bool mDone;
-	int mInputNum;
-	static std::string sInputs[];
-	static int sInputCount;
+	std::string mErrorMsg;
+	InputConfig* mTargetConfig;
+	int mCurInputId;
 };
 
 #endif

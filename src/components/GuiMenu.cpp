@@ -24,6 +24,8 @@ GuiMenu::~GuiMenu()
 
 void GuiMenu::input(InputConfig* config, Input input)
 {
+	mList->input(config, input);
+
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		delete this;

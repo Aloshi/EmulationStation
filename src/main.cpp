@@ -5,7 +5,7 @@
 #include "components/GuiGameList.h"
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
-#include "components/GuiInputConfig.h"
+#include "components/GuiDetectDevice.h"
 #include <SDL.h>
 #include "AudioManager.h"
 #include "platform.h"
@@ -135,26 +135,11 @@ int main(int argc, char* argv[])
 			//choose which GUI to open depending on Input configuration
 			if(fs::exists(InputManager::getConfigPath()))
 			{
-				LOG(LogDebug) << "Found input config in " << InputManager::getConfigPath() << "\n";
-
 				//an input config already exists - load it and proceed to the gamelist as usual.
 				window.getInputManager()->loadConfig();
 				GuiGameList::create(&window);
 			}else{
-
-				if(DEBUG)
-					std::cout << "SDL_NumJoysticks() reports " << SDL_NumJoysticks() << " present.\n";
-
-				//if no input.cfg is present, but a joystick is connected, launch the input config GUI
-				if(SDL_NumJoysticks() > 0)
-				{
-					LOG(LogDebug) << "	at least one joystick detected, launching config GUI...\n";
-					window.pushGui(new GuiInputConfig(&window));
-				}else{
-					LOG(LogDebug) << "	no joystick detected, ignoring...\n";
-					GuiGameList::create(&window);
-				}
-
+				window.pushGui(new GuiDetectDevice(&window));
 			}
 		}
 	}
