@@ -32,8 +32,8 @@ public:
 
 	void render();
 
-	void onInit();
-	void onDeinit();
+	void init();
+	void deinit();
 private:
 	GuiImage mBackgroundImage, mHorizontalImage, mVerticalImage, mCornerImage;
 

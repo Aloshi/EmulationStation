@@ -26,8 +26,8 @@ public:
 	void update(int deltaTime);
 	void render();
 
-	void onInit();
-	void onDeinit();
+	void init();
+	void deinit();
 
 	void updateDetailData();
 

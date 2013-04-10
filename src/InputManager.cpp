@@ -21,6 +21,8 @@ void InputManager::init()
 	if(mJoysticks != NULL)
 		deinit();
 
+	std::cout << "initializing InputManager...";
+
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
 	mNumJoysticks = SDL_NumJoysticks();
@@ -42,10 +44,14 @@ void InputManager::init()
 	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD);
 
 	SDL_JoystickEventState(SDL_ENABLE);
+
+	std::cout << "done\n";
 }
 
 void InputManager::deinit()
 {
+	std::cout << "deinitializing InputManager...";
+
 	SDL_JoystickEventState(SDL_DISABLE);
 
 	if(!SDL_WasInit(SDL_INIT_JOYSTICK))
@@ -70,6 +76,8 @@ void InputManager::deinit()
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+
+	std::cout << "done\n";
 }
 
 int InputManager::getNumJoysticks() { return mNumJoysticks; }

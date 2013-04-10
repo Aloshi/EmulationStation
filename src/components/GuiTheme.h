@@ -20,6 +20,9 @@ public:
 
 	void render();
 
+	void init();
+	void deinit();
+
 	unsigned int getColor(std::string name);
 	bool getBool(std::string name);
 	float getFloat(std::string name);

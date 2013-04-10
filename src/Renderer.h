@@ -20,7 +20,7 @@ namespace Renderer
 	unsigned int getScreenWidth();
 	unsigned int getScreenHeight();
 
-	enum FontSize { SMALL, MEDIUM, LARGE };
+	enum FontSize { SMALL, MEDIUM, LARGE, FONT_SIZE_COUNT };
 	Font* getDefaultFont(FontSize size);
 	void buildGLColorArray(GLubyte* ptr, unsigned int color, unsigned int vertCount);
 

@@ -111,12 +111,18 @@ void GuiBox::render()
 	mCornerImage.render();
 }
 
-void GuiBox::onInit()
+void GuiBox::init()
 {
+	mVerticalImage.init();
+	mHorizontalImage.init();
+	mCornerImage.init();
 }
 
-void GuiBox::onDeinit()
+void GuiBox::deinit()
 {
+	mVerticalImage.deinit();
+	mHorizontalImage.deinit();
+	mCornerImage.deinit();
 }
 
 int GuiBox::getHorizontalBorderWidth()

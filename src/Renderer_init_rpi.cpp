@@ -31,7 +31,7 @@ namespace Renderer
 	{
 		LOG(LogInfo) << "Starting SDL...";
 
-		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) != 0)
+		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 		{
 			LOG(LogError) << "Error initializing SDL!\n	" << SDL_GetError() << "\n" << "Are you in the 'video', 'audio', and 'input' groups? Is X closed? Is your firmware up to date? Are you using at least the 192/64 memory split?";
 			return false;

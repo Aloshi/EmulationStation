@@ -47,10 +47,10 @@ Font::Font(std::string path, int size)
 	mPath = path;
 	mSize = size;
 
-	onInit();
+	init();
 }
 
-void Font::onInit()
+void Font::init()
 {
 	if(!libraryInitialized)
 		initLibrary();
@@ -69,12 +69,16 @@ void Font::onInit()
 	buildAtlas();
 
 	FT_Done_Face(face);
+
+	std::cout << "initialized font\n";
 }
 
-void Font::onDeinit()
+void Font::deinit()
 {
 	if(textureID)
 		glDeleteTextures(1, &textureID);
+
+	std::cout << "deinitialized font\n";
 }
 
 void Font::buildAtlas()

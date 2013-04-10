@@ -67,9 +67,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
-	AudioManager::deinit();
-	window->getInputManager()->deinit();
-	Renderer::deinit();
+	window->deinit();
 
 	std::string command = mLaunchCommand;
 
@@ -86,9 +84,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 		LOG(LogWarning) << "...launch terminated with nonzero exit code " << exitCode << "!";
 	}
 
-	Renderer::init(0, 0);
-	window->getInputManager()->init();
-	AudioManager::init();
+	window->init();
 }
 
 void SystemData::populateFolder(FolderData* folder)

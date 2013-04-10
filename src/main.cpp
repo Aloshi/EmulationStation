@@ -114,7 +114,8 @@ int main(int argc, char* argv[])
 	//initialize audio
 	AudioManager::init();
 
-	Window window;
+	Window window; //don't call Window.init() because we manually pass the resolution to Renderer::init
+	window.getInputManager()->init();
 
 	//try loading the system config file
 	if(!fs::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit

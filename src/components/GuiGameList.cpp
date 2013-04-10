@@ -125,6 +125,7 @@ void GuiGameList::input(InputConfig* config, Input input)
 			while(mTheme->getSound("menuSelect")->isPlaying());
 
 			mSystem->launchGame(mWindow, (GameData*)file);
+			return;
 		}
 	}
 
@@ -275,14 +276,24 @@ void GuiGameList::clearDetailData()
 
 //called when the renderer shuts down/returns
 //we have to manually call init/deinit on mTheme because it is not our child
-void GuiGameList::onDeinit()
+void GuiGameList::deinit()
 {
+	if(mDetailed)
+	{
+		mScreenshot->deinit();
+	}
+
 	mTheme->deinit();
 }
 
-void GuiGameList::onInit()
+void GuiGameList::init()
 {
 	mTheme->init();
+
+	if(mDetailed)
+	{
+		mScreenshot->deinit();
+	}
 }
 
 extern bool IGNOREGAMELIST; //defined in main.cpp (as a command line argument)

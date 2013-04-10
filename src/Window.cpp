@@ -1,10 +1,11 @@
 #include "Window.h"
 #include <iostream>
+#include "Renderer.h"
+#include "AudioManager.h"
 
 Window::Window()
 {
 	mInputManager = new InputManager(this);
-	mInputManager->init();
 }
 
 Window::~Window()
@@ -50,6 +51,10 @@ void Window::render()
 
 void Window::init()
 {
+	AudioManager::init();
+	mInputManager->init();
+	Renderer::init(0, 0);
+
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
 		mGuiStack.at(i)->init();
@@ -62,6 +67,10 @@ void Window::deinit()
 	{
 		mGuiStack.at(i)->deinit();
 	}
+
+	AudioManager::deinit();
+	mInputManager->deinit();
+	Renderer::deinit();
 }
 
 void Window::input(InputConfig* config, Input input)

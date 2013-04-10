@@ -21,7 +21,7 @@ namespace Renderer
 	{
 		LOG(LogInfo) << "Creating surface...";
 
-		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO) != 0)
+		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
 		{
 			LOG(LogError) << "Error initializing SDL!\n	" << SDL_GetError();
 			return false;
@@ -32,7 +32,7 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | SDL_FULLSCREEN | SDL_DOUBLEBUF);
+		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL /*| SDL_FULLSCREEN*/ | SDL_DOUBLEBUF);
 
 		if(sdlScreen == NULL)
 		{
@@ -80,11 +80,23 @@ namespace Renderer
 		glOrtho(0, display_width, display_height, 0, -1.0, 1.0);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+		//initialize fonts
+		for(int i = 0; i < (int)FONT_SIZE_COUNT; i++)
+		{
+			getDefaultFont((FontSize)i)->init();
+		}
+
 		return true;
 	}
 
 	void deinit()
 	{
+		//deinitialize fonts
+		for(int i = 0; i < (int)FONT_SIZE_COUNT; i++)
+		{
+			getDefaultFont((FontSize)i)->deinit();
+		}
+
 		destroySurface();
 	}
 };

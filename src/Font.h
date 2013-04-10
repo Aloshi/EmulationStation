@@ -40,8 +40,8 @@ public:
 	void sizeText(std::string text, int* w, int* h); //Sets the width and height of a given string to given pointers. Skipped if pointer is NULL.
 	int getHeight();
 
-	void onInit();
-	void onDeinit();
+	void init();
+	void deinit();
 
 	int getSize();
 

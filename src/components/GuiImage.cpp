@@ -354,13 +354,13 @@ void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, u
 	glDisable(GL_BLEND);
 }
 
-void GuiImage::onInit()
+void GuiImage::init()
 {
 	if(!mPath.empty())
 		loadImage(mPath);
 }
 
-void GuiImage::onDeinit()
+void GuiImage::deinit()
 {
 	unloadImage();
 }

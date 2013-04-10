@@ -32,8 +32,8 @@ public:
 	void render();
 
 	//Image textures will be deleted on renderer deinitialization, and recreated on reinitialization (if mPath is not empty).
-	void onInit();
-	void onDeinit();
+	void init();
+	void deinit();
 
 	unsigned char getOpacity();
 	void setOpacity(unsigned char opacity);

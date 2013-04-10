@@ -431,3 +431,20 @@ void GuiTheme::render()
 		mComponentVector.at(i)->render();
 	}
 }
+
+void GuiTheme::init()
+{
+	for(unsigned int i = 0; i < mComponentVector.size(); i++)
+	{
+		mComponentVector.at(i)->init();
+	}
+}
+
+void GuiTheme::deinit()
+{
+	for(unsigned int i = 0; i < mComponentVector.size(); i++)
+	{
+		mComponentVector.at(i)->deinit();
+	}
+}
+
