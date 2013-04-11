@@ -438,6 +438,11 @@ void GuiTheme::init()
 	{
 		mComponentVector.at(i)->init();
 	}
+
+	//fonts are special
+	if(mListFont)	mListFont->init();
+	if(mDescFont)	mDescFont->init();
+	if(mFastSelectFont)	mFastSelectFont->init();
 }
 
 void GuiTheme::deinit()
@@ -446,5 +451,8 @@ void GuiTheme::deinit()
 	{
 		mComponentVector.at(i)->deinit();
 	}
-}
 
+	if(mListFont)	mListFont->deinit();
+	if(mDescFont)	mDescFont->deinit();
+	if(mFastSelectFont)	mFastSelectFont->deinit();
+}
