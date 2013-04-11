@@ -69,16 +69,12 @@ void Font::init()
 	buildAtlas();
 
 	FT_Done_Face(face);
-
-	std::cout << "initialized font\n";
 }
 
 void Font::deinit()
 {
 	if(textureID)
 		glDeleteTextures(1, &textureID);
-
-	std::cout << "deinitialized font\n";
 }
 
 void Font::buildAtlas()

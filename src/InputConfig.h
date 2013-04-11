@@ -6,6 +6,7 @@
 #include <string>
 #include <SDL.h>
 #include <sstream>
+#include "pugiXML/pugixml.hpp"
 
 #define DEVICE_KEYBOARD -1
 
@@ -103,6 +104,8 @@ public:
 	//Returns a list of names this input is mapped to.
 	std::vector<std::string> getMappedTo(Input input);
 
+	void loadFromXML(pugi::xml_node root, int playerNum);
+	void writeToXML(pugi::xml_node parent);
 private:
 	std::map<std::string, Input> mNameMap;
 	const int mDeviceId;

@@ -17,6 +17,7 @@ public:
 	~InputManager();
 
 	void loadConfig();
+	void writeConfig();
 	static std::string getConfigPath();
 
 	void init();

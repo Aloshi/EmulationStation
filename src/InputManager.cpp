@@ -2,6 +2,11 @@
 #include "InputConfig.h"
 #include "Window.h"
 #include <iostream>
+#include "Log.h"
+#include "pugiXML/pugixml.hpp"
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 InputManager::InputManager(Window* window) : mWindow(window)
 {
@@ -20,8 +25,6 @@ void InputManager::init()
 {
 	if(mJoysticks != NULL)
 		deinit();
-
-	std::cout << "initializing InputManager...";
 
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
@@ -45,13 +48,11 @@ void InputManager::init()
 
 	SDL_JoystickEventState(SDL_ENABLE);
 
-	std::cout << "done\n";
+	loadConfig();
 }
 
 void InputManager::deinit()
 {
-	std::cout << "deinitializing InputManager...";
-
 	SDL_JoystickEventState(SDL_DISABLE);
 
 	if(!SDL_WasInit(SDL_INIT_JOYSTICK))
@@ -76,8 +77,6 @@ void InputManager::deinit()
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
-
-	std::cout << "done\n";
 }
 
 int InputManager::getNumJoysticks() { return mNumJoysticks; }
@@ -164,7 +163,83 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 
 void InputManager::loadConfig()
 {
+	if(!mJoysticks)
+	{
+		std::cout << "ERROR - cannot load config without being initialized!\n";
+	}
 
+	std::string path = getConfigPath();
+	if(!fs::exists(path))
+		return;
+
+	pugi::xml_document doc;
+	pugi::xml_parse_result res = doc.load_file(path.c_str());
+
+	if(!res)
+	{
+		LOG(LogError) << "Error loading input config: " << res.description();
+		return;
+	}
+
+	mNumPlayers = 0;
+
+	pugi::xml_node root = doc.child("inputList");
+
+	for(pugi::xml_node node = root.child("inputConfig"); node; node = node.next_sibling("inputConfig"))
+	{
+		std::string type = node.attribute("type").as_string();
+
+		if(type == "keyboard")
+		{
+			getInputConfigByDevice(DEVICE_KEYBOARD)->loadFromXML(node, mNumPlayers);
+			mNumPlayers++;
+		}else if(type == "joystick")
+		{
+			bool found = false;
+			std::string devName = node.child("deviceName").text().get();
+			for(int i = 0; i < mNumJoysticks; i++)
+			{
+				if(SDL_JoystickName(i) == devName)
+				{
+					mInputConfigs[i]->loadFromXML(node, mNumPlayers);
+					mNumPlayers++;
+					found = true;
+					break;
+				}
+			}
+
+			if(!found)
+			{
+				LOG(LogWarning) << "Could not find joystick named \"" << devName << "\"! Skipping it.\n";
+				continue;
+			}
+		}else{
+			LOG(LogWarning) << "Device type \"" << type << "\" unknown!\n";
+		}
+	}
+}
+
+void InputManager::writeConfig()
+{
+	if(!mJoysticks)
+	{
+		std::cout << "ERROR - cannot write config without being initialized!\n";
+		return;
+	}
+
+	std::string path = getConfigPath();
+
+	pugi::xml_document doc;
+
+	pugi::xml_node root = doc.append_child("inputList");
+
+	mKeyboardInputConfig->writeToXML(root);
+	for(int i = 0; i < mNumJoysticks; i++)
+	{
+		mInputConfigs[i]->writeToXML(root);
+	}
+
+	doc.save_file(path.c_str());
 }
 
 std::string InputManager::getConfigPath()
@@ -173,4 +248,3 @@ std::string InputManager::getConfigPath()
 	path += "/.emulationstation/es_input.cfg";
 	return path;
 }
-

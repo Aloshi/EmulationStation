@@ -4,6 +4,38 @@
 #include <SDL.h>
 #include <iostream>
 
+//some util functions
+std::string inputTypeToString(InputType type)
+{
+	switch(type)
+	{
+	case TYPE_AXIS:
+		return "axis";
+	case TYPE_BUTTON:
+		return "button";
+	case TYPE_HAT:
+		return "hat";
+	case TYPE_KEY:
+		return "key";
+	default:
+		return "error";
+	}
+}
+
+InputType stringToInputType(const std::string& type)
+{
+	if(type == "axis")
+		return TYPE_AXIS;
+	if(type == "button")
+		return TYPE_BUTTON;
+	if(type == "hat")
+		return TYPE_HAT;
+	if(type == "key")
+		return TYPE_KEY;
+	return TYPE_COUNT;
+}
+
+
 std::string toLower(std::string str)
 {
 	for(unsigned int i = 0; i < str.length(); i++)
@@ -13,6 +45,7 @@ std::string toLower(std::string str)
 
 	return str;
 }
+//end util functions
 
 InputConfig::InputConfig(int deviceId) : mDeviceId(deviceId)
 {
@@ -91,6 +124,53 @@ std::vector<std::string> InputConfig::getMappedTo(Input input)
 	return maps;
 }
 
+void InputConfig::loadFromXML(pugi::xml_node node, int playerNum)
+{
+	this->clear();
+
+	setPlayerNum(playerNum);
+
+	for(pugi::xml_node input = node.child("input"); input; input = input.next_sibling("input"))
+	{
+		std::string name = input.attribute("name").as_string();
+		std::string type = input.attribute("type").as_string();
+		InputType typeEnum = stringToInputType(type);
+
+		if(typeEnum == TYPE_COUNT)
+		{
+			std::cout << "ERROR - input type \"" << type << "\" is invalid! Skipping input \"" << name << "\".\n";
+			continue;
+		}
+
+		int id = input.attribute("id").as_int();
+		int value = input.attribute("value").as_int();
+
+		if(value == 0)
+			std::cout << "WARNING: InputConfig value is 0 for " << type << " " << id << "!\n";
+
+		mNameMap[toLower(name)] = Input(mDeviceId, typeEnum, id, value, true);
+	}
+}
+
+void InputConfig::writeToXML(pugi::xml_node parent)
+{
+	pugi::xml_node cfg = parent.append_child("inputConfig");
+
+	if(mDeviceId == DEVICE_KEYBOARD)
+		cfg.append_attribute("type") = "keyboard";
+	else
+		cfg.append_attribute("type") = "joystick";
+
+	typedef std::map<std::string, Input>::iterator it_type;
+	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)
+	{
+		pugi::xml_node input = cfg.append_child("input");
+		input.append_attribute("name") = iterator->first.c_str();
+		input.append_attribute("type") = inputTypeToString(iterator->second.type).c_str();
+		input.append_attribute("id").set_value(iterator->second.id);
+		input.append_attribute("value").set_value(iterator->second.value);
+	}
+}
 
 void InputConfig::setPlayerNum(int num) { mPlayerNum = num; }
 int InputConfig::getPlayerNum() { return mPlayerNum; }

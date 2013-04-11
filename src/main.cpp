@@ -136,8 +136,7 @@ int main(int argc, char* argv[])
 			//choose which GUI to open depending on Input configuration
 			if(fs::exists(InputManager::getConfigPath()))
 			{
-				//an input config already exists - load it and proceed to the gamelist as usual.
-				window.getInputManager()->loadConfig();
+				//an input config already exists - we have input, proceed to the gamelist as usual.
 				GuiGameList::create(&window);
 			}else{
 				window.pushGui(new GuiDetectDevice(&window));
