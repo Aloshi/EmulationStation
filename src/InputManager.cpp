@@ -196,7 +196,7 @@ void InputManager::loadConfig()
 		}else if(type == "joystick")
 		{
 			bool found = false;
-			std::string devName = node.child("deviceName").text().get();
+			std::string devName = node.attribute("deviceName").as_string();
 			for(int i = 0; i < mNumJoysticks; i++)
 			{
 				if(SDL_JoystickName(i) == devName)

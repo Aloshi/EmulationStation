@@ -320,6 +320,8 @@ GuiGameList* GuiGameList::create(Window* window)
 
 void GuiGameList::update(int deltaTime)
 {
-	mImageAnimation->update(deltaTime);
+	if(mDetailed)
+		mImageAnimation->update(deltaTime);
+
 	mList->update(deltaTime);
 }

@@ -157,9 +157,12 @@ void InputConfig::writeToXML(pugi::xml_node parent)
 	pugi::xml_node cfg = parent.append_child("inputConfig");
 
 	if(mDeviceId == DEVICE_KEYBOARD)
+	{
 		cfg.append_attribute("type") = "keyboard";
-	else
+	}else{
 		cfg.append_attribute("type") = "joystick";
+		cfg.append_attribute("deviceName") = SDL_JoystickName(mDeviceId);
+	}
 
 	typedef std::map<std::string, Input>::iterator it_type;
 	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)

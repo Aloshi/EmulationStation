@@ -17,6 +17,10 @@ namespace Renderer
 	bool init(int w, int h);
 	void deinit();
 
+	//just takes care of default font init/deinit right now
+	void onInit();
+	void onDeinit();
+
 	unsigned int getScreenWidth();
 	unsigned int getScreenHeight();
 
