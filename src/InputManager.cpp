@@ -1,7 +1,6 @@
 #include "InputManager.h"
 #include "InputConfig.h"
 #include "Window.h"
-#include <iostream>
 #include "Log.h"
 #include "pugiXML/pugixml.hpp"
 #include <boost/filesystem.hpp>
@@ -103,7 +102,7 @@ InputConfig* InputManager::getInputConfigByPlayer(int player)
 			return mInputConfigs[i];
 	}
 
-	std::cout << "Could not find input config for player number " << player << "!\n";
+	LOG(LogError) << "Could not find input config for player number " << player << "!";
 	return NULL;
 }
 
@@ -165,7 +164,7 @@ void InputManager::loadConfig()
 {
 	if(!mJoysticks)
 	{
-		std::cout << "ERROR - cannot load config without being initialized!\n";
+		LOG(LogError) << "ERROR - cannot load InputManager config without being initialized!";
 	}
 
 	std::string path = getConfigPath();
@@ -183,6 +182,13 @@ void InputManager::loadConfig()
 
 	mNumPlayers = 0;
 
+	bool configuredDevice[mNumJoysticks];
+	for(int i = 0; i < mNumJoysticks; i++)
+	{
+		mInputConfigs[i]->setPlayerNum(-1);
+		configuredDevice[i] = false;
+	}
+
 	pugi::xml_node root = doc.child("inputList");
 
 	for(pugi::xml_node node = root.child("inputConfig"); node; node = node.next_sibling("inputConfig"))
@@ -199,31 +205,57 @@ void InputManager::loadConfig()
 			std::string devName = node.attribute("deviceName").as_string();
 			for(int i = 0; i < mNumJoysticks; i++)
 			{
-				if(SDL_JoystickName(i) == devName)
+				if(!configuredDevice[i] && SDL_JoystickName(i) == devName)
 				{
 					mInputConfigs[i]->loadFromXML(node, mNumPlayers);
 					mNumPlayers++;
 					found = true;
+					configuredDevice[i] = true;
 					break;
 				}
 			}
 
 			if(!found)
 			{
-				LOG(LogWarning) << "Could not find joystick named \"" << devName << "\"! Skipping it.\n";
+				LOG(LogWarning) << "Could not find unconfigured joystick named \"" << devName << "\"! Skipping it.\n";
 				continue;
 			}
 		}else{
 			LOG(LogWarning) << "Device type \"" << type << "\" unknown!\n";
 		}
 	}
+
+	if(mNumPlayers == 0)
+	{
+		LOG(LogInfo) << "No input configs loaded. Loading default keyboard config.";
+		loadDefaultConfig();
+	}
+}
+
+//used in an "emergency" where no configs could be loaded from the inputmanager config file
+//allows the user to select to reconfigure in menus if this happens without having to delete es_input.cfg manually
+void InputManager::loadDefaultConfig()
+{
+	InputConfig* cfg = getInputConfigByDevice(DEVICE_KEYBOARD);
+
+	mNumPlayers++;
+	cfg->setPlayerNum(0);
+	cfg->mapInput("up", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_UP, 1, true));
+	cfg->mapInput("down", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_DOWN, 1, true));
+	cfg->mapInput("left", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_LEFT, 1, true));
+	cfg->mapInput("right", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_RIGHT, 1, true));
+
+	cfg->mapInput("a", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_RETURN, 1, true));
+	cfg->mapInput("b", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_ESCAPE, 1, true));
+	cfg->mapInput("menu", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F1, 1, true));
+	cfg->mapInput("select", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F2, 1, true));
 }
 
 void InputManager::writeConfig()
 {
 	if(!mJoysticks)
 	{
-		std::cout << "ERROR - cannot write config without being initialized!\n";
+		LOG(LogError) << "ERROR - cannot write config without being initialized!";
 		return;
 	}
 

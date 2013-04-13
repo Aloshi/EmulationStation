@@ -40,6 +40,8 @@ private:
 	//non-InputManager classes shouldn't use this, as you can easily miss the keyboard
 	InputConfig* getInputConfigByDevice(int device);
 
+	void loadDefaultConfig();
+
 	int mNumJoysticks;
 	int mNumPlayers;
 	SDL_Joystick** mJoysticks;

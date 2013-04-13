@@ -1,9 +1,9 @@
 #include "GuiInputConfig.h"
 #include "../Window.h"
 #include "../Renderer.h"
-#include <iostream>
 #include "../Font.h"
 #include "GuiGameList.h"
+#include "../Log.h"
 
 static int inputCount = 8;
 static std::string inputName[8] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select"};
@@ -11,6 +11,7 @@ static std::string inputName[8] = { "Up", "Down", "Left", "Right", "A", "B", "Me
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : Gui(window), mTargetConfig(target)
 {
 	mCurInputId = 0;
+	LOG(LogInfo) << "Configuring device " << target->getDeviceId();
 }
 
 void GuiInputConfig::update(int deltaTime)
@@ -45,7 +46,7 @@ void GuiInputConfig::input(InputConfig* config, Input input)
 		}
 
 		input.configured = true;
-		std::cout << "[" << input.string() << "] -> " << inputName[mCurInputId] << "\n";
+		LOG(LogInfo) << "  [" << input.string() << "] -> " << inputName[mCurInputId];
 
 		config->mapInput(inputName[mCurInputId], input);
 		mCurInputId++;

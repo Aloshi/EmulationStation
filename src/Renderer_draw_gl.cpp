@@ -86,7 +86,7 @@ namespace Renderer {
 		//make sure our font exists
 		if(!boost::filesystem::exists(fontPath))
 		{
-			LOG(LogError) << "System font \"" << fontPath << "\" wasn't found! Well, you're kind of screwed. Sorry. Report this to Aloshi, please.";
+			LOG(LogError) << "System font wasn't found! Try installing the DejaVu truetype font (pacman -S ttf-dejavu on Arch, sudo apt-get install ttf-dejavu on Debian)";
 			return;
 		}
 

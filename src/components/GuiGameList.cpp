@@ -292,7 +292,7 @@ void GuiGameList::init()
 
 	if(mDetailed)
 	{
-		mScreenshot->deinit();
+		mScreenshot->init();
 	}
 }
 
