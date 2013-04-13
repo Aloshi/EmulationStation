@@ -5,8 +5,8 @@
 #include "GuiGameList.h"
 #include "../Log.h"
 
-static int inputCount = 8;
-static std::string inputName[8] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select"};
+static int inputCount = 10;
+static std::string inputName[10] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown"};
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : Gui(window), mTargetConfig(target)
 {
@@ -51,6 +51,12 @@ void GuiInputConfig::input(InputConfig* config, Input input)
 		config->mapInput(inputName[mCurInputId], input);
 		mCurInputId++;
 		mErrorMsg = "";
+
+		//if the controller doesn't have enough buttons for Page Up/Page Down, skip to done
+		if(mWindow->getInputManager()->getButtonCountByDevice(config->getDeviceId()) <= 4 && mCurInputId >= 8)
+		{
+			mCurInputId = inputCount;
+		}
 	}
 }
 

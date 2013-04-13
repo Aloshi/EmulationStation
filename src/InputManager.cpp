@@ -79,6 +79,13 @@ void InputManager::deinit()
 }
 
 int InputManager::getNumJoysticks() { return mNumJoysticks; }
+int InputManager::getButtonCountByDevice(int id)
+{
+	if(id == DEVICE_KEYBOARD)
+		return 120; //it's a lot, okay.
+	else
+		return SDL_JoystickNumButtons(mJoysticks[id]);
+}
 
 int InputManager::getNumPlayers() { return mNumPlayers; }
 void InputManager::setNumPlayers(int num) { mNumPlayers = num; }
@@ -249,6 +256,8 @@ void InputManager::loadDefaultConfig()
 	cfg->mapInput("b", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_ESCAPE, 1, true));
 	cfg->mapInput("menu", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F1, 1, true));
 	cfg->mapInput("select", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F2, 1, true));
+	cfg->mapInput("pageup", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_RIGHTBRACKET, 1, true));
+	cfg->mapInput("pagedown", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_LEFTBRACKET, 1, true));
 }
 
 void InputManager::writeConfig()
