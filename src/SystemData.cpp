@@ -88,20 +88,6 @@ void SystemData::launchGame(Window* window, GameData* game)
 	window->init();
 }
 
-bool SystemData::containsFolder(FolderData* root, const std::string& path)
-{
-	for(int i = 0; i < root->getFileCount(); i++)
-	{
-		FileData* f = root->getFile(i);
-		if(f->isFolder())
-		{
-			if(f->getPath() == path || containsFolder((FolderData*)f, path))
-				return true;
-		}
-	}
-	return false;
-}
-
 void SystemData::populateFolder(FolderData* folder)
 {
 	std::string folderPath = folder->getPath();
@@ -114,8 +100,10 @@ void SystemData::populateFolder(FolderData* folder)
 	//make sure that this isn't a symlink to a thing we already have
 	if(fs::is_symlink(folderPath))
 	{
-		if(containsFolder(mRootFolder, folderPath))
+		//if this symlink resolves to somewhere that's at the beginning of our path, it's gonna recurse
+		if(folderPath.find(fs::canonical(folderPath).string()) == 0)
 		{
+			LOG(LogWarning) << "Skipping infinitely recursive symlink \"" << folderPath << "\"";
 			return;
 		}
 	}

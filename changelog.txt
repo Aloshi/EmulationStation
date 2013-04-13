@@ -1,3 +1,9 @@
+April 13, 2013
+-Finally merged the unstable branch, which means better input everything!
+-Can now use multiple joysticks.
+-Can now remap keyboard input.
+-Hopefully prevented infinitely recursing symlinks.
+
 March 28, 2013
 -Hopefully fixed bad joystick events at startup.
 
