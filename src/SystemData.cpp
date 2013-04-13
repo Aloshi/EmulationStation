@@ -9,6 +9,7 @@
 #include "AudioManager.h"
 #include "Log.h"
 #include "InputManager.h"
+#include <iostream>
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -75,9 +76,9 @@ void SystemData::launchGame(Window* window, GameData* game)
 	command = strreplace(command, "%BASENAME%", game->getBaseName());
 
 	LOG(LogInfo) << "	" << command;
-	LOG(LogInfo) << "==============================================";
+	std::cout << "==============================================\n";
 	int exitCode = system(command.c_str());
-	LOG(LogInfo) << "==============================================";
+	std::cout << "==============================================\n";
 
 	if(exitCode != 0)
 	{
@@ -92,7 +93,7 @@ void SystemData::populateFolder(FolderData* folder)
 	std::string folderPath = folder->getPath();
 	if(!fs::is_directory(folderPath))
 	{
-		LOG(LogError) << "Error - folder with path \"" << folderPath << "\" is not a directory!";
+		LOG(LogWarning) << "Error - folder with path \"" << folderPath << "\" is not a directory!";
 		return;
 	}
 
