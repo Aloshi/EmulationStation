@@ -38,6 +38,7 @@ private:
 	std::string mLaunchCommand;
 
 	void populateFolder(FolderData* folder);
+	bool containsFolder(FolderData* folder, const std::string& path);
 
 	FolderData* mRootFolder;
 };

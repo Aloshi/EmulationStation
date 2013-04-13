@@ -88,6 +88,20 @@ void SystemData::launchGame(Window* window, GameData* game)
 	window->init();
 }
 
+bool SystemData::containsFolder(FolderData* root, const std::string& path)
+{
+	for(int i = 0; i < root->getFileCount(); i++)
+	{
+		FileData* f = root->getFile(i);
+		if(f->isFolder())
+		{
+			if(f->getPath() == path || containsFolder((FolderData*)f, path))
+				return true;
+		}
+	}
+	return false;
+}
+
 void SystemData::populateFolder(FolderData* folder)
 {
 	std::string folderPath = folder->getPath();
@@ -95,6 +109,15 @@ void SystemData::populateFolder(FolderData* folder)
 	{
 		LOG(LogWarning) << "Error - folder with path \"" << folderPath << "\" is not a directory!";
 		return;
+	}
+
+	//make sure that this isn't a symlink to a thing we already have
+	if(fs::is_symlink(folderPath))
+	{
+		if(containsFolder(mRootFolder, folderPath))
+		{
+			return;
+		}
 	}
 
 	for(fs::directory_iterator end, dir(folderPath); dir != end; ++dir)
