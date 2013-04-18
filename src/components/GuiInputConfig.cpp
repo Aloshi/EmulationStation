@@ -6,7 +6,8 @@
 #include "../Log.h"
 
 static int inputCount = 10;
-static std::string inputName[10] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown"};
+static std::string inputName[10] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown" };
+static std::string inputDispName[10] = { "Up", "Down", "Left", "Right", "Accept", "Back", "Menu", "Jump to Letter", "Page Up", "Page Down" };
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : Gui(window), mTargetConfig(target)
 {
@@ -71,7 +72,7 @@ void GuiInputConfig::render()
 	int y = 14 + font->getHeight();
 	for(int i = 0; i < mCurInputId; i++)
 	{
-		Renderer::drawText(inputName[i], 10, y, 0x00CC00FF, font);
+		Renderer::drawText(inputDispName[i], 10, y, 0x00CC00FF, font);
 		y += font->getHeight() + 5;
 	}
 
@@ -80,7 +81,7 @@ void GuiInputConfig::render()
 		Renderer::drawCenteredText("Basic config done!", 0, (int)(Renderer::getScreenHeight() * 0.6), 0x00CC00FF, font);
 		Renderer::drawCenteredText("Press any button to continue.", 0, (int)(Renderer::getScreenHeight() * 0.6) + font->getHeight() + 4, 0x000000FF, font);
 	}else{
-		Renderer::drawText(inputName[mCurInputId], 10, y, 0x000000FF, font);
+		Renderer::drawText(inputDispName[mCurInputId], 10, y, 0x000000FF, font);
 	}
 
 	if(!mErrorMsg.empty())
