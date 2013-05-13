@@ -1,4 +1,5 @@
 #include "platform.h"
+#include <stdlib.h>
 
 std::string getHomePath()
 {
