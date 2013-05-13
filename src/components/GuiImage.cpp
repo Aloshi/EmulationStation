@@ -200,9 +200,9 @@ void GuiImage::resize()
 			resizeScaleX = resizeScaleY;
 
 		if(resizeScaleX)
-			mDrawWidth *= resizeScaleX;
+			mDrawWidth = (int)(mDrawWidth * resizeScaleX);
 		if(resizeScaleY)
-			mDrawHeight *= resizeScaleY;
+			mDrawHeight = (int)(mDrawHeight * resizeScaleY);
 	}
 }
 

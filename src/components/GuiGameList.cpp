@@ -17,9 +17,9 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : Gui(window)
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(mWindow, Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX"), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
+		mList = new GuiList<FileData*>(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
-		mScreenshot = new GuiImage(mWindow, Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), "", mTheme->getFloat("gameImageWidth"), mTheme->getFloat("gameImageHeight"), false);
+		mScreenshot = new GuiImage(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")), "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 
 		mImageAnimation = new GuiAnimation();
@@ -85,7 +85,7 @@ void GuiGameList::render()
 	{
 		//divider
 		if(!mTheme->getBool("hideDividers"))
-			Renderer::drawRect(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX") - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
+			Renderer::drawRect((int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")) - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
 
 		//if we're not scrolling and we have selected a non-folder
 		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
@@ -94,7 +94,7 @@ void GuiGameList::render()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, Renderer::getScreenWidth() * 0.03, mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03), mTheme->getColor("description"), mTheme->getDescriptionFont());
+				Renderer::drawWrappedText(desc, (int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, (int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), mTheme->getColor("description"), mTheme->getDescriptionFont());
 		}
 
 		mScreenshot->render();
@@ -200,7 +200,7 @@ std::string GuiGameList::getThemeFile()
 {
 	std::string themePath;
 
-	themePath = getenv("HOME");
+	themePath = getHomePath();
 	themePath += "/.emulationstation/" +  mSystem->getName() + "/theme.xml";
 	if(boost::filesystem::exists(themePath))
 		return themePath;
@@ -209,7 +209,7 @@ std::string GuiGameList::getThemeFile()
 	if(boost::filesystem::exists(themePath))
 		return themePath;
 
-	themePath = getenv("HOME");
+	themePath = getHomePath();
 	themePath += "/.emulationstation/es_theme.xml";
 	if(boost::filesystem::exists(themePath))
 		return themePath;
@@ -235,13 +235,13 @@ void GuiGameList::updateTheme()
 	{
 		mList->setCentered(mTheme->getBool("listCentered"));
 
-		mList->setOffsetX(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth());
-		mList->setTextOffsetX(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth());
+		mList->setOffsetX((int)(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth()));
+		mList->setTextOffsetX((int)(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth()));
 
-		mScreenshot->setOffsetX(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth());
-		mScreenshot->setOffsetY(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+		mScreenshot->setOffsetX((int)(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth()));
+		mScreenshot->setOffsetY((int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
-		mScreenshot->setResize(mTheme->getFloat("gameImageWidth"), mTheme->getFloat("gameImageHeight"), false);
+		mScreenshot->setResize((int)mTheme->getFloat("gameImageWidth"), (int)mTheme->getFloat("gameImageHeight"), false);
 	}
 }
 
@@ -252,7 +252,7 @@ void GuiGameList::updateDetailData()
 
 	if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 	{
-		mScreenshot->setOffset((mTheme->getFloat("gameImageOffsetX") - 0.05) * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+		mScreenshot->setOffset((int)((mTheme->getFloat("gameImageOffsetX") - 0.05) * Renderer::getScreenWidth()), (int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
 
 		if(((GameData*)mList->getSelectedObject())->getImagePath().empty())
 			mScreenshot->setImage(mTheme->getString("imageNotFoundPath"));

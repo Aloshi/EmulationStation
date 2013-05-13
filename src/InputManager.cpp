@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "pugiXML/pugixml.hpp"
 #include <boost/filesystem.hpp>
+#include "platform.h"
 
 namespace fs = boost::filesystem;
 
@@ -189,7 +190,7 @@ void InputManager::loadConfig()
 
 	mNumPlayers = 0;
 
-	bool configuredDevice[mNumJoysticks];
+	bool* configuredDevice = new bool[mNumJoysticks];
 	for(int i = 0; i < mNumJoysticks; i++)
 	{
 		mInputConfigs[i]->setPlayerNum(-1);
@@ -231,6 +232,8 @@ void InputManager::loadConfig()
 			LOG(LogWarning) << "Device type \"" << type << "\" unknown!\n";
 		}
 	}
+
+	delete[] configuredDevice;
 
 	if(mNumPlayers == 0)
 	{
@@ -285,7 +288,7 @@ void InputManager::writeConfig()
 
 std::string InputManager::getConfigPath()
 {
-	std::string path = getenv("HOME");
+	std::string path = getHomePath();
 	path += "/.emulationstation/es_input.cfg";
 	return path;
 }

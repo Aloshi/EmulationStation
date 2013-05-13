@@ -24,7 +24,7 @@ GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileDa
 	mScrollOffset = 0;
 
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
-	mBox = new GuiBox(window, sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6);
+	mBox = new GuiBox(window, (int)(sw * 0.2f), (int)(sh * 0.2f), (int)(sw * 0.6f), (int)(sh * 0.6f));
 	mBox->setData(data);
 
 	mTextColor = textcolor;
@@ -41,11 +41,11 @@ void GuiFastSelect::render()
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 
 	if(!mBox->hasBackground())
-		Renderer::drawRect(sw * 0.2, sh * 0.2, sw * 0.6, sh * 0.6, 0x000FF0FF);
+		Renderer::drawRect((int)(sw * 0.2f), (int)(sh * 0.2f), (int)(sw * 0.6f), (int)(sh * 0.6f), 0x000FF0FF);
 
 	mBox->render();
 
-	Renderer::drawCenteredText(LETTERS.substr(mLetterID, 1), 0, sh * 0.5 - (mFont->getHeight() * 0.5), mTextColor, mFont);
+	Renderer::drawCenteredText(LETTERS.substr(mLetterID, 1), 0, (int)(sh * 0.5f - (mFont->getHeight() * 0.5f)), mTextColor, mFont);
 }
 
 void GuiFastSelect::input(InputConfig* config, Input input)

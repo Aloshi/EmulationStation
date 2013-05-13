@@ -16,10 +16,11 @@ int Font::getSize() { return mSize; }
 
 std::string Font::getDefaultPath()
 {
-	int fontCount = 3;
-	std::string fonts[] = {"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
+	const int fontCount = 4;
+	std::string fonts[fontCount] = { "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
 		"/usr/share/fonts/TTF/DejaVuSerif.ttf",
-		"/usr/share/fonts/dejavu/DejaVuSerif.ttf" };
+		"/usr/share/fonts/dejavu/DejaVuSerif.ttf",
+		"font.ttf" };
 
 	for(int i = 0; i < fontCount; i++)
 	{
@@ -226,7 +227,7 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	starty += mMaxGlyphHeight;
 
 	//padding (another 0.5% is added to the bottom through the sizeText function)
-	starty += mMaxGlyphHeight * 0.1;
+	starty += (int)(mMaxGlyphHeight * 0.1f);
 
 
 	int pointCount = text.length() * 2;
@@ -248,8 +249,8 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	int p = 0;
 	int i = 0;
 
-	float x = startx;
-	float y = starty;
+	float x = (float)startx;
+	float y = (float)starty;
 	for(; p < pointCount; i++, p++)
 	{
 		unsigned char letter = text[i];
@@ -321,10 +322,10 @@ void Font::sizeText(std::string text, int* w, int* h)
 		*w = cwidth;
 
 	if(h != NULL)
-		*h = mMaxGlyphHeight + mMaxGlyphHeight * 0.5;
+		*h = (int)(mMaxGlyphHeight + mMaxGlyphHeight * 0.5f);
 }
 
 int Font::getHeight()
 {
-	return mMaxGlyphHeight * 1.5;
+	return (int)(mMaxGlyphHeight * 1.5f);
 }

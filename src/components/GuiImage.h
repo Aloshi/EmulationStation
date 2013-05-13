@@ -1,11 +1,13 @@
 #ifndef _GUIIMAGE_H_
 #define _GUIIMAGE_H_
 
+#include "../platform.h"
+#include GLHEADER
+
 #include "../Gui.h"
 #include <string>
 #include <FreeImage.h>
-#include "../platform.h"
-#include GLHEADER
+
 
 class GuiImage : public Gui
 {

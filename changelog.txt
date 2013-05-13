@@ -1,3 +1,7 @@
+May 13, 2013
+-Ported to Windows.  You'll need to change the lib_paths property sheet Include and Library directories (I didn't include dependencies!).
+-Added --windowed (only works for desktop builds).
+
 April 13, 2013
 -Finally merged the unstable branch, which means better input everything!
 -Can now use multiple joysticks.

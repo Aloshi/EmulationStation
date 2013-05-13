@@ -4,7 +4,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <stdlib.h>
-#include <SDL/SDL_joystick.h>
+#include <SDL_joystick.h>
 #include "Renderer.h"
 #include "AudioManager.h"
 #include "Log.h"
@@ -30,7 +30,7 @@ SystemData::SystemData(std::string name, std::string descName, std::string start
 	if(startPath[0] == '~')
 	{
 		startPath.erase(0, 1);
-		std::string home = getenv("HOME");
+		std::string home = getHomePath();
 		startPath.insert(0, home);
         }
 
@@ -292,7 +292,7 @@ void SystemData::deleteSystems()
 
 std::string SystemData::getConfigPath()
 {
-	std::string home = getenv("HOME");
+	std::string home = getHomePath();
 	if(home.empty())
 	{
 		LOG(LogError) << "$HOME environment variable empty or nonexistant!";
@@ -316,7 +316,7 @@ std::string SystemData::getGamelistPath(){
 	if(fs::exists(filePath))
 		return filePath;
 
-	filePath = getenv("HOME");
+	filePath = getHomePath();
 	filePath += "/.emulationstation/"+ getName() + "/gamelist.xml";
 	if(fs::exists(filePath))
 		return filePath;

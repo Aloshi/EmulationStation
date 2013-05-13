@@ -42,7 +42,7 @@ void GuiList<listType>::render()
 
 	if((int)mRowVector.size() >= screenCount)
 	{
-		startEntry = mSelection - (screenCount * 0.5);
+		startEntry = mSelection - (int)(screenCount * 0.5);
 		if(startEntry < 0)
 			startEntry = 0;
 		if(startEntry >= (int)mRowVector.size() - screenCount)

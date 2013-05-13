@@ -1,6 +1,6 @@
 #include "GuiMenu.h"
 #include <iostream>
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "../Log.h"
 #include "../SystemData.h"
 #include "GuiGameList.h"
@@ -84,6 +84,6 @@ void GuiMenu::update(int deltaTime)
 
 void GuiMenu::render()
 {
-	Renderer::drawRect(Renderer::getScreenWidth() * 0.25, 0, Renderer::getScreenWidth() * 0.5, Renderer::getScreenHeight(), 0x999999);
+	Renderer::drawRect(Renderer::getScreenWidth() / 4, 0, Renderer::getScreenWidth() / 2, Renderer::getScreenHeight(), 0x999999);
 	mList->render();
 }

@@ -33,15 +33,15 @@ void GuiAnimation::fadeOut(int time)
 
 void GuiAnimation::update(int deltaTime)
 {
-	float mult = deltaTime * 0.05;
+	float mult = deltaTime * 0.05f;
 
 	if(mMoveX != 0 || mMoveY != 0)
 	{
 		int offsetx = (mMoveX > mMoveSpeed) ? mMoveSpeed : mMoveX;
 		int offsety = (mMoveY > mMoveSpeed) ? mMoveSpeed : mMoveY;
 
-		offsetx *= mult;
-		offsety *= mult;
+		offsetx = (int)(offsetx * mult);
+		offsety = (int)(offsety * mult);
 
 		moveChildren(offsetx, offsety);
 

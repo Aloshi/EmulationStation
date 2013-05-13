@@ -97,7 +97,7 @@ void GuiTheme::setDefaults()
 	mBoolMap["listCentered"] = true;
 
 	mFloatMap["listOffsetX"] = 0.5;
-	mFloatMap["listTextOffsetX"] = 0.005;
+	mFloatMap["listTextOffsetX"] = 0.005f;
 	mFloatMap["gameImageOriginX"] = 0.5;
 	mFloatMap["gameImageOriginY"] = 0;
 	mFloatMap["gameImageOffsetX"] = mFloatMap["listOffsetX"] / 2;
@@ -204,16 +204,16 @@ void GuiTheme::readXML(std::string path)
 	mColorMap["description"] = resolveColor(root.child("descColor").text().get(), mColorMap["description"]);
 	mColorMap["fastSelect"] = resolveColor(root.child("fastSelectColor").text().get(), mColorMap["fastSelect"]);
 
-	mBoolMap["hideHeader"] = root.child("hideHeader");
-	mBoolMap["hideDividers"] = root.child("hideDividers");
+	mBoolMap["hideHeader"] = root.child("hideHeader") != 0;
+	mBoolMap["hideDividers"] = root.child("hideDividers") != 0;
 
 	//GuiBox theming data
 	mBoxData.backgroundPath = expandPath(root.child("boxBackground").text().get());
-	mBoxData.backgroundTiled = root.child("boxBackgroundTiled");
+	mBoxData.backgroundTiled = root.child("boxBackgroundTiled") != 0;
 	mBoxData.horizontalPath = expandPath(root.child("boxHorizontal").text().get());
-	mBoxData.horizontalTiled = root.child("boxHorizontalTiled");
+	mBoxData.horizontalTiled = root.child("boxHorizontalTiled") != 0;
 	mBoxData.verticalPath = expandPath(root.child("boxVertical").text().get());
-	mBoxData.verticalTiled = root.child("boxVerticalTiled");
+	mBoxData.verticalTiled = root.child("boxVerticalTiled") != 0;
 	mBoxData.cornerPath = expandPath(root.child("boxCorner").text().get());
 
 	//list stuff
@@ -288,7 +288,7 @@ Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
 		std::string dim = data.child("dim").text().get();
 		std::string origin = data.child("origin").text().get();
 
-		bool tiled = data.child("tiled");
+		bool tiled = data.child("tiled") != 0;
 
 		//split position and dimension information
 		std::string posX, posY;
@@ -301,10 +301,10 @@ Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
 		splitString(origin, ' ', &originX, &originY);
 
 		//resolve to pixels from percentages/variables
-		int x = resolveExp(posX) * Renderer::getScreenWidth();
-		int y = resolveExp(posY) * Renderer::getScreenHeight();
-		int w = resolveExp(dimW) * Renderer::getScreenWidth();
-		int h = resolveExp(dimH) * Renderer::getScreenHeight();
+		int x = (int)(resolveExp(posX) * Renderer::getScreenWidth());
+		int y = (int)(resolveExp(posY) * Renderer::getScreenHeight());
+		int w = (int)(resolveExp(dimW) * Renderer::getScreenWidth());
+		int h = (int)(resolveExp(dimH) * Renderer::getScreenHeight());
 
 		float ox = strToFloat(originX);
 		float oy = strToFloat(originY);
@@ -327,7 +327,7 @@ Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
 std::string GuiTheme::expandPath(std::string path)
 {
 	if(path[0] == '~')
-		path = getenv("HOME") + path.substr(1, path.length() - 1);
+		path = getHomePath() + path.substr(1, path.length() - 1);
 	else if(path[0] == '.')
 		path = boost::filesystem::path(mPath).parent_path().string() + path.substr(1, path.length() - 1);
 
@@ -344,7 +344,7 @@ float GuiTheme::resolveExp(std::string str, float defaultVal)
 	exp.setExpression(str);
 
 	//set variables
-	exp.setVariable("headerHeight", Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / Renderer::getScreenHeight());
+	exp.setVariable("headerHeight", (float)(Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / Renderer::getScreenHeight()));
 	exp.setVariable("infoWidth", mFloatMap["listOffsetX"]);
 
 	return exp.eval();

@@ -1,12 +1,12 @@
 //EmulationStation, a graphical front-end for ROM browsing. Created by Alec "Aloshi" Lofquist.
 
+#include <SDL.h>
 #include <iostream>
 #include "Renderer.h"
 #include "components/GuiGameList.h"
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "components/GuiDetectDevice.h"
-#include <SDL.h>
 #include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"
@@ -24,6 +24,7 @@ bool IGNOREGAMELIST = false;
 bool DRAWFRAMERATE = false;
 bool DONTSHOWEXIT = false;
 bool DEBUG = false;
+bool WINDOWED = false;
 unsigned int DIMTIME = 30*1000;
 
 namespace fs = boost::filesystem;
@@ -39,11 +40,11 @@ int main(int argc, char* argv[])
 			if(strcmp(argv[i], "-w") == 0)
 			{
 				width = atoi(argv[i + 1]);
-				i++;
+				i++; //skip the argument value
 			}else if(strcmp(argv[i], "-h") == 0)
 			{
 				height = atoi(argv[i + 1]);
-				i++;
+				i++; //skip the argument value
 			}else if(strcmp(argv[i], "--gamelist-only") == 0)
 			{
 				PARSEGAMELISTONLY = true;
@@ -63,7 +64,10 @@ int main(int argc, char* argv[])
 			}else if(strcmp(argv[i], "--dimtime") == 0)
 			{
 				DIMTIME = atoi(argv[i + 1]) * 1000;
-				i++;
+				i++; //skip the argument value
+			}else if(strcmp(argv[i], "--windowed") == 0)
+			{
+				WINDOWED = true;
 			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
@@ -76,6 +80,11 @@ int main(int argc, char* argv[])
 				std::cout << "--no-exit			don't show the exit option in the menu\n";
 				std::cout << "--debug				even more logging\n";
 				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
+
+				#ifdef _DESKTOP_
+					std::cout << "--windowed			not fullscreen\n";
+				#endif
+
 				std::cout << "--help				summon a sentient, angry tuba\n\n";
 				std::cout << "More information available in README.md.\n";
 				return 0;
@@ -90,7 +99,7 @@ int main(int argc, char* argv[])
 	bool running = true;
 
 	//make sure the config directory exists
-	std::string home = getenv("HOME");
+	std::string home = getHomePath();
 	std::string configDir = home + "/.emulationstation";
 	if(!fs::exists(configDir))
 	{

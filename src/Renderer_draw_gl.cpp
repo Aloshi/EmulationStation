@@ -1,5 +1,5 @@
-#include "Renderer.h"
 #include "platform.h"
+#include "Renderer.h"
 #include GLHEADER
 #include <iostream>
 #include "Font.h"
@@ -28,7 +28,7 @@ namespace Renderer {
 
 	void drawRect(int x, int y, int w, int h, unsigned int color)
 	{
-		GLfloat points[12];
+		GLint points[12];
 
 		points[0] = x; points [1] = y;
 		points[2] = x; points[3] = y + h;
@@ -46,7 +46,7 @@ namespace Renderer {
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
 
-		glVertexPointer(2, GL_FLOAT, 0, points);
+		glVertexPointer(2, GL_INT, 0, points);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -90,7 +90,7 @@ namespace Renderer {
 			return;
 		}
 
-		float fontSizes[] = {0.035, 0.045, 0.1};
+		float fontSizes[] = {0.035f, 0.045f, 0.1f};
 		for(unsigned int i = 0; i < 3; i++)
 		{
 			fonts[i] = new Font(fontPath, (unsigned int)(fontSizes[i] * getScreenHeight()));
@@ -119,10 +119,9 @@ namespace Renderer {
 		int w, h;
 		font->sizeText(text, &w, &h);
 
-		int x = (int)getScreenWidth() - w;
-		x *= 0.5;
-
-		x += xOffset * 0.5;
+		int x = getScreenWidth() - w;
+		x = x / 2;
+		x += xOffset / 2;
 
 		drawText(text, x, y, color, font);
 	}

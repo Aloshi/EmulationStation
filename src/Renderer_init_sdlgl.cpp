@@ -1,11 +1,19 @@
 #include "Renderer.h"
 #include <iostream>
 #include "platform.h"
+
+#ifdef _WINDOWS_
+	#include <Windows.h>
+#endif
+
 #include GLHEADER
+
 #include "Font.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "InputManager.h"
 #include "Log.h"
+
+extern bool WINDOWED;
 
 namespace Renderer
 {
@@ -32,13 +40,15 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | SDL_FULLSCREEN | SDL_DOUBLEBUF);
+		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | (WINDOWED ? 0 : SDL_FULLSCREEN) | SDL_DOUBLEBUF);
 
 		if(sdlScreen == NULL)
 		{
 			LOG(LogError) << "Error creating SDL video surface!";
 			return false;
 		}
+
+		SDL_WM_SetCaption("EmulationStation", NULL);
 
 		//usually display width/height are not specified, i.e. zero, which SDL automatically takes as "native resolution"
 		//so, since other things rely on the size of the screen (damn currently unnormalized coordinate system), we set it here
