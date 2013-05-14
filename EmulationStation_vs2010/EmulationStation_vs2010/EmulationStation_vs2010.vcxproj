@@ -85,6 +85,7 @@
     <ClCompile Include="..\..\src\pugiXML\pugixml.cpp" />
     <ClCompile Include="..\..\src\Renderer_draw_gl.cpp" />
     <ClCompile Include="..\..\src\Renderer_init.cpp" />
+    <ClCompile Include="..\..\src\Renderer_init_sdlgl.cpp" />
     <ClCompile Include="..\..\src\Sound.cpp" />
     <ClCompile Include="..\..\src\SystemData.cpp" />
     <ClCompile Include="..\..\src\Window.cpp" />
