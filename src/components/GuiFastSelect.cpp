@@ -8,7 +8,7 @@ const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
 GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, 
-	int textcolor, Sound* scrollsound, Font* font) : Gui(window)
+	int textcolor, std::shared_ptr<Sound> & scrollsound, Font* font) : Gui(window)
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
 	if(mLetterID == std::string::npos)

@@ -34,7 +34,7 @@ public:
 	void setSelectorColor(unsigned int selectorColor);
 	void setSelectedTextColor(unsigned int selectedColor);
 	void setCentered(bool centered);
-	void setScrollSound(Sound* sound);
+	void setScrollSound(std::shared_ptr<Sound> & sound);
 	void setTextOffsetX(int textoffsetx);
 
 	int getObjectCount();
@@ -71,7 +71,7 @@ private:
 
 	std::vector<ListRow> mRowVector;
 	int mSelection;
-	Sound* mScrollSound;
+	std::shared_ptr<Sound> mScrollSound;
 };
 
 #include "GuiList.cpp"

@@ -23,7 +23,7 @@ float GuiTheme::getFloat(std::string name)
 	return mFloatMap[name];
 }
 
-Sound* GuiTheme::getSound(std::string name)
+std::shared_ptr<Sound> & GuiTheme::getSound(std::string name)
 {
 	return mSoundMap[name];
 }
@@ -63,10 +63,16 @@ GuiTheme::GuiTheme(Window* window, bool detailed, std::string path) : Gui(window
 {
 	mDetailed = detailed;
 
-	mSoundMap["menuScroll"] = new Sound();
-	mSoundMap["menuSelect"] = new Sound();
-	mSoundMap["menuBack"] = new Sound();
-	mSoundMap["menuOpen"] = new Sound();
+	mSoundMap["menuScroll"] = std::shared_ptr<Sound>(new Sound);
+	mSoundMap["menuSelect"] = std::shared_ptr<Sound>(new Sound);
+	mSoundMap["menuBack"] = std::shared_ptr<Sound>(new Sound);
+	mSoundMap["menuOpen"] = std::shared_ptr<Sound>(new Sound);
+
+	//register all sound with the audiomanager
+	AudioManager::registerSound(mSoundMap["menuScroll"]);
+	AudioManager::registerSound(mSoundMap["menuSelect"]);
+	AudioManager::registerSound(mSoundMap["menuBack"]);
+	AudioManager::registerSound(mSoundMap["menuOpen"]);
 
 	mListFont = NULL;
 	mDescFont = NULL;

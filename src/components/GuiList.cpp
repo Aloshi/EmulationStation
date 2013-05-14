@@ -269,7 +269,7 @@ void GuiList<listType>::setSelection(int i)
 }
 
 template <typename listType>
-void GuiList<listType>::setScrollSound(Sound* sound)
+void GuiList<listType>::setScrollSound(std::shared_ptr<Sound> & sound)
 {
 	mScrollSound = sound;
 }

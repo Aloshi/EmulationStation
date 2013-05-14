@@ -3,13 +3,10 @@
 
 std::string getHomePath()
 {
-	#ifdef _WIN32
-		return "C:\\";
-	#else
-		const char* home = getenv("HOME");
-		if(home == NULL)
-			return "";
-		else
-			return home;
-	#endif
+	//this gives you something like "/home/YOUR_USERNAME" on Linux and "C:\Users\YOUR_USERNAME\" on Windows
+	const char* home = getenv("HOME");
+	if(home == NULL)
+		return "";
+	else
+		return home;
 }

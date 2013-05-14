@@ -119,10 +119,6 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-
-	//initialize audio
-	AudioManager::init();
-
 	Window window; //don't call Window.init() because we manually pass the resolution to Renderer::init
 	window.getInputManager()->init();
 
@@ -139,7 +135,7 @@ int main(int argc, char* argv[])
 		if(SystemData::sSystemVector.size() == 0) //if it exists but was empty, notify the user and quit
 		{
 			std::cerr << "A system config file in " << SystemData::getConfigPath() << " was found, but contained no systems.\n";
-			std::cerr << "Does at least one system have a game presesnt?\n";
+			std::cerr << "Does at least one system have a game present?\n";
 			running = false;
 		}else{
 			//choose which GUI to open depending on Input configuration
@@ -222,7 +218,6 @@ int main(int argc, char* argv[])
 		Log::flush();
 	}
 
-	AudioManager::deinit();
 	Renderer::deinit();
 	SystemData::deleteSystems();
 

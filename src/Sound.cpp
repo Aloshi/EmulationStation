@@ -1,26 +1,19 @@
 #include "Sound.h"
-#include <iostream>
 #include "AudioManager.h"
 #include "Log.h"
 
-Sound::Sound(std::string path)
+
+Sound::Sound(const std::string & path) : mSampleData(NULL), mSamplePos(0), mSampleLength(0), playing(false)
 {
-	mSound = NULL;
-	mChannel = -1;
-
-	AudioManager::registerSound(this);
-
 	loadFile(path);
 }
 
 Sound::~Sound()
 {
 	deinit();
-
-	AudioManager::unregisterSound(this);
 }
 
-void Sound::loadFile(std::string path)
+void Sound::loadFile(const std::string & path)
 {
 	mPath = path;
 	init();
@@ -28,51 +21,104 @@ void Sound::loadFile(std::string path)
 
 void Sound::init()
 {
-	if(!AudioManager::isInitialized())
-		return;
-
-	if(mSound != NULL)
+	if(mSampleData != NULL)
 		deinit();
 
 	if(mPath.empty())
 		return;
 
-	mSound = Mix_LoadWAV(mPath.c_str());
-
-	if(mSound == NULL)
-	{
-		LOG(LogError) << "Error loading sound \"" << mPath << "\"!\n" << "	" << Mix_GetError();
+	//load wav file via SDL
+	SDL_AudioSpec wave;
+	Uint8 * data = NULL;
+    Uint32 dlen = 0;
+	if (SDL_LoadWAV(mPath.c_str(), &wave, &data, &dlen) == NULL) {
+		LOG(LogError) << "Error loading sound \"" << mPath << "\"!\n" << "	" << SDL_GetError();
+		return;
 	}
+	//build conversion buffer
+	SDL_AudioCVT cvt;
+    SDL_BuildAudioCVT(&cvt, wave.format, wave.channels, wave.freq, AUDIO_S16, 2, 44100);
+	//copy data to conversion buffer
+	cvt.len = dlen;
+    cvt.buf = new Uint8[cvt.len * cvt.len_mult];
+    memcpy(cvt.buf, data, dlen);
+	//convert buffer to stereo, 16bit, 44.1kHz
+    if (SDL_ConvertAudio(&cvt) < 0) {
+		LOG(LogError) << "Error converting sound \"" << mPath << "\" to 44.1kHz, 16bit, stereo format!\n" << "	" << SDL_GetError();
+		delete[] cvt.buf;
+	}
+	else {
+		//worked. set up member data
+		SDL_LockAudio();
+		mSampleData = cvt.buf;
+		mSampleLength = cvt.len_cvt;
+		mSamplePos = 0;
+		mSampleFormat.channels = 2;
+		mSampleFormat.freq = 44100;
+		mSampleFormat.format = AUDIO_S16;
+		SDL_UnlockAudio();
+	}
+	//free wav data now
+    SDL_FreeWAV(data);
 }
 
 void Sound::deinit()
 {
-	if(mSound != NULL)
+	playing = false;
+
+	if(mSampleData != NULL)
 	{
-		Mix_FreeChunk(mSound);
-		mSound = NULL;
+		SDL_LockAudio();
+		delete[] mSampleData;
+		mSampleData = NULL;
+		mSampleLength = 0;
+		mSamplePos = 0;
+		SDL_UnlockAudio();
 	}
 }
 
 void Sound::play()
 {
-	if(mSound == NULL)
+	if(mSampleData == NULL)
 		return;
 
-	mChannel = -1;
+	//flag our sample as playing
+	playing = true;
+	//tell the AudioManager to start playing samples
+	AudioManager::play();
+}
 
-	mChannel = Mix_PlayChannel(-1, mSound, 0);
-	if(mChannel == -1)
-	{
-		LOG(LogError) << "Error playing sound!\n	" << Mix_GetError();
+bool Sound::isPlaying() const
+{
+	return playing;
+}
+
+void Sound::stop()
+{
+	//flag our sample as playing and rewind its position
+	playing = false;
+	mSamplePos = 0;
+}
+
+const Uint8 * Sound::getData() const
+{
+	return mSampleData;
+}
+
+Uint32 Sound::getPosition() const
+{
+	return mSamplePos;
+}
+
+void Sound::setPosition(Uint32 newPosition)
+{
+	mSamplePos = newPosition;
+	if (mSamplePos >= mSampleLength) {
+		mSamplePos = 0;
 	}
 }
 
-bool Sound::isPlaying()
+Uint32 Sound::getLength() const
 {
-	if(mChannel != -1 && Mix_Playing(mChannel))
-		return true;
-	else
-		return false;
+	return mSampleLength;
 }
-

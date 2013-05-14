@@ -1,10 +1,12 @@
 #ifndef _GUITHEME_H_
 #define _GUITHEME_H_
 
+#include <memory>
+
 #include "../Gui.h"
 #include "../pugiXML/pugixml.hpp"
 #include "GuiBox.h"
-#include "../Sound.h"
+#include "../AudioManager.h"
 #include "../Font.h"
 
 //This class loads an XML-defined list of Guis.
@@ -26,7 +28,7 @@ public:
 	unsigned int getColor(std::string name);
 	bool getBool(std::string name);
 	float getFloat(std::string name);
-	Sound* getSound(std::string name);
+	std::shared_ptr<Sound> & getSound(std::string name);
 	std::string getString(std::string name);
 
 	Font* getListFont();
@@ -53,7 +55,7 @@ private:
 	std::map<std::string, unsigned int> mColorMap;
 	std::map<std::string, bool> mBoolMap;
 	std::map<std::string, float> mFloatMap;
-	std::map<std::string, Sound*> mSoundMap;
+	std::map<std::string, std::shared_ptr<Sound>> mSoundMap;
 	std::map<std::string, std::string> mStringMap;
 
 	GuiBoxData mBoxData;

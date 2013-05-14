@@ -1,17 +1,31 @@
 #ifndef _AUDIOMANAGER_H_
 #define _AUDIOMANAGER_H_
 
-class Sound;
+#include <vector>
+#include <memory>
 
-namespace AudioManager
+#include "SDL_audio.h"
+
+#include "Sound.h"
+
+
+class AudioManager
 {
-	void registerSound(Sound* sound);
-	void unregisterSound(Sound* sound);
+	static SDL_AudioSpec sAudioFormat;
+	static std::vector<std::shared_ptr<Sound>> sSoundVector;
+	static std::shared_ptr<AudioManager> sInstance;
 
-	bool isInitialized();
+	static void mixAudio(void *unused, Uint8 *stream, int len);
 
-	void init();
-	void deinit();
-}
+	AudioManager();
+
+public:
+	static void registerSound(std::shared_ptr<Sound> & sound);
+	static void unregisterSound(std::shared_ptr<Sound> & sound);
+
+	static void play();
+
+	virtual ~AudioManager();
+};
 
 #endif

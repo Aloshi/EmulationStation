@@ -51,7 +51,6 @@ void Window::render()
 
 void Window::init()
 {
-	AudioManager::init();
 	mInputManager->init();
 	Renderer::init(0, 0);
 
@@ -68,7 +67,6 @@ void Window::deinit()
 		mGuiStack.at(i)->deinit();
 	}
 
-	AudioManager::deinit();
 	mInputManager->deinit();
 	Renderer::deinit();
 }

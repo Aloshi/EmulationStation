@@ -13,7 +13,7 @@ class GuiGameList;
 class GuiFastSelect : public Gui
 {
 public:
-	GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, Sound* scrollsound, Font* font);
+	GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, std::shared_ptr<Sound> & scrollsound, Font* font);
 	~GuiFastSelect();
 
 	void input(InputConfig* config, Input input);
@@ -39,7 +39,7 @@ private:
 	int mScrollTimer, mScrollOffset;
 	bool mScrolling;
 
-	Sound* mScrollSound;
+	std::shared_ptr<Sound> mScrollSound;
 	Font* mFont;
 };
 
