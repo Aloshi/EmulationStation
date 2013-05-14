@@ -1,15 +1,14 @@
 //the Makefiles define these via command line
-//#define _RPI_
-//#define _DESKTOP_
+//#define USE_OPENGL_ES
+//#define USE_OPENGL_DESKTOP
 
-#ifdef _RPI_
+#ifdef USE_OPENGL_ES
 	#define GLHEADER <GLES/gl.h>
 #endif
 
-
-#ifdef _DESKTOP_
+#ifdef USE_OPENGL_DESKTOP
 	//why the hell this naming inconsistency exists is well beyond me
-	#ifdef _WIN32
+	#ifdef WIN32
 		#define sleep Sleep
 	#endif
 
