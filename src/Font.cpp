@@ -17,10 +17,36 @@ int Font::getSize() { return mSize; }
 std::string Font::getDefaultPath()
 {
 	const int fontCount = 4;
-	std::string fonts[fontCount] = { "/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
+
+#ifdef WIN32
+	std::string fonts[] = {"DejaVuSerif.ttf",
+		"Arial.ttf",
+		"Verdana.ttf",
+		"Tahoma.ttf" };
+
+	//build full font path
+	TCHAR winDir[MAX_PATH];
+	GetWindowsDirectory(winDir, MAX_PATH);
+#ifdef UNICODE
+	char winDirChar[MAX_PATH*2];
+	char DefChar = ' ';
+    WideCharToMultiByte(CP_ACP, 0, winDir, -1, winDirChar, MAX_PATH, &DefChar, NULL);
+	std::string fontPath(winDirChar);
+#else
+	std::string fontPath(winDir);
+#endif
+	fontPath += "\\Fonts\\";
+	//prepend to font file names
+	for(int i = 0; i < fontCount; i++)
+	{
+		fonts[i] = fontPath + fonts[i];
+	}
+#else
+	std::string fonts[] = {"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
 		"/usr/share/fonts/TTF/DejaVuSerif.ttf",
 		"/usr/share/fonts/dejavu/DejaVuSerif.ttf",
 		"font.ttf" };
+#endif
 
 	for(int i = 0; i < fontCount; i++)
 	{
