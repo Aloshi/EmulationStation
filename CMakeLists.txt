@@ -152,18 +152,6 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
 )
 
-#add OS specifix sources
-#if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-#    LIST(APPEND ES_SOURCES
-#        main_windows.cpp
-#    )
-#endif()
-#if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-#    LIST(APPEND ES_SOURCES
-#        main_linux.cpp
-#    )
-#endif()
-
 #add open gl specific sources
 if(${GLSystem} MATCHES "Desktop OpenGL")
     LIST(APPEND ES_SOURCES
@@ -171,17 +159,13 @@ if(${GLSystem} MATCHES "Desktop OpenGL")
     )
 else()
     LIST(APPEND ES_SOURCES
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_gles.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_rpi.cpp
     )
 endif()
 
 #-------------------------------------------------------------------------------
 #define libraries and directories
 set(ES_LIBRARIES
-#    ${FREETYPE_LIBRARIES}
-#    ${FreeImage_LIBRARIES}
-#    ${SDL_LIBRARY}
-#    ${Boost_LIBRARIES}
 	freetype
 	freeimage
 	SDL
