@@ -7,6 +7,7 @@ else Log().get(level)
 
 #include <string>
 #include <sstream>
+#include <iostream>
 
 enum LogLevel { LogError, LogWarning, LogInfo, LogDebug };
 

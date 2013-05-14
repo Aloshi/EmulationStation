@@ -8,12 +8,10 @@
 
 namespace fs = boost::filesystem;
 
-InputManager::InputManager(Window* window) : mWindow(window)
+InputManager::InputManager(Window* window) : mWindow(window), 
+	mJoysticks(NULL), mInputConfigs(NULL), mKeyboardInputConfig(NULL), mPrevAxisValues(NULL),
+	mNumJoysticks(0), mNumPlayers(0)
 {
-	mJoysticks = NULL;
-	mKeyboardInputConfig = NULL;
-	mNumJoysticks = 0;
-	mNumPlayers = 0;
 }
 
 InputManager::~InputManager()
@@ -66,14 +64,17 @@ void InputManager::deinit()
 			delete mInputConfigs[i];
 		}
 
-		delete mKeyboardInputConfig;
+		delete[] mInputConfigs;
+		mInputConfigs = NULL;
 
 		delete[] mJoysticks;
-		delete[] mInputConfigs;
-		delete[] mPrevAxisValues;
 		mJoysticks = NULL;
+
+		delete mKeyboardInputConfig;
 		mKeyboardInputConfig = NULL;
-		mInputConfigs = NULL;
+
+		delete[] mPrevAxisValues;
+		mPrevAxisValues = NULL;
 	}
 
 	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
