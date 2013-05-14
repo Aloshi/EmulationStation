@@ -1,7 +1,6 @@
 #include "Renderer.h"
-#include <bcm_host.h>
 #include <iostream>
-#include <bcm_host.h>
+#include "platform.h"
 #include <GLES/gl.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -9,6 +8,10 @@
 #include <SDL/SDL.h>
 #include "InputManager.h"
 #include "Log.h"
+
+#ifdef _RPI_
+    #include <bcm_host.h>
+#endif
 
 namespace Renderer
 {
@@ -19,7 +22,11 @@ namespace Renderer
 	EGLContext context;
 	EGLConfig config;
 
+#ifdef _RPI_
 	static EGL_DISPMANX_WINDOW_T nativewindow;
+#else
+    NativeWindowType nativewindow;
+#endif
 
 	unsigned int display_width = 0;
 	unsigned int display_height = 0;
@@ -47,13 +54,13 @@ namespace Renderer
 
 		LOG(LogInfo) << "Creating surface...";
 
+#ifdef _RPI_
 		DISPMANX_ELEMENT_HANDLE_T dispman_element;
 		DISPMANX_DISPLAY_HANDLE_T dispman_display;
 		DISPMANX_UPDATE_HANDLE_T dispman_update;
 		VC_RECT_T dst_rect;
 		VC_RECT_T src_rect;
-
-
+#endif
 
 		display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 		if(display == EGL_NO_DISPLAY)
@@ -104,9 +111,8 @@ namespace Renderer
 			return false;
 		}
 
-
-
-
+#ifdef _RPI_
+        //get hardware info for screen/desktop from BCM interface
 		if(!display_width || !display_height)
 		{
 			bool success = graphics_get_display_size(0, &display_width, &display_height); //0 = LCD
@@ -117,10 +123,27 @@ namespace Renderer
 				return false;
 			}
 		}
+#else
+        //get hardware info for screen/desktop from SDL
+        if(!display_width || !display_height) 
+        {
+            const SDL_VideoInfo* videoInfo = SDL_GetVideoInfo();
+			if(videoInfo == NULL)
+            {
+				LOG(LogError) << "Error getting display size!";
+				return false;
+			}
+            else
+            {
+                display_width = current_w;
+                display_height = current_h;
+            }
+		}
+#endif
 
 		LOG(LogInfo) << "Resolution: " << display_width << "x" << display_height << "...";
 
-
+#ifdef _RPI_
 		dst_rect.x = 0; dst_rect.y = 0;
 		dst_rect.width = display_width; dst_rect.height = display_height;
 
@@ -133,11 +156,9 @@ namespace Renderer
 		dispman_element = vc_dispmanx_element_add(dispman_update, dispman_display, 0 /*layer*/, &dst_rect, 0 /*src*/, &src_rect, DISPMANX_PROTECTION_NONE, 0 /*alpha*/, 0 /*clamp*/, DISPMANX_NO_ROTATE /*transform*/);
 
 		nativewindow.element = dispman_element;
-		nativewindow.width = display_width; nativewindow.height = display_height;
-		vc_dispmanx_update_submit_sync(dispman_update);
-
-
-
+        nativewindow.width = display_width; nativewindow.height = display_height;
+        vc_dispmanx_update_submit_sync(dispman_update);
+#endif
 
 		surface = eglCreateWindowSurface(display, config, &nativewindow, NULL);
 		if(surface == EGL_NO_SURFACE)
