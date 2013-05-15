@@ -69,16 +69,6 @@ set(ES_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
 )
 
-if(${GLSystem} MATCHES "Desktop OpenGL")
-    LIST(APPEND ES_INCLUDE_DIRS
-        ${OPENGL_INCLUDE_DIR}
-    )
-else()
-    LIST(APPEND ES_INCLUDE_DIRS
-        ${OPENGLES_INCLUDE_DIR}
-    )
-endif()   
-
 if(DEFINED BCMHOST)
     LIST(APPEND ES_INCLUDE_DIRS
         "/opt/vc/include"
@@ -86,6 +76,16 @@ if(DEFINED BCMHOST)
         "/opt/vc/include/interface/vmcs_host/linux"
         "/opt/vc/include/interface/vcos/pthreads"
     )
+else()
+    if(${GLSystem} MATCHES "Desktop OpenGL")
+        LIST(APPEND ES_INCLUDE_DIRS
+            ${OPENGL_INCLUDE_DIR}
+        )
+    else()
+        LIST(APPEND ES_INCLUDE_DIRS
+            ${OPENGLES_INCLUDE_DIR}
+        )
+    endif()
 endif()
 
 #-------------------------------------------------------------------------------
@@ -172,20 +172,22 @@ set(ES_LIBRARIES
 	boost_system
 )
 
-if(${GLSystem} MATCHES "Desktop OpenGL")
-    LIST(APPEND ES_LIBRARIES
-        ${OPENGL_LIBRARIES}
-    )
-else()
-    LIST(APPEND ES_LIBRARIES
-        ${OPENGLES_LIBRARIES}
-    )
-endif()
-
 if(DEFINED BCMHOST)
     LIST(APPEND ES_LIBRARIES
         bcm_host
+        EGL
+        GLESv1_CM
     )
+else()
+    if(${GLSystem} MATCHES "Desktop OpenGL")
+        LIST(APPEND ES_LIBRARIES
+            ${OPENGL_LIBRARIES}
+        )
+    else()
+        LIST(APPEND ES_LIBRARIES
+            ${OPENGLES_LIBRARIES}
+        )
+    endif()
 endif()
 
 if(DEFINED BCMHOST)
