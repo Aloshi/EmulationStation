@@ -82,8 +82,18 @@ void Sound::play()
 	if(mSampleData == NULL)
 		return;
 
-	//flag our sample as playing
-	playing = true;
+	if (playing)
+	{
+		//replay from start. rewind the sample to the beginning
+		SDL_LockAudio();
+		mSamplePos = 0;
+		SDL_UnlockAudio();
+	}
+	else
+	{
+		//flag our sample as playing
+		playing = true;
+	}
 	//tell the AudioManager to start playing samples
 	AudioManager::play();
 }
@@ -96,8 +106,10 @@ bool Sound::isPlaying() const
 void Sound::stop()
 {
 	//flag our sample as playing and rewind its position
+	SDL_LockAudio();
 	playing = false;
 	mSamplePos = 0;
+	SDL_UnlockAudio();
 }
 
 const Uint8 * Sound::getData() const
