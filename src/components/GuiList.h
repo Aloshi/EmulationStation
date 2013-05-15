@@ -7,6 +7,7 @@
 #include "../InputManager.h"
 #include <vector>
 #include <string>
+#include <memory>
 #include "../Sound.h"
 
 //A graphical list. Supports multiple colors for rows and scrolling.

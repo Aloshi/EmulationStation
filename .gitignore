@@ -16,3 +16,6 @@
 
 #Compiled executable
 emulationstation
+
+#build directory
+EmulationStation_vs2010

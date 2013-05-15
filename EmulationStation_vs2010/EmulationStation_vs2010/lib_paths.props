@@ -3,15 +3,15 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>C:\Games\VC++ Includes\freetype-2.3.5-1-bin\include\freetype2;C:\Games\VC++ Includes\SDL_mixer-1.2.12\include;C:\Games\VC++ Includes\FreeImage\Dist;C:\boost_1_53_0;C:\Games\VC++ Includes\SDL-1.2.15\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Games\VC++ Includes\freetype-2.3.5-1-bin\lib;C:\Games\VC++ Includes\SDL_mixer-1.2.12\lib\x86;C:\Games\VC++ Includes\FreeImage\Dist;C:\boost_1_53_0\stage\lib;C:\Games\VC++ Includes\SDL-1.2.15\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:/Programmierung/Projekte/trunk_clean/freetype2/include;C:/Users/kr.ERPA/Documents/GitHub/FreeImage/Dist;C:\Users\kr.ERPA\Documents\GitHub\SDL-1.2.15\include;C:\Programmierung\Projekte\VPackNG\modules\boost-1.53.0\include;%(AdditionalLibraryDirectories);$(IncludePath)</IncludePath>
+    <LibraryPath>C:/Programmierung/Projekte/trunk_clean/freetype2/lib;C:/Users/kr.ERPA/Documents/GitHub/FreeImage/Dist;C:\Users\kr.ERPA\Documents\GitHub\SDL-1.2.15\lib\x86;C:\Programmierung\Projekte\VPackNG\modules\boost-1.53.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <PreprocessorDefinitions>_DESKTOP_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDLmain.lib;SDL.lib;FreeImage.lib;freetype.lib;opengl32.lib;SDL_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDLmain.lib;SDL.lib;FreeImage.lib;freetype.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
