@@ -92,11 +92,13 @@ endif()
 #define basic sources and headers
 set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.h
@@ -119,6 +121,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiTheme.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/data/Resources.h
 )
 set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.cpp
@@ -126,6 +129,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp
@@ -149,6 +153,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiTheme.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_16.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_32.cpp
 )
 
 #add open gl specific sources
@@ -159,6 +165,14 @@ if(${GLSystem} MATCHES "Desktop OpenGL")
 else()
     LIST(APPEND ES_SOURCES
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_rpi.cpp
+    )
+endif()
+
+#-------------------------------------------------------------------------------
+#define OS specific sources and headers
+if(MSVC)
+    LIST(APPEND ES_SOURCES
+		${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.rc
     )
 endif()
 
