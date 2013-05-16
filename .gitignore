@@ -11,11 +11,17 @@
 *.la
 *.a
 
+# And on Windows
+*.dll
+*.pdb
+*.exe.manifest
+
 # Dependency makefiles
 *.d
 
 #Compiled executable
 emulationstation
+emulationstation.exe
 
 #build directory
 EmulationStation_vs2010
