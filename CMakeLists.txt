@@ -164,19 +164,29 @@ endif()
 
 #-------------------------------------------------------------------------------
 #define libraries and directories
+if(DEFINED BCMHOST)
+    link_directories(
+        ${Boost_LIBRARY_DIRS}
+        "/opt/vc/lib"
+    )
+else()
+    link_directories(
+        ${Boost_LIBRARY_DIRS}
+    )
+endif()
+
 set(ES_LIBRARIES
-	freetype
-	freeimage
-	SDL
-	boost_filesystem
-	boost_system
+    ${Boost_LIBRARIES}
+    ${FREETYPE_LIBRARIES}
+    ${FreeImage_LIBRARIES}
+	${SDL_LIBRARY}
+    ${SDLMAIN_LIBRARY}
 )
 
 if(DEFINED BCMHOST)
     LIST(APPEND ES_LIBRARIES
         bcm_host
         EGL
-        GLESv1_CM
     )
 else()
     if(${GLSystem} MATCHES "Desktop OpenGL")
@@ -188,10 +198,6 @@ else()
             ${OPENGLES_LIBRARIES}
         )
     endif()
-endif()
-
-if(DEFINED BCMHOST)
-    LINK_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR} "/opt/vc/lib")
 endif()
 
 #-------------------------------------------------------------------------------

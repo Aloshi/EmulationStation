@@ -24,12 +24,11 @@ IF (WIN32)
 
   ELSE (CYGWIN)
 
-    IF(BORLAND)
+    IF(MSVC)
+      #The user hast to provide this atm. GLES can be emulated via Desktop OpenGL
+      #using the ANGLE project found at: http://code.google.com/p/angleproject/
       SET (OPENGLES_gl_LIBRARY import32 CACHE STRING "OpenGL ES 1.x library for win32")
-    ELSE(BORLAND)
-          #MS compiler - todo - fix the following line:
-      SET (OPENGLES_gl_LIBRARY ${OGRE_SOURCE_DIR}/Dependencies/lib/release/libgles_cm.lib CACHE STRING "OpenGL ES 1.x library for win32")
-    ENDIF(BORLAND)
+    ENDIF(MSVC)
 
   ENDIF (CYGWIN)
 
@@ -47,6 +46,7 @@ ELSE (WIN32)
       /usr/openwin/share/include
       /opt/graphics/OpenGL/include /usr/X11R6/include
       /usr/include
+      /opt/vc/include
     )
 
     FIND_LIBRARY(OPENGLES_gl_LIBRARY
@@ -55,6 +55,7 @@ ELSE (WIN32)
             /usr/openwin/lib
             /usr/shlib /usr/X11R6/lib
             /usr/lib
+            /opt/vc/lib
     )
 
     # On Unix OpenGL most certainly always requires X11.

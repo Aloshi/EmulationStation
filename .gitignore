@@ -19,3 +19,8 @@ emulationstation
 
 #build directory
 EmulationStation_vs2010
+build
+Debug
+Release
+MinSizeRel
+RelWithDebInfo
