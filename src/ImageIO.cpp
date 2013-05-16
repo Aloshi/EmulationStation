@@ -1,5 +1,7 @@
 #include "ImageIO.h"
 
+#include <memory.h>
+
 #include "Log.h"
 
 

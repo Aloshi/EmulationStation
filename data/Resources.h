@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stddef.h>
+
 //This is a shabby, sort of OS-independent resource "system"
 //Use bin2h: http://code.google.com/p/bin2h/
 //to convert the binary files to C code,

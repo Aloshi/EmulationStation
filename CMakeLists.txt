@@ -35,7 +35,7 @@ endif()
 find_package(FreeType REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 #-------------------------------------------------------------------------------
 #set up compiler flags and excutable names
