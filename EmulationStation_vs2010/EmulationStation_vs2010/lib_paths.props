@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-	    <IncludePath>$(IncludePath)</IncludePath>
-	    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>C:/Programmierung/Projekte/trunk_clean/freetype2/include;C:/Users/kr.ERPA/Documents/GitHub/FreeImage/Dist;C:\Users\kr.ERPA\Documents\GitHub\SDL-1.2.15\include;C:\Programmierung\Projekte\VPackNG\modules\boost-1.53.0\include;%(AdditionalLibraryDirectories);$(IncludePath)</IncludePath>
+    <LibraryPath>C:/Programmierung/Projekte/trunk_clean/freetype2/lib;C:/Users/kr.ERPA/Documents/GitHub/FreeImage/Dist;C:\Users\kr.ERPA\Documents\GitHub\SDL-1.2.15\lib\x86;C:\Programmierung\Projekte\VPackNG\modules\boost-1.53.0\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
