@@ -9,8 +9,8 @@
 namespace fs = boost::filesystem;
 
 InputManager::InputManager(Window* window) : mWindow(window), 
-	mJoysticks(NULL), mInputConfigs(NULL), mKeyboardInputConfig(NULL), mPrevAxisValues(NULL),
-	mNumJoysticks(0), mNumPlayers(0)
+	mNumJoysticks(0), mNumPlayers(0), mJoysticks(NULL), 
+	mInputConfigs(NULL), mKeyboardInputConfig(NULL), mPrevAxisValues(NULL)
 {
 }
 
