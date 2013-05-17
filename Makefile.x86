@@ -1,4 +1,5 @@
-CPPFLAGS=-I/usr/include/freetype2 -I/usr/include/SDL -D_DESKTOP_
+CPPFLAGS=-I/usr/include/freetype2 -I/usr/include/SDL
+CPPFLAGS+=-D_DESKTOP -DUSE_OPENGL_DESKTOP
 LIBS=-lGL -lfreetype -lSDL -lboost_system -lboost_filesystem -lfreeimage -lSDL_mixer
 ADDITIONAL_SRC_SOURCES=Renderer_init_sdlgl.cpp
 
