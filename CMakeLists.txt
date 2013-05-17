@@ -35,7 +35,7 @@ endif()
 find_package(FreeType REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL REQUIRED)
-find_package(Boost REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system filesystem)
 
 #-------------------------------------------------------------------------------
 #set up compiler flags and excutable names
@@ -47,6 +47,8 @@ if(MSVC)
     set(CMAKE_DEBUG_POSTFIX "d")
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -92,11 +94,13 @@ endif()
 #define basic sources and headers
 set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.h
@@ -119,6 +123,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiTheme.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/data/Resources.h
 )
 set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.cpp
@@ -126,6 +131,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp
@@ -149,6 +155,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiTheme.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_16.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_32.cpp
 )
 
 #add open gl specific sources
@@ -159,6 +167,14 @@ if(${GLSystem} MATCHES "Desktop OpenGL")
 else()
     LIST(APPEND ES_SOURCES
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_rpi.cpp
+    )
+endif()
+
+#-------------------------------------------------------------------------------
+#define OS specific sources and headers
+if(MSVC)
+    LIST(APPEND ES_SOURCES
+		${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.rc
     )
 endif()
 
@@ -211,3 +227,15 @@ set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 include_directories(${ES_INCLUDE_DIRS})
 add_executable(emulationstation ${ES_SOURCES} ${ES_HEADERS})
 target_link_libraries(emulationstation ${ES_LIBRARIES})
+
+#special properties for windows builds
+if(MSVC)
+    #show console in debug builds, but not in proper release builds
+    #Note that up to CMake 2.8.10 this feature is broken: http://public.kitware.com/Bug/view.php?id=12566
+    set_target_properties(emulationstation PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE")
+    set_target_properties(emulationstation PROPERTIES COMPILE_DEFINITIONS_DEBUG "_CONSOLE")
+    set_target_properties(emulationstation PROPERTIES LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:CONSOLE")
+    set_target_properties(emulationstation PROPERTIES COMPILE_DEFINITIONS_RELWITHDEBINFO "_CONSOLE")
+    set_target_properties(emulationstation PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+    set_target_properties(emulationstation PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
+endif()
