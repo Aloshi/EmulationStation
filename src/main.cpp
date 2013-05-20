@@ -7,7 +7,6 @@
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "components/GuiDetectDevice.h"
-#include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"
 #include "Window.h"
@@ -121,6 +120,7 @@ int main(int argc, char* argv[])
 
 	Window window; //don't call Window.init() because we manually pass the resolution to Renderer::init
 	window.getInputManager()->init();
+	AudioManager::init();
 
 	//try loading the system config file
 	if(!fs::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit

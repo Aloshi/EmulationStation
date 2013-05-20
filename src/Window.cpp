@@ -53,6 +53,7 @@ void Window::init()
 {
 	mInputManager->init();
 	Renderer::init(0, 0);
+	AudioManager::init();
 
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
@@ -68,6 +69,7 @@ void Window::deinit()
 	}
 
 	mInputManager->deinit();
+	AudioManager::deinit();
 	Renderer::deinit();
 }
 

@@ -26,6 +26,9 @@ public:
 	static void play();
 
 	virtual ~AudioManager();
+
+	static void init();
+	static void deinit();
 };
 
 #endif
