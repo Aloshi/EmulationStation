@@ -51,6 +51,15 @@ void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
 
 AudioManager::AudioManager()
 {
+}
+
+AudioManager::~AudioManager()
+{
+	deinit();
+}
+
+void AudioManager::init()
+{
 	//Set up format and callback. Play 16-bit stereo audio at 44.1Khz
 	sAudioFormat.freq = 44100;
 	sAudioFormat.format = AUDIO_S16;
@@ -65,7 +74,7 @@ AudioManager::AudioManager()
 	}
 }
 
-AudioManager::~AudioManager()
+void AudioManager::deinit()
 {
 	SDL_PauseAudio(1);
 	SDL_CloseAudio();
