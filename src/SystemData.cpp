@@ -68,6 +68,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
+	AudioManager::getInstance()->deinit();
 	window->deinit();
 
 	std::string command = mLaunchCommand;
@@ -86,6 +87,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 	}
 
 	window->init();
+	AudioManager::getInstance()->init();
 }
 
 void SystemData::populateFolder(FolderData* folder)

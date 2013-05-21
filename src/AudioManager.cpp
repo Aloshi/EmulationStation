@@ -51,6 +51,34 @@ void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
 
 AudioManager::AudioManager()
 {
+	init();
+}
+
+AudioManager::~AudioManager()
+{
+	deinit();
+}
+
+std::shared_ptr<AudioManager> & AudioManager::getInstance()
+{
+	//check if an AudioManager instance is already created, if not create one
+	if (sInstance == nullptr) {
+		sInstance = std::shared_ptr<AudioManager>(new AudioManager);
+	}
+	return sInstance;
+}
+
+void AudioManager::init()
+{
+	//stop playing all Sounds
+	for(unsigned int i = 0; i < sSoundVector.size(); i++)
+	{
+		if(sSoundVector.at(i)->isPlaying())
+		{
+			sSoundVector[i]->stop();
+		}
+	}
+
 	//Set up format and callback. Play 16-bit stereo audio at 44.1Khz
 	sAudioFormat.freq = 44100;
 	sAudioFormat.format = AUDIO_S16;
@@ -65,27 +93,35 @@ AudioManager::AudioManager()
 	}
 }
 
-AudioManager::~AudioManager()
+void AudioManager::deinit()
 {
+	//stop playing all Sounds
+	for(unsigned int i = 0; i < sSoundVector.size(); i++)
+	{
+		if(sSoundVector.at(i)->isPlaying())
+		{
+			sSoundVector[i]->stop();
+		}
+	}
+	//pause audio and close SDL connection
 	SDL_PauseAudio(1);
 	SDL_CloseAudio();
 }
 
 void AudioManager::registerSound(std::shared_ptr<Sound> & sound)
 {
-	//check if an AudioManager instance is already created, if not create one
-	if (sInstance == nullptr) {
-		sInstance = std::shared_ptr<AudioManager>(new AudioManager);
-	}
+	getInstance();
 	sSoundVector.push_back(sound);
 }
 
 void AudioManager::unregisterSound(std::shared_ptr<Sound> & sound)
 {
+	getInstance();
 	for(unsigned int i = 0; i < sSoundVector.size(); i++)
 	{
 		if(sSoundVector.at(i) == sound)
 		{
+			sSoundVector[i]->stop();
 			sSoundVector.erase(sSoundVector.begin() + i);
 			return;
 		}
@@ -95,6 +131,7 @@ void AudioManager::unregisterSound(std::shared_ptr<Sound> & sound)
 
 void AudioManager::play()
 {
+	getInstance();
 	//unpause audio, the mixer will figure out if samples need to be played...
 	SDL_PauseAudio(0);
 }

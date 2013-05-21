@@ -20,6 +20,11 @@ class AudioManager
 	AudioManager();
 
 public:
+	static std::shared_ptr<AudioManager> & getInstance();
+
+	void init();
+	void deinit();
+
 	static void registerSound(std::shared_ptr<Sound> & sound);
 	static void unregisterSound(std::shared_ptr<Sound> & sound);
 
