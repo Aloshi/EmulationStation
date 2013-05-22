@@ -95,7 +95,7 @@ void Sound::play()
 		playing = true;
 	}
 	//tell the AudioManager to start playing samples
-	AudioManager::play();
+	AudioManager::getInstance()->play();
 }
 
 bool Sound::isPlaying() const

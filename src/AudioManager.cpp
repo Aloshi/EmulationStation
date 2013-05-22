@@ -1,11 +1,12 @@
 #include "AudioManager.h"
 
 #include "Log.h"
+#include "VolumeControl.h"
 
 
 std::vector<std::shared_ptr<Sound>> AudioManager::sSoundVector;
-std::shared_ptr<AudioManager> AudioManager::sInstance;
 SDL_AudioSpec AudioManager::sAudioFormat;
+std::shared_ptr<AudioManager> AudioManager::sInstance;
 
 
 void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
@@ -52,6 +53,9 @@ void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
 AudioManager::AudioManager()
 {
 	init();
+
+	//set internal volume
+	//VolumeControl::getInstance()->setVolume(50);
 }
 
 AudioManager::~AudioManager()
@@ -95,16 +99,9 @@ void AudioManager::init()
 
 void AudioManager::deinit()
 {
-	//stop playing all Sounds
-	for(unsigned int i = 0; i < sSoundVector.size(); i++)
-	{
-		if(sSoundVector.at(i)->isPlaying())
-		{
-			sSoundVector[i]->stop();
-		}
-	}
-	//pause audio and close SDL connection
-	SDL_PauseAudio(1);
+	//stop all playback
+	stop();
+
 	SDL_CloseAudio();
 }
 
@@ -132,6 +129,24 @@ void AudioManager::unregisterSound(std::shared_ptr<Sound> & sound)
 void AudioManager::play()
 {
 	getInstance();
+
+	//set internal audio volume. important after launching a game and returning here
+	//VolumeControl::getInstance()->setVolume(50);
+
 	//unpause audio, the mixer will figure out if samples need to be played...
 	SDL_PauseAudio(0);
+}
+
+void AudioManager::stop()
+{
+	//stop playing all Sounds
+	for(unsigned int i = 0; i < sSoundVector.size(); i++)
+	{
+		if(sSoundVector.at(i)->isPlaying())
+		{
+			sSoundVector[i]->stop();
+		}
+	}
+	//pause audio
+	SDL_PauseAudio(1);
 }

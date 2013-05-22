@@ -37,6 +37,11 @@ find_package(FreeImage REQUIRED)
 find_package(SDL REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem)
 
+#add ALSA for Linux
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    find_package(ALSA REQUIRED)
+endif()
+
 #-------------------------------------------------------------------------------
 #set up compiler flags and excutable names
 if(DEFINED BCMHOST)
@@ -70,6 +75,13 @@ set(ES_INCLUDE_DIRS
     ${SDL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
 )
+
+#add ALSA for Linux
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    LIST(APPEND ES_INCLUDE_DIRS
+        ${ALSA_INCLUDE_DIRS}
+    )
+endif()
 
 if(DEFINED BCMHOST)
     LIST(APPEND ES_INCLUDE_DIRS
@@ -109,6 +121,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiAnimation.h
@@ -142,6 +155,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiAnimation.cpp
@@ -199,12 +213,24 @@ set(ES_LIBRARIES
     ${SDLMAIN_LIBRARY}
 )
 
+#add ALSA for Linux
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    LIST(APPEND ES_LIBRARIES
+        ${ALSA_LIBRARY}
+    )
+endif()
+
 if(DEFINED BCMHOST)
     LIST(APPEND ES_LIBRARIES
         bcm_host
         EGL
     )
 else()
+    if(MSVC)
+        LIST(APPEND ES_LIBRARIES
+            winmm
+        )
+    endif()
     if(${GLSystem} MATCHES "Desktop OpenGL")
         LIST(APPEND ES_LIBRARIES
             ${OPENGL_LIBRARIES}

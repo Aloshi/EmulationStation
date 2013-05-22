@@ -25,10 +25,11 @@ public:
 	void init();
 	void deinit();
 
-	static void registerSound(std::shared_ptr<Sound> & sound);
-	static void unregisterSound(std::shared_ptr<Sound> & sound);
+	void registerSound(std::shared_ptr<Sound> & sound);
+	void unregisterSound(std::shared_ptr<Sound> & sound);
 
-	static void play();
+	void play();
+	void stop();
 
 	virtual ~AudioManager();
 };

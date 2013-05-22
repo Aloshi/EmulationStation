@@ -7,6 +7,7 @@
 #include <SDL_joystick.h>
 #include "Renderer.h"
 #include "AudioManager.h"
+#include "VolumeControl.h"
 #include "Log.h"
 #include "InputManager.h"
 #include <iostream>
@@ -69,6 +70,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 	LOG(LogInfo) << "Attempting to launch game...";
 
 	AudioManager::getInstance()->deinit();
+	VolumeControl::getInstance()->deinit();
 	window->deinit();
 
 	std::string command = mLaunchCommand;
@@ -87,6 +89,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 	}
 
 	window->init();
+	VolumeControl::getInstance()->init();
 	AudioManager::getInstance()->init();
 }
 

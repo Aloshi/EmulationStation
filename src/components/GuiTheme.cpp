@@ -69,10 +69,10 @@ GuiTheme::GuiTheme(Window* window, bool detailed, std::string path) : Gui(window
 	mSoundMap["menuOpen"] = std::shared_ptr<Sound>(new Sound);
 
 	//register all sound with the audiomanager
-	AudioManager::registerSound(mSoundMap["menuScroll"]);
-	AudioManager::registerSound(mSoundMap["menuSelect"]);
-	AudioManager::registerSound(mSoundMap["menuBack"]);
-	AudioManager::registerSound(mSoundMap["menuOpen"]);
+	AudioManager::getInstance()->registerSound(mSoundMap["menuScroll"]);
+	AudioManager::getInstance()->registerSound(mSoundMap["menuSelect"]);
+	AudioManager::getInstance()->registerSound(mSoundMap["menuBack"]);
+	AudioManager::getInstance()->registerSound(mSoundMap["menuOpen"]);
 
 	mListFont = NULL;
 	mDescFont = NULL;
