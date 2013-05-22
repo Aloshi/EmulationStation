@@ -3,7 +3,7 @@
 #include <vector>
 #include <FreeImage.h>
 
-
+//This is used for loading files from Resource.h.  Just the ES logo for now (for the icon).
 class ImageIO
 {
 public:
