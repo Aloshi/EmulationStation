@@ -181,28 +181,31 @@ void SystemData::loadConfig()
 	std::ifstream file(path.c_str());
 	if(file.is_open())
 	{
+		size_t lineNr = 0;
 		std::string line;
 		std::string sysName, sysDescName, sysPath, sysExtension, sysCommand;
 		while(file.good())
 		{
+			lineNr++;
 			std::getline(file, line);
 
+			//remove whitespace from line through STL and lambda magic
+			line.erase(std::remove_if(line.begin(), line.end(), [&](char c){ return std::string("\t\r\n\v\f").find(c) != std::string::npos; }), line.end());
+
 			//skip blank lines and comments
-			if(line.empty() || line[0] == *"#")
+			if(line.empty() || line.at(0) == '#')
 				continue;
 
 			//find the name (left of the equals sign) and the value (right of the equals sign)
 			bool lineValid = false;
-			std::string varName, varValue;
-			for(unsigned int i = 0; i < line.length(); i++)
+			std::string varName;
+			std::string varValue;
+			const std::string::size_type equalsPos = line.find('=', 1);
+			if(equalsPos != std::string::npos)
 			{
-				if(line[i] == *"=")
-				{
-					lineValid = true;
-					varName = line.substr(0, i);
-					varValue = line.substr(i + 1, line.length() - 1);
-					break;
-				}
+				lineValid = true;
+				varName = line.substr(0, equalsPos);
+				varValue = line.substr(equalsPos + 1, line.length() - 1);
 			}
 
 			if(lineValid)
@@ -242,7 +245,7 @@ void SystemData::loadConfig()
 					sysName = ""; sysDescName = ""; sysPath = ""; sysExtension = ""; sysCommand = "" ;
 				}
 			}else{
-				LOG(LogError) << "Error reading config file \"" << path << "\" - no equals sign found on line \"" << line << "\"!";
+				LOG(LogError) << "Error reading config file \"" << path << "\" - no equals sign found on line " << lineNr << ": \"" << line << "\"!";
 				return;
 			}
 		}
