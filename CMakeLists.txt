@@ -57,6 +57,12 @@ if(MSVC)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
+    #check for GCC 4.7+
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
+    if (GCC_VERSION VERSION_LESS 4.7)
+            message(SEND_ERROR "You need at least GCC 4.7 to compile EmulationStation!")
+    endif()
+    #set up compiler flags for GCC
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2") #support C++11 for std::, optimize
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")  #strip binary
 endif()
