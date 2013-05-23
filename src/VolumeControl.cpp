@@ -24,7 +24,7 @@ VolumeControl::VolumeControl()
 	init();
 
 	//get original volume levels for system
-	getVolume(originalVolume);
+	originalVolume = getVolume();
 }
 
 VolumeControl::~VolumeControl()
@@ -212,9 +212,9 @@ void VolumeControl::deinit()
 #endif
 }
 
-void VolumeControl::getVolume(uint8_t & volume)
+int VolumeControl::getVolume() const
 {
-	volume = 0;
+	int volume = 0;
 
 #if defined (__APPLE__)
     #error TODO: Not implemented for MacOS yet!!!
@@ -235,11 +235,6 @@ void VolumeControl::getVolume(uint8_t & volume)
 				if (rawVolume > 0)
 				{
 					volume = (rawVolume * 100) / (maxVolume - minVolume);
-					//clamp to 0-100 range
-					if (volume > 100)
-					{
-						volume = 100;
-					}
 				}
 				//else volume = 0;
 			}
@@ -289,11 +284,25 @@ void VolumeControl::getVolume(uint8_t & volume)
 		
 	}
 #endif
+	//clamp to 0-100 range
+	if (volume < 0)
+	{
+		volume = 0;
+	}
+	if (volume > 100)
+	{
+		volume = 100;
+	}
+	return volume;
 }
 
-void VolumeControl::setVolume(uint8_t volume)
+void VolumeControl::setVolume(int volume)
 {
 	//clamp to 0-100 range
+	if (volume < 0)
+	{
+		volume = 0;
+	}
 	if (volume > 100)
 	{
 		volume = 100;

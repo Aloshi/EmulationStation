@@ -36,8 +36,8 @@ class VolumeControl
 	IAudioEndpointVolume * endpointVolume;
 #endif
 
-	uint8_t originalVolume;
-	uint8_t internalVolume;
+	int originalVolume;
+	int internalVolume;
 
 	static std::shared_ptr<VolumeControl> sInstance;
 
@@ -49,8 +49,8 @@ public:
 	void init();
 	void deinit();
 
-	void getVolume(uint8_t & volume);
-	void setVolume(uint8_t volume);
+	int getVolume() const;
+	void setVolume(int volume);
 
 	virtual ~VolumeControl();
 };

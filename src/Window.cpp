@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Renderer.h"
 #include "AudioManager.h"
+#include "VolumeControl.h"
 
 Window::Window()
 {
@@ -73,7 +74,15 @@ void Window::deinit()
 
 void Window::input(InputConfig* config, Input input)
 {
-	if(peekGui())
+	if(config->isMappedTo("mastervolup", input))
+	{
+		VolumeControl::getInstance()->setVolume(VolumeControl::getInstance()->getVolume() + 5);
+	}
+	else if(config->isMappedTo("mastervoldown", input))
+	{
+		VolumeControl::getInstance()->setVolume(VolumeControl::getInstance()->getVolume() - 5);
+	}
+	else if(peekGui())
 		this->peekGui()->input(config, input);
 }
 
