@@ -12,7 +12,7 @@ Building
 
 EmulationStation has a few dependencies. For building, you'll need SDL 1.2, SDL_mixer, FreeImage, FreeType, and Boost.Filesystem, which can easily be obtained with apt-get:
 ```
-sudo apt-get install libsdl1.2-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev libsdl-mixer1.2-dev ttf-dejavu
+sudo apt-get install libsdl1.2-dev libboost-system-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev ttf-dejavu
 ```
 
 There are also a few libraries already on the RPi (located in /opt/vc/, like the Broadcom libraries, EGL, and GLES). You can build EmulationStation by simply running `make`.
@@ -22,10 +22,23 @@ There are also a few libraries already on the RPi (located in /opt/vc/, like the
 
 EmulationStation can also be built on a "normal" Linux system. You'll need the same libraries listed above:
 ```
-sudo apt-get install libsdl1.2-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev libsdl-mixer1.2-dev ttf-dejavu
+sudo apt-get install libsdl1.2-dev libboost-system-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev ttf-dejavu
 ```
 
-You'll also need OpenGL. I don't know the proper package name, but you'll need `/usr/include/GL/gl.h` and `libGL`. You probably already have it. You can build with `make -f Makefile.x86` (badly named Makefile, I know). For some reason it doesn't seem to run with X closed on desktop.
+You'll also need OpenGL. I you don't have `/usr/include/GL/gl.h` and `libGL` try installing the MESA development package with:
+```
+sudo apt-get libgl1-mesa-dev
+```
+
+You can build with `make -f Makefile.x86` (badly named Makefile, I know). For some reason it doesn't seem to run with X closed on desktop.
+
+
+**Via CMake:**
+<pre>
+cd EmulationStation
+cmake .
+make
+</pre>
 
 Configuring
 ===========
@@ -38,7 +51,7 @@ When you first start EmulationStation, you will be prompted to configure any inp
 
 1. Press a button on any device you wish to use. *This includes the keyboard.* If you are unable to configure a device, hold a button on the first device to continue to step 2.
 
-2. Press the displayed input for each device in sequence.  You will be prompted for Up, Down, Left, Right, A (Select), B (Back), Menu, Select (fast select), PageUp, and PageDown. If your controller doesn't have enough buttons to map PageUp/PageDown, it will be skipped.
+2. Press the displayed input for each device in sequence.  You will be prompted for Up, Down, Left, Right, A (Select), B (Back), Menu, Select (fast select), PageUp, and PageDown, Volume up and Volume down. If your controller doesn't have enough buttons to map PageUp/PageDown, it will be skipped.
 
 3. Your config will be saved to `~/.emulationstation/es_input.cfg`. If you wish to reconfigure, just delete this file.
 
@@ -63,6 +76,7 @@ You can use `--help` to view a list of command-line options. Briefly outlined he
 --no-exit		- do not display 'exit' in the ES menu.
 --debug			- print additional output to the console, primarily about input.
 --dimtime [seconds]	- delay before dimming the screen and entering sleep mode. Default is 30, use 0 for never.
+--windowed      - run ES in a window.
 ```
 
 Writing an es_systems.cfg
