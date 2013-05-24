@@ -172,7 +172,10 @@ int main(int argc, char* argv[])
 						timeSinceLastEvent = 0;
 					}
 					break;
-
+				case InputManager::SDL_USEREVENT_POLLDEVICES:
+					//try to poll input devices, but do not necessarily wake up...
+					window.getInputManager()->parseEvent(event);
+					break;
 				case SDL_QUIT:
 					running = false;
 					break;

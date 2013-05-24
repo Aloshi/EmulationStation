@@ -6,11 +6,29 @@
 #include <boost/filesystem.hpp>
 #include "platform.h"
 
+#if defined(WIN32) || defined(_WIN32)
+	#include <Windows.h>
+#endif
+
 namespace fs = boost::filesystem;
+
+//----- InputDevice ----------------------------------------------------------------------------
+
+InputDevice::InputDevice(const std::string & deviceName, unsigned long vendorId, unsigned long productId)
+	: name(deviceName), vendor(vendorId), product(productId)
+{
+}
+
+bool InputDevice::operator==(const InputDevice & b) const
+{
+	return (name == b.name && vendor == b.vendor && product == b.product);
+}
+
+//----- InputManager ---------------------------------------------------------------------------
 
 InputManager::InputManager(Window* window) : mWindow(window), 
 	mJoysticks(NULL), mInputConfigs(NULL), mKeyboardInputConfig(NULL), mPrevAxisValues(NULL),
-	mNumJoysticks(0), mNumPlayers(0)
+	mNumJoysticks(0), mNumPlayers(0), devicePollingTimer(nullptr)
 {
 }
 
@@ -19,12 +37,112 @@ InputManager::~InputManager()
 	deinit();
 }
 
+std::vector<InputDevice> InputManager::getInputDevices() const
+{
+	std::vector<InputDevice> currentDevices;
+
+	//retrieve all input devices from system
+#if defined (__APPLE__)
+    #error TODO: Not implemented for MacOS yet!!!
+#elif defined(__linux__)
+	//open linux input devices file system
+	const std::string inputPath("/dev/input");
+	fs::directory_iterator dirIt(inputPath);
+	while (dirIt != fs::directory_iterator()) {
+		//get directory entry
+		std::string deviceName = (*dirIt).path().string();
+		//remove parent path
+		deviceName.erase(0, inputPath.length() + 1);
+		//check if it start with "js"
+		if (deviceName.length() >= 3 && deviceName.find("js") == 0) {
+			//looks like a joystick. add to devices.
+			currentDevices.push_back(InputDevice(deviceName, 0, 0));
+		}
+		dirIt++;
+	}
+	//or dump /proc/bus/input/devices anbd search for a Handler=..."js"... entry
+#elif defined(WIN32) || defined(_WIN32)
+	RAWINPUTDEVICELIST * deviceList = nullptr;
+	UINT nrOfDevices = 0;
+	//get number of input devices
+	if (GetRawInputDeviceList(deviceList, &nrOfDevices, sizeof(RAWINPUTDEVICELIST)) != -1 && nrOfDevices > 0)
+	{
+		//get list of input devices
+		deviceList = new RAWINPUTDEVICELIST[nrOfDevices];
+		if (GetRawInputDeviceList(deviceList, &nrOfDevices, sizeof(RAWINPUTDEVICELIST)) != -1)
+		{
+			//loop through input devices
+			for (int i = 0; i < nrOfDevices; i++)
+			{
+				//get device name
+				char * rawName = new char[2048];
+				UINT rawNameSize = 2047;
+				GetRawInputDeviceInfo(deviceList[i].hDevice, RIDI_DEVICENAME, (void *)rawName, &rawNameSize);
+				//null-terminate string
+				rawName[rawNameSize] = '\0';
+				//convert to string
+				std::string deviceName = rawName;
+				delete [] rawName;
+				//get deviceType
+				RID_DEVICE_INFO deviceInfo;
+				UINT deviceInfoSize = sizeof(RID_DEVICE_INFO);
+				GetRawInputDeviceInfo(deviceList[i].hDevice, RIDI_DEVICEINFO, (void *)&deviceInfo, &deviceInfoSize);
+				//check if it is a HID. we ignore keyboards and mice...
+				if (deviceInfo.dwType == RIM_TYPEHID)
+				{
+					//check if the vendor/product already exists in list. yes. could be more elegant...
+					std::vector<InputDevice>::const_iterator cdIt = currentDevices.cbegin();
+					while (cdIt != currentDevices.cend())
+					{
+						if (cdIt->name == deviceName && cdIt->product == deviceInfo.hid.dwProductId && cdIt->vendor == deviceInfo.hid.dwVendorId)
+						{
+							//device already there
+							break;
+						}
+						++cdIt;
+					}
+					//was the device found?
+					if (cdIt == currentDevices.cend())
+					{
+						//no. add it.
+						currentDevices.push_back(InputDevice(deviceName, deviceInfo.hid.dwProductId, deviceInfo.hid.dwVendorId));
+					}
+				}
+			}
+		}
+		delete [] deviceList;
+	}
+#endif
+
+	return currentDevices;
+}
+
+Uint32 InputManager::devicePollingCallback(Uint32 interval, void* param)
+{
+	//this thing my be running in a different thread, so we're not allowed to call
+	//any functions or change/allocate/delete stuff, but can send a user event
+	SDL_Event event;
+	SDL_UserEvent userevent;
+	userevent.type = SDL_USEREVENT_POLLDEVICES;
+	userevent.code = 0;
+	userevent.data1 = nullptr;
+	userevent.data2 = nullptr;
+	event.type = SDL_USEREVENT;
+	event.user = userevent;
+	SDL_PushEvent(&event);
+
+	return interval;
+}
+
 void InputManager::init()
 {
 	if(mJoysticks != NULL)
 		deinit();
 
-	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
+	//get current input devices from system
+	inputDevices = getInputDevices();
+
+	SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_TIMER);
 
 	mNumJoysticks = SDL_NumJoysticks();
 	mJoysticks = new SDL_Joystick*[mNumJoysticks];
@@ -46,11 +164,16 @@ void InputManager::init()
 
 	SDL_JoystickEventState(SDL_ENABLE);
 
+	//start timer for input device polling
+	devicePollingTimer = SDL_AddTimer(POLLING_INTERVAL, devicePollingCallback, (void *)this);
+
 	loadConfig();
 }
 
 void InputManager::deinit()
 {
+	SDL_RemoveTimer(devicePollingTimer);
+
 	SDL_JoystickEventState(SDL_DISABLE);
 
 	if(!SDL_WasInit(SDL_INIT_JOYSTICK))
@@ -77,7 +200,9 @@ void InputManager::deinit()
 		mPrevAxisValues = NULL;
 	}
 
-	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
+	SDL_QuitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_TIMER);
+
+	inputDevices.clear();
 }
 
 int InputManager::getNumJoysticks() { return mNumJoysticks; }
@@ -163,6 +288,16 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 
 	case SDL_KEYUP:
 		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
+		return true;
+
+	case SDL_USEREVENT_POLLDEVICES:
+		//poll joystick / HID again
+		std::vector<InputDevice> currentDevices = getInputDevices();
+		//compare device lists to see if devices were added/deleted
+		if (currentDevices != inputDevices) {
+			LOG(LogInfo) << "Device configuration changed!";
+			inputDevices = currentDevices;
+		}
 		return true;
 	}
 
