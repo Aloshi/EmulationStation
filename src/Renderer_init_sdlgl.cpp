@@ -20,6 +20,8 @@ extern bool WINDOWED;
 
 namespace Renderer
 {
+	static bool initialCursorState;
+
 	unsigned int display_width = 0;
 	unsigned int display_height = 0;
 
@@ -85,6 +87,9 @@ namespace Renderer
 
 		LOG(LogInfo) << "Created surface successfully.";
 
+		//hide mouse cursor
+		initialCursorState = SDL_ShowCursor(0);
+
 		return true;
 	}
 
@@ -98,6 +103,10 @@ namespace Renderer
 	{
 		SDL_FreeSurface(sdlScreen);
 		sdlScreen = NULL;
+
+		//show mouse cursor
+		SDL_ShowCursor(initialCursorState);
+
 		SDL_Quit();
 	}
 
