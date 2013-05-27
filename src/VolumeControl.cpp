@@ -4,7 +4,11 @@
 
 
 #if defined(__linux__)
-    const char * VolumeControl::mixerName = "Master";
+    #ifdef _RPI_
+        const char * VolumeControl::mixerName = "PCM";
+    #else
+    	const char * VolumeControl::mixerName = "Master";
+    #endif
     const char * VolumeControl::mixerCard = "default";
 #endif
 
@@ -60,57 +64,57 @@ void VolumeControl::init()
 		//open mixer
 		if (snd_mixer_open(&mixerHandle, 0) >= 0)
 		{
-			LOG(LogDebug) << "AudioManager::init() - Opened ALSA mixer";
+			LOG(LogDebug) << "VolumeControl::init() - Opened ALSA mixer";
 			//ok. attach to defualt card
 			if (snd_mixer_attach(mixerHandle, mixerCard) >= 0)
 			{
-				LOG(LogDebug) << "AudioManager::init() - Attached to default card";
+				LOG(LogDebug) << "VolumeControl::init() - Attached to default card";
 				//ok. register simple element class
 				if (snd_mixer_selem_register(mixerHandle, NULL, NULL) >= 0)
 				{
-					LOG(LogDebug) << "AudioManager::init() - Registered simple element class";
+					LOG(LogDebug) << "VolumeControl::init() - Registered simple element class";
 					//ok. load registered elements
 					if (snd_mixer_load(mixerHandle) >= 0)
 					{
-						LOG(LogDebug) << "AudioManager::init() - Loaded mixer elements";
+						LOG(LogDebug) << "VolumeControl::init() - Loaded mixer elements";
 						//ok. find elements now
 						mixerElem = snd_mixer_find_selem(mixerHandle, mixerSelemId);
 						if (mixerElem != nullptr)
 						{
 							//wohoo. good to go...
-							LOG(LogDebug) << "AudioManager::init() - Mixer initialized";
+							LOG(LogDebug) << "VolumeControl::init() - Mixer initialized";
 						}
 						else
 						{
-							LOG(LogError) << "AudioManager::init() - Failed to find mixer elements!";
+							LOG(LogError) << "VolumeControl::init() - Failed to find mixer elements!";
 							snd_mixer_close(mixerHandle);
 							mixerHandle = nullptr;
 						}
 					}
 					else
 					{
-						LOG(LogError) << "AudioManager::init() - Failed to load mixer elements!";
+						LOG(LogError) << "VolumeControl::init() - Failed to load mixer elements!";
 						snd_mixer_close(mixerHandle);
 						mixerHandle = nullptr;
 					}
 				}
 				else
 				{
-					LOG(LogError) << "AudioManager::init() - Failed to register simple element class!";
+					LOG(LogError) << "VolumeControl::init() - Failed to register simple element class!";
 					snd_mixer_close(mixerHandle);
 					mixerHandle = nullptr;
 				}
 			}
 			else
 			{
-				LOG(LogError) << "AudioManager::init() - Failed to attach to default card!";
+				LOG(LogError) << "VolumeControl::init() - Failed to attach to default card!";
 				snd_mixer_close(mixerHandle);
 				mixerHandle = nullptr;
 			}
 		}
 		else
 		{
-			LOG(LogError) << "AudioManager::init() - Failed to open ALSA mixer!";
+			LOG(LogError) << "VolumeControl::init() - Failed to open ALSA mixer!";
 		}
 	}
 #elif defined(WIN32) || defined(_WIN32)
@@ -136,14 +140,14 @@ void VolumeControl::init()
 				mixerLineControls.cbmxctrl = sizeof(MIXERCONTROL);
 				if (mixerGetLineControls((HMIXEROBJ)mixerHandle, &mixerLineControls, MIXER_GETLINECONTROLSF_ONEBYTYPE) != MMSYSERR_NOERROR)
 				{
-					LOG(LogError) << "AudioManager::getVolume() - Failed to get mixer volume control!";
+					LOG(LogError) << "VolumeControl::getVolume() - Failed to get mixer volume control!";
 					mixerClose(mixerHandle);
 					mixerHandle = nullptr;
 				}
 			}
 			else
 			{
-				LOG(LogError) << "AudioManager::init() - Failed to open mixer!";
+				LOG(LogError) << "VolumeControl::init() - Failed to open mixer!";
 			}
 		}
 	}
@@ -166,21 +170,21 @@ void VolumeControl::init()
 					defaultDevice->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_INPROC_SERVER, nullptr, (LPVOID *)&endpointVolume);
 					if (endpointVolume == nullptr)
 					{
-						LOG(LogError) << "AudioManager::init() - Failed to get default audio endpoint volume!";
+						LOG(LogError) << "VolumeControl::init() - Failed to get default audio endpoint volume!";
 					}
 					//release default device. we don't need it anymore
 					defaultDevice->Release();
 				}
 				else
 				{
-					LOG(LogError) << "AudioManager::init() - Failed to get default audio endpoint!";
+					LOG(LogError) << "VolumeControl::init() - Failed to get default audio endpoint!";
 				}
 				//release device enumerator. we don't need it anymore
 				deviceEnumerator->Release();
 			}
 			else
 			{
-				LOG(LogError) << "AudioManager::init() - Failed to get audio endpoint enumerator!";
+				LOG(LogError) << "VolumeControl::init() - Failed to get audio endpoint enumerator!";
 				CoUninitialize();
 			}
 		}
@@ -266,7 +270,7 @@ int VolumeControl::getVolume() const
 		}
 		else
 		{
-			LOG(LogError) << "AudioManager::getVolume() - Failed to get mixer volume!";
+			LOG(LogError) << "VolumeControl::getVolume() - Failed to get mixer volume!";
 		}
 	}
 	else if (endpointVolume != nullptr)
@@ -279,7 +283,7 @@ int VolumeControl::getVolume() const
 		}
 		else
 		{
-			LOG(LogError) << "AudioManager::setVolume() - Failed to get master volume!";
+			LOG(LogError) << "VolumeControl::getVolume() - Failed to get master volume!";
 		}
 		
 	}
@@ -347,7 +351,7 @@ void VolumeControl::setVolume(int volume)
 		mixerControlDetails.cbDetails = sizeof(MIXERCONTROLDETAILS_UNSIGNED);
 		if (mixerSetControlDetails((HMIXEROBJ)mixerHandle, &mixerControlDetails, MIXER_SETCONTROLDETAILSF_VALUE) != MMSYSERR_NOERROR)
 		{
-			LOG(LogError) << "AudioManager::setVolume() - Failed to set mixer volume!";
+			LOG(LogError) << "VolumeControl::setVolume() - Failed to set mixer volume!";
 		}
 	}
 	else if (endpointVolume != nullptr)
@@ -359,7 +363,7 @@ void VolumeControl::setVolume(int volume)
 		}
 		if (endpointVolume->SetMasterVolumeLevelScalar(floatVolume, nullptr) != S_OK)
 		{
-			LOG(LogError) << "AudioManager::setVolume() - Failed to set master volume!";
+			LOG(LogError) << "VolumeControl::setVolume() - Failed to set master volume!";
 		}
 	}
 #endif
