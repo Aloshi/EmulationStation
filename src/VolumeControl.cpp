@@ -12,7 +12,7 @@
     const char * VolumeControl::mixerCard = "default";
 #endif
 
-std::shared_ptr<VolumeControl> VolumeControl::sInstance;
+std::weak_ptr<VolumeControl> VolumeControl::sInstance;
 
 
 VolumeControl::VolumeControl()
@@ -31,6 +31,20 @@ VolumeControl::VolumeControl()
 	originalVolume = getVolume();
 }
 
+VolumeControl::VolumeControl(const VolumeControl & right)
+{
+	sInstance = right.sInstance;
+}
+
+VolumeControl & VolumeControl::operator=(const VolumeControl & right)
+{
+	if (this != &right) {
+		sInstance = right.sInstance;
+	}
+
+	return *this;
+}
+
 VolumeControl::~VolumeControl()
 {
 	//set original volume levels for system
@@ -42,10 +56,12 @@ VolumeControl::~VolumeControl()
 std::shared_ptr<VolumeControl> & VolumeControl::getInstance()
 {
 	//check if an VolumeControl instance is already created, if not create one
-	if (sInstance == nullptr) {
-		sInstance = std::shared_ptr<VolumeControl>(new VolumeControl);
+	static std::shared_ptr<VolumeControl> sharedInstance = sInstance.lock();
+	if (sharedInstance == nullptr) {
+		sharedInstance.reset(new VolumeControl);
+		sInstance = sharedInstance;
 	}
-	return sInstance;
+	return sharedInstance;
 }
 
 void VolumeControl::init()

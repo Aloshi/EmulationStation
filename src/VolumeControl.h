@@ -39,9 +39,11 @@ class VolumeControl
 	int originalVolume;
 	int internalVolume;
 
-	static std::shared_ptr<VolumeControl> sInstance;
+	static std::weak_ptr<VolumeControl> sInstance;
 
 	VolumeControl();
+	VolumeControl(const VolumeControl & right);
+    VolumeControl & operator=(const VolumeControl & right);
 
 public:
 	static std::shared_ptr<VolumeControl> & getInstance();
@@ -52,5 +54,5 @@ public:
 	int getVolume() const;
 	void setVolume(int volume);
 
-	virtual ~VolumeControl();
+	~VolumeControl();
 };
