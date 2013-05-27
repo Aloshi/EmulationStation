@@ -1,44 +1,54 @@
 EmulationStation
 ================
 
-A graphical front-end for emulators with controller navigation. Developed for the Raspbery Pi, but runs on most Linux systems.
+A cross-platform graphical front-end for emulators with controller navigation.
 
-A cool guy named petrockblog made a script which automatically installs RetroArch, its cores, and ES. It also includes options for configuring your RPi and setting it up to boot directly into ES. You can find it here: https://github.com/petrockblog/RetroPie-Setup
+**Raspberry Pi users:**
+A cool guy named petrockblog made a script which automatically installs many emulators and ES. It also includes options for configuring your RPi and setting it up to boot directly into ES. You can find it here: https://github.com/petrockblog/RetroPie-Setup
 
 Building
 ========
 
-**On the Raspberry Pi:**
+EmulationStation uses some C++11 code, which means you'll need to install at least g++-4.7 on Linux, or VS2010 on Windows.
 
-EmulationStation has a few dependencies. For building, you'll need SDL 1.2, SDL_mixer, FreeImage, FreeType, and Boost.Filesystem, which can easily be obtained with apt-get:
+EmulationStation has a few dependencies. For building, you'll need SDL 1.2, Boost.System, Boost.Filesystem, FreeImage, FreeType, and the DejaVu TrueType font.  
+
+**On Linux:**
+All of this be easily installed with apt-get:
 ```
 sudo apt-get install libsdl1.2-dev libboost-system-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev ttf-dejavu
 ```
 
-There are also a few libraries already on the RPi (located in /opt/vc/, like the Broadcom libraries, EGL, and GLES). You can build EmulationStation by simply running `make`.
-
-
-**On something else (desktop):**
-
-EmulationStation can also be built on a "normal" Linux system. You'll need the same libraries listed above:
-```
-sudo apt-get install libsdl1.2-dev libboost-system-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev ttf-dejavu
-```
-
-You'll also need OpenGL. I you don't have `/usr/include/GL/gl.h` and `libGL` try installing the MESA development package with:
+On "desktop" Linux (that is, *not* the Raspberry Pi), you'll also need OpenGL.  Try installing the MESA development package with:
 ```
 sudo apt-get libgl1-mesa-dev
 ```
 
-You can build with `make -f Makefile.x86` (badly named Makefile, I know). For some reason it doesn't seem to run with X closed on desktop.
+On the Raspberry Pi, there are also a few special libraries, located in /opt/vc/: the Broadcom libraries, libEGL, and GLES.  You shouldn't need to install them.
 
-
-**Via CMake:**
-<pre>
+**Generate and Build Makefile with CMake:**
+```
 cd EmulationStation
 cmake .
 make
-</pre>
+```
+
+**On Windows:**
+
+[Boost](http://www.boost.org/users/download/) (you'll need to compile for Boost.Filesystem)
+
+[FreeImage](http://downloads.sourceforge.net/freeimage/FreeImage3154Win32.zip)
+
+[FreeType2](http://download.savannah.gnu.org/releases/freetype/freetype-2.4.9.tar.bz2) (you'll need to compile)
+
+[SDL-1.2](http://www.libsdl.org/release/SDL-devel-1.2.15-VC.zip)
+
+(remember to copy necessary .DLLs into the same folder as the executable: FreeImage.dll, freetype6.dll, SDL.dll, and zlib1.dll)
+
+[CMake](http://www.cmake.org/cmake/resources/software.html) (this is used for generating the Visual Studio project)
+
+(If you don't know how to use CMake, here are some hints: run CMake-gui and point it at your EmulationStation folder.  Point the "build" directory somewhere - I use EmulationStation/build.  Click configure, choose "Visual Studio 2010 Project", fill in red fields as they appear, then click Generate.)
+
 
 Configuring
 ===========
