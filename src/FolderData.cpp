@@ -37,7 +37,9 @@ bool filesort(FileData* file1, FileData* file2)
 	std::string name1 = file1->getName();
 	std::string name2 = file2->getName();
 
-	for(unsigned int i = 0; i < name1.length(); i++)
+	//min of name1/name2 .length()s
+	unsigned int count = name1.length() > name2.length() ? name2.length() : name1.length();
+	for(unsigned int i = 0; i < count; i++)
 	{
 		if(toupper(name1[i]) != toupper(name2[i]))
 		{

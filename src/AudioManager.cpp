@@ -22,7 +22,7 @@ void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
 		{
 			//calculate rest length of current sample
 			Uint32 restLength = (sound->getLength() - sound->getPosition());
-			if (restLength > len) {
+			if (restLength > (Uint32)len) {
 				//if stream length is smaller than smaple lenght, clip it
 				restLength = len;
 			}

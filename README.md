@@ -97,9 +97,11 @@ The COMMAND is the shell command ES will execute to start your emulator. As it i
 
 The following "tags" are replaced by ES in COMMANDs:
 
-`%ROM%`		- Replaced with absolute path to the selected ROM.
+`%ROM%`		- Replaced with absolute path to the selected ROM, with most Bash special characters escaped with a backslash.
 
 `%BASENAME%`	- Replaced with the "base" name of the path to the selected ROM. For example, a path of "/foo/bar.rom", this tag would be "bar". This tag is useful for setting up AdvanceMAME.
+
+`%ROM_RAW%`	- Replaced with the unescaped absolute path to the selected ROM.  If your emulator is picky about paths, you might want to use this instead of %ROM%, but enclosed in quotes.
 
 gamelist.xml
 ============

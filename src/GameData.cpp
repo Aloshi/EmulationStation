@@ -22,6 +22,7 @@ std::string GameData::getBashPath()
 {
 	//a quick and dirty way to insert a backslash before most characters that would mess up a bash path
 	std::string path = mPath;
+
 	const char* invalidChars = " '\"\\!$^&*(){}[]?;<>";
 	for(unsigned int i = 0; i < path.length(); i++)
 	{

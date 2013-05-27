@@ -332,6 +332,9 @@ Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
 //expands a file path (./ becomes the directory of this theme file, ~/ becomes $HOME/)
 std::string GuiTheme::expandPath(std::string path)
 {
+	if(path.empty())
+		return "";
+	
 	if(path[0] == '~')
 		path = getHomePath() + path.substr(1, path.length() - 1);
 	else if(path[0] == '.')
