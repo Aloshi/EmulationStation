@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include <iostream>
+#include <iomanip>
 #include "Renderer.h"
 #include "components/GuiGameList.h"
 #include "SystemData.h"
@@ -198,12 +199,22 @@ int main(int argc, char* argv[])
 
 		if(DRAWFRAMERATE)
 		{
-			float framerate = 1/((float)deltaTime)*1000;
-			std::stringstream ss;
-			ss << framerate;
-			std::string fps;
-			ss >> fps;
-			Renderer::drawText(fps, 50, 50, 0x00FF00FF, Renderer::getDefaultFont(Renderer::MEDIUM));
+			static int timeElapsed = 0;
+			static int nrOfFrames = 0;
+			static std::string fpsString;
+
+			nrOfFrames++;
+			timeElapsed += deltaTime;
+			//wait until half a second has passed to recalculate fps
+			if (timeElapsed >= 500) {
+				std::stringstream ss;
+				ss << std::fixed << std::setprecision(1) << (1000.0f * (float)nrOfFrames / (float)timeElapsed) << "fps, ";
+				ss << std::fixed << std::setprecision(2) << ((float)timeElapsed / (float)nrOfFrames) << "ms";
+				fpsString = ss.str();
+				nrOfFrames = 0;
+				timeElapsed = 0;
+			}
+			Renderer::drawText(fpsString, 50, 50, 0x00FF00FF, Renderer::getDefaultFont(Renderer::MEDIUM));
 		}
 
 		//sleep if we're past our threshold
