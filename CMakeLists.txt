@@ -127,6 +127,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Vector2.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
@@ -171,7 +172,6 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiImage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiTheme.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
