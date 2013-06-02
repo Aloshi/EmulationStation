@@ -1,6 +1,6 @@
-#include "GuiAnimation.h"
+#include "AnimationComponent.h"
 
-GuiAnimation::GuiAnimation()
+AnimationComponent::AnimationComponent()
 {
 	mMoveX = 0;
 	mMoveY = 0;
@@ -8,14 +8,14 @@ GuiAnimation::GuiAnimation()
 	mFadeRate = 0;
 }
 
-void GuiAnimation::move(int x, int y, int speed)
+void AnimationComponent::move(int x, int y, int speed)
 {
 	mMoveX = x;
 	mMoveY = y;
 	mMoveSpeed = speed;
 }
 
-void GuiAnimation::fadeIn(int time)
+void AnimationComponent::fadeIn(int time)
 {
 	mOpacity = 0;
 	setChildrenOpacity(0);
@@ -23,7 +23,7 @@ void GuiAnimation::fadeIn(int time)
 	mFadeRate = time;
 }
 
-void GuiAnimation::fadeOut(int time)
+void AnimationComponent::fadeOut(int time)
 {
 	mOpacity = 255;
 	setChildrenOpacity(255);
@@ -31,7 +31,7 @@ void GuiAnimation::fadeOut(int time)
 	mFadeRate = -time;
 }
 
-void GuiAnimation::update(int deltaTime)
+void AnimationComponent::update(int deltaTime)
 {
 	float mult = deltaTime * 0.05f;
 
@@ -69,21 +69,22 @@ void GuiAnimation::update(int deltaTime)
 	}
 }
 
-void GuiAnimation::addChild(GuiImage* gui)
+void AnimationComponent::addChild(ImageComponent* gui)
 {
 	mChildren.push_back(gui);
 }
 
-void GuiAnimation::moveChildren(int offsetx, int offsety)
+void AnimationComponent::moveChildren(int offsetx, int offsety)
 {
+	Vector2i move(offsetx, offsety);
 	for(unsigned int i = 0; i < mChildren.size(); i++)
 	{
-		GuiImage* comp = mChildren.at(i);
-		comp->setOffset(comp->getOffsetX() + offsetx, comp->getOffsetY() + offsety);
+		ImageComponent* comp = mChildren.at(i);
+		comp->setOffset(comp->getOffset() + move);
 	}
 }
 
-void GuiAnimation::setChildrenOpacity(unsigned char opacity)
+void AnimationComponent::setChildrenOpacity(unsigned char opacity)
 {
 	for(unsigned int i = 0; i < mChildren.size(); i++)
 	{

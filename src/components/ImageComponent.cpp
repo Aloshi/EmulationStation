@@ -1,18 +1,18 @@
-#include "GuiImage.h"
+#include "ImageComponent.h"
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <math.h>
 #include "../Log.h"
 #include "../Renderer.h"
 
-unsigned int GuiImage::getWidth() { return mDrawWidth; }
-unsigned int GuiImage::getHeight() { return mDrawHeight; }
+unsigned int ImageComponent::getWidth() { return mDrawWidth; }
+unsigned int ImageComponent::getHeight() { return mDrawHeight; }
 
-GuiImage::GuiImage(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact) : Gui(window)
+ImageComponent::ImageComponent(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact) : GuiComponent(window)
 {
 	mTextureID = 0;
 
-	setOffset(offsetX, offsetY);
+	setOffset(Vector2i(offsetX, offsetY));
 
 	//default origin is the center of image
 	mOriginX = 0.5;
@@ -36,12 +36,12 @@ GuiImage::GuiImage(Window* window, int offsetX, int offsetY, std::string path, u
 		setImage(path);
 }
 
-GuiImage::~GuiImage()
+ImageComponent::~ImageComponent()
 {
 	unloadImage();
 }
 
-void GuiImage::loadImage(std::string path)
+void ImageComponent::loadImage(std::string path)
 {
 	//make sure the file *exists*
 	if(!boost::filesystem::exists(path))
@@ -171,7 +171,7 @@ void GuiImage::loadImage(std::string path)
 	resize();
 }
 
-void GuiImage::resize()
+void ImageComponent::resize()
 {
 	mDrawWidth = mWidth;
 	mDrawHeight = mHeight;
@@ -206,7 +206,7 @@ void GuiImage::resize()
 	}
 }
 
-void GuiImage::unloadImage()
+void ImageComponent::unloadImage()
 {
 	if(mTextureID)
 	{
@@ -216,7 +216,7 @@ void GuiImage::unloadImage()
 	}
 }
 
-void GuiImage::setImage(std::string path)
+void ImageComponent::setImage(std::string path)
 {
 	if(mPath == path)
 		return;
@@ -229,13 +229,13 @@ void GuiImage::setImage(std::string path)
 
 }
 
-void GuiImage::setOrigin(float originX, float originY)
+void ImageComponent::setOrigin(float originX, float originY)
 {
 	mOriginX = originX;
 	mOriginY = originY;
 }
 
-void GuiImage::setTiling(bool tile)
+void ImageComponent::setTiling(bool tile)
 {
 	mTiled = tile;
 
@@ -243,7 +243,7 @@ void GuiImage::setTiling(bool tile)
 		mResizeExact = false;
 }
 
-void GuiImage::setResize(unsigned int width, unsigned int height, bool resizeExact)
+void ImageComponent::setResize(unsigned int width, unsigned int height, bool resizeExact)
 {
 	mResizeWidth = width;
 	mResizeHeight = height;
@@ -251,17 +251,17 @@ void GuiImage::setResize(unsigned int width, unsigned int height, bool resizeExa
 	resize();
 }
 
-void GuiImage::setFlipX(bool flip)
+void ImageComponent::setFlipX(bool flip)
 {
 	mFlipX = flip;
 }
 
-void GuiImage::setFlipY(bool flip)
+void ImageComponent::setFlipY(bool flip)
 {
 	mFlipY = flip;
 }
 
-void GuiImage::render()
+void ImageComponent::render()
 {
 	if(mTextureID && getOpacity() > 0)
 	{
@@ -274,17 +274,17 @@ void GuiImage::render()
 			float yCount = ((float)mResizeHeight/mHeight);
 
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
-			buildImageArray(getOffsetX(), getOffsetY(), points, texs, xCount, yCount);
+			buildImageArray(getOffset().x, getOffset().y, points, texs, xCount, yCount);
 		}else{
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
-			buildImageArray(getOffsetX(), getOffsetY(), points, texs);
+			buildImageArray(getOffset().x, getOffset().y, points, texs);
 		}
 
 		drawImageArray(points, texs, colors, 6);
 	}
 }
 
-void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
+void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
 {
 	points[0] = posX - (mDrawWidth * mOriginX) * px;		points[1] = posY - (mDrawHeight * mOriginY) * py;
 	points[2] = posX - (mDrawWidth * mOriginX) * px;		points[3] = posY + (mDrawHeight * (1 - mOriginY)) * py;
@@ -322,13 +322,12 @@ void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* tex
 	}
 }
 
-void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int numArrays)
+void ImageComponent::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int numArrays)
 {
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -354,21 +353,21 @@ void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, u
 	glDisable(GL_BLEND);
 }
 
-void GuiImage::init()
+void ImageComponent::init()
 {
 	if(!mPath.empty())
 		loadImage(mPath);
 }
 
-void GuiImage::deinit()
+void ImageComponent::deinit()
 {
 	unloadImage();
 }
 
-bool GuiImage::hasImage()
+bool ImageComponent::hasImage()
 {
 	return !mPath.empty();
 }
 
-unsigned char GuiImage::getOpacity() { return mOpacity; }
-void GuiImage::setOpacity(unsigned char opacity) { mOpacity = opacity; }
+unsigned char ImageComponent::getOpacity() { return mOpacity; }
+void ImageComponent::setOpacity(unsigned char opacity) { mOpacity = opacity; }

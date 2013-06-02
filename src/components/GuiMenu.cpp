@@ -8,11 +8,11 @@
 //defined in main.cpp
 extern bool DONTSHOWEXIT;
 
-GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : Gui(window)
+GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : GuiComponent(window)
 {
 	mParent = parent;
 
-	mList = new GuiList<std::string>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::LARGE));
+	mList = new TextListComponent<std::string>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::LARGE));
 	mList->setSelectedTextColor(0x0000FFFF);
 	populateList();
 }
@@ -22,20 +22,23 @@ GuiMenu::~GuiMenu()
 	delete mList;
 }
 
-void GuiMenu::input(InputConfig* config, Input input)
+bool GuiMenu::input(InputConfig* config, Input input)
 {
 	mList->input(config, input);
 
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		delete this;
-		return;
+		return true;
 	}
 
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		executeCommand(mList->getSelectedObject());
+		return true;
 	}
+
+	return false;
 }
 
 void GuiMenu::executeCommand(std::string command)

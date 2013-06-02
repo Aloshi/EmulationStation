@@ -6,26 +6,26 @@
 #include <boost/filesystem.hpp>
 #include "../Log.h"
 
-GuiGameList::GuiGameList(Window* window, bool useDetail) : Gui(window)
+GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window)
 {
 	mDetailed = useDetail;
 
-	mTheme = new GuiTheme(mWindow, mDetailed);
+	mTheme = new ThemeComponent(mWindow, mDetailed);
 
 	//The GuiGameList can use the older, simple game list if so desired.
 	//The old view only shows a list in the center of the screen; the new view can display an image and description.
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
+		mList = new TextListComponent<FileData*>(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
-		mScreenshot = new GuiImage(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")), "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
+		mScreenshot = new ImageComponent(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")), "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 
-		mImageAnimation = new GuiAnimation();
+		mImageAnimation = new AnimationComponent();
 		mImageAnimation->addChild(mScreenshot);
 	}else{
-		mList = new GuiList<FileData*>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
+		mList = new TextListComponent<FileData*>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 		mScreenshot = NULL;
 		mImageAnimation = NULL;
 	}
@@ -94,7 +94,7 @@ void GuiGameList::render()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, (int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, (int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), mTheme->getColor("description"), mTheme->getDescriptionFont());
+				Renderer::drawWrappedText(desc, (int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getHeight() + 12, (int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), mTheme->getColor("description"), mTheme->getDescriptionFont());
 		}
 
 		mScreenshot->render();
@@ -103,7 +103,7 @@ void GuiGameList::render()
 	mList->render();
 }
 
-void GuiGameList::input(InputConfig* config, Input input)
+bool GuiGameList::input(InputConfig* config, Input input)
 {
 	mList->input(config, input);
 
@@ -118,6 +118,7 @@ void GuiGameList::input(InputConfig* config, Input input)
 			mFolderStack.push(mFolder);
 			mFolder = (FolderData*)file;
 			updateList();
+			return true;
 		}else{
 			mList->stopScrolling();
 
@@ -125,7 +126,7 @@ void GuiGameList::input(InputConfig* config, Input input)
 			while(mTheme->getSound("menuSelect")->isPlaying());
 
 			mSystem->launchGame(mWindow, (GameData*)file);
-			return;
+			return true;
 		}
 	}
 
@@ -139,6 +140,8 @@ void GuiGameList::input(InputConfig* config, Input input)
 
 		//play the back sound
 		mTheme->getSound("menuBack")->play();
+
+		return true;
 	}
 
 	//only allow switching systems if more than one exists (otherwise it'll reset your position when you switch and it's annoying)
@@ -147,10 +150,12 @@ void GuiGameList::input(InputConfig* config, Input input)
 		if(config->isMappedTo("right", input))
 		{
 			setSystemId(mSystemId + 1);
+			return true;
 		}
 		if(config->isMappedTo("left", input))
 		{
 			setSystemId(mSystemId - 1);
+			return true;
 		}
 	}
 
@@ -158,12 +163,14 @@ void GuiGameList::input(InputConfig* config, Input input)
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		mWindow->pushGui(new GuiMenu(mWindow, this));
+		return true;
 	}
 
 	//open the fast select menu
 	if(config->isMappedTo("select", input) && input.value != 0)
 	{
 		mWindow->pushGui(new GuiFastSelect(mWindow, this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont()));
+		return true;
 	}
 
 	if(mDetailed)
@@ -175,7 +182,10 @@ void GuiGameList::input(InputConfig* config, Input input)
 			else
 				clearDetailData();
 		}
+		return true;
 	}
+
+	return false;
 }
 
 void GuiGameList::updateList()
@@ -235,11 +245,10 @@ void GuiGameList::updateTheme()
 	{
 		mList->setCentered(mTheme->getBool("listCentered"));
 
-		mList->setOffsetX((int)(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth()));
+		mList->setOffset((int)(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth()), mList->getOffset().y);
 		mList->setTextOffsetX((int)(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth()));
 
-		mScreenshot->setOffsetX((int)(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth()));
-		mScreenshot->setOffsetY((int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
+		mScreenshot->setOffset((int)(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth()), (int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 		mScreenshot->setResize((int)mTheme->getFloat("gameImageWidth"), (int)mTheme->getFloat("gameImageHeight"), false);
 	}

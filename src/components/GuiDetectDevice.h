@@ -1,14 +1,14 @@
 #ifndef _GUIDETECTDEVICE_H_
 #define _GUIDETECTDEVICE_H_
 
-#include "../Gui.h"
+#include "../GuiComponent.h"
 
-class GuiDetectDevice : public Gui
+class GuiDetectDevice : public GuiComponent
 {
 public:
 	GuiDetectDevice(Window* window);
 
-	void input(InputConfig* config, Input input);
+	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
 	void render();
 

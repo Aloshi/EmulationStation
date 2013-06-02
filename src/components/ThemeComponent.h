@@ -1,26 +1,24 @@
-#ifndef _GUITHEME_H_
-#define _GUITHEME_H_
+#ifndef _THEMECOMPONENT_H_
+#define _THEMECOMPONENT_H_
 
 #include <memory>
 
-#include "../Gui.h"
+#include "../GuiComponent.h"
 #include "../pugiXML/pugixml.hpp"
 #include "GuiBox.h"
 #include "../AudioManager.h"
 #include "../Font.h"
 
 //This class loads an XML-defined list of Guis.
-class GuiTheme : public Gui
+class ThemeComponent : public GuiComponent
 {
 public:
-	GuiTheme(Window* window, bool detailed, std::string path = "");
-	~GuiTheme();
+	ThemeComponent(Window* window, bool detailed, std::string path = "");
+	virtual ~ThemeComponent();
 
 	void readXML(std::string path);
 
 	GuiBoxData getBoxData();
-
-	void render();
 
 	void init();
 	void deinit();
@@ -34,11 +32,12 @@ public:
 	Font* getListFont();
 	Font* getDescriptionFont();
 	Font* getFastSelectFont();
+
 private:
 	void setDefaults();
 	void deleteComponents();
-	void createComponentChildren(pugi::xml_node node, Gui* parent);
-	Gui* createElement(pugi::xml_node data, Gui* parent);
+	void createComponentChildren(pugi::xml_node node, GuiComponent* parent);
+	GuiComponent* createElement(pugi::xml_node data, GuiComponent* parent);
 
 	//utility functions
 	std::string expandPath(std::string path);
@@ -48,7 +47,6 @@ private:
 	float strToFloat(std::string str, float defaultVal = 0.0f);
 	Font* resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize);
 
-	std::vector<Gui*> mComponentVector;
 	std::string mPath;
 	bool mDetailed;
 
@@ -59,6 +57,7 @@ private:
 	std::map<std::string, std::string> mStringMap;
 
 	GuiBoxData mBoxData;
+
 	Font* mListFont;
 	Font* mDescFont;
 	Font* mFastSelectFont;

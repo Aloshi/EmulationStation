@@ -1,22 +1,22 @@
-#ifndef _GUIIMAGE_H_
-#define _GUIIMAGE_H_
+#ifndef _IMAGECOMPONENT_H_
+#define _IMAGECOMPONENT_H_
 
 #include "../platform.h"
 #include GLHEADER
 
-#include "../Gui.h"
+#include "../GuiComponent.h"
 #include <string>
 #include <FreeImage.h>
 
 
-class GuiImage : public Gui
+class ImageComponent : public GuiComponent
 {
 public:
 	//Creates a new GuiImage at the given location. If given an image, it will be loaded. If maxWidth and/or maxHeight are nonzero, the image will be
 	//resized to fix. If only one axis is specified, the other will be resized in accordance with the image's aspect ratio. If resizeExact is false,
 	//the image will only be downscaled, never upscaled (the image's size must surpass at least one nonzero bound).
-	GuiImage(Window* window, int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool resizeExact = false);
-	~GuiImage();
+	ImageComponent(Window* window, int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool resizeExact = false);
+	virtual ~ImageComponent();
 
 	void setImage(std::string path); //Loads the image at the given filepath.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
@@ -39,12 +39,12 @@ public:
 
 	unsigned char getOpacity();
 	void setOpacity(unsigned char opacity);
+
 private:
 	unsigned int mResizeWidth, mResizeHeight;
 	float mOriginX, mOriginY;
 	bool mResizeExact, mTiled, mFlipX, mFlipY;
 
-	int mOffsetX, mOffsetY;
 	unsigned char mOpacity;
 
 	void loadImage(std::string path);

@@ -1,41 +1,41 @@
-#include "GuiTheme.h"
+#include "ThemeComponent.h"
 #include "../MathExp.h"
 #include <iostream>
 #include "GuiGameList.h"
-#include "GuiImage.h"
+#include "ImageComponent.h"
 #include <boost/filesystem.hpp>
 #include <sstream>
 #include "../Renderer.h"
 #include "../Log.h"
 
-unsigned int GuiTheme::getColor(std::string name)
+unsigned int ThemeComponent::getColor(std::string name)
 {
 	return mColorMap[name];
 }
 
-bool GuiTheme::getBool(std::string name)
+bool ThemeComponent::getBool(std::string name)
 {
 	return mBoolMap[name];
 }
 
-float GuiTheme::getFloat(std::string name)
+float ThemeComponent::getFloat(std::string name)
 {
 	return mFloatMap[name];
 }
 
-std::shared_ptr<Sound> & GuiTheme::getSound(std::string name)
+std::shared_ptr<Sound> & ThemeComponent::getSound(std::string name)
 {
 	return mSoundMap[name];
 }
 
-std::string GuiTheme::getString(std::string name)
+std::string ThemeComponent::getString(std::string name)
 {
 	return mStringMap[name];
 }
 
-GuiBoxData GuiTheme::getBoxData() { return mBoxData; }
+GuiBoxData ThemeComponent::getBoxData() { return mBoxData; }
 
-Font* GuiTheme::getListFont()
+Font* ThemeComponent::getListFont()
 {
 	if(mListFont == NULL)
 		return Renderer::getDefaultFont(Renderer::MEDIUM);
@@ -43,7 +43,7 @@ Font* GuiTheme::getListFont()
 		return mListFont;
 }
 
-Font* GuiTheme::getDescriptionFont()
+Font* ThemeComponent::getDescriptionFont()
 {
 	if(mDescFont == NULL)
 		return Renderer::getDefaultFont(Renderer::SMALL);
@@ -51,7 +51,7 @@ Font* GuiTheme::getDescriptionFont()
 		return mDescFont;
 }
 
-Font* GuiTheme::getFastSelectFont()
+Font* ThemeComponent::getFastSelectFont()
 {
 	if(mFastSelectFont == NULL)
 		return Renderer::getDefaultFont(Renderer::LARGE);
@@ -59,7 +59,7 @@ Font* GuiTheme::getFastSelectFont()
 		return mFastSelectFont;
 }
 
-GuiTheme::GuiTheme(Window* window, bool detailed, std::string path) : Gui(window)
+ThemeComponent::ThemeComponent(Window* window, bool detailed, std::string path) : GuiComponent(window)
 {
 	mDetailed = detailed;
 
@@ -84,12 +84,12 @@ GuiTheme::GuiTheme(Window* window, bool detailed, std::string path) : Gui(window
 		readXML(path);
 }
 
-GuiTheme::~GuiTheme()
+ThemeComponent::~ThemeComponent()
 {
 	deleteComponents();
 }
 
-void GuiTheme::setDefaults()
+void ThemeComponent::setDefaults()
 {
 	mColorMap["primary"] = 0x0000FFFF;
 	mColorMap["secondary"] = 0x00FF00FF;
@@ -144,14 +144,14 @@ void GuiTheme::setDefaults()
 	}
 }
 
-void GuiTheme::deleteComponents()
+void ThemeComponent::deleteComponents()
 {
-	for(unsigned int i = 0; i < mComponentVector.size(); i++)
+	for(unsigned int i = 0; i < getChildCount(); i++)
 	{
-		delete mComponentVector.at(i);
+		delete getChild(i);
 	}
 
-	mComponentVector.clear();
+	clearChildren();
 
 	//deletes fonts if any were created
 	setDefaults();
@@ -159,7 +159,7 @@ void GuiTheme::deleteComponents()
 
 
 
-void GuiTheme::readXML(std::string path)
+void ThemeComponent::readXML(std::string path)
 {
 	if(mPath == path)
 		return;
@@ -264,11 +264,11 @@ void GuiTheme::readXML(std::string path)
 }
 
 //recursively creates components
-void GuiTheme::createComponentChildren(pugi::xml_node node, Gui* parent)
+void ThemeComponent::createComponentChildren(pugi::xml_node node, GuiComponent* parent)
 {
 	for(pugi::xml_node data = node.child("component"); data; data = data.next_sibling("component"))
 	{
-		Gui* nextComp = createElement(data, parent);
+		GuiComponent* nextComp = createElement(data, parent);
 
 		if(nextComp)
 			createComponentChildren(data, nextComp);
@@ -276,7 +276,7 @@ void GuiTheme::createComponentChildren(pugi::xml_node node, Gui* parent)
 }
 
 //takes an XML element definition and creates an object from it
-Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
+GuiComponent* ThemeComponent::createElement(pugi::xml_node data, GuiComponent* parent)
 {
 	std::string type = data.child("type").text().get();
 
@@ -315,12 +315,12 @@ Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
 		float ox = strToFloat(originX);
 		float oy = strToFloat(originY);
 
-		GuiImage* comp = new GuiImage(mWindow, x, y, "", w, h, true);
+		ImageComponent* comp = new ImageComponent(mWindow, x, y, "", w, h, true);
 		comp->setOrigin(ox, oy);
 		comp->setTiling(tiled);
 		comp->setImage(path);
 
-		mComponentVector.push_back(comp);
+		addChild(comp);
 		return comp;
 	}
 
@@ -330,7 +330,7 @@ Gui* GuiTheme::createElement(pugi::xml_node data, Gui* parent)
 }
 
 //expands a file path (./ becomes the directory of this theme file, ~/ becomes $HOME/)
-std::string GuiTheme::expandPath(std::string path)
+std::string ThemeComponent::expandPath(std::string path)
 {
 	if(path.empty())
 		return "";
@@ -344,7 +344,7 @@ std::string GuiTheme::expandPath(std::string path)
 }
 
 //takes a string containing a mathematical expression (possibly including variables) and resolves it to a float value
-float GuiTheme::resolveExp(std::string str, float defaultVal)
+float ThemeComponent::resolveExp(std::string str, float defaultVal)
 {
 	if(str.empty())
 		return defaultVal;
@@ -360,7 +360,7 @@ float GuiTheme::resolveExp(std::string str, float defaultVal)
 }
 
 //takes a string of hex and resolves it to an integer
-unsigned int GuiTheme::resolveColor(std::string str, unsigned int defaultColor)
+unsigned int ThemeComponent::resolveColor(std::string str, unsigned int defaultColor)
 {
 	if(str.empty())
 		return defaultColor;
@@ -384,7 +384,7 @@ unsigned int GuiTheme::resolveColor(std::string str, unsigned int defaultColor)
 }
 
 //splits a string in two at the first instance of the delimiter
-void GuiTheme::splitString(std::string str, char delim, std::string* before, std::string* after)
+void ThemeComponent::splitString(std::string str, char delim, std::string* before, std::string* after)
 {
 	if(str.empty())
 		return;
@@ -400,7 +400,7 @@ void GuiTheme::splitString(std::string str, char delim, std::string* before, std
 }
 
 //converts a string to a float
-float GuiTheme::strToFloat(std::string str, float defaultVal)
+float ThemeComponent::strToFloat(std::string str, float defaultVal)
 {
 	if(str.empty())
 		return defaultVal;
@@ -412,7 +412,7 @@ float GuiTheme::strToFloat(std::string str, float defaultVal)
 	return ret;
 }
 
-Font* GuiTheme::resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize)
+Font* ThemeComponent::resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize)
 {
 	if(!node)
 		return NULL;
@@ -433,34 +433,21 @@ Font* GuiTheme::resolveFont(pugi::xml_node node, std::string defaultPath, unsign
 	return new Font(path, size);
 }
 
-void GuiTheme::render()
+void ThemeComponent::init()
 {
-	for(unsigned int i = 0; i < mComponentVector.size(); i++)
-	{
-		mComponentVector.at(i)->render();
-	}
-}
-
-void GuiTheme::init()
-{
-	for(unsigned int i = 0; i < mComponentVector.size(); i++)
-	{
-		mComponentVector.at(i)->init();
-	}
-
 	//fonts are special
 	if(mListFont)	mListFont->init();
 	if(mDescFont)	mDescFont->init();
 	if(mFastSelectFont)	mFastSelectFont->init();
+
+	GuiComponent::init();
 }
 
-void GuiTheme::deinit()
+void ThemeComponent::deinit()
 {
-	for(unsigned int i = 0; i < mComponentVector.size(); i++)
-	{
-		mComponentVector.at(i)->deinit();
-	}
+	GuiComponent::deinit();
 
+	//fonts are special
 	if(mListFont)	mListFont->deinit();
 	if(mDescFont)	mDescFont->deinit();
 	if(mFastSelectFont)	mFastSelectFont->deinit();

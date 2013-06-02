@@ -7,7 +7,7 @@
 #include <string>
 #include <sstream>
 
-GuiDetectDevice::GuiDetectDevice(Window* window) : Gui(window)
+GuiDetectDevice::GuiDetectDevice(Window* window) : GuiComponent(window)
 {
 	//clear any player information from the InputManager
 	for(int i = 0; i < mWindow->getInputManager()->getNumPlayers(); i++)
@@ -22,7 +22,7 @@ GuiDetectDevice::GuiDetectDevice(Window* window) : Gui(window)
 	mHoldingFinish = false;
 }
 
-void GuiDetectDevice::input(InputConfig* config, Input input)
+bool GuiDetectDevice::input(InputConfig* config, Input input)
 {
 	if((input.type == TYPE_BUTTON || input.type == TYPE_KEY))
 	{
@@ -38,11 +38,11 @@ void GuiDetectDevice::input(InputConfig* config, Input input)
 					mHoldingFinish = false;
 				}
 			}
-			return;
+			return true;
 		}
 
 		if(!input.value)
-			return;
+			return false;
 
 		config->setPlayerNum(mCurrentPlayer);
 		mWindow->getInputManager()->setNumPlayers(mWindow->getInputManager()->getNumPlayers() + 1); //inc total number of players
@@ -53,7 +53,11 @@ void GuiDetectDevice::input(InputConfig* config, Input input)
 		{
 			done();
 		}
+
+		return true;
 	}
+
+	return false;
 }
 
 void GuiDetectDevice::done()

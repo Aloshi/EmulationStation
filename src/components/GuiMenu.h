@@ -1,24 +1,24 @@
 #ifndef _GUIMENU_H_
 #define _GUIMENU_H_
 
-#include "../Gui.h"
-#include "GuiList.h"
+#include "../GuiComponent.h"
+#include "TextListComponent.h"
 
 class GuiGameList;
 
-class GuiMenu : public Gui
+class GuiMenu : public GuiComponent
 {
 public:
 	GuiMenu(Window* window, GuiGameList* parent);
-	~GuiMenu();
+	virtual ~GuiMenu();
 
-	void input(InputConfig* config, Input input);
+	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
 	void render();
 
 private:
 	GuiGameList* mParent;
-	GuiList<std::string>* mList;
+	TextListComponent<std::string>* mList;
 
 	void populateList();
 	void executeCommand(std::string command);

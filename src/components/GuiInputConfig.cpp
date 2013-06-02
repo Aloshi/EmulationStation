@@ -9,7 +9,7 @@ static int inputCount = 12;
 static std::string inputName[12] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown", "MasterVolUp", "MasterVolDown" };
 static std::string inputDispName[12] = { "Up", "Down", "Left", "Right", "Accept", "Back", "Menu", "Jump to Letter", "Page Up", "Page Down", "Master volume up", "Master volume down" };
 
-GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : Gui(window), mTargetConfig(target)
+GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : GuiComponent(window), mTargetConfig(target)
 {
 	mCurInputId = 0;
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId();
@@ -20,10 +20,10 @@ void GuiInputConfig::update(int deltaTime)
 
 }
 
-void GuiInputConfig::input(InputConfig* config, Input input)
+bool GuiInputConfig::input(InputConfig* config, Input input)
 {
 	if(config != mTargetConfig || input.value == 0)
-		return;
+		return false;
 
 	if(mCurInputId >= inputCount)
 	{
@@ -43,7 +43,7 @@ void GuiInputConfig::input(InputConfig* config, Input input)
 		if(config->getMappedTo(input).size() > 0)
 		{
 			mErrorMsg = "Already mapped!";
-			return;
+			return true;
 		}
 
 		input.configured = true;
@@ -59,6 +59,8 @@ void GuiInputConfig::input(InputConfig* config, Input input)
 			mCurInputId = inputCount;
 		}
 	}
+
+	return true;
 }
 
 void GuiInputConfig::render()
