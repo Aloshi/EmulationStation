@@ -1,5 +1,6 @@
 #include "GuiComponent.h"
 #include "Window.h"
+#include "Log.h"
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL)
 {
@@ -88,4 +89,48 @@ void GuiComponent::setOffset(int x, int y)
 {
 	mOffset.x = x;
 	mOffset.y = y;
+}
+
+void GuiComponent::addChild(GuiComponent* cmp)
+{
+	mChildren.push_back(cmp);
+
+	if(cmp->getParent())
+		cmp->getParent()->removeChild(cmp);
+
+	cmp->setParent(this);
+}
+
+void GuiComponent::removeChild(GuiComponent* cmp)
+{
+	if(cmp->getParent() != this)
+	{
+		LOG(LogError) << "Tried to remove child from incorrect parent!";
+	}
+
+	cmp->setParent(NULL);
+
+	for(auto i = mChildren.begin(); i != mChildren.end(); i++)
+	{
+		if(*i == cmp)
+		{
+			mChildren.erase(i);
+			return;
+		}
+	}
+}
+
+void GuiComponent::clearChildren()
+{
+	mChildren.clear();
+}
+
+unsigned int GuiComponent::getChildCount()
+{
+	return mChildren.size();
+}
+
+GuiComponent* GuiComponent::getChild(unsigned int i)
+{
+	return mChildren.at(i);
 }

@@ -3,11 +3,10 @@
 
 #include "InputConfig.h"
 #include "Vector2.h"
-#include "ComponentContainer.h"
 
 class Window;
 
-class GuiComponent : public ComponentContainer
+class GuiComponent
 {
 public:
 	GuiComponent(Window* window);
@@ -28,10 +27,17 @@ public:
 	void setParent(GuiComponent* parent);
 	GuiComponent* getParent();
 
+	void addChild(GuiComponent* cmp);
+	void removeChild(GuiComponent* cmp);
+	void clearChildren();
+	unsigned int getChildCount();
+	GuiComponent* getChild(unsigned int i);
+
 protected:
 	Window* mWindow;
 	GuiComponent* mParent;
 	Vector2i mOffset;
+	std::vector<GuiComponent*> mChildren;
 };
 
 #endif
