@@ -112,7 +112,6 @@ endif()
 #define basic sources and headers
 set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ComponentContainer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.h
@@ -148,7 +147,6 @@ set(ES_HEADERS
 )
 set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/ComponentContainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.cpp
