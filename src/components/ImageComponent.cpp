@@ -261,7 +261,7 @@ void ImageComponent::setFlipY(bool flip)
 	mFlipY = flip;
 }
 
-void ImageComponent::render()
+void ImageComponent::onRender()
 {
 	if(mTextureID && getOpacity() > 0)
 	{
@@ -274,14 +274,16 @@ void ImageComponent::render()
 			float yCount = ((float)mResizeHeight/mHeight);
 
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
-			buildImageArray(getOffset().x, getOffset().y, points, texs, xCount, yCount);
+			buildImageArray(0, 0, points, texs, xCount, yCount);
 		}else{
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
-			buildImageArray(getOffset().x, getOffset().y, points, texs);
+			buildImageArray(0, 0, points, texs);
 		}
 
 		drawImageArray(points, texs, colors, 6);
 	}
+
+	GuiComponent::onRender();
 }
 
 void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)

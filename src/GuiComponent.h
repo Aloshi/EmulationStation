@@ -12,11 +12,21 @@ public:
 	GuiComponent(Window* window);
 	virtual ~GuiComponent();
 
+	//Called when input is received.
 	//Return true if the input is consumed, false if it should continue to be passed to other children.
 	virtual bool input(InputConfig* config, Input input);
+
+	//Called when time passes.  Default implementation also calls update(deltaTime) on children - so you should probably call GuiComponent::update(deltaTime) at some point.
 	virtual void update(int deltaTime);
+
+	//Called when it's time to render.  Translates the OpenGL matrix, calls onRender() (which renders children), then un-translates the OpenGL matrix.
+	//You probably don't need to override this, but instead want the protected method onRender.
 	virtual void render();
+
+	//Called when the Renderer initializes.  Passes to children.
 	virtual void init();
+
+	//Called when the Renderer deinitializes.  Passes to children.
 	virtual void deinit();
 
 	Vector2i getGlobalOffset();
@@ -34,6 +44,9 @@ public:
 	GuiComponent* getChild(unsigned int i);
 
 protected:
+	//Default implementation just renders children - you should probably always call GuiComponent::onRender at some point in your custom onRender.
+	virtual void onRender();
+
 	Window* mWindow;
 	GuiComponent* mParent;
 	Vector2i mOffset;

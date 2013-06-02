@@ -1,6 +1,7 @@
 #include "GuiComponent.h"
 #include "Window.h"
 #include "Log.h"
+#include "Renderer.h"
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL)
 {
@@ -35,6 +36,15 @@ void GuiComponent::update(int deltaTime)
 
 void GuiComponent::render()
 {
+	Renderer::translate(mOffset);
+
+	onRender();
+
+	Renderer::translate(-mOffset);
+}
+
+void GuiComponent::onRender()
+{
 	for(unsigned int i = 0; i < getChildCount(); i++)
 	{
 		getChild(i)->render();
@@ -57,16 +67,7 @@ void GuiComponent::deinit()
 	}
 }
 
-void GuiComponent::setParent(GuiComponent* parent)
-{
-	mParent = parent;
-}
-
-GuiComponent* GuiComponent::getParent()
-{
-	return mParent;
-}
-
+//Offset stuff.
 Vector2i GuiComponent::getGlobalOffset()
 {
 	if(mParent)
@@ -91,6 +92,7 @@ void GuiComponent::setOffset(int x, int y)
 	mOffset.y = y;
 }
 
+//Children stuff.
 void GuiComponent::addChild(GuiComponent* cmp)
 {
 	mChildren.push_back(cmp);
@@ -133,4 +135,14 @@ unsigned int GuiComponent::getChildCount()
 GuiComponent* GuiComponent::getChild(unsigned int i)
 {
 	return mChildren.at(i);
+}
+
+void GuiComponent::setParent(GuiComponent* parent)
+{
+	mParent = parent;
+}
+
+GuiComponent* GuiComponent::getParent()
+{
+	return mParent;
 }

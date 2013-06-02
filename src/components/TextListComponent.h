@@ -21,7 +21,6 @@ public:
 
 	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
-	void render();
 
 	void addObject(std::string name, T obj, unsigned int color = 0xFF0000);
 	void clear();
@@ -43,6 +42,9 @@ public:
 	void setSelection(int i);
 
 	void setFont(Font* f);
+
+protected:
+	void onRender();
 
 private:
 	static const int SCROLLDELAY = 507;
@@ -96,9 +98,9 @@ TextListComponent<T>::~TextListComponent()
 }
 
 template <typename T>
-void TextListComponent<T>::render()
+void TextListComponent<T>::onRender()
 {
-	const int cutoff = getOffset().y;
+	const int cutoff = 0;
 	const int entrySize = mFont->getHeight() + 5;
 
 	int startEntry = 0;
@@ -133,18 +135,20 @@ void TextListComponent<T>::render()
 		//draw selector bar
 		if(mSelection == i)
 		{
-			Renderer::drawRect(getOffset().x, y, Renderer::getScreenWidth(), mFont->getHeight(), mSelectorColor);
+			Renderer::drawRect(0, y, Renderer::getScreenWidth(), mFont->getHeight(), mSelectorColor);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
 
 		if(mDrawCentered)
-			Renderer::drawCenteredText(row.name, getOffset().x + mTextOffsetX, y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
+			Renderer::drawCenteredText(row.name, mTextOffsetX, y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
 		else
-			Renderer::drawText(row.name, getOffset().x + mTextOffsetX, y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
+			Renderer::drawText(row.name, mTextOffsetX, y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
 
 		y += entrySize;
 	}
+
+	GuiComponent::onRender();
 }
 
 template <typename T>
@@ -189,7 +193,7 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 		}
 	}
 
-	return false;
+	return GuiComponent::input(config, input);
 }
 
 template <typename T>
@@ -228,6 +232,8 @@ void TextListComponent<T>::update(int deltaTime)
 			}
 		}
 	}
+
+	GuiComponent::update(deltaTime);
 }
 
 template <typename T>

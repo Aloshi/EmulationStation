@@ -9,7 +9,7 @@
 #include "../AudioManager.h"
 #include "../Font.h"
 
-//This class loads an XML-defined list of Guis.
+//This class loads an XML-defined list of GuiComponents.
 class ThemeComponent : public GuiComponent
 {
 public:

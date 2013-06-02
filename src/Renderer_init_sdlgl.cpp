@@ -88,7 +88,7 @@ namespace Renderer
 		LOG(LogInfo) << "Created surface successfully.";
 
 		//hide mouse cursor
-		initialCursorState = SDL_ShowCursor(0);
+		initialCursorState = SDL_ShowCursor(0) == 1;
 
 		return true;
 	}

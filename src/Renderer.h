@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include "Vector2.h"
 #include "platform.h"
 #include GLHEADER
 //#include "Font.h"
@@ -28,8 +29,12 @@ namespace Renderer
 	Font* getDefaultFont(FontSize size);
 	void buildGLColorArray(GLubyte* ptr, unsigned int color, unsigned int vertCount);
 
-	//drawing commands
+	//graphics commands
 	void swapBuffers();
+
+	void translatef(float x, float y);
+	void translate(Vector2i offset);
+	
 	void drawRect(int x, int y, int w, int h, unsigned int color);
 	void drawText(std::string text, int x, int y, unsigned int color, Font* font);
 	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color, Font* font);

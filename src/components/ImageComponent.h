@@ -31,14 +31,15 @@ public:
 
 	bool hasImage();
 
-	void render();
-
 	//Image textures will be deleted on renderer deinitialization, and recreated on reinitialization (if mPath is not empty).
 	void init();
 	void deinit();
 
 	unsigned char getOpacity();
 	void setOpacity(unsigned char opacity);
+
+protected:
+	void onRender();
 
 private:
 	unsigned int mResizeWidth, mResizeHeight;

@@ -26,6 +26,16 @@ namespace Renderer {
 		}
 	}
 
+	void translatef(float x, float y)
+	{
+		glTranslatef(x, y, 0);
+	}
+
+	void translate(Vector2i offset)
+	{
+		translatef((float)offset.x, (float)offset.y);
+	}
+
 	void drawRect(int x, int y, int w, int h, unsigned int color)
 	{
 #ifdef USE_OPENGL_ES
