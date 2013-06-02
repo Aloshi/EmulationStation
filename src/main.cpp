@@ -1,4 +1,5 @@
 //EmulationStation, a graphical front-end for ROM browsing. Created by Alec "Aloshi" Lofquist.
+//http://www.aloshi.com
 
 #include <SDL.h>
 #include <iostream>
@@ -82,7 +83,7 @@ int main(int argc, char* argv[])
 				std::cout << "--debug				even more logging\n";
 				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
 
-				#ifdef _DESKTOP_
+				#ifdef USE_OPENGL_DESKTOP
 					std::cout << "--windowed			not fullscreen\n";
 				#endif
 

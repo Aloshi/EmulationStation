@@ -5,29 +5,27 @@
 #include "../Log.h"
 #include "../Renderer.h"
 
-unsigned int ImageComponent::getWidth() { return mDrawWidth; }
-unsigned int ImageComponent::getHeight() { return mDrawHeight; }
+unsigned int ImageComponent::getWidth() { return mSize.x; }
+unsigned int ImageComponent::getHeight() { return mSize.y; }
 
-ImageComponent::ImageComponent(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact) : GuiComponent(window)
+ImageComponent::ImageComponent(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool allowUpscale) : GuiComponent(window)
 {
 	mTextureID = 0;
 
 	setOffset(Vector2i(offsetX, offsetY));
 
 	//default origin is the center of image
-	mOriginX = 0.5;
-	mOriginY = 0.5;
-	mOpacity = 255;
+	mOrigin.x = 0.5;
+	mOrigin.y = 0.5;
 
-	mWidth = mDrawWidth = 0;
-	mHeight = mDrawHeight = 0;
+	mOpacity = 255;
 
 	mTiled = false;
 
-	mResizeWidth = resizeWidth;
-	mResizeHeight = resizeHeight;
+	mTargetSize.x = resizeWidth;
+	mTargetSize.y = resizeHeight;
 
-	mResizeExact = resizeExact;
+	mAllowUpscale = allowUpscale;
 
 	mFlipX = false;
 	mFlipY = false;
@@ -46,7 +44,7 @@ void ImageComponent::loadImage(std::string path)
 	//make sure the file *exists*
 	if(!boost::filesystem::exists(path))
 	{
-		LOG(LogError) << "File \"" << path << "\" not found!";
+		LOG(LogError) << "Image \"" << path << "\" not found!";
 		return;
 	}
 
@@ -112,29 +110,6 @@ void ImageComponent::loadImage(std::string path)
 		return;
 	}
 
-
-	/*
-	//set width/height to powers of 2 for OpenGL
-	for(unsigned int i = 0; i < 22; i++)
-	{
-		unsigned int pwrOf2 = pow(2, i);
-		if(!widthPwrOf2 && pwrOf2 >= width)
-			widthPwrOf2 = pwrOf2;
-		if(!heightPwrOf2 && pwrOf2 >= height)
-			heightPwrOf2 = pwrOf2;
-
-		if(widthPwrOf2 && heightPwrOf2)
-			break;
-	}
-
-	if(!widthPwrOf2 || !heightPwrOf2)
-	{
-		LOG(LogError) << "Error assigning power of two for width or height of image!";
-		FreeImage_Unload(image);
-		return;
-	}*/
-
-
 	//convert from BGRA to RGBA
 	GLubyte* imageRGBA = new GLubyte[4*width*height];
 	for(unsigned int i = 0; i < width*height; i++)
@@ -159,8 +134,8 @@ void ImageComponent::loadImage(std::string path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	mWidth = width;
-	mHeight = height;
+	mTextureSize.x = width;
+	mTextureSize.y = height;
 
 	//free the image data
 	FreeImage_Unload(image);
@@ -173,36 +148,32 @@ void ImageComponent::loadImage(std::string path)
 
 void ImageComponent::resize()
 {
-	mDrawWidth = mWidth;
-	mDrawHeight = mHeight;
+	mSize.x = mTextureSize.x;
+	mSize.y = mTextureSize.y;
 
 	//(we don't resize tiled images)
-	if(!mTiled)
+	if(!mTiled && (mTargetSize.x || mTargetSize.y))
 	{
-		float resizeScaleX = 0, resizeScaleY = 0;
-		if(mResizeExact)
-		{
-			if(mResizeWidth)
-				resizeScaleX = (float)mResizeWidth / mWidth;
-			if(mResizeHeight)
-				resizeScaleY = (float)mResizeHeight / mHeight;
-		}else{
-			if(mResizeWidth && mWidth > mResizeWidth)
-				resizeScaleX = (float)mResizeWidth / mWidth;
+		Vector2f resizeScale;
 
-			if(mResizeHeight && mHeight > mResizeHeight)
-				resizeScaleY = (float)mResizeHeight / mHeight;
+		if(mTargetSize.x && (mAllowUpscale || mSize.x > mTargetSize.x))
+		{
+			resizeScale.x = (float)mTargetSize.x / mSize.x;
+		}
+		if(mTargetSize.y && (mAllowUpscale || mSize.y > mTargetSize.y))
+		{
+			resizeScale.y = (float)mTargetSize.y / mSize.y;
 		}
 
-		if(resizeScaleX && !resizeScaleY)
-			resizeScaleY = resizeScaleX;
-		if(resizeScaleY && !resizeScaleX)
-			resizeScaleX = resizeScaleY;
+		if(resizeScale.x && !resizeScale.y)
+			resizeScale.y = resizeScale.x;
+		if(resizeScale.y && !resizeScale.x)
+			resizeScale.x = resizeScale.y;
 
-		if(resizeScaleX)
-			mDrawWidth = (int)(mDrawWidth * resizeScaleX);
-		if(resizeScaleY)
-			mDrawHeight = (int)(mDrawHeight * resizeScaleY);
+		if(resizeScale.x)
+			mSize.x = (int)(mSize.x * resizeScale.x);
+		if(resizeScale.y)
+			mSize.y = (int)(mSize.y * resizeScale.y);
 	}
 }
 
@@ -231,8 +202,8 @@ void ImageComponent::setImage(std::string path)
 
 void ImageComponent::setOrigin(float originX, float originY)
 {
-	mOriginX = originX;
-	mOriginY = originY;
+	mOrigin.x = originX;
+	mOrigin.y = originY;
 }
 
 void ImageComponent::setTiling(bool tile)
@@ -240,14 +211,14 @@ void ImageComponent::setTiling(bool tile)
 	mTiled = tile;
 
 	if(mTiled)
-		mResizeExact = false;
+		mAllowUpscale = false;
 }
 
-void ImageComponent::setResize(unsigned int width, unsigned int height, bool resizeExact)
+void ImageComponent::setResize(unsigned int width, unsigned int height, bool allowUpscale)
 {
-	mResizeWidth = width;
-	mResizeHeight = height;
-	mResizeExact = resizeExact;
+	mTargetSize.x = width;
+	mTargetSize.y = height;
+	mAllowUpscale = allowUpscale;
 	resize();
 }
 
@@ -270,9 +241,9 @@ void ImageComponent::onRender()
 
 		if(mTiled)
 		{
-			float xCount = ((float)mResizeWidth/mWidth);
-			float yCount = ((float)mResizeHeight/mHeight);
-
+			float xCount = (float)mTargetSize.x / mTextureSize.x;
+			float yCount = (float)mTargetSize.y / mTextureSize.y;
+			
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
 			buildImageArray(0, 0, points, texs, xCount, yCount);
 		}else{
@@ -288,13 +259,13 @@ void ImageComponent::onRender()
 
 void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
 {
-	points[0] = posX - (mDrawWidth * mOriginX) * px;		points[1] = posY - (mDrawHeight * mOriginY) * py;
-	points[2] = posX - (mDrawWidth * mOriginX) * px;		points[3] = posY + (mDrawHeight * (1 - mOriginY)) * py;
-	points[4] = posX + (mDrawWidth * (1 - mOriginX)) * px;		points[5] = posY - (mDrawHeight * mOriginY) * py;
+	points[0] = posX - (mSize.x * mOrigin.x) * px;		points[1] = posY - (mSize.y * mOrigin.y) * py;
+	points[2] = posX - (mSize.x * mOrigin.x) * px;		points[3] = posY + (mSize.y * (1 - mOrigin.y)) * py;
+	points[4] = posX + (mSize.x * (1 - mOrigin.x)) * px;		points[5] = posY - (mSize.y * mOrigin.y) * py;
 
-	points[6] = posX + (mDrawWidth * (1 - mOriginX)) * px;		points[7] = posY - (mDrawHeight * mOriginY) * py;
-	points[8] = posX - (mDrawWidth * mOriginX) * px;		points[9] = posY + (mDrawHeight * (1 - mOriginY)) * py;
-	points[10] = posX + (mDrawWidth * (1 -mOriginX)) * px;		points[11] = posY + (mDrawHeight * (1 - mOriginY)) * py;
+	points[6] = posX + (mSize.x * (1 - mOrigin.x)) * px;		points[7] = posY - (mSize.y * mOrigin.y) * py;
+	points[8] = posX - (mSize.x * mOrigin.x) * px;		points[9] = posY + (mSize.y * (1 - mOrigin.y)) * py;
+	points[10] = posX + (mSize.x * (1 -mOrigin.x)) * px;		points[11] = posY + (mSize.y * (1 - mOrigin.y)) * py;
 
 
 
@@ -359,11 +330,15 @@ void ImageComponent::init()
 {
 	if(!mPath.empty())
 		loadImage(mPath);
+
+	GuiComponent::init();
 }
 
 void ImageComponent::deinit()
 {
 	unloadImage();
+
+	GuiComponent::deinit();
 }
 
 bool ImageComponent::hasImage()

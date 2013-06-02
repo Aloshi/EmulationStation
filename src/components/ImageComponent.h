@@ -13,15 +13,15 @@ class ImageComponent : public GuiComponent
 {
 public:
 	//Creates a new GuiImage at the given location. If given an image, it will be loaded. If maxWidth and/or maxHeight are nonzero, the image will be
-	//resized to fix. If only one axis is specified, the other will be resized in accordance with the image's aspect ratio. If resizeExact is false,
+	//resized to fit. If only one axis is specified, the other will be set in accordance with the image's aspect ratio. If allowUpscale is false,
 	//the image will only be downscaled, never upscaled (the image's size must surpass at least one nonzero bound).
-	ImageComponent(Window* window, int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool resizeExact = false);
+	ImageComponent(Window* window, int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool allowUpscale = false);
 	virtual ~ImageComponent();
 
 	void setImage(std::string path); //Loads the image at the given filepath.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
-	void setResize(unsigned int width, unsigned int height, bool resizeExact);
+	void setResize(unsigned int width, unsigned int height, bool allowUpscale);
 
 	void setFlipX(bool flip);
 	void setFlipY(bool flip);
@@ -42,9 +42,12 @@ protected:
 	void onRender();
 
 private:
-	unsigned int mResizeWidth, mResizeHeight;
-	float mOriginX, mOriginY;
-	bool mResizeExact, mTiled, mFlipX, mFlipY;
+	Vector2<unsigned int> mSize;
+	Vector2<unsigned int> mTargetSize;
+	Vector2<unsigned int> mTextureSize;
+	Vector2f mOrigin;
+
+	bool mAllowUpscale, mTiled, mFlipX, mFlipY;
 
 	unsigned char mOpacity;
 
@@ -55,9 +58,6 @@ private:
 	void unloadImage();
 
 	std::string mPath;
-
-	unsigned int mWidth, mHeight; //Our rendered size.
-	unsigned int mDrawWidth, mDrawHeight;
 
 	GLuint mTextureID;
 };
