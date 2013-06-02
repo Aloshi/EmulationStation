@@ -11,6 +11,7 @@
 #include "platform.h"
 #include "Log.h"
 #include "Window.h"
+#include "EmulationStation.h"
 
 #ifdef _RPI_
 	#include <bcm_host.h>
@@ -109,6 +110,7 @@ int main(int argc, char* argv[])
 
 	//start the logger
 	Log::open();
+	LOG(LogInfo) << "EmulationStation - " << PROGRAM_VERSION_STRING;
 
 	//the renderer also takes care of setting up SDL for input and sound
 	bool renderInit = Renderer::init(width, height);
