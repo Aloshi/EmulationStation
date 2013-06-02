@@ -20,7 +20,7 @@ public:
 	virtual void update(int deltaTime);
 
 	//Called when it's time to render.  Translates the OpenGL matrix, calls onRender() (which renders children), then un-translates the OpenGL matrix.
-	//You probably don't need to override this, but instead want the protected method onRender.
+	//You probably don't need to override this, and should use the protected method onRender.
 	virtual void render();
 
 	//Called when the Renderer initializes.  Passes to children.
@@ -34,6 +34,8 @@ public:
 	void setOffset(Vector2i offset);
 	void setOffset(int x, int y);
 
+	Vector2u getSize();
+	
 	void setParent(GuiComponent* parent);
 	GuiComponent* getParent();
 
@@ -50,6 +52,7 @@ protected:
 	Window* mWindow;
 	GuiComponent* mParent;
 	Vector2i mOffset;
+	Vector2u mSize;
 	std::vector<GuiComponent*> mChildren;
 };
 

@@ -92,6 +92,7 @@ bool operator !=(const Vector2<T>& left, const Vector2<T>& right)
 }
 
 typedef Vector2<int> Vector2i;
+typedef Vector2<unsigned int> Vector2u;
 typedef Vector2<float> Vector2f;
 
 #endif

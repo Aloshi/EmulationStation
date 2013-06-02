@@ -5,8 +5,7 @@
 #include "../Log.h"
 #include "../Renderer.h"
 
-unsigned int ImageComponent::getWidth() { return mSize.x; }
-unsigned int ImageComponent::getHeight() { return mSize.y; }
+Vector2u ImageComponent::getTextureSize() { return mTextureSize; }
 
 ImageComponent::ImageComponent(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool allowUpscale) : GuiComponent(window)
 {
@@ -175,6 +174,11 @@ void ImageComponent::resize()
 		if(resizeScale.y)
 			mSize.y = (int)(mSize.y * resizeScale.y);
 	}
+
+	if(mTiled)
+	{
+		mSize = mTargetSize;
+	}
 }
 
 void ImageComponent::unloadImage()
@@ -212,6 +216,8 @@ void ImageComponent::setTiling(bool tile)
 
 	if(mTiled)
 		mAllowUpscale = false;
+
+	resize();
 }
 
 void ImageComponent::setResize(unsigned int width, unsigned int height, bool allowUpscale)
@@ -241,8 +247,8 @@ void ImageComponent::onRender()
 
 		if(mTiled)
 		{
-			float xCount = (float)mTargetSize.x / mTextureSize.x;
-			float yCount = (float)mTargetSize.y / mTextureSize.y;
+			float xCount = (float)mSize.x / mTextureSize.x;
+			float yCount = (float)mSize.y / mTextureSize.y;
 			
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
 			buildImageArray(0, 0, points, texs, xCount, yCount);
@@ -259,13 +265,13 @@ void ImageComponent::onRender()
 
 void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
 {
-	points[0] = posX - (mSize.x * mOrigin.x) * px;		points[1] = posY - (mSize.y * mOrigin.y) * py;
-	points[2] = posX - (mSize.x * mOrigin.x) * px;		points[3] = posY + (mSize.y * (1 - mOrigin.y)) * py;
-	points[4] = posX + (mSize.x * (1 - mOrigin.x)) * px;		points[5] = posY - (mSize.y * mOrigin.y) * py;
+	points[0] = posX - (mSize.x * mOrigin.x);		points[1] = posY - (mSize.y * mOrigin.y);
+	points[2] = posX - (mSize.x * mOrigin.x);		points[3] = posY + (mSize.y * (1 - mOrigin.y));
+	points[4] = posX + (mSize.x * (1 - mOrigin.x));		points[5] = posY - (mSize.y * mOrigin.y);
 
-	points[6] = posX + (mSize.x * (1 - mOrigin.x)) * px;		points[7] = posY - (mSize.y * mOrigin.y) * py;
-	points[8] = posX - (mSize.x * mOrigin.x) * px;		points[9] = posY + (mSize.y * (1 - mOrigin.y)) * py;
-	points[10] = posX + (mSize.x * (1 -mOrigin.x)) * px;		points[11] = posY + (mSize.y * (1 - mOrigin.y)) * py;
+	points[6] = posX + (mSize.x * (1 - mOrigin.x));		points[7] = posY - (mSize.y * mOrigin.y);
+	points[8] = posX - (mSize.x * mOrigin.x);		points[9] = posY + (mSize.y * (1 - mOrigin.y));
+	points[10] = posX + (mSize.x * (1 -mOrigin.x));		points[11] = posY + (mSize.y * (1 - mOrigin.y));
 
 
 

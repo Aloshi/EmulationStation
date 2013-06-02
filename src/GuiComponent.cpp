@@ -92,6 +92,11 @@ void GuiComponent::setOffset(int x, int y)
 	mOffset.y = y;
 }
 
+Vector2u GuiComponent::getSize()
+{
+	return mSize;
+}
+
 //Children stuff.
 void GuiComponent::addChild(GuiComponent* cmp)
 {

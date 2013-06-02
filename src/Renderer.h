@@ -35,6 +35,10 @@ namespace Renderer
 	void translatef(float x, float y);
 	void translate(Vector2i offset);
 	
+	void setClipRect(int x, int y, unsigned int w, unsigned int h);
+	void setClipRect(Vector2i offset, Vector2u size);
+	void clearClipRect();
+
 	void drawRect(int x, int y, int w, int h, unsigned int color);
 	void drawText(std::string text, int x, int y, unsigned int color, Font* font);
 	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color, Font* font);

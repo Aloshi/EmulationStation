@@ -26,8 +26,9 @@ public:
 	void setFlipX(bool flip);
 	void setFlipY(bool flip);
 
-	unsigned int getWidth(); //Returns render width in pixels. May be different than actual texture width.
-	unsigned int getHeight(); //Returns render height in pixels. May be different than actual texture height.
+	//You can get the rendered size of the ImageComponent with getSize().
+	Vector2u getTextureSize();
+
 
 	bool hasImage();
 
@@ -42,9 +43,8 @@ protected:
 	void onRender();
 
 private:
-	Vector2<unsigned int> mSize;
-	Vector2<unsigned int> mTargetSize;
-	Vector2<unsigned int> mTextureSize;
+	Vector2u mTargetSize;
+	Vector2u mTextureSize;
 	Vector2f mOrigin;
 
 	bool mAllowUpscale, mTiled, mFlipX, mFlipY;

@@ -10,8 +10,12 @@
 #include <memory>
 #include "../Sound.h"
 
+#define MARQUEE_DELAY 600
+#define MARQUEE_SPEED 16
+#define MARQUEE_RATE 3
+
 //A graphical list. Supports multiple colors for rows and scrolling.
-//TODO - add truncation to text rendering if name exceeds a maximum width (a trailing elipses, perhaps).
+//TODO - add truncation to text rendering if name exceeds a maximum width (a trailing elipses, perhaps). Marquee would be nice too.
 template <typename T>
 class TextListComponent : public GuiComponent
 {
@@ -51,9 +55,13 @@ private:
 	static const int SCROLLTIME = 200;
 
 	void scroll(); //helper method, scrolls in whatever direction scrollDir is
+	void setScrollDir(int val); //helper method, set mScrollDir as well as reset marquee stuff
 
 	int mScrollDir, mScrollAccumulator;
 	bool mScrolling;
+
+	int mMarqueeOffset;
+	int mMarqueeTime;
 
 	Font* mFont;
 	unsigned int mSelectorColor, mSelectedTextColorOverride;
@@ -83,6 +91,9 @@ TextListComponent<T>::TextListComponent(Window* window, int offsetX, int offsetY
 
 	setOffset(Vector2i(offsetX, offsetY));
 
+	mSize = Vector2u(Renderer::getScreenWidth() - getOffset().x, Renderer::getScreenHeight() - getOffset().y);
+	mMarqueeOffset = 0;
+	mMarqueeTime = -MARQUEE_DELAY;
 	mTextOffsetX = 0;
 
 	mFont = font;
@@ -140,10 +151,17 @@ void TextListComponent<T>::onRender()
 
 		ListRow row = mRowVector.at((unsigned int)i);
 
+		int x = mTextOffsetX - (mSelection == i ? mMarqueeOffset : 0);
+		unsigned int color = (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color;
+
+		Renderer::setClipRect(getOffset(), getSize());
+
 		if(mDrawCentered)
-			Renderer::drawCenteredText(row.name, mTextOffsetX, y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
+			Renderer::drawCenteredText(row.name, x, y, color, mFont);
 		else
-			Renderer::drawText(row.name, mTextOffsetX, y, (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color, mFont);
+			Renderer::drawText(row.name, x, y, color, mFont);
+
+		Renderer::clearClipRect();
 
 		y += entrySize;
 	}
@@ -160,27 +178,27 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 		{
 			if(config->isMappedTo("down", input))
 			{
-				mScrollDir = 1;
+				setScrollDir(1);
 				scroll();
 				return true;
 			}
 
 			if(config->isMappedTo("up", input))
 			{
-				mScrollDir = -1;
+				setScrollDir(-1);
 				scroll();
 				return true;
 			}
 			if(config->isMappedTo("pagedown", input))
 			{
-				mScrollDir = 10;
+				setScrollDir(10);
 				scroll();
 				return true;
 			}
 
 			if(config->isMappedTo("pageup", input))
 			{
-				mScrollDir = -10;
+				setScrollDir(-10);
 				scroll();
 				return true;
 			}
@@ -194,6 +212,14 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 	}
 
 	return GuiComponent::input(config, input);
+}
+
+template <typename T>
+void TextListComponent<T>::setScrollDir(int val)
+{
+	mScrollDir = val;
+	mMarqueeOffset = 0;
+	mMarqueeTime = -MARQUEE_DELAY;
 }
 
 template <typename T>
@@ -229,6 +255,22 @@ void TextListComponent<T>::update(int deltaTime)
 				mScrollAccumulator -= SCROLLTIME;
 
 				scroll();
+			}
+		}
+	}else{
+		//if we're not scrolling and this object's text goes outside our size, marquee it!
+		std::string text = getSelectedName();
+		int w;
+		mFont->sizeText(text, &w, NULL);
+
+		//it's long enough to marquee
+		if(w - mMarqueeOffset > (int)getSize().x - 12)
+		{
+			mMarqueeTime += deltaTime;
+			while(mMarqueeTime > MARQUEE_SPEED)
+			{
+				mMarqueeOffset += MARQUEE_RATE;
+				mMarqueeTime -= MARQUEE_SPEED;
 			}
 		}
 	}

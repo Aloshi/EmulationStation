@@ -30,18 +30,17 @@ public:
 
 	bool hasBackground();
 
-	void render();
-
 	void init();
 	void deinit();
+
+protected:
+	void onRender();
 
 private:
 	ImageComponent mBackgroundImage, mHorizontalImage, mVerticalImage, mCornerImage;
 
 	int getHorizontalBorderWidth();
 	int getVerticalBorderWidth();
-
-	unsigned int mWidth, mHeight;
 };
 
 #endif

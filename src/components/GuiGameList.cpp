@@ -94,7 +94,7 @@ void GuiGameList::render()
 
 			std::string desc = game->getDescription();
 			if(!desc.empty())
-				Renderer::drawWrappedText(desc, (int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getHeight() + 12, (int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), mTheme->getColor("description"), mTheme->getDescriptionFont());
+				Renderer::drawWrappedText(desc, (int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12, (int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), mTheme->getColor("description"), mTheme->getDescriptionFont());
 		}
 
 		mScreenshot->render();

@@ -36,6 +36,22 @@ namespace Renderer {
 		translatef((float)offset.x, (float)offset.y);
 	}
 
+	void setClipRect(int x, int y, unsigned int w, unsigned int h)
+	{
+		glScissor(x, y, w, h);
+		glEnable(GL_SCISSOR_TEST);
+	}
+
+	void setClipRect(Vector2i offset, Vector2u size)
+	{
+		setClipRect(offset.x, offset.y, size.x, size.y);
+	}
+
+	void clearClipRect()
+	{
+		glDisable(GL_SCISSOR_TEST);
+	}
+
 	void drawRect(int x, int y, int w, int h, unsigned int color)
 	{
 #ifdef USE_OPENGL_ES
