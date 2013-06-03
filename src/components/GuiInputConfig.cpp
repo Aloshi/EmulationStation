@@ -9,7 +9,7 @@ static int inputCount = 12;
 static std::string inputName[12] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown", "MasterVolUp", "MasterVolDown" };
 static std::string inputDispName[12] = { "Up", "Down", "Left", "Right", "Accept", "Back", "Menu", "Jump to Letter", "Page Up", "Page Down", "Master volume up", "Master volume down" };
 
-GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : GuiComponent(window), mTargetConfig(target)
+GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : GuiComponent(window), mTargetConfig(target), mCanSkip(false)
 {
 	mCurInputId = 0;
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId();
@@ -38,8 +38,15 @@ bool GuiInputConfig::input(InputConfig* config, Input input)
 				GuiGameList::create(mWindow);
 			}
 			delete this;
+			return true;
 		}
 	}else{
+		if(mCanSkip && config->isMappedTo("a", input))
+		{
+			mCurInputId++;
+			return true;
+		}
+
 		if(config->getMappedTo(input).size() > 0)
 		{
 			mErrorMsg = "Already mapped!";
@@ -53,14 +60,15 @@ bool GuiInputConfig::input(InputConfig* config, Input input)
 		mCurInputId++;
 		mErrorMsg = "";
 
-		//if the controller doesn't have enough buttons for Page Up/Page Down, skip to done
-		if(mWindow->getInputManager()->getButtonCountByDevice(config->getDeviceId()) <= 4 && mCurInputId >= 8)
+		//for buttons with not enough buttons, press A to skip
+		if(mCurInputId >= 7)
 		{
-			mCurInputId = inputCount;
+			mCanSkip = true;
 		}
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 void GuiInputConfig::render()
@@ -80,10 +88,21 @@ void GuiInputConfig::render()
 
 	if(mCurInputId >= inputCount)
 	{
-		Renderer::drawCenteredText("Basic config done!", 0, (int)(Renderer::getScreenHeight() * 0.6), 0x00CC00FF, font);
-		Renderer::drawCenteredText("Press any button to continue.", 0, (int)(Renderer::getScreenHeight() * 0.6) + font->getHeight() + 4, 0x000000FF, font);
+		Renderer::drawCenteredText("Basic config done!", 0, (int)(Renderer::getScreenHeight() * 0.4), 0x00CC00FF, font);
+		Renderer::drawCenteredText("Press any button to continue.", 0, (int)(Renderer::getScreenHeight() * 0.4) + font->getHeight() + 4, 0x000000FF, font);
 	}else{
 		Renderer::drawText(inputDispName[mCurInputId], 10, y, 0x000000FF, font);
+		if(mCanSkip)
+		{
+			int textWidth = 0;
+			font->sizeText(inputDispName[mCurInputId], &textWidth, NULL);
+			textWidth += 14;
+
+			if(Renderer::getScreenWidth() / 2.5f > textWidth)
+				textWidth = (int)(Renderer::getScreenWidth() / 2.5f);
+
+			Renderer::drawText("press A to skip", textWidth, y, 0x0000AAFF, font);
+		}
 	}
 
 	if(!mErrorMsg.empty())

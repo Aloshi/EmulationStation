@@ -17,6 +17,7 @@ private:
 	std::string mErrorMsg;
 	InputConfig* mTargetConfig;
 	int mCurInputId;
+	bool mCanSkip;
 };
 
 #endif
