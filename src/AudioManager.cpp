@@ -28,17 +28,13 @@ void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
 			}
 			//mix sample into stream
 			SDL_MixAudio(stream, &(sound->getData()[sound->getPosition()]), restLength, SDL_MIX_MAXVOLUME);
-			if (sound->getPosition() + restLength >= sound->getLength())
-			{
-				//if the position is beyond the end of the buffer, stop playing the sample
-				sound->stop();
-			}
-			else 
+			if (sound->getPosition() + restLength < sound->getLength())
 			{
 				//sample hasn't ended yet
-				sound->setPosition(sound->getPosition() + restLength);
 				stillPlaying = true;
 			}
+			//set new sound position. if this is at or beyond the end of the sample, it will stop automatically
+			sound->setPosition(sound->getPosition() + restLength);
 		}
 		//advance to next sound
 		++soundIt;

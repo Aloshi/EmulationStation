@@ -82,18 +82,19 @@ void Sound::play()
 	if(mSampleData == NULL)
 		return;
 
+	SDL_LockAudio();
 	if (playing)
 	{
 		//replay from start. rewind the sample to the beginning
-		SDL_LockAudio();
 		mSamplePos = 0;
-		SDL_UnlockAudio();
+		
 	}
 	else
 	{
 		//flag our sample as playing
 		playing = true;
 	}
+	SDL_UnlockAudio();
 	//tell the AudioManager to start playing samples
 	AudioManager::getInstance()->play();
 }
@@ -126,6 +127,8 @@ void Sound::setPosition(Uint32 newPosition)
 {
 	mSamplePos = newPosition;
 	if (mSamplePos >= mSampleLength) {
+		//got to or beyond the end of the sample. stop playing
+		playing = false;
 		mSamplePos = 0;
 	}
 }
