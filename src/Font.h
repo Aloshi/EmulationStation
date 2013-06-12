@@ -26,10 +26,10 @@ public:
 		int texW;
 		int texH;
 
-		int advX;
-		int advY;
+		float advX;
+		float advY;
 
-		int bearingY;
+		float bearingY;
 	};
 
 	charPosData charData[128];
@@ -58,6 +58,7 @@ private:
 	int textureWidth; //OpenGL texture width
 	int textureHeight; //OpenGL texture height
 	int mMaxGlyphHeight;
+	float fontScale; //!<Font scale factor. It is > 1.0 if the font would be to big for the texture
 
 	std::string mPath;
 	int mSize;
