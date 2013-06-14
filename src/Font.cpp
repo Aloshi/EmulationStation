@@ -70,6 +70,7 @@ void Font::initLibrary()
 }
 
 Font::Font(std::string path, int size)
+	: fontScale(1.0f)
 {
 	mPath = path;
 	mSize = size;
@@ -84,18 +85,7 @@ void Font::init()
 
 	mMaxGlyphHeight = 0;
 
-	if(FT_New_Face(sLibrary, mPath.c_str(), 0, &face))
-	{
-		LOG(LogError) << "Error creating font face! (path: " << mPath.c_str();
-		return;
-	}
-
-	//FT_Set_Char_Size(face, 0, size * 64, getDpiX(), getDpiY());
-	FT_Set_Pixel_Sizes(face, 0, mSize);
-
 	buildAtlas();
-
-	FT_Done_Face(face);
 }
 
 void Font::deinit()
@@ -106,6 +96,15 @@ void Font::deinit()
 
 void Font::buildAtlas()
 {
+	if(FT_New_Face(sLibrary, mPath.c_str(), 0, &face))
+	{
+		LOG(LogError) << "Error creating font face! (path: " << mPath.c_str();
+		return;
+	}
+
+	//FT_Set_Char_Size(face, 0, size * 64, getDpiX(), getDpiY());
+	FT_Set_Pixel_Sizes(face, 0, mSize);
+
 	//find the size we should use
 	FT_GlyphSlot g = face->glyph;
 	int w = 0;
@@ -129,8 +128,6 @@ void Font::buildAtlas()
 
 	textureWidth = w;
 	textureHeight = h;
-
-
 
 	//create the texture
 	glGenTextures(1, &textureID);
@@ -171,7 +168,7 @@ void Font::buildAtlas()
 		if(x + g->bitmap.width >= textureWidth)
 		{
 			x = 0;
-			y += maxHeight;
+			y += maxHeight + 1; //leave one pixel of space between glyphs
 			maxHeight = 0;
 		}
 
@@ -185,22 +182,33 @@ void Font::buildAtlas()
 		charData[i].texY = y;
 		charData[i].texW = g->bitmap.width;
 		charData[i].texH = g->bitmap.rows;
-		charData[i].advX = g->metrics.horiAdvance >> 6;
-		charData[i].advY = g->advance.y >> 6;
-		charData[i].bearingY = g->metrics.horiBearingY >> 6;
+		charData[i].advX = g->metrics.horiAdvance / 64.0f;
+		charData[i].advY = g->metrics.vertAdvance / 64.0f;
+		charData[i].bearingY = g->metrics.horiBearingY / 64.0f;
 
 		if(charData[i].texH > mMaxGlyphHeight)
 			mMaxGlyphHeight = charData[i].texH;
 
-		x += g->bitmap.width;
-	}
-
-	if(y >= textureHeight)
-	{
-		LOG(LogError) << "Error - font size exceeded texture size! If you were doing something reasonable, tell Aloshi to fix it!";
+		x += g->bitmap.width + 1; //leave one pixel of space between glyphs
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	FT_Done_Face(face);
+
+	if((y + maxHeight) >= textureHeight)
+	{
+		//failed to create a proper font texture
+		LOG(LogError) << "Error - font with size " << mSize << " exceeded texture size! Trying again...";
+		//try a 3/4th smaller size and redo initialization
+		fontScale *= 1.25f;
+		mSize = (int)(mSize * (1.0f / fontScale));
+		deinit();
+		init();
+	}
+	else {
+		LOG(LogInfo) << "Created font with size " << mSize << std::endl;
+	}
 
 	//std::cout << "generated texture \"" << textureID << "\" (w: " << w << " h: " << h << ")" << std::endl;
 }
@@ -249,62 +257,62 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		return;
 	}
 
-
-	starty += mMaxGlyphHeight;
-
-	//padding (another 0.5% is added to the bottom through the sizeText function)
-	starty += (int)(mMaxGlyphHeight * 0.1f);
-
-
 	int pointCount = text.length() * 2;
 	point* points = new point[pointCount];
 	tex* texs = new tex[pointCount];
 	GLubyte* colors = new GLubyte[pointCount * 3 * 4];
-
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
 	//texture atlas width/height
 	float tw = (float)textureWidth;
 	float th = (float)textureHeight;
 
-	int p = 0;
-	int i = 0;
-
 	float x = (float)startx;
-	float y = (float)starty;
-	for(; p < pointCount; i++, p++)
+	float y = starty + mMaxGlyphHeight * 1.1f * fontScale; //padding (another 0.5% is added to the bottom through the sizeText function)
+
+	int p = 0;
+	for(int i = 0; p < pointCount; i++, p++)
 	{
 		unsigned char letter = text[i];
 
 		if(letter < 32 || letter >= 128)
 			letter = 127; //print [X] if character is not standard ASCII
 
-		points[p].pos0x = x;								points[p].pos0y = y + charData[letter].texH - charData[letter].bearingY;
-		points[p].pos1x = x + charData[letter].texW;					points[p].pos1y = y - charData[letter].bearingY;
-		points[p].pos2x = x;								points[p].pos2y = y - charData[letter].bearingY;
+		points[p].pos0x = x;
+		points[p].pos0y = y + (charData[letter].texH - charData[letter].bearingY) * fontScale;
+		points[p].pos1x = x + charData[letter].texW * fontScale;
+		points[p].pos1y = y - charData[letter].bearingY * fontScale;
+		points[p].pos2x = x;
+		points[p].pos2y = points[p].pos1y;
 
-		texs[p].tex0x = charData[letter].texX / tw;					texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
-		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;		texs[p].tex1y = charData[letter].texY / th;
-		texs[p].tex2x = charData[letter].texX / tw;					texs[p].tex2y = charData[letter].texY / th;
-
+		texs[p].tex0x = charData[letter].texX / tw;
+		texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
+		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;
+		texs[p].tex1y = charData[letter].texY / th;
+		texs[p].tex2x = texs[p].tex0x;
+		texs[p].tex2y = texs[p].tex1y;
 
 		p++;
 
-		points[p].pos0x = x;						points[p].pos0y = y + charData[letter].texH  - charData[letter].bearingY;
-		points[p].pos1x = x + charData[letter].texW;			points[p].pos1y = y  - charData[letter].bearingY;
-		points[p].pos2x = x + charData[letter].texW;			points[p].pos2y = y + charData[letter].texH  - charData[letter].bearingY;
+		points[p].pos0x = points[p-1].pos0x;
+		points[p].pos0y = points[p-1].pos0y;
+		points[p].pos1x = points[p-1].pos1x;
+		points[p].pos1y = points[p-1].pos1y;
+		points[p].pos2x = points[p-1].pos1x;
+		points[p].pos2y = points[p-1].pos0y;
 
-		texs[p].tex0x = charData[letter].texX / tw;					texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
-		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;		texs[p].tex1y = charData[letter].texY / th;
-		texs[p].tex2x = texs[p].tex1x;							texs[p].tex2y = texs[p].tex0y;
+		texs[p].tex0x = texs[p-1].tex0x;
+		texs[p].tex0y = texs[p-1].tex0y;
+		texs[p].tex1x = texs[p-1].tex1x;
+		texs[p].tex1y = texs[p-1].tex1y;
+		texs[p].tex2x = texs[p-1].tex1x;
+		texs[p].tex2y = texs[p-1].tex0y;
 
-
-		x += charData[letter].advX;
+		x += charData[letter].advX * fontScale;
 	}
 
 	Renderer::buildGLColorArray(colors, color, pointCount * 3);
@@ -340,18 +348,17 @@ void Font::sizeText(std::string text, int* w, int* h)
 		if(letter < 32 || letter >= 128)
 			letter = 127;
 
-		cwidth += charData[letter].advX;
+		cwidth += charData[letter].advX * fontScale;
 	}
-
 
 	if(w != NULL)
 		*w = cwidth;
 
 	if(h != NULL)
-		*h = (int)(mMaxGlyphHeight + mMaxGlyphHeight * 0.5f);
+		*h = (int)(mMaxGlyphHeight * 1.5f * fontScale);
 }
 
 int Font::getHeight()
 {
-	return (int)(mMaxGlyphHeight * 1.5f);
+	return (int)(mMaxGlyphHeight * 1.5f * fontScale);
 }

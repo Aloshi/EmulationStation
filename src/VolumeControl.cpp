@@ -215,6 +215,8 @@ void VolumeControl::deinit()
 	#error TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
 	if (mixerHandle != nullptr) {
+		snd_mixer_detach(mixerHandle, mixerCard);
+		snd_mixer_free(mixerHandle);
 		snd_mixer_close(mixerHandle);
 		mixerHandle = nullptr;
 		mixerElem = nullptr;

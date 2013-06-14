@@ -20,19 +20,29 @@ std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * d
 			FIBITMAP * fiBitmap = FreeImage_LoadFromMemory(format, fiMemory);
 			if (fiBitmap != nullptr)
 			{
-				//loaded. convert to 32bit
-				FIBITMAP * fiConverted = FreeImage_ConvertTo32Bits(fiBitmap);
-				if (fiConverted != nullptr)
+				//loaded. convert to 32bit if necessary
+				FIBITMAP * fiConverted = nullptr;
+				if (FreeImage_GetBPP(fiBitmap) != 32)
 				{
-					width = FreeImage_GetWidth(fiConverted);
-					height = FreeImage_GetHeight(fiConverted);
-					unsigned int pitch = FreeImage_GetPitch(fiConverted);
+					FIBITMAP * fiConverted = FreeImage_ConvertTo32Bits(fiBitmap);
+					if (fiConverted != nullptr)
+					{
+						//free original bitmap data
+						FreeImage_Unload(fiBitmap);
+						fiBitmap = fiConverted;
+					}
+				}
+				if (fiBitmap != nullptr)
+				{
+					width = FreeImage_GetWidth(fiBitmap);
+					height = FreeImage_GetHeight(fiBitmap);
+					unsigned int pitch = FreeImage_GetPitch(fiBitmap);
 					//loop through scanlines and add all pixel data to the return vector
 					//this is necessary, because width*height*bpp might not be == pitch
 					unsigned char * tempData = new unsigned char[width * height * 4];
 					for (size_t i = 0; i < height; i++)
 					{
-						const BYTE * scanLine = FreeImage_GetScanLine(fiConverted, i);
+						const BYTE * scanLine = FreeImage_GetScanLine(fiBitmap, i);
 						memcpy(tempData + (i * width * 4), scanLine, width * 4);
 					}
 					//convert from BGRA to RGBA
@@ -47,11 +57,13 @@ std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * d
 						((RGBQUAD *)tempData)[i] = rgba;
 					}
 					rawData = std::vector<unsigned char>(tempData, tempData + width * height * 4);
-					//free converted data
-					FreeImage_Unload(fiConverted);
+					//free bitmap data
+					FreeImage_Unload(fiBitmap);
 				}
-				//free bitmap data
-				FreeImage_Unload(fiBitmap);
+			}
+			else
+			{
+				LOG(LogError) << "Error - Failed to load image from memory!";
 			}
 		}
 		else

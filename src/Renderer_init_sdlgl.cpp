@@ -41,7 +41,7 @@ namespace Renderer
 		}
 
 		//ATM it is best to just leave the window icon alone on windows.
-		//When compiled as a Windows application, ES at least has an icon int the taskbar
+		//When compiled as a Windows application, ES at least has an icon in the taskbar
 		//The method below looks pretty shite as alpha isn't taken into account...
 #ifndef WIN32
 		//try loading PNG from memory
@@ -51,9 +51,9 @@ namespace Renderer
 		if (!rawData.empty()) {
 			//SDL interprets each pixel as a 32-bit number, so our masks must depend on the endianness (byte order) of the machine
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
-			Uint32 rmask = 0xff000000; Uint32 gmask = 0x00ff0000; Uint32 bmask = 0x0000ff00; Uint32 amask = 0x000000ff;
+			Uint32 rmask = 0xff000000; Uint32 gmask = 0x0000ff00; Uint32 bmask = 0x00ff0000; Uint32 amask = 0x000000ff;
 #else
-			Uint32 rmask = 0x000000ff; Uint32 gmask = 0x0000ff00; Uint32 bmask = 0x00ff0000;Uint32 amask = 0xff000000;
+			Uint32 rmask = 0x000000ff; Uint32 gmask = 0x00ff0000; Uint32 bmask = 0x0000ff00; Uint32 amask = 0xff000000;
 #endif
 			//try creating SDL surface from logo data
 			SDL_Surface * logoSurface = SDL_CreateRGBSurfaceFrom((void *)rawData.data(), width, height, 32, width*4, rmask, gmask, bmask, amask);
