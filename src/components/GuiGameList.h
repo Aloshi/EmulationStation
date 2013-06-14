@@ -6,6 +6,7 @@
 #include "ImageComponent.h"
 #include "ThemeComponent.h"
 #include "AnimationComponent.h"
+#include "TextComponent.h"
 #include <string>
 #include <stack>
 #include "../SystemData.h"
@@ -13,7 +14,7 @@
 #include "../FolderData.h"
 
 //This is where the magic happens - GuiGameList is the parent of almost every graphical element in ES at the moment.
-//It has a GuiList child that handles the game list, a GuiTheme that handles the theming system, and a GuiImage for game images.
+//It has a TextListComponent child that handles the game list, a ThemeComponent that handles the theming system, and an ImageComponent for game images.
 class GuiGameList : public GuiComponent
 {
 public:
@@ -48,8 +49,11 @@ private:
 
 	TextListComponent<FileData*>* mList;
 	ImageComponent* mScreenshot;
+	TextComponent mDescription;
 	AnimationComponent* mImageAnimation;
 	ThemeComponent* mTheme;
+
+	Vector2i getImagePos();
 };
 
 #endif

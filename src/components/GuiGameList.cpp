@@ -6,7 +6,12 @@
 #include <boost/filesystem.hpp>
 #include "../Log.h"
 
-GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window)
+Vector2i GuiGameList::getImagePos()
+{
+	return Vector2i((int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")));
+}
+
+GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window), mDescription(window)
 {
 	mDetailed = useDetail;
 
@@ -19,7 +24,7 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window)
 	{
 		mList = new TextListComponent<FileData*>(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
-		mScreenshot = new ImageComponent(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")), "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
+		mScreenshot = new ImageComponent(mWindow, getImagePos().x, getImagePos().y, "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 
 		mImageAnimation = new AnimationComponent();
@@ -30,6 +35,9 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window)
 		mImageAnimation = NULL;
 	}
 
+	mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
+	mDescription.setExtent(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), 0));
+	
 	setSystemId(0);
 }
 
@@ -41,8 +49,9 @@ GuiGameList::~GuiGameList()
 	{
 		delete mImageAnimation;
 		delete mScreenshot;
-		delete mTheme;
 	}
+
+	delete mTheme;
 }
 
 void GuiGameList::setSystemId(int id)
@@ -86,18 +95,14 @@ void GuiGameList::render()
 		//divider
 		if(!mTheme->getBool("hideDividers"))
 			Renderer::drawRect((int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")) - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
-
-		//if we're not scrolling and we have selected a non-folder
-		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
-		{
-			GameData* game = (GameData*)mList->getSelectedObject();
-
-			std::string desc = game->getDescription();
-			if(!desc.empty())
-				Renderer::drawWrappedText(desc, (int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12, (int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), mTheme->getColor("description"), mTheme->getDescriptionFont());
-		}
-
+		
 		mScreenshot->render();
+		
+		//if we're not scrolling and we have selected a non-folder
+		if(!mList->isScrolling() && !mList->getSelectedObject()->isFolder())
+		{
+			mDescription.render();
+		}
 	}
 
 	mList->render();
@@ -118,6 +123,7 @@ bool GuiGameList::input(InputConfig* config, Input input)
 			mFolderStack.push(mFolder);
 			mFolder = (FolderData*)file;
 			updateList();
+			updateDetailData();
 			return true;
 		}else{
 			mList->stopScrolling();
@@ -251,6 +257,9 @@ void GuiGameList::updateTheme()
 		mScreenshot->setOffset((int)(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth()), (int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 		mScreenshot->setResize((int)mTheme->getFloat("gameImageWidth"), (int)mTheme->getFloat("gameImageHeight"), false);
+
+		mDescription.setColor(mTheme->getColor("description"));
+		mDescription.setFont(mTheme->getDescriptionFont());
 	}
 }
 
@@ -261,15 +270,19 @@ void GuiGameList::updateDetailData()
 
 	if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 	{
-		mScreenshot->setOffset((int)((mTheme->getFloat("gameImageOffsetX") - 0.05) * Renderer::getScreenWidth()), (int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
-
 		if(((GameData*)mList->getSelectedObject())->getImagePath().empty())
 			mScreenshot->setImage(mTheme->getString("imageNotFoundPath"));
 		else
 			mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
 
-		mImageAnimation->fadeIn(15);
-		mImageAnimation->move((int)(0.05 * Renderer::getScreenWidth()), 0, 5);
+		Vector2i imgOffset = Vector2i((int)(Renderer::getScreenWidth() * 0.10f), 0);
+		mScreenshot->setOffset(getImagePos() - imgOffset);
+
+		mImageAnimation->fadeIn(35);
+		mImageAnimation->move(imgOffset.x, imgOffset.y, 20);
+
+		mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
+		mDescription.setText(((GameData*)mList->getSelectedObject())->getDescription());
 	}else{
 		mScreenshot->setImage("");
 	}

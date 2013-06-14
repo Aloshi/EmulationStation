@@ -5,9 +5,12 @@
 #include "Font.h"
 #include <boost/filesystem.hpp>
 #include "Log.h"
+#include <stack>
 
 namespace Renderer {
 	bool loadedFonts = false;
+
+	std::stack<Rect> clipStack;
 
 	void setColor4bArray(GLubyte* array, unsigned int color)
 	{
@@ -36,20 +39,44 @@ namespace Renderer {
 		translatef((float)offset.x, (float)offset.y);
 	}
 
-	void setClipRect(int x, int y, unsigned int w, unsigned int h)
+	void pushClipRect(int x, int y, unsigned int w, unsigned int h)
 	{
-		glScissor(x, y, w, h);
+		Rect rect(x, y, w, h);
+		if(rect.size.x == 0)
+			rect.size.x = Renderer::getScreenWidth() - rect.pos.x;
+		if(rect.size.y == 0)
+			rect.size.y = Renderer::getScreenHeight() - rect.pos.y;
+
+		//glScissor starts at the bottom left of the window
+		//so (0, 0, 1, 1) is the bottom left pixel
+		//everything else uses y+ = down, so flip it to be consistent
+		rect.pos.y = Renderer::getScreenHeight() - rect.pos.y - rect.size.y;
+
+		clipStack.push(rect);
+		glScissor(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
 		glEnable(GL_SCISSOR_TEST);
 	}
 
-	void setClipRect(Vector2i offset, Vector2u size)
+	void pushClipRect(Vector2i pos, Vector2u size)
 	{
-		setClipRect(offset.x, offset.y, size.x, size.y);
+		pushClipRect(pos.x, pos.y, size.x, size.y);
 	}
 
-	void clearClipRect()
+	void popClipRect()
 	{
-		glDisable(GL_SCISSOR_TEST);
+		if(clipStack.empty())
+		{
+			LOG(LogError) << "Tried to popClipRect while the stack was empty!";
+			return;
+		}
+		clipStack.pop();
+		if(clipStack.empty())
+		{
+			glDisable(GL_SCISSOR_TEST);
+		}else{
+			Rect top = clipStack.top();
+			glScissor(top.pos.x, top.pos.y, top.size.x, top.size.y);
+		}
 	}
 
 	void drawRect(int x, int y, int w, int h, unsigned int color)

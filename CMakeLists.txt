@@ -133,6 +133,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.h
@@ -167,6 +168,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.cpp

@@ -5,6 +5,8 @@
 #include "ImageComponent.h"
 #include <vector>
 
+#define ANIMATION_TICK_SPEED 16
+
 class AnimationComponent
 {
 public:
@@ -28,6 +30,8 @@ private:
 
 	int mFadeRate;
 	int mMoveX, mMoveY, mMoveSpeed;
+
+	int mAccumulator;
 };
 
 #endif

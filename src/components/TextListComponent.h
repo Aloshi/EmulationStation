@@ -141,6 +141,8 @@ void TextListComponent<T>::onRender()
 	if(listCutoff > (int)mRowVector.size())
 		listCutoff = mRowVector.size();
 
+	Renderer::pushClipRect(getOffset(), getSize());
+
 	for(int i = startEntry; i < listCutoff; i++)
 	{
 		//draw selector bar
@@ -154,17 +156,15 @@ void TextListComponent<T>::onRender()
 		int x = mTextOffsetX - (mSelection == i ? mMarqueeOffset : 0);
 		unsigned int color = (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color;
 
-		Renderer::setClipRect(getOffset(), getSize());
-
 		if(mDrawCentered)
 			Renderer::drawCenteredText(row.name, x, y, color, mFont);
 		else
 			Renderer::drawText(row.name, x, y, color, mFont);
 
-		Renderer::clearClipRect();
-
 		y += entrySize;
 	}
+
+	Renderer::popClipRect();
 
 	GuiComponent::onRender();
 }

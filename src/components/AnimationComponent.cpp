@@ -6,6 +6,8 @@ AnimationComponent::AnimationComponent()
 	mMoveY = 0;
 	mMoveSpeed = 0;
 	mFadeRate = 0;
+	mOpacity = 0;
+	mAccumulator = 0;
 }
 
 void AnimationComponent::move(int x, int y, int speed)
@@ -31,41 +33,46 @@ void AnimationComponent::fadeOut(int time)
 	mFadeRate = -time;
 }
 
+//this should really be fixed at the system loop level...
 void AnimationComponent::update(int deltaTime)
 {
-	float mult = deltaTime * 0.05f;
-
-	if(mMoveX != 0 || mMoveY != 0)
+	mAccumulator += deltaTime;
+	while(mAccumulator >= ANIMATION_TICK_SPEED)
 	{
-		int offsetx = (mMoveX > mMoveSpeed) ? mMoveSpeed : mMoveX;
-		int offsety = (mMoveY > mMoveSpeed) ? mMoveSpeed : mMoveY;
+		mAccumulator -= ANIMATION_TICK_SPEED;
 
-		offsetx = (int)(offsetx * mult);
-		offsety = (int)(offsety * mult);
-
-		moveChildren(offsetx, offsety);
-
-		mMoveX -= offsetx;
-		mMoveY -= offsety;
-	}
-
-	if(mFadeRate != 0)
-	{
-		int opacity = (int)mOpacity + mFadeRate;
-		if(opacity > 255)
+		if(mMoveX != 0 || mMoveY != 0)
 		{
-			mFadeRate = 0;
-			opacity = 255;
+			Vector2i offset(mMoveX, mMoveY);
+			if(abs(offset.x) > mMoveSpeed)
+				offset.x = mMoveSpeed * (offset.x > 0 ? 1 : -1);
+			if(abs(offset.y) > mMoveSpeed)
+				offset.y = mMoveSpeed * (offset.y > 0 ? 1 : -1);
+
+			moveChildren(offset.x, offset.y);
+
+			mMoveX -= offset.x;
+			mMoveY -= offset.y;
 		}
 
-		if(opacity < 0)
+		if(mFadeRate != 0)
 		{
-			mFadeRate = 0;
-			opacity = 0;
-		}
+			int opacity = (int)mOpacity + mFadeRate;
+			if(opacity > 255)
+			{
+				mFadeRate = 0;
+				opacity = 255;
+			}
 
-		mOpacity = (unsigned char)opacity;
-		setChildrenOpacity((unsigned char)opacity);
+			if(opacity < 0)
+			{
+				mFadeRate = 0;
+				opacity = 0;
+			}
+
+			mOpacity = (unsigned char)opacity;
+			setChildrenOpacity((unsigned char)opacity);
+		}
 	}
 }
 

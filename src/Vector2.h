@@ -27,7 +27,6 @@ public:
 	T y;
 };
 
-
 template <typename T>
 Vector2<T> operator -(const Vector2<T>& right)
 {
@@ -94,5 +93,15 @@ bool operator !=(const Vector2<T>& left, const Vector2<T>& right)
 typedef Vector2<int> Vector2i;
 typedef Vector2<unsigned int> Vector2u;
 typedef Vector2<float> Vector2f;
+
+class Rect
+{
+public:
+	Vector2i pos;
+	Vector2u size;
+
+	Rect() {};
+	Rect(int x, int y, unsigned int w, unsigned int h) : pos(x, y), size(w, h) {};
+};
 
 #endif
