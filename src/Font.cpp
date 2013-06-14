@@ -341,7 +341,7 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 
 void Font::sizeText(std::string text, int* w, int* h)
 {
-	int cwidth = 0;
+	float cwidth = 0.0f;
 	for(unsigned int i = 0; i < text.length(); i++)
 	{
 		unsigned char letter = text[i];
@@ -352,10 +352,10 @@ void Font::sizeText(std::string text, int* w, int* h)
 	}
 
 	if(w != NULL)
-		*w = cwidth;
+		*w = (int)cwidth;
 
 	if(h != NULL)
-		*h = (int)(mMaxGlyphHeight * 1.5f * fontScale);
+		*h = getHeight();
 }
 
 int Font::getHeight()
