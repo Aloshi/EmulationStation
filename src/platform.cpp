@@ -19,6 +19,10 @@ std::string getHomePath()
 		if (envDir != nullptr && envPath != nullptr) {
 			homePath = envDir;
 			homePath += envPath;
+
+			for(unsigned int i = 0; i < homePath.length(); i++)
+				if(homePath[i] == '\\')
+					homePath[i] = '/';
 		}
 	}
 #else

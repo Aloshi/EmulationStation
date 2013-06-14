@@ -33,14 +33,12 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 	std::string sysPath = system->getStartPath();
 
 	//strip out the system path stuff so it's relative to the system root folder
-	for(unsigned int i = 0; i < gamePath.length(); i++)
-	{
-		if(gamePath[i] != sysPath[i])
-		{
-			gamePath = gamePath.substr(i, gamePath.length() - i);
-			break;
-		}
-	}
+	unsigned int i = 0;
+	while(i < gamePath.length() && i < sysPath.length() && gamePath[i] == sysPath[i])
+		i++;
+
+	gamePath = gamePath.substr(i, gamePath.length() - i);
+
 
 	if(gamePath[0] != '/')
 		gamePath.insert(0, "/");
