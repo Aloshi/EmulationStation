@@ -101,7 +101,7 @@ void GuiInputConfig::render()
 			if(Renderer::getScreenWidth() / 2.5f > textWidth)
 				textWidth = (int)(Renderer::getScreenWidth() / 2.5f);
 
-			Renderer::drawText("press A to skip", textWidth, y, 0x0000AAFF, font);
+			Renderer::drawText("press Accept to skip", textWidth, y, 0x0000AAFF, font);
 		}
 	}
 
