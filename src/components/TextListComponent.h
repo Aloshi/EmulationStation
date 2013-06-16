@@ -10,7 +10,7 @@
 #include <memory>
 #include "../Sound.h"
 
-#define MARQUEE_DELAY 600
+#define MARQUEE_DELAY 900
 #define MARQUEE_SPEED 16
 #define MARQUEE_RATE 3
 
@@ -315,6 +315,8 @@ void TextListComponent<T>::clear()
 {
 	mRowVector.clear();
 	mSelection = 0;
+	mMarqueeOffset = 0;
+	mMarqueeTime = -MARQUEE_DELAY;
 }
 
 template <typename T>
