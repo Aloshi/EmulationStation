@@ -141,14 +141,14 @@ void TextListComponent<T>::onRender()
 	if(listCutoff > (int)mRowVector.size())
 		listCutoff = mRowVector.size();
 
-	Renderer::pushClipRect(getOffset(), getSize());
+	Renderer::pushClipRect(getGlobalOffset(), getSize());
 
 	for(int i = startEntry; i < listCutoff; i++)
 	{
 		//draw selector bar
 		if(mSelection == i)
 		{
-			Renderer::drawRect(0, y, Renderer::getScreenWidth(), mFont->getHeight(), mSelectorColor);
+			Renderer::drawRect(0, y, getSize().x, mFont->getHeight(), mSelectorColor);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);

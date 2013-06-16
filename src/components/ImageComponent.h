@@ -18,6 +18,8 @@ public:
 	ImageComponent(Window* window, int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool allowUpscale = false);
 	virtual ~ImageComponent();
 
+	//Copy the entire screen into a texture for us to use.
+	void copyScreen();
 	void setImage(std::string path); //Loads the image at the given filepath.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.

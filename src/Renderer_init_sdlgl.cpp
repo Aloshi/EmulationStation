@@ -71,7 +71,8 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | (WINDOWED ? 0 : SDL_FULLSCREEN) | SDL_DOUBLEBUF);
+		//SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); //vsync
+		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | (WINDOWED ? 0 : SDL_FULLSCREEN));
 
 		if(sdlScreen == NULL)
 		{

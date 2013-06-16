@@ -39,6 +39,8 @@ private:
 	void updateList();
 	void updateTheme();
 	void clearDetailData();
+	void doTransition(int dir);
+
 	std::string getThemeFile();
 
 	SystemData* mSystem;
@@ -52,6 +54,9 @@ private:
 	TextComponent mDescription;
 	AnimationComponent* mImageAnimation;
 	ThemeComponent* mTheme;
+
+	ImageComponent mTransitionImage;
+	AnimationComponent mTransitionAnimation;
 
 	Vector2i getImagePos();
 };

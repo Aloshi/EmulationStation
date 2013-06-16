@@ -11,7 +11,8 @@ Vector2i GuiGameList::getImagePos()
 	return Vector2i((int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")));
 }
 
-GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window), mDescription(window)
+GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window), 
+	mDescription(window), mTransitionImage(window, 0, 0, "", Renderer::getScreenWidth(), Renderer::getScreenHeight(), true)
 {
 	mDetailed = useDetail;
 
@@ -38,11 +39,23 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window),
 	mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
 	mDescription.setExtent(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), 0));
 	
+	mTransitionImage.setOffset(Renderer::getScreenWidth(), 0);
+	mTransitionImage.setOrigin(0, 0);
+	mTransitionAnimation.addChild(&mTransitionImage);
+
+	//a hack! the GuiGameList doesn't use the children system right now because I haven't redone it to do so yet.
+	//the list depends on knowing it's final window coordinates (getGlobalOffset), which requires knowing the where the GuiGameList is.
+	//the GuiGameList now moves during screen transitions, so we have to let it know somehow.
+	//this should be removed in favor of using real children soon.
+	mList->setParent(this);
+
 	setSystemId(0);
 }
 
 GuiGameList::~GuiGameList()
 {
+	//undo the parenting hack because otherwise it's not really a child and will try to remove itself on delete
+	mList->setParent(NULL);
 	delete mList;
 
 	if(mDetailed)
@@ -83,6 +96,13 @@ void GuiGameList::setSystemId(int id)
 
 void GuiGameList::render()
 {
+	if(mTransitionImage.getOffset().x > 0) //transitioning in from the left
+		mOffset.x = mTransitionImage.getOffset().x - Renderer::getScreenWidth();
+	else //transitioning in from the right
+		mOffset.x = mTransitionImage.getOffset().x + Renderer::getScreenWidth();
+
+	Renderer::translate(mOffset);
+
 	if(mTheme)
 		mTheme->render();
 
@@ -106,6 +126,10 @@ void GuiGameList::render()
 	}
 
 	mList->render();
+
+	Renderer::translate(-mOffset);
+
+	mTransitionImage.render();
 }
 
 bool GuiGameList::input(InputConfig* config, Input input)
@@ -156,11 +180,13 @@ bool GuiGameList::input(InputConfig* config, Input input)
 		if(config->isMappedTo("right", input))
 		{
 			setSystemId(mSystemId + 1);
+			doTransition(-1);
 			return true;
 		}
 		if(config->isMappedTo("left", input))
 		{
 			setSystemId(mSystemId - 1);
+			doTransition(1);
 			return true;
 		}
 	}
@@ -345,5 +371,15 @@ void GuiGameList::update(int deltaTime)
 	if(mDetailed)
 		mImageAnimation->update(deltaTime);
 
+	mTransitionAnimation.update(deltaTime);
+
 	mList->update(deltaTime);
+}
+
+void GuiGameList::doTransition(int dir)
+{
+	mTransitionImage.copyScreen();
+	mTransitionImage.setOpacity(255);
+	mTransitionImage.setOffset(0, 0);
+	mTransitionAnimation.move(Renderer::getScreenWidth() * dir, 0, 50);
 }
