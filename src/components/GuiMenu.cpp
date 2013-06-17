@@ -4,9 +4,7 @@
 #include "../Log.h"
 #include "../SystemData.h"
 #include "GuiGameList.h"
-
-//defined in main.cpp
-extern bool DONTSHOWEXIT;
+#include "../Settings.h"
 
 GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : GuiComponent(window)
 {
@@ -76,7 +74,7 @@ void GuiMenu::populateList()
 
 	mList->addObject("Reload", "es_reload", 0x0000FFFF);
 
-	if(!DONTSHOWEXIT)
+	if(!Settings::getInstance()->getBool("DONTSHOWEXIT"))
 		mList->addObject("Exit", "exit", 0xFF0000FF); //a special case; pushes an SDL quit event to the event stack instead of being called by system()
 }
 

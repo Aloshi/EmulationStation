@@ -11,13 +11,11 @@
 #include "Log.h"
 #include "InputManager.h"
 #include <iostream>
+#include "Settings.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
 namespace fs = boost::filesystem;
-
-extern bool PARSEGAMELISTONLY;
-extern bool IGNOREGAMELIST;
 
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
@@ -41,10 +39,10 @@ SystemData::SystemData(std::string name, std::string descName, std::string start
 
 	mRootFolder = new FolderData(this, mStartPath, "Search Root");
 
-	if(!PARSEGAMELISTONLY)
+	if(!Settings::getInstance()->getBool("PARSEGAMELISTONLY"))
 		populateFolder(mRootFolder);
 
-	if(!IGNOREGAMELIST)
+	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
 		parseGamelist(this);
 
 	mRootFolder->sort();
@@ -322,8 +320,8 @@ FolderData* SystemData::getRootFolder()
 	return mRootFolder;
 }
 
-std::string SystemData::getGamelistPath(){
-
+std::string SystemData::getGamelistPath()
+{
 	std::string filePath;
 
 	filePath = mRootFolder->getPath() + "/gamelist.xml";

@@ -5,6 +5,7 @@
 #include "GuiFastSelect.h"
 #include <boost/filesystem.hpp>
 #include "../Log.h"
+#include "../Settings.h"
 
 Vector2i GuiGameList::getImagePos()
 {
@@ -344,12 +345,11 @@ void GuiGameList::init()
 	}
 }
 
-extern bool IGNOREGAMELIST; //defined in main.cpp (as a command line argument)
 GuiGameList* GuiGameList::create(Window* window)
 {
 	bool detailed = false;
 
-	if(!IGNOREGAMELIST)
+	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
 	{
 		for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
 		{
