@@ -5,9 +5,12 @@
 #include "GuiGameList.h"
 #include "../Log.h"
 
-static int inputCount = 12;
-static std::string inputName[12] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown", "MasterVolUp", "MasterVolDown" };
-static std::string inputDispName[12] = { "Up", "Down", "Left", "Right", "Accept", "Back", "Menu", "Jump to Letter", "Page Up", "Page Down", "Master volume up", "Master volume down" };
+static const int inputCount = 10;
+static std::string inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown"};
+static std::string inputDispName[inputCount] = { "Up", "Down", "Left", "Right", "Accept", "Back", "Menu", "Jump to Letter", "Page Up", "Page Down"};
+
+//MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
+//If you want, you can manually add them to es_input.cfg.
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : GuiComponent(window), mTargetConfig(target), mCanSkip(false)
 {
