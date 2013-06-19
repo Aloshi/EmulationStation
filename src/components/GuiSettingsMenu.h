@@ -5,6 +5,7 @@
 #include "ComponentListComponent.h"
 #include <vector>
 #include "SwitchComponent.h"
+#include "SliderComponent.h"
 #include "TextComponent.h"
 
 class GuiSettingsMenu : public GuiComponent
@@ -22,6 +23,8 @@ private:
 	ComponentListComponent mList;
 
 	SwitchComponent mDrawFramerateSwitch;
+	SliderComponent mVolumeSlider;
+	TextComponent mSaveLabel;
 
 	std::vector<GuiComponent*> mLabels;
 };

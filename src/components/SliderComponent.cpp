@@ -2,15 +2,15 @@
 #include <assert.h>
 #include "../Renderer.h"
 
-SliderComponent::SliderComponent(Window* window, float min, float max) : GuiComponent(window),
-	mMin(min), mMax(max), mMoveRate(0)
+SliderComponent::SliderComponent(Window* window, float min, float max, float increment) : GuiComponent(window),
+	mMin(min), mMax(max), mIncrement(increment), mMoveRate(0), mRepeatWaitTimer(0)
 {
 	assert((min - max) != 0);
 
 	mValue = (max + min) / 2;
 
 	//calculate move scale
-	mMoveScale = (max - min) * 0.0007f;
+	mMoveScale = ((max - min) * 0.0007f) / increment;
 
 	setSize(Vector2u(128, 32));
 }
@@ -20,18 +20,23 @@ bool SliderComponent::input(InputConfig* config, Input input)
 	if(config->isMappedTo("left", input))
 	{
 		if(input.value)
-			mMoveRate = -1;
+			mMoveRate = -mIncrement;
 		else
 			mMoveRate = 0;
+
+		//setting mRepeatWaitTimer to 0 will trigger an initial move in our update method
+		mRepeatWaitTimer = 0;
 
 		return true;
 	}
 	if(config->isMappedTo("right", input))
 	{
 		if(input.value)
-			mMoveRate = 1;
+			mMoveRate = mIncrement;
 		else
 			mMoveRate = 0;
+
+		mRepeatWaitTimer = 0;
 
 		return true;
 	}
@@ -41,13 +46,22 @@ bool SliderComponent::input(InputConfig* config, Input input)
 
 void SliderComponent::update(int deltaTime)
 {
-	mValue += mMoveRate * deltaTime * mMoveScale;
+	if(mMoveRate != 0)
+	{
+		if(mRepeatWaitTimer == 0)
+			mValue += mMoveRate;
+		else if(mRepeatWaitTimer >= 450)
+			mValue += mMoveRate * deltaTime * mMoveScale;
 
-	if(mValue < mMin)
-		mValue = mMin;
-	if(mValue > mMax)
-		mValue = mMax;
+		if(mValue < mMin)
+			mValue = mMin;
+		if(mValue > mMax)
+			mValue = mMax;
 
+		if(mRepeatWaitTimer < 450)
+			mRepeatWaitTimer += deltaTime;
+	}
+	
 	GuiComponent::update(deltaTime);
 }
 
@@ -74,4 +88,14 @@ void SliderComponent::onRender()
 void SliderComponent::setSize(Vector2u size)
 {
 	mSize = size;
+}
+
+void SliderComponent::setValue(float value)
+{
+	mValue = value;
+}
+
+float SliderComponent::getValue()
+{
+	return mValue;
 }

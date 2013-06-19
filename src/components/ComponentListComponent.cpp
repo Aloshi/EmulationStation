@@ -310,3 +310,10 @@ void ComponentListComponent::onOffsetChanged()
 {
 	updateComponentOffsets();
 }
+
+GuiComponent* ComponentListComponent::getSelectedComponent()
+{
+	if(!cursorValid())
+		return NULL;
+	return getCell(mCursor.x, mCursor.y)->component;
+}

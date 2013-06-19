@@ -31,6 +31,8 @@ public:
 	void resetCursor();
 	bool cursorValid();
 
+	GuiComponent* getSelectedComponent();
+
 private:
 	class ComponentEntry
 	{
