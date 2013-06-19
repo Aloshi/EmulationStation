@@ -15,7 +15,6 @@
 #define MARQUEE_RATE 3
 
 //A graphical list. Supports multiple colors for rows and scrolling.
-//TODO - add truncation to text rendering if name exceeds a maximum width (a trailing elipses, perhaps). Marquee would be nice too.
 template <typename T>
 class TextListComponent : public GuiComponent
 {

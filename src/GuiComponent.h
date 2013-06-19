@@ -29,10 +29,11 @@ public:
 	//Called when the Renderer deinitializes.  Passes to children.
 	virtual void deinit();
 
-	Vector2i getGlobalOffset();
+	virtual Vector2i getGlobalOffset();
 	Vector2i getOffset();
 	void setOffset(Vector2i offset);
 	void setOffset(int x, int y);
+	virtual void onOffsetChanged() {};
 
 	Vector2u getSize();
 	

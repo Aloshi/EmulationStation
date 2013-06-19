@@ -12,15 +12,18 @@ public:
 
 	void setFont(Font* font);
 	void setBox(Vector2i pos, Vector2u size);
-	void setExtent(Vector2u size);
+	void setExtent(Vector2u size); //Use Vector2u(0, 0) to automatically generate extent.
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
 
 	void onRender();
 
 private:
+	void calculateExtent();
+
 	unsigned int mColor;
 	Font* mFont;
+	bool mAutoCalcExtent;
 	std::string mText;
 };
 

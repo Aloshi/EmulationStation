@@ -133,7 +133,10 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.h
@@ -143,6 +146,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/Resources.h
@@ -169,7 +173,10 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.cpp
@@ -178,6 +185,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_16.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_32.cpp

@@ -13,6 +13,9 @@ GuiComponent::~GuiComponent()
 
 	if(mParent)
 		mParent->removeChild(this);
+
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->setParent(NULL);
 }
 
 bool GuiComponent::input(InputConfig* config, Input input)
@@ -83,13 +86,15 @@ Vector2i GuiComponent::getOffset()
 
 void GuiComponent::setOffset(Vector2i offset)
 {
-	mOffset = offset;
+	setOffset(offset.x, offset.y);
+	onOffsetChanged();
 }
 
 void GuiComponent::setOffset(int x, int y)
 {
 	mOffset.x = x;
 	mOffset.y = y;
+	onOffsetChanged();
 }
 
 Vector2u GuiComponent::getSize()

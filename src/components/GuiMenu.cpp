@@ -5,6 +5,7 @@
 #include "../SystemData.h"
 #include "GuiGameList.h"
 #include "../Settings.h"
+#include "GuiSettingsMenu.h"
 
 GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : GuiComponent(window)
 {
@@ -52,6 +53,10 @@ void GuiMenu::executeCommand(std::string command)
 		//reload the game list
 		SystemData::loadConfig();
 		mParent->setSystemId(0);
+	}else if(command == "es_settings")
+	{
+		mWindow->pushGui(new GuiSettingsMenu(mWindow));
+		delete this;
 	}else{
 		if(system(command.c_str()) != 0)
 		{
@@ -69,6 +74,9 @@ void GuiMenu::populateList()
 	//the method is GuiList::addObject(std::string displayString, std::string commandString, unsigned int displayHexColor);
 	//the list will automatically adjust as items are added to it, this should be the only area you need to change
 	//if you want to do something special within ES, override your command in the executeComand() method
+
+	mList->addObject("Settings", "es_settings", 0x0000FFFF);
+
 	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FFFF);
 	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FFFF);
 
