@@ -34,7 +34,7 @@ namespace Renderer
 	{
 		LOG(LogInfo) << "Creating surface...";
 
-		if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
+		if(SDL_Init(SDL_INIT_VIDEO) != 0)
 		{
 			LOG(LogError) << "Error initializing SDL!\n	" << SDL_GetError();
 			return false;
