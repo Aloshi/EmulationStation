@@ -3,6 +3,7 @@
 
 #include "GuiComponent.h"
 #include "InputManager.h"
+#include "resources/ResourceManager.h"
 #include <vector>
 
 class Window
@@ -23,9 +24,11 @@ public:
 	void deinit();
 
 	InputManager* getInputManager();
+	ResourceManager* getResourceManager();
 
 private:
 	InputManager* mInputManager;
+	ResourceManager mResourceManager;
 	std::vector<GuiComponent*> mGuiStack;
 };
 

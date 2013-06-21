@@ -53,8 +53,9 @@ void Window::render()
 
 void Window::init()
 {
-	mInputManager->init();
+	mInputManager->init(); //shouldn't this go AFTER renderer initialization?
 	Renderer::init(0, 0);
+	mResourceManager.init();
 
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
@@ -70,6 +71,7 @@ void Window::deinit()
 	}
 
 	mInputManager->deinit();
+	mResourceManager.deinit();
 	Renderer::deinit();
 }
 
@@ -96,4 +98,9 @@ void Window::update(int deltaTime)
 InputManager* Window::getInputManager()
 {
 	return mInputManager;
+}
+
+ResourceManager* Window::getResourceManager()
+{
+	return &mResourceManager;
 }
