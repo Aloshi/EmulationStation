@@ -1,37 +1,38 @@
-#ifndef _GUIIMAGE_H_
-#define _GUIIMAGE_H_
+#ifndef _IMAGECOMPONENT_H_
+#define _IMAGECOMPONENT_H_
 
 #include "../platform.h"
 #include GLHEADER
 
-#include "../Gui.h"
+#include "../GuiComponent.h"
 #include <string>
 #include <FreeImage.h>
 
 
-class GuiImage : public Gui
+class ImageComponent : public GuiComponent
 {
 public:
 	//Creates a new GuiImage at the given location. If given an image, it will be loaded. If maxWidth and/or maxHeight are nonzero, the image will be
-	//resized to fix. If only one axis is specified, the other will be resized in accordance with the image's aspect ratio. If resizeExact is false,
+	//resized to fit. If only one axis is specified, the other will be set in accordance with the image's aspect ratio. If allowUpscale is false,
 	//the image will only be downscaled, never upscaled (the image's size must surpass at least one nonzero bound).
-	GuiImage(Window* window, int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool resizeExact = false);
-	~GuiImage();
+	ImageComponent(Window* window, int offsetX = 0, int offsetY = 0, std::string path = "", unsigned int maxWidth = 0, unsigned int maxHeight = 0, bool allowUpscale = false);
+	virtual ~ImageComponent();
 
+	//Copy the entire screen into a texture for us to use.
+	void copyScreen();
 	void setImage(std::string path); //Loads the image at the given filepath.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
-	void setResize(unsigned int width, unsigned int height, bool resizeExact);
+	void setResize(unsigned int width, unsigned int height, bool allowUpscale);
 
 	void setFlipX(bool flip);
 	void setFlipY(bool flip);
 
-	unsigned int getWidth(); //Returns render width in pixels. May be different than actual texture width.
-	unsigned int getHeight(); //Returns render height in pixels. May be different than actual texture height.
+	//You can get the rendered size of the ImageComponent with getSize().
+	Vector2u getTextureSize();
+
 
 	bool hasImage();
-
-	void render();
 
 	//Image textures will be deleted on renderer deinitialization, and recreated on reinitialization (if mPath is not empty).
 	void init();
@@ -39,12 +40,17 @@ public:
 
 	unsigned char getOpacity();
 	void setOpacity(unsigned char opacity);
-private:
-	unsigned int mResizeWidth, mResizeHeight;
-	float mOriginX, mOriginY;
-	bool mResizeExact, mTiled, mFlipX, mFlipY;
 
-	int mOffsetX, mOffsetY;
+protected:
+	void onRender();
+
+private:
+	Vector2u mTargetSize;
+	Vector2u mTextureSize;
+	Vector2f mOrigin;
+
+	bool mAllowUpscale, mTiled, mFlipX, mFlipY;
+
 	unsigned char mOpacity;
 
 	void loadImage(std::string path);
@@ -54,9 +60,6 @@ private:
 	void unloadImage();
 
 	std::string mPath;
-
-	unsigned int mWidth, mHeight; //Our rendered size.
-	unsigned int mDrawWidth, mDrawHeight;
 
 	GLuint mTextureID;
 };

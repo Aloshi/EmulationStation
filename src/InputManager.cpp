@@ -72,7 +72,7 @@ std::vector<InputDevice> InputManager::getInputDevices() const
 		if (GetRawInputDeviceList(deviceList, &nrOfDevices, sizeof(RAWINPUTDEVICELIST)) != -1)
 		{
 			//loop through input devices
-			for (int i = 0; i < nrOfDevices; i++)
+			for (unsigned int i = 0; i < nrOfDevices; i++)
 			{
 				//get device name
 				char * rawName = new char[2048];

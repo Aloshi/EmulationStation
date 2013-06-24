@@ -11,13 +11,11 @@
 #include "Log.h"
 #include "InputManager.h"
 #include <iostream>
+#include "Settings.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
 namespace fs = boost::filesystem;
-
-extern bool PARSEGAMELISTONLY;
-extern bool IGNOREGAMELIST;
 
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
@@ -41,10 +39,10 @@ SystemData::SystemData(std::string name, std::string descName, std::string start
 
 	mRootFolder = new FolderData(this, mStartPath, "Search Root");
 
-	if(!PARSEGAMELISTONLY)
+	if(!Settings::getInstance()->getBool("PARSEGAMELISTONLY"))
 		populateFolder(mRootFolder);
 
-	if(!IGNOREGAMELIST)
+	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
 		parseGamelist(this);
 
 	mRootFolder->sort();
@@ -77,6 +75,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 
 	command = strreplace(command, "%ROM%", game->getBashPath());
 	command = strreplace(command, "%BASENAME%", game->getBaseName());
+	command = strreplace(command, "%ROM_RAW%", game->getPath());
 
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";
@@ -120,7 +119,37 @@ void SystemData::populateFolder(FolderData* folder)
 		if(filePath.stem().string().empty())
 			continue;
 
-		if(fs::is_directory(filePath))
+		//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
+		//we first get the extension of the file itself:
+		std::string extension = filePath.extension().string();
+		std::string chkExt;
+		size_t extPos = 0;
+
+		//folders *can* also match the extension and be added as games - this is mostly just to support higan
+		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
+		bool isGame = false;
+		do {
+			//now we loop through every extension in the list
+			size_t cpos = extPos;
+			extPos = mSearchExtension.find(" ", extPos);
+			chkExt = mSearchExtension.substr(cpos, ((extPos == std::string::npos) ? mSearchExtension.length() - cpos: extPos - cpos));
+
+			//if it matches, add it
+			if(chkExt == extension)
+			{
+				GameData* newGame = new GameData(this, filePath.string(), filePath.stem().string());
+				folder->pushFileData(newGame);
+				isGame = true;
+				break;
+			}else if(extPos != std::string::npos) //if not, add one to the "next position" marker to skip the space when reading the next extension
+			{
+				extPos++;
+			}
+
+		} while(extPos != std::string::npos && chkExt != "" && chkExt.find(".") != std::string::npos);
+	
+		//add directories that also do not match an extension as folders
+		if(!isGame && fs::is_directory(filePath))
 		{
 			FolderData* newFolder = new FolderData(this, filePath.string(), filePath.stem().string());
 			populateFolder(newFolder);
@@ -130,31 +159,6 @@ void SystemData::populateFolder(FolderData* folder)
 				delete newFolder;
 			else
 				folder->pushFileData(newFolder);
-		}else{
-			//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
-			//we first get the extension of the file itself:
-			std::string extension = filePath.extension().string();
-			std::string chkExt;
-			size_t extPos = 0;
-
-			do {
-				//now we loop through every extension in the list
-				size_t cpos = extPos;
-				extPos = mSearchExtension.find(" ", extPos);
-				chkExt = mSearchExtension.substr(cpos, ((extPos == std::string::npos) ? mSearchExtension.length() - cpos: extPos - cpos));
-
-				//if it matches, add it
-				if(chkExt == extension)
-				{
-					GameData* newGame = new GameData(this, filePath.string(), filePath.stem().string());
-					folder->pushFileData(newGame);
-					break;
-				}else if(extPos != std::string::npos) //if not, add one to the "next position" marker to skip the space when reading the next extension
-				{
-					extPos++;
-				}
-
-			} while(extPos != std::string::npos && chkExt != "" && chkExt.find(".") != std::string::npos);
 		}
 	}
 }
@@ -316,8 +320,8 @@ FolderData* SystemData::getRootFolder()
 	return mRootFolder;
 }
 
-std::string SystemData::getGamelistPath(){
-
+std::string SystemData::getGamelistPath()
+{
 	std::string filePath;
 
 	filePath = mRootFolder->getPath() + "/gamelist.xml";

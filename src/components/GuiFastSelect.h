@@ -1,22 +1,23 @@
 #ifndef _GUIFASTSELECT_H_
 #define _GUIFASTSELECT_H_
 
-#include "../Gui.h"
+#include "../GuiComponent.h"
 #include "../SystemData.h"
 #include "../FolderData.h"
 #include "../Sound.h"
-#include "GuiList.h"
+#include "TextListComponent.h"
 #include "GuiBox.h"
 
 class GuiGameList;
 
-class GuiFastSelect : public Gui
+class GuiFastSelect : public GuiComponent
 {
 public:
-	GuiFastSelect(Window* window, GuiGameList* parent, GuiList<FileData*>* list, char startLetter, GuiBoxData data, int textcolor, std::shared_ptr<Sound> & scrollsound, Font* font);
+	GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, GuiBoxData data, 
+		int textcolor, std::shared_ptr<Sound> & scrollsound, Font* font);
 	~GuiFastSelect();
 
-	void input(InputConfig* config, Input input);
+	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
 	void render();
 private:
@@ -28,7 +29,7 @@ private:
 	void scroll();
 	void setLetterID(int id);
 
-	GuiList<FileData*>* mList;
+	TextListComponent<FileData*>* mList;
 
 	size_t mLetterID;
 	GuiGameList* mParent;

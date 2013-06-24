@@ -1,33 +1,30 @@
-#include "GuiImage.h"
+#include "ImageComponent.h"
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <math.h>
 #include "../Log.h"
 #include "../Renderer.h"
 
-unsigned int GuiImage::getWidth() { return mDrawWidth; }
-unsigned int GuiImage::getHeight() { return mDrawHeight; }
+Vector2u ImageComponent::getTextureSize() { return mTextureSize; }
 
-GuiImage::GuiImage(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool resizeExact) : Gui(window)
+ImageComponent::ImageComponent(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool allowUpscale) : GuiComponent(window)
 {
 	mTextureID = 0;
 
-	setOffset(offsetX, offsetY);
+	setOffset(Vector2i(offsetX, offsetY));
 
 	//default origin is the center of image
-	mOriginX = 0.5;
-	mOriginY = 0.5;
-	mOpacity = 255;
+	mOrigin.x = 0.5;
+	mOrigin.y = 0.5;
 
-	mWidth = mDrawWidth = 0;
-	mHeight = mDrawHeight = 0;
+	mOpacity = 255;
 
 	mTiled = false;
 
-	mResizeWidth = resizeWidth;
-	mResizeHeight = resizeHeight;
+	mTargetSize.x = resizeWidth;
+	mTargetSize.y = resizeHeight;
 
-	mResizeExact = resizeExact;
+	mAllowUpscale = allowUpscale;
 
 	mFlipX = false;
 	mFlipY = false;
@@ -36,17 +33,17 @@ GuiImage::GuiImage(Window* window, int offsetX, int offsetY, std::string path, u
 		setImage(path);
 }
 
-GuiImage::~GuiImage()
+ImageComponent::~ImageComponent()
 {
 	unloadImage();
 }
 
-void GuiImage::loadImage(std::string path)
+void ImageComponent::loadImage(std::string path)
 {
 	//make sure the file *exists*
 	if(!boost::filesystem::exists(path))
 	{
-		LOG(LogError) << "File \"" << path << "\" not found!";
+		LOG(LogError) << "Image \"" << path << "\" not found!";
 		return;
 	}
 
@@ -112,29 +109,6 @@ void GuiImage::loadImage(std::string path)
 		return;
 	}
 
-
-	/*
-	//set width/height to powers of 2 for OpenGL
-	for(unsigned int i = 0; i < 22; i++)
-	{
-		unsigned int pwrOf2 = pow(2, i);
-		if(!widthPwrOf2 && pwrOf2 >= width)
-			widthPwrOf2 = pwrOf2;
-		if(!heightPwrOf2 && pwrOf2 >= height)
-			heightPwrOf2 = pwrOf2;
-
-		if(widthPwrOf2 && heightPwrOf2)
-			break;
-	}
-
-	if(!widthPwrOf2 || !heightPwrOf2)
-	{
-		LOG(LogError) << "Error assigning power of two for width or height of image!";
-		FreeImage_Unload(image);
-		return;
-	}*/
-
-
 	//convert from BGRA to RGBA
 	GLubyte* imageRGBA = new GLubyte[4*width*height];
 	for(unsigned int i = 0; i < width*height; i++)
@@ -159,8 +133,8 @@ void GuiImage::loadImage(std::string path)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	mWidth = width;
-	mHeight = height;
+	mTextureSize.x = width;
+	mTextureSize.y = height;
 
 	//free the image data
 	FreeImage_Unload(image);
@@ -171,42 +145,43 @@ void GuiImage::loadImage(std::string path)
 	resize();
 }
 
-void GuiImage::resize()
+void ImageComponent::resize()
 {
-	mDrawWidth = mWidth;
-	mDrawHeight = mHeight;
+	mSize.x = mTextureSize.x;
+	mSize.y = mTextureSize.y;
 
 	//(we don't resize tiled images)
-	if(!mTiled)
+	if(!mTiled && (mTargetSize.x || mTargetSize.y))
 	{
-		float resizeScaleX = 0, resizeScaleY = 0;
-		if(mResizeExact)
-		{
-			if(mResizeWidth)
-				resizeScaleX = (float)mResizeWidth / mWidth;
-			if(mResizeHeight)
-				resizeScaleY = (float)mResizeHeight / mHeight;
-		}else{
-			if(mResizeWidth && mWidth > mResizeWidth)
-				resizeScaleX = (float)mResizeWidth / mWidth;
+		Vector2f resizeScale;
 
-			if(mResizeHeight && mHeight > mResizeHeight)
-				resizeScaleY = (float)mResizeHeight / mHeight;
+		if(mTargetSize.x && (mAllowUpscale || mSize.x > mTargetSize.x))
+		{
+			resizeScale.x = (float)mTargetSize.x / mSize.x;
+		}
+		if(mTargetSize.y && (mAllowUpscale || mSize.y > mTargetSize.y))
+		{
+			resizeScale.y = (float)mTargetSize.y / mSize.y;
 		}
 
-		if(resizeScaleX && !resizeScaleY)
-			resizeScaleY = resizeScaleX;
-		if(resizeScaleY && !resizeScaleX)
-			resizeScaleX = resizeScaleY;
+		if(resizeScale.x && !resizeScale.y)
+			resizeScale.y = resizeScale.x;
+		if(resizeScale.y && !resizeScale.x)
+			resizeScale.x = resizeScale.y;
 
-		if(resizeScaleX)
-			mDrawWidth = (int)(mDrawWidth * resizeScaleX);
-		if(resizeScaleY)
-			mDrawHeight = (int)(mDrawHeight * resizeScaleY);
+		if(resizeScale.x)
+			mSize.x = (int)(mSize.x * resizeScale.x);
+		if(resizeScale.y)
+			mSize.y = (int)(mSize.y * resizeScale.y);
+	}
+
+	if(mTiled)
+	{
+		mSize = mTargetSize;
 	}
 }
 
-void GuiImage::unloadImage()
+void ImageComponent::unloadImage()
 {
 	if(mTextureID)
 	{
@@ -216,7 +191,7 @@ void GuiImage::unloadImage()
 	}
 }
 
-void GuiImage::setImage(std::string path)
+void ImageComponent::setImage(std::string path)
 {
 	if(mPath == path)
 		return;
@@ -229,39 +204,41 @@ void GuiImage::setImage(std::string path)
 
 }
 
-void GuiImage::setOrigin(float originX, float originY)
+void ImageComponent::setOrigin(float originX, float originY)
 {
-	mOriginX = originX;
-	mOriginY = originY;
+	mOrigin.x = originX;
+	mOrigin.y = originY;
 }
 
-void GuiImage::setTiling(bool tile)
+void ImageComponent::setTiling(bool tile)
 {
 	mTiled = tile;
 
 	if(mTiled)
-		mResizeExact = false;
-}
+		mAllowUpscale = false;
 
-void GuiImage::setResize(unsigned int width, unsigned int height, bool resizeExact)
-{
-	mResizeWidth = width;
-	mResizeHeight = height;
-	mResizeExact = resizeExact;
 	resize();
 }
 
-void GuiImage::setFlipX(bool flip)
+void ImageComponent::setResize(unsigned int width, unsigned int height, bool allowUpscale)
+{
+	mTargetSize.x = width;
+	mTargetSize.y = height;
+	mAllowUpscale = allowUpscale;
+	resize();
+}
+
+void ImageComponent::setFlipX(bool flip)
 {
 	mFlipX = flip;
 }
 
-void GuiImage::setFlipY(bool flip)
+void ImageComponent::setFlipY(bool flip)
 {
 	mFlipY = flip;
 }
 
-void GuiImage::render()
+void ImageComponent::onRender()
 {
 	if(mTextureID && getOpacity() > 0)
 	{
@@ -270,29 +247,31 @@ void GuiImage::render()
 
 		if(mTiled)
 		{
-			float xCount = ((float)mResizeWidth/mWidth);
-			float yCount = ((float)mResizeHeight/mHeight);
-
+			float xCount = (float)mSize.x / mTextureSize.x;
+			float yCount = (float)mSize.y / mTextureSize.y;
+			
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
-			buildImageArray(getOffsetX(), getOffsetY(), points, texs, xCount, yCount);
+			buildImageArray(0, 0, points, texs, xCount, yCount);
 		}else{
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
-			buildImageArray(getOffsetX(), getOffsetY(), points, texs);
+			buildImageArray(0, 0, points, texs);
 		}
 
 		drawImageArray(points, texs, colors, 6);
 	}
+
+	GuiComponent::onRender();
 }
 
-void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
+void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
 {
-	points[0] = posX - (mDrawWidth * mOriginX) * px;		points[1] = posY - (mDrawHeight * mOriginY) * py;
-	points[2] = posX - (mDrawWidth * mOriginX) * px;		points[3] = posY + (mDrawHeight * (1 - mOriginY)) * py;
-	points[4] = posX + (mDrawWidth * (1 - mOriginX)) * px;		points[5] = posY - (mDrawHeight * mOriginY) * py;
+	points[0] = posX - (mSize.x * mOrigin.x);		points[1] = posY - (mSize.y * mOrigin.y);
+	points[2] = posX - (mSize.x * mOrigin.x);		points[3] = posY + (mSize.y * (1 - mOrigin.y));
+	points[4] = posX + (mSize.x * (1 - mOrigin.x));		points[5] = posY - (mSize.y * mOrigin.y);
 
-	points[6] = posX + (mDrawWidth * (1 - mOriginX)) * px;		points[7] = posY - (mDrawHeight * mOriginY) * py;
-	points[8] = posX - (mDrawWidth * mOriginX) * px;		points[9] = posY + (mDrawHeight * (1 - mOriginY)) * py;
-	points[10] = posX + (mDrawWidth * (1 -mOriginX)) * px;		points[11] = posY + (mDrawHeight * (1 - mOriginY)) * py;
+	points[6] = posX + (mSize.x * (1 - mOrigin.x));		points[7] = posY - (mSize.y * mOrigin.y);
+	points[8] = posX - (mSize.x * mOrigin.x);		points[9] = posY + (mSize.y * (1 - mOrigin.y));
+	points[10] = posX + (mSize.x * (1 -mOrigin.x));		points[11] = posY + (mSize.y * (1 - mOrigin.y));
 
 
 
@@ -322,13 +301,12 @@ void GuiImage::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* tex
 	}
 }
 
-void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int numArrays)
+void ImageComponent::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int numArrays)
 {
 	glBindTexture(GL_TEXTURE_2D, mTextureID);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -354,21 +332,57 @@ void GuiImage::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, u
 	glDisable(GL_BLEND);
 }
 
-void GuiImage::init()
+void ImageComponent::init()
 {
 	if(!mPath.empty())
 		loadImage(mPath);
+
+	GuiComponent::init();
 }
 
-void GuiImage::deinit()
+void ImageComponent::deinit()
 {
 	unloadImage();
+
+	GuiComponent::deinit();
 }
 
-bool GuiImage::hasImage()
+bool ImageComponent::hasImage()
 {
 	return !mPath.empty();
 }
 
-unsigned char GuiImage::getOpacity() { return mOpacity; }
-void GuiImage::setOpacity(unsigned char opacity) { mOpacity = opacity; }
+unsigned char ImageComponent::getOpacity() { return mOpacity; }
+void ImageComponent::setOpacity(unsigned char opacity) { mOpacity = opacity; }
+
+void ImageComponent::copyScreen()
+{
+	unloadImage();
+	
+	int width = Renderer::getScreenWidth();
+	int height = Renderer::getScreenHeight();
+
+	//glReadBuffer(GL_FRONT);
+
+	/*char* data = new char[width*height*3];
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);*/
+
+	glGenTextures(1, &mTextureID);
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
+
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	//delete[] data;
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, width, height, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	mTextureSize.x = height;
+	mTextureSize.y = height;
+
+	resize();
+}

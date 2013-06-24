@@ -14,24 +14,24 @@ Window::~Window()
 	delete mInputManager;
 }
 
-void Window::pushGui(Gui* gui)
+void Window::pushGui(GuiComponent* gui)
 {
 	mGuiStack.push_back(gui);
 }
 
-void Window::removeGui(Gui* gui)
+void Window::removeGui(GuiComponent* gui)
 {
-	for(unsigned int i = 0; i < mGuiStack.size(); i++)
+	for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
 	{
-		if(mGuiStack.at(i) == gui)
+		if(*i == gui)
 		{
-			mGuiStack.erase(mGuiStack.begin() + i);
-			break;
+			mGuiStack.erase(i);
+			return;
 		}
 	}
 }
 
-Gui* Window::peekGui()
+GuiComponent* Window::peekGui()
 {
 	if(mGuiStack.size() == 0)
 		return NULL;
@@ -41,6 +41,7 @@ Gui* Window::peekGui()
 
 void Window::render()
 {
+	//there's nothing to render, which should pretty much never happen
 	if(mGuiStack.size() == 0)
 		std::cout << "guistack empty\n";
 

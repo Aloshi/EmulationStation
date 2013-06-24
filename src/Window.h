@@ -1,7 +1,7 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-#include "Gui.h"
+#include "GuiComponent.h"
 #include "InputManager.h"
 #include <vector>
 
@@ -11,9 +11,9 @@ public:
 	Window();
 	~Window();
 
-	void pushGui(Gui* gui);
-	void removeGui(Gui* gui);
-	Gui* peekGui();
+	void pushGui(GuiComponent* gui);
+	void removeGui(GuiComponent* gui);
+	GuiComponent* peekGui();
 
 	void input(InputConfig* config, Input input);
 	void update(int deltaTime);
@@ -26,7 +26,7 @@ public:
 
 private:
 	InputManager* mInputManager;
-	std::vector<Gui*> mGuiStack;
+	std::vector<GuiComponent*> mGuiStack;
 };
 
 #endif

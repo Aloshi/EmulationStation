@@ -15,8 +15,7 @@
 #include "ImageIO.h"
 #include "../data/Resources.h"
 #include "EmulationStation.h"
-
-extern bool WINDOWED;
+#include "Settings.h"
 
 namespace Renderer
 {
@@ -71,7 +70,8 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | (WINDOWED ? 0 : SDL_FULLSCREEN) | SDL_DOUBLEBUF);
+		//SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1); //vsync
+		sdlScreen = SDL_SetVideoMode(display_width, display_height, 16, SDL_OPENGL | (Settings::getInstance()->getBool("WINDOWED") ? 0 : SDL_FULLSCREEN));
 
 		if(sdlScreen == NULL)
 		{
@@ -88,7 +88,7 @@ namespace Renderer
 		LOG(LogInfo) << "Created surface successfully.";
 
 		//hide mouse cursor
-		initialCursorState = SDL_ShowCursor(0);
+		initialCursorState = SDL_ShowCursor(0) == 1;
 
 		return true;
 	}

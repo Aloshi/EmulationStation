@@ -117,7 +117,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.h
@@ -125,21 +125,28 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MathExp.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/platform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Vector2.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiAnimation.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextListComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiImage.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiTheme.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/Resources.h
@@ -149,7 +156,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Gui.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.cpp
@@ -159,21 +166,26 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/platform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_draw_gl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiAnimation.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiImage.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
-#    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiTheme.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_16.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_32.cpp

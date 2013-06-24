@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <SDL.h>
 #include <iostream>
+#include "Log.h"
 
 //some util functions
 std::string inputTypeToString(InputType type)
@@ -138,7 +139,7 @@ void InputConfig::loadFromXML(pugi::xml_node node, int playerNum)
 
 		if(typeEnum == TYPE_COUNT)
 		{
-			std::cout << "ERROR - input type \"" << type << "\" is invalid! Skipping input \"" << name << "\".\n";
+			LOG(LogError) << "InputConfig load error - input of type \"" << type << "\" is invalid! Skipping input \"" << name << "\".\n";
 			continue;
 		}
 
@@ -146,7 +147,7 @@ void InputConfig::loadFromXML(pugi::xml_node node, int playerNum)
 		int value = input.attribute("value").as_int();
 
 		if(value == 0)
-			std::cout << "WARNING: InputConfig value is 0 for " << type << " " << id << "!\n";
+			LOG(LogWarning) << "WARNING: InputConfig value is 0 for " << type << " " << id << "!\n";
 
 		mNameMap[toLower(name)] = Input(mDeviceId, typeEnum, id, value, true);
 	}
@@ -167,6 +168,9 @@ void InputConfig::writeToXML(pugi::xml_node parent)
 	typedef std::map<std::string, Input>::iterator it_type;
 	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)
 	{
+		if(!iterator->second.configured)
+			continue;
+
 		pugi::xml_node input = cfg.append_child("input");
 		input.append_attribute("name") = iterator->first.c_str();
 		input.append_attribute("type") = inputTypeToString(iterator->second.type).c_str();

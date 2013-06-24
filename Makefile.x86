@@ -1,4 +1,0 @@
-CPPFLAGS=-I/usr/include/freetype2 -I/usr/include/SDL -D_DESKTOP_
-LIBS=-lGL -lfreetype -lSDL -lboost_system -lboost_filesystem -lfreeimage -lSDL_mixer
-
-include Makefile.common

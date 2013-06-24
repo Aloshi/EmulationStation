@@ -4,15 +4,14 @@
 #include "../Log.h"
 #include "../SystemData.h"
 #include "GuiGameList.h"
+#include "../Settings.h"
+#include "GuiSettingsMenu.h"
 
-//defined in main.cpp
-extern bool DONTSHOWEXIT;
-
-GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : Gui(window)
+GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : GuiComponent(window)
 {
 	mParent = parent;
 
-	mList = new GuiList<std::string>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::LARGE));
+	mList = new TextListComponent<std::string>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::LARGE));
 	mList->setSelectedTextColor(0x0000FFFF);
 	populateList();
 }
@@ -22,20 +21,23 @@ GuiMenu::~GuiMenu()
 	delete mList;
 }
 
-void GuiMenu::input(InputConfig* config, Input input)
+bool GuiMenu::input(InputConfig* config, Input input)
 {
 	mList->input(config, input);
 
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		delete this;
-		return;
+		return true;
 	}
 
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		executeCommand(mList->getSelectedObject());
+		return true;
 	}
+
+	return false;
 }
 
 void GuiMenu::executeCommand(std::string command)
@@ -51,6 +53,10 @@ void GuiMenu::executeCommand(std::string command)
 		//reload the game list
 		SystemData::loadConfig();
 		mParent->setSystemId(0);
+	}else if(command == "es_settings")
+	{
+		mWindow->pushGui(new GuiSettingsMenu(mWindow));
+		delete this;
 	}else{
 		if(system(command.c_str()) != 0)
 		{
@@ -68,12 +74,15 @@ void GuiMenu::populateList()
 	//the method is GuiList::addObject(std::string displayString, std::string commandString, unsigned int displayHexColor);
 	//the list will automatically adjust as items are added to it, this should be the only area you need to change
 	//if you want to do something special within ES, override your command in the executeComand() method
+
+	mList->addObject("Settings", "es_settings", 0x0000FFFF);
+
 	mList->addObject("Restart", "sudo shutdown -r now", 0x0000FFFF);
 	mList->addObject("Shutdown", "sudo shutdown -h now", 0x0000FFFF);
 
 	mList->addObject("Reload", "es_reload", 0x0000FFFF);
 
-	if(!DONTSHOWEXIT)
+	if(!Settings::getInstance()->getBool("DONTSHOWEXIT"))
 		mList->addObject("Exit", "exit", 0xFF0000FF); //a special case; pushes an SDL quit event to the event stack instead of being called by system()
 }
 

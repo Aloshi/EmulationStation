@@ -1,4 +1,5 @@
 //EmulationStation, a graphical front-end for ROM browsing. Created by Alec "Aloshi" Lofquist.
+//http://www.aloshi.com
 
 #include <SDL.h>
 #include <iostream>
@@ -12,21 +13,14 @@
 #include "platform.h"
 #include "Log.h"
 #include "Window.h"
+#include "EmulationStation.h"
+#include "Settings.h"
 
 #ifdef _RPI_
 	#include <bcm_host.h>
 #endif
 
 #include <sstream>
-
-//these can be set by command-line arguments
-bool PARSEGAMELISTONLY = false;
-bool IGNOREGAMELIST = false;
-bool DRAWFRAMERATE = false;
-bool DONTSHOWEXIT = false;
-bool DEBUG = false;
-bool WINDOWED = false;
-unsigned int DIMTIME = 30*1000;
 
 namespace fs = boost::filesystem;
 
@@ -48,27 +42,27 @@ int main(int argc, char* argv[])
 				i++; //skip the argument value
 			}else if(strcmp(argv[i], "--gamelist-only") == 0)
 			{
-				PARSEGAMELISTONLY = true;
+				Settings::getInstance()->setBool("PARSEGAMELISTONLY", true);
 			}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
 			{
-				IGNOREGAMELIST = true;
+				Settings::getInstance()->setBool("IGNOREGAMELIST", true);
 			}else if(strcmp(argv[i], "--draw-framerate") == 0)
 			{
-				DRAWFRAMERATE = true;
+				Settings::getInstance()->setBool("DRAWFRAMERATE", true);
 			}else if(strcmp(argv[i], "--no-exit") == 0)
 			{
-				DONTSHOWEXIT = true;
+				Settings::getInstance()->setBool("DONTSHOWEXIT", true);
 			}else if(strcmp(argv[i], "--debug") == 0)
 			{
-				DEBUG = true;
+				Settings::getInstance()->setBool("DEBUG", true);
 				Log::setReportingLevel(LogDebug);
 			}else if(strcmp(argv[i], "--dimtime") == 0)
 			{
-				DIMTIME = atoi(argv[i + 1]) * 1000;
+				Settings::getInstance()->setInt("DIMTIME", atoi(argv[i + 1]) * 1000);
 				i++; //skip the argument value
 			}else if(strcmp(argv[i], "--windowed") == 0)
 			{
-				WINDOWED = true;
+				Settings::getInstance()->setBool("WINDOWED", true);
 			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
@@ -82,7 +76,7 @@ int main(int argc, char* argv[])
 				std::cout << "--debug				even more logging\n";
 				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
 
-				#ifdef _DESKTOP_
+				#ifdef USE_OPENGL_DESKTOP
 					std::cout << "--windowed			not fullscreen\n";
 				#endif
 
@@ -110,6 +104,7 @@ int main(int argc, char* argv[])
 
 	//start the logger
 	Log::open();
+	LOG(LogInfo) << "EmulationStation - " << PROGRAM_VERSION_STRING;
 
 	//the renderer also takes care of setting up SDL for input and sound
 	bool renderInit = Renderer::init(width, height);
@@ -195,9 +190,10 @@ int main(int argc, char* argv[])
 		lastTime = curTime;
 
 		window.update(deltaTime);
+		Renderer::swapBuffers(); //swap here so we can read the last screen state during updates (see ImageComponent::copyScreen())
 		window.render();
 
-		if(DRAWFRAMERATE)
+		if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
 		{
 			static int timeElapsed = 0;
 			static int nrOfFrames = 0;
@@ -221,14 +217,15 @@ int main(int argc, char* argv[])
 		//sleeping entails setting a flag to start skipping frames
 		//and initially drawing a black semi-transparent rect to dim the screen
 		timeSinceLastEvent += deltaTime;
-		if(timeSinceLastEvent >= DIMTIME && DIMTIME != 0)
+		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("DIMTIME") && Settings::getInstance()->getInt("DIMTIME") != 0)
 		{
 			sleeping = true;
 			timeSinceLastEvent = 0;
 			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000A0);
+			Renderer::swapBuffers();
 		}
 
-		Renderer::swapBuffers();
+		
 		Log::flush();
 	}
 

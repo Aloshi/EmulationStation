@@ -14,13 +14,18 @@
 # Dependency makefiles
 *.d
 
-#Compiled executable
+# Compiled executable
 emulationstation
 
-#build directory
-EmulationStation_vs2010
+# build directory
 build
 Debug
 Release
 MinSizeRel
 RelWithDebInfo
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+Makefile

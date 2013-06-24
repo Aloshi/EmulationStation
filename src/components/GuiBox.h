@@ -1,8 +1,8 @@
 #ifndef _GUIBOX_H_
 #define _GUIBOX_H_
 
-#include "../Gui.h"
-#include "GuiImage.h"
+#include "../GuiComponent.h"
+#include "ImageComponent.h"
 #include <string>
 
 struct GuiBoxData
@@ -16,7 +16,7 @@ struct GuiBoxData
 	std::string cornerPath;
 };
 
-class GuiBox : public Gui
+class GuiBox : public GuiComponent
 {
 public:
 	GuiBox(Window* window, int offsetX, int offsetY, unsigned int width, unsigned int height);
@@ -30,17 +30,17 @@ public:
 
 	bool hasBackground();
 
-	void render();
-
 	void init();
 	void deinit();
+
+protected:
+	void onRender();
+
 private:
-	GuiImage mBackgroundImage, mHorizontalImage, mVerticalImage, mCornerImage;
+	ImageComponent mBackgroundImage, mHorizontalImage, mVerticalImage, mCornerImage;
 
 	int getHorizontalBorderWidth();
 	int getVerticalBorderWidth();
-
-	unsigned int mWidth, mHeight;
 };
 
 #endif

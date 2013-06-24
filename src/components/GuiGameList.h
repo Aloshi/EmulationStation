@@ -1,11 +1,12 @@
 #ifndef _GUIGAMELIST_H_
 #define _GUIGAMELIST_H_
 
-#include "../Gui.h"
-#include "GuiList.h"
-#include "GuiImage.h"
-#include "GuiTheme.h"
-#include "GuiAnimation.h"
+#include "../GuiComponent.h"
+#include "TextListComponent.h"
+#include "ImageComponent.h"
+#include "ThemeComponent.h"
+#include "AnimationComponent.h"
+#include "TextComponent.h"
 #include <string>
 #include <stack>
 #include "../SystemData.h"
@@ -13,16 +14,16 @@
 #include "../FolderData.h"
 
 //This is where the magic happens - GuiGameList is the parent of almost every graphical element in ES at the moment.
-//It has a GuiList child that handles the game list, a GuiTheme that handles the theming system, and a GuiImage for game images.
-class GuiGameList : public Gui
+//It has a TextListComponent child that handles the game list, a ThemeComponent that handles the theming system, and an ImageComponent for game images.
+class GuiGameList : public GuiComponent
 {
 public:
 	GuiGameList(Window* window, bool useDetail = false);
-	~GuiGameList();
+	virtual ~GuiGameList();
 
 	void setSystemId(int id);
 
-	void input(InputConfig* config, Input input);
+	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
 	void render();
 
@@ -38,6 +39,8 @@ private:
 	void updateList();
 	void updateTheme();
 	void clearDetailData();
+	void doTransition(int dir);
+
 	std::string getThemeFile();
 
 	SystemData* mSystem;
@@ -46,10 +49,16 @@ private:
 	int mSystemId;
 	bool mDetailed;
 
-	GuiList<FileData*>* mList;
-	GuiImage* mScreenshot;
-	GuiAnimation* mImageAnimation;
-	GuiTheme* mTheme;
+	TextListComponent<FileData*>* mList;
+	ImageComponent* mScreenshot;
+	TextComponent mDescription;
+	AnimationComponent* mImageAnimation;
+	ThemeComponent* mTheme;
+
+	ImageComponent mTransitionImage;
+	AnimationComponent mTransitionAnimation;
+
+	Vector2i getImagePos();
 };
 
 #endif

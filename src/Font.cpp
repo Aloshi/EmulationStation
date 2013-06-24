@@ -5,6 +5,7 @@
 #include "Renderer.h"
 #include <boost/filesystem.hpp>
 #include "Log.h"
+#include "Vector2.h"
 
 FT_Library Font::sLibrary;
 bool Font::libraryInitialized = false;
@@ -199,7 +200,7 @@ void Font::buildAtlas()
 	if((y + maxHeight) >= textureHeight)
 	{
 		//failed to create a proper font texture
-		LOG(LogError) << "Error - font with size " << mSize << " exceeded texture size! Trying again...";
+		LOG(LogWarning) << "Font with size " << mSize << " exceeded max texture size! Trying again...";
 		//try a 3/4th smaller size and redo initialization
 		fontScale *= 1.25f;
 		mSize = (int)(mSize * (1.0f / fontScale));
@@ -207,10 +208,8 @@ void Font::buildAtlas()
 		init();
 	}
 	else {
-		LOG(LogInfo) << "Created font with size " << mSize << std::endl;
+		LOG(LogInfo) << "Created font with size " << mSize << ".";
 	}
-
-	//std::cout << "generated texture \"" << textureID << "\" (w: " << w << " h: " << h << ")" << std::endl;
 }
 
 Font::~Font()
@@ -220,33 +219,10 @@ Font::~Font()
 }
 
 
-
-//why these aren't in an array:
-//openGL reads these in the order they are in memory
-//if I use an array, it will be 4 x values then 4 y values
-//it'll read XX, XX, YY instead of XY, XY, XY
-//...
-//that was the thinking at the time and honestly an array would have been smarter wow I'm dumb
-struct point {
-	GLfloat pos0x;
-	GLfloat pos0y;
-
-	GLfloat pos1x;
-	GLfloat pos1y;
-
-	GLfloat pos2x;
-	GLfloat pos2y;
-};
-
-struct tex {
-	GLfloat tex0x;
-	GLfloat tex0y;
-
-	GLfloat tex1x;
-	GLfloat tex1y;
-
-	GLfloat tex2x;
-	GLfloat tex2y;
+struct Vertex
+{
+	Vector2<GLfloat> pos;
+	Vector2<GLfloat> tex;
 };
 
 void Font::drawText(std::string text, int startx, int starty, int color)
@@ -257,10 +233,9 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		return;
 	}
 
-	int pointCount = text.length() * 2;
-	point* points = new point[pointCount];
-	tex* texs = new tex[pointCount];
-	GLubyte* colors = new GLubyte[pointCount * 3 * 4];
+	const int triCount = text.length() * 2;
+	Vertex* vert = new Vertex[triCount * 3];
+	GLubyte* colors = new GLubyte[triCount * 3 * 4];
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glEnable(GL_TEXTURE_2D);
@@ -274,58 +249,51 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	float x = (float)startx;
 	float y = starty + mMaxGlyphHeight * 1.1f * fontScale; //padding (another 0.5% is added to the bottom through the sizeText function)
 
-	int p = 0;
-	for(int i = 0; p < pointCount; i++, p++)
+	int charNum = 0;
+	for(int i = 0; i < triCount * 3; i += 6, charNum++)
 	{
-		unsigned char letter = text[i];
+		unsigned char letter = text[charNum];
 
 		if(letter < 32 || letter >= 128)
 			letter = 127; //print [X] if character is not standard ASCII
 
-		points[p].pos0x = x;
-		points[p].pos0y = y + (charData[letter].texH - charData[letter].bearingY) * fontScale;
-		points[p].pos1x = x + charData[letter].texW * fontScale;
-		points[p].pos1y = y - charData[letter].bearingY * fontScale;
-		points[p].pos2x = x;
-		points[p].pos2y = points[p].pos1y;
+		//order is bottom left, top right, top left
+		vert[i + 0].pos = Vector2<GLfloat>(x, y + (charData[letter].texH - charData[letter].bearingY) * fontScale);
+		vert[i + 1].pos = Vector2<GLfloat>(x + charData[letter].texW * fontScale, y - charData[letter].bearingY * fontScale);
+		vert[i + 2].pos = Vector2<GLfloat>(x, vert[i + 1].pos.y);
 
-		texs[p].tex0x = charData[letter].texX / tw;
-		texs[p].tex0y = (charData[letter].texY + charData[letter].texH) / th;
-		texs[p].tex1x = (charData[letter].texX + charData[letter].texW) / tw;
-		texs[p].tex1y = charData[letter].texY / th;
-		texs[p].tex2x = texs[p].tex0x;
-		texs[p].tex2y = texs[p].tex1y;
+		Vector2<int> charTexCoord(charData[letter].texX, charData[letter].texY);
+		Vector2<int> charTexSize(charData[letter].texW, charData[letter].texH);
 
-		p++;
+		vert[i + 0].tex = Vector2<GLfloat>(charTexCoord.x / tw, (charTexCoord.y + charTexSize.y) / th);
+		vert[i + 1].tex = Vector2<GLfloat>((charTexCoord.x + charTexSize.x) / tw, charTexCoord.y / th);
+		vert[i + 2].tex = Vector2<GLfloat>(vert[i + 0].tex.x, vert[i + 1].tex.y);
 
-		points[p].pos0x = points[p-1].pos0x;
-		points[p].pos0y = points[p-1].pos0y;
-		points[p].pos1x = points[p-1].pos1x;
-		points[p].pos1y = points[p-1].pos1y;
-		points[p].pos2x = points[p-1].pos1x;
-		points[p].pos2y = points[p-1].pos0y;
+		//next triangle (second half of the quad)
+		vert[i + 3].pos = vert[i + 0].pos;
+		vert[i + 4].pos = vert[i + 1].pos;
+		vert[i + 5].pos.x = vert[i + 1].pos.x;
+		vert[i + 5].pos.y = vert[i + 0].pos.y;
 
-		texs[p].tex0x = texs[p-1].tex0x;
-		texs[p].tex0y = texs[p-1].tex0y;
-		texs[p].tex1x = texs[p-1].tex1x;
-		texs[p].tex1y = texs[p-1].tex1y;
-		texs[p].tex2x = texs[p-1].tex1x;
-		texs[p].tex2y = texs[p-1].tex0y;
+		vert[i + 3].tex = vert[i + 0].tex;
+		vert[i + 4].tex = vert[i + 1].tex;
+		vert[i + 5].tex.x = vert[i + 1].tex.x;
+		vert[i + 5].tex.y = vert[i + 0].tex.y;
 
 		x += charData[letter].advX * fontScale;
 	}
 
-	Renderer::buildGLColorArray(colors, color, pointCount * 3);
+	Renderer::buildGLColorArray(colors, color, triCount * 3);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 
-	glVertexPointer(2, GL_FLOAT, 0, points);
-	glTexCoordPointer(2, GL_FLOAT, 0, texs);
+	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &vert[0].pos);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &vert[0].tex);
 	glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
 
-	glDrawArrays(GL_TRIANGLES, 0, pointCount * 3);
+	glDrawArrays(GL_TRIANGLES, 0, triCount * 3);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -334,14 +302,13 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
 
-	delete[] points;
-	delete[] texs;
+	delete[] vert;
 	delete[] colors;
 }
 
 void Font::sizeText(std::string text, int* w, int* h)
 {
-	int cwidth = 0;
+	float cwidth = 0.0f;
 	for(unsigned int i = 0; i < text.length(); i++)
 	{
 		unsigned char letter = text[i];
@@ -352,10 +319,10 @@ void Font::sizeText(std::string text, int* w, int* h)
 	}
 
 	if(w != NULL)
-		*w = cwidth;
+		*w = (int)cwidth;
 
 	if(h != NULL)
-		*h = (int)(mMaxGlyphHeight * 1.5f * fontScale);
+		*h = getHeight();
 }
 
 int Font::getHeight()

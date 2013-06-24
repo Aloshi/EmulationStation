@@ -5,44 +5,65 @@
 #include "GuiFastSelect.h"
 #include <boost/filesystem.hpp>
 #include "../Log.h"
+#include "../Settings.h"
 
-GuiGameList::GuiGameList(Window* window, bool useDetail) : Gui(window)
+Vector2i GuiGameList::getImagePos()
+{
+	return Vector2i((int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")));
+}
+
+GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window), 
+	mDescription(window), mTransitionImage(window, 0, 0, "", Renderer::getScreenWidth(), Renderer::getScreenHeight(), true)
 {
 	mDetailed = useDetail;
 
-	mTheme = new GuiTheme(mWindow, mDetailed);
+	mTheme = new ThemeComponent(mWindow, mDetailed);
 
 	//The GuiGameList can use the older, simple game list if so desired.
 	//The old view only shows a list in the center of the screen; the new view can display an image and description.
 	//Those with smaller displays may prefer the older view.
 	if(mDetailed)
 	{
-		mList = new GuiList<FileData*>(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
+		mList = new TextListComponent<FileData*>(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")), Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 
-		mScreenshot = new GuiImage(mWindow, (int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")), "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
-		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
-
-		mImageAnimation = new GuiAnimation();
+		mImageAnimation = new AnimationComponent();
 		mImageAnimation->addChild(mScreenshot);
 	}else{
-		mList = new GuiList<FileData*>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
-		mScreenshot = NULL;
-		mImageAnimation = NULL;
+		mList = new TextListComponent<FileData*>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 	}
+
+	mScreenshot = new ImageComponent(mWindow, getImagePos().x, getImagePos().y, "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
+	mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
+
+	mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
+	mDescription.setExtent(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), 0));
+	
+	mTransitionImage.setOffset(Renderer::getScreenWidth(), 0);
+	mTransitionImage.setOrigin(0, 0);
+	mTransitionAnimation.addChild(&mTransitionImage);
+
+	//a hack! the GuiGameList doesn't use the children system right now because I haven't redone it to do so yet.
+	//the list depends on knowing it's final window coordinates (getGlobalOffset), which requires knowing the where the GuiGameList is.
+	//the GuiGameList now moves during screen transitions, so we have to let it know somehow.
+	//this should be removed in favor of using real children soon.
+	mList->setParent(this);
 
 	setSystemId(0);
 }
 
 GuiGameList::~GuiGameList()
 {
+	//undo the parenting hack because otherwise it's not really a child and will try to remove itself on delete
+	mList->setParent(NULL);
 	delete mList;
 
 	if(mDetailed)
 	{
 		delete mImageAnimation;
 		delete mScreenshot;
-		delete mTheme;
 	}
+
+	delete mTheme;
 }
 
 void GuiGameList::setSystemId(int id)
@@ -74,6 +95,13 @@ void GuiGameList::setSystemId(int id)
 
 void GuiGameList::render()
 {
+	if(mTransitionImage.getOffset().x > 0) //transitioning in from the left
+		mOffset.x = mTransitionImage.getOffset().x - Renderer::getScreenWidth();
+	else //transitioning in from the right
+		mOffset.x = mTransitionImage.getOffset().x + Renderer::getScreenWidth();
+
+	Renderer::translate(mOffset);
+
 	if(mTheme)
 		mTheme->render();
 
@@ -86,24 +114,24 @@ void GuiGameList::render()
 		//divider
 		if(!mTheme->getBool("hideDividers"))
 			Renderer::drawRect((int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")) - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
-
-		//if we're not scrolling and we have selected a non-folder
-		if(!mList->isScrolling() && mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
-		{
-			GameData* game = (GameData*)mList->getSelectedObject();
-
-			std::string desc = game->getDescription();
-			if(!desc.empty())
-				Renderer::drawWrappedText(desc, (int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffsetY() + mScreenshot->getHeight() + 12, (int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), mTheme->getColor("description"), mTheme->getDescriptionFont());
-		}
-
+		
 		mScreenshot->render();
+		
+		//if we're not scrolling and we have selected a non-folder
+		if(!mList->isScrolling() && !mList->getSelectedObject()->isFolder())
+		{
+			mDescription.render();
+		}
 	}
 
 	mList->render();
+
+	Renderer::translate(-mOffset);
+
+	mTransitionImage.render();
 }
 
-void GuiGameList::input(InputConfig* config, Input input)
+bool GuiGameList::input(InputConfig* config, Input input)
 {
 	mList->input(config, input);
 
@@ -118,6 +146,8 @@ void GuiGameList::input(InputConfig* config, Input input)
 			mFolderStack.push(mFolder);
 			mFolder = (FolderData*)file;
 			updateList();
+			updateDetailData();
+			return true;
 		}else{
 			mList->stopScrolling();
 
@@ -125,7 +155,7 @@ void GuiGameList::input(InputConfig* config, Input input)
 			while(mTheme->getSound("menuSelect")->isPlaying());
 
 			mSystem->launchGame(mWindow, (GameData*)file);
-			return;
+			return true;
 		}
 	}
 
@@ -139,6 +169,8 @@ void GuiGameList::input(InputConfig* config, Input input)
 
 		//play the back sound
 		mTheme->getSound("menuBack")->play();
+
+		return true;
 	}
 
 	//only allow switching systems if more than one exists (otherwise it'll reset your position when you switch and it's annoying)
@@ -147,10 +179,14 @@ void GuiGameList::input(InputConfig* config, Input input)
 		if(config->isMappedTo("right", input))
 		{
 			setSystemId(mSystemId + 1);
+			doTransition(-1);
+			return true;
 		}
 		if(config->isMappedTo("left", input))
 		{
 			setSystemId(mSystemId - 1);
+			doTransition(1);
+			return true;
 		}
 	}
 
@@ -158,12 +194,14 @@ void GuiGameList::input(InputConfig* config, Input input)
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		mWindow->pushGui(new GuiMenu(mWindow, this));
+		return true;
 	}
 
 	//open the fast select menu
 	if(config->isMappedTo("select", input) && input.value != 0)
 	{
 		mWindow->pushGui(new GuiFastSelect(mWindow, this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont()));
+		return true;
 	}
 
 	if(mDetailed)
@@ -175,7 +213,10 @@ void GuiGameList::input(InputConfig* config, Input input)
 			else
 				clearDetailData();
 		}
+		return true;
 	}
+
+	return false;
 }
 
 void GuiGameList::updateList()
@@ -235,13 +276,15 @@ void GuiGameList::updateTheme()
 	{
 		mList->setCentered(mTheme->getBool("listCentered"));
 
-		mList->setOffsetX((int)(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth()));
+		mList->setOffset((int)(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth()), mList->getOffset().y);
 		mList->setTextOffsetX((int)(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth()));
 
-		mScreenshot->setOffsetX((int)(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth()));
-		mScreenshot->setOffsetY((int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
+		mScreenshot->setOffset((int)(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth()), (int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
 		mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 		mScreenshot->setResize((int)mTheme->getFloat("gameImageWidth"), (int)mTheme->getFloat("gameImageHeight"), false);
+
+		mDescription.setColor(mTheme->getColor("description"));
+		mDescription.setFont(mTheme->getDescriptionFont());
 	}
 }
 
@@ -252,15 +295,19 @@ void GuiGameList::updateDetailData()
 
 	if(mList->getSelectedObject() && !mList->getSelectedObject()->isFolder())
 	{
-		mScreenshot->setOffset((int)((mTheme->getFloat("gameImageOffsetX") - 0.05) * Renderer::getScreenWidth()), (int)(mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight()));
-
 		if(((GameData*)mList->getSelectedObject())->getImagePath().empty())
 			mScreenshot->setImage(mTheme->getString("imageNotFoundPath"));
 		else
 			mScreenshot->setImage(((GameData*)mList->getSelectedObject())->getImagePath());
 
-		mImageAnimation->fadeIn(15);
-		mImageAnimation->move((int)(0.05 * Renderer::getScreenWidth()), 0, 5);
+		Vector2i imgOffset = Vector2i((int)(Renderer::getScreenWidth() * 0.10f), 0);
+		mScreenshot->setOffset(getImagePos() - imgOffset);
+
+		mImageAnimation->fadeIn(35);
+		mImageAnimation->move(imgOffset.x, imgOffset.y, 20);
+
+		mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
+		mDescription.setText(((GameData*)mList->getSelectedObject())->getDescription());
 	}else{
 		mScreenshot->setImage("");
 	}
@@ -296,12 +343,11 @@ void GuiGameList::init()
 	}
 }
 
-extern bool IGNOREGAMELIST; //defined in main.cpp (as a command line argument)
 GuiGameList* GuiGameList::create(Window* window)
 {
 	bool detailed = false;
 
-	if(!IGNOREGAMELIST)
+	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
 	{
 		for(unsigned int i = 0; i < SystemData::sSystemVector.size(); i++)
 		{
@@ -323,5 +369,15 @@ void GuiGameList::update(int deltaTime)
 	if(mDetailed)
 		mImageAnimation->update(deltaTime);
 
+	mTransitionAnimation.update(deltaTime);
+
 	mList->update(deltaTime);
+}
+
+void GuiGameList::doTransition(int dir)
+{
+	mTransitionImage.copyScreen();
+	mTransitionImage.setOpacity(255);
+	mTransitionImage.setOffset(0, 0);
+	mTransitionAnimation.move(Renderer::getScreenWidth() * dir, 0, 50);
 }
