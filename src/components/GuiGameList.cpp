@@ -19,6 +19,8 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window),
 
 	mTheme = new ThemeComponent(mWindow, mDetailed);
 
+	mScreenshot = new ImageComponent(mWindow, getImagePos().x, getImagePos().y, "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
+
 	//The GuiGameList can use the older, simple game list if so desired.
 	//The old view only shows a list in the center of the screen; the new view can display an image and description.
 	//Those with smaller displays may prefer the older view.
@@ -32,7 +34,6 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window),
 		mList = new TextListComponent<FileData*>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::MEDIUM));
 	}
 
-	mScreenshot = new ImageComponent(mWindow, getImagePos().x, getImagePos().y, "", (unsigned int)mTheme->getFloat("gameImageWidth"), (unsigned int)mTheme->getFloat("gameImageHeight"), false);
 	mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 
 	mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
@@ -56,11 +57,11 @@ GuiGameList::~GuiGameList()
 	//undo the parenting hack because otherwise it's not really a child and will try to remove itself on delete
 	mList->setParent(NULL);
 	delete mList;
+	delete mScreenshot;
 
 	if(mDetailed)
 	{
 		delete mImageAnimation;
-		delete mScreenshot;
 	}
 
 	delete mTheme;
