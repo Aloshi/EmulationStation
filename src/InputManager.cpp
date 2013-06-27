@@ -58,7 +58,7 @@ std::vector<InputDevice> InputManager::getInputDevices() const
 			//looks like a joystick. add to devices.
 			currentDevices.push_back(InputDevice(deviceName, 0, 0));
 		}
-		dirIt++;
+		++dirIt;
 	}
 	//or dump /proc/bus/input/devices anbd search for a Handler=..."js"... entry
 #elif defined(WIN32) || defined(_WIN32)
@@ -122,14 +122,13 @@ Uint32 InputManager::devicePollingCallback(Uint32 interval, void* param)
 	//this thing my be running in a different thread, so we're not allowed to call
 	//any functions or change/allocate/delete stuff, but can send a user event
 	SDL_Event event;
-	SDL_UserEvent userevent;
-	userevent.type = SDL_USEREVENT_POLLDEVICES;
-	userevent.code = 0;
-	userevent.data1 = nullptr;
-	userevent.data2 = nullptr;
-	event.type = SDL_USEREVENT;
-	event.user = userevent;
-	SDL_PushEvent(&event);
+	event.user.type = SDL_USEREVENT;
+	event.user.code = SDL_USEREVENT_POLLDEVICES;
+	event.user.data1 = nullptr;
+	event.user.data2 = nullptr;
+	if (SDL_PushEvent(&event) != 0) {
+		LOG(LogError) << "InputManager::devicePollingCallback - SDL event queue is full!";
+	}
 
 	return interval;
 }
@@ -290,15 +289,20 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
 		return true;
 
-	case SDL_USEREVENT_POLLDEVICES:
-		//poll joystick / HID again
-		std::vector<InputDevice> currentDevices = getInputDevices();
-		//compare device lists to see if devices were added/deleted
-		if (currentDevices != inputDevices) {
-			LOG(LogInfo) << "Device configuration changed!";
-			inputDevices = currentDevices;
+	case SDL_USEREVENT:
+		if (ev.user.code == SDL_USEREVENT_POLLDEVICES) {
+			//poll joystick / HID again
+			std::vector<InputDevice> currentDevices = getInputDevices();
+			//compare device lists to see if devices were added/deleted
+			if (currentDevices != inputDevices) {
+				LOG(LogInfo) << "Device configuration changed!";
+				inputDevices = currentDevices;
+				//deinit and reinit InputManager
+				deinit();
+				init();
+			}
+			return true;
 		}
-		return true;
 	}
 
 	return false;

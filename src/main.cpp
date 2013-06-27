@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
 						timeSinceLastEvent = 0;
 					}
 					break;
-				case InputManager::SDL_USEREVENT_POLLDEVICES:
+				case SDL_USEREVENT:
 					//try to poll input devices, but do not necessarily wake up...
 					window.getInputManager()->parseEvent(event);
 					break;
@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
 		if(sleeping)
 		{
 			lastTime = SDL_GetTicks();
-			sleep(1); //this doesn't need to accurate
+			SDL_Delay(1); //this doesn't need to be accurate
 			continue;
 		}
 
@@ -225,7 +225,6 @@ int main(int argc, char* argv[])
 			Renderer::swapBuffers();
 		}
 
-		
 		Log::flush();
 	}
 
