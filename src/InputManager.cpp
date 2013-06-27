@@ -165,14 +165,14 @@ void InputManager::init()
 	SDL_JoystickEventState(SDL_ENABLE);
 
 	//start timer for input device polling
-	devicePollingTimer = SDL_AddTimer(POLLING_INTERVAL, devicePollingCallback, (void *)this);
+	//devicePollingTimer = SDL_AddTimer(POLLING_INTERVAL, devicePollingCallback, (void *)this);
 
 	loadConfig();
 }
 
 void InputManager::deinit()
 {
-	SDL_RemoveTimer(devicePollingTimer);
+	//SDL_RemoveTimer(devicePollingTimer);
 
 	SDL_JoystickEventState(SDL_DISABLE);
 
