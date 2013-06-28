@@ -62,6 +62,17 @@ bool FolderData::compareRating(const FileData* file1, const FileData* file2)
 	return false;
 }
 
+bool FolderData::compareUserRating(const FileData* file1, const FileData* file2)
+{
+	//we need game data. try to cast
+	const GameData * game1 = dynamic_cast<const GameData*>(file1);
+	const GameData * game2 = dynamic_cast<const GameData*>(file2);
+	if (game1 != nullptr && game2 != nullptr) {
+		return game1->getUserRating() < game2->getUserRating();
+	}
+	return false;
+}
+
 bool FolderData::compareTimesPlayed(const FileData* file1, const FileData* file2)
 {
 	//we need game data. try to cast
@@ -69,6 +80,17 @@ bool FolderData::compareTimesPlayed(const FileData* file1, const FileData* file2
 	const GameData * game2 = dynamic_cast<const GameData*>(file2);
 	if (game1 != nullptr && game2 != nullptr) {
 		return game1->getTimesPlayed() < game2->getTimesPlayed();
+	}
+	return false;
+}
+
+bool FolderData::compareLastPlayed(const FileData* file1, const FileData* file2)
+{
+	//we need game data. try to cast
+	const GameData * game1 = dynamic_cast<const GameData*>(file1);
+	const GameData * game2 = dynamic_cast<const GameData*>(file2);
+	if (game1 != nullptr && game2 != nullptr) {
+		return game1->getLastPlayed() < game2->getLastPlayed();
 	}
 	return false;
 }

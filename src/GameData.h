@@ -2,6 +2,8 @@
 #define _GAMEDATA_H_
 
 #include <string>
+#include <ctime>
+
 #include "FileData.h"
 #include "SystemData.h"
 
@@ -18,7 +20,9 @@ public:
 	static const std::string xmlTagDescription;
 	static const std::string xmlTagImagePath;
 	static const std::string xmlTagRating;
+	static const std::string xmlTagUserRating;
 	static const std::string xmlTagTimesPlayed;
+	static const std::string xmlTagLastPlayed;
 
 	GameData(SystemData* system, std::string path, std::string name);
 
@@ -37,8 +41,14 @@ public:
 	float getRating() const;
 	void setRating(float rating);
 
+	float getUserRating() const;
+	void setUserRating(float rating);
+
 	size_t getTimesPlayed() const;
 	void setTimesPlayed(size_t timesPlayed);
+
+	std::time_t getLastPlayed() const;
+	void setLastPlayed(std::time_t lastPlayed);
 
 	std::string getBashPath() const;
 	std::string getBaseName() const;
@@ -53,7 +63,9 @@ private:
 	std::string mDescription;
 	std::string mImagePath;
 	float mRating;
+	float mUserRating;
 	size_t mTimesPlayed;
+	std::time_t mLastPlayed;
 };
 
 #endif

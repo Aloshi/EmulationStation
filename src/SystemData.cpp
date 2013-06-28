@@ -95,8 +95,9 @@ void SystemData::launchGame(Window* window, GameData* game)
 	VolumeControl::getInstance()->init();
 	AudioManager::getInstance()->init();
 
-	//update number of times the game has been launched
+	//update number of times the game has been launched and the time
 	game->setTimesPlayed(game->getTimesPlayed() + 1);
+	game->setLastPlayed(std::time(nullptr));
 }
 
 void SystemData::populateFolder(FolderData* folder)
