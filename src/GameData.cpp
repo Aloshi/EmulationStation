@@ -14,7 +14,7 @@ const std::string GameData::xmlTagTimesPlayed = "timesplayed";
 
 
 GameData::GameData(SystemData* system, std::string path, std::string name)
-	: mSystem(system), mPath(path), mName(name), mRating(0), mTimesPlayed(0)
+	: mSystem(system), mPath(path), mName(name), mRating(0.0f), mTimesPlayed(0)
 {
 }
 
@@ -63,12 +63,12 @@ void GameData::setImagePath(const std::string & imagePath)
 	mImagePath = imagePath;
 }
 
-size_t GameData::getRating() const
+float GameData::getRating() const
 {
 	return mRating;
 }
 
-void GameData::setRating(size_t rating)
+void GameData::setRating(float rating)
 {
 	mRating = rating;
 }

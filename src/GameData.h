@@ -34,8 +34,8 @@ public:
 	const std::string & getImagePath() const;
 	void setImagePath(const std::string & imagePath);
 
-	size_t getRating() const;
-	void setRating(size_t rating);
+	float getRating() const;
+	void setRating(float rating);
 
 	size_t getTimesPlayed() const;
 	void setTimesPlayed(size_t timesPlayed);
@@ -52,7 +52,7 @@ private:
 	//extra data
 	std::string mDescription;
 	std::string mImagePath;
-	size_t mRating;
+	float mRating;
 	size_t mTimesPlayed;
 };
 

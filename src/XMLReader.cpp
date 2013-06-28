@@ -182,7 +182,7 @@ void parseGamelist(SystemData* system)
 			//get rating and the times played from the XML doc
 			if(gameNode.child(GameData::xmlTagRating.c_str()))
 			{
-				size_t rating;
+				float rating;
 				std::istringstream(gameNode.child(GameData::xmlTagRating.c_str()).text().get()) >> rating;
 				game->setRating(rating);
 			}
@@ -190,7 +190,7 @@ void parseGamelist(SystemData* system)
 			{
 				size_t timesPlayed;
 				std::istringstream(gameNode.child(GameData::xmlTagTimesPlayed.c_str()).text().get()) >> timesPlayed;
-				game->setRating(timesPlayed);
+				game->setTimesPlayed(timesPlayed);
 			}
 		}
 		else{
@@ -222,7 +222,7 @@ void addGameDataNode(pugi::xml_node & parent, const GameData * game)
 	}
 	//all other values are added regardless of their value
 	pugi::xml_node ratingNode = newGame.append_child(GameData::xmlTagRating.c_str());
-	ratingNode.text().set(std::to_string((unsigned long long)game->getRating()).c_str());
+	ratingNode.text().set(std::to_string((long double)game->getRating()).c_str());
 	pugi::xml_node timesPlayedNode = newGame.append_child(GameData::xmlTagTimesPlayed.c_str());
 	timesPlayedNode.text().set(std::to_string((unsigned long long)game->getTimesPlayed()).c_str());
 }
