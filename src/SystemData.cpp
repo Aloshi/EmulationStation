@@ -50,6 +50,10 @@ SystemData::SystemData(std::string name, std::string descName, std::string start
 
 SystemData::~SystemData()
 {
+	//save changed game data back to xml
+	if(!Settings::getInstance()->getBool("IGNOREGAMELIST")) {
+		updateGamelist(this);
+	}
 	delete mRootFolder;
 }
 
@@ -90,6 +94,9 @@ void SystemData::launchGame(Window* window, GameData* game)
 	window->init();
 	VolumeControl::getInstance()->init();
 	AudioManager::getInstance()->init();
+
+	//update number of times the game has been launched
+	game->setTimesPlayed(game->getTimesPlayed() + 1);
 }
 
 void SystemData::populateFolder(FolderData* folder)
