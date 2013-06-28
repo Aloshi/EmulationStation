@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <iostream>
 
+
+std::map<FolderData::ComparisonFunction*, std::string> FolderData::sortStateNameMap;
+
 bool FolderData::isFolder() const { return true; }
 const std::string & FolderData::getName() const { return mName; }
 const std::string & FolderData::getPath() const { return mPath; }
@@ -11,10 +14,16 @@ unsigned int FolderData::getFileCount() { return mFileVector.size(); }
 
 
 FolderData::FolderData(SystemData* system, std::string path, std::string name)
+	: mSystem(system), mPath(path), mName(name)
 {
-	mSystem = system;
-	mPath = path;
-	mName = name;
+	//first created folder data initializes the list
+	if (sortStateNameMap.empty()) {
+		sortStateNameMap[compareFileName] = "file name";
+		sortStateNameMap[compareRating] = "rating";
+		sortStateNameMap[compareUserRating] = "user rating";
+		sortStateNameMap[compareTimesPlayed] = "times played";
+		sortStateNameMap[compareLastPlayed] = "last time played";
+	}
 }
 
 FolderData::~FolderData()
@@ -30,6 +39,22 @@ FolderData::~FolderData()
 void FolderData::pushFileData(FileData* file)
 {
 	mFileVector.push_back(file);
+}
+
+//sort this folder and any subfolders
+void FolderData::sort(ComparisonFunction & comparisonFunction, bool ascending)
+{
+	std::sort(mFileVector.begin(), mFileVector.end(), comparisonFunction);
+
+	for(unsigned int i = 0; i < mFileVector.size(); i++)
+	{
+		if(mFileVector.at(i)->isFolder())
+			((FolderData*)mFileVector.at(i))->sort(comparisonFunction, ascending);
+	}
+
+	if (!ascending) {
+		std::reverse(mFileVector.begin(), mFileVector.end());
+	}
 }
 
 //returns if file1 should come before file2
@@ -95,16 +120,16 @@ bool FolderData::compareLastPlayed(const FileData* file1, const FileData* file2)
 	return false;
 }
 
-//sort this folder and any subfolders
-void FolderData::sort()
+std::string FolderData::getSortStateName(ComparisonFunction & comparisonFunction, bool ascending)
 {
-	std::sort(mFileVector.begin(), mFileVector.end(), compareFileName);
-
-	for(unsigned int i = 0; i < mFileVector.size(); i++)
-	{
-		if(mFileVector.at(i)->isFolder())
-			((FolderData*)mFileVector.at(i))->sort();
+	std::string temp = sortStateNameMap[comparisonFunction];
+	if (ascending) {
+		temp.append(" (ascending)");
 	}
+	else {
+		temp.append(" (descending)");
+	}
+	return temp;
 }
 
 FileData* FolderData::getFile(unsigned int i) const

@@ -7,15 +7,31 @@
 #include "../Log.h"
 #include "../Settings.h"
 
+
+std::vector<FolderData::SortState> GuiGameList::sortStates;
+
+
 Vector2i GuiGameList::getImagePos()
 {
 	return Vector2i((int)(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX")), (int)(Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY")));
 }
 
 GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window), 
-	mDescription(window), mTransitionImage(window, 0, 0, "", Renderer::getScreenWidth(), Renderer::getScreenHeight(), true)
+	mDescription(window), mTransitionImage(window, 0, 0, "", Renderer::getScreenWidth(), Renderer::getScreenHeight(), true), mDetailed(useDetail), sortStateIndex(0)
 {
-	mDetailed = useDetail;
+	//first object initializes the vector
+	if (sortStates.empty()) {
+		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, true));
+		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, false));
+		sortStates.push_back(FolderData::SortState(FolderData::compareRating, true));
+		sortStates.push_back(FolderData::SortState(FolderData::compareRating, false));
+		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, true));
+		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, false));
+		sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, true));
+		sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, false));
+		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, true));
+		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, false));
+	}
 
 	mTheme = new ThemeComponent(mWindow, mDetailed);
 
@@ -190,6 +206,16 @@ bool GuiGameList::input(InputConfig* config, Input input)
 		}
 	}
 
+	//change sort order
+	if(config->isMappedTo("sortordernext", input) && input.value != 0) {
+		setNextSortIndex();
+		//std::cout << "Sort order is " << FolderData::getSortStateName(sortStates.at(sortStateIndex).comparisonFunction, sortStates.at(sortStateIndex).ascending) << std::endl;
+	}
+	else if(config->isMappedTo("sortorderprevious", input) && input.value != 0) {
+		setPreviousSortIndex();
+		//std::cout << "Sort order is " << FolderData::getSortStateName(sortStates.at(sortStateIndex).comparisonFunction, sortStates.at(sortStateIndex).ascending) << std::endl;
+	}
+
 	//open the "start menu"
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
@@ -217,6 +243,45 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	}
 
 	return false;
+}
+
+void GuiGameList::setSortIndex(size_t index)
+{
+	//make the index valid
+	if (index >= sortStates.size()) {
+		index = 0;
+	}
+	if (index != sortStateIndex) {
+		//get sort state from vector and sort list
+		sortStateIndex = index;
+		sort(sortStates.at(sortStateIndex).comparisonFunction, sortStates.at(sortStateIndex).ascending);
+	}
+}
+
+void GuiGameList::setNextSortIndex()
+{
+	//make the index wrap around
+	if ((sortStateIndex - 1) >= sortStates.size()) {
+		setSortIndex(0);
+	}
+	setSortIndex(sortStateIndex + 1);
+}
+
+void GuiGameList::setPreviousSortIndex()
+{
+	//make the index wrap around
+	if (((int)sortStateIndex - 1) < 0) {
+		setSortIndex(sortStates.size() - 1);
+	}
+	setSortIndex(sortStateIndex - 1);
+}
+
+void GuiGameList::sort(FolderData::ComparisonFunction & comparisonFunction, bool ascending)
+{
+	//resort list and update it
+	mFolder->sort(comparisonFunction, ascending);
+	updateList();
+	updateDetailData();
 }
 
 void GuiGameList::updateList()

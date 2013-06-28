@@ -17,6 +17,9 @@
 //It has a TextListComponent child that handles the game list, a ThemeComponent that handles the theming system, and an ImageComponent for game images.
 class GuiGameList : public GuiComponent
 {
+	static std::vector<FolderData::SortState> sortStates;
+	size_t sortStateIndex;
+
 public:
 	GuiGameList(Window* window, bool useDetail = false);
 	virtual ~GuiGameList();
@@ -31,6 +34,11 @@ public:
 	void deinit();
 
 	void updateDetailData();
+
+	void setSortIndex(size_t index);
+	void setNextSortIndex();
+	void setPreviousSortIndex();
+	void sort(FolderData::ComparisonFunction & comparisonFunction = FolderData::compareFileName, bool ascending = true);
 
 	static GuiGameList* create(Window* window);
 
