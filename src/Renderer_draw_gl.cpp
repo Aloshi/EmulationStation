@@ -14,18 +14,22 @@ namespace Renderer {
 
 	void setColor4bArray(GLubyte* array, unsigned int color)
 	{
-		array[0] = (color & 0xff000000) / 0x1000000;
-		array[1] = (color & 0x00ff0000) / 0x10000;
-		array[2] = (color & 0x0000ff00) / 0x100;
+		array[0] = (color & 0xff000000) >> 24;
+		array[1] = (color & 0x00ff0000) >> 16;
+		array[2] = (color & 0x0000ff00) >> 8;
 		array[3] = (color & 0x000000ff);
 	}
 
 	void buildGLColorArray(GLubyte* ptr, unsigned int color, unsigned int vertCount)
 	{
+		//convert color from ???? to RGBA?
+		unsigned int colorRGBA;
+		setColor4bArray((GLubyte *)&colorRGBA, color);
+		//write color to unsigned int array
+		GLuint * uiPtr = (GLuint *)ptr;
 		for(unsigned int i = 0; i < vertCount; i++)
 		{
-			setColor4bArray(ptr, color);
-			ptr += 4;
+			uiPtr[i] = colorRGBA;
 		}
 	}
 

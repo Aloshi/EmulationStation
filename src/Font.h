@@ -26,10 +26,11 @@ public:
 		int texW;
 		int texH;
 
-		float advX;
-		float advY;
+		float advX; //!<The horizontal distance to advance to the next character after this one
+		float advY; //!<The vertical distance to advance to the next character after this one
 
-		float bearingY;
+		float bearingX; //!<The horizontal distance from the cursor to the start of the character
+		float bearingY; //!<The vertical distance from the cursor to the start of the character
 	};
 
 	charPosData charData[128];

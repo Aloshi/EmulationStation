@@ -183,9 +183,10 @@ void Font::buildAtlas()
 		charData[i].texY = y;
 		charData[i].texW = g->bitmap.width;
 		charData[i].texH = g->bitmap.rows;
-		charData[i].advX = g->metrics.horiAdvance / 64.0f;
-		charData[i].advY = g->metrics.vertAdvance / 64.0f;
-		charData[i].bearingY = g->metrics.horiBearingY / 64.0f;
+		charData[i].advX = (float)g->metrics.horiAdvance / 64.0f;
+		charData[i].advY = (float)g->metrics.vertAdvance / 64.0f;
+		charData[i].bearingX = (float)g->metrics.horiBearingX / 64.0f;
+		charData[i].bearingY = (float)g->metrics.horiBearingY / 64.0f;
 
 		if(charData[i].texH > mMaxGlyphHeight)
 			mMaxGlyphHeight = charData[i].texH;
@@ -257,10 +258,12 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		if(letter < 32 || letter >= 128)
 			letter = 127; //print [X] if character is not standard ASCII
 
+		//the glyph might not start at the cursor position, but needs to be shifted a bit
+		const float glyphStartX = x + charData[letter].bearingX * fontScale;
 		//order is bottom left, top right, top left
-		vert[i + 0].pos = Vector2<GLfloat>(x, y + (charData[letter].texH - charData[letter].bearingY) * fontScale);
-		vert[i + 1].pos = Vector2<GLfloat>(x + charData[letter].texW * fontScale, y - charData[letter].bearingY * fontScale);
-		vert[i + 2].pos = Vector2<GLfloat>(x, vert[i + 1].pos.y);
+		vert[i + 0].pos = Vector2<GLfloat>(glyphStartX, y + (charData[letter].texH - charData[letter].bearingY) * fontScale);
+		vert[i + 1].pos = Vector2<GLfloat>(glyphStartX + charData[letter].texW * fontScale, y - charData[letter].bearingY * fontScale);
+		vert[i + 2].pos = Vector2<GLfloat>(glyphStartX, vert[i + 1].pos.y);
 
 		Vector2<int> charTexCoord(charData[letter].texX, charData[letter].texY);
 		Vector2<int> charTexSize(charData[letter].texW, charData[letter].texH);
