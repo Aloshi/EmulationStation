@@ -65,6 +65,7 @@ Log::~Log()
 	fprintf(getOutput(), "%s", os.str().c_str());
 
 	//if it's an error, also print to console
-	if(messageLevel == LogError)
+	//print all messages if using --debug
+	if(messageLevel == LogError || reportingLevel >= LogDebug)
 		fprintf(stderr, "%s", os.str().c_str());
 }

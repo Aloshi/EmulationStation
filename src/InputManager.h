@@ -77,6 +77,9 @@ public:
 	bool parseEvent(const SDL_Event& ev);
 
 	InputConfig* getInputConfigByPlayer(int player);
+
+	void startPolling();
+	void stopPolling();
 };
 
 #endif
