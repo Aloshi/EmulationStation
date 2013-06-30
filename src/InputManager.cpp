@@ -423,6 +423,9 @@ void InputManager::loadDefaultConfig()
 
 	cfg->mapInput("mastervolup", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_PLUS, 1, true));
 	cfg->mapInput("mastervoldown", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_MINUS, 1, true));
+
+	cfg->mapInput("sortordernext", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F7, 1, true));
+	cfg->mapInput("sortorderprevious", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F8, 1, true));
 }
 
 void InputManager::writeConfig()
