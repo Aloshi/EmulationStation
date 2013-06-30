@@ -28,7 +28,7 @@ bool InputDevice::operator==(const InputDevice & b) const
 
 InputManager::InputManager(Window* window) : mWindow(window), 
 	mJoysticks(NULL), mInputConfigs(NULL), mKeyboardInputConfig(NULL), mPrevAxisValues(NULL),
-	mNumJoysticks(0), mNumPlayers(0), devicePollingTimer(nullptr)
+	mNumJoysticks(0), mNumPlayers(0), devicePollingTimer(NULL)
 {
 }
 
@@ -164,14 +164,31 @@ void InputManager::init()
 	SDL_JoystickEventState(SDL_ENABLE);
 
 	//start timer for input device polling
-	devicePollingTimer = SDL_AddTimer(POLLING_INTERVAL, devicePollingCallback, (void *)this);
+	startPolling();
 
 	loadConfig();
 }
 
+void InputManager::startPolling()
+{
+	if(devicePollingTimer != NULL)
+		return;
+
+	devicePollingTimer = SDL_AddTimer(POLLING_INTERVAL, devicePollingCallback, (void *)this);
+}
+
+void InputManager::stopPolling()
+{
+	if(devicePollingTimer == NULL)
+		return;
+
+	SDL_RemoveTimer(devicePollingTimer);
+	devicePollingTimer = NULL;
+}
+
 void InputManager::deinit()
 {
-	SDL_RemoveTimer(devicePollingTimer);
+	stopPolling();
 
 	SDL_JoystickEventState(SDL_DISABLE);
 
@@ -380,6 +397,8 @@ void InputManager::loadConfig()
 		LOG(LogInfo) << "No input configs loaded. Loading default keyboard config.";
 		loadDefaultConfig();
 	}
+
+	LOG(LogInfo) << "Loaded InputConfig data for " << getNumPlayers() << " devices.";
 }
 
 //used in an "emergency" where no configs could be loaded from the inputmanager config file
