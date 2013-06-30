@@ -44,6 +44,10 @@ bool GuiDetectDevice::input(InputConfig* config, Input input)
 		if(!input.value)
 			return false;
 
+		//don't allow device list to change once the first player has registered
+		if(mCurrentPlayer == 0)
+			mWindow->getInputManager()->stopPolling();
+
 		config->setPlayerNum(mCurrentPlayer);
 		mWindow->getInputManager()->setNumPlayers(mWindow->getInputManager()->getNumPlayers() + 1); //inc total number of players
 		mCurrentPlayer++;
