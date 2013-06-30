@@ -18,8 +18,9 @@ public:
 	{
 		ComparisonFunction & comparisonFunction;
 		bool ascending;
+        std::string description;
 
-		SortState(ComparisonFunction & sortFunction, bool sortAscending) : comparisonFunction(sortFunction), ascending(sortAscending) {}
+		SortState(ComparisonFunction & sortFunction, bool sortAscending, const std::string & sortDescription) : comparisonFunction(sortFunction), ascending(sortAscending), description(sortDescription) {}
 	};
 
 private:

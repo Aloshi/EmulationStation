@@ -5,6 +5,7 @@
 #include "../SystemData.h"
 #include "../FolderData.h"
 #include "../Sound.h"
+#include "ThemeComponent.h"
 #include "TextListComponent.h"
 #include "GuiBox.h"
 
@@ -13,8 +14,7 @@ class GuiGameList;
 class GuiFastSelect : public GuiComponent
 {
 public:
-	GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, GuiBoxData data, 
-		int textcolor, std::shared_ptr<Sound> & scrollsound, Font* font);
+	GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, ThemeComponent * theme);
 	~GuiFastSelect();
 
 	bool input(InputConfig* config, Input input);
@@ -41,7 +41,7 @@ private:
 	bool mScrolling;
 
 	std::shared_ptr<Sound> mScrollSound;
-	Font* mFont;
+	ThemeComponent * mTheme;
 };
 
 #endif

@@ -21,16 +21,16 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window),
 {
 	//first object initializes the vector
 	if (sortStates.empty()) {
-		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, true));
-		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, false));
-		sortStates.push_back(FolderData::SortState(FolderData::compareRating, true));
-		sortStates.push_back(FolderData::SortState(FolderData::compareRating, false));
-		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, true));
-		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, false));
-		sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, true));
-		sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, false));
-		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, true));
-		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, false));
+		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, true, "file name, ascending"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, false, "file name, descending"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareRating, true, "database rating, ascending"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareRating, false, "database rating, descending"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, true, "your rating, ascending"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, false, "your rating, descending"));
+        sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, true, "played least often"));
+        sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, false, "played most often"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, true, "played least recently"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, false, "played most recently"));
 	}
 
 	mTheme = new ThemeComponent(mWindow, mDetailed);
@@ -227,7 +227,7 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	//open the fast select menu
 	if(config->isMappedTo("select", input) && input.value != 0)
 	{
-		mWindow->pushGui(new GuiFastSelect(mWindow, this, mList, mList->getSelectedObject()->getName()[0], mTheme->getBoxData(), mTheme->getColor("fastSelect"), mTheme->getSound("menuScroll"), mTheme->getFastSelectFont()));
+		mWindow->pushGui(new GuiFastSelect(mWindow, this, mList, mList->getSelectedObject()->getName()[0], mTheme));
 		return true;
 	}
 
@@ -244,6 +244,11 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	}
 
 	return false;
+}
+
+const FolderData::SortState & GuiGameList::getSortState() const
+{
+    return sortStates.at(sortStateIndex);
 }
 
 void GuiGameList::setSortIndex(size_t index)

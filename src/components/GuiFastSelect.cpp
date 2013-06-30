@@ -7,17 +7,15 @@ const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
-GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, GuiBoxData data, 
-	int textcolor, std::shared_ptr<Sound> & scrollsound, Font* font) : GuiComponent(window)
+GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, ThemeComponent * theme)
+    : GuiComponent(window), mParent(parent), mList(list), mTheme(theme)
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
 	if(mLetterID == std::string::npos)
 		mLetterID = 0;
 
-	mParent = parent;
-	mList = list;
-	mScrollSound = scrollsound;
-	mFont = font;
+    mScrollSound = mTheme->getSound("menuScroll");
+    mTextColor = mTheme->getColor("fastSelect");
 
 	mScrolling = false;
 	mScrollTimer = 0;
@@ -25,9 +23,7 @@ GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, TextListCompon
 
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 	mBox = new GuiBox(window, (int)(sw * 0.2f), (int)(sh * 0.2f), (int)(sw * 0.6f), (int)(sh * 0.6f));
-	mBox->setData(data);
-
-	mTextColor = textcolor;
+	mBox->setData(mTheme->getBoxData());
 }
 
 GuiFastSelect::~GuiFastSelect()
@@ -41,11 +37,14 @@ void GuiFastSelect::render()
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 
 	if(!mBox->hasBackground())
-		Renderer::drawRect((int)(sw * 0.2f), (int)(sh * 0.2f), (int)(sw * 0.6f), (int)(sh * 0.6f), 0x000FF0FF);
+		Renderer::drawRect((int)(sw * 0.3f), (int)(sh * 0.3f), (int)(sw * 0.4f), (int)(sh * 0.4f), 0x000FF0AA);
 
 	mBox->render();
 
-	Renderer::drawCenteredText(LETTERS.substr(mLetterID, 1), 0, (int)(sh * 0.5f - (mFont->getHeight() * 0.5f)), mTextColor, mFont);
+	Renderer::drawCenteredText(LETTERS.substr(mLetterID, 1), 0, (int)(sh * 0.5f - (mTheme->getFastSelectFont()->getHeight() * 0.5f)), mTextColor, mTheme->getFastSelectFont());
+    Renderer::drawCenteredText("Sort order:", 0, (int)(sh * 0.6f - (mTheme->getDescriptionFont()->getHeight() * 0.5f)), mTextColor, mTheme->getDescriptionFont());
+    std::string sortString = "<- " + mParent->getSortState().description + " ->";
+    Renderer::drawCenteredText(sortString, 0, (int)(sh * 0.6f + (mTheme->getDescriptionFont()->getHeight() * 0.5f)), mTextColor, mTheme->getDescriptionFont());
 }
 
 bool GuiFastSelect::input(InputConfig* config, Input input)
@@ -61,6 +60,19 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 	{
 		mScrollOffset = 1;
 		scroll();
+		return true;
+	}
+
+	if(config->isMappedTo("left", input) && input.value != 0)
+	{
+		mParent->setPreviousSortIndex();
+        mScrollSound->play();
+		return true;
+	}
+    else if(config->isMappedTo("right", input) && input.value != 0)
+	{
+		mParent->setNextSortIndex();
+        mScrollSound->play();
 		return true;
 	}
 
