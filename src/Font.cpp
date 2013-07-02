@@ -5,7 +5,6 @@
 #include "Renderer.h"
 #include <boost/filesystem.hpp>
 #include "Log.h"
-#include "Vector2.h"
 
 FT_Library Font::sLibrary;
 bool Font::libraryInitialized = false;
@@ -220,13 +219,14 @@ Font::~Font()
 }
 
 
-struct Vertex
-{
-	Vector2<GLfloat> pos;
-	Vector2<GLfloat> tex;
-};
-
 void Font::drawText(std::string text, int startx, int starty, int color)
+{
+	TextCache* cache = buildTextCache(text, startx, starty, color);
+	renderTextCache(cache);
+	delete cache;
+}
+
+void Font::renderTextCache(TextCache* cache)
 {
 	if(!textureID)
 	{
@@ -234,24 +234,92 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		return;
 	}
 
-	const int triCount = text.length() * 2;
-	Vertex* vert = new Vertex[triCount * 3];
-	GLubyte* colors = new GLubyte[triCount * 3 * 4];
+	if(cache == NULL)
+	{
+		LOG(LogError) << "Attempted to draw NULL TextCache!";
+		return;
+	}
+
+	if(cache->sourceFont != this)
+	{
+		LOG(LogError) << "Attempted to draw TextCache with font other than its source!";
+		return;
+	}
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+
+	glVertexPointer(2, GL_FLOAT, sizeof(TextCache::Vertex), &cache->verts[0].pos);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(TextCache::Vertex), &cache->verts[0].tex);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 0, cache->colors);
+
+	glDrawArrays(GL_TRIANGLES, 0, cache->vertCount);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_BLEND);
+}
+
+void Font::sizeText(std::string text, int* w, int* h)
+{
+	float cwidth = 0.0f;
+	for(unsigned int i = 0; i < text.length(); i++)
+	{
+		unsigned char letter = text[i];
+		if(letter < 32 || letter >= 128)
+			letter = 127;
+
+		cwidth += charData[letter].advX * fontScale;
+	}
+
+	if(w != NULL)
+		*w = (int)cwidth;
+
+	if(h != NULL)
+		*h = getHeight();
+}
+
+int Font::getHeight()
+{
+	return (int)(mMaxGlyphHeight * 1.5f * fontScale);
+}
+
+
+//=============================================================================================================
+//TextCache
+//=============================================================================================================
+
+TextCache* Font::buildTextCache(const std::string& text, int offsetX, int offsetY, unsigned int color)
+{
+	if(!textureID)
+	{
+		LOG(LogError) << "Error - tried to build TextCache with Font that has no texture loaded!";
+		return NULL;
+	}
+
+	const int triCount = text.length() * 2;
+	const int vertCount = triCount * 3;
+	TextCache::Vertex* vert = new TextCache::Vertex[vertCount];
+	GLubyte* colors = new GLubyte[vertCount * 4];
+
 	//texture atlas width/height
 	float tw = (float)textureWidth;
 	float th = (float)textureHeight;
 
-	float x = (float)startx;
-	float y = starty + mMaxGlyphHeight * 1.1f * fontScale; //padding (another 0.5% is added to the bottom through the sizeText function)
+	float x = (float)offsetX;
+	float y = offsetY + mMaxGlyphHeight * 1.1f * fontScale; //padding (another 0.5% is added to the bottom through the sizeText function)
 
 	int charNum = 0;
-	for(int i = 0; i < triCount * 3; i += 6, charNum++)
+	for(int i = 0; i < vertCount; i += 6, charNum++)
 	{
 		unsigned char letter = text[charNum];
 
@@ -286,49 +354,24 @@ void Font::drawText(std::string text, int startx, int starty, int color)
 		x += charData[letter].advX * fontScale;
 	}
 
-	Renderer::buildGLColorArray(colors, color, triCount * 3);
+	TextCache* cache = new TextCache(vertCount, vert, colors, this);
+	if(color != 0x00000000)
+		cache->setColor(color);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
+	return cache;
+}
 
-	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &vert[0].pos);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &vert[0].tex);
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+TextCache::TextCache(int verts, Vertex* v, GLubyte* c, Font* f) : vertCount(verts), verts(v), colors(c), sourceFont(f)
+{
+}
 
-	glDrawArrays(GL_TRIANGLES, 0, triCount * 3);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
-
-	delete[] vert;
+TextCache::~TextCache()
+{
+	delete[] verts;
 	delete[] colors;
 }
 
-void Font::sizeText(std::string text, int* w, int* h)
+void TextCache::setColor(unsigned int color)
 {
-	float cwidth = 0.0f;
-	for(unsigned int i = 0; i < text.length(); i++)
-	{
-		unsigned char letter = text[i];
-		if(letter < 32 || letter >= 128)
-			letter = 127;
-
-		cwidth += charData[letter].advX * fontScale;
-	}
-
-	if(w != NULL)
-		*w = (int)cwidth;
-
-	if(h != NULL)
-		*h = getHeight();
-}
-
-int Font::getHeight()
-{
-	return (int)(mMaxGlyphHeight * 1.5f * fontScale);
+	Renderer::buildGLColorArray(const_cast<GLubyte*>(colors), color, vertCount);
 }

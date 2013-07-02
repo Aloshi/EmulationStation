@@ -21,13 +21,13 @@ class GuiGameList : public GuiComponent
 	size_t sortStateIndex;
 
 public:
-	GuiGameList(Window* window, bool useDetail = false);
+	GuiGameList(Window* window);
 	virtual ~GuiGameList();
 
 	void setSystemId(int id);
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
+	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
 	void render();
 
 	void init();
@@ -42,6 +42,8 @@ public:
 
 	static GuiGameList* create(Window* window);
 
+	bool isDetailed() const;
+
 	static const float sInfoWidth;
 private:
 	void updateList();
@@ -55,12 +57,11 @@ private:
 	FolderData* mFolder;
 	std::stack<FolderData*> mFolderStack;
 	int mSystemId;
-	bool mDetailed;
 
-	TextListComponent<FileData*>* mList;
-	ImageComponent* mScreenshot;
+	TextListComponent<FileData*> mList;
+	ImageComponent mScreenshot;
 	TextComponent mDescription;
-	AnimationComponent* mImageAnimation;
+	AnimationComponent mImageAnimation;
 	ThemeComponent* mTheme;
 
 	ImageComponent mTransitionImage;

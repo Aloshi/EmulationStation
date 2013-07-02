@@ -252,4 +252,61 @@ namespace Renderer {
 		}
 	}
 
+	void sizeWrappedText(std::string text, int xLen, Font* font, int* xOut, int* yOut)
+	{
+		*xOut = xLen;
+
+		int y = 0;
+
+		std::string line, word, temp;
+		int w, h;
+		size_t space, newline;
+
+		while(text.length() > 0 || !line.empty()) //while there's text or we still have text to render
+		{
+			space = text.find(' ', 0);
+			if(space == std::string::npos)
+				space = text.length() - 1;
+
+			word = text.substr(0, space + 1);
+
+			//check if the next word contains a newline
+			newline = word.find('\n', 0);
+			if(newline != std::string::npos)
+			{
+				word = word.substr(0, newline);
+				text.erase(0, newline + 1);
+			}else{
+				text.erase(0, space + 1);
+			}
+
+			temp = line + word;
+
+			font->sizeText(temp, &w, &h);
+
+			//if we're on the last word and it'll fit on the line, just add it to the line
+			if((w <= xLen && text.length() == 0) || newline != std::string::npos)
+			{
+				line = temp;
+				word = "";
+			}
+
+			//if the next line will be too long or we're on the last of the text, render it
+			if(w > xLen || text.length() == 0 || newline != std::string::npos)
+			{
+				//increment y by height and some extra padding for the next line
+				y += h + 4;
+
+				//move the word we skipped to the next line
+				line = word;
+			}else{
+				//there's still space, continue building the line
+				line = temp;
+			}
+
+		}
+
+		*yOut = y;
+	}
+
 };

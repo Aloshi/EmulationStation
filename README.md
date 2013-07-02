@@ -120,7 +120,7 @@ The gamelist.xml for a system defines metadata for a system's games. This metada
 
 **Making a gamelist.xml by hand sucks, so a cool guy named Pendor made a python script which automatically generates a gamelist.xml for you, with boxart automatically downloaded. It can be found here:** https://github.com/elpendor/ES-scraper
 
-If a file named gamelist.xml is found in the root of a system's search directory OR within `~/.emulationstation/%NAME%/`, it will be parsed and the detailed GuiGameList will be used. This means you can define images, descriptions, and different names for files. Note that only standard ASCII characters are supported (if you see a weird [X] symbol, you're probably using unicode!).
+If a file named gamelist.xml is found in the root of a system's search directory OR within `~/.emulationstation/%NAME%/`, game metadata will be loaded from it. This allows you to define images, descriptions, and different names for files. Note that only standard ASCII characters are supported for text (if you see a weird [X] symbol, you're probably using unicode!).
 Images will be automatically resized to fit within the left column of the screen. Smaller images will load faster, so try to keep your resolution low.
 An example gamelist.xml:
 ```
