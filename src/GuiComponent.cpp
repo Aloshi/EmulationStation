@@ -156,3 +156,14 @@ GuiComponent* GuiComponent::getParent()
 {
 	return mParent;
 }
+
+
+unsigned char GuiComponent::getOpacity()
+{
+	return mOpacity;
+}
+
+void GuiComponent::setOpacity(unsigned char opacity)
+{
+	mOpacity = opacity;
+}

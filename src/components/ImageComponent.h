@@ -38,9 +38,6 @@ public:
 	void init();
 	void deinit();
 
-	unsigned char getOpacity();
-	void setOpacity(unsigned char opacity);
-
 protected:
 	void onRender();
 
@@ -50,8 +47,6 @@ private:
 	Vector2f mOrigin;
 
 	bool mAllowUpscale, mTiled, mFlipX, mFlipY;
-
-	unsigned char mOpacity;
 
 	void loadImage(std::string path);
 	void resize();
