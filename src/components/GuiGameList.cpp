@@ -30,7 +30,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mImageAnimation.addChild(&mScreenshot);
 
 	//scale delay with screen width (higher width = more text per line)
-	//the scroll speed is automatically scrolled by component size
+	//the scroll speed is automatically scaled by component size
 	mDescription.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
 
 	mTransitionImage.setOffset(Renderer::getScreenWidth(), 0);
