@@ -30,7 +30,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mScreenshot(window),
 	mDescription(window), 
 	mTransitionImage(window, 0, 0, "", Renderer::getScreenWidth(), Renderer::getScreenHeight(), true),
-    sortStateIndex(0)
+    sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex"))
 {
 	//first object initializes the vector
 	if (sortStates.empty()) {
@@ -247,6 +247,8 @@ void GuiGameList::setSortIndex(size_t index)
 		sortStateIndex = index;
 		sort(sortStates.at(sortStateIndex).comparisonFunction, sortStates.at(sortStateIndex).ascending);
 	}
+    //save new index to settings
+    Settings::getInstance()->setInt("GameListSortIndex", sortStateIndex);
 }
 
 void GuiGameList::setNextSortIndex()

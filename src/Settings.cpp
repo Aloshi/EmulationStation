@@ -33,6 +33,8 @@ void Settings::setDefaults()
 	mBoolMap["WINDOWED"] = false;
 
 	mIntMap["DIMTIME"] = 30*1000;
+
+    mIntMap["GameListSortIndex"] = 0;
 }
 
 template <typename K, typename V>
