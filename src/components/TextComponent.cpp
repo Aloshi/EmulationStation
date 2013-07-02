@@ -74,7 +74,7 @@ void TextComponent::onRender()
 
 	Renderer::pushClipRect(getGlobalOffset(), getSize());
 
-	Renderer::drawWrappedText(mText, (int)-mScrollPos.x, (int)-mScrollPos.y, mSize.x, mColor, font);
+	Renderer::drawWrappedText(mText, (int)-mScrollPos.x, (int)-mScrollPos.y, mSize.x, mColor >> 8 << 8  | getOpacity(), font);
 
 	Renderer::popClipRect();
 
