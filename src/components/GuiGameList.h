@@ -35,6 +35,7 @@ public:
 
 	void updateDetailData();
 
+    const FolderData::SortState & getSortState() const;
 	void setSortIndex(size_t index);
 	void setNextSortIndex();
 	void setPreviousSortIndex();
