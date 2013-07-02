@@ -59,10 +59,8 @@ Font* ThemeComponent::getFastSelectFont()
 		return mFastSelectFont;
 }
 
-ThemeComponent::ThemeComponent(Window* window, bool detailed, std::string path) : GuiComponent(window)
+ThemeComponent::ThemeComponent(Window* window) : GuiComponent(window)
 {
-	mDetailed = detailed;
-
 	mSoundMap["menuScroll"] = std::shared_ptr<Sound>(new Sound);
 	mSoundMap["menuSelect"] = std::shared_ptr<Sound>(new Sound);
 	mSoundMap["menuBack"] = std::shared_ptr<Sound>(new Sound);
@@ -79,9 +77,6 @@ ThemeComponent::ThemeComponent(Window* window, bool detailed, std::string path) 
 	mFastSelectFont = NULL;
 
 	setDefaults();
-
-	if(!path.empty())
-		readXML(path);
 }
 
 ThemeComponent::~ThemeComponent()
@@ -159,7 +154,7 @@ void ThemeComponent::deleteComponents()
 
 
 
-void ThemeComponent::readXML(std::string path)
+void ThemeComponent::readXML(std::string path, bool detailed)
 {
 	if(mPath == path)
 		return;
@@ -185,7 +180,7 @@ void ThemeComponent::readXML(std::string path)
 
 	pugi::xml_node root;
 
-	if(!mDetailed)
+	if(!detailed)
 	{
 		//if we're using the basic view, check if there's a basic version of the theme
 		root = doc.child("basicTheme");

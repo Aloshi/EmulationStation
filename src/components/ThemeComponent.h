@@ -13,10 +13,10 @@
 class ThemeComponent : public GuiComponent
 {
 public:
-	ThemeComponent(Window* window, bool detailed, std::string path = "");
+	ThemeComponent(Window* window);
 	virtual ~ThemeComponent();
 
-	void readXML(std::string path);
+	void readXML(std::string path, bool detailed);
 
 	GuiBoxData getBoxData();
 
@@ -48,7 +48,6 @@ private:
 	Font* resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize);
 
 	std::string mPath;
-	bool mDetailed;
 
 	std::map<std::string, unsigned int> mColorMap;
 	std::map<std::string, bool> mBoolMap;
