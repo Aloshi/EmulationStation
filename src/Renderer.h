@@ -43,6 +43,7 @@ namespace Renderer
 	void drawText(std::string text, int x, int y, unsigned int color, Font* font);
 	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color, Font* font);
 	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, unsigned int color, Font* font);
+	void sizeWrappedText(std::string text, int xLen, Font* font, int* xOut, int* yOut);
 }
 
 #endif

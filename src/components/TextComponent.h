@@ -16,15 +16,29 @@ public:
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
 
-	void onRender();
+	Vector2d getScrollPos() const;
+	void setScrollPos(const Vector2d& pos);
+	void setAutoScroll(int delay, double speed); //Use 0 for speed to disable.
+	void resetAutoScrollTimer();
+
+	void update(int deltaTime) override;
+	void onRender() override;
 
 private:
+	Font* getFont() const;
 	void calculateExtent();
 
 	unsigned int mColor;
 	Font* mFont;
 	bool mAutoCalcExtent;
 	std::string mText;
+
+	//scrolling
+	Vector2d mScrollPos;
+	Vector2d mScrollDir;
+	int mAutoScrollDelay;
+	double mAutoScrollSpeed;
+	int mAutoScrollTimer;
 };
 
 #endif

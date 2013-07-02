@@ -36,9 +36,11 @@ GuiGameList::GuiGameList(Window* window, bool useDetail) : GuiComponent(window),
 
 	mScreenshot->setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 
-	mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
-	mDescription.setExtent(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), 0));
-	
+	mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), getImagePos().y + mScreenshot->getSize().y + 12));
+	//scale delay with screen width (higher width = more text per line)
+	//the scroll speed is automatically scrolled by component size
+	mDescription.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
+
 	mTransitionImage.setOffset(Renderer::getScreenWidth(), 0);
 	mTransitionImage.setOrigin(0, 0);
 	mTransitionAnimation.addChild(&mTransitionImage);
@@ -307,7 +309,8 @@ void GuiGameList::updateDetailData()
 		mImageAnimation->fadeIn(35);
 		mImageAnimation->move(imgOffset.x, imgOffset.y, 20);
 
-		mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), mScreenshot->getOffset().y + mScreenshot->getSize().y + 12));
+		mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), getImagePos().y + mScreenshot->getSize().y + 12));
+		mDescription.setExtent(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), Renderer::getScreenHeight() - mDescription.getOffset().y));
 		mDescription.setText(((GameData*)mList->getSelectedObject())->getDescription());
 	}else{
 		mScreenshot->setImage("");
@@ -373,6 +376,8 @@ void GuiGameList::update(int deltaTime)
 	mTransitionAnimation.update(deltaTime);
 
 	mList->update(deltaTime);
+
+	mDescription.update(deltaTime);
 }
 
 void GuiGameList::doTransition(int dir)
