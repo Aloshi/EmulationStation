@@ -18,12 +18,12 @@ public:
 
 	void update(int deltaTime);
 
-	void addChild(ImageComponent* gui);
+	void addChild(GuiComponent* gui);
 
 private:
 	unsigned char mOpacity;
 
-	std::vector<ImageComponent*> mChildren;
+	std::vector<GuiComponent*> mChildren;
 
 	void moveChildren(int offsetx, int offsety);
 	void setChildrenOpacity(unsigned char opacity);
