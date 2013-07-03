@@ -159,7 +159,7 @@ void SystemData::populateFolder(FolderData* folder)
 		//add directories that also do not match an extension as folders
 		if(!isGame && fs::is_directory(filePath))
 		{
-			FolderData* newFolder = new FolderData(this, filePath.string(), filePath.stem().string());
+			FolderData* newFolder = new FolderData(this, filePath.generic_string(), filePath.stem().string());
 			populateFolder(newFolder);
 
 			//ignore folders that do not contain games
@@ -233,7 +233,11 @@ void SystemData::loadConfig()
 						sysPath = varValue.substr(0, varValue.length() - 1);
 					else
 						sysPath = varValue;
-				}else if(varName == "EXTENSION")
+					//convert path to generic directory seperators
+					boost::filesystem::path genericPath(sysPath);
+					sysPath = genericPath.generic_string();
+				}
+				else if(varName == "EXTENSION")
 					sysExtension = varValue;
 				else if(varName == "COMMAND")
 					sysCommand = varValue;
