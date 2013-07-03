@@ -71,12 +71,10 @@ void Font::initLibrary()
 
 Font::Font(int size) : fontScale(1.0f), mSize(size)
 {
-	LOG(LogInfo) << "CREATING FONT (" << mSize << ")";
 }
 
 Font::~Font()
 {
-	LOG(LogInfo) << "~~~DESTROYING FONT (" << mSize << ")";
 	deinit();
 }
 
