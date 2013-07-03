@@ -40,20 +40,49 @@ std::shared_ptr<TextureResource> ResourceManager::getTexture(const std::string& 
 	return mTextureMap[path].lock();
 }
 
+std::shared_ptr<Font> ResourceManager::getFont(const std::string& path, int size)
+{
+	if(path.empty() || size == 0)
+		return std::shared_ptr<Font>(); //NULL pointer
+
+	std::pair<std::string, int> fontDef(path, size);
+	if(mFontMap[fontDef].expired())
+	{
+		std::shared_ptr<Font> ret(new Font(size));
+		mFontMap[fontDef] = std::weak_ptr<Font>(ret);
+
+		initializeResource(path, ret);
+
+		return ret;
+	}
+
+	return mFontMap[fontDef].lock();
+}
+
 void ResourceManager::init()
 {
 	for(auto iter = mTextureMap.begin(); iter != mTextureMap.end(); iter++)
 	{
 		if(!iter->second.expired())
-		{
 			initializeResource(iter->first, iter->second.lock());
-		}
+	}
+
+	for(auto iter = mFontMap.begin(); iter != mFontMap.end(); iter++)
+	{
+		if(!iter->second.expired())
+			initializeResource(iter->first.first, iter->second.lock());
 	}
 }
 
 void ResourceManager::deinit()
 {
 	for(auto iter = mTextureMap.begin(); iter != mTextureMap.end(); iter++)
+	{
+		if(!iter->second.expired())
+			iter->second.lock()->deinit();
+	}
+
+	for(auto iter = mFontMap.begin(); iter != mFontMap.end(); iter++)
 	{
 		if(!iter->second.expired())
 			iter->second.lock()->deinit();

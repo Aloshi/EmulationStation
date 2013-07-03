@@ -19,7 +19,7 @@ template <typename T>
 class TextListComponent : public GuiComponent
 {
 public:
-	TextListComponent(Window* window, int offsetX, int offsetY, Font* font);
+	TextListComponent(Window* window, int offsetX, int offsetY, std::shared_ptr<Font> font);
 	virtual ~TextListComponent();
 
 	bool input(InputConfig* config, Input input);
@@ -44,7 +44,7 @@ public:
 	T getObject(int i);
 	void setSelection(int i);
 
-	void setFont(Font* f);
+	void setFont(std::shared_ptr<Font> f);
 
 protected:
 	void onRender();
@@ -62,7 +62,7 @@ private:
 	int mMarqueeOffset;
 	int mMarqueeTime;
 
-	Font* mFont;
+	std::shared_ptr<Font> mFont;
 	unsigned int mSelectorColor, mSelectedTextColorOverride;
 	bool mDrawCentered;
 
@@ -81,7 +81,7 @@ private:
 };
 
 template <typename T>
-TextListComponent<T>::TextListComponent(Window* window, int offsetX, int offsetY, Font* font) : GuiComponent(window)
+TextListComponent<T>::TextListComponent(Window* window, int offsetX, int offsetY, std::shared_ptr<Font> font) : GuiComponent(window)
 {
 	mSelection = 0;
 	mScrollDir = 0;
@@ -132,7 +132,7 @@ void TextListComponent<T>::onRender()
 
 	if(mRowVector.size() == 0)
 	{
-		Renderer::drawCenteredText("The list is empty.", 0, y, 0xFF0000FF, mFont);
+		mFont->drawCenteredText("The list is empty.", 0, y, 0xFF0000FF);
 		return;
 	}
 
@@ -156,9 +156,9 @@ void TextListComponent<T>::onRender()
 		unsigned int color = (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color;
 
 		if(mDrawCentered)
-			Renderer::drawCenteredText(row.name, x, y, color, mFont);
+			mFont->drawCenteredText(row.name, x, y, color);
 		else
-			Renderer::drawText(row.name, x, y, color, mFont);
+			mFont->drawText(row.name, x, y, color);
 
 		y += entrySize;
 	}
@@ -202,7 +202,6 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 				return true;
 			}
 		}else{
-			//if((button == InputManager::DOWN && mScrollDir > 0) || (button == InputManager::PAGEDOWN && mScrollDir > 0) || (button == InputManager::UP && mScrollDir < 0) || (button == InputManager::PAGEUP && mScrollDir < 0))
 			if(config->isMappedTo("down", input) || config->isMappedTo("up", input) || config->isMappedTo("pagedown", input) || config->isMappedTo("pageup", input))
 			{
 				stopScrolling();
@@ -397,7 +396,7 @@ void TextListComponent<T>::setScrollSound(std::shared_ptr<Sound> & sound)
 }
 
 template <typename T>
-void TextListComponent<T>::setFont(Font* font)
+void TextListComponent<T>::setFont(std::shared_ptr<Font> font)
 {
 	mFont = font;
 }

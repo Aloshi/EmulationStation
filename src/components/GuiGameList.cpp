@@ -26,7 +26,7 @@ bool GuiGameList::isDetailed() const
 
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
 	mTheme(new ThemeComponent(mWindow)),
-	mList(window, 0, 0, Renderer::getDefaultFont(Renderer::MEDIUM)),
+	mList(window, 0, 0, window->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM)), 
 	mScreenshot(window),
 	mDescription(window), 
 	mDescContainer(window), 
@@ -114,15 +114,17 @@ void GuiGameList::render()
 	if(mTheme)
 		mTheme->render();
 
+	std::shared_ptr<Font> headerFont = mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_LARGE);
+
 	//header
 	if(!mTheme->getBool("hideHeader"))
-		Renderer::drawCenteredText(mSystem->getDescName(), 0, 1, 0xFF0000FF, Renderer::getDefaultFont(Renderer::LARGE));
+		headerFont->drawCenteredText(mSystem->getDescName(), 0, 1, 0xFF0000FF);
 
 	if(isDetailed())
 	{
 		//divider
 		if(!mTheme->getBool("hideDividers"))
-			Renderer::drawRect((int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")) - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
+			Renderer::drawRect((int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")) - 4, headerFont->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
 		
 		mScreenshot.render();
 		mDescContainer.render();
@@ -324,7 +326,7 @@ void GuiGameList::updateTheme()
 	mList.setScrollSound(mTheme->getSound("menuScroll"));
 
 	mList.setFont(mTheme->getListFont());
-	mList.setOffset(0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2);
+	mList.setOffset(0, FONT_SIZE_LARGE + 2);
 
 	if(isDetailed())
 	{

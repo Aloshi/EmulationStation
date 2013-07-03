@@ -5,7 +5,7 @@
 #include <map>
 #include "Resource.h"
 #include "TextureResource.h"
-
+#include "../Font.h"
 
 //The ResourceManager exists to:
 //1. Automatically deal with initializing/deinitializing various resources (OpenGL textures, SDL audio)
@@ -22,6 +22,7 @@ class ResourceManager
 {
 public:
 	std::shared_ptr<TextureResource> getTexture(const std::string& path);
+	std::shared_ptr<Font> getFont(const std::string& path, int size);
 
 	void init();
 	void deinit();
@@ -31,4 +32,6 @@ private:
 	ResourceData loadFile(const std::string& path);
 
 	std::map< std::string, std::weak_ptr<TextureResource> > mTextureMap;
+
+	std::map< std::pair<std::string, int>, std::weak_ptr<Font> > mFontMap;
 };

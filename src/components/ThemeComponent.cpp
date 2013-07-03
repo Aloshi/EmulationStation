@@ -35,28 +35,28 @@ std::string ThemeComponent::getString(std::string name)
 
 GuiBoxData ThemeComponent::getBoxData() { return mBoxData; }
 
-Font* ThemeComponent::getListFont()
+std::shared_ptr<Font> ThemeComponent::getListFont()
 {
-	if(mListFont == NULL)
-		return Renderer::getDefaultFont(Renderer::MEDIUM);
-	else
+	if(mListFont)
 		return mListFont;
-}
-
-Font* ThemeComponent::getDescriptionFont()
-{
-	if(mDescFont == NULL)
-		return Renderer::getDefaultFont(Renderer::SMALL);
 	else
-		return mDescFont;
+		return mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM);
 }
 
-Font* ThemeComponent::getFastSelectFont()
+std::shared_ptr<Font> ThemeComponent::getDescriptionFont()
+{
+	if(mDescFont)
+		return mDescFont;
+	else
+		return mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_SMALL);
+}
+
+std::shared_ptr<Font> ThemeComponent::getFastSelectFont()
 {
 	if(mFastSelectFont == NULL)
-		return Renderer::getDefaultFont(Renderer::LARGE);
-	else
 		return mFastSelectFont;
+	else
+		return mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_LARGE);
 }
 
 ThemeComponent::ThemeComponent(Window* window) : GuiComponent(window)
@@ -72,9 +72,9 @@ ThemeComponent::ThemeComponent(Window* window) : GuiComponent(window)
 	AudioManager::getInstance()->registerSound(mSoundMap["menuBack"]);
 	AudioManager::getInstance()->registerSound(mSoundMap["menuOpen"]);
 
-	mListFont = NULL;
-	mDescFont = NULL;
-	mFastSelectFont = NULL;
+	mListFont.reset();
+	mDescFont.reset();
+	mFastSelectFont.reset();
 
 	setDefaults();
 }
@@ -102,7 +102,7 @@ void ThemeComponent::setDefaults()
 	mFloatMap["gameImageOriginX"] = 0.5;
 	mFloatMap["gameImageOriginY"] = 0;
 	mFloatMap["gameImageOffsetX"] = mFloatMap["listOffsetX"] / 2;
-	mFloatMap["gameImageOffsetY"] = (float)Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / (float)Renderer::getScreenHeight();
+	mFloatMap["gameImageOffsetY"] = (float)FONT_SIZE_LARGE / (float)Renderer::getScreenHeight();
 	mFloatMap["gameImageWidth"] = mFloatMap["listOffsetX"];
 	mFloatMap["gameImageHeight"] = 0;
 
@@ -121,22 +121,9 @@ void ThemeComponent::setDefaults()
 	mBoxData.verticalTiled = false;
 	mBoxData.cornerPath = "";
 
-	if(mListFont != NULL)
-	{
-		delete mListFont;
-		mListFont = NULL;
-	}
-
-	if(mDescFont != NULL)
-	{
-		delete mDescFont;
-		mDescFont = NULL;
-	}
-	if(mFastSelectFont != NULL)
-	{
-		delete mFastSelectFont;
-		mFastSelectFont = NULL;
-	}
+	mListFont.reset();
+	mDescFont.reset();
+	mFastSelectFont.reset();
 }
 
 void ThemeComponent::deleteComponents()
@@ -148,10 +135,8 @@ void ThemeComponent::deleteComponents()
 
 	clearChildren();
 
-	//deletes fonts if any were created
 	setDefaults();
 }
-
 
 
 void ThemeComponent::readXML(std::string path, bool detailed)
@@ -248,9 +233,9 @@ void ThemeComponent::readXML(std::string path, bool detailed)
 	mSoundMap["menuOpen"]->loadFile(expandPath(root.child("menuOpenSound").text().get()));
 
 	//fonts
-	mListFont = resolveFont(root.child("listFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::MEDIUM)->getSize());
-	mDescFont = resolveFont(root.child("descriptionFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::SMALL)->getSize());
-	mFastSelectFont = resolveFont(root.child("fastSelectFont"), Font::getDefaultPath(), Renderer::getDefaultFont(Renderer::LARGE)->getSize());
+	mListFont = resolveFont(root.child("listFont"), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
+	mDescFont = resolveFont(root.child("descriptionFont"), Font::getDefaultPath(), FONT_SIZE_SMALL);
+	mFastSelectFont = resolveFont(root.child("fastSelectFont"), Font::getDefaultPath(), FONT_SIZE_LARGE);
 
 	//actually read the components
 	createComponentChildren(root, this);
@@ -348,7 +333,7 @@ float ThemeComponent::resolveExp(std::string str, float defaultVal)
 	exp.setExpression(str);
 
 	//set variables
-	exp.setVariable("headerHeight", (float)(Renderer::getDefaultFont(Renderer::LARGE)->getHeight() / Renderer::getScreenHeight()));
+	exp.setVariable("headerHeight", (float)(FONT_SIZE_LARGE / Renderer::getScreenHeight()));
 	exp.setVariable("infoWidth", mFloatMap["listOffsetX"]);
 
 	return exp.eval();
@@ -407,7 +392,7 @@ float ThemeComponent::strToFloat(std::string str, float defaultVal)
 	return ret;
 }
 
-Font* ThemeComponent::resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize)
+std::shared_ptr<Font> ThemeComponent::resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize)
 {
 	if(!node)
 		return NULL;
@@ -425,25 +410,5 @@ Font* ThemeComponent::resolveFont(pugi::xml_node node, std::string defaultPath, 
 		size = defaultSize;
 	}
 
-	return new Font(path, size);
-}
-
-void ThemeComponent::init()
-{
-	//fonts are special
-	if(mListFont)	mListFont->init();
-	if(mDescFont)	mDescFont->init();
-	if(mFastSelectFont)	mFastSelectFont->init();
-
-	GuiComponent::init();
-}
-
-void ThemeComponent::deinit()
-{
-	GuiComponent::deinit();
-
-	//fonts are special
-	if(mListFont)	mListFont->deinit();
-	if(mDescFont)	mDescFont->deinit();
-	if(mFastSelectFont)	mFastSelectFont->deinit();
+	return mWindow->getResourceManager()->getFont(path, size);
 }

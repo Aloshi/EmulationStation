@@ -7,6 +7,10 @@
 Window::Window()
 {
 	mInputManager = new InputManager(this);
+
+	mDefaultFonts.push_back(mResourceManager.getFont(Font::getDefaultPath(), FONT_SIZE_SMALL));
+	mDefaultFonts.push_back(mResourceManager.getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM));
+	mDefaultFonts.push_back(mResourceManager.getFont(Font::getDefaultPath(), FONT_SIZE_LARGE));
 }
 
 Window::~Window()

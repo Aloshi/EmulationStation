@@ -69,23 +69,25 @@ void Font::initLibrary()
 	}
 }
 
-Font::Font(std::string path, int size)
-	: fontScale(1.0f)
+Font::Font(int size) : fontScale(1.0f), mSize(size)
 {
-	mPath = path;
-	mSize = size;
-
-	init();
+	LOG(LogInfo) << "CREATING FONT (" << mSize << ")";
 }
 
-void Font::init()
+Font::~Font()
+{
+	LOG(LogInfo) << "~~~DESTROYING FONT (" << mSize << ")";
+	deinit();
+}
+
+void Font::init(ResourceData data)
 {
 	if(!libraryInitialized)
 		initLibrary();
 
 	mMaxGlyphHeight = 0;
 
-	buildAtlas();
+	buildAtlas(data);
 }
 
 void Font::deinit()
@@ -94,11 +96,11 @@ void Font::deinit()
 		glDeleteTextures(1, &textureID);
 }
 
-void Font::buildAtlas()
+void Font::buildAtlas(ResourceData data)
 {
-	if(FT_New_Face(sLibrary, mPath.c_str(), 0, &face))
+	if(FT_New_Memory_Face(sLibrary, data.ptr, data.length, 0, &face))
 	{
-		LOG(LogError) << "Error creating font face! (path: " << mPath.c_str();
+		LOG(LogError) << "Error creating font face!";
 		return;
 	}
 
@@ -205,17 +207,11 @@ void Font::buildAtlas()
 		fontScale *= 1.25f;
 		mSize = (int)(mSize * (1.0f / fontScale));
 		deinit();
-		init();
+		init(data);
 	}
 	else {
-		LOG(LogInfo) << "Created font with size " << mSize << ".";
+		//LOG(LogInfo) << "Created font with size " << mSize << ".";
 	}
-}
-
-Font::~Font()
-{
-	if(textureID)
-		glDeleteTextures(1, &textureID);
 }
 
 
@@ -292,6 +288,144 @@ int Font::getHeight()
 {
 	return (int)(mMaxGlyphHeight * 1.5f * fontScale);
 }
+
+
+
+
+void Font::drawCenteredText(std::string text, int xOffset, int y, unsigned int color)
+{
+	int w, h;
+	sizeText(text, &w, &h);
+
+	int x = Renderer::getScreenWidth() - w;
+	x = x / 2;
+	x += xOffset / 2;
+
+	drawText(text, x, y, color);
+}
+
+//this could probably be optimized
+//draws text and ensures it's never longer than xLen
+void Font::drawWrappedText(std::string text, int xStart, int yStart, int xLen, unsigned int color)
+{
+	int y = yStart;
+
+	std::string line, word, temp;
+	int w, h;
+	size_t space, newline;
+
+	while(text.length() > 0 || !line.empty()) //while there's text or we still have text to render
+	{
+		space = text.find(' ', 0);
+		if(space == std::string::npos)
+			space = text.length() - 1;
+
+
+		word = text.substr(0, space + 1);
+
+		//check if the next word contains a newline
+		newline = word.find('\n', 0);
+		if(newline != std::string::npos)
+		{
+			word = word.substr(0, newline);
+			text.erase(0, newline + 1);
+		}else{
+			text.erase(0, space + 1);
+		}
+
+		temp = line + word;
+
+		sizeText(temp, &w, &h);
+
+		//if we're on the last word and it'll fit on the line, just add it to the line
+		if((w <= xLen && text.length() == 0) || newline != std::string::npos)
+		{
+			line = temp;
+			word = "";
+		}
+
+
+		//if the next line will be too long or we're on the last of the text, render it
+		if(w > xLen || text.length() == 0 || newline != std::string::npos)
+		{
+			//render line now
+			if(w > 0) //make sure it's not blank
+				drawText(line, xStart, y, color);
+
+			//increment y by height and some extra padding for the next line
+			y += h + 4;
+
+			//move the word we skipped to the next line
+			line = word;
+		}else{
+			//there's still space, continue building the line
+			line = temp;
+		}
+
+	}
+}
+
+void Font::sizeWrappedText(std::string text, int xLen, int* xOut, int* yOut)
+{
+	//this is incorrect for text that is so short it doesn't need to wrap
+	if(xOut != NULL)
+		*xOut = xLen;
+
+	int y = 0;
+
+	std::string line, word, temp;
+	int w, h;
+	size_t space, newline;
+
+	while(text.length() > 0 || !line.empty()) //while there's text or we still have text to render
+	{
+		space = text.find(' ', 0);
+		if(space == std::string::npos)
+			space = text.length() - 1;
+
+		word = text.substr(0, space + 1);
+
+		//check if the next word contains a newline
+		newline = word.find('\n', 0);
+		if(newline != std::string::npos)
+		{
+			word = word.substr(0, newline);
+			text.erase(0, newline + 1);
+		}else{
+			text.erase(0, space + 1);
+		}
+
+		temp = line + word;
+
+		sizeText(temp, &w, &h);
+
+		//if we're on the last word and it'll fit on the line, just add it to the line
+		if((w <= xLen && text.length() == 0) || newline != std::string::npos)
+		{
+			line = temp;
+			word = "";
+		}
+
+		//if the next line will be too long or we're on the last of the text, render it
+		if(w > xLen || text.length() == 0 || newline != std::string::npos)
+		{
+			//increment y by height and some extra padding for the next line
+			y += h + 4;
+
+			//move the word we skipped to the next line
+			line = word;
+		}else{
+			//there's still space, continue building the line
+			line = temp;
+		}
+
+	}
+
+	if(yOut != NULL)
+		*yOut = y;
+}
+
+
 
 
 //=============================================================================================================

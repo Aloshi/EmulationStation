@@ -41,10 +41,11 @@ void GuiFastSelect::render()
 
 	mBox->render();
 
-	Renderer::drawCenteredText(LETTERS.substr(mLetterID, 1), 0, (int)(sh * 0.5f - (mTheme->getFastSelectFont()->getHeight() * 0.5f)), mTextColor, mTheme->getFastSelectFont());
-    Renderer::drawCenteredText("Sort order:", 0, (int)(sh * 0.6f - (mTheme->getDescriptionFont()->getHeight() * 0.5f)), mTextColor, mTheme->getDescriptionFont());
+	mTheme->getFastSelectFont()->drawCenteredText(LETTERS.substr(mLetterID, 1), 0, (int)(sh * 0.5f - (mTheme->getFastSelectFont()->getHeight() * 0.5f)), mTextColor);
+    mTheme->getDescriptionFont()->drawCenteredText("Sort order:", 0, (int)(sh * 0.6f - (mTheme->getDescriptionFont()->getHeight() * 0.5f)), mTextColor);
+
     std::string sortString = "<- " + mParent->getSortState().description + " ->";
-    Renderer::drawCenteredText(sortString, 0, (int)(sh * 0.6f + (mTheme->getDescriptionFont()->getHeight() * 0.5f)), mTextColor, mTheme->getDescriptionFont());
+    mTheme->getDescriptionFont()->drawCenteredText(sortString, 0, (int)(sh * 0.6f + (mTheme->getDescriptionFont()->getHeight() * 0.5f)), mTextColor);
 }
 
 bool GuiFastSelect::input(InputConfig* config, Input input)
