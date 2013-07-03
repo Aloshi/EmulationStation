@@ -25,13 +25,15 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mList(window, 0, 0, Renderer::getDefaultFont(Renderer::MEDIUM)),
 	mScreenshot(window),
 	mDescription(window), 
+	mDescContainer(window), 
 	mTransitionImage(window, 0, 0, "", Renderer::getScreenWidth(), Renderer::getScreenHeight(), true)
 {
 	mImageAnimation.addChild(&mScreenshot);
+	mDescContainer.addChild(&mDescription);
 
 	//scale delay with screen width (higher width = more text per line)
 	//the scroll speed is automatically scaled by component size
-	mDescription.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
+	mDescContainer.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
 
 	mTransitionImage.setOffset(Renderer::getScreenWidth(), 0);
 	mTransitionImage.setOrigin(0, 0);
@@ -104,7 +106,7 @@ void GuiGameList::render()
 			Renderer::drawRect((int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")) - 4, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
 		
 		mScreenshot.render();
-		mDescription.render();
+		mDescContainer.render();
 	}
 
 	mList.render();
@@ -290,8 +292,13 @@ void GuiGameList::updateDetailData()
 			mImageAnimation.fadeIn(35);
 			mImageAnimation.move(imgOffset.x, imgOffset.y, 20);
 
-			mDescription.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), getImagePos().y + mScreenshot.getSize().y + 12));
-			mDescription.setExtent(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), Renderer::getScreenHeight() - mDescription.getOffset().y));
+			mDescContainer.setOffset(Vector2i((int)(Renderer::getScreenWidth() * 0.03), getImagePos().y + mScreenshot.getSize().y + 12));
+			mDescContainer.setSize(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), Renderer::getScreenHeight() - mDescContainer.getOffset().y));
+			mDescContainer.setScrollPos(Vector2d(0, 0));
+			mDescContainer.resetAutoScrollTimer();
+
+			mDescription.setOffset(0, 0);
+			mDescription.setExtent(Vector2u((int)(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03)), 0));
 			mDescription.setText(((GameData*)mList.getSelectedObject())->getDescription());
 		}else{
 			mScreenshot.setImage("");
@@ -340,7 +347,7 @@ void GuiGameList::update(int deltaTime)
 
 	mList.update(deltaTime);
 
-	mDescription.update(deltaTime);
+	mDescContainer.update(deltaTime);
 }
 
 void GuiGameList::doTransition(int dir)

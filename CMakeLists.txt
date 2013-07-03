@@ -135,6 +135,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
@@ -175,6 +176,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp

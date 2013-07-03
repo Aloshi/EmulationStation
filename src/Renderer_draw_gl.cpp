@@ -254,7 +254,8 @@ namespace Renderer {
 
 	void sizeWrappedText(std::string text, int xLen, Font* font, int* xOut, int* yOut)
 	{
-		*xOut = xLen;
+		if(xOut != NULL)
+			*xOut = xLen;
 
 		int y = 0;
 
@@ -306,7 +307,8 @@ namespace Renderer {
 
 		}
 
-		*yOut = y;
+		if(yOut != NULL)
+			*yOut = y;
 	}
 
 };
