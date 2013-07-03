@@ -1,8 +1,11 @@
 #ifndef _FOLDER_H_
 #define _FOLDER_H_
 
-#include "FileData.h"
+#include <map>
 #include <vector>
+
+#include "FileData.h"
+
 
 class SystemData;
 
@@ -10,19 +13,42 @@ class SystemData;
 class FolderData : public FileData
 {
 public:
+	typedef bool ComparisonFunction(const FileData* a, const FileData* b);
+	struct SortState
+	{
+		ComparisonFunction & comparisonFunction;
+		bool ascending;
+        std::string description;
+
+		SortState(ComparisonFunction & sortFunction, bool sortAscending, const std::string & sortDescription) : comparisonFunction(sortFunction), ascending(sortAscending), description(sortDescription) {}
+	};
+
+private:
+	static std::map<ComparisonFunction*, std::string> sortStateNameMap;
+
+public:
 	FolderData(SystemData* system, std::string path, std::string name);
 	~FolderData();
 
-	bool isFolder();
-	std::string getName();
-	std::string getPath();
+	bool isFolder() const;
+	const std::string & getName() const;
+	const std::string & getPath() const;
 
 	unsigned int getFileCount();
-	FileData* getFile(unsigned int i);
+	FileData* getFile(unsigned int i) const;
+	std::vector<FileData*> getFiles(bool onlyFiles = false) const;
+	std::vector<FileData*> getFilesRecursive(bool onlyFiles = false) const;
 
 	void pushFileData(FileData* file);
 
-	void sort();
+	void sort(ComparisonFunction & comparisonFunction = compareFileName, bool ascending = true);
+	static bool compareFileName(const FileData* file1, const FileData* file2);
+	static bool compareRating(const FileData* file1, const FileData* file2);
+	static bool compareUserRating(const FileData* file1, const FileData* file2);
+	static bool compareTimesPlayed(const FileData* file1, const FileData* file2);
+	static bool compareLastPlayed(const FileData* file1, const FileData* file2);
+	static std::string getSortStateName(ComparisonFunction & comparisonFunction = compareFileName, bool ascending = true);
+
 private:
 	SystemData* mSystem;
 	std::string mPath;

@@ -36,6 +36,9 @@ public:
 	virtual void onOffsetChanged() {};
 
 	Vector2u getSize();
+    void setSize(Vector2u size);
+    void setSize(unsigned int w, unsigned int h);
+    virtual void onSizeChanged() {};
 	
 	void setParent(GuiComponent* parent);
 	GuiComponent* getParent();
