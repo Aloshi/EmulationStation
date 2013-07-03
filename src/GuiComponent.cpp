@@ -102,6 +102,19 @@ Vector2u GuiComponent::getSize()
 	return mSize;
 }
 
+void GuiComponent::setSize(Vector2u size)
+{
+    mSize = size;
+    onSizeChanged();
+}
+
+void GuiComponent::setSize(unsigned int w, unsigned int h)
+{
+    mSize.x = w;
+    mSize.y = h;
+    onSizeChanged();
+}
+
 //Children stuff.
 void GuiComponent::addChild(GuiComponent* cmp)
 {

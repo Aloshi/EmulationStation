@@ -117,19 +117,19 @@ void parseGamelist(SystemData* system)
 		return;
 	}
 
-	pugi::xml_node root = doc.child("gameList");
+	pugi::xml_node root = doc.child(GameData::xmlTagGameList.c_str());
 	if(!root)
 	{
-		LOG(LogError) << "Could not find <gameList> node in gamelist \"" << xmlpath << "\"!";
+		LOG(LogError) << "Could not find <" << GameData::xmlTagGameList << "> node in gamelist \"" << xmlpath << "\"!";
 		return;
 	}
 
-	for(pugi::xml_node gameNode = root.child("game"); gameNode; gameNode = gameNode.next_sibling("game"))
+	for(pugi::xml_node gameNode = root.child(GameData::xmlTagGame.c_str()); gameNode; gameNode = gameNode.next_sibling(GameData::xmlTagGame.c_str()))
 	{
-		pugi::xml_node pathNode = gameNode.child("path");
+		pugi::xml_node pathNode = gameNode.child(GameData::xmlTagPath.c_str());
 		if(!pathNode)
 		{
-			LOG(LogError) << "<game> node contains no <path> child!";
+			LOG(LogError) << "<" << GameData::xmlTagGame << "> node contains no <" << GameData::xmlTagPath << "> child!";
 			continue;
 		}
 
@@ -152,13 +152,17 @@ void parseGamelist(SystemData* system)
 			//actually gather the information in the XML doc, then pass it to the game's set method
 			std::string newName, newDesc, newImage;
 
-			if(gameNode.child("name"))
-				newName = gameNode.child("name").text().get();
-			if(gameNode.child("desc"))
-				newDesc = gameNode.child("desc").text().get();
-			if(gameNode.child("image"))
+			if(gameNode.child(GameData::xmlTagName.c_str()))
 			{
-				newImage = gameNode.child("image").text().get();
+				game->setName(gameNode.child(GameData::xmlTagName.c_str()).text().get());
+			}
+			if(gameNode.child(GameData::xmlTagDescription.c_str())) 
+			{
+				game->setDescription(gameNode.child(GameData::xmlTagDescription.c_str()).text().get());
+			}
+			if(gameNode.child(GameData::xmlTagImagePath.c_str()))
+			{
+				newImage = gameNode.child(GameData::xmlTagImagePath.c_str()).text().get();
 
 				//expand "."
 				if(newImage[0] == '.')
@@ -168,15 +172,148 @@ void parseGamelist(SystemData* system)
 					newImage.insert(0, pathname.parent_path().string() );
 				}
 
-				//if the image doesn't exist, forget it
-				if(!boost::filesystem::exists(newImage))
-					newImage = "";
+				//if the image exist, set it
+				if(boost::filesystem::exists(newImage))
+				{
+					game->setImagePath(newImage);
+				}
 			}
 
-			game->set(newName, newDesc, newImage);
-
-		}else{
+			//get rating and the times played from the XML doc
+			if(gameNode.child(GameData::xmlTagRating.c_str()))
+			{
+				float rating;
+				std::istringstream(gameNode.child(GameData::xmlTagRating.c_str()).text().get()) >> rating;
+				game->setRating(rating);
+			}
+			if(gameNode.child(GameData::xmlTagUserRating.c_str()))
+			{
+				float userRating;
+				std::istringstream(gameNode.child(GameData::xmlTagUserRating.c_str()).text().get()) >> userRating;
+				game->setUserRating(userRating);
+			}
+			if(gameNode.child(GameData::xmlTagTimesPlayed.c_str()))
+			{
+				size_t timesPlayed;
+				std::istringstream(gameNode.child(GameData::xmlTagTimesPlayed.c_str()).text().get()) >> timesPlayed;
+				game->setTimesPlayed(timesPlayed);
+			}
+			if(gameNode.child(GameData::xmlTagLastPlayed.c_str()))
+			{
+				std::time_t lastPlayed;
+				std::istringstream(gameNode.child(GameData::xmlTagLastPlayed.c_str()).text().get()) >> lastPlayed;
+				game->setLastPlayed(lastPlayed);
+			}
+		}
+		else{
 			LOG(LogWarning) << "Game at \"" << path << "\" does not exist!";
 		}
+	}
+}
+
+void addGameDataNode(pugi::xml_node & parent, const GameData * game)
+{
+	//create game and add to parent node
+	pugi::xml_node newGame = parent.append_child(GameData::xmlTagGame.c_str());
+	//add values
+	if (!game->getPath().empty()) {
+		pugi::xml_node pathNode = newGame.append_child(GameData::xmlTagPath.c_str());
+		pathNode.text().set(game->getPath().c_str());
+	}
+	if (!game->getName().empty()) {
+		pugi::xml_node nameNode = newGame.append_child(GameData::xmlTagName.c_str());
+		nameNode.text().set(game->getName().c_str());
+	}
+	if (!game->getDescription().empty()) {
+		pugi::xml_node descriptionNode = newGame.append_child(GameData::xmlTagDescription.c_str());
+		descriptionNode.text().set(game->getDescription().c_str());
+	}
+	if (!game->getImagePath().empty()) {
+		pugi::xml_node imagePathNode = newGame.append_child(GameData::xmlTagImagePath.c_str());
+		imagePathNode.text().set(game->getImagePath().c_str());
+	}
+	//all other values are added regardless of their value
+	pugi::xml_node ratingNode = newGame.append_child(GameData::xmlTagRating.c_str());
+	ratingNode.text().set(std::to_string((long double)game->getRating()).c_str());
+
+	pugi::xml_node userRatingNode = newGame.append_child(GameData::xmlTagUserRating.c_str());
+	userRatingNode.text().set(std::to_string((long double)game->getUserRating()).c_str());
+
+	pugi::xml_node timesPlayedNode = newGame.append_child(GameData::xmlTagTimesPlayed.c_str());
+	timesPlayedNode.text().set(std::to_string((unsigned long long)game->getTimesPlayed()).c_str());
+
+	pugi::xml_node lastPlayedNode = newGame.append_child(GameData::xmlTagLastPlayed.c_str());
+	lastPlayedNode.text().set(std::to_string((unsigned long long)game->getLastPlayed()).c_str());
+}
+
+void updateGamelist(SystemData* system)
+{
+	//We do this by reading the XML again, adding changes and then writing it back,
+	//because there might be information missing in our systemdata which would then miss in the new XML.
+	//We have the complete information for every game though, so we can simply remove a game
+	//we already have in the system from the XML, and then add it back from its GameData information...
+
+	std::string xmlpath = system->getGamelistPath();
+	if(xmlpath.empty()) {
+		return;
+	}
+
+	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\" before writing...";
+
+	pugi::xml_document doc;
+	pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
+
+	if(!result) {
+		LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
+		return;
+	}
+
+	pugi::xml_node root = doc.child(GameData::xmlTagGameList.c_str());
+	if(!root) {
+		LOG(LogError) << "Could not find <" << GameData::xmlTagGameList << "> node in gamelist \"" << xmlpath << "\"!";
+		return;
+	}
+
+	//now we have all the information from the XML. now iterate through all our games and add information from there
+	FolderData * rootFolder = system->getRootFolder();
+	if (rootFolder != nullptr) {
+		//get only files, no folders
+		std::vector<FileData*> files = rootFolder->getFilesRecursive(true);
+		//iterate through all files, checking if they're already in the XML
+		std::vector<FileData*>::const_iterator fit = files.cbegin();
+		while(fit != files.cend()) {
+			//try to cast to gamedata
+			const GameData * game = dynamic_cast<const GameData*>(*fit);
+			if (game != nullptr) {
+				//worked. check if this games' path can be found somewhere in the XML
+				for(pugi::xml_node gameNode = root.child(GameData::xmlTagGame.c_str()); gameNode; gameNode = gameNode.next_sibling(GameData::xmlTagGame.c_str())) {
+					//get path from game node
+					pugi::xml_node pathNode = gameNode.child(GameData::xmlTagPath.c_str());
+					if(!pathNode)
+					{
+						LOG(LogError) << "<" << GameData::xmlTagGame << "> node contains no <" << GameData::xmlTagPath << "> child!";
+						continue;
+					}
+					//check path
+					if (pathNode.text().get() == game->getPath()) {
+						//found the game. remove it. it will be added again later with updated values
+						root.remove_child(gameNode);
+						//break node search loop
+						break;
+					}
+				}
+				//either the game content was removed, because it needs to be updated,
+				//or didn't exist in the first place, so just add it
+				addGameDataNode(root, game);
+			}
+			++fit;
+		}
+		//now write the file
+		if (!doc.save_file(xmlpath.c_str())) {
+			LOG(LogError) << "Error saving XML file \"" << xmlpath << "\"!";
+		}
+	}
+	else {
+		LOG(LogError) << "Found no root folder for system \"" << system->getName() << "\"!";
 	}
 }
