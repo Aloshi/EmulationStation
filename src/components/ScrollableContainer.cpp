@@ -15,8 +15,6 @@ void ScrollableContainer::render()
 
 	Renderer::translatef(translate.x, translate.y);
 	
-	Renderer::drawRect(0, 0, 800, 800, 0xFF0000FF);
-
 	GuiComponent::onRender();
 
 	Renderer::translatef(-translate.x, -translate.y);
