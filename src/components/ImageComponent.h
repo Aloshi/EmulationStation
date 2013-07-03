@@ -32,9 +32,6 @@ public:
 
 	bool hasImage();
 
-	unsigned char getOpacity();
-	void setOpacity(unsigned char opacity);
-
 protected:
 	void onRender();
 
@@ -43,8 +40,6 @@ private:
 	Vector2f mOrigin;
 
 	bool mAllowUpscale, mTiled, mFlipX, mFlipY;
-
-	unsigned char mOpacity;
 
 	void resize();
 	void buildImageArray(int x, int y, GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1); //writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position

@@ -6,6 +6,9 @@
 #include GLHEADER
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include "Vector2.h"
+
+class TextCache;
 
 //A TrueType Font renderer that uses FreeType and OpenGL.
 //The library is automatically initialized when it's needed.
@@ -37,8 +40,12 @@ public:
 
 	GLuint textureID;
 
-	void drawText(std::string text, int startx, int starty, int color); //Render some text using this font.
-	void sizeText(std::string text, int* w, int* h); //Sets the width and height of a given string to given pointers. Skipped if pointer is NULL.
+	TextCache* buildTextCache(const std::string& text, int offsetX, int offsetY, unsigned int color);
+	void renderTextCache(TextCache* cache);
+
+	//Create a TextCache, render with it, then delete it.  Best used for short text or text that changes frequently.
+	void drawText(std::string text, int startx, int starty, int color);
+	void sizeText(std::string text, int* w, int* h); //Sets the width and height of a given string to supplied pointers. A dimension is skipped if its pointer is NULL.
 	int getHeight();
 
 	void init();
@@ -63,6 +70,26 @@ private:
 
 	std::string mPath;
 	int mSize;
+};
+
+class TextCache
+{
+public:
+	struct Vertex
+	{
+		Vector2<GLfloat> pos;
+		Vector2<GLfloat> tex;
+	};
+
+	void setColor(unsigned int color);
+
+	TextCache(int verts, Vertex* v, GLubyte* c, Font* f);
+	~TextCache();
+
+	const int vertCount;
+	const Vertex* verts;
+	const GLubyte* colors;
+	const Font* sourceFont;
 };
 
 #endif

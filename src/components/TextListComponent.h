@@ -117,7 +117,7 @@ void TextListComponent<T>::onRender()
 
 	//number of entries that can fit on the screen simultaniously
 	int screenCount = (Renderer::getScreenHeight() - cutoff) / entrySize;
-	//screenCount -= 1;
+	screenCount -= 1;
 
 	if((int)mRowVector.size() >= screenCount)
 	{

@@ -76,7 +76,7 @@ void AnimationComponent::update(int deltaTime)
 	}
 }
 
-void AnimationComponent::addChild(ImageComponent* gui)
+void AnimationComponent::addChild(GuiComponent* gui)
 {
 	mChildren.push_back(gui);
 }
@@ -86,7 +86,7 @@ void AnimationComponent::moveChildren(int offsetx, int offsety)
 	Vector2i move(offsetx, offsety);
 	for(unsigned int i = 0; i < mChildren.size(); i++)
 	{
-		ImageComponent* comp = mChildren.at(i);
+		GuiComponent* comp = mChildren.at(i);
 		comp->setOffset(comp->getOffset() + move);
 	}
 }

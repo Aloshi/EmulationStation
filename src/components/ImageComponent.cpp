@@ -224,8 +224,6 @@ bool ImageComponent::hasImage()
 	return !mPath.empty();
 }
 
-unsigned char ImageComponent::getOpacity() { return mOpacity; }
-void ImageComponent::setOpacity(unsigned char opacity) { mOpacity = opacity; }
 
 void ImageComponent::copyScreen()
 {

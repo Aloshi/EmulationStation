@@ -12,19 +12,23 @@
 #include "../SystemData.h"
 #include "../GameData.h"
 #include "../FolderData.h"
+#include "ScrollableContainer.h"
 
 //This is where the magic happens - GuiGameList is the parent of almost every graphical element in ES at the moment.
 //It has a TextListComponent child that handles the game list, a ThemeComponent that handles the theming system, and an ImageComponent for game images.
 class GuiGameList : public GuiComponent
 {
+	static std::vector<FolderData::SortState> sortStates;
+	size_t sortStateIndex;
+
 public:
-	GuiGameList(Window* window, bool useDetail = false);
+	GuiGameList(Window* window);
 	virtual ~GuiGameList();
 
 	void setSystemId(int id);
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
+	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
 	void render();
 
 	void init();
@@ -32,7 +36,15 @@ public:
 
 	void updateDetailData();
 
+    const FolderData::SortState & getSortState() const;
+	void setSortIndex(size_t index);
+	void setNextSortIndex();
+	void setPreviousSortIndex();
+	void sort(FolderData::ComparisonFunction & comparisonFunction = FolderData::compareFileName, bool ascending = true);
+
 	static GuiGameList* create(Window* window);
+
+	bool isDetailed() const;
 
 	static const float sInfoWidth;
 private:
@@ -47,12 +59,12 @@ private:
 	FolderData* mFolder;
 	std::stack<FolderData*> mFolderStack;
 	int mSystemId;
-	bool mDetailed;
 
-	TextListComponent<FileData*>* mList;
-	ImageComponent* mScreenshot;
+	TextListComponent<FileData*> mList;
+	ImageComponent mScreenshot;
 	TextComponent mDescription;
-	AnimationComponent* mImageAnimation;
+	ScrollableContainer mDescContainer;
+	AnimationComponent mImageAnimation;
 	ThemeComponent* mTheme;
 
 	ImageComponent mTransitionImage;

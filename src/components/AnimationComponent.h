@@ -2,7 +2,6 @@
 #define _ANIMATIONCOMPONENT_H_
 
 #include "../GuiComponent.h"
-#include "ImageComponent.h"
 #include <vector>
 
 #define ANIMATION_TICK_SPEED 16
@@ -18,12 +17,12 @@ public:
 
 	void update(int deltaTime);
 
-	void addChild(ImageComponent* gui);
+	void addChild(GuiComponent* gui);
 
 private:
 	unsigned char mOpacity;
 
-	std::vector<ImageComponent*> mChildren;
+	std::vector<GuiComponent*> mChildren;
 
 	void moveChildren(int offsetx, int offsety);
 	void setChildrenOpacity(unsigned char opacity);
