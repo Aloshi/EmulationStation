@@ -145,7 +145,7 @@ void SystemData::populateFolder(FolderData* folder)
 			//if it matches, add it
 			if(chkExt == extension)
 			{
-				GameData* newGame = new GameData(this, filePath.string(), filePath.stem().string());
+				GameData* newGame = new GameData(this, filePath.generic_string(), filePath.stem().string());
 				folder->pushFileData(newGame);
 				isGame = true;
 				break;
