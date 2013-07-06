@@ -76,6 +76,13 @@ void AnimationComponent::update(int deltaTime)
 	}
 }
 
+bool AnimationComponent::isAnimating()
+{
+	if(mMoveX != 0 || mMoveY != 0 || mFadeRate != 0) return true;
+
+	return false;
+}
+
 void AnimationComponent::addChild(GuiComponent* gui)
 {
 	mChildren.push_back(gui);

@@ -18,6 +18,8 @@ public:
 
 	void update(int deltaTime);
 
+	bool isAnimating();
+
 	void addChild(GuiComponent* gui);
 
 private:
