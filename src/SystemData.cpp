@@ -20,10 +20,12 @@ namespace fs = boost::filesystem;
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
 
-SystemData::SystemData(std::string name, std::string descName, std::string startPath, std::string extension, std::string command)
+SystemData::SystemData(std::string name, std::string descName, std::string startPath, std::string extension, std::string command, std::string image)
 {
 	mName = name;
 	mDescName = descName;
+	mImage = image;
+
 
 	//expand home symbol if the startpath contains ~
 	if(startPath[0] == '~')
@@ -168,6 +170,11 @@ std::string SystemData::getName()
 	return mName;
 }
 
+std::string SystemData::getImage()
+{
+	return mImage;
+}
+
 std::string SystemData::getDescName()
 {
 	return mDescName;
@@ -187,7 +194,7 @@ void SystemData::loadConfig()
 	{
 		size_t lineNr = 0;
 		std::string line;
-		std::string sysName, sysDescName, sysPath, sysExtension, sysCommand;
+		std::string sysName, sysDescName, sysPath, sysExtension, sysCommand, sysImage;
 		while(file.good())
 		{
 			lineNr++;
@@ -229,14 +236,16 @@ void SystemData::loadConfig()
 					sysExtension = varValue;
 				else if(varName == "COMMAND")
 					sysCommand = varValue;
+				else if(varName == "IMAGE")
+					sysImage = varValue;
 
 				//we have all our variables - create the system object
-				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())
+				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty() && !sysImage.empty())
 				{
 					if(sysDescName.empty())
 						sysDescName = sysName;
 
-					SystemData* newSystem = new SystemData(sysName, sysDescName, sysPath, sysExtension, sysCommand);
+					SystemData* newSystem = new SystemData(sysName, sysDescName, sysPath, sysExtension, sysCommand, sysImage);
 					if(newSystem->getRootFolder()->getFileCount() == 0)
 					{
 						LOG(LogWarning) << "System \"" << sysName << "\" has no games! Ignoring it.";
@@ -246,7 +255,7 @@ void SystemData::loadConfig()
 					}
 
 					//reset the variables for the next block (should there be one)
-					sysName = ""; sysDescName = ""; sysPath = ""; sysExtension = ""; sysCommand = "" ;
+					sysName = sysDescName = sysPath = sysExtension = sysCommand = sysImage = ""; 
 				}
 			}else{
 				LOG(LogError) << "Error reading config file \"" << path << "\" - no equals sign found on line " << lineNr << ": \"" << line << "\"!";
@@ -300,6 +309,19 @@ void SystemData::deleteSystems()
 		delete sSystemVector.at(i);
 	}
 	sSystemVector.clear();
+}
+
+std::string SystemData::getBlankConsoleImagePath()
+{
+	std::string home = getHomePath();
+	if(home.empty())
+	{
+		LOG(LogError) << "$HOME environment variable empty or nonexistant!";
+		exit(1);
+		return "";
+	}
+
+	return(home + "/.emulationstation/blank.png");
 }
 
 std::string SystemData::getConfigPath()

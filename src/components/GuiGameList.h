@@ -35,13 +35,15 @@ public:
 	static GuiGameList* create(Window* window);
 
 	bool isDetailed() const;
+	void doTransition(int dir);
+	void doVerticalTransition(int dir);
 
 	static const float sInfoWidth;
 private:
 	void updateList();
 	void updateTheme();
 	void clearDetailData();
-	void doTransition(int dir);
+	
 
 	std::string getThemeFile();
 

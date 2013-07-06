@@ -83,10 +83,19 @@ void GuiGameList::setSystemId(int id)
 
 void GuiGameList::render()
 {
+	//add a default plain background
+	Renderer::drawRect(0,0,Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFFFF);
+
+	GuiComponent::render();
+
 	if(mTransitionImage.getOffset().x > 0) //transitioning in from the left
 		mOffset.x = mTransitionImage.getOffset().x - Renderer::getScreenWidth();
-	else //transitioning in from the right
+	else if(mTransitionImage.getOffset().x < 0)//transitioning in from the right
 		mOffset.x = mTransitionImage.getOffset().x + Renderer::getScreenWidth();
+	else if(mTransitionImage.getOffset().y > 0) //transitioning in from the up
+		mOffset.y = mTransitionImage.getOffset().y - Renderer::getScreenHeight();
+	else //transitioning in from the down
+		mOffset.y = mTransitionImage.getOffset().y + Renderer::getScreenHeight();
 
 	Renderer::translate(mOffset);
 
@@ -143,16 +152,23 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	}
 
 	//if there's something on the directory stack, return to it
-	if(config->isMappedTo("b", input) && input.value != 0 && mFolderStack.size())
+	if(config->isMappedTo("b", input) && input.value != 0)
 	{
-		mFolder = mFolderStack.top();
-		mFolderStack.pop();
-		updateList();
-		updateDetailData();
+		if(mFolderStack.size())
+		{
+			mFolder = mFolderStack.top();
+			mFolderStack.pop();
+			updateList();
+			updateDetailData();
 
-		//play the back sound
-		mTheme->getSound("menuBack")->play();
-
+			//play the back sound
+			mTheme->getSound("menuBack")->play();
+		}
+		else
+		{
+			mWindow->removeGui(this);
+		}
+		
 		return true;
 	}
 
@@ -328,12 +344,14 @@ void GuiGameList::init()
 GuiGameList* GuiGameList::create(Window* window)
 {
 	GuiGameList* list = new GuiGameList(window);
-	window->pushGui(list);
+	//window->pushGui(list);
 	return list;
 }
 
 void GuiGameList::update(int deltaTime)
 {
+	GuiComponent::update(deltaTime);
+
 	mImageAnimation.update(deltaTime);
 
 	mTransitionAnimation.update(deltaTime);
@@ -349,4 +367,12 @@ void GuiGameList::doTransition(int dir)
 	mTransitionImage.setOpacity(255);
 	mTransitionImage.setOffset(0, 0);
 	mTransitionAnimation.move(Renderer::getScreenWidth() * dir, 0, 50);
+}
+
+void GuiGameList::doVerticalTransition(int dir)
+{
+	mTransitionImage.copyScreen();
+	mTransitionImage.setOpacity(255);
+	mTransitionImage.setOffset(0, 0);
+	mTransitionAnimation.move(0, Renderer::getScreenHeight() * dir, 50);
 }

@@ -6,6 +6,7 @@
 #include <iomanip>
 #include "Renderer.h"
 #include "components/GuiGameList.h"
+#include "components/GuiConsoleList.h"
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "components/GuiDetectDevice.h"
@@ -138,7 +139,11 @@ int main(int argc, char* argv[])
 			if(fs::exists(InputManager::getConfigPath()))
 			{
 				//an input config already exists - we have input, proceed to the gamelist as usual.
-				GuiGameList::create(&window);
+				GuiGameList * list = GuiGameList::create(&window);
+
+				GuiConsoleList* consoles = new GuiConsoleList(&window, list);
+
+				window.pushGui(consoles);
 			}else{
 				window.pushGui(new GuiDetectDevice(&window));
 			}
