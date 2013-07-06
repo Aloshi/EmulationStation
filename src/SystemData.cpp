@@ -4,6 +4,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <stdlib.h>
+#include <SDL.h>
 #include <SDL_joystick.h>
 #include "Renderer.h"
 #include "AudioManager.h"
@@ -12,6 +13,8 @@
 #include "InputManager.h"
 #include <iostream>
 #include "Settings.h"
+
+extern int lastTime;
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -98,6 +101,8 @@ void SystemData::launchGame(Window* window, GameData* game)
 	//update number of times the game has been launched and the time
 	game->setTimesPlayed(game->getTimesPlayed() + 1);
 	game->setLastPlayed(std::time(nullptr));
+
+	lastTime = SDL_GetTicks();
 }
 
 void SystemData::populateFolder(FolderData* folder)

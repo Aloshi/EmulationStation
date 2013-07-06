@@ -107,7 +107,6 @@ namespace Renderer
 		//show mouse cursor
 		SDL_ShowCursor(initialCursorState);
 
-		SDL_Quit();
 	}
 
 	bool init(int w, int h)
@@ -132,6 +131,19 @@ namespace Renderer
 	}
 
 	void deinit()
+	{
+		onDeinit();
+
+		destroySurface();
+		SDL_Quit();
+	}
+
+	void wake(int w, int h)
+	{
+		init();
+	}
+
+	void sleep()
 	{
 		onDeinit();
 

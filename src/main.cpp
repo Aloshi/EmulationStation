@@ -22,6 +22,8 @@
 
 #include <sstream>
 
+int lastTime = 0;
+
 namespace fs = boost::filesystem;
 
 int main(int argc, char* argv[])
@@ -63,6 +65,11 @@ int main(int argc, char* argv[])
 			}else if(strcmp(argv[i], "--windowed") == 0)
 			{
 				Settings::getInstance()->setBool("WINDOWED", true);
+#ifdef _RPI_
+			}else if(strcmp(argv[i], "--pihdmisleep") == 0)
+			{
+				Settings::getInstance()->setBool("PIHDMISLEEP", true);
+#endif
 			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
@@ -75,6 +82,9 @@ int main(int argc, char* argv[])
 				std::cout << "--no-exit			don't show the exit option in the menu\n";
 				std::cout << "--debug				even more logging\n";
 				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
+#ifdef _RPI_
+				std::cout << "--pihdmisleep			put the hdmi display into standby instead of dimming the screen.  This restarts ES on wake.\n";
+#endif
 
 				#ifdef USE_OPENGL_DESKTOP
 					std::cout << "--windowed			not fullscreen\n";
@@ -145,10 +155,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	bool sleeping = false;
 	unsigned int timeSinceLastEvent = 0;
+	bool sleeping = false;
 
-	int lastTime = 0;
 	while(running)
 	{
 		SDL_Event event;
@@ -162,6 +171,20 @@ int main(int argc, char* argv[])
 				case SDL_KEYDOWN:
 				case SDL_KEYUP:
 				case SDL_JOYAXISMOTION:
+#ifdef _RPI_
+					// window has been deinitted, so we
+					// can't use it's input manager to parse
+					// the event, so do this first.
+					if(sleeping && Settings::getInstance()->getBool("PIHDMISLEEP")) {
+						LOG(LogInfo) << "Waking HDMI";
+						window.wake();
+
+						// Ignore the waking event
+						sleeping = false;
+						timeSinceLastEvent = 0;
+						break;
+					}
+#endif
 					if(window.getInputManager()->parseEvent(event))
 					{
 						sleeping = false;
@@ -221,8 +244,17 @@ int main(int argc, char* argv[])
 		{
 			sleeping = true;
 			timeSinceLastEvent = 0;
+#ifdef _RPI_
+			if(Settings::getInstance()->getBool("PIHDMISLEEP")) {
+				LOG(LogInfo) << "Sleeping HDMI";
+				window.sleep();
+			} else {
+#endif
 			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000A0);
 			Renderer::swapBuffers();
+#ifdef _RPI_
+			}
+#endif
 		}
 
 		Log::flush();
