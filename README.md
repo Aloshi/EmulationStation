@@ -10,7 +10,7 @@ I found a bug! I have a problem!
 ================================
 
 - First, try to check the [issue list](https://github.com/Aloshi/EmulationStation/issues?state=open) if there are already some entries that might match your issue. Then make sure to check closed bugs too, to find a solution to already solved problems.
-- Try to update to the latest version of EmulationStation using git (You might need to delete you `es_input.cfg` and `es_settings.cfg` after that to reset them to default values after this):
+- Try to update to the latest version of EmulationStation using git (You might need to delete your `es_input.cfg` and `es_settings.cfg` after that to reset them to default values):
 
 ```
 cd EmulationStation
@@ -23,7 +23,7 @@ make
 Building
 ========
 
-EmulationStation uses some C++11 code, which means you'll need to install at least g++-4.7 on Linux, or VS2010 on Windows.
+EmulationStation uses some C++11 code, which means you'll need to install at least g++-4.7 on Linux, or VS2010 on Windows. For installing and switching to G++ 4.7 see [here](http://lektiondestages.blogspot.de/2013/05/installing-and-switching-gccg-versions.html).
 
 EmulationStation has a few dependencies. For building, you'll need SDL 1.2, Boost.System, Boost.Filesystem, FreeImage, FreeType, and the DejaVu TrueType font.  
 
