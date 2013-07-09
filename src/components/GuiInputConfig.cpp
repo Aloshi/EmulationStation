@@ -77,7 +77,7 @@ bool GuiInputConfig::input(InputConfig* config, Input input)
 
 void GuiInputConfig::render()
 {
-	std::shared_ptr<Font> font = mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM);
+	std::shared_ptr<Font> font = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
 
 	std::stringstream stream;
 	stream << "PLAYER " << mTargetConfig->getPlayerNum() + 1 << ", press...";

@@ -40,7 +40,7 @@ std::shared_ptr<Font> ThemeComponent::getListFont()
 	if(mListFont)
 		return mListFont;
 	else
-		return mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM);
+		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
 }
 
 std::shared_ptr<Font> ThemeComponent::getDescriptionFont()
@@ -48,7 +48,7 @@ std::shared_ptr<Font> ThemeComponent::getDescriptionFont()
 	if(mDescFont)
 		return mDescFont;
 	else
-		return mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_SMALL);
+		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL);
 }
 
 std::shared_ptr<Font> ThemeComponent::getFastSelectFont()
@@ -56,7 +56,7 @@ std::shared_ptr<Font> ThemeComponent::getFastSelectFont()
 	if(mFastSelectFont == NULL)
 		return mFastSelectFont;
 	else
-		return mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_LARGE);
+		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE);
 }
 
 ThemeComponent::ThemeComponent(Window* window) : GuiComponent(window)
@@ -410,5 +410,5 @@ std::shared_ptr<Font> ThemeComponent::resolveFont(pugi::xml_node node, std::stri
 		size = defaultSize;
 	}
 
-	return mWindow->getResourceManager()->getFont(path, size);
+	return Font::get(*mWindow->getResourceManager(), path, size);
 }

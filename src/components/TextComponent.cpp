@@ -53,7 +53,7 @@ std::shared_ptr<Font> TextComponent::getFont() const
 	if(mFont)
 		return mFont;
 	else
-		return mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM);
+		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
 }
 
 void TextComponent::onRender()

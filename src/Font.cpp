@@ -14,6 +14,8 @@ int Font::getDpiY() { return 96; }
 
 int Font::getSize() { return mSize; }
 
+std::map< std::pair<std::string, int>, std::weak_ptr<Font> > Font::sFontMap;
+
 std::string Font::getDefaultPath()
 {
 	const int fontCount = 4;
@@ -69,13 +71,46 @@ void Font::initLibrary()
 	}
 }
 
-Font::Font(int size) : fontScale(1.0f), mSize(size)
+Font::Font(const ResourceManager& rm, const std::string& path, int size) : fontScale(1.0f), mSize(size), mPath(path)
 {
+	reload(rm);
 }
 
 Font::~Font()
 {
 	deinit();
+}
+
+void Font::reload(const ResourceManager& rm)
+{
+	init(rm.getFileData(mPath));
+}
+
+void Font::unload(const ResourceManager& rm)
+{
+	deinit();
+}
+
+std::shared_ptr<Font> Font::get(ResourceManager& rm, const std::string& path, int size)
+{
+	if(path.empty())
+	{
+		LOG(LogError) << "Tried to get font with no path!";
+		return std::shared_ptr<Font>();
+	}
+
+	std::pair<std::string, int> def(path, size);
+	auto foundFont = sFontMap.find(def);
+	if(foundFont != sFontMap.end())
+	{
+		if(!foundFont->second.expired())
+			return foundFont->second.lock();
+	}
+
+	std::shared_ptr<Font> font = std::shared_ptr<Font>(new Font(rm, path, size));
+	sFontMap[def] = std::weak_ptr<Font>(font);
+	rm.addReloadable(font);
+	return font;
 }
 
 void Font::init(ResourceData data)
@@ -96,7 +131,7 @@ void Font::deinit()
 
 void Font::buildAtlas(ResourceData data)
 {
-	if(FT_New_Memory_Face(sLibrary, data.ptr, data.length, 0, &face))
+	if(FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face))
 	{
 		LOG(LogError) << "Error creating font face!";
 		return;
@@ -206,9 +241,8 @@ void Font::buildAtlas(ResourceData data)
 		mSize = (int)(mSize * (1.0f / fontScale));
 		deinit();
 		init(data);
-	}
-	else {
-		//LOG(LogInfo) << "Created font with size " << mSize << ".";
+	}else{
+		LOG(LogInfo) << "Created font with size " << mSize << ".";
 	}
 }
 

@@ -7,7 +7,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "Vector2.h"
-#include "resources/Resource.h"
+#include "resources/ResourceManager.h"
 
 class TextCache;
 
@@ -17,12 +17,13 @@ class TextCache;
 
 //A TrueType Font renderer that uses FreeType and OpenGL.
 //The library is automatically initialized when it's needed.
-class Font : public Resource
+class Font : public IReloadable
 {
 public:
 	static void initLibrary();
 
-	Font(int size);
+	static std::shared_ptr<Font> get(ResourceManager& rm, const std::string& path, int size);
+
 	~Font();
 
 	FT_Face face;
@@ -55,12 +56,11 @@ public:
 	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, unsigned int color);
 	void sizeWrappedText(std::string text, int xLen, int* xOut, int* yOut);
 	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color);
-	
 
 	int getHeight();
 
-	void init(ResourceData data) override;
-	void deinit() override;
+	void unload(const ResourceManager& rm) override;
+	void reload(const ResourceManager& rm) override;
 
 	int getSize();
 
@@ -72,6 +72,13 @@ private:
 	static FT_Library sLibrary;
 	static bool libraryInitialized;
 
+	static std::map< std::pair<std::string, int>, std::weak_ptr<Font> > sFontMap;
+
+	Font(const ResourceManager& rm, const std::string& path, int size);
+
+	void init(ResourceData data);
+	void deinit();
+
 	void buildAtlas(ResourceData data); //Builds a "texture atlas," one big OpenGL texture with glyphs 32 to 128.
 
 	int textureWidth; //OpenGL texture width
@@ -80,6 +87,7 @@ private:
 	float fontScale; //!<Font scale factor. It is > 1.0 if the font would be to big for the texture
 
 	int mSize;
+	const std::string mPath;
 };
 
 class TextCache

@@ -5,8 +5,11 @@
 #include "../ImageIO.h"
 #include "../Renderer.h"
 
-TextureResource::TextureResource() : mTextureID(0)
+std::map< std::string, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
+
+TextureResource::TextureResource(const ResourceManager& rm, const std::string& path) : mTextureID(0), mPath(path)
 {
+	reload(rm);
 }
 
 TextureResource::~TextureResource()
@@ -14,17 +17,28 @@ TextureResource::~TextureResource()
 	deinit();
 }
 
-void TextureResource::init(ResourceData data)
+void TextureResource::unload(const ResourceManager& rm)
+{
+	deinit();
+}
+
+void TextureResource::reload(const ResourceManager& rm)
+{
+	if(!mPath.empty())
+		initFromResource(rm.getFileData(mPath));
+}
+
+void TextureResource::initFromResource(const ResourceData data)
 {
 	//make sure we aren't going to leak an old texture
 	deinit();
 
 	size_t width, height;
-	std::vector<unsigned char> imageRGBA = ImageIO::loadFromMemoryRGBA32(data.ptr, data.length, width, height);
+	std::vector<unsigned char> imageRGBA = ImageIO::loadFromMemoryRGBA32(const_cast<unsigned char*>(data.ptr.get()), data.length, width, height);
 
 	if(imageRGBA.size() == 0)
 	{
-		LOG(LogError) << "Could not initialize texture!";
+		LOG(LogError) << "Could not initialize texture (invalid resource data)!";
 		return;
 	}
 
@@ -42,25 +56,6 @@ void TextureResource::init(ResourceData data)
 
 	mTextureSize.x = width;
 	mTextureSize.y = height;
-}
-
-void TextureResource::deinit()
-{
-	if(mTextureID != 0)
-	{
-		glDeleteTextures(1, &mTextureID);
-		mTextureID = 0;
-	}
-}
-
-Vector2u TextureResource::getSize()
-{
-	return mTextureSize;
-}
-
-void TextureResource::bind()
-{
-	glBindTexture(GL_TEXTURE_2D, mTextureID);
 }
 
 void TextureResource::initFromScreen()
@@ -83,4 +78,47 @@ void TextureResource::initFromScreen()
 
 	mTextureSize.x = height;
 	mTextureSize.y = height;
+}
+
+void TextureResource::deinit()
+{
+	if(mTextureID != 0)
+	{
+		glDeleteTextures(1, &mTextureID);
+		mTextureID = 0;
+	}
+}
+
+Vector2u TextureResource::getSize() const
+{
+	return mTextureSize;
+}
+
+void TextureResource::bind() const
+{
+	if(mTextureID != 0)
+		glBindTexture(GL_TEXTURE_2D, mTextureID);
+	else
+		LOG(LogError) << "Tried to bind uninitialized texture!";
+}
+
+
+std::shared_ptr<TextureResource> TextureResource::get(ResourceManager& rm, const std::string& path)
+{
+	if(path.empty())
+		return std::shared_ptr<TextureResource>(new TextureResource(rm, path));
+
+	auto foundTexture = sTextureMap.find(path);
+	if(foundTexture != sTextureMap.end())
+	{
+		if(!foundTexture->second.expired())
+		{
+			return foundTexture->second.lock();
+		}
+	}
+
+	std::shared_ptr<TextureResource> tex = std::shared_ptr<TextureResource>(new TextureResource(rm, path));
+	sTextureMap[path] = std::weak_ptr<TextureResource>(tex);
+	rm.addReloadable(tex);
+	return tex;
 }

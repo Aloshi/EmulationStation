@@ -26,7 +26,7 @@ bool GuiGameList::isDetailed() const
 
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
 	mTheme(new ThemeComponent(mWindow)),
-	mList(window, 0, 0, window->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM)), 
+	mList(window, 0, 0, Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)), 
 	mScreenshot(window),
 	mDescription(window), 
 	mDescContainer(window), 
@@ -114,7 +114,7 @@ void GuiGameList::render()
 	if(mTheme)
 		mTheme->render();
 
-	std::shared_ptr<Font> headerFont = mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_LARGE);
+	std::shared_ptr<Font> headerFont = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE);
 
 	//header
 	if(!mTheme->getBool("hideHeader"))

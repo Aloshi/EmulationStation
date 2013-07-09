@@ -1,27 +1,37 @@
 #pragma once
 
-#include "Resource.h"
+#include "ResourceManager.h"
 
 #include <string>
 #include "../Vector2.h"
 #include "../platform.h"
 #include GLHEADER
 
-class TextureResource : public Resource
+class TextureResource : public IReloadable
 {
 public:
-	TextureResource();
-	~TextureResource();
+	static std::shared_ptr<TextureResource> get(ResourceManager& rm, const std::string& path);
 
-	void init(ResourceData data) override;
-	void deinit() override;
+	virtual ~TextureResource();
 
-	Vector2u getSize();
-	void bind();
-
+	void unload(const ResourceManager& rm) override;
+	void reload(const ResourceManager& rm) override;
+	
+	Vector2u getSize() const;
+	void bind() const;
+	
 	void initFromScreen();
 
 private:
+	TextureResource(const ResourceManager& rm, const std::string& path);
+
+	void initFromPath();
+	void initFromResource(const ResourceData data);
+	void deinit();
+
 	Vector2u mTextureSize;
 	GLuint mTextureID;
+	const std::string mPath;
+
+	static std::map< std::string, std::weak_ptr<TextureResource> > sTextureMap;
 };

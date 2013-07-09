@@ -8,9 +8,9 @@ Window::Window()
 {
 	mInputManager = new InputManager(this);
 
-	mDefaultFonts.push_back(mResourceManager.getFont(Font::getDefaultPath(), FONT_SIZE_SMALL));
-	mDefaultFonts.push_back(mResourceManager.getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM));
-	mDefaultFonts.push_back(mResourceManager.getFont(Font::getDefaultPath(), FONT_SIZE_LARGE));
+	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_SMALL));
+	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_MEDIUM));
+	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_LARGE));
 }
 
 Window::~Window()
@@ -59,7 +59,7 @@ void Window::init()
 {
 	mInputManager->init(); //shouldn't this go AFTER renderer initialization?
 	Renderer::init(0, 0);
-	mResourceManager.init();
+	mResourceManager.reloadAll();
 
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
@@ -75,7 +75,7 @@ void Window::deinit()
 	}
 
 	mInputManager->deinit();
-	mResourceManager.deinit();
+	mResourceManager.unloadAll();
 	Renderer::deinit();
 }
 

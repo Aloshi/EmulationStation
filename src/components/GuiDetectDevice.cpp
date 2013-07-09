@@ -83,7 +83,7 @@ void GuiDetectDevice::update(int deltaTime)
 
 void GuiDetectDevice::render()
 {
-	std::shared_ptr<Font> font = mWindow->getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM);
+	std::shared_ptr<Font> font = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
 
 	std::string playerString;
 	std::stringstream stream;

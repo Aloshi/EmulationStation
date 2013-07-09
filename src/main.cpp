@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 				nrOfFrames = 0;
 				timeElapsed = 0;
 			}
-			window.getResourceManager()->getFont(Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(fpsString, 50, 50, 0x00FF00FF);
+			Font::get(*window.getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(fpsString, 50, 50, 0x00FF00FF);
 		}
 
 		//sleep if we're past our threshold

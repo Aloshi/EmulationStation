@@ -1,6 +1,13 @@
 #include "ResourceManager.h"
 #include "../Log.h"
 #include <fstream>
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
+
+auto array_deleter = [](unsigned char* p) { delete[] p; };
+auto nop_deleter = [](unsigned char* p) { };
+
 
 //from ES_logo_16.cpp
 extern const size_t es_logo_16_data_len;
@@ -18,96 +25,35 @@ struct EmbeddedResource
 
 static const int embedded_resource_count = 2;
 static const EmbeddedResource embedded_resources[embedded_resource_count] = {
-	{ "internal://es_logo_16.png", {es_logo_16_data, es_logo_16_data_len} }, 
-	{ "internal://es_logo_32.png", {es_logo_32_data, es_logo_32_data_len} }
+	{ "internal://es_logo_16.png", {std::shared_ptr<unsigned char>((unsigned char*)es_logo_16_data, nop_deleter), es_logo_16_data_len} }, 
+	{ "internal://es_logo_32.png", {std::shared_ptr<unsigned char>((unsigned char*)es_logo_32_data, nop_deleter), es_logo_32_data_len} }
 };
 
-std::shared_ptr<TextureResource> ResourceManager::getTexture(const std::string& path)
-{
-	if(path.empty())
-		return std::shared_ptr<TextureResource>(); //NULL pointer
 
-	if(mTextureMap[path].expired())
-	{
-		std::shared_ptr<TextureResource> ret(new TextureResource());
-		mTextureMap[path] = std::weak_ptr<TextureResource>(ret);
-		
-		initializeResource(path, ret);
-
-		return ret;
-	}
-
-	return mTextureMap[path].lock();
-}
-
-std::shared_ptr<Font> ResourceManager::getFont(const std::string& path, int size)
-{
-	if(path.empty() || size == 0)
-		return std::shared_ptr<Font>(); //NULL pointer
-
-	std::pair<std::string, int> fontDef(path, size);
-	if(mFontMap[fontDef].expired())
-	{
-		std::shared_ptr<Font> ret(new Font(size));
-		mFontMap[fontDef] = std::weak_ptr<Font>(ret);
-
-		initializeResource(path, ret);
-
-		return ret;
-	}
-
-	return mFontMap[fontDef].lock();
-}
-
-void ResourceManager::init()
-{
-	for(auto iter = mTextureMap.begin(); iter != mTextureMap.end(); iter++)
-	{
-		if(!iter->second.expired())
-			initializeResource(iter->first, iter->second.lock());
-	}
-
-	for(auto iter = mFontMap.begin(); iter != mFontMap.end(); iter++)
-	{
-		if(!iter->second.expired())
-			initializeResource(iter->first.first, iter->second.lock());
-	}
-}
-
-void ResourceManager::deinit()
-{
-	for(auto iter = mTextureMap.begin(); iter != mTextureMap.end(); iter++)
-	{
-		if(!iter->second.expired())
-			iter->second.lock()->deinit();
-	}
-
-	for(auto iter = mFontMap.begin(); iter != mFontMap.end(); iter++)
-	{
-		if(!iter->second.expired())
-			iter->second.lock()->deinit();
-	}
-}
-
-void ResourceManager::initializeResource(const std::string& path, std::shared_ptr<Resource> resource)
+const ResourceData ResourceManager::getFileData(const std::string& path) const
 {
 	for(int i = 0; i < embedded_resource_count; i++)
 	{
 		if(strcmp(embedded_resources[i].internal_path, path.c_str()) == 0)
 		{
 			//this embedded resource matches the filepath; use it
-			resource->init(embedded_resources[i].resourceData);
-			return;
+			return embedded_resources[i].resourceData;
 		}
 	}
 
-	//it's not embedded; load the file, initialize with it, then free the file
-	ResourceData data = loadFile(path);
-	resource->init(data);
-	delete[] data.ptr;
+	//it's not embedded; load the file
+	if(!fs::exists(path))
+	{
+		//if the file doesn't exist, return an "empty" ResourceData
+		ResourceData data = {NULL, 0};
+		return data;
+	}else{
+		ResourceData data = loadFile(path);
+		return data;
+	}
 }
 
-ResourceData ResourceManager::loadFile(const std::string& path)
+ResourceData ResourceManager::loadFile(const std::string& path) const
 {
 	std::ifstream stream(path, std::ios::binary);
 
@@ -115,10 +61,48 @@ ResourceData ResourceManager::loadFile(const std::string& path)
 	size_t size = (size_t)stream.tellg();
 	stream.seekg(0, stream.beg);
 
-	unsigned char* data = new unsigned char[size];
-	stream.read((char*)data, size);
+	//supply custom deleter to properly free array
+	std::shared_ptr<unsigned char> data(new unsigned char[size], array_deleter);
+	stream.read((char*)data.get(), size);
 	stream.close();
 
 	ResourceData ret = {data, size};
 	return ret;
+}
+
+bool ResourceManager::fileExists(const std::string& path) const
+{
+	for(int i = 0; i < embedded_resource_count; i++)
+	{
+		if(strcmp(embedded_resources[i].internal_path, path.c_str()) == 0)
+		{
+			//this embedded resource matches the filepath
+			return true;
+		}
+	}
+
+	return fs::exists(path);
+}
+
+void ResourceManager::unloadAll()
+{
+	for(auto iter = mReloadables.begin(); iter != mReloadables.end(); iter++)
+	{
+		if(!iter->expired())
+			iter->lock()->unload(*this);
+	}
+}
+
+void ResourceManager::reloadAll()
+{
+	for(auto iter = mReloadables.begin(); iter != mReloadables.end(); iter++)
+	{
+		if(!iter->expired())
+			iter->lock()->reload(*this);
+	}
+}
+
+void ResourceManager::addReloadable(std::weak_ptr<IReloadable> reloadable)
+{
+	mReloadables.push_back(reloadable);
 }

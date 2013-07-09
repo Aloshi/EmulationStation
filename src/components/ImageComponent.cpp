@@ -86,7 +86,11 @@ void ImageComponent::setImage(std::string path)
 
 	mPath = path;
 
-	mTexture = mWindow->getResourceManager()->getTexture(path);
+	if(mPath.empty() || !mWindow->getResourceManager()->fileExists(mPath))
+		mTexture.reset();
+	else
+		mTexture = TextureResource::get(*mWindow->getResourceManager(), mPath);
+
 	resize();
 }
 
@@ -229,7 +233,7 @@ void ImageComponent::copyScreen()
 {
 	mTexture.reset();
 
-	mTexture = std::make_shared<TextureResource>();
+	mTexture = TextureResource::get(*mWindow->getResourceManager(), "");
 	mTexture->initFromScreen();
 
 	resize();

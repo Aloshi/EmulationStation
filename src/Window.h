@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "resources/ResourceManager.h"
 #include <vector>
+#include "Font.h"
 
 class Window
 {
