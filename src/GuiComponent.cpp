@@ -3,7 +3,7 @@
 #include "Log.h"
 #include "Renderer.h"
 
-GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL)
+GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255)
 {
 }
 
