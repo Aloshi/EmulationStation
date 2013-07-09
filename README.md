@@ -6,6 +6,20 @@ A cross-platform graphical front-end for emulators with controller navigation.
 **Raspberry Pi users:**
 A cool guy named petrockblog made a script which automatically installs many emulators and ES. It also includes options for configuring your RPi and setting it up to boot directly into ES. You can find it here: https://github.com/petrockblog/RetroPie-Setup
 
+I found a bug! I have a problem!
+================================
+
+- First, try to check the [issue list](https://github.com/Aloshi/EmulationStation/issues?state=open) if there are already some entries that might match your issue. Then make sure to check closed bugs too, to find a solution to already solved problems.
+- Try to update to the latest version of EmulationStation using git (You might need to delete you `es_input.cfg` and `es_settings.cfg` after that to reset them to default values after this):
+
+```
+cd EmulationStation
+git pull
+cmake .
+make
+```
+- If your problem still isn't gone, the best way to report a bug is to post an issue on GitHub. Try to post the simplest steps possible to reproduce the bug. Include files you think might be related (except for ROMs, of course). If you haven't re-run ES since the crash, the log file `~/.emulationstation/es_log.txt` is also helpful.
+
 Building
 ========
 
@@ -138,11 +152,6 @@ The path element should be the absolute path of the ROM. Special characters SHOU
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 The switch `--ignore-gamelist` can be used to ignore the gamelist and use the non-detailed view.
-
-I found a bug!
-==============
-
-The best way to report a bug is to post an issue on GitHub. Try to post the simplest steps possible to reproduce the bug. Include files you think might be related (except for ROMs, of course). If you haven't re-run ES since the crash, the log file `~/.emulationstation/es_log.txt` is also helpful.
 
 Themes
 ======

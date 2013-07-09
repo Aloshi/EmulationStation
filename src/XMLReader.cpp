@@ -133,7 +133,9 @@ void parseGamelist(SystemData* system)
 			continue;
 		}
 
-		std::string path = pathNode.text().get();
+		//convert path to generic directory seperators
+		boost::filesystem::path gamePath(pathNode.text().get());
+		std::string path = gamePath.generic_string();
 
 		//expand "."
 		if(path[0] == '.')
@@ -169,7 +171,7 @@ void parseGamelist(SystemData* system)
 				{
 					newImage.erase(0, 1);
 					boost::filesystem::path pathname(xmlpath);
-					newImage.insert(0, pathname.parent_path().string() );
+					newImage.insert(0, pathname.parent_path().generic_string() );
 				}
 
 				//if the image exist, set it
@@ -218,7 +220,9 @@ void addGameDataNode(pugi::xml_node & parent, const GameData * game)
 	//add values
 	if (!game->getPath().empty()) {
 		pugi::xml_node pathNode = newGame.append_child(GameData::xmlTagPath.c_str());
-		pathNode.text().set(game->getPath().c_str());
+		//store path with generic directory seperators
+		boost::filesystem::path gamePath(game->getPath());
+		pathNode.text().set(gamePath.generic_string().c_str());
 	}
 	if (!game->getName().empty()) {
 		pugi::xml_node nameNode = newGame.append_child(GameData::xmlTagName.c_str());
@@ -294,8 +298,10 @@ void updateGamelist(SystemData* system)
 						LOG(LogError) << "<" << GameData::xmlTagGame << "> node contains no <" << GameData::xmlTagPath << "> child!";
 						continue;
 					}
-					//check path
-					if (pathNode.text().get() == game->getPath()) {
+					//check paths. use the same directory separators
+					boost::filesystem::path nodePath(pathNode.text().get());
+					boost::filesystem::path gamePath(game->getPath());
+					if (nodePath.generic_string() == gamePath.generic_string()) {
 						//found the game. remove it. it will be added again later with updated values
 						root.remove_child(gameNode);
 						//break node search loop
