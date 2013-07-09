@@ -326,7 +326,7 @@ void GuiGameList::updateTheme()
 	mList.setScrollSound(mTheme->getSound("menuScroll"));
 
 	mList.setFont(mTheme->getListFont());
-	mList.setOffset(0, FONT_SIZE_LARGE + 2);
+	mList.setOffset(0, Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE)->getHeight() + 2);
 
 	if(isDetailed())
 	{
