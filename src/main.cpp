@@ -20,26 +20,23 @@
 	#include <bcm_host.h>
 #endif
 
-
 #include <sstream>
 
 namespace fs = boost::filesystem;
 
-int main(int argc, char* argv[])
+bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
 {
-	unsigned int width = 0;
-	unsigned int height = 0;
 	if(argc > 1)
 	{
 		for(int i = 1; i < argc; i++)
 		{
 			if(strcmp(argv[i], "-w") == 0)
 			{
-				width = atoi(argv[i + 1]);
+				*width = atoi(argv[i + 1]);
 				i++; //skip the argument value
 			}else if(strcmp(argv[i], "-h") == 0)
 			{
-				height = atoi(argv[i + 1]);
+				*height = atoi(argv[i + 1]);
 				i++; //skip the argument value
 			}else if(strcmp(argv[i], "--gamelist-only") == 0)
 			{
@@ -83,17 +80,16 @@ int main(int argc, char* argv[])
 
 				std::cout << "--help				summon a sentient, angry tuba\n\n";
 				std::cout << "More information available in README.md.\n";
-				return 0;
+				return false; //exit after printing help
 			}
 		}
 	}
 
-	#ifdef _RPI_
-		bcm_host_init();
-	#endif
+	return true;
+}
 
-	bool running = true;
-
+bool verifyHomeFolderExists()
+{
 	//make sure the config directory exists
 	std::string home = getHomePath();
 	std::string configDir = home + "/.emulationstation";
@@ -101,55 +97,83 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "Creating config directory \"" << configDir << "\"\n";
 		fs::create_directory(configDir);
+		if(!fs::exists(configDir))
+		{
+			std::cerr << "Config directory could not be created!\n";
+			return false;
+		}
 	}
+
+	return true;
+}
+
+//called on exit, assuming we get far enough to have the log initialized
+void onExit()
+{
+	Log::close();
+
+	#ifdef _RPI_
+		bcm_host_deinit();
+	#endif
+}
+
+int main(int argc, char* argv[])
+{
+	unsigned int width = 0;
+	unsigned int height = 0;
+
+	if(!parseArgs(argc, argv, &width, &height))
+		return 0;
+
+	//if ~/.emulationstation doesn't exist and cannot be created, bail
+	if(!verifyHomeFolderExists())
+		return 1;
+
+	#ifdef _RPI_
+		bcm_host_init();
+	#endif
 
 	//start the logger
 	Log::open();
 	LOG(LogInfo) << "EmulationStation - " << PROGRAM_VERSION_STRING;
 
-	//the renderer also takes care of setting up SDL for input and sound
-	bool renderInit = Renderer::init(width, height);
-	if(!renderInit)
+	//always close the log and deinit the BCM library on exit
+	atexit(&onExit);
+
+	Window window;
+	if(!window.init(width, height))
 	{
-		std::cerr << "Error initializing renderer!\n";
-		Log::close();
+		LOG(LogError) << "Window failed to initialize!";
 		return 1;
 	}
 
-	Window window; //don't call Window.init() because we manually pass the resolution to Renderer::init
-	window.getInputManager()->init();
-
 	//try loading the system config file
-	if(!fs::exists(SystemData::getConfigPath())) //if it doesn't exist, create the example and quit
+	if(!SystemData::loadConfig(SystemData::getConfigPath(), true))
 	{
-		std::cerr << "A system config file in " << SystemData::getConfigPath() << " was not found. An example will be created.\n";
-		SystemData::writeExampleConfig();
-		std::cerr << "Set it up, then re-run EmulationStation.\n";
-		running = false;
-	}else{
-		SystemData::loadConfig();
+		LOG(LogError) << "Error parsing system config file!";
+		return 1;
+	}
 
-		if(SystemData::sSystemVector.size() == 0) //if it exists but was empty, notify the user and quit
-		{
-			std::cerr << "A system config file in " << SystemData::getConfigPath() << " was found, but contained no systems.\n";
-			std::cerr << "Does at least one system have a game present?\n";
-			running = false;
-		}else{
-			//choose which GUI to open depending on Input configuration
-			if(fs::exists(InputManager::getConfigPath()))
-			{
-				//an input config already exists - we have input, proceed to the gamelist as usual.
-				GuiGameList::create(&window);
-			}else{
-				window.pushGui(new GuiDetectDevice(&window));
-			}
-		}
+	//make sure it wasn't empty
+	if(SystemData::sSystemVector.size() == 0)
+	{
+		LOG(LogError) << "No systems found! Does at least one system have a game present? (check that extensions match!)";
+		return 1;
+	}
+
+	//choose which GUI to open depending on if an input configuration already exists
+	if(fs::exists(InputManager::getConfigPath()))
+	{
+		GuiGameList::create(&window);
+	}else{
+		window.pushGui(new GuiDetectDevice(&window));
 	}
 
 	bool sleeping = false;
 	unsigned int timeSinceLastEvent = 0;
-
 	int lastTime = 0;
+	bool running = true;
+
 	while(running)
 	{
 		SDL_Event event;
@@ -233,12 +257,6 @@ int main(int argc, char* argv[])
 	SystemData::deleteSystems();
 
 	std::cout << "EmulationStation cleanly shutting down...\n";
-
-	Log::close();
-
-	#ifdef _RPI_
-		bcm_host_deinit();
-	#endif
 
 	return 0;
 }

@@ -182,13 +182,20 @@ std::string SystemData::getDescName()
 }
 
 //creates systems from information located in a config file
-void SystemData::loadConfig()
+bool SystemData::loadConfig(const std::string& path, bool writeExample)
 {
 	deleteSystems();
 
-	std::string path = getConfigPath();
-
 	LOG(LogInfo) << "Loading system config file...";
+
+	if(!fs::exists(path))
+	{
+		LOG(LogInfo) << "System config file \"" << path << "\" doesn't exist!";
+		if(writeExample)
+			writeExampleConfig(path);
+
+		return false;
+	}
 
 	std::ifstream file(path.c_str());
 	if(file.is_open())
@@ -262,21 +269,21 @@ void SystemData::loadConfig()
 				}
 			}else{
 				LOG(LogError) << "Error reading config file \"" << path << "\" - no equals sign found on line " << lineNr << ": \"" << line << "\"!";
-				return;
+				return false;
 			}
 		}
 	}else{
 		LOG(LogError) << "Error - could not load config file \"" << path << "\"!";
-		return;
+		return false;
 	}
 
 	LOG(LogInfo) << "Finished loading config file - created " << sSystemVector.size() << " systems.";
-	return;
+	return true;
 }
 
-void SystemData::writeExampleConfig()
+void SystemData::writeExampleConfig(const std::string& path)
 {
-	std::string path = getConfigPath();
+	std::cerr << "Writing example config to \"" << path << "\"...";
 
 	std::ofstream file(path.c_str());
 
@@ -303,6 +310,8 @@ void SystemData::writeExampleConfig()
 	file << "COMMAND=" << std::endl;
 
 	file.close();
+
+	std::cerr << "done. Go read it!\n";
 }
 
 void SystemData::deleteSystems()

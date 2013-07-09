@@ -25,8 +25,8 @@ public:
 	void launchGame(Window* window, GameData* game);
 
 	static void deleteSystems();
-	static void loadConfig();
-	static void writeExampleConfig();
+	static bool loadConfig(const std::string& path, bool writeExampleIfNonexistant = true); //Load the system config file at getConfigPath(). Returns true if no errors were encountered. An example can be written if the file doesn't exist.
+	static void writeExampleConfig(const std::string& path);
 	static std::string getConfigPath();
 
 	static std::vector<SystemData*> sSystemVector;

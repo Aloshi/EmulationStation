@@ -21,7 +21,7 @@ public:
 	void update(int deltaTime);
 	void render();
 
-	void init();
+	bool init(unsigned int width = 0, unsigned int height = 0);
 	void deinit();
 
 	InputManager* getInputManager();

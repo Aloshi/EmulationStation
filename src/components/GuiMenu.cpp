@@ -52,7 +52,7 @@ void GuiMenu::executeCommand(std::string command)
 	}else if(command == "es_reload")
 	{
 		//reload the game list
-		SystemData::loadConfig();
+		SystemData::loadConfig(SystemData::getConfigPath(), false);
 		mParent->setSystemId(0);
 	}else if(command == "es_settings")
 	{

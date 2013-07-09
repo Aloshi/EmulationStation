@@ -3,18 +3,20 @@
 #include "Renderer.h"
 #include "AudioManager.h"
 #include "VolumeControl.h"
+#include "Log.h"
+#include "Settings.h"
 
 Window::Window()
 {
 	mInputManager = new InputManager(this);
-
-	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_SMALL));
-	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_MEDIUM));
-	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_LARGE));
 }
 
 Window::~Window()
 {
+	//delete all our GUIs
+	while(peekGui())
+		delete peekGui();
+	
 	delete mInputManager;
 }
 
@@ -55,25 +57,31 @@ void Window::render()
 	}
 }
 
-void Window::init()
+bool Window::init(unsigned int width, unsigned int height)
 {
-	mInputManager->init(); //shouldn't this go AFTER renderer initialization?
-	Renderer::init(0, 0);
+	if(!Renderer::init(width, height))
+	{
+		LOG(LogError) << "Renderer failed to initialize!";
+		return false;
+	}
+
+	mInputManager->init();
+
 	mResourceManager.reloadAll();
 
-	for(unsigned int i = 0; i < mGuiStack.size(); i++)
+	//keep a reference to the default fonts, so they don't keep getting destroyed/recreated
+	if(mDefaultFonts.empty())
 	{
-		mGuiStack.at(i)->init();
+		mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_SMALL));
+		mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_MEDIUM));
+		mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_LARGE));
 	}
+
+	return true;
 }
 
 void Window::deinit()
 {
-	for(unsigned int i = 0; i < mGuiStack.size(); i++)
-	{
-		mGuiStack.at(i)->deinit();
-	}
-
 	mInputManager->deinit();
 	mResourceManager.unloadAll();
 	Renderer::deinit();
