@@ -53,7 +53,7 @@ std::shared_ptr<Font> ThemeComponent::getDescriptionFont()
 
 std::shared_ptr<Font> ThemeComponent::getFastSelectFont()
 {
-	if(mFastSelectFont == NULL)
+	if(mFastSelectFont)
 		return mFastSelectFont;
 	else
 		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE);
