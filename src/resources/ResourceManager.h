@@ -3,7 +3,7 @@
 #include <stddef.h>
 #include <memory>
 #include <map>
-#include <vector>
+#include <list>
 
 //The ResourceManager exists to...
 //Allow loading resources embedded into the executable like an actual file.
@@ -38,5 +38,5 @@ public:
 private:
 	ResourceData loadFile(const std::string& path) const;
 
-	std::vector< std::weak_ptr<IReloadable> > mReloadables;
+	std::list< std::weak_ptr<IReloadable> > mReloadables;
 };

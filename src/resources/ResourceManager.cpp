@@ -86,19 +86,31 @@ bool ResourceManager::fileExists(const std::string& path) const
 
 void ResourceManager::unloadAll()
 {
-	for(auto iter = mReloadables.begin(); iter != mReloadables.end(); iter++)
+	auto iter = mReloadables.begin();
+	while(iter != mReloadables.end())
 	{
 		if(!iter->expired())
+		{
 			iter->lock()->unload(*this);
+			iter++;
+		}else{
+			mReloadables.erase(iter++);
+		}
 	}
 }
 
 void ResourceManager::reloadAll()
 {
-	for(auto iter = mReloadables.begin(); iter != mReloadables.end(); iter++)
+	auto iter = mReloadables.begin();
+	while(iter != mReloadables.end())
 	{
 		if(!iter->expired())
+		{
 			iter->lock()->reload(*this);
+			iter++;
+		}else{
+			mReloadables.erase(iter++);
+		}
 	}
 }
 
