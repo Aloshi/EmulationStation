@@ -11,7 +11,8 @@ GuiMenu::GuiMenu(Window* window, GuiGameList* parent) : GuiComponent(window)
 {
 	mParent = parent;
 
-	mList = new TextListComponent<std::string>(mWindow, 0, Renderer::getDefaultFont(Renderer::LARGE)->getHeight() + 2, Renderer::getDefaultFont(Renderer::LARGE));
+	std::shared_ptr<Font> font = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE);
+	mList = new TextListComponent<std::string>(mWindow, 0, font->getHeight() + 2, font);
 	mList->setSelectedTextColor(0x0000FFFF);
 	populateList();
 }

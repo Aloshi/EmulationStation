@@ -1,13 +1,14 @@
 #include "TextComponent.h"
 #include "../Renderer.h"
 #include "../Log.h"
+#include "../Window.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
 	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true)
 {
 }
 
-TextComponent::TextComponent(Window* window, const std::string& text, Font* font, Vector2i pos, Vector2u size) : GuiComponent(window), 
+TextComponent::TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, Vector2i pos, Vector2u size) : GuiComponent(window), 
 	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true)
 {
 	setText(text);
@@ -28,7 +29,7 @@ void TextComponent::setExtent(Vector2u size)
 	calculateExtent();
 }
 
-void TextComponent::setFont(Font* font)
+void TextComponent::setFont(std::shared_ptr<Font> font)
 {
 	mFont = font;
 
@@ -47,23 +48,21 @@ void TextComponent::setText(const std::string& text)
 	calculateExtent();
 }
 
-Font* TextComponent::getFont() const
+std::shared_ptr<Font> TextComponent::getFont() const
 {
-	return (mFont ? mFont : Renderer::getDefaultFont(Renderer::MEDIUM));;
+	if(mFont)
+		return mFont;
+	else
+		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
 }
 
 void TextComponent::onRender()
 {
-	Font* font = getFont();
-	if(font == NULL)
-	{
-		LOG(LogError) << "TextComponent can't get a valid font!";
-		return;
-	}
+	std::shared_ptr<Font> font = getFont();
 
 	//Renderer::pushClipRect(getGlobalOffset(), getSize());
 
-	Renderer::drawWrappedText(mText, 0, 0, mSize.x, mColor >> 8 << 8  | getOpacity(), font);
+	font->drawWrappedText(mText, 0, 0, mSize.x, mColor >> 8 << 8  | getOpacity());
 
 	//Renderer::popClipRect();
 
@@ -72,16 +71,11 @@ void TextComponent::onRender()
 
 void TextComponent::calculateExtent()
 {
-	Font* font = getFont();
-	if(font == NULL)
-	{
-		LOG(LogError) << "TextComponent can't get a valid font!";
-		return;
-	}
+	std::shared_ptr<Font> font = getFont();
 
 	if(mAutoCalcExtent.x)
 		font->sizeText(mText, (int*)&mSize.x, (int*)&mSize.y);
 	else
 		if(mAutoCalcExtent.y)
-			Renderer::sizeWrappedText(mText, getSize().x, mFont, NULL, (int*)&mSize.y);
+			font->sizeWrappedText(mText, getSize().x, NULL, (int*)&mSize.y);
 }

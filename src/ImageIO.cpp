@@ -59,6 +59,7 @@ std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * d
 					rawData = std::vector<unsigned char>(tempData, tempData + width * height * 4);
 					//free bitmap data
 					FreeImage_Unload(fiBitmap);
+					delete[] tempData;
 				}
 			}
 			else

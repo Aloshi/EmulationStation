@@ -20,18 +20,15 @@ public:
 
 	GuiBoxData getBoxData();
 
-	void init();
-	void deinit();
-
 	unsigned int getColor(std::string name);
 	bool getBool(std::string name);
 	float getFloat(std::string name);
 	std::shared_ptr<Sound> & getSound(std::string name);
 	std::string getString(std::string name);
 
-	Font* getListFont();
-	Font* getDescriptionFont();
-	Font* getFastSelectFont();
+	std::shared_ptr<Font> getListFont();
+	std::shared_ptr<Font> getDescriptionFont();
+	std::shared_ptr<Font> getFastSelectFont();
 
 private:
 	void setDefaults();
@@ -45,7 +42,7 @@ private:
 	unsigned int resolveColor(std::string str, unsigned int defaultColor = 0x000000FF);
 	void splitString(std::string str, char delim, std::string* before, std::string* after);
 	float strToFloat(std::string str, float defaultVal = 0.0f);
-	Font* resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize);
+	std::shared_ptr<Font> resolveFont(pugi::xml_node node, std::string defaultPath, unsigned int defaultSize);
 
 	std::string mPath;
 
@@ -56,10 +53,10 @@ private:
 	std::map<std::string, std::string> mStringMap;
 
 	GuiBoxData mBoxData;
-
-	Font* mListFont;
-	Font* mDescFont;
-	Font* mFastSelectFont;
+	
+	std::shared_ptr<Font> mListFont;
+	std::shared_ptr<Font> mDescFont;
+	std::shared_ptr<Font> mFastSelectFont;
 };
 
 #endif

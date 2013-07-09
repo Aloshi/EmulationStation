@@ -4,13 +4,18 @@
 #include <math.h>
 #include "../Log.h"
 #include "../Renderer.h"
+#include "../Window.h"
 
-Vector2u ImageComponent::getTextureSize() { return mTextureSize; }
+Vector2u ImageComponent::getTextureSize() 
+{
+	if(mTexture)
+		return mTexture->getSize();
+	else
+		return Vector2u(0, 0);
+}
 
 ImageComponent::ImageComponent(Window* window, int offsetX, int offsetY, std::string path, unsigned int resizeWidth, unsigned int resizeHeight, bool allowUpscale) : GuiComponent(window)
 {
-	mTextureID = 0;
-
 	setOffset(Vector2i(offsetX, offsetY));
 
 	//default origin is the center of image
@@ -35,120 +40,15 @@ ImageComponent::ImageComponent(Window* window, int offsetX, int offsetY, std::st
 
 ImageComponent::~ImageComponent()
 {
-	unloadImage();
-}
-
-void ImageComponent::loadImage(std::string path)
-{
-	//make sure the file *exists*
-	if(!boost::filesystem::exists(path))
-	{
-		LOG(LogError) << "Image \"" << path << "\" not found!";
-		return;
-	}
-
-	//make sure we don't already have an image
-	unloadImage();
-
-
-	FREE_IMAGE_FORMAT format = FIF_UNKNOWN;
-	FIBITMAP* image = NULL;
-	BYTE* imageData = NULL;
-	unsigned int width, height;
-
-	//detect the filetype
-	format = FreeImage_GetFileType(path.c_str(), 0);
-	if(format == FIF_UNKNOWN)
-		format = FreeImage_GetFIFFromFilename(path.c_str());
-	if(format == FIF_UNKNOWN)
-	{
-		LOG(LogError) << "Error - could not detect filetype for image \"" << path << "\"!";
-		return;
-	}
-
-
-	//make sure we can read this filetype first, then load it
-	if(FreeImage_FIFSupportsReading(format))
-	{
-		image = FreeImage_Load(format, path.c_str());
-	}else{
-		LOG(LogError) << "Error - file format reading not supported for image \"" << path << "\"!";
-		return;
-	}
-
-	//make sure it loaded properly
-	if(!image)
-	{
-		LOG(LogError) << "Error loading image \"" << path << "\"!";
-		return;
-	}
-
-	//convert to 32bit
-	FIBITMAP* imgConv = FreeImage_ConvertTo32Bits(image);
-	FreeImage_Unload(image);
-	image = imgConv;
-
-	//get a pointer to the image data as BGRA
-	imageData = FreeImage_GetBits(image);
-	if(!imageData)
-	{
-		LOG(LogError) << "Error retriving bits from image \"" << path << "\"!";
-		return;
-	}
-
-
-
-	width = FreeImage_GetWidth(image);
-	height = FreeImage_GetHeight(image);
-
-	//if width or height are zero then something is clearly wrong
-	if(!width || !height)
-	{
-		LOG(LogError) << "Width or height are zero for image \"" << path << "\"!";
-		FreeImage_Unload(image);
-		return;
-	}
-
-	//convert from BGRA to RGBA
-	GLubyte* imageRGBA = new GLubyte[4*width*height];
-	for(unsigned int i = 0; i < width*height; i++)
-	{
-		imageRGBA[i*4+0] = imageData[i*4+2];
-		imageRGBA[i*4+1] = imageData[i*4+1];
-		imageRGBA[i*4+2] = imageData[i*4+0];
-		imageRGBA[i*4+3] = imageData[i*4+3];
-	}
-
-
-
-	//now for the openGL texture stuff
-	glGenTextures(1, &mTextureID);
-	glBindTexture(GL_TEXTURE_2D, mTextureID);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageRGBA);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	mTextureSize.x = width;
-	mTextureSize.y = height;
-
-	//free the image data
-	FreeImage_Unload(image);
-
-	//free the memory from that pointer
-	delete[] imageRGBA;
-
-	resize();
 }
 
 void ImageComponent::resize()
 {
-	mSize.x = mTextureSize.x;
-	mSize.y = mTextureSize.y;
+	if(!mTexture)
+		return;
+
+	mSize.x = getTextureSize().x;
+	mSize.y = getTextureSize().y;
 
 	//(we don't resize tiled images)
 	if(!mTiled && (mTargetSize.x || mTargetSize.y))
@@ -176,19 +76,7 @@ void ImageComponent::resize()
 	}
 
 	if(mTiled)
-	{
 		mSize = mTargetSize;
-	}
-}
-
-void ImageComponent::unloadImage()
-{
-	if(mTextureID)
-	{
-		glDeleteTextures(1, &mTextureID);
-
-		mTextureID = 0;
-	}
 }
 
 void ImageComponent::setImage(std::string path)
@@ -198,10 +86,12 @@ void ImageComponent::setImage(std::string path)
 
 	mPath = path;
 
-	unloadImage();
-	if(!path.empty())
-		loadImage(path);
+	if(mPath.empty() || !mWindow->getResourceManager()->fileExists(mPath))
+		mTexture.reset();
+	else
+		mTexture = TextureResource::get(*mWindow->getResourceManager(), mPath);
 
+	resize();
 }
 
 void ImageComponent::setOrigin(float originX, float originY)
@@ -240,15 +130,15 @@ void ImageComponent::setFlipY(bool flip)
 
 void ImageComponent::onRender()
 {
-	if(mTextureID && getOpacity() > 0)
+	if(mTexture && getOpacity() > 0)
 	{
 		GLfloat points[12], texs[12];
 		GLubyte colors[6*4];
 
 		if(mTiled)
 		{
-			float xCount = (float)mSize.x / mTextureSize.x;
-			float yCount = (float)mSize.y / mTextureSize.y;
+			float xCount = (float)mSize.x / getTextureSize().x;
+			float yCount = (float)mSize.y / getTextureSize().y;
 			
 			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
 			buildImageArray(0, 0, points, texs, xCount, yCount);
@@ -303,7 +193,8 @@ void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloa
 
 void ImageComponent::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int numArrays)
 {
-	glBindTexture(GL_TEXTURE_2D, mTextureID);
+	mTexture->bind();
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -332,21 +223,6 @@ void ImageComponent::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* col
 	glDisable(GL_BLEND);
 }
 
-void ImageComponent::init()
-{
-	if(!mPath.empty())
-		loadImage(mPath);
-
-	GuiComponent::init();
-}
-
-void ImageComponent::deinit()
-{
-	unloadImage();
-
-	GuiComponent::deinit();
-}
-
 bool ImageComponent::hasImage()
 {
 	return !mPath.empty();
@@ -355,32 +231,10 @@ bool ImageComponent::hasImage()
 
 void ImageComponent::copyScreen()
 {
-	unloadImage();
-	
-	int width = Renderer::getScreenWidth();
-	int height = Renderer::getScreenHeight();
+	mTexture.reset();
 
-	//glReadBuffer(GL_FRONT);
-
-	/*char* data = new char[width*height*3];
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);*/
-
-	glGenTextures(1, &mTextureID);
-	glBindTexture(GL_TEXTURE_2D, mTextureID);
-
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	//delete[] data;
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, width, height, 0);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	mTextureSize.x = height;
-	mTextureSize.y = height;
+	mTexture = TextureResource::get(*mWindow->getResourceManager(), "");
+	mTexture->initFromScreen();
 
 	resize();
 }

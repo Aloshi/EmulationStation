@@ -150,6 +150,8 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
 	${CMAKE_CURRENT_SOURCE_DIR}/data/Resources.h
 )
 set(ES_SOURCES
@@ -189,6 +191,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_16.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_32.cpp
 )

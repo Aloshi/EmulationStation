@@ -8,9 +8,9 @@ class TextComponent : public GuiComponent
 {
 public:
 	TextComponent(Window* window);
-	TextComponent(Window* window, const std::string& text, Font* font, Vector2i pos, Vector2u size);
+	TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, Vector2i pos, Vector2u size);
 
-	void setFont(Font* font);
+	void setFont(std::shared_ptr<Font> font);
 	void setBox(Vector2i pos, Vector2u size);
 	void setExtent(Vector2u size); //Use Vector2u(0, 0) to automatically generate extent on a single line.  Use Vector2(value, 0) to automatically generate extent for wrapped text.
 	void setText(const std::string& text);
@@ -19,12 +19,12 @@ public:
 	void onRender() override;
 
 private:
-	Font* getFont() const;
+	std::shared_ptr<Font> getFont() const;
 	
 	void calculateExtent();
 
 	unsigned int mColor;
-	Font* mFont;
+	std::shared_ptr<Font> mFont;
 	Vector2<bool> mAutoCalcExtent;
 	std::string mText;
 };

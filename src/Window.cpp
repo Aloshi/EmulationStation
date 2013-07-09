@@ -7,6 +7,10 @@
 Window::Window()
 {
 	mInputManager = new InputManager(this);
+
+	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_SMALL));
+	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_MEDIUM));
+	mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_LARGE));
 }
 
 Window::~Window()
@@ -53,8 +57,9 @@ void Window::render()
 
 void Window::init()
 {
-	mInputManager->init();
+	mInputManager->init(); //shouldn't this go AFTER renderer initialization?
 	Renderer::init(0, 0);
+	mResourceManager.reloadAll();
 
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
@@ -70,6 +75,7 @@ void Window::deinit()
 	}
 
 	mInputManager->deinit();
+	mResourceManager.unloadAll();
 	Renderer::deinit();
 }
 
@@ -96,4 +102,9 @@ void Window::update(int deltaTime)
 InputManager* Window::getInputManager()
 {
 	return mInputManager;
+}
+
+ResourceManager* Window::getResourceManager()
+{
+	return &mResourceManager;
 }
