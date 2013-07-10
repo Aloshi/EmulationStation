@@ -73,6 +73,8 @@ else()
     add_definitions(-DUSE_OPENGL_ES)
 endif()
 
+add_definitions(-DEIGEN_DONT_ALIGN)
+
 #-------------------------------------------------------------------------------
 #add include directories
 set(ES_INCLUDE_DIRS
