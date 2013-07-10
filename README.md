@@ -10,6 +10,7 @@ I found a bug! I have a problem!
 ================================
 
 - First, try to check the [issue list](https://github.com/Aloshi/EmulationStation/issues?state=open) if there are already some entries that might match your issue. Then make sure to check closed bugs too, to find a solution to already solved problems.
+- When you're running EmulationStation on a on Raspberry Pi and have problems with config files not being saved properly, content missing after editing etc, check if your SD card is corrupted (see issues [#78](https://github.com/Aloshi/EmulationStation/issues/78) and [#107](https://github.com/Aloshi/EmulationStation/issues/107)). You can do this using the free tools [h2testw](http://www.heise.de/download/h2testw.html) or [F3](http://oss.digirati.com.br/f3/).
 - Try to update to the latest version of EmulationStation using git (You might need to delete your `es_input.cfg` and `es_settings.cfg` after that to reset them to default values):
 
 ```
