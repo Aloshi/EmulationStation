@@ -53,7 +53,7 @@ std::shared_ptr<Font> ThemeComponent::getDescriptionFont()
 
 std::shared_ptr<Font> ThemeComponent::getFastSelectFont()
 {
-	if(mFastSelectFont == NULL)
+	if(mFastSelectFont)
 		return mFastSelectFont;
 	else
 		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE);
@@ -71,10 +71,6 @@ ThemeComponent::ThemeComponent(Window* window) : GuiComponent(window)
 	AudioManager::getInstance()->registerSound(mSoundMap["menuSelect"]);
 	AudioManager::getInstance()->registerSound(mSoundMap["menuBack"]);
 	AudioManager::getInstance()->registerSound(mSoundMap["menuOpen"]);
-
-	mListFont.reset();
-	mDescFont.reset();
-	mFastSelectFont.reset();
 
 	setDefaults();
 }
@@ -95,7 +91,7 @@ void ThemeComponent::setDefaults()
 
 	mBoolMap["hideHeader"] = false;
 	mBoolMap["hideDividers"] = false;
-	mBoolMap["listCentered"] = true;
+	mBoolMap["listCentered"] = false;
 
 	mFloatMap["listOffsetX"] = 0.5;
 	mFloatMap["listTextOffsetX"] = 0.005f;
