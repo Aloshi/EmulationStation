@@ -98,7 +98,7 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<listSelectedColor>` - the hex color to use for selected text on the GuiGameList. Default is zero, which means no change.
 
-`<listLeftAlign />` - if present, the games list names will be left aligned to the value of `<listOffsetX>` (default 0.5).
+`<listLeftAlign />` - if present, the games list names will be left aligned to the value of `<listOffsetX>` + `<listTextOffsetX>`. On by default for detailed themes.
 
 `<hideHeader />` - if present, the system name header won't be displayed (useful for replacing it with an image). If you're making a complete custom theme, you probably want to use this.
 

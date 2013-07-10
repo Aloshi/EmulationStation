@@ -344,6 +344,7 @@ void GuiGameList::updateTheme()
 	}else{
 		mList.setCentered(true);
 		mList.setOffset(0, mList.getOffset().y);
+		mList.setTextOffsetX(0);
 	}
 }
 

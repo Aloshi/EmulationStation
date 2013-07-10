@@ -72,10 +72,6 @@ ThemeComponent::ThemeComponent(Window* window) : GuiComponent(window)
 	AudioManager::getInstance()->registerSound(mSoundMap["menuBack"]);
 	AudioManager::getInstance()->registerSound(mSoundMap["menuOpen"]);
 
-	mListFont.reset();
-	mDescFont.reset();
-	mFastSelectFont.reset();
-
 	setDefaults();
 }
 
@@ -95,7 +91,7 @@ void ThemeComponent::setDefaults()
 
 	mBoolMap["hideHeader"] = false;
 	mBoolMap["hideDividers"] = false;
-	mBoolMap["listCentered"] = true;
+	mBoolMap["listCentered"] = false;
 
 	mFloatMap["listOffsetX"] = 0.5;
 	mFloatMap["listTextOffsetX"] = 0.005f;
