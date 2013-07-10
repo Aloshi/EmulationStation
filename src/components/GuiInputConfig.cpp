@@ -81,34 +81,33 @@ void GuiInputConfig::render()
 
 	std::stringstream stream;
 	stream << "PLAYER " << mTargetConfig->getPlayerNum() + 1 << ", press...";
-	font->drawText(stream.str(), 10, 10, 0x000000FF);
+	font->drawText(stream.str(), Eigen::Vector2f(10, 10), 0x000000FF);
 
 	int y = 14 + font->getHeight();
 	for(int i = 0; i < mCurInputId; i++)
 	{
-		font->drawText(inputDispName[i], 10, y, 0x00CC00FF);
+		font->drawText(inputDispName[i], Eigen::Vector2f(10, y), 0x00CC00FF);
 		y += font->getHeight() + 5;
 	}
 
 	if(mCurInputId >= inputCount)
 	{
-		font->drawCenteredText("Basic config done!", 0, (int)(Renderer::getScreenHeight() * 0.4), 0x00CC00FF);
-		font->drawCenteredText("Press any button to continue.", 0, (int)(Renderer::getScreenHeight() * 0.4) + font->getHeight() + 4, 0x000000FF);
+		font->drawCenteredText("Basic config done!", 0, Renderer::getScreenHeight() * 0.4f, 0x00CC00FF);
+		font->drawCenteredText("Press any button to continue.", 0, Renderer::getScreenHeight() * 0.4f + font->getHeight() + 4, 0x000000FF);
 	}else{
-		font->drawText(inputDispName[mCurInputId], 10, y, 0x000000FF);
+		font->drawText(inputDispName[mCurInputId], Eigen::Vector2f(10, y), 0x000000FF);
 		if(mCanSkip)
 		{
-			int textWidth = 0;
-			font->sizeText(inputDispName[mCurInputId], &textWidth, NULL);
-			textWidth += 14;
+			Eigen::Vector2f textSize = font->sizeText(inputDispName[mCurInputId]);
+			textSize[0] += 14;
 
-			if(Renderer::getScreenWidth() / 2.5f > textWidth)
-				textWidth = (int)(Renderer::getScreenWidth() / 2.5f);
+			if(Renderer::getScreenWidth() / 2.5f > textSize.x())
+				textSize[0] = Renderer::getScreenWidth() / 2.5f;
 
-			font->drawText("press Accept to skip", textWidth, y, 0x0000AAFF);
+			font->drawText("press Accept to skip", Eigen::Vector2f(textSize.x(), y), 0x0000AAFF);
 		}
 	}
 
 	if(!mErrorMsg.empty())
-		font->drawCenteredText(mErrorMsg, 0, Renderer::getScreenHeight() - font->getHeight() - 10, 0xFF0000FF);
+		font->drawCenteredText(mErrorMsg, 0, (float)Renderer::getScreenHeight() - font->getHeight() - 10, 0xFF0000FF);
 }

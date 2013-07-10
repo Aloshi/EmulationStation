@@ -7,22 +7,19 @@ class ScrollableContainer : public GuiComponent
 public:
 	ScrollableContainer(Window* window);
 
-	void setSize(Vector2u size);
-
-	Vector2d getScrollPos() const;
-	void setScrollPos(const Vector2d& pos);
+	Eigen::Vector2d getScrollPos() const;
+	void setScrollPos(const Eigen::Vector2d& pos);
 	void setAutoScroll(int delay, double speed); //Use 0 for speed to disable.
 	void resetAutoScrollTimer();
 
 	void update(int deltaTime) override;
-	void render() override;
+	void render(const Eigen::Affine3f& parentTrans) override;
 
-	//Vector2i getGlobalOffset() override;
 private:
-	Vector2i getContentSize();
+	Eigen::Vector2f getContentSize();
 
-	Vector2d mScrollPos;
-	Vector2d mScrollDir;
+	Eigen::Vector2d mScrollPos;
+	Eigen::Vector2d mScrollDir;
 	int mAutoScrollDelay;
 	double mAutoScrollSpeed;
 	int mAutoScrollTimer;

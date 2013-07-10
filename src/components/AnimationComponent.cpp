@@ -43,16 +43,16 @@ void AnimationComponent::update(int deltaTime)
 
 		if(mMoveX != 0 || mMoveY != 0)
 		{
-			Vector2i offset(mMoveX, mMoveY);
-			if(abs(offset.x) > mMoveSpeed)
-				offset.x = mMoveSpeed * (offset.x > 0 ? 1 : -1);
-			if(abs(offset.y) > mMoveSpeed)
-				offset.y = mMoveSpeed * (offset.y > 0 ? 1 : -1);
+			Eigen::Vector2i offset(mMoveX, mMoveY);
+			if(abs(offset.x()) > mMoveSpeed)
+				offset.x() = mMoveSpeed * (offset.x() > 0 ? 1 : -1);
+			if(abs(offset.y()) > mMoveSpeed)
+				offset.y() = mMoveSpeed * (offset.y() > 0 ? 1 : -1);
 
-			moveChildren(offset.x, offset.y);
+			moveChildren(offset.x(), offset.y());
 
-			mMoveX -= offset.x;
-			mMoveY -= offset.y;
+			mMoveX -= offset.x();
+			mMoveY -= offset.y();
 		}
 
 		if(mFadeRate != 0)
@@ -83,11 +83,11 @@ void AnimationComponent::addChild(GuiComponent* gui)
 
 void AnimationComponent::moveChildren(int offsetx, int offsety)
 {
-	Vector2i move(offsetx, offsety);
+	Eigen::Vector3f move((float)offsetx, (float)offsety, 0);
 	for(unsigned int i = 0; i < mChildren.size(); i++)
 	{
 		GuiComponent* comp = mChildren.at(i);
-		comp->setOffset(comp->getOffset() + move);
+		comp->setPosition(comp->getPosition() + move);
 	}
 }
 

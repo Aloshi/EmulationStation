@@ -1,11 +1,10 @@
 #include "GuiBox.h"
 
-GuiBox::GuiBox(Window* window, int offsetX, int offsetY, unsigned int width, unsigned int height) : GuiComponent(window), mBackgroundImage(window), 
+GuiBox::GuiBox(Window* window, float offsetX, float offsetY, float width, float height) : GuiComponent(window), mBackgroundImage(window), 
 	mHorizontalImage(window), mVerticalImage(window), mCornerImage(window)
 {
-	setOffset(Vector2i(offsetX, offsetY));
-	
-	mSize = Vector2u(width, height);
+	setPosition(offsetX, offsetY);
+	setSize(width, height);
 }
 
 void GuiBox::setData(GuiBoxData data)
@@ -22,7 +21,7 @@ void GuiBox::setHorizontalImage(std::string path, bool tiled)
 	mHorizontalImage.setOrigin(0, 0);
 
 	mHorizontalImage.setImage(path);
-	mHorizontalImage.setResize(getHorizontalBorderWidth(), mSize.y, true);
+	mHorizontalImage.setResize(getHorizontalBorderWidth(), mSize.y(), true);
 }
 
 void GuiBox::setVerticalImage(std::string path, bool tiled)
@@ -31,15 +30,15 @@ void GuiBox::setVerticalImage(std::string path, bool tiled)
 	mVerticalImage.setOrigin(0, 0);
 
 	mVerticalImage.setImage(path);
-	mVerticalImage.setResize(mSize.x, getVerticalBorderWidth(), true);
+	mVerticalImage.setResize(mSize.x(), getVerticalBorderWidth(), true);
 }
 
 void GuiBox::setBackgroundImage(std::string path, bool tiled)
 {
 	mBackgroundImage.setOrigin(0, 0);
-	mBackgroundImage.setResize(mSize.x, mSize.y, true);
+	mBackgroundImage.setResize(mSize.x(), mSize.y(), true);
 	mBackgroundImage.setTiling(tiled);
-	mBackgroundImage.setOffset(0, 0);
+	mBackgroundImage.setPosition(0, 0);
 
 	mBackgroundImage.setImage(path);
 }
@@ -52,81 +51,65 @@ void GuiBox::setCornerImage(std::string path)
 	mCornerImage.setImage(path);
 }
 
-void GuiBox::onRender()
+void GuiBox::render(const Eigen::Affine3f& parentTrans)
 {
-	mBackgroundImage.render();
+	Eigen::Affine3f trans = parentTrans * getTransform();
+
+	mBackgroundImage.render(trans);
 
 	//left border
-	mHorizontalImage.setOffset(-getHorizontalBorderWidth(), 0);
+	mHorizontalImage.setPosition(-getHorizontalBorderWidth(), 0);
 	mHorizontalImage.setFlipX(false);
-	mHorizontalImage.render();
+	mHorizontalImage.render(trans);
 	
 	//right border
-	mHorizontalImage.setOffset(mSize.x, 0);
+	mHorizontalImage.setPosition(mSize.x(), 0);
 	mHorizontalImage.setFlipX(true);
-	mHorizontalImage.render();
+	mHorizontalImage.render(trans);
 	
 	//top border
-	mVerticalImage.setOffset(0, -getVerticalBorderWidth());
+	mVerticalImage.setPosition(0, -getVerticalBorderWidth());
 	mVerticalImage.setFlipY(false);
-	mVerticalImage.render();
+	mVerticalImage.render(trans);
 	
 	//bottom border
-	mVerticalImage.setOffset(0, mSize.y);
+	mVerticalImage.setPosition(0, mSize.y());
 	mVerticalImage.setFlipY(true);
-	mVerticalImage.render();
+	mVerticalImage.render(trans);
 
 
 	//corner top left
-	mCornerImage.setOffset(-getHorizontalBorderWidth(), -getVerticalBorderWidth());
+	mCornerImage.setPosition(-getHorizontalBorderWidth(), -getVerticalBorderWidth());
 	mCornerImage.setFlipX(false);
 	mCornerImage.setFlipY(false);
-	mCornerImage.render();
+	mCornerImage.render(trans);
 
 	//top right
-	mCornerImage.setOffset(mSize.x, mCornerImage.getOffset().y);
+	mCornerImage.setPosition(mSize.x(), mCornerImage.getPosition().y());
 	mCornerImage.setFlipX(true);
-	mCornerImage.render();
+	mCornerImage.render(trans);
 
 	//bottom right
-	mCornerImage.setOffset(mCornerImage.getOffset().x, mSize.y);
+	mCornerImage.setPosition(mCornerImage.getPosition().x(), mSize.y());
 	mCornerImage.setFlipY(true);
-	mCornerImage.render();
+	mCornerImage.render(trans);
 
 	//bottom left
-	mCornerImage.setOffset(-getHorizontalBorderWidth(), mCornerImage.getOffset().y);
+	mCornerImage.setPosition(-getHorizontalBorderWidth(), mCornerImage.getPosition().y());
 	mCornerImage.setFlipX(false);
-	mCornerImage.render();
+	mCornerImage.render(trans);
 
-	GuiComponent::onRender();
+	GuiComponent::renderChildren(trans);
 }
 
-void GuiBox::init()
+float GuiBox::getHorizontalBorderWidth()
 {
-	mVerticalImage.init();
-	mHorizontalImage.init();
-	mCornerImage.init();
-
-	GuiComponent::init();
+	return (float)mHorizontalImage.getTextureSize().x();
 }
 
-void GuiBox::deinit()
+float GuiBox::getVerticalBorderWidth()
 {
-	mVerticalImage.deinit();
-	mHorizontalImage.deinit();
-	mCornerImage.deinit();
-
-	GuiComponent::deinit();
-}
-
-int GuiBox::getHorizontalBorderWidth()
-{
-	return mHorizontalImage.getTextureSize().x;
-}
-
-int GuiBox::getVerticalBorderWidth()
-{
-	return mVerticalImage.getTextureSize().y;
+	return (float)mVerticalImage.getTextureSize().y();
 }
 
 bool GuiBox::hasBackground()

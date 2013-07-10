@@ -12,9 +12,9 @@ public:
 	GuiMenu(Window* window, GuiGameList* parent);
 	virtual ~GuiMenu();
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
-	void render();
+	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
+	void render(const Eigen::Affine3f& parentTrans) override;
 
 private:
 	GuiGameList* mParent;

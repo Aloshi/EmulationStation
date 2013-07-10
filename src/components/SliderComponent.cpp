@@ -12,7 +12,7 @@ SliderComponent::SliderComponent(Window* window, float min, float max, float inc
 	//calculate move scale
 	mMoveScale = ((max - min) * 0.0007f) / increment;
 
-	setSize(Vector2u(128, 32));
+	setSize(128, 32);
 }
 
 bool SliderComponent::input(InputConfig* config, Input input)
@@ -65,29 +65,26 @@ void SliderComponent::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void SliderComponent::onRender()
+void SliderComponent::render(const Eigen::Affine3f& parentTrans)
 {
+	Eigen::Affine3f trans = parentTrans * getTransform();
+
 	//render line
 	const int lineWidth = 2;
-	Renderer::drawRect(0, mSize.y / 2 - lineWidth / 2, mSize.x, lineWidth, 0x000000CC);
+	Renderer::drawRect(0, (int)mSize.y() / 2 - lineWidth / 2, (int)mSize.x(), lineWidth, 0x000000CC);
 
 	//render left end
-	const int capWidth = (int)(mSize.x * 0.03f);
-	Renderer::drawRect(0, 0, capWidth, mSize.y, 0x000000CC);
+	const int capWidth = (int)(mSize.x() * 0.03f);
+	Renderer::drawRect(0, 0, capWidth, (int)mSize.y(), 0x000000CC);
 
 	//render right end
-	Renderer::drawRect(mSize.x - capWidth, 0, capWidth, mSize.y, 0x000000CC);
+	Renderer::drawRect((int)mSize.x() - capWidth, 0, capWidth, (int)mSize.y(), 0x000000CC);
 
 	//render our value
-	const int lineLength = mSize.x - capWidth;
-	Renderer::drawRect((int)(((mValue + mMin) / mMax) * lineLength), 0, capWidth, mSize.y, 0x0000FFFF);
+	const int lineLength = (int)mSize.x() - capWidth;
+	Renderer::drawRect((int)(((mValue + mMin) / mMax) * lineLength), 0, capWidth, (int)mSize.y(), 0x0000FFFF);
 
-	GuiComponent::onRender();
-}
-
-void SliderComponent::setSize(Vector2u size)
-{
-	mSize = size;
+	GuiComponent::renderChildren(trans);
 }
 
 void SliderComponent::setValue(float value)

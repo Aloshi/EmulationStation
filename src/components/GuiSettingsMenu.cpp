@@ -4,7 +4,7 @@
 #include "../VolumeControl.h"
 
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window), 
-	mList(window, Vector2u(2, 3)), 
+	mList(window, Eigen::Vector2i(2, 3)), 
 	mDrawFramerateSwitch(window),
 	mVolumeSlider(window, 0, 100, 1),
 	mSaveLabel(window)
@@ -13,31 +13,33 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 
 	addChild(&mList);
 
-	mList.setOffset(Renderer::getScreenWidth() / 4, 0);
+	mList.setPosition(Renderer::getScreenWidth() / 4.0f, 0);
+
+	using namespace Eigen;
 
 	TextComponent* label = new TextComponent(mWindow);
 	label->setText("Draw Framerate: ");
 	label->setColor(0x0000FFFF);
-	mList.setEntry(Vector2u(0, 0), Vector2u(1, 1), label, false, ComponentListComponent::AlignRight, Vector2<bool>(true, true));
+	mList.setEntry(Vector2i(0, 0), Vector2i(1, 1), label, false, ComponentListComponent::AlignRight, Matrix<bool, 1, 2>(true, true));
 	mLabels.push_back(label);
 
 	//drawFramerate switch
-	mList.setEntry(Vector2u(1, 0), Vector2u(1, 1), &mDrawFramerateSwitch, true, ComponentListComponent::AlignCenter, Vector2<bool>(true, true));
+	mList.setEntry(Vector2i(1, 0), Vector2i(1, 1), &mDrawFramerateSwitch, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(true, true));
 
 	label = new TextComponent(mWindow);
 	label->setText("System volume: ");
 	label->setColor(0x0000FFFF);
-	mList.setEntry(Vector2u(0, 1), Vector2u(1, 1), label, false, ComponentListComponent::AlignRight, Vector2<bool>(true, true));
+	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), label, false, ComponentListComponent::AlignRight, Matrix<bool, 1, 2>(true, true));
 
 	//volume slider
-	mList.setEntry(Vector2u(1, 1), Vector2u(1, 1), &mVolumeSlider, true, ComponentListComponent::AlignCenter, Vector2<bool>(true, true));
+	mList.setEntry(Vector2i(1, 1), Vector2i(1, 1), &mVolumeSlider, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(true, true));
 
 	//save label
 	mSaveLabel.setText("SAVE");
 	mSaveLabel.setColor(0x000000FF);
-	mList.setEntry(Vector2u(0, 2), Vector2u(2, 1), &mSaveLabel, true, ComponentListComponent::AlignCenter, Vector2<bool>(false, true));
+	mList.setEntry(Vector2i(0, 2), Vector2i(2, 1), &mSaveLabel, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
 
-	mList.setOffset(Renderer::getScreenWidth() / 2 - mList.getSize().x / 2, 0);
+	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, 0);
 }
 
 GuiSettingsMenu::~GuiSettingsMenu()

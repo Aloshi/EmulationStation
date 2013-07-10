@@ -13,10 +13,8 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void onRender() override;
+	void render(const Eigen::Affine3f& parentTrans) override;
 	
-	void setSize(Vector2u size);
-
 private:
 	float mMin, mMax;
 	float mValue;

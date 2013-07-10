@@ -90,18 +90,18 @@ void GuiDetectDevice::render()
 	stream << (mCurrentPlayer + 1);
 	stream >> playerString;
 
-	font->drawCenteredText("Press a button on the device for", 0, Renderer::getScreenHeight() / 3, 0x000000FF);
-	font->drawCenteredText("PLAYER " + playerString, 0, (int)(Renderer::getScreenHeight()*1.5f) / 3, 0x333333FF);
+	font->drawCenteredText("Press a button on the device for", 0, Renderer::getScreenHeight() / 3.0f, 0x000000FF);
+	font->drawCenteredText("PLAYER " + playerString, 0, (Renderer::getScreenHeight()*1.5f) / 3.0f, 0x333333FF);
 
 	if(mWindow->getInputManager()->getNumPlayers() > 0)
 	{
-		font->drawCenteredText("(P1 - hold a button to finish)", 0, (Renderer::getScreenHeight()*2) / 3, (mHoldingFinish ? 0x0000FFFF : 0x000066FF));
+		font->drawCenteredText("(P1 - hold a button to finish)", 0, (Renderer::getScreenHeight()*2) / 3.0f, (mHoldingFinish ? 0x0000FFFF : 0x000066FF));
 	}
 
 	if(mWindow->getInputManager()->getNumJoysticks() == 0)
 	{
-		font->drawCenteredText("No joysticks detected!", 0, Renderer::getScreenHeight() - (font->getHeight()*2)-10, 0xFF0000FF);
+		font->drawCenteredText("No joysticks detected!", 0, Renderer::getScreenHeight() - (font->getHeight()*2.0f)-10, 0xFF0000FF);
 	}
 
-	font->drawCenteredText("Press F4 to quit.", 0, Renderer::getScreenHeight() - font->getHeight() - 2 , 0x000000FF);
+	font->drawCenteredText("Press F4 to quit.", 0, Renderer::getScreenHeight() - font->getHeight() - 2.0f , 0x000000FF);
 }

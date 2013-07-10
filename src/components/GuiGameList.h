@@ -29,10 +29,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render();
-
-	void init();
-	void deinit();
+	void render(const Eigen::Affine3f& parentTrans) override;
 
 	void updateDetailData();
 
@@ -70,7 +67,7 @@ private:
 	ImageComponent mTransitionImage;
 	AnimationComponent mTransitionAnimation;
 
-	Vector2i getImagePos();
+	Eigen::Vector3f getImagePos();
 };
 
 #endif

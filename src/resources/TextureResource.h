@@ -3,7 +3,7 @@
 #include "ResourceManager.h"
 
 #include <string>
-#include "../Vector2.h"
+#include "../Eigen/Dense"
 #include "../platform.h"
 #include GLHEADER
 
@@ -17,7 +17,7 @@ public:
 	void unload(const ResourceManager& rm) override;
 	void reload(const ResourceManager& rm) override;
 	
-	Vector2u getSize() const;
+	Eigen::Vector2i getSize() const;
 	void bind() const;
 	
 	void initFromScreen();
@@ -29,7 +29,7 @@ private:
 	void initFromResource(const ResourceData data);
 	void deinit();
 
-	Vector2u mTextureSize;
+	Eigen::Vector2i mTextureSize;
 	GLuint mTextureID;
 	const std::string mPath;
 

@@ -8,7 +8,7 @@ SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(wind
 	//mSize = Vector2u((unsigned int)(Renderer::getScreenWidth() * 0.05), 
 	//	(unsigned int)(Renderer::getScreenHeight() * 0.05));
 
-	Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->sizeText("OFF", (int*)&mSize.x, (int*)&mSize.y);
+	mSize = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->sizeText("OFF");
 }
 
 bool SwitchComponent::input(InputConfig* config, Input input)
@@ -22,15 +22,18 @@ bool SwitchComponent::input(InputConfig* config, Input input)
 	return false;
 }
 
-void SwitchComponent::onRender()
+void SwitchComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Renderer::pushClipRect(getGlobalOffset(), getSize());
+	//Renderer::pushClipRect(getGlobalOffset(), getSize());
 
-	Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(mState ? "ON" : "OFF", 0, 0, mState ? 0x00FF00FF : 0xFF0000FF);
+	Eigen::Affine3f trans = parentTrans * getTransform();
+	Renderer::setMatrix(trans);
 
-	Renderer::popClipRect();
+	Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(mState ? "ON" : "OFF", Eigen::Vector2f(0, 0), mState ? 0x00FF00FF : 0xFF0000FF);
 
-	GuiComponent::onRender();
+	//Renderer::popClipRect();
+
+	GuiComponent::renderChildren(trans);
 }
 
 bool SwitchComponent::getState()

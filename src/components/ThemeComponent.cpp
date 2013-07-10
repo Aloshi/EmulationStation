@@ -283,10 +283,10 @@ GuiComponent* ThemeComponent::createElement(pugi::xml_node data, GuiComponent* p
 		splitString(origin, ' ', &originX, &originY);
 
 		//resolve to pixels from percentages/variables
-		int x = (int)(resolveExp(posX) * Renderer::getScreenWidth());
-		int y = (int)(resolveExp(posY) * Renderer::getScreenHeight());
-		int w = (int)(resolveExp(dimW) * Renderer::getScreenWidth());
-		int h = (int)(resolveExp(dimH) * Renderer::getScreenHeight());
+		float x = resolveExp(posX) * Renderer::getScreenWidth();
+		float y = resolveExp(posY) * Renderer::getScreenHeight();
+		float w = resolveExp(dimW) * Renderer::getScreenWidth();
+		float h = resolveExp(dimH) * Renderer::getScreenHeight();
 
 		float ox = strToFloat(originX);
 		float oy = strToFloat(originY);

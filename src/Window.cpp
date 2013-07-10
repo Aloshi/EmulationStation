@@ -51,9 +51,11 @@ void Window::render()
 	if(mGuiStack.size() == 0)
 		std::cout << "guistack empty\n";
 
+	Eigen::Affine3f trans(Eigen::Affine3f::Identity());
+
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
-		mGuiStack.at(i)->render();
+		mGuiStack.at(i)->render(trans);
 	}
 }
 

@@ -6,7 +6,7 @@
 #include GLHEADER
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Vector2.h"
+#include "Eigen/Dense"
 #include "resources/ResourceManager.h"
 
 class TextCache;
@@ -46,23 +46,24 @@ public:
 
 	GLuint textureID;
 
-	TextCache* buildTextCache(const std::string& text, int offsetX, int offsetY, unsigned int color);
+	TextCache* buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color);
 	void renderTextCache(TextCache* cache);
 
 	//Create a TextCache, render with it, then delete it.  Best used for short text or text that changes frequently.
-	void drawText(std::string text, int startx, int starty, int color);
-	void sizeText(std::string text, int* w, int* h); //Sets the width and height of a given string to supplied pointers. A dimension is skipped if its pointer is NULL.
+	void drawText(std::string text, const Eigen::Vector2f& offset, unsigned int color);
+	Eigen::Vector2f sizeText(std::string text) const; //Sets the width and height of a given string to supplied pointers. A dimension is skipped if its pointer is NULL.
 	
-	void drawWrappedText(std::string text, int xStart, int yStart, int xLen, unsigned int color);
-	void sizeWrappedText(std::string text, int xLen, int* xOut, int* yOut);
-	void drawCenteredText(std::string text, int xOffset, int y, unsigned int color);
+	void drawWrappedText(std::string text, const Eigen::Vector2f& offset, float xLen, unsigned int color);
+	Eigen::Vector2f sizeWrappedText(std::string text, float xLen) const;
 
-	int getHeight();
+	void drawCenteredText(std::string text, float xOffset, float y, unsigned int color);
+
+	int getHeight() const;
 
 	void unload(const ResourceManager& rm) override;
 	void reload(const ResourceManager& rm) override;
 
-	int getSize();
+	int getSize() const;
 
 	static std::string getDefaultPath();
 private:
@@ -95,8 +96,8 @@ class TextCache
 public:
 	struct Vertex
 	{
-		Vector2<GLfloat> pos;
-		Vector2<GLfloat> tex;
+		Eigen::Vector2f pos;
+		Eigen::Vector2f tex;
 	};
 
 	void setColor(unsigned int color);

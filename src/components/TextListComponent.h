@@ -9,6 +9,7 @@
 #include <string>
 #include <memory>
 #include "../Sound.h"
+#include "../Log.h"
 
 #define MARQUEE_DELAY 900
 #define MARQUEE_SPEED 16
@@ -19,11 +20,14 @@ template <typename T>
 class TextListComponent : public GuiComponent
 {
 public:
-	TextListComponent(Window* window, int offsetX, int offsetY, std::shared_ptr<Font> font);
+	TextListComponent(Window* window, float offsetX, float offsetY, std::shared_ptr<Font> font);
 	virtual ~TextListComponent();
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
+	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
+	void render(const Eigen::Affine3f& parentTrans) override;
+
+	void onPositionChanged() override;
 
 	void addObject(std::string name, T obj, unsigned int color = 0xFF0000);
 	void clear();
@@ -45,9 +49,6 @@ public:
 	void setSelection(int i);
 
 	void setFont(std::shared_ptr<Font> f);
-
-protected:
-	void onRender();
 
 private:
 	static const int SCROLLDELAY = 507;
@@ -81,16 +82,15 @@ private:
 };
 
 template <typename T>
-TextListComponent<T>::TextListComponent(Window* window, int offsetX, int offsetY, std::shared_ptr<Font> font) : GuiComponent(window)
+TextListComponent<T>::TextListComponent(Window* window, float offsetX, float offsetY, std::shared_ptr<Font> font) : GuiComponent(window)
 {
 	mSelection = 0;
 	mScrollDir = 0;
 	mScrolling = 0;
 	mScrollAccumulator = 0;
 
-	setOffset(Vector2i(offsetX, offsetY));
-
-	mSize = Vector2u(Renderer::getScreenWidth() - getOffset().x, Renderer::getScreenHeight() - getOffset().y);
+	setPosition(offsetX, offsetY);
+	
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
 	mTextOffsetX = 0;
@@ -103,13 +103,22 @@ TextListComponent<T>::TextListComponent(Window* window, int offsetX, int offsetY
 }
 
 template <typename T>
+void TextListComponent<T>::onPositionChanged()
+{
+	setSize(Renderer::getScreenWidth() - getPosition().x(), Renderer::getScreenHeight() - getPosition().y());
+}
+
+template <typename T>
 TextListComponent<T>::~TextListComponent()
 {
 }
 
 template <typename T>
-void TextListComponent<T>::onRender()
+void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
+	Eigen::Affine3f trans = parentTrans * getTransform();
+	Renderer::setMatrix(trans);
+
 	const int cutoff = 0;
 	const int entrySize = mFont->getHeight() + 5;
 
@@ -128,7 +137,7 @@ void TextListComponent<T>::onRender()
 			startEntry = mRowVector.size() - screenCount;
 	}
 
-	int y = cutoff;
+	float y = (float)cutoff;
 
 	if(mRowVector.size() == 0)
 	{
@@ -140,32 +149,33 @@ void TextListComponent<T>::onRender()
 	if(listCutoff > (int)mRowVector.size())
 		listCutoff = mRowVector.size();
 
-	Renderer::pushClipRect(getGlobalOffset(), getSize());
+	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)getSize().x(), (int)getSize().y()));
+	//Renderer::pushClipRect(getGlobalOffset(), getSize());
 
 	for(int i = startEntry; i < listCutoff; i++)
 	{
 		//draw selector bar
 		if(mSelection == i)
 		{
-			Renderer::drawRect(0, y, getSize().x, mFont->getHeight(), mSelectorColor);
+			Renderer::drawRect(0, (int)y, (int)getSize().x(), mFont->getHeight(), mSelectorColor);
 		}
 
 		ListRow row = mRowVector.at((unsigned int)i);
 
-		int x = mTextOffsetX - (mSelection == i ? mMarqueeOffset : 0);
+		float x = (float)mTextOffsetX - (mSelection == i ? mMarqueeOffset : 0);
 		unsigned int color = (mSelection == i && mSelectedTextColorOverride != 0) ? mSelectedTextColorOverride : row.color;
 
 		if(mDrawCentered)
 			mFont->drawCenteredText(row.name, x, y, color);
 		else
-			mFont->drawText(row.name, x, y, color);
+			mFont->drawText(row.name, Eigen::Vector2f(x, y), color);
 
 		y += entrySize;
 	}
 
 	Renderer::popClipRect();
 
-	GuiComponent::onRender();
+	GuiComponent::renderChildren(trans);
 }
 
 template <typename T>
@@ -258,11 +268,11 @@ void TextListComponent<T>::update(int deltaTime)
 	}else{
 		//if we're not scrolling and this object's text goes outside our size, marquee it!
 		std::string text = getSelectedName();
-		int w;
-		mFont->sizeText(text, &w, NULL);
+
+		Eigen::Vector2f textSize = mFont->sizeText(text);
 
 		//it's long enough to marquee
-		if(w - mMarqueeOffset > (int)getSize().x - 12)
+		if(textSize.x() - mMarqueeOffset > getSize().x() - 12)
 		{
 			mMarqueeTime += deltaTime;
 			while(mMarqueeTime > MARQUEE_SPEED)

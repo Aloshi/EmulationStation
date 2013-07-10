@@ -17,9 +17,10 @@ public:
 	GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, ThemeComponent * theme);
 	~GuiFastSelect();
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
-	void render();
+	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
+	void render(const Eigen::Affine3f& parentTrans) override;
+
 private:
 	static const std::string LETTERS;
 	static const int SCROLLSPEED;

@@ -128,7 +128,6 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Vector2.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h

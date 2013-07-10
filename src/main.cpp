@@ -217,7 +217,7 @@ int main(int argc, char* argv[])
 		window.update(deltaTime);
 		Renderer::swapBuffers(); //swap here so we can read the last screen state during updates (see ImageComponent::copyScreen())
 		window.render();
-
+		
 		if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
 		{
 			static int timeElapsed = 0;
@@ -235,7 +235,9 @@ int main(int argc, char* argv[])
 				nrOfFrames = 0;
 				timeElapsed = 0;
 			}
-			Font::get(*window.getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(fpsString, 50, 50, 0x00FF00FF);
+
+			Renderer::setMatrix(Eigen::Affine3f::Identity());
+			Font::get(*window.getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(fpsString, Eigen::Vector2f(50, 50), 0x00FF00FF);
 		}
 
 		//sleep if we're past our threshold

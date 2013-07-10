@@ -7,7 +7,7 @@
 
 std::map< std::string, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
 
-TextureResource::TextureResource(const ResourceManager& rm, const std::string& path) : mTextureID(0), mPath(path)
+TextureResource::TextureResource(const ResourceManager& rm, const std::string& path) : mTextureID(0), mPath(path), mTextureSize(Eigen::Vector2i::Zero())
 {
 	reload(rm);
 }
@@ -54,8 +54,7 @@ void TextureResource::initFromResource(const ResourceData data)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	mTextureSize.x = width;
-	mTextureSize.y = height;
+	mTextureSize << width, height;
 }
 
 void TextureResource::initFromScreen()
@@ -76,8 +75,8 @@ void TextureResource::initFromScreen()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	mTextureSize.x = height;
-	mTextureSize.y = height;
+	mTextureSize[0] = height;
+	mTextureSize[1] = height;
 }
 
 void TextureResource::deinit()
@@ -89,7 +88,7 @@ void TextureResource::deinit()
 	}
 }
 
-Vector2u TextureResource::getSize() const
+Eigen::Vector2i TextureResource::getSize() const
 {
 	return mTextureSize;
 }

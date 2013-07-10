@@ -22,7 +22,7 @@ GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, TextListCompon
 	mScrollOffset = 0;
 
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
-	mBox = new GuiBox(window, (int)(sw * 0.2f), (int)(sh * 0.2f), (int)(sw * 0.6f), (int)(sh * 0.6f));
+	mBox = new GuiBox(window, sw * 0.2f, sh * 0.2f, sw * 0.6f, sh * 0.6f);
 	mBox->setData(mTheme->getBoxData());
 }
 
@@ -32,23 +32,27 @@ GuiFastSelect::~GuiFastSelect()
 	delete mBox;
 }
 
-void GuiFastSelect::render()
+void GuiFastSelect::render(const Eigen::Affine3f& parentTrans)
 {
+	Eigen::Affine3f trans = parentTrans * getTransform();
+	Renderer::setMatrix(trans);
+
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 
 	if(!mBox->hasBackground())
 		Renderer::drawRect((int)(sw * 0.3f), (int)(sh * 0.3f), (int)(sw * 0.4f), (int)(sh * 0.4f), 0x000FF0AA);
 
-	mBox->render();
+	mBox->render(trans);
 
+	Renderer::setMatrix(trans);
 	std::shared_ptr<Font> letterFont = mTheme->getFastSelectFont();
 	std::shared_ptr<Font> subtextFont = mTheme->getDescriptionFont();
 
-	letterFont->drawCenteredText(LETTERS.substr(mLetterID, 1), 0, (int)(sh * 0.5f - (letterFont->getHeight() * 0.5f)), mTextColor);
-    subtextFont->drawCenteredText("Sort order:", 0, (int)(sh * 0.6f - (subtextFont->getHeight() * 0.5f)), mTextColor);
+	letterFont->drawCenteredText(LETTERS.substr(mLetterID, 1), 0, sh * 0.5f - (letterFont->getHeight() * 0.5f), mTextColor);
+    subtextFont->drawCenteredText("Sort order:", 0, sh * 0.6f - (subtextFont->getHeight() * 0.5f), mTextColor);
 
     std::string sortString = "<- " + mParent->getSortState().description + " ->";
-    subtextFont->drawCenteredText(sortString, 0, (int)(sh * 0.6f + (subtextFont->getHeight() * 0.5f)), mTextColor);
+    subtextFont->drawCenteredText(sortString, 0, sh * 0.6f + (subtextFont->getHeight() * 0.5f), mTextColor);
 }
 
 bool GuiFastSelect::input(InputConfig* config, Input input)
