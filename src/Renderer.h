@@ -17,6 +17,8 @@ namespace Renderer
 {
 	bool init(int w, int h);
 	void deinit();
+	void wake(int w, int h);
+	void sleep();
 
 	//just takes care of default font init/deinit right now
 	void onInit();

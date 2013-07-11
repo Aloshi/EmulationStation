@@ -24,6 +24,9 @@ namespace Renderer
 
 #ifdef _RPI_
 	static EGL_DISPMANX_WINDOW_T nativewindow;
+	DISPMANX_DISPLAY_HANDLE_T dispman_display;
+	DISPMANX_ELEMENT_HANDLE_T dispman_element;
+	DISPMANX_UPDATE_HANDLE_T dispman_update;
 #else
     NativeWindowType nativewindow;
 #endif
@@ -55,9 +58,6 @@ namespace Renderer
 		LOG(LogInfo) << "Creating surface...";
 
 #ifdef _RPI_
-		DISPMANX_ELEMENT_HANDLE_T dispman_element;
-		DISPMANX_DISPLAY_HANDLE_T dispman_display;
-		DISPMANX_UPDATE_HANDLE_T dispman_update;
 		VC_RECT_T dst_rect;
 		VC_RECT_T src_rect;
 #endif
@@ -198,9 +198,13 @@ namespace Renderer
 		surface = EGL_NO_SURFACE;
 		context = EGL_NO_CONTEXT;
 
+		dispman_update = vc_dispmanx_update_start(0);
+		vc_dispmanx_element_remove(dispman_update, dispman_element);
+		vc_dispmanx_update_submit_sync(dispman_update);
+		vc_dispmanx_display_close(dispman_display);
+
 		SDL_FreeSurface(sdlScreen);
 		sdlScreen = NULL;
-		SDL_Quit();
 	}
 
 	bool init(int w, int h)
@@ -228,5 +232,25 @@ namespace Renderer
 	{
 		onDeinit();
 		destroySurface();
+		SDL_Quit();
+	}
+
+	void wake(int w, int h)
+	{
+		vc_tv_hdmi_power_on_preferred();
+		::sleep(5);
+		init(w, h);
+	}
+
+	void sleep()
+	{
+		onDeinit();
+		destroySurface();
+		vc_tv_power_off();
+	}
+
+	void destroy()
+	{
+		deinit();
 	}
 };

@@ -79,6 +79,28 @@ void Window::deinit()
 	Renderer::deinit();
 }
 
+void Window::wake()
+{
+	mInputManager->init();
+	Renderer::wake(0, 0);
+
+	for(unsigned int i = 0; i < mGuiStack.size(); i++)
+	{
+		mGuiStack.at(i)->init();
+	}
+}
+
+void Window::sleep()
+{
+	for(unsigned int i = 0; i < mGuiStack.size(); i++)
+	{
+		mGuiStack.at(i)->deinit();
+	}
+
+	mInputManager->deinit();
+	Renderer::sleep();
+}
+
 void Window::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("mastervolup", input))

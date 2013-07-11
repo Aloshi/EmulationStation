@@ -31,6 +31,9 @@ void Settings::setDefaults()
 	mBoolMap["DONTSHOWEXIT"] = false;
 	mBoolMap["DEBUG"] = false;
 	mBoolMap["WINDOWED"] = false;
+#ifdef _RPI_
+	mBoolMap["PIHMDISLEEP"] = false;
+#endif
 
 	mIntMap["DIMTIME"] = 30*1000;
 

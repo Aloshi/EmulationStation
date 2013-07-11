@@ -23,6 +23,8 @@ public:
 
 	void init();
 	void deinit();
+	void wake();
+	void sleep();
 
 	InputManager* getInputManager();
 	ResourceManager* getResourceManager();
