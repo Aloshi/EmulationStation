@@ -95,6 +95,7 @@ void GuiMenu::update(int deltaTime)
 void GuiMenu::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans;
+	Renderer::setMatrix(trans);
 
 	Renderer::drawRect(Renderer::getScreenWidth() / 4, 0, Renderer::getScreenWidth() / 2, Renderer::getScreenHeight(), 0x999999);
 	mList->render(trans);

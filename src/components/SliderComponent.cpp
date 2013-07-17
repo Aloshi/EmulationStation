@@ -68,6 +68,7 @@ void SliderComponent::update(int deltaTime)
 void SliderComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
+	Renderer::setMatrix(trans);
 
 	//render line
 	const int lineWidth = 2;

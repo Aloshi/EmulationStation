@@ -101,9 +101,11 @@ Eigen::Vector3f ComponentListComponent::getCellOffset(Eigen::Vector2i pos)
 	for(int x = 0; x < pos.x(); x++)
 		offset[0] += getColumnWidth(x);
 
+	//LOG(LogInfo) << "total offsets up to " << pos.x() << ", " << pos.y() << ": " << offset.x() << ", " << offset.y();
+
 	ComponentEntry* entry = getCell(pos.x(), pos.y());
 
-	Eigen::Vector2i gridSize;
+	Eigen::Vector2i gridSize(0, 0);
 	for(int x = pos.x(); x < pos.x() + entry->dim[0]; x++)
 		gridSize[0] += getColumnWidth(x);
 	for(int y = pos.y(); y < pos.y() + entry->dim[1]; y++)
@@ -273,6 +275,7 @@ void ComponentListComponent::update(int deltaTime)
 void ComponentListComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
+	Renderer::setMatrix(trans);
 
 	Renderer::drawRect(0, 0, (int)getSize().x(), (int)getSize().y(), 0xFFFFFFAA);
 
@@ -281,30 +284,35 @@ void ComponentListComponent::render(const Eigen::Affine3f& parentTrans)
 		iter->component->render(trans);
 	}
 
+	
 	//draw cell outlines
-	/*Vector2i pos;
-	for(unsigned int x = 0; x < mGridSize.x; x++)
+	/*Renderer::setMatrix(trans);
+	Eigen::Vector2i pos(0, 0);
+	for(int x = 0; x < mGridSize.x(); x++)
 	{
-		for(unsigned int y = 0; y < mGridSize.y; y++)
+		for(int y = 0; y < mGridSize.y(); y++)
 		{
-			Renderer::drawRect(pos.x, pos.y, getColumnWidth(x), 2, 0x000000AA);
-			Renderer::drawRect(pos.x, pos.y, 2, getRowHeight(y), 0x000000AA);
-			Renderer::drawRect(pos.x + getColumnWidth(x), pos.y, 2, getRowHeight(y), 0x000000AA);
-			Renderer::drawRect(pos.x, pos.y + getRowHeight(y) - 2, getColumnWidth(x), 2, 0x000000AA);
+			Renderer::drawRect(pos.x(), pos.y(), getColumnWidth(x), 2, 0x000000AA);
+			Renderer::drawRect(pos.x(), pos.y(), 2, getRowHeight(y), 0x000000AA);
+			Renderer::drawRect(pos.x() + getColumnWidth(x), pos.y(), 2, getRowHeight(y), 0x000000AA);
+			Renderer::drawRect(pos.x(), pos.y() + getRowHeight(y) - 2, getColumnWidth(x), 2, 0x000000AA);
 
-			pos.y += getRowHeight(y);
+			pos[1] += getRowHeight(y);
 		}
 
-		pos.y = 0;
-		pos.x += getColumnWidth(x);
+		pos[1] = 0;
+		pos[0] += getColumnWidth(x);
 	}*/
 
 	//draw cursor
 	if(cursorValid())
 	{
 		ComponentEntry* entry = getCell(mCursor.x(), mCursor.y());
-		Renderer::drawRect((int)entry->component->getPosition().x(), (int)entry->component->getPosition().y(), 4, 4, 0xFF0000FF);
-		Renderer::drawRect((int)entry->component->getPosition().x(), (int)entry->component->getPosition().y(), (int)entry->component->getSize().x(), (int)entry->component->getSize().y(), 0x0000AA88);
+		Eigen::Affine3f entryTrans = trans * entry->component->getTransform();
+		Renderer::setMatrix(entryTrans);
+
+		Renderer::drawRect(0, 0, 4, 4, 0xFF0000FF);
+		Renderer::drawRect(0, 0, (int)entry->component->getSize().x(), (int)entry->component->getSize().y(), 0x0000AA88);
 	}
 }
 

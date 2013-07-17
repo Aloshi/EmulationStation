@@ -58,6 +58,8 @@ public:
 	unsigned char getOpacity() const;
 	void setOpacity(unsigned char opacity);
 
+	const Eigen::Affine3f getTransform();
+
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;
 
@@ -69,8 +71,6 @@ protected:
 
 	Eigen::Vector3f mPosition;
 	Eigen::Vector2f mSize;
-
-	const Eigen::Affine3f getTransform();
 
 private:
 	Eigen::Affine3f mTransform; //Don't access this directly! Use getTransform()!
