@@ -5,8 +5,9 @@
 #include "VolumeControl.h"
 #include "Log.h"
 #include "Settings.h"
+#include <iomanip>
 
-Window::Window()
+Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10)
 {
 	mInputManager = new InputManager(this);
 }
@@ -43,20 +44,6 @@ GuiComponent* Window::peekGui()
 		return NULL;
 
 	return mGuiStack.at(mGuiStack.size() - 1);
-}
-
-void Window::render()
-{
-	//there's nothing to render, which should pretty much never happen
-	if(mGuiStack.size() == 0)
-		std::cout << "guistack empty\n";
-
-	Eigen::Affine3f trans(Eigen::Affine3f::Identity());
-
-	for(unsigned int i = 0; i < mGuiStack.size(); i++)
-	{
-		mGuiStack.at(i)->render(trans);
-	}
 }
 
 bool Window::init(unsigned int width, unsigned int height)
@@ -105,8 +92,58 @@ void Window::input(InputConfig* config, Input input)
 
 void Window::update(int deltaTime)
 {
+	if(mNormalizeNextUpdate)
+	{
+		mNormalizeNextUpdate = false;
+		if(deltaTime > mAverageDeltaTime)
+			deltaTime = mAverageDeltaTime;
+	}
+
+	mFrameTimeElapsed += deltaTime;
+	mFrameCountElapsed++;
+	if(mFrameTimeElapsed > 500)
+	{
+		mAverageDeltaTime = mFrameTimeElapsed / mFrameCountElapsed;
+		
+		if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
+		{
+			std::stringstream ss;
+			ss << std::fixed << std::setprecision(1) << (1000.0f * (float)mFrameCountElapsed / (float)mFrameTimeElapsed) << "fps, ";
+			ss << std::fixed << std::setprecision(2) << ((float)mFrameTimeElapsed / (float)mFrameCountElapsed) << "ms";
+			mFrameDataString = ss.str();
+		}
+
+		mFrameTimeElapsed = 0;
+		mFrameCountElapsed = 0;
+	}
+
 	if(peekGui())
 		peekGui()->update(deltaTime);
+}
+
+void Window::render()
+{
+	//there's nothing to render, which should pretty much never happen
+	if(mGuiStack.size() == 0)
+		std::cout << "guistack empty\n";
+
+	Eigen::Affine3f trans(Eigen::Affine3f::Identity());
+
+	for(unsigned int i = 0; i < mGuiStack.size(); i++)
+	{
+		mGuiStack.at(i)->render(trans);
+	}
+
+	if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
+	{
+		Renderer::setMatrix(Eigen::Affine3f::Identity());
+		mDefaultFonts.at(1)->drawText(mFrameDataString, Eigen::Vector2f(50, 50), 0xFF00FFFF);
+	}
+}
+
+void Window::normalizeNextUpdate()
+{
+	mNormalizeNextUpdate = true;
 }
 
 InputManager* Window::getInputManager()

@@ -94,6 +94,7 @@ void SystemData::launchGame(Window* window, GameData* game)
 	window->init();
 	VolumeControl::getInstance()->init();
 	AudioManager::getInstance()->init();
+	window->normalizeNextUpdate();
 
 	//update number of times the game has been launched and the time
 	game->setTimesPlayed(game->getTimesPlayed() + 1);

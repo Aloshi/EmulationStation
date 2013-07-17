@@ -100,6 +100,7 @@ void GuiGameList::setSystemId(int id)
 	updateTheme();
 	updateList();
 	updateDetailData();
+	mWindow->normalizeNextUpdate(); //image loading can be slow
 }
 
 void GuiGameList::render(const Eigen::Affine3f& parentTrans)
@@ -135,7 +136,7 @@ void GuiGameList::render(const Eigen::Affine3f& parentTrans)
 	}
 
 	mList.render(trans);
-	mTransitionImage.render(trans);
+	mTransitionImage.render(parentTrans);
 }
 
 bool GuiGameList::input(InputConfig* config, Input input)

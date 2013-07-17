@@ -27,12 +27,21 @@ public:
 	InputManager* getInputManager();
 	ResourceManager* getResourceManager();
 
+	void normalizeNextUpdate();
+
 private:
 	InputManager* mInputManager;
 	ResourceManager mResourceManager;
 	std::vector<GuiComponent*> mGuiStack;
 
 	std::vector< std::shared_ptr<Font> > mDefaultFonts;
+
+	int mFrameTimeElapsed;
+	int mFrameCountElapsed;
+	int mAverageDeltaTime;
+	std::string mFrameDataString;
+
+	bool mNormalizeNextUpdate;
 };
 
 #endif

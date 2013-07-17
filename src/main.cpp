@@ -217,28 +217,6 @@ int main(int argc, char* argv[])
 		window.update(deltaTime);
 		Renderer::swapBuffers(); //swap here so we can read the last screen state during updates (see ImageComponent::copyScreen())
 		window.render();
-		
-		if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
-		{
-			static int timeElapsed = 0;
-			static int nrOfFrames = 0;
-			static std::string fpsString;
-
-			nrOfFrames++;
-			timeElapsed += deltaTime;
-			//wait until half a second has passed to recalculate fps
-			if (timeElapsed >= 500) {
-				std::stringstream ss;
-				ss << std::fixed << std::setprecision(1) << (1000.0f * (float)nrOfFrames / (float)timeElapsed) << "fps, ";
-				ss << std::fixed << std::setprecision(2) << ((float)timeElapsed / (float)nrOfFrames) << "ms";
-				fpsString = ss.str();
-				nrOfFrames = 0;
-				timeElapsed = 0;
-			}
-
-			Renderer::setMatrix(Eigen::Affine3f::Identity());
-			Font::get(*window.getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(fpsString, Eigen::Vector2f(50, 50), 0x00FF00FF);
-		}
 
 		//sleep if we're past our threshold
 		//sleeping entails setting a flag to start skipping frames
