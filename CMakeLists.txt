@@ -36,6 +36,7 @@ find_package(FreeType REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem)
+find_package(Eigen3 REQUIRED)
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -82,6 +83,7 @@ set(ES_INCLUDE_DIRS
     ${FreeImage_INCLUDE_DIRS}
     ${SDL_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIR}
 )
 
 #add ALSA for Linux
