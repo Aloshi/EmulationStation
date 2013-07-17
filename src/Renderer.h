@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include "platform.h"
-#include "Eigen/Dense"
+#include <Eigen/Dense>
 #include GLHEADER
 //#include "Font.h"
 

@@ -2,7 +2,7 @@
 #define _GUICOMPONENT_H_
 
 #include "InputConfig.h"
-#include "Eigen/Dense"
+#include <Eigen/Dense>
 
 class Window;
 

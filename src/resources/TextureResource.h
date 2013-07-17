@@ -3,7 +3,7 @@
 #include "ResourceManager.h"
 
 #include <string>
-#include "../Eigen/Dense"
+#include <Eigen/Dense>
 #include "../platform.h"
 #include GLHEADER
 

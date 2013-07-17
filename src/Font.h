@@ -6,7 +6,7 @@
 #include GLHEADER
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "Eigen/Dense"
+#include <Eigen/Dense>
 #include "resources/ResourceManager.h"
 
 class TextCache;
