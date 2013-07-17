@@ -216,7 +216,9 @@ namespace Renderer
 			return false;
 
 		glViewport(0, 0, display_width, display_height);
+		glMatrixMode(GL_PROJECTION);
 		glOrthof(0, display_width, display_height, 0, -1.0, 1.0);
+		glMatrixMode(GL_MODELVIEW);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		onInit();
