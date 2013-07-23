@@ -14,6 +14,7 @@ public:
 	void onSizeChanged() override;
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
+	void setCentered(bool center); //Default is uncentered.
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 
@@ -26,6 +27,7 @@ private:
 	std::shared_ptr<Font> mFont;
 	Eigen::Matrix<bool, 1, 2> mAutoCalcExtent;
 	std::string mText;
+	bool mCentered;
 };
 
 #endif

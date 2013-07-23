@@ -63,6 +63,7 @@ private:
 	ScrollableContainer mDescContainer;
 	AnimationComponent mImageAnimation;
 	ThemeComponent* mTheme;
+	TextComponent mHeaderText;
 
 	ImageComponent mTransitionImage;
 	AnimationComponent mTransitionAnimation;

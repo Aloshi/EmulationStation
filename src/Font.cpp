@@ -397,8 +397,7 @@ void Font::drawWrappedText(std::string text, const Eigen::Vector2f& offset, floa
 
 Eigen::Vector2f Font::sizeWrappedText(std::string text, float xLen) const
 {
-	//this is incorrect for text that is so short it doesn't need to wrap
-	Eigen::Vector2f out(xLen, 0);
+	Eigen::Vector2f out(0, 0);
 	
 	float y = 0;
 
@@ -443,6 +442,10 @@ Eigen::Vector2f Font::sizeWrappedText(std::string text, float xLen) const
 
 			//move the word we skipped to the next line
 			line = word;
+
+			//update our maximum known line width
+			if(textSize.x() > out.x())
+				out[0] = textSize.x();
 		}else{
 			//there's still space, continue building the line
 			line = temp;

@@ -31,6 +31,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mDescription(window), 
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
+	mHeaderText(mWindow), 
     sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex"))
 {
 	//first object initializes the vector
@@ -56,22 +57,27 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
 	mTransitionImage.setPosition((float)Renderer::getScreenWidth(), 0);
 	mTransitionImage.setOrigin(0, 0);
-	mTransitionAnimation.addChild(&mTransitionImage);
 
-	//a hack! the GuiGameList doesn't use the children system right now because I haven't redone it to do so yet.
-	//the list depends on knowing it's final window coordinates (getGlobalOffset), which requires knowing the where the GuiGameList is.
-	//the GuiGameList now moves during screen transitions, so we have to let it know somehow.
-	//this should be removed in favor of using real children soon.
-	mList.setParent(this);
+	mHeaderText.setColor(0xFF0000FF);
+	mHeaderText.setFont(Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE));
+	mHeaderText.setPosition(0, 1);
+	mHeaderText.setSize((float)Renderer::getScreenWidth(), 0);
+	mHeaderText.setCentered(true);
+
+	addChild(mTheme);
+	addChild(&mHeaderText);
+	addChild(&mScreenshot);
+	addChild(&mDescContainer);
+	addChild(&mList);
+	addChild(&mTransitionImage);
+
+	mTransitionAnimation.addChild(this);
 
 	setSystemId(0);
 }
 
 GuiGameList::~GuiGameList()
 {
-	//undo the parenting hack because otherwise it's not really a child and will try to remove itself on delete
-	mList.setParent(NULL);
-	
 	delete mTheme;
 }
 
@@ -105,38 +111,8 @@ void GuiGameList::setSystemId(int id)
 
 void GuiGameList::render(const Eigen::Affine3f& parentTrans)
 {
-	if(mTransitionImage.getPosition().x() > 0) //transitioning in from the left
-		mPosition[0] = mTransitionImage.getPosition().x() - Renderer::getScreenWidth();
-	else //transitioning in from the right
-		mPosition[0] = mTransitionImage.getPosition().x() + Renderer::getScreenWidth();
-
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::setMatrix(trans);
-
-	if(mTheme)
-		mTheme->render(trans);
-
-	//reset modelview matrix if mTheme changed it
-	Renderer::setMatrix(trans);
-
-	std::shared_ptr<Font> headerFont = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE);
-
-	//header
-	if(!mTheme->getBool("hideHeader"))
-		headerFont->drawCenteredText(mSystem->getDescName(), 0, 1, 0xFF0000FF);
-
-	if(isDetailed())
-	{
-		//divider
-		if(!mTheme->getBool("hideDividers"))
-			Renderer::drawRect((int)(Renderer::getScreenWidth() * mTheme->getFloat("listOffsetX")) - 4, headerFont->getHeight() + 2, 8, Renderer::getScreenHeight(), 0x0000FFFF);
-		
-		mScreenshot.render(trans);
-		mDescContainer.render(trans);
-	}
-
-	mList.render(trans);
-	mTransitionImage.render(parentTrans);
+	renderChildren(trans);
 }
 
 bool GuiGameList::input(InputConfig* config, Input input)
@@ -330,6 +306,13 @@ void GuiGameList::updateTheme()
 	mList.setFont(mTheme->getListFont());
 	mList.setPosition(0.0f, Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE)->getHeight() + 2.0f);
 
+	if(!mTheme->getBool("hideHeader"))
+	{
+		mHeaderText.setText(mSystem->getDescName());
+	}else{
+		mHeaderText.setText("");
+	}
+
 	if(isDetailed())
 	{
 		mList.setCentered(mTheme->getBool("listCentered"));
@@ -405,19 +388,21 @@ GuiGameList* GuiGameList::create(Window* window)
 
 void GuiGameList::update(int deltaTime)
 {
-	mImageAnimation.update(deltaTime);
-
 	mTransitionAnimation.update(deltaTime);
-
-	mList.update(deltaTime);
-
-	mDescContainer.update(deltaTime);
+	mImageAnimation.update(deltaTime);
+	GuiComponent::update(deltaTime);
 }
 
 void GuiGameList::doTransition(int dir)
 {
 	mTransitionImage.copyScreen();
 	mTransitionImage.setOpacity(255);
-	mTransitionImage.setPosition(0, 0);
+
+	//put the image of what's currently onscreen at what will be (in screen coords) 0, 0
+	mTransitionImage.setPosition((float)Renderer::getScreenWidth() * dir, 0);
+
+	//move the entire thing offscreen so we'll move into place
+	setPosition((float)Renderer::getScreenWidth() * -dir, mPosition[1]);
+
 	mTransitionAnimation.move(Renderer::getScreenWidth() * dir, 0, 50);
 }

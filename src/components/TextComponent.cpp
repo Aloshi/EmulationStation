@@ -4,12 +4,12 @@
 #include "../Window.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
-	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true)
+	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
 {
 }
 
 TextComponent::TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
-	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true)
+	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
 {
 	setText(text);
 	setFont(font);
@@ -43,6 +43,11 @@ void TextComponent::setText(const std::string& text)
 	calculateExtent();
 }
 
+void TextComponent::setCentered(bool center)
+{
+	mCentered = center;
+}
+
 std::shared_ptr<Font> TextComponent::getFont() const
 {
 	if(mFont)
@@ -56,9 +61,20 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 	std::shared_ptr<Font> font = getFont();
 
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::setMatrix(trans);
-	
-	font->drawWrappedText(mText, Eigen::Vector2f(0, 0), getSize().x(), mColor >> 8 << 8  | getOpacity());
+
+	if(font && !mText.empty())
+	{
+		Renderer::setMatrix(trans);
+
+		if(mCentered)
+		{
+			Eigen::Vector2f textSize = font->sizeWrappedText(mText, getSize().x());
+			Eigen::Vector2f pos((getSize().x() - textSize.x()) / 2, 0);
+			font->drawWrappedText(mText, pos, getSize().x(), (mColor >> 8 << 8) | getOpacity());
+		}else{
+			font->drawWrappedText(mText, Eigen::Vector2f(0, 0), getSize().x(), mColor >> 8 << 8  | getOpacity());
+		}
+	}
 
 	GuiComponent::renderChildren(trans);
 }
