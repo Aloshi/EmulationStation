@@ -27,15 +27,6 @@ public:
 	//4. Tell your children to render, based on your component's transform - renderChildren(t).
 	virtual void render(const Eigen::Affine3f& parentTrans);
 
-	//TO BE DEPRECATED
-	//Called when the Renderer initializes.  Passes to children.
-	virtual void init();
-
-	//TO BE DEPRECATED
-	//Called when the Renderer deinitializes.  Passes to children.
-	virtual void deinit();
-
-	virtual Eigen::Vector3f getGlobalPosition(); //to be deprecated
 	Eigen::Vector3f getPosition() const;
 	void setPosition(const Eigen::Vector3f& offset);
 	void setPosition(float x, float y, float z = 0.0f);

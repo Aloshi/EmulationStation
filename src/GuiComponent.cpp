@@ -52,31 +52,6 @@ void GuiComponent::renderChildren(const Eigen::Affine3f& transform) const
 	}
 }
 
-void GuiComponent::init()
-{
-	for(unsigned int i = 0; i < getChildCount(); i++)
-	{
-		getChild(i)->init();
-	}
-}
-
-void GuiComponent::deinit()
-{
-	for(unsigned int i = 0; i < getChildCount(); i++)
-	{
-		getChild(i)->deinit();
-	}
-}
-
-//Offset stuff.
-Eigen::Vector3f GuiComponent::getGlobalPosition()
-{
-	if(mParent)
-		return mParent->getGlobalPosition() + mPosition;
-	else
-		return mPosition;
-}
-
 Eigen::Vector3f GuiComponent::getPosition() const
 {
 	return mPosition;
