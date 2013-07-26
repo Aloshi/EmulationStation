@@ -11,7 +11,7 @@ public:
 
 	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
-	void render();
+	void render(const Eigen::Affine3f& parentTrans) override;
 
 private:
 	std::string mErrorMsg;

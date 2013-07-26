@@ -81,8 +81,11 @@ void GuiDetectDevice::update(int deltaTime)
 	}
 }
 
-void GuiDetectDevice::render()
+void GuiDetectDevice::render(const Eigen::Affine3f& parentTrans)
 {
+	Eigen::Affine3f trans = parentTrans * getTransform();
+	Renderer::setMatrix(trans);
+
 	std::shared_ptr<Font> font = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
 
 	std::string playerString;
