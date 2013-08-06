@@ -137,3 +137,10 @@ Uint32 Sound::getLength() const
 {
 	return mSampleLength;
 }
+
+Uint32 Sound::getLengthMS() const
+{
+	//44100 samples per second, 2 channels (stereo)
+	//I have no idea why the *0.75 is necessary, but otherwise it's inaccurate
+	return (Uint32)((mSampleLength / 44100.0f / 2.0f * 0.75f) * 1000);
+}

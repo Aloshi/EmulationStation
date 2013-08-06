@@ -31,6 +31,7 @@ public:
 	Uint32 getPosition() const;
 	void setPosition(Uint32 newPosition);
 	Uint32 getLength() const;
+	Uint32 getLengthMS() const;
 };
 
 #endif

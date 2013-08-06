@@ -10,7 +10,6 @@
 
 std::vector<FolderData::SortState> GuiGameList::sortStates;
 
-
 Eigen::Vector3f GuiGameList::getImagePos()
 {
 	return Eigen::Vector3f(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), 0.0f);
@@ -32,7 +31,9 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
 	mHeaderText(mWindow), 
-    sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex"))
+    sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex")),
+	mLockInput(false),
+	mEffectFunc(NULL), mEffectTime(0), mGameLaunchEffectLength(700)
 {
 	//first object initializes the vector
 	if (sortStates.empty()) {
@@ -116,7 +117,10 @@ void GuiGameList::render(const Eigen::Affine3f& parentTrans)
 }
 
 bool GuiGameList::input(InputConfig* config, Input input)
-{
+{	
+	if(mLockInput)
+		return false;
+
 	mList.input(config, input);
 
 	if(config->isMappedTo("a", input) && mFolder->getFileCount() > 0 && input.value != 0)
@@ -135,10 +139,14 @@ bool GuiGameList::input(InputConfig* config, Input input)
 		}else{
 			mList.stopScrolling();
 
-			//wait for the sound to finish or we'll never hear it...
-			while(mTheme->getSound("menuSelect")->isPlaying());
+			mEffectFunc = &GuiGameList::updateGameLaunchEffect;
+			mEffectTime = 0;
+			mGameLaunchEffectLength = (int)mTheme->getSound("menuSelect")->getLengthMS();
+			if(mGameLaunchEffectLength < 800)
+				mGameLaunchEffectLength = 800;
 
-			mSystem->launchGame(mWindow, (GameData*)file);
+			mLockInput = true;
+
 			return true;
 		}
 	}
@@ -390,6 +398,13 @@ void GuiGameList::update(int deltaTime)
 {
 	mTransitionAnimation.update(deltaTime);
 	mImageAnimation.update(deltaTime);
+
+	if(mEffectFunc != NULL)
+	{
+		mEffectTime += deltaTime;
+		(this->*mEffectFunc)(mEffectTime);
+	}
+
 	GuiComponent::update(deltaTime);
 }
 
@@ -405,4 +420,65 @@ void GuiGameList::doTransition(int dir)
 	setPosition((float)Renderer::getScreenWidth() * -dir, mPosition[1]);
 
 	mTransitionAnimation.move(Renderer::getScreenWidth() * dir, 0, 50);
+}
+
+float lerpFloat(const float& start, const float& end, float t)
+{
+	if(t <= 0)
+		return start;
+	if(t >= 1)
+		return end;
+
+	return (start * (1 - t) + end * t);
+}
+
+Eigen::Vector2f lerpVector2f(const Eigen::Vector2f& start, const Eigen::Vector2f& end, float t)
+{
+	if(t <= 0)
+		return start;
+	if(t >= 1)
+		return end;
+
+	return (start * (1 - t) + end * t);
+}
+
+void GuiGameList::updateGameLaunchEffect(int t)
+{
+	const int endTime = mGameLaunchEffectLength;
+
+	const int zoomTime = endTime;
+	const int centerTime = endTime - 100;
+
+	const int fadeDelay = endTime - 500;
+	const int fadeTime = endTime - fadeDelay;
+
+	Eigen::Vector2f imageCenter(mScreenshot.getCenter());
+	if(!isDetailed())
+	{
+		imageCenter << mList.getPosition().x() + mList.getSize().x() / 2, mList.getPosition().y() + mList.getSize().y() / 2;
+	}
+
+	const Eigen::Vector2f centerStart(Renderer::getScreenWidth() / 2, Renderer::getScreenHeight() / 2);
+
+	mWindow->setCenterPoint(lerpVector2f(centerStart, imageCenter, (float)t / endTime));
+	mWindow->setZoomFactor(lerpFloat(1.0f, 2.0f, (float)t / endTime));
+	mWindow->setFadePercent(lerpFloat(0.0f, 1.0f, (float)(t - fadeDelay) / fadeTime));
+
+	if(t > endTime)
+	{
+		//effect done
+		mSystem->launchGame(mWindow, (GameData*)mList.getSelectedObject());
+		mEffectFunc = &GuiGameList::updateGameReturnEffect;
+		mEffectTime = 0;
+		mGameLaunchEffectLength = 700;
+		mLockInput = false;
+	}
+}
+
+void GuiGameList::updateGameReturnEffect(int t)
+{
+	updateGameLaunchEffect(mGameLaunchEffectLength - t);
+
+	if(t >= mGameLaunchEffectLength)
+		mEffectFunc = NULL;
 }

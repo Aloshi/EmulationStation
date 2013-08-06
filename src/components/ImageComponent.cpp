@@ -14,6 +14,12 @@ Eigen::Vector2i ImageComponent::getTextureSize() const
 		return Eigen::Vector2i(0, 0);
 }
 
+Eigen::Vector2f ImageComponent::getCenter() const
+{
+	return Eigen::Vector2f(mPosition.x() - (getSize().x() * mOrigin.x()) + getSize().x() / 2, 
+		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
+}
+
 ImageComponent::ImageComponent(Window* window, float offsetX, float offsetY, std::string path, float targetWidth, float targetHeight, bool allowUpscale) : GuiComponent(window), 
 	mTiled(false), mAllowUpscale(allowUpscale), mFlipX(false), mFlipY(false), mOrigin(0.5, 0.5), mTargetSize(targetWidth, targetHeight)
 {

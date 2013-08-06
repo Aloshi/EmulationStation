@@ -30,6 +30,8 @@ public:
 	//You can get the rendered size of the ImageComponent with getSize().
 	Eigen::Vector2i getTextureSize() const;
 
+	Eigen::Vector2f getCenter() const;
+
 	bool hasImage();
 
 	void render(const Eigen::Affine3f& parentTrans) override;

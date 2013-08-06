@@ -149,7 +149,12 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	if(listCutoff > (int)mRowVector.size())
 		listCutoff = mRowVector.size();
 
-	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)getSize().x(), (int)getSize().y()));
+	Eigen::Vector3f dim(getSize().x(), getSize().y(), 0);
+	dim = trans * dim - trans.translation();
+	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)dim.x(), (int)dim.y()));
+
+	//Renderer::pushClipRect(pos, dim);
+	//Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)getSize().x() * trans., (int)getSize().y() * trans.scale().y()));
 	//Renderer::pushClipRect(getGlobalOffset(), getSize());
 
 	for(int i = startEntry; i < listCutoff; i++)

@@ -29,6 +29,11 @@ public:
 
 	void normalizeNextUpdate();
 
+	void setZoomFactor(const float& zoom);
+	void setCenterPoint(const Eigen::Vector2f& point);
+
+	void setFadePercent(const float& perc);
+
 private:
 	InputManager* mInputManager;
 	ResourceManager mResourceManager;
@@ -42,6 +47,15 @@ private:
 	std::string mFrameDataString;
 
 	bool mNormalizeNextUpdate;
+
+	float mZoomFactor;
+	Eigen::Vector2f mCenterPoint;
+
+	void updateMatrix();
+	Eigen::Affine3f mMatrix;
+
+	void postProcess();
+	float mFadePercent;
 };
 
 #endif
