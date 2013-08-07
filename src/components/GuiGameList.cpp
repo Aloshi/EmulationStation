@@ -113,11 +113,7 @@ void GuiGameList::setSystemId(int id)
 void GuiGameList::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-
 	renderChildren(trans);
-
-	Renderer::setMatrix(trans);
-	mTheme->getDescriptionFont()->drawText("DESCRIPTION TEXT", Eigen::Vector2f::Zero(), 0xFF0000FF);
 }
 
 bool GuiGameList::input(InputConfig* config, Input input)
