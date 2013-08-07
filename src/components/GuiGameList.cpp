@@ -113,7 +113,11 @@ void GuiGameList::setSystemId(int id)
 void GuiGameList::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
+
 	renderChildren(trans);
+
+	Renderer::setMatrix(trans);
+	mTheme->getDescriptionFont()->drawText("DESCRIPTION TEXT", Eigen::Vector2f::Zero(), 0xFF0000FF);
 }
 
 bool GuiGameList::input(InputConfig* config, Input input)
@@ -338,6 +342,8 @@ void GuiGameList::updateTheme()
 		mList.setCentered(true);
 		mList.setPosition(0, mList.getPosition().y());
 		mList.setTextOffsetX(0);
+
+		//mDescription.setFont(nullptr);
 	}
 }
 
@@ -490,6 +496,7 @@ void GuiGameList::updateGameLaunchEffect(int t)
 	if(t > endTime)
 	{
 		//effect done
+		mTransitionImage.setImage(""); //fixes "tried to bind uninitialized texture!" since copyScreen()'d textures don't reinit
 		mSystem->launchGame(mWindow, (GameData*)mList.getSelectedObject());
 		mEffectFunc = &GuiGameList::updateGameReturnEffect;
 		mEffectTime = 0;

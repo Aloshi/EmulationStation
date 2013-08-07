@@ -71,9 +71,6 @@ void ImageComponent::resize()
 
 void ImageComponent::setImage(std::string path)
 {
-	if(mPath == path)
-		return;
-
 	mPath = path;
 
 	if(mPath.empty() || !mWindow->getResourceManager()->fileExists(mPath))

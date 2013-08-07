@@ -105,7 +105,11 @@ void TextureResource::bind() const
 std::shared_ptr<TextureResource> TextureResource::get(ResourceManager& rm, const std::string& path)
 {
 	if(path.empty())
-		return std::shared_ptr<TextureResource>(new TextureResource(rm, path));
+	{
+		std::shared_ptr<TextureResource> tex(new TextureResource(rm, ""));
+		rm.addReloadable(tex); //make sure we're deinitialized even though we do nothing on reinitialization
+		return tex;
+	}
 
 	auto foundTexture = sTextureMap.find(path);
 	if(foundTexture != sTextureMap.end())

@@ -127,7 +127,10 @@ void Font::init(ResourceData data)
 void Font::deinit()
 {
 	if(textureID)
+	{
 		glDeleteTextures(1, &textureID);
+		textureID = 0;
+	}
 }
 
 void Font::buildAtlas(ResourceData data)
@@ -246,7 +249,7 @@ void Font::buildAtlas(ResourceData data)
 		deinit();
 		init(data);
 	}else{
-		LOG(LogInfo) << "Created font \"" << mPath << "\" with size " << mSize << ".";
+		LOG(LogInfo) << "Created font \"" << mPath << "\" with size " << mSize << ". textureID: " << textureID;
 	}
 }
 
