@@ -21,7 +21,7 @@ void GuiBox::setHorizontalImage(std::string path, bool tiled)
 	mHorizontalImage.setOrigin(0, 0);
 
 	mHorizontalImage.setImage(path);
-	mHorizontalImage.setResize(getHorizontalBorderWidth(), mSize.y(), true);
+	mHorizontalImage.setResize(mSize.x(), getHorizontalBorderWidth(), true);
 }
 
 void GuiBox::setVerticalImage(std::string path, bool tiled)
@@ -30,7 +30,7 @@ void GuiBox::setVerticalImage(std::string path, bool tiled)
 	mVerticalImage.setOrigin(0, 0);
 
 	mVerticalImage.setImage(path);
-	mVerticalImage.setResize(mSize.x(), getVerticalBorderWidth(), true);
+	mVerticalImage.setResize(getVerticalBorderWidth(), mSize.y(), true);
 }
 
 void GuiBox::setBackgroundImage(std::string path, bool tiled)
@@ -58,24 +58,24 @@ void GuiBox::render(const Eigen::Affine3f& parentTrans)
 	mBackgroundImage.render(trans);
 
 	//left border
-	mHorizontalImage.setPosition(-getHorizontalBorderWidth(), 0);
-	mHorizontalImage.setFlipX(false);
-	mHorizontalImage.render(trans);
+	mVerticalImage.setPosition(-getVerticalBorderWidth(), 0);
+	mVerticalImage.setFlipX(false);
+	mVerticalImage.render(trans);
 	
 	//right border
-	mHorizontalImage.setPosition(mSize.x(), 0);
-	mHorizontalImage.setFlipX(true);
-	mHorizontalImage.render(trans);
+	mVerticalImage.setPosition(mSize.x(), 0);
+	mVerticalImage.setFlipX(true);
+	mVerticalImage.render(trans);
 	
 	//top border
-	mVerticalImage.setPosition(0, -getVerticalBorderWidth());
-	mVerticalImage.setFlipY(false);
-	mVerticalImage.render(trans);
+	mHorizontalImage.setPosition(0, -getHorizontalBorderWidth());
+	mHorizontalImage.setFlipY(false);
+	mHorizontalImage.render(trans);
 	
 	//bottom border
-	mVerticalImage.setPosition(0, mSize.y());
-	mVerticalImage.setFlipY(true);
-	mVerticalImage.render(trans);
+	mHorizontalImage.setPosition(0, mSize.y());
+	mHorizontalImage.setFlipY(true);
+	mHorizontalImage.render(trans);
 
 
 	//corner top left
@@ -104,12 +104,12 @@ void GuiBox::render(const Eigen::Affine3f& parentTrans)
 
 float GuiBox::getHorizontalBorderWidth()
 {
-	return (float)mHorizontalImage.getTextureSize().x();
+	return (float)mHorizontalImage.getTextureSize().y();
 }
 
 float GuiBox::getVerticalBorderWidth()
 {
-	return (float)mVerticalImage.getTextureSize().y();
+	return (float)mVerticalImage.getTextureSize().x();
 }
 
 bool GuiBox::hasBackground()
