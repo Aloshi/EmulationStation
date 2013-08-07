@@ -24,6 +24,7 @@ private:
 
 	SwitchComponent mDrawFramerateSwitch;
 	SliderComponent mVolumeSlider;
+	SwitchComponent mDisableSoundsSwitch;
 	TextComponent mSaveLabel;
 
 	std::vector<GuiComponent*> mLabels;

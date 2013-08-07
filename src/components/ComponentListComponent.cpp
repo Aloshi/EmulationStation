@@ -229,6 +229,7 @@ void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
 				return;
 
 			mCursor += searchAxis;
+			LOG(LogInfo) << "checking " << mCursor.x() << ", " << mCursor.y();
 		}
 
 		//now again on search axis-
@@ -239,7 +240,10 @@ void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
 				return;
 
 			mCursor -= searchAxis;
+			LOG(LogInfo) << "checking " << mCursor.x() << ", " << mCursor.y();
 		}
+
+		mCursor = curDirPos;
 	}
 
 	//failed to find another focusable element in this direction

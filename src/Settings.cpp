@@ -31,6 +31,7 @@ void Settings::setDefaults()
 	mBoolMap["DONTSHOWEXIT"] = false;
 	mBoolMap["DEBUG"] = false;
 	mBoolMap["WINDOWED"] = false;
+	mBoolMap["DISABLESOUNDS"] = false;
 
 	mIntMap["DIMTIME"] = 30*1000;
 

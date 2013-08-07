@@ -1,7 +1,7 @@
 #include "Sound.h"
 #include "AudioManager.h"
 #include "Log.h"
-
+#include "Settings.h"
 
 Sound::Sound(const std::string & path) : mSampleData(NULL), mSamplePos(0), mSampleLength(0), playing(false)
 {
@@ -80,6 +80,9 @@ void Sound::deinit()
 void Sound::play()
 {
 	if(mSampleData == NULL)
+		return;
+
+	if(Settings::getInstance()->getBool("DISABLESOUNDS"))
 		return;
 
 	SDL_LockAudio();
