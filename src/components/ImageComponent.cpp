@@ -21,7 +21,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window, float offsetX, float offsetY, std::string path, float targetWidth, float targetHeight, bool allowUpscale) : GuiComponent(window), 
-	mTiled(false), mAllowUpscale(allowUpscale), mFlipX(false), mFlipY(false), mOrigin(0.5, 0.5), mTargetSize(targetWidth, targetHeight)
+	mTiled(false), mAllowUpscale(allowUpscale), mFlipX(false), mFlipY(false), mOrigin(0.5, 0.5), mTargetSize(targetWidth, targetHeight), mColorShift(0xFFFFFFFF)
 {
 	setPosition(offsetX, offsetY);
 
@@ -113,6 +113,11 @@ void ImageComponent::setFlipY(bool flip)
 	mFlipY = flip;
 }
 
+void ImageComponent::setColorShift(unsigned int color)
+{
+	mColorShift = color;
+}
+
 void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
@@ -128,10 +133,10 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 			float xCount = mSize.x() / getTextureSize().x();
 			float yCount = mSize.y() / getTextureSize().y();
 			
-			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
+			Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8)| (getOpacity()), 6);
 			buildImageArray(0, 0, points, texs, xCount, yCount);
 		}else{
-			Renderer::buildGLColorArray(colors, 0xFFFFFF00 | (getOpacity()), 6);
+			Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8) | (getOpacity()), 6);
 			buildImageArray(0, 0, points, texs);
 		}
 

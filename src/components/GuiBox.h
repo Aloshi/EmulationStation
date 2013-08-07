@@ -30,6 +30,9 @@ public:
 
 	bool hasBackground();
 
+	void setBackgroundColor(unsigned int color);
+	void setBorderColor(unsigned int color);
+
 	void render(const Eigen::Affine3f& parentTrans) override;
 
 private:

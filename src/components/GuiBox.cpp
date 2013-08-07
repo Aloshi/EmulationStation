@@ -51,6 +51,18 @@ void GuiBox::setCornerImage(std::string path)
 	mCornerImage.setImage(path);
 }
 
+void GuiBox::setBackgroundColor(unsigned int color)
+{
+	mBackgroundImage.setColorShift(color);
+}
+
+void GuiBox::setBorderColor(unsigned int color)
+{
+	mHorizontalImage.setColorShift(color);
+	mVerticalImage.setColorShift(color);
+	mCornerImage.setColorShift(color);
+}
+
 void GuiBox::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();

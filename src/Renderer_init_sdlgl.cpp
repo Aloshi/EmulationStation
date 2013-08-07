@@ -46,7 +46,7 @@ namespace Renderer
 		//try loading PNG from memory
 		size_t width = 0;
 		size_t height = 0;
-		std::vector<unsigned char> rawData = ImageIO::loadFromMemoryRGBA32(es_logo_32_data, es_logo_32_data_len, width, height);
+		std::vector<unsigned char> rawData = ImageIO::loadFromMemoryRGBA32(ES_logo_32_png_data, ES_logo_32_png_size, width, height);
 		if (!rawData.empty()) {
 			//SDL interprets each pixel as a 32-bit number, so our masks must depend on the endianness (byte order) of the machine
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN

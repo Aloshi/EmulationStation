@@ -196,9 +196,15 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_16.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/data/logo/ES_logo_32.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/ResourceUtil.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_16_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_32_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/bar_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/corner_png.cpp
 )
+
+SOURCE_GROUP(resources FILES ResourceUtil.cpp)
 
 #add open gl specific sources
 if(${GLSystem} MATCHES "Desktop OpenGL")

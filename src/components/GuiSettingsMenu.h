@@ -7,6 +7,7 @@
 #include "SwitchComponent.h"
 #include "SliderComponent.h"
 #include "TextComponent.h"
+#include "GuiBox.h"
 
 class GuiSettingsMenu : public GuiComponent
 {
@@ -21,6 +22,8 @@ private:
 	void applyStates();
 
 	ComponentListComponent mList;
+
+	GuiBox mBox;
 
 	SwitchComponent mDrawFramerateSwitch;
 	SliderComponent mVolumeSlider;

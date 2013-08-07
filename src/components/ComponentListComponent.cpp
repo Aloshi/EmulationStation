@@ -101,8 +101,6 @@ Eigen::Vector3f ComponentListComponent::getCellOffset(Eigen::Vector2i pos)
 	for(int x = 0; x < pos.x(); x++)
 		offset[0] += getColumnWidth(x);
 
-	//LOG(LogInfo) << "total offsets up to " << pos.x() << ", " << pos.y() << ": " << offset.x() << ", " << offset.y();
-
 	ComponentEntry* entry = getCell(pos.x(), pos.y());
 
 	Eigen::Vector2i gridSize(0, 0);
@@ -229,7 +227,6 @@ void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
 				return;
 
 			mCursor += searchAxis;
-			LOG(LogInfo) << "checking " << mCursor.x() << ", " << mCursor.y();
 		}
 
 		//now again on search axis-
@@ -240,7 +237,6 @@ void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
 				return;
 
 			mCursor -= searchAxis;
-			LOG(LogInfo) << "checking " << mCursor.x() << ", " << mCursor.y();
 		}
 
 		mCursor = curDirPos;

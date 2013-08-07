@@ -5,6 +5,7 @@
 
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window), 
 	mList(window, Eigen::Vector2i(2, 4)), 
+	mBox(mWindow, 0, 0, 0, 0),
 	mDrawFramerateSwitch(window),
 	mVolumeSlider(window, 0, 100, 1),
 	mDisableSoundsSwitch(window, false),
@@ -12,6 +13,7 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 {
 	loadStates();
 
+	addChild(&mBox);
 	addChild(&mList);
 
 	mList.setPosition(Renderer::getScreenWidth() / 4.0f, 0);
@@ -53,7 +55,14 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	mList.setEntry(Vector2i(0, 3), Vector2i(2, 1), &mSaveLabel, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
 
 	//center list
-	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, 0);
+	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
+	mBox.setPosition(mList.getPosition());
+	mBox.setSize(mList.getSize());
+
+	mBox.setCornerImage(":/corner.png");
+	mBox.setVerticalImage(":/bar.png");
+	mBox.setHorizontalImage(":/bar.png");
+	mBox.setBorderColor(0x333333FF);
 }
 
 GuiSettingsMenu::~GuiSettingsMenu()

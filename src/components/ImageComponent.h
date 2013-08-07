@@ -23,6 +23,7 @@ public:
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
 	void setResize(float width, float height, bool allowUpscale);
+	void setColorShift(unsigned int color);
 
 	void setFlipX(bool flip);
 	void setFlipY(bool flip);
@@ -47,6 +48,8 @@ private:
 	void drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int count = 6); //draws the given set of points and texture coordinates, number of coordinate pairs may be specified (default 6)
 
 	std::string mPath;
+
+	unsigned int mColorShift;
 
 	std::shared_ptr<TextureResource> mTexture;
 };

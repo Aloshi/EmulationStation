@@ -1,5 +1,6 @@
 #include "ResourceManager.h"
 #include "../Log.h"
+#include "../../data/Resources.h"
 #include <fstream>
 #include <boost/filesystem.hpp>
 
@@ -8,37 +9,19 @@ namespace fs = boost::filesystem;
 auto array_deleter = [](unsigned char* p) { delete[] p; };
 auto nop_deleter = [](unsigned char* p) { };
 
-
-//from ES_logo_16.cpp
-extern const size_t es_logo_16_data_len;
-extern const unsigned char es_logo_16_data[];
-
-//from ES_logo_32.cpp
-extern const size_t es_logo_32_data_len;
-extern const unsigned char es_logo_32_data[];
-
-struct EmbeddedResource
-{
-	const char* internal_path;
-	ResourceData resourceData;
-};
-
-static const int embedded_resource_count = 2;
-static const EmbeddedResource embedded_resources[embedded_resource_count] = {
-	{ "internal://es_logo_16.png", {std::shared_ptr<unsigned char>((unsigned char*)es_logo_16_data, nop_deleter), es_logo_16_data_len} }, 
-	{ "internal://es_logo_32.png", {std::shared_ptr<unsigned char>((unsigned char*)es_logo_32_data, nop_deleter), es_logo_32_data_len} }
-};
-
-
 const ResourceData ResourceManager::getFileData(const std::string& path) const
 {
-	for(int i = 0; i < embedded_resource_count; i++)
+	//check if its embedded
+	
+	if(res2hMap.find(path) != res2hMap.end())
 	{
-		if(strcmp(embedded_resources[i].internal_path, path.c_str()) == 0)
-		{
-			//this embedded resource matches the filepath; use it
-			return embedded_resources[i].resourceData;
-		}
+		//it is
+		Res2hEntry embeddedEntry = res2hMap.find(path)->second;
+		ResourceData data = { 
+			std::shared_ptr<unsigned char>(const_cast<unsigned char*>(embeddedEntry.data), nop_deleter), 
+			embeddedEntry.size
+		};
+		return data;
 	}
 
 	//it's not embedded; load the file
@@ -72,14 +55,9 @@ ResourceData ResourceManager::loadFile(const std::string& path) const
 
 bool ResourceManager::fileExists(const std::string& path) const
 {
-	for(int i = 0; i < embedded_resource_count; i++)
-	{
-		if(strcmp(embedded_resources[i].internal_path, path.c_str()) == 0)
-		{
-			//this embedded resource matches the filepath
-			return true;
-		}
-	}
+	//if it exists as an embedded file, return true
+	if(res2hMap.find(path) != res2hMap.end())
+		return true;
 
 	return fs::exists(path);
 }
