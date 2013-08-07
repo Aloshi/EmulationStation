@@ -12,7 +12,9 @@ void ScrollableContainer::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Affine3f trans = parentTrans * getTransform();
 
 	Eigen::Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());
-	Eigen::Vector2i clipDim((int)mSize.x(), (int)mSize.y());
+
+	Eigen::Vector3f dimScaled = trans * Eigen::Vector3f(mSize.x(), mSize.y(), 0);
+	Eigen::Vector2i clipDim((int)dimScaled.x() - trans.translation().x(), (int)dimScaled.y() - trans.translation().y());
 
 	Renderer::pushClipRect(clipPos, clipDim);
 

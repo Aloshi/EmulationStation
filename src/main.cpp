@@ -214,6 +214,10 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
+		//cap deltaTime at 1000
+		if(deltaTime > 1000 || deltaTime < 0)
+			deltaTime = 1000;
+
 		window.update(deltaTime);
 		Renderer::swapBuffers(); //swap here so we can read the last screen state during updates (see ImageComponent::copyScreen())
 		window.render();

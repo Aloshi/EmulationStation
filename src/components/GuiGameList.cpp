@@ -442,15 +442,35 @@ Eigen::Vector2f lerpVector2f(const Eigen::Vector2f& start, const Eigen::Vector2f
 	return (start * (1 - t) + end * t);
 }
 
+float clamp(float min, float max, float val)
+{
+	if(val < min)
+		val = min;
+	else if(val > max)
+		val = max;
+
+	return val;
+}
+
+//http://en.wikipedia.org/wiki/Smoothstep
+float smoothStep(float edge0, float edge1, float x)
+{
+    // Scale, and clamp x to 0..1 range
+    x = clamp(0, 1, (x - edge0)/(edge1 - edge0));
+	
+    // Evaluate polynomial
+    return x*x*x*(x*(x*6 - 15) + 10);
+}
+
 void GuiGameList::updateGameLaunchEffect(int t)
 {
 	const int endTime = mGameLaunchEffectLength;
 
 	const int zoomTime = endTime;
-	const int centerTime = endTime - 100;
+	const int centerTime = endTime - 50;
 
-	const int fadeDelay = endTime - 500;
-	const int fadeTime = endTime - fadeDelay;
+	const int fadeDelay = endTime - 600;
+	const int fadeTime = endTime - fadeDelay - 100;
 
 	Eigen::Vector2f imageCenter(mScreenshot.getCenter());
 	if(!isDetailed())
@@ -460,8 +480,11 @@ void GuiGameList::updateGameLaunchEffect(int t)
 
 	const Eigen::Vector2f centerStart(Renderer::getScreenWidth() / 2, Renderer::getScreenHeight() / 2);
 
-	mWindow->setCenterPoint(lerpVector2f(centerStart, imageCenter, (float)t / endTime));
-	mWindow->setZoomFactor(lerpFloat(1.0f, 2.0f, (float)t / endTime));
+	//remember to clamp or zoom factor will be incorrect with a negative t because squared
+	const float tNormalized = clamp(0, 1, (float)t / endTime);
+
+	mWindow->setCenterPoint(lerpVector2f(centerStart, imageCenter, smoothStep(0.0, 1.0, tNormalized)));
+	mWindow->setZoomFactor(lerpFloat(1.0f, 3.0f, tNormalized*tNormalized));
 	mWindow->setFadePercent(lerpFloat(0.0f, 1.0f, (float)(t - fadeDelay) / fadeTime));
 
 	if(t > endTime)

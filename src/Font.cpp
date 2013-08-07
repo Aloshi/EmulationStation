@@ -78,6 +78,7 @@ Font::Font(const ResourceManager& rm, const std::string& path, int size) : fontS
 
 Font::~Font()
 {
+	LOG(LogInfo) << "Destroying font \"" << mPath << "\" with size " << mSize << ".";
 	deinit();
 }
 
@@ -238,14 +239,14 @@ void Font::buildAtlas(ResourceData data)
 	if((y + maxHeight) >= textureHeight)
 	{
 		//failed to create a proper font texture
-		LOG(LogWarning) << "Font with size " << mSize << " exceeded max texture size! Trying again...";
+		LOG(LogWarning) << "Font \"" << mPath << "\" with size " << mSize << " exceeded max texture size! Trying again...";
 		//try a 3/4th smaller size and redo initialization
 		fontScale *= 1.25f;
 		mSize = (int)(mSize * (1.0f / fontScale));
 		deinit();
 		init(data);
 	}else{
-		LOG(LogInfo) << "Created font with size " << mSize << ".";
+		LOG(LogInfo) << "Created font \"" << mPath << "\" with size " << mSize << ".";
 	}
 }
 
