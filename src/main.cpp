@@ -147,6 +147,9 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
+	SDL_JoystickEventState(SDL_DISABLE);
+
 	//try loading the system config file
 	if(!SystemData::loadConfig(SystemData::getConfigPath(), true))
 	{
@@ -168,6 +171,9 @@ int main(int argc, char* argv[])
 	}else{
 		window.pushGui(new GuiDetectDevice(&window));
 	}
+
+	//generate joystick events since we're done loading
+	SDL_JoystickEventState(SDL_ENABLE);
 
 	bool sleeping = false;
 	unsigned int timeSinceLastEvent = 0;
