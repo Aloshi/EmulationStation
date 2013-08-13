@@ -20,20 +20,19 @@ namespace fs = boost::filesystem;
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
 
-SystemData::SystemData(std::string name, std::string descName, std::string startPath, std::string extension, std::string command)
+SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, const std::string& command)
 {
 	mName = name;
-	mDescName = descName;
+	mFullName = fullName;
+	mStartPath = startPath;
 
 	//expand home symbol if the startpath contains ~
-	if(startPath[0] == '~')
+	if(mStartPath[0] == '~')
 	{
-		startPath.erase(0, 1);
-		std::string home = getHomePath();
-		startPath.insert(0, home);
-        }
+		mStartPath.erase(0, 1);
+		mStartPath.insert(0, getHomePath());
+	}
 
-	mStartPath = startPath;
 	mSearchExtension = extension;
 	mLaunchCommand = command;
 
@@ -177,9 +176,12 @@ std::string SystemData::getName()
 	return mName;
 }
 
-std::string SystemData::getDescName()
+std::string SystemData::getFullName()
 {
-	return mDescName;
+	if(mFullName.empty())
+		return mName;
+	else
+		return mFullName;
 }
 
 //creates systems from information located in a config file
@@ -187,132 +189,99 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 {
 	deleteSystems();
 
-	LOG(LogInfo) << "Loading system config file...";
+	LOG(LogInfo) << "Loading system config file " << path << "...";
 
 	if(!fs::exists(path))
 	{
-		LOG(LogInfo) << "System config file \"" << path << "\" doesn't exist!";
+		LOG(LogError) << "File does not exist!";
+		
 		if(writeExample)
 			writeExampleConfig(path);
 
 		return false;
 	}
 
-	std::ifstream file(path.c_str());
-	if(file.is_open())
+	pugi::xml_document doc;
+	pugi::xml_parse_result res = doc.load_file(path.c_str());
+
+	if(!res)
 	{
-		size_t lineNr = 0;
-		std::string line;
-		std::string sysName, sysDescName, sysPath, sysExtension, sysCommand;
-		while(file.good())
-		{
-			lineNr++;
-			std::getline(file, line);
-
-			//remove whitespace from line through STL and lambda magic
-			line.erase(std::remove_if(line.begin(), line.end(), [&](char c){ return std::string("\t\r\n\v\f").find(c) != std::string::npos; }), line.end());
-
-			//skip blank lines and comments
-			if(line.empty() || line.at(0) == '#')
-				continue;
-
-			//find the name (left of the equals sign) and the value (right of the equals sign)
-			bool lineValid = false;
-			std::string varName;
-			std::string varValue;
-			const std::string::size_type equalsPos = line.find('=', 1);
-			if(equalsPos != std::string::npos)
-			{
-				lineValid = true;
-				varName = line.substr(0, equalsPos);
-				varValue = line.substr(equalsPos + 1, line.length() - 1);
-			}
-
-			if(lineValid)
-			{
-				//map the value to the appropriate variable
-				if(varName == "NAME")
-					sysName = varValue;
-				else if(varName == "DESCNAME")
-					sysDescName = varValue;
-				else if(varName == "PATH")
-				{
-					if(varValue[varValue.length() - 1] == '/')
-						sysPath = varValue.substr(0, varValue.length() - 1);
-					else
-						sysPath = varValue;
-					//convert path to generic directory seperators
-					boost::filesystem::path genericPath(sysPath);
-					sysPath = genericPath.generic_string();
-				}
-				else if(varName == "EXTENSION")
-					sysExtension = varValue;
-				else if(varName == "COMMAND")
-					sysCommand = varValue;
-
-				//we have all our variables - create the system object
-				if(!sysName.empty() && !sysPath.empty() &&!sysExtension.empty() && !sysCommand.empty())
-				{
-					if(sysDescName.empty())
-						sysDescName = sysName;
-
-					SystemData* newSystem = new SystemData(sysName, sysDescName, sysPath, sysExtension, sysCommand);
-					if(newSystem->getRootFolder()->getFileCount() == 0)
-					{
-						LOG(LogWarning) << "System \"" << sysName << "\" has no games! Ignoring it.";
-						delete newSystem;
-					}else{
-						sSystemVector.push_back(newSystem);
-					}
-
-					//reset the variables for the next block (should there be one)
-					sysName = ""; sysDescName = ""; sysPath = ""; sysExtension = ""; sysCommand = "" ;
-				}
-			}else{
-				LOG(LogError) << "Error reading config file \"" << path << "\" - no equals sign found on line " << lineNr << ": \"" << line << "\"!";
-				return false;
-			}
-		}
-	}else{
-		LOG(LogError) << "Error - could not load config file \"" << path << "\"!";
+		LOG(LogError) << "Could not parse config file!";
+		LOG(LogError) << res.description();
 		return false;
 	}
 
-	LOG(LogInfo) << "Finished loading config file - created " << sSystemVector.size() << " systems.";
+	//actually read the file
+	pugi::xml_node systemList = doc.child("systemList");
+
+	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
+	{
+		std::string name, fullname, path, ext, cmd;
+		name = system.child("name").text().get();
+		fullname = system.child("fullname").text().get();
+		path = system.child("path").text().get();
+		ext = system.child("extension").text().get();
+		cmd = system.child("command").text().get();
+
+		//validate
+		if(name.empty() || path.empty() || ext.empty() || cmd.empty())
+		{
+			LOG(LogError) << "System \"" << name << "\" is missing name, path, extension, or command!";
+			continue;
+		}
+
+		//convert path to generic directory seperators
+		boost::filesystem::path genericPath(path);
+		path = genericPath.generic_string();
+
+		SystemData* newSys = new SystemData(name, fullname, path, ext, cmd);
+		if(newSys->getRootFolder()->getFileCount() == 0)
+		{
+			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
+			delete newSys;
+		}else{
+			sSystemVector.push_back(newSys);
+		}
+	}
+
 	return true;
 }
 
 void SystemData::writeExampleConfig(const std::string& path)
 {
-	std::cerr << "Writing example config to \"" << path << "\"...";
-
 	std::ofstream file(path.c_str());
 
-	file << "# This is the EmulationStation Systems configuration file." << std::endl;
-	file << "# Lines that begin with a hash (#) are ignored, as are empty lines." << std::endl;
-	file << "# A sample system might look like this:" << std::endl;
-	file << "#NAME=nes" << std::endl;
-	file << "#DESCNAME=Nintendo Entertainment System" << std::endl;
-	file << "#PATH=~/ROMs/nes/" << std::endl;
-	file << "#EXTENSION=.nes .NES" << std::endl;
-	file << "#COMMAND=retroarch -L ~/cores/libretro-fceumm.so %ROM%" << std::endl << std::endl;
-
-	file << "#NAME is a short name used internally (and in alternative paths)." << std::endl;
-	file << "#DESCNAME is a descriptive name to identify the system. It may be displayed in a header." << std::endl;
-	file << "#PATH is the path to start the recursive search for ROMs in. ~ will be expanded into the $HOME variable." << std::endl;
-	file << "#EXTENSION is a list of extensions to search for, separated by spaces. You MUST include the period, and it must be exact - it's case sensitive, and no wildcards." << std::endl;
-	file << "#COMMAND is the shell command to execute when a game is selected. %ROM% will be replaced with the (bash special-character escaped) path to the ROM." << std::endl << std::endl;
-
-	file << "#Now try your own!" << std::endl;
-	file << "NAME=" << std::endl;
-	file << "DESCNAME=" << std::endl;
-	file << "PATH=" << std::endl;
-	file << "EXTENSION=" << std::endl;
-	file << "COMMAND=" << std::endl;
+	file << "<!-- This is the EmulationStation Systems configuration file.\n"
+			"All systems must be contained within the <systemList> tag.-->\n"
+			"\n"
+			"<systemList>\n"
+			"	<!-- Here's an example system to get you started. -->\n"
+			"	<system>\n"
+			"\n"
+			"		<!-- A short name, used internally. -->\n"
+			"		<name>NES</name>\n"
+			"\n"
+			"		<!-- A \"pretty\" name, displayed in the header and such. -->\n"
+			"		<fullname>Nintendo Entertainment System</fullname>\n"
+			"\n"
+			"		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME or $HOMEPATH, depending on platform. -->\n"
+			"		<path>~/roms/nes</path>\n"
+			"\n"
+			"		<!-- A list of extensions to search for, delimited by a space. You MUST include the period! It's also case sensitive. -->\n"
+			"		<extension>.nes .NES</extension>\n"
+			"\n"
+			"		<!-- The shell command executed when a game is selected. A few special tags are replaced if found in a command:\n"
+			"		%ROM% is replaced by a bash-special-character-escaped absolute path to the ROM.\n"
+			"		%BASENAME% is replaced by the \"base\" name of the ROM.  For example, \"/foo/bar.rom\" would have a basename of \"bar\". Useful for MAME.\n"
+			"		%ROM_RAW% is the raw, unescaped path to the ROM. -->\n"
+			"		<command>retroarch -L ~/cores/libretro-fceumm.so %ROM%</command>\n"
+			"\n"
+			"	</system>\n"
+			"</systemList>\n";
 
 	file.close();
 
-	std::cerr << "done. Go read it!\n";
+	LOG(LogError) << "Example config written!  Go read it at \"" << path << "\"!";
 }
 
 void SystemData::deleteSystems()
@@ -329,7 +298,7 @@ std::string SystemData::getConfigPath()
 	std::string home = getHomePath();
 	if(home.empty())
 	{
-		LOG(LogError) << "$HOME environment variable empty or nonexistant!";
+		LOG(LogError) << "Home path environment variable empty or nonexistant!";
 		exit(1);
 		return "";
 	}

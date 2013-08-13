@@ -316,7 +316,7 @@ void GuiGameList::updateTheme()
 
 	if(!mTheme->getBool("hideHeader"))
 	{
-		mHeaderText.setText(mSystem->getDescName());
+		mHeaderText.setText(mSystem->getFullName());
 	}else{
 		mHeaderText.setText("");
 	}

@@ -11,12 +11,12 @@ class GameData;
 class SystemData
 {
 public:
-	SystemData(std::string name, std::string descName, std::string startPath, std::string extension, std::string command);
+	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, const std::string& command);
 	~SystemData();
 
 	FolderData* getRootFolder();
 	std::string getName();
-	std::string getDescName();
+	std::string getFullName();
 	std::string getStartPath();
 	std::string getExtension();
 	std::string getGamelistPath();
@@ -32,7 +32,7 @@ public:
 	static std::vector<SystemData*> sSystemVector;
 private:
 	std::string mName;
-	std::string mDescName;
+	std::string mFullName;
 	std::string mStartPath;
 	std::string mSearchExtension;
 	std::string mLaunchCommand;
