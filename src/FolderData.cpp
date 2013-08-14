@@ -82,7 +82,7 @@ bool FolderData::compareRating(const FileData* file1, const FileData* file2)
 	const GameData * game1 = dynamic_cast<const GameData*>(file1);
 	const GameData * game2 = dynamic_cast<const GameData*>(file2);
 	if (game1 != nullptr && game2 != nullptr) {
-		return game1->getRating() < game2->getRating();
+		return const_cast<GameData*>(game1)->metadata()->getFloat("rating") < const_cast<GameData*>(game2)->metadata()->getFloat("rating");
 	}
 	return false;
 }
@@ -93,7 +93,7 @@ bool FolderData::compareUserRating(const FileData* file1, const FileData* file2)
 	const GameData * game1 = dynamic_cast<const GameData*>(file1);
 	const GameData * game2 = dynamic_cast<const GameData*>(file2);
 	if (game1 != nullptr && game2 != nullptr) {
-		return game1->getUserRating() < game2->getUserRating();
+		return const_cast<GameData*>(game1)->metadata()->getFloat("userrating") < const_cast<GameData*>(game2)->metadata()->getFloat("userrating");
 	}
 	return false;
 }
@@ -104,7 +104,7 @@ bool FolderData::compareTimesPlayed(const FileData* file1, const FileData* file2
 	const GameData * game1 = dynamic_cast<const GameData*>(file1);
 	const GameData * game2 = dynamic_cast<const GameData*>(file2);
 	if (game1 != nullptr && game2 != nullptr) {
-		return game1->getTimesPlayed() < game2->getTimesPlayed();
+		return const_cast<GameData*>(game1)->metadata()->getInt("playcount") < const_cast<GameData*>(game2)->metadata()->getInt("playcount");
 	}
 	return false;
 }
@@ -115,7 +115,7 @@ bool FolderData::compareLastPlayed(const FileData* file1, const FileData* file2)
 	const GameData * game1 = dynamic_cast<const GameData*>(file1);
 	const GameData * game2 = dynamic_cast<const GameData*>(file2);
 	if (game1 != nullptr && game2 != nullptr) {
-		return game1->getLastPlayed() < game2->getLastPlayed();
+		return const_cast<GameData*>(game1)->metadata()->getTime("lastplayed") < const_cast<GameData*>(game2)->metadata()->getTime("lastplayed");
 	}
 	return false;
 }

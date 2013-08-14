@@ -353,11 +353,12 @@ void GuiGameList::updateDetailData()
 		//if we've selected a game
 		if(mList.getSelectedObject() && !mList.getSelectedObject()->isFolder())
 		{
+			GameData* game = (GameData*)mList.getSelectedObject();
 			//set image to either "not found" image or metadata image
-			if(((GameData*)mList.getSelectedObject())->getImagePath().empty())
+			if(game->metadata()->get("image").empty())
 				mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
 			else
-				mScreenshot.setImage(((GameData*)mList.getSelectedObject())->getImagePath());
+				mScreenshot.setImage(game->metadata()->get("image"));
 
 			Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
 			mScreenshot.setPosition(getImagePos() - imgOffset);
@@ -372,7 +373,7 @@ void GuiGameList::updateDetailData()
 
 			mDescription.setPosition(0, 0);
 			mDescription.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), 0));
-			mDescription.setText(((GameData*)mList.getSelectedObject())->getDescription());
+			mDescription.setText(game->metadata()->get("desc"));
 		}else{
 			mScreenshot.setImage("");
 			mDescription.setText("");

@@ -10,8 +10,8 @@ class FileData
 public:
 	virtual ~FileData() { };
 	virtual bool isFolder() const = 0;
-	virtual const std::string & getName() const = 0;
-	virtual const std::string & getPath() const = 0;
+	virtual const std::string& getName() const = 0;
+	virtual const std::string& getPath() const = 0;
 };
 
 #endif

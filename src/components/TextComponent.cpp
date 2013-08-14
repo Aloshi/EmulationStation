@@ -93,3 +93,13 @@ void TextComponent::calculateExtent()
 		}
 	}
 }
+
+void TextComponent::setValue(const std::string& value)
+{
+	setText(value);
+}
+
+std::string TextComponent::getValue() const
+{
+	return mText;
+}

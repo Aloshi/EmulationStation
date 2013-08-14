@@ -96,8 +96,8 @@ void SystemData::launchGame(Window* window, GameData* game)
 	window->normalizeNextUpdate();
 
 	//update number of times the game has been launched and the time
-	game->setTimesPlayed(game->getTimesPlayed() + 1);
-	game->setLastPlayed(std::time(nullptr));
+	game->incTimesPlayed();
+	game->lastPlayedNow();
 }
 
 void SystemData::populateFolder(FolderData* folder)
@@ -145,7 +145,7 @@ void SystemData::populateFolder(FolderData* folder)
 			//if it matches, add it
 			if(chkExt == extension)
 			{
-				GameData* newGame = new GameData(this, filePath.generic_string(), filePath.stem().string());
+				GameData* newGame = new GameData(this, filePath.generic_string());
 				folder->pushFileData(newGame);
 				isGame = true;
 				break;

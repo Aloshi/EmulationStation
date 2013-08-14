@@ -18,6 +18,9 @@ public:
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 
+	std::string getValue() const override;
+	void setValue(const std::string& value) override;
+	
 private:
 	std::shared_ptr<Font> getFont() const;
 	
