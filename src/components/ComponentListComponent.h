@@ -18,7 +18,8 @@ public:
 	};
 
 	//DO NOT USE NEGATIVE NUMBERS FOR POSITION OR SIZE.
-	void setEntry(Eigen::Vector2i pos, Eigen::Vector2i size, GuiComponent* component, bool canFocus, AlignmentType align, Eigen::Matrix<bool, 1, 2> autoFit, UpdateBehavior updateType = UpdateAlways);
+	void setEntry(Eigen::Vector2i pos, Eigen::Vector2i size, GuiComponent* component, bool canFocus, AlignmentType align, 
+		Eigen::Matrix<bool, 1, 2> autoFit = Eigen::Matrix<bool, 1, 2>(true, true), UpdateBehavior updateType = UpdateAlways);
 
 	void onPositionChanged() override;
 
@@ -76,6 +77,7 @@ private:
 	void updateSize();
 
 	void moveCursor(Eigen::Vector2i dir);
+	void onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i to);
 	Eigen::Vector2i mCursor;
 
 	void updateComponentOffsets();

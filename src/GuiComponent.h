@@ -54,6 +54,9 @@ public:
 	virtual std::string getValue() const;
 	virtual void setValue(const std::string& value);
 
+	virtual void onFocusGained() {};
+	virtual void onFocusLost() {};
+
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;
 

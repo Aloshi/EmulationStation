@@ -4,7 +4,7 @@
 
 #define INITIAL_CELL_SIZE 12
 
-ComponentListComponent::ComponentListComponent(Window* window, Eigen::Vector2i gridDimensions) : GuiComponent(window), mGrid(NULL), mColumnWidths(NULL), mRowHeights(NULL)
+ComponentListComponent::ComponentListComponent(Window* window, Eigen::Vector2i gridDimensions) : GuiComponent(window), mGrid(NULL), mColumnWidths(NULL), mRowHeights(NULL), mCursor(-1, -1)
 {
 	mEntries.reserve(gridDimensions.x() * gridDimensions.y());
 	makeCells(gridDimensions);
@@ -180,6 +180,16 @@ bool ComponentListComponent::input(InputConfig* config, Input input)
 		moveCursor(Eigen::Vector2i(0, -1));
 		return true;
 	}
+	if(config->isMappedTo("left", input))
+	{
+		moveCursor(Eigen::Vector2i(-1, 0));
+		return true;
+	}
+	if(config->isMappedTo("right", input))
+	{
+		moveCursor(Eigen::Vector2i(1, 0));
+		return true;
+	}
 
 	return false;
 }
@@ -192,7 +202,9 @@ void ComponentListComponent::resetCursor()
 		return;
 	}
 
+	const Eigen::Vector2i origCursor = mCursor;
 	mCursor << mEntries.at(0).pos[0], mEntries.at(0).pos[1];
+	onCursorMoved(origCursor, mCursor);
 }
 
 void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
@@ -203,15 +215,21 @@ void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
 		return;
 	}
 
+	Eigen::Vector2i origCursor = mCursor;
+
 	if(!cursorValid())
 	{
 		resetCursor();
+
 		if(!cursorValid())
+		{
+			if(mCursor != origCursor)
+				onCursorMoved(origCursor, mCursor);
+
 			return;
+		}
 	}
 
-	Eigen::Vector2i origCursor = mCursor;
-	
 	Eigen::Vector2i searchAxis(dir.x() == 0, dir.y() == 0);
 	
 	while(mCursor.x() >= 0 && mCursor.y() >= 0 && mCursor.x() < mGridSize.x() && mCursor.y() < mGridSize.y())
@@ -224,7 +242,10 @@ void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
 		while(mCursor.x() < mGridSize.x() && mCursor.y() < mGridSize.y())
 		{
 			if(cursorValid() && getCell(mCursor.x(), mCursor.y())->canFocus)
+			{
+				onCursorMoved(origCursor, mCursor);
 				return;
+			}
 
 			mCursor += searchAxis;
 		}
@@ -234,7 +255,10 @@ void ComponentListComponent::moveCursor(Eigen::Vector2i dir)
 		while(mCursor.x() >= 0 && mCursor.y() >= 0)
 		{
 			if(cursorValid() && getCell(mCursor.x(), mCursor.y())->canFocus)
+			{
+				onCursorMoved(origCursor, mCursor);
 				return;
+			}
 
 			mCursor -= searchAxis;
 		}
@@ -326,4 +350,13 @@ GuiComponent* ComponentListComponent::getSelectedComponent()
 	if(!cursorValid())
 		return NULL;
 	return getCell(mCursor.x(), mCursor.y())->component;
+}
+
+void ComponentListComponent::onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i to)
+{
+	if(from != Eigen::Vector2i(-1, -1))
+		getCell(from.x(), from.y())->component->onFocusLost();
+
+	if(to != Eigen::Vector2i(-1, -1))
+		getCell(to.x(), to.y())->component->onFocusGained();
 }

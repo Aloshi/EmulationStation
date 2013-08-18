@@ -17,6 +17,18 @@ extern const unsigned char ES_logo_16_png_data[];
 extern const size_t ES_logo_32_png_size;
 extern const unsigned char ES_logo_32_png_data[];
 
+extern const size_t glow_hor_png_size;
+extern const unsigned char glow_hor_png_data[];
+
+extern const size_t glow_off_hor_png_size;
+extern const unsigned char glow_off_hor_png_data[];
+
+extern const size_t glow_off_vert_png_size;
+extern const unsigned char glow_off_vert_png_data[];
+
+extern const size_t glow_vert_png_size;
+extern const unsigned char glow_vert_png_data[];
+
 struct Res2hEntry {
     const std::string relativeFileName;
     const size_t size;

@@ -6,7 +6,7 @@
 #include <boost/filesystem.hpp>
 #include "../Log.h"
 #include "../Settings.h"
-
+#include "GuiGameEd.h"
 
 std::vector<FolderData::SortState> GuiGameList::sortStates;
 
@@ -122,6 +122,12 @@ bool GuiGameList::input(InputConfig* config, Input input)
 		return false;
 
 	mList.input(config, input);
+
+	if(input.id == SDLK_F3)
+	{
+		mWindow->pushGui(new GuiGameEd(mWindow, (GameData*)mSystem->getRootFolder()->getFile(0), MetaDataList::getDefaultGameMDD()));
+		return true;
+	}
 
 	if(config->isMappedTo("a", input) && mFolder->getFileCount() > 0 && input.value != 0)
 	{

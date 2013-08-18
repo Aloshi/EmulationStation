@@ -56,9 +56,10 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 
 	//center list
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
+
+	//set up borders/background
 	mBox.setPosition(mList.getPosition());
 	mBox.setSize(mList.getSize());
-
 	mBox.setCornerImage(":/corner.png");
 	mBox.setVerticalImage(":/bar.png");
 	mBox.setHorizontalImage(":/bar.png");

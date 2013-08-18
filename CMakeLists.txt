@@ -143,11 +143,13 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameEd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
@@ -187,10 +189,12 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameEd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
@@ -204,6 +208,10 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_32_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/bar_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/corner_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/glow_hor_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/glow_vert_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/glow_off_hor_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/glow_off_vert_png.cpp
 )
 
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)

@@ -1,6 +1,7 @@
 #include "MetaData.h"
 #include "components/TextComponent.h"
 #include "Log.h"
+#include "components/TextEditComponent.h"
 
 MetaDataList::MetaDataList()
 {
@@ -15,12 +16,13 @@ MetaDataList::MetaDataList(const std::vector<MetaDataDecl>& mdd)
 std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 {
 	MetaDataDecl decls[] = { 
-		{"name",  MD_STRING, ""}, 
-		{"desc",  MD_STRING, ""},
-		{"image", MD_IMAGE_PATH, ""},
-		{"rating", MD_RATING, "0"},
-		{"timesplayed", MD_INT, "0"},
-		{"playcount", MD_TIME, "0"}
+		{"name",		MD_STRING,				""}, 
+		{"desc",		MD_MULTILINE_STRING,	""},
+		{"image",		MD_IMAGE_PATH,			""},
+		{"rating",		MD_RATING,				"0"},
+		{"userrating",	MD_RATING,				"0"},
+		{"playcount",	MD_INT,					"0"},
+		{"lastplayed",	MD_TIME,				"0"}
 	};
 
 	std::vector<MetaDataDecl> mdd(decls, decls + sizeof(decls) / sizeof(decls[0]));
@@ -106,21 +108,7 @@ GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataType as)
 	switch(as)
 	{
 	default:
-		TextComponent* comp = new TextComponent(window);
+		TextEditComponent* comp = new TextEditComponent(window);
 		return comp;
 	}
-}
-
-GuiComponent* MetaDataList::makeDisplay(Window* window, MetaDataDecl from)
-{
-	GuiComponent* comp = makeDisplay(window, from.type);
-	comp->setValue(get(from.key));
-	return comp;
-}
-
-GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataDecl from)
-{
-	GuiComponent* comp = makeEditor(window, from.type);
-	comp->setValue(get(from.key));
-	return comp;
 }

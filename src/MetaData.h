@@ -14,6 +14,7 @@ enum MetaDataType
 	MD_FLOAT,
 
 	//specialized types
+	MD_MULTILINE_STRING,
 	MD_IMAGE_PATH,
 	MD_RATING,
 	MD_TIME
@@ -42,11 +43,8 @@ public:
 	float getFloat(const std::string& key) const;
 	std::time_t getTime(const std::string& key) const;
 
-	GuiComponent* makeDisplay(Window* window, MetaDataType as);
-	GuiComponent* makeDisplay(Window* window, MetaDataDecl from);
-
-	GuiComponent* makeEditor(Window* window, MetaDataType as);
-	GuiComponent* makeEditor(Window* window, MetaDataDecl from);
+	static GuiComponent* makeDisplay(Window* window, MetaDataType as);
+	static GuiComponent* makeEditor(Window* window, MetaDataType as);
 
 	void appendToXML(pugi::xml_node parent, const std::vector<MetaDataDecl>& ignoreDefaults = std::vector<MetaDataDecl>()) const;
 
