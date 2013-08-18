@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <iostream>
 #include "Log.h"
+#include "InputManager.h"
 
 //some util functions
 std::string inputTypeToString(InputType type)
@@ -48,7 +49,7 @@ std::string toLower(std::string str)
 }
 //end util functions
 
-InputConfig::InputConfig(int deviceId) : mDeviceId(deviceId)
+InputConfig::InputConfig(int deviceId, const std::string& deviceName) : mDeviceId(deviceId), mDeviceName(deviceName)
 {
 	mPlayerNum = -1;
 }
@@ -162,7 +163,7 @@ void InputConfig::writeToXML(pugi::xml_node parent)
 		cfg.append_attribute("type") = "keyboard";
 	}else{
 		cfg.append_attribute("type") = "joystick";
-		cfg.append_attribute("deviceName") = SDL_JoystickName(mDeviceId);
+		cfg.append_attribute("deviceName") = mDeviceName.c_str();
 	}
 
 	typedef std::map<std::string, Input>::iterator it_type;

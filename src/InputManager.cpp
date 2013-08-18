@@ -126,7 +126,7 @@ Uint32 InputManager::devicePollingCallback(Uint32 interval, void* param)
 	event.user.code = SDL_USEREVENT_POLLDEVICES;
 	event.user.data1 = nullptr;
 	event.user.data2 = nullptr;
-	if (SDL_PushEvent(&event) != 0) {
+	if (!SDL_PushEvent(&event)) {
 		LOG(LogError) << "InputManager::devicePollingCallback - SDL event queue is full!";
 	}
 
@@ -151,7 +151,7 @@ void InputManager::init()
 	for(int i = 0; i < mNumJoysticks; i++)
 	{
 		mJoysticks[i] = SDL_JoystickOpen(i);
-		mInputConfigs[i] = new InputConfig(i);
+		mInputConfigs[i] = new InputConfig(i, SDL_JoystickName(mJoysticks[i]));
 
 		for(int k = 0; k < SDL_JoystickNumAxes(mJoysticks[i]); k++)
 		{
@@ -159,7 +159,7 @@ void InputManager::init()
 		}
 	}
 
-	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD);
+	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD, "Keyboard");
 
 	SDL_JoystickEventState(SDL_ENABLE);
 
@@ -370,7 +370,7 @@ void InputManager::loadConfig()
 			std::string devName = node.attribute("deviceName").as_string();
 			for(int i = 0; i < mNumJoysticks; i++)
 			{
-				if(!configuredDevice[i] && SDL_JoystickName(i) == devName)
+				if(!configuredDevice[i] && SDL_JoystickName(mJoysticks[i]) == devName)
 				{
 					mInputConfigs[i]->loadFromXML(node, mNumPlayers);
 					mNumPlayers++;

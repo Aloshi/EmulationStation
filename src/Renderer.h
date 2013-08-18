@@ -12,7 +12,8 @@ class GuiComponent;
 class Font;
 
 //The Renderer provides several higher-level functions for drawing (rectangles, text, etc.).
-//Defined in multiple files - Renderer.cpp has the GuiComponent stuff, Renderer_draw_* includes renderer-specific drawing implementations, and Renderer_init_* includes renderer-specific init/deinit.
+//Renderer_draw_gl.cpp has most of the higher-level functions and wrappers.
+//Renderer_init_*.cpp has platform-specific renderer initialziation/deinitialziation code.  (e.g. the Raspberry Pi sets up dispmanx/OpenGL ES)
 namespace Renderer
 {
 	bool init(int w, int h);
