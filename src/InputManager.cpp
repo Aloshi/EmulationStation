@@ -6,29 +6,11 @@
 #include <boost/filesystem.hpp>
 #include "platform.h"
 
-#if defined(WIN32) || defined(_WIN32)
-	#include <Windows.h>
-#endif
-
 namespace fs = boost::filesystem;
 
-//----- InputDevice ----------------------------------------------------------------------------
-
-InputDevice::InputDevice(const std::string & deviceName, unsigned long vendorId, unsigned long productId)
-	: name(deviceName), vendor(vendorId), product(productId)
-{
-}
-
-bool InputDevice::operator==(const InputDevice & b) const
-{
-	return (name == b.name && vendor == b.vendor && product == b.product);
-}
-
-//----- InputManager ---------------------------------------------------------------------------
-
 InputManager::InputManager(Window* window) : mWindow(window), 
-	mJoysticks(NULL), mInputConfigs(NULL), mKeyboardInputConfig(NULL), mPrevAxisValues(NULL),
-	mNumJoysticks(0), mNumPlayers(0), devicePollingTimer(NULL)
+	mKeyboardInputConfig(NULL),
+	mNumJoysticks(0), mNumPlayers(0)
 {
 }
 
@@ -37,188 +19,69 @@ InputManager::~InputManager()
 	deinit();
 }
 
-std::vector<InputDevice> InputManager::getInputDevices() const
-{
-	std::vector<InputDevice> currentDevices;
-
-	//retrieve all input devices from system
-#if defined (__APPLE__)
-    #error TODO: Not implemented for MacOS yet!!!
-#elif defined(__linux__)
-	//open linux input devices file system
-	const std::string inputPath("/dev/input");
-	fs::directory_iterator dirIt(inputPath);
-	while (dirIt != fs::directory_iterator()) {
-		//get directory entry
-		std::string deviceName = (*dirIt).path().string();
-		//remove parent path
-		deviceName.erase(0, inputPath.length() + 1);
-		//check if it start with "js"
-		if (deviceName.length() >= 3 && deviceName.find("js") == 0) {
-			//looks like a joystick. add to devices.
-			currentDevices.push_back(InputDevice(deviceName, 0, 0));
-		}
-		++dirIt;
-	}
-	//or dump /proc/bus/input/devices anbd search for a Handler=..."js"... entry
-#elif defined(WIN32) || defined(_WIN32)
-	RAWINPUTDEVICELIST * deviceList = nullptr;
-	UINT nrOfDevices = 0;
-	//get number of input devices
-	if (GetRawInputDeviceList(deviceList, &nrOfDevices, sizeof(RAWINPUTDEVICELIST)) != -1 && nrOfDevices > 0)
-	{
-		//get list of input devices
-		deviceList = new RAWINPUTDEVICELIST[nrOfDevices];
-		if (GetRawInputDeviceList(deviceList, &nrOfDevices, sizeof(RAWINPUTDEVICELIST)) != -1)
-		{
-			//loop through input devices
-			for (unsigned int i = 0; i < nrOfDevices; i++)
-			{
-				//get device name
-				char * rawName = new char[2048];
-				UINT rawNameSize = 2047;
-				GetRawInputDeviceInfo(deviceList[i].hDevice, RIDI_DEVICENAME, (void *)rawName, &rawNameSize);
-				//null-terminate string
-				rawName[rawNameSize] = '\0';
-				//convert to string
-				std::string deviceName = rawName;
-				delete [] rawName;
-				//get deviceType
-				RID_DEVICE_INFO deviceInfo;
-				UINT deviceInfoSize = sizeof(RID_DEVICE_INFO);
-				GetRawInputDeviceInfo(deviceList[i].hDevice, RIDI_DEVICEINFO, (void *)&deviceInfo, &deviceInfoSize);
-				//check if it is a HID. we ignore keyboards and mice...
-				if (deviceInfo.dwType == RIM_TYPEHID)
-				{
-					//check if the vendor/product already exists in list. yes. could be more elegant...
-					std::vector<InputDevice>::const_iterator cdIt = currentDevices.cbegin();
-					while (cdIt != currentDevices.cend())
-					{
-						if (cdIt->name == deviceName && cdIt->product == deviceInfo.hid.dwProductId && cdIt->vendor == deviceInfo.hid.dwVendorId)
-						{
-							//device already there
-							break;
-						}
-						++cdIt;
-					}
-					//was the device found?
-					if (cdIt == currentDevices.cend())
-					{
-						//no. add it.
-						currentDevices.push_back(InputDevice(deviceName, deviceInfo.hid.dwProductId, deviceInfo.hid.dwVendorId));
-					}
-				}
-			}
-		}
-		delete [] deviceList;
-	}
-#endif
-
-	return currentDevices;
-}
-
-Uint32 InputManager::devicePollingCallback(Uint32 interval, void* param)
-{
-	//this thing my be running in a different thread, so we're not allowed to call
-	//any functions or change/allocate/delete stuff, but can send a user event
-	SDL_Event event;
-	event.user.type = SDL_USEREVENT;
-	event.user.code = SDL_USEREVENT_POLLDEVICES;
-	event.user.data1 = nullptr;
-	event.user.data2 = nullptr;
-	if (!SDL_PushEvent(&event)) {
-		LOG(LogError) << "InputManager::devicePollingCallback - SDL event queue is full!";
-	}
-
-	return interval;
-}
-
 void InputManager::init()
 {
-	if(mJoysticks != NULL)
+	if(initialized())
 		deinit();
 
-	//get current input devices from system
-	inputDevices = getInputDevices();
-
-	SDL_InitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_TIMER);
+	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 
 	mNumJoysticks = SDL_NumJoysticks();
-	mJoysticks = new SDL_Joystick*[mNumJoysticks];
-	mInputConfigs = new InputConfig*[mNumJoysticks];
-	mPrevAxisValues = new std::map<int, int>[mNumJoysticks];
 
 	for(int i = 0; i < mNumJoysticks; i++)
 	{
-		mJoysticks[i] = SDL_JoystickOpen(i);
-		mInputConfigs[i] = new InputConfig(i, SDL_JoystickName(mJoysticks[i]));
-
-		for(int k = 0; k < SDL_JoystickNumAxes(mJoysticks[i]); k++)
-		{
-			mPrevAxisValues[i][k] = 0;
-		}
+		SDL_Joystick* joy = SDL_JoystickOpen(i);
+		SDL_JoystickID joyId = SDL_JoystickInstanceID(joy);
+		mJoysticks.push_back(joy);
+		mInputConfigs[joyId] = new InputConfig(i, SDL_JoystickName(joy));
+		
+		int numAxes = SDL_JoystickNumAxes(joy);
+		mPrevAxisValues[joyId] = new int[numAxes];
+		std::fill(mPrevAxisValues[joyId], mPrevAxisValues[joyId] + numAxes, 0); //initialize array to 0
 	}
 
 	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD, "Keyboard");
 
-	SDL_JoystickEventState(SDL_ENABLE);
-
-	//start timer for input device polling
-	startPolling();
-
 	loadConfig();
-}
 
-void InputManager::startPolling()
-{
-	if(devicePollingTimer != NULL)
-		return;
-
-	devicePollingTimer = SDL_AddTimer(POLLING_INTERVAL, devicePollingCallback, (void *)this);
-}
-
-void InputManager::stopPolling()
-{
-	if(devicePollingTimer == NULL)
-		return;
-
-	SDL_RemoveTimer(devicePollingTimer);
-	devicePollingTimer = NULL;
+	SDL_JoystickEventState(SDL_ENABLE);
 }
 
 void InputManager::deinit()
 {
-	stopPolling();
-
 	SDL_JoystickEventState(SDL_DISABLE);
 
-	if(!SDL_WasInit(SDL_INIT_JOYSTICK))
+	if(!initialized())
 		return;
 
-	if(mJoysticks != NULL)
+	for(auto iter = mJoysticks.begin(); iter != mJoysticks.end(); iter++)
 	{
-		for(int i = 0; i < mNumJoysticks; i++)
-		{
-			SDL_JoystickClose(mJoysticks[i]);
-			delete mInputConfigs[i];
-		}
-
-		delete[] mInputConfigs;
-		mInputConfigs = NULL;
-
-		delete[] mJoysticks;
-		mJoysticks = NULL;
-
-		delete mKeyboardInputConfig;
-		mKeyboardInputConfig = NULL;
-
-		delete[] mPrevAxisValues;
-		mPrevAxisValues = NULL;
+		SDL_JoystickClose(*iter);
 	}
 
-	SDL_QuitSubSystem(SDL_INIT_JOYSTICK | SDL_INIT_TIMER);
+	mJoysticks.clear();
 
-	inputDevices.clear();
+	for(auto iter = mInputConfigs.begin(); iter != mInputConfigs.end(); iter++)
+	{
+		delete iter->second;
+	}
+
+	mInputConfigs.clear();
+
+	for(auto iter = mPrevAxisValues.begin(); iter != mPrevAxisValues.end(); iter++)
+	{
+		delete[] iter->second;
+	}
+
+	mPrevAxisValues.clear();
+
+	if(mKeyboardInputConfig != NULL)
+	{
+		delete mKeyboardInputConfig;
+		mKeyboardInputConfig = NULL;
+	}
+
+	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 }
 
 int InputManager::getNumJoysticks() { return mNumJoysticks; }
@@ -233,7 +96,7 @@ int InputManager::getButtonCountByDevice(int id)
 int InputManager::getNumPlayers() { return mNumPlayers; }
 void InputManager::setNumPlayers(int num) { mNumPlayers = num; }
 
-InputConfig* InputManager::getInputConfigByDevice(int device)
+InputConfig* InputManager::getInputConfigByDevice(SDL_JoystickID device)
 {
 	if(device == DEVICE_KEYBOARD)
 		return mKeyboardInputConfig;
@@ -246,10 +109,12 @@ InputConfig* InputManager::getInputConfigByPlayer(int player)
 	if(mKeyboardInputConfig->getPlayerNum() == player)
 		return mKeyboardInputConfig;
 
-	for(int i = 0; i < mNumJoysticks; i++)
+	for(auto iter = mInputConfigs.begin(); iter != mInputConfigs.end(); iter++)
 	{
-		if(mInputConfigs[i]->getPlayerNum() == player)
-			return mInputConfigs[i];
+		if(iter->second->getPlayerNum() == player)
+		{
+			return iter->second;
+		}
 	}
 
 	LOG(LogError) << "Could not find input config for player number " << player << "!";
@@ -306,20 +171,10 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
 		return true;
 
-	case SDL_USEREVENT:
-		if (ev.user.code == SDL_USEREVENT_POLLDEVICES) {
-			//poll joystick / HID again
-			std::vector<InputDevice> currentDevices = getInputDevices();
-			//compare device lists to see if devices were added/deleted
-			if (currentDevices != inputDevices) {
-				LOG(LogInfo) << "Device configuration changed!";
-				inputDevices = currentDevices;
-				//deinit and reinit InputManager
-				deinit();
-				init();
-			}
-			return true;
-		}
+	case SDL_JOYDEVICEADDED:
+		deinit();
+		init();
+		return true;
 	}
 
 	return false;
@@ -327,7 +182,7 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 
 void InputManager::loadConfig()
 {
-	if(!mJoysticks)
+	if(!initialized())
 	{
 		LOG(LogError) << "ERROR - cannot load InputManager config without being initialized!";
 	}
@@ -348,10 +203,11 @@ void InputManager::loadConfig()
 	mNumPlayers = 0;
 
 	bool* configuredDevice = new bool[mNumJoysticks];
-	for(int i = 0; i < mNumJoysticks; i++)
+	std::fill(configuredDevice, configuredDevice + mNumJoysticks, false);
+
+	for(auto iter = mInputConfigs.begin(); iter != mInputConfigs.end(); iter++)
 	{
-		mInputConfigs[i]->setPlayerNum(-1);
-		configuredDevice[i] = false;
+		iter->second->setPlayerNum(-1);
 	}
 
 	pugi::xml_node root = doc.child("inputList");
@@ -372,7 +228,8 @@ void InputManager::loadConfig()
 			{
 				if(!configuredDevice[i] && SDL_JoystickName(mJoysticks[i]) == devName)
 				{
-					mInputConfigs[i]->loadFromXML(node, mNumPlayers);
+					SDL_JoystickID joyId = SDL_JoystickInstanceID(mJoysticks[i]);
+					mInputConfigs[joyId]->loadFromXML(node, mNumPlayers);
 					mNumPlayers++;
 					found = true;
 					configuredDevice[i] = true;
@@ -423,14 +280,11 @@ void InputManager::loadDefaultConfig()
 
 	cfg->mapInput("mastervolup", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_PLUS, 1, true));
 	cfg->mapInput("mastervoldown", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_MINUS, 1, true));
-
-	cfg->mapInput("sortordernext", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F7, 1, true));
-	cfg->mapInput("sortorderprevious", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_F8, 1, true));
 }
 
 void InputManager::writeConfig()
 {
-	if(!mJoysticks)
+	if(!initialized())
 	{
 		LOG(LogError) << "ERROR - cannot write config without being initialized!";
 		return;
@@ -456,4 +310,9 @@ std::string InputManager::getConfigPath()
 	std::string path = getHomePath();
 	path += "/.emulationstation/es_input.cfg";
 	return path;
+}
+
+bool InputManager::initialized() const
+{
+	return mKeyboardInputConfig != NULL;
 }

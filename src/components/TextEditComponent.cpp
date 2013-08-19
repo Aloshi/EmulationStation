@@ -16,6 +16,8 @@ void TextEditComponent::onFocusGained()
 	mBox.setHorizontalImage(":/glow_hor.png");
 	mBox.setVerticalImage(":/glow_vert.png");
 	mBox.setBorderColor(0x51CCFFFF);
+
+	SDL_StartTextInput();
 }
 
 void TextEditComponent::onFocusLost()
@@ -23,6 +25,8 @@ void TextEditComponent::onFocusLost()
 	mBox.setHorizontalImage(":/glow_off_hor.png");
 	mBox.setVerticalImage(":/glow_off_vert.png");
 	mBox.setBorderColor(0xFFFFFFFF);
+
+	SDL_StopTextInput();
 }
 
 void TextEditComponent::onSizeChanged()
