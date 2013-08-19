@@ -166,3 +166,11 @@ std::string GuiComponent::getValue() const
 {
 	return "";
 }
+
+void GuiComponent::textInput(const char* text)
+{
+	for(auto iter = mChildren.begin(); iter != mChildren.end(); iter++)
+	{
+		(*iter)->textInput(text);
+	}
+}

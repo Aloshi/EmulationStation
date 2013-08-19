@@ -156,6 +156,17 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 		return true;
 
 	case SDL_KEYDOWN:
+		if(ev.key.keysym.sym == SDLK_BACKSPACE && SDL_IsTextInputActive())
+		{
+			if(mWindow->peekGui() != NULL)
+				mWindow->peekGui()->textInput("\b");
+
+			return true;
+		}
+
+		if(ev.key.repeat)
+			return false;
+
 		if(ev.key.keysym.sym == SDLK_F4)
 		{
 			SDL_Event* quit = new SDL_Event();
@@ -170,6 +181,11 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 	case SDL_KEYUP:
 		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
 		return true;
+
+	case SDL_TEXTINPUT:
+		if(mWindow->peekGui() != NULL)
+			mWindow->peekGui()->textInput(ev.text.text);
+		break;
 
 	case SDL_JOYDEVICEADDED:
 		deinit();

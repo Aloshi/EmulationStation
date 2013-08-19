@@ -3,12 +3,15 @@
 #include "../GuiComponent.h"
 #include "GuiBox.h"
 
+class Font;
+
 class TextEditComponent : public GuiComponent
 {
 public:
 	TextEditComponent(Window* window);
 
-	bool input(InputConfig* config, Input input) override;
+	void textInput(const char* text) override;
+	void render(const Eigen::Affine3f& parentTrans) override;
 
 	void onFocusGained() override;
 	void onFocusLost() override;
@@ -17,9 +20,12 @@ public:
 
 	void setValue(const std::string& val) override;
 	std::string getValue() const override;
+
 private:
 	std::string mText;
-	bool mAllowNewlines;
+	bool mFocused;
+
+	std::shared_ptr<Font> getFont();
 
 	GuiBox mBox;
 };

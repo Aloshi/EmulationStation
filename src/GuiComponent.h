@@ -12,6 +12,8 @@ public:
 	GuiComponent(Window* window);
 	virtual ~GuiComponent();
 
+	virtual void textInput(const char* text);
+
 	//Called when input is received.
 	//Return true if the input is consumed, false if it should continue to be passed to other children.
 	virtual bool input(InputConfig* config, Input input);

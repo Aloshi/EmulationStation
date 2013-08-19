@@ -340,6 +340,12 @@ void ComponentListComponent::render(const Eigen::Affine3f& parentTrans)
 	}
 }
 
+void ComponentListComponent::textInput(const char* text)
+{
+	if(getSelectedComponent() != NULL)
+		getSelectedComponent()->textInput(text);
+}
+
 void ComponentListComponent::onPositionChanged()
 {
 	updateComponentOffsets();

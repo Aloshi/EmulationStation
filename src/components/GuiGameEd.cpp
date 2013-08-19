@@ -88,8 +88,8 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 		mGeneratedComponents.push_back(ed);
 
 		y++;
+		break;
 	}
-
 
 
 	//force list reflow
