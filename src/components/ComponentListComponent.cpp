@@ -118,7 +118,7 @@ Eigen::Vector3f ComponentListComponent::getCellOffset(Eigen::Vector2i pos)
 		offset[0] += gridSize.x() - entry->component->getSize().x();
 
 	//always center on the Y axis
-	offset[1] += gridSize.y() / 2 - entry->component->getSize().y() / 2;
+	offset[1] += gridSize.y() / 2.0f - entry->component->getSize().y() / 2.0f;
 
 	return offset;
 }

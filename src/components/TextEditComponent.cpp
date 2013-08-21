@@ -5,14 +5,13 @@
 #include "../Renderer.h"
 
 TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
-	mBox(window, 0, 0, 0, 0)
+	mBox(window, 0, 0, 0, 0), mFocused(false)
 {
 	addChild(&mBox);
 	
 	onFocusLost();
 
-	LOG(LogInfo) << getFont()->getHeight();
-	setSize(256, /*(float)getFont()->getHeight()*/ 41);
+	setSize(256, (float)getFont()->getHeight());
 }
 
 void TextEditComponent::onFocusGained()
@@ -72,7 +71,7 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 	Renderer::setMatrix(trans);
 	
 	std::shared_ptr<Font> f = getFont();
-	f->drawText(mText, Eigen::Vector2f::Zero(), 0x00000000 | getOpacity());
+	//f->drawText(mText, Eigen::Vector2f::Zero(), 0x00000000 | getOpacity());
 }
 
 std::shared_ptr<Font> TextEditComponent::getFont()

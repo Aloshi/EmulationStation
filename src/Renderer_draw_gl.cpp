@@ -103,9 +103,9 @@ namespace Renderer {
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		glDisableClientState(GL_BLEND);
+		glDisable(GL_BLEND);
 		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisable(GL_COLOR_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
 	}
 
 	void setMatrix(float* matrix)
