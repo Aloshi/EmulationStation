@@ -16,8 +16,13 @@ int Font::getSize() const { return mSize; }
 
 std::map< std::pair<std::string, int>, std::weak_ptr<Font> > Font::sFontMap;
 
+static std::string default_font_path = "";
+
 std::string Font::getDefaultPath()
 {
+	if(!default_font_path.empty())
+		return default_font_path;
+
 	const int fontCount = 4;
 
 #ifdef WIN32
@@ -53,10 +58,13 @@ std::string Font::getDefaultPath()
 	for(int i = 0; i < fontCount; i++)
 	{
 		if(boost::filesystem::exists(fonts[i]))
+		{
+			default_font_path = fonts[i];
 			return fonts[i];
+		}
 	}
 
-	LOG(LogError) << "Error - could not find a font!";
+	LOG(LogError) << "Error - could not find the default font!";
 
 	return "";
 }
