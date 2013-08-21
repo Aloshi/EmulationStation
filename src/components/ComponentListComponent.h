@@ -28,8 +28,10 @@ public:
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
-	void setColumnWidth(int col, unsigned int size);
-	void setRowHeight(int row, unsigned int size);
+	void forceColumnWidth(int col, unsigned int size);
+	void forceRowHeight(int row, unsigned int size);
+
+	void updateComponent(GuiComponent* cmp);
 
 	void resetCursor();
 	bool cursorValid();
@@ -73,6 +75,8 @@ private:
 
 	unsigned int* mColumnWidths;
 	unsigned int* mRowHeights;
+	bool* mColumnWidthForced;
+	bool* mRowHeightForced;
 
 	Eigen::Vector3f getCellOffset(Eigen::Vector2i gridPos);
 	void updateSize();
@@ -82,6 +86,7 @@ private:
 	Eigen::Vector2i mCursor;
 
 	void updateComponentOffsets();
+	void updateCellSize(ComponentEntry* e, bool updWidth = true, bool updHeight = true);
 };
 
 //ability to define a list of components in terms of a grid

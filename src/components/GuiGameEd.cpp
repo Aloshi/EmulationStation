@@ -2,11 +2,11 @@
 #include "../Renderer.h"
 #include "../Log.h"
 
-#define MDED_RESERVED_ROWS 2
+#define MDED_RESERVED_ROWS 3
 
 GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataDecl>& mdd) : GuiComponent(window), 
 	mBox(mWindow, 0, 0, 0, 0),
-	mList(window, Eigen::Vector2i(2, mdd.size() + MDED_RESERVED_ROWS)),
+	mList(window, Eigen::Vector2i(3, mdd.size() + MDED_RESERVED_ROWS)),
 	mPathDisp(window),
 	mGame(game)
 {
@@ -83,15 +83,17 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 		mGeneratedComponents.push_back(label);
 
 		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
+		ed->setSize(ed->getSize().x(), 256);
 		ed->setValue(mGame->metadata()->get(iter->key));
 		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
 		mGeneratedComponents.push_back(ed);
 
 		y++;
-		break;
 	}
 
-
-	//force list reflow
-	mList.onPositionChanged();
+	TextComponent* save = new TextComponent(mWindow);
+	save->setText("SAVE");
+	save->setColor(0x0000FFFF);
+	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), save, true, ComponentListComponent::AlignCenter);
+	mGeneratedComponents.push_back(save);
 }

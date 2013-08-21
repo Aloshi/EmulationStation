@@ -3,9 +3,10 @@
 #include "../Font.h"
 #include "../Window.h"
 #include "../Renderer.h"
+#include "ComponentListComponent.h"
 
 TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
-	mBox(window, 0, 0, 0, 0), mFocused(false)
+	mBox(window, 0, 0, 0, 0), mFocused(false), mAllowResize(true)
 {
 	addChild(&mBox);
 	
@@ -42,6 +43,7 @@ void TextEditComponent::onSizeChanged()
 void TextEditComponent::setValue(const std::string& val)
 {
 	mText = val;
+	onTextChanged();
 }
 
 std::string TextEditComponent::getValue() const
@@ -61,6 +63,30 @@ void TextEditComponent::textInput(const char* text)
 			mText += text;
 		}
 	}
+
+	onTextChanged();
+}
+
+void TextEditComponent::onTextChanged()
+{
+	if(mAllowResize)
+	{
+		float y = getFont()->sizeWrappedText(mText, mSize.x()).y();
+		if(y == 0)
+			y = getFont()->getHeight();
+		
+		setSize(mSize.x(), y);
+	}
+	
+	ComponentListComponent* cmp = dynamic_cast<ComponentListComponent*>(getParent());
+	if(cmp)
+		cmp->updateComponent(this);
+}
+
+void TextEditComponent::setAllowResize(bool allow)
+{
+	mAllowResize = allow;
+	onTextChanged();
 }
 
 void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
@@ -71,7 +97,7 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 	Renderer::setMatrix(trans);
 	
 	std::shared_ptr<Font> f = getFont();
-	//f->drawText(mText, Eigen::Vector2f::Zero(), 0x00000000 | getOpacity());
+	f->drawWrappedText(mText, Eigen::Vector2f(0, 0), mSize.x(), 0x000000 | getOpacity());
 }
 
 std::shared_ptr<Font> TextEditComponent::getFont()

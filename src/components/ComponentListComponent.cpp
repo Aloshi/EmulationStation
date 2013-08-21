@@ -4,7 +4,10 @@
 
 #define INITIAL_CELL_SIZE 12
 
-ComponentListComponent::ComponentListComponent(Window* window, Eigen::Vector2i gridDimensions) : GuiComponent(window), mGrid(NULL), mColumnWidths(NULL), mRowHeights(NULL), mCursor(-1, -1)
+ComponentListComponent::ComponentListComponent(Window* window, Eigen::Vector2i gridDimensions) : GuiComponent(window), 
+	mGrid(NULL), mColumnWidths(NULL), mRowHeights(NULL), 
+	mColumnWidthForced(NULL), mRowHeightForced(NULL), 
+	mCursor(-1, -1)
 {
 	mEntries.reserve(gridDimensions.x() * gridDimensions.y());
 	makeCells(gridDimensions);
@@ -28,6 +31,12 @@ void ComponentListComponent::makeCells(Eigen::Vector2i size)
 	
 	mRowHeights = new unsigned int[size.y()];
 	std::fill(mRowHeights, mRowHeights + size.y(), INITIAL_CELL_SIZE);
+
+	mColumnWidthForced = new bool[size.x()];
+	std::fill(mColumnWidthForced, mColumnWidthForced + size.x(), false);
+
+	mRowHeightForced = new bool[size.y()];
+	std::fill(mRowHeightForced, mRowHeightForced + size.y(), false);
 
 	updateSize();
 	resetCursor();
@@ -68,23 +77,26 @@ void ComponentListComponent::setEntry(Eigen::Vector2i pos, Eigen::Vector2i size,
 		mCursor = pos;
 
 	//update the column width and row height
-	if(autoFit.x() && (int)getColumnWidth(pos.x()) < component->getSize().x())
-		setColumnWidth(pos.x(), (unsigned int)component->getSize().x());
-	if(autoFit.y() && (int)getRowHeight(pos.y()) < component->getSize().y())
-		setRowHeight(pos.y(), (unsigned int)component->getSize().y());
+	//if(autoFit.x() && (int)getColumnWidth(pos.x()) < component->getSize().x())
+	//	setColumnWidth(pos.x(), (unsigned int)component->getSize().x());
+	//if(autoFit.y() && (int)getRowHeight(pos.y()) < component->getSize().y())
+	//	setRowHeight(pos.y(), (unsigned int)component->getSize().y());
+	updateCellSize(&mEntries.back(), autoFit.x(), autoFit.y());
 
 	component->setPosition(getCellOffset(pos));
 }
 
-void ComponentListComponent::setRowHeight(int row, unsigned int size)
+void ComponentListComponent::forceRowHeight(int row, unsigned int size)
 {
 	mRowHeights[row] = size;
+	mRowHeightForced[row] = true;
 	updateSize();
 }
 
-void ComponentListComponent::setColumnWidth(int col, unsigned int size)
+void ComponentListComponent::forceColumnWidth(int col, unsigned int size)
 {
 	mColumnWidths[col] = size;
+	mRowHeightForced[col] = true;
 	updateSize();
 }
 
@@ -159,6 +171,63 @@ void ComponentListComponent::updateComponentOffsets()
 	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
 	{
 		iter->component->setPosition(getCellOffset(iter->pos));
+	}
+}
+
+void ComponentListComponent::updateCellSize(ComponentEntry* e, bool updWidth, bool updHeight)
+{
+	if(!e)
+	{
+		LOG(LogError) << "Tried to updateCellSize NULL ComponentEntry!";
+		return;
+	}
+
+	unsigned int x = e->pos.x();
+	unsigned int y = e->pos.y();
+
+	if(!mColumnWidthForced[x] && updWidth)
+	{
+		//recalc width to widest in column
+		float widest = 0;
+		for(int row = 0; row < mGridSize.y(); row++)
+		{
+			ComponentEntry* check = getCell(x, row);
+			if(check)
+			{
+				if(check->component->getSize().x() > widest)
+					widest = check->component->getSize().x();
+			}
+		}
+
+		mColumnWidths[x] = (unsigned int)widest;
+	}
+	if(!mRowHeightForced[y] && updHeight)
+	{
+		float tallest = 0;
+		for(int col = 0; col < mGridSize.x(); col++)
+		{
+			ComponentEntry* check = getCell(col, y);
+			if(check)
+			{
+				if(check->component->getSize().y() > tallest)
+					tallest = check->component->getSize().y();
+			}
+		}
+
+		mRowHeights[y] = (unsigned int)tallest;
+	}
+
+	updateComponentOffsets();
+}
+
+void ComponentListComponent::updateComponent(GuiComponent* cmp)
+{
+	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
+	{
+		if(iter->component == cmp)
+		{
+			updateCellSize(&(*iter));
+		}
 	}
 }
 
