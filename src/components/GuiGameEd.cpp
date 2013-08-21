@@ -37,9 +37,8 @@ GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataD
 
 	//initialize metadata list
 	addChild(&mList);
-	mList.setPosition(0, mPathDisp.getSize().y() + 4);
-	mList.setSize(mSize.x(), mSize.y() - mList.getPosition().y());
 	populateList(mdd);
+	mList.setPosition((mSize.x() - mList.getSize().x()) / 2, mPathDisp.getSize().y() + 4);
 }
 
 GuiGameEd::~GuiGameEd()
@@ -83,7 +82,7 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 		mGeneratedComponents.push_back(label);
 
 		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
-		ed->setSize(ed->getSize().x(), 256);
+		ed->setSize(mSize.x() / 2, ed->getSize().y());
 		ed->setValue(mGame->metadata()->get(iter->key));
 		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
 		mGeneratedComponents.push_back(ed);

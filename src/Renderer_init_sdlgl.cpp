@@ -40,6 +40,13 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 		//SDL_GL_SetSwapInterval(1); //0 for immediate updates, 1 for updates synchronized with the vertical retrace, -1 for late swap tearing
 
+		SDL_DisplayMode dispMode;
+		SDL_GetDisplayMode(0, 0, &dispMode);
+		if(display_width == 0)
+			display_width = dispMode.w;
+		if(display_height == 0)
+			display_height = dispMode.h;
+
 		sdlWindow = SDL_CreateWindow("EmulationStation", 
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
 			display_width, display_height, 

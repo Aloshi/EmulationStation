@@ -84,6 +84,8 @@ void ComponentListComponent::setEntry(Eigen::Vector2i pos, Eigen::Vector2i size,
 	updateCellSize(&mEntries.back(), autoFit.x(), autoFit.y());
 
 	component->setPosition(getCellOffset(pos));
+
+	updateSize();
 }
 
 void ComponentListComponent::forceRowHeight(int row, unsigned int size)
@@ -91,6 +93,7 @@ void ComponentListComponent::forceRowHeight(int row, unsigned int size)
 	mRowHeights[row] = size;
 	mRowHeightForced[row] = true;
 	updateSize();
+	updateComponentOffsets();
 }
 
 void ComponentListComponent::forceColumnWidth(int col, unsigned int size)
@@ -98,6 +101,7 @@ void ComponentListComponent::forceColumnWidth(int col, unsigned int size)
 	mColumnWidths[col] = size;
 	mRowHeightForced[col] = true;
 	updateSize();
+	updateComponentOffsets();
 }
 
 unsigned int ComponentListComponent::getRowHeight(int row) { return mRowHeights[row]; }
@@ -218,6 +222,7 @@ void ComponentListComponent::updateCellSize(ComponentEntry* e, bool updWidth, bo
 	}
 
 	updateComponentOffsets();
+	updateSize();
 }
 
 void ComponentListComponent::updateComponent(GuiComponent* cmp)
@@ -405,7 +410,7 @@ void ComponentListComponent::render(const Eigen::Affine3f& parentTrans)
 		Renderer::setMatrix(entryTrans);
 
 		Renderer::drawRect(0, 0, 4, 4, 0xFF0000FF);
-		Renderer::drawRect(0, 0, (int)entry->component->getSize().x(), (int)entry->component->getSize().y(), 0x0000AA88);
+		Renderer::drawRect(0, 0, (int)entry->component->getSize().x(), (int)entry->component->getSize().y(), 0x0000AA22);
 	}
 }
 

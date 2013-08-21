@@ -73,7 +73,7 @@ void TextEditComponent::onTextChanged()
 	{
 		float y = getFont()->sizeWrappedText(mText, mSize.x()).y();
 		if(y == 0)
-			y = getFont()->getHeight();
+			y = (float)getFont()->getHeight();
 		
 		setSize(mSize.x(), y);
 	}
