@@ -26,10 +26,13 @@ private:
 	
 	void calculateExtent();
 
+	void onTextChanged();
+
 	unsigned int mColor;
 	std::shared_ptr<Font> mFont;
 	Eigen::Matrix<bool, 1, 2> mAutoCalcExtent;
 	std::string mText;
+	std::unique_ptr<TextCache> mTextCache;
 	bool mCentered;
 };
 

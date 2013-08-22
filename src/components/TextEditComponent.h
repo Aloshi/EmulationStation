@@ -4,12 +4,13 @@
 #include "GuiBox.h"
 
 class Font;
+class TextCache;
 
 class TextEditComponent : public GuiComponent
 {
 public:
 	TextEditComponent(Window* window);
-
+	
 	void textInput(const char* text) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
@@ -33,4 +34,6 @@ private:
 	std::shared_ptr<Font> getFont();
 
 	GuiBox mBox;
+
+	std::unique_ptr<TextCache> mTextCache;
 };

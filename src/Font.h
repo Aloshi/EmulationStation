@@ -53,6 +53,8 @@ public:
 	void drawText(std::string text, const Eigen::Vector2f& offset, unsigned int color);
 	Eigen::Vector2f sizeText(std::string text) const; //Sets the width and height of a given string to supplied pointers. A dimension is skipped if its pointer is NULL.
 	
+	std::string wrapText(std::string text, float xLen) const;
+
 	void drawWrappedText(std::string text, const Eigen::Vector2f& offset, float xLen, unsigned int color);
 	Eigen::Vector2f sizeWrappedText(std::string text, float xLen) const;
 
@@ -102,13 +104,12 @@ public:
 
 	void setColor(unsigned int color);
 
-	TextCache(int verts, Vertex* v, GLubyte* c, Font* f);
+	TextCache(int verts, Vertex* v, GLubyte* c);
 	~TextCache();
 
-	const int vertCount;
-	const Vertex* verts;
-	const GLubyte* colors;
-	const Font* sourceFont;
+	int vertCount;
+	Vertex* verts;
+	GLubyte* colors;
 };
 
 #endif

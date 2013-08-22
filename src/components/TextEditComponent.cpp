@@ -69,11 +69,16 @@ void TextEditComponent::textInput(const char* text)
 
 void TextEditComponent::onTextChanged()
 {
+	std::shared_ptr<Font> f = getFont();
+
+	std::string wrappedText = f->wrapText(mText, mSize.x());
+	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(wrappedText, 0, 0, 0x00000000 | getOpacity()));
+
 	if(mAllowResize)
 	{
-		float y = getFont()->sizeWrappedText(mText, mSize.x()).y();
+		float y = f->sizeText(wrappedText).y();
 		if(y == 0)
-			y = (float)getFont()->getHeight();
+			y = (float)f->getHeight();
 		
 		setSize(mSize.x(), y);
 	}
@@ -96,8 +101,11 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 
 	Renderer::setMatrix(trans);
 	
-	std::shared_ptr<Font> f = getFont();
-	f->drawWrappedText(mText, Eigen::Vector2f(0, 0), mSize.x(), 0x000000 | getOpacity());
+	if(mTextCache != NULL)
+	{
+		std::shared_ptr<Font> f = getFont();
+		f->renderTextCache(mTextCache.get());
+	}
 }
 
 std::shared_ptr<Font> TextEditComponent::getFont()
