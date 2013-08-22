@@ -8,7 +8,8 @@ GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataD
 	mBox(mWindow, 0, 0, 0, 0),
 	mList(window, Eigen::Vector2i(3, mdd.size() + MDED_RESERVED_ROWS)),
 	mPathDisp(window),
-	mGame(game)
+	mGame(game),
+	mDeleteButton(window), mFetchButton(window), mSaveButton(window)
 {
 	LOG(LogInfo) << "Creating GuiGameEd";
 
@@ -34,6 +35,13 @@ GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataD
 	mPathDisp.setSize(mSize.x(), 0);
 	mPathDisp.setCentered(true);
 	mPathDisp.setText(mGame->getBaseName());
+
+	//initialize buttons
+	mDeleteButton.setText("DELETE", 0x555555FF);
+	mFetchButton.setText("FETCH", 0x555555FF);
+
+	mSaveButton.setText("SAVE", 0x0000FFFF);
+	mSaveButton.setPressedFunc([&] { save(); delete this; });
 
 	//initialize metadata list
 	addChild(&mList);
@@ -61,17 +69,12 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 
 	int y = 0;
 
-	TextComponent* del = new TextComponent(mWindow);
-	del->setText("DELETE");
-	del->setColor(0xFF0000FF);
-	mList.setEntry(Vector2i(0, y), Vector2i(1, 1), del, true, ComponentListComponent::AlignCenter);
-	mGeneratedComponents.push_back(del);
+	//delete button
+	mList.setEntry(Vector2i(0, y), Vector2i(1, 1), &mDeleteButton, true, ComponentListComponent::AlignCenter);
 
-	TextComponent* fetch = new TextComponent(mWindow);
-	fetch->setText("FETCH");
-	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), fetch, true, ComponentListComponent::AlignCenter);
-	mGeneratedComponents.push_back(fetch);
-
+	//fetch button
+	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), &mFetchButton, true, ComponentListComponent::AlignCenter);
+	
 	y++;
 
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
@@ -79,20 +82,25 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 		TextComponent* label = new TextComponent(mWindow);
 		label->setText(iter->key);
 		mList.setEntry(Vector2i(0, y), Vector2i(1, 1), label, false, ComponentListComponent::AlignLeft);
-		mGeneratedComponents.push_back(label);
+		mLabels.push_back(label);
 
 		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
 		ed->setSize(mSize.x() / 2, ed->getSize().y());
 		ed->setValue(mGame->metadata()->get(iter->key));
 		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
-		mGeneratedComponents.push_back(ed);
+		mEditors.push_back(ed);
 
 		y++;
 	}
 
-	TextComponent* save = new TextComponent(mWindow);
-	save->setText("SAVE");
-	save->setColor(0x0000FFFF);
-	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), save, true, ComponentListComponent::AlignCenter);
-	mGeneratedComponents.push_back(save);
+	//save button
+	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter);
+}
+
+void GuiGameEd::save()
+{
+	for(unsigned int i = 0; i < mLabels.size(); i++)
+	{
+		mGame->metadata()->set(mLabels.at(i)->getValue(), mEditors.at(i)->getValue());
+	}
 }

@@ -6,6 +6,7 @@
 #include "TextComponent.h"
 #include "../GameData.h"
 #include "GuiBox.h"
+#include "ButtonComponent.h"
 
 class GuiGameEd : public GuiComponent
 {
@@ -14,6 +15,8 @@ public:
 	virtual ~GuiGameEd();
 
 private:
+	void save();
+
 	void populateList(const std::vector<MetaDataDecl>& mdd);
 
 	GuiBox mBox;
@@ -22,7 +25,12 @@ private:
 
 	TextComponent mPathDisp;
 
-	std::vector<GuiComponent*> mGeneratedComponents;
+	std::vector<TextComponent*> mLabels;
+	std::vector<GuiComponent*> mEditors;
 
 	GameData* mGame;
+
+	ButtonComponent mDeleteButton;
+	ButtonComponent mFetchButton;
+	ButtonComponent mSaveButton;
 };

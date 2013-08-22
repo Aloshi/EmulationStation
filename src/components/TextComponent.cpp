@@ -73,10 +73,9 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 			Eigen::Affine3f centeredTrans = trans;
 			centeredTrans = centeredTrans.translate(Eigen::Vector3f(pos.x(), pos.y(), 0));
 			Renderer::setMatrix(centeredTrans);
-			font->renderTextCache(mTextCache.get());
-		}else{
-			font->renderTextCache(mTextCache.get());
 		}
+
+		font->renderTextCache(mTextCache.get());
 	}
 
 	GuiComponent::renderChildren(trans);

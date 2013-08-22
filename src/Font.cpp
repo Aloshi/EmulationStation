@@ -86,7 +86,6 @@ Font::Font(const ResourceManager& rm, const std::string& path, int size) : fontS
 
 Font::~Font()
 {
-	LOG(LogInfo) << "Destroying font \"" << mPath << "\" with size " << mSize << ".";
 	deinit();
 }
 
@@ -256,8 +255,6 @@ void Font::buildAtlas(ResourceData data)
 		mSize = (int)(mSize * (1.0f / fontScale));
 		deinit();
 		init(data);
-	}else{
-		LOG(LogInfo) << "Created font \"" << mPath << "\" with size " << mSize << ". textureID: " << textureID;
 	}
 }
 
@@ -497,14 +494,15 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 		x += charData[letter].advX * fontScale;
 	}
 
-	TextCache* cache = new TextCache(vertCount, vert, colors);
+	TextCache::CacheMetrics metrics = { sizeText(text) };
+	TextCache* cache = new TextCache(vertCount, vert, colors, metrics);
 	if(color != 0x00000000)
 		cache->setColor(color);
 
 	return cache;
 }
 
-TextCache::TextCache(int verts, Vertex* v, GLubyte* c) : vertCount(verts), verts(v), colors(c)
+TextCache::TextCache(int verts, Vertex* v, GLubyte* c, const CacheMetrics& m) : vertCount(verts), verts(v), colors(c), metrics(m)
 {
 }
 

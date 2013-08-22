@@ -356,16 +356,16 @@ void ComponentListComponent::update(int deltaTime)
 {
 	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
 	{
-		if(iter->updateType == UpdateAlways)
+		switch(iter->updateType)
 		{
+		case UpdateAlways:
 			iter->component->update(deltaTime);
-			continue;
-		}
+			break;
 
-		if(iter->updateType == UpdateFocused && cursorValid() && getCell(mCursor.x(), mCursor.y())->component == iter->component)
-		{
-			iter->component->update(deltaTime);
-			continue;
+		case UpdateFocused:
+			if(cursorValid() && getCell(mCursor.x(), mCursor.y())->component == iter->component)
+				iter->component->update(deltaTime);
+			break;
 		}
 	}
 }

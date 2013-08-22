@@ -102,9 +102,14 @@ public:
 		Eigen::Vector2f tex;
 	};
 
+	struct CacheMetrics
+	{
+		Eigen::Vector2f size;
+	} metrics;
+
 	void setColor(unsigned int color);
 
-	TextCache(int verts, Vertex* v, GLubyte* c);
+	TextCache(int verts, Vertex* v, GLubyte* c, const CacheMetrics& m);
 	~TextCache();
 
 	int vertCount;
