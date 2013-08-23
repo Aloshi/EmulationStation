@@ -5,7 +5,7 @@
 #define MDED_RESERVED_ROWS 3
 
 GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataDecl>& mdd) : GuiComponent(window), 
-	mBox(mWindow, 0, 0, 0, 0),
+	mBox(mWindow, ":/frame.png", 0xAAAAAAFF, 0xCCCCCCFF),
 	mList(window, Eigen::Vector2i(3, mdd.size() + MDED_RESERVED_ROWS)),
 	mPathDisp(window),
 	mGame(game),
@@ -20,14 +20,7 @@ GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataD
 	mPosition << (Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2, 0.0f;
 
 	addChild(&mBox);
-	mBox.setVerticalImage(":/bar.png");
-	mBox.setHorizontalImage(":/bar.png");
-	mBox.setCornerImage(":/corner.png");
-	mBox.setBorderColor(0x666666FF);
-	mBox.setPosition(0, 0);
-	mBox.setSize(mSize);
-	mBox.setBackgroundImage(":/bar.png");
-	mBox.setBackgroundColor(0xAAAAAAAA);
+	mBox.fitTo(mSize);
 
 	//initialize path display
 	addChild(&mPathDisp);

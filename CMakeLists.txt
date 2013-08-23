@@ -140,6 +140,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.h
@@ -187,6 +188,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
@@ -214,6 +216,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/glow_vert_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/glow_off_hor_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/glow_off_vert_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/frame_png.cpp
 )
 
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)

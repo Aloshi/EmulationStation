@@ -5,7 +5,7 @@
 #include "../MetaData.h"
 #include "TextComponent.h"
 #include "../GameData.h"
-#include "GuiBox.h"
+#include "NinePatchComponent.h"
 #include "ButtonComponent.h"
 
 class GuiGameEd : public GuiComponent
@@ -19,7 +19,7 @@ private:
 
 	void populateList(const std::vector<MetaDataDecl>& mdd);
 
-	GuiBox mBox;
+	NinePatchComponent mBox;
 
 	ComponentListComponent mList;
 

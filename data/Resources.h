@@ -8,6 +8,9 @@
 extern const size_t bar_png_size;
 extern const unsigned char bar_png_data[];
 
+extern const size_t button_png_size;
+extern const unsigned char button_png_data[];
+
 extern const size_t corner_png_size;
 extern const unsigned char corner_png_data[];
 
@@ -16,6 +19,9 @@ extern const unsigned char ES_logo_16_png_data[];
 
 extern const size_t ES_logo_32_png_size;
 extern const unsigned char ES_logo_32_png_data[];
+
+extern const size_t frame_png_size;
+extern const unsigned char frame_png_data[];
 
 extern const size_t glow_hor_png_size;
 extern const unsigned char glow_hor_png_data[];

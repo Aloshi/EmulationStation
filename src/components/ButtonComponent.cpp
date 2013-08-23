@@ -2,9 +2,15 @@
 #include "../Renderer.h"
 #include "../Window.h"
 
-ButtonComponent::ButtonComponent(Window* window) : GuiComponent(window)
+ButtonComponent::ButtonComponent(Window* window) : GuiComponent(window),
+	mBox(window, ":/button.png")
 {
 	setSize(64, 48);
+}
+
+void ButtonComponent::onSizeChanged()
+{
+	mBox.setSize(mSize);
 }
 
 void ButtonComponent::setPressedFunc(std::function<void()> f)
@@ -37,6 +43,8 @@ void ButtonComponent::setText(const std::string& text, unsigned int color)
 void ButtonComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
+
+	mBox.render(trans);
 
 	if(mTextCache)
 	{
