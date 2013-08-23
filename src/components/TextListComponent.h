@@ -125,9 +125,8 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	int startEntry = 0;
 
 	//number of entries that can fit on the screen simultaniously
-	int screenCount = (Renderer::getScreenHeight() - cutoff) / entrySize;
-	screenCount -= 1;
-
+	int screenCount = (int)mSize.y() / entrySize;
+	
 	if((int)mRowVector.size() >= screenCount)
 	{
 		startEntry = mSelection - (int)(screenCount * 0.5);
