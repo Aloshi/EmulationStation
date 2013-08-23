@@ -184,3 +184,24 @@ std::vector<FileData*> FolderData::getFilesRecursive(bool onlyFiles) const
 	}
 	return temp;
 }
+
+void FolderData::removeFileRecursive(FileData* f)
+{
+	auto iter = mFileVector.begin();
+	while(iter != mFileVector.end())
+	{
+		if(*iter == f)
+		{
+			iter = mFileVector.erase(iter);
+		}else{
+			
+			FolderData* folder = dynamic_cast<FolderData*>(*iter);
+			if(folder)
+			{
+				folder->removeFileRecursive(f);
+			}
+
+			iter++;
+		}
+	}
+}

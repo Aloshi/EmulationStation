@@ -125,7 +125,9 @@ bool GuiGameList::input(InputConfig* config, Input input)
 
 	if(input.id == SDLK_F3)
 	{
-		mWindow->pushGui(new GuiGameEd(mWindow, (GameData*)mSystem->getRootFolder()->getFile(0), MetaDataList::getDefaultGameMDD()));
+		GameData* game = dynamic_cast<GameData*>(mList.getSelectedObject());
+		if(game)
+			mWindow->pushGui(new GuiGameEd(mWindow, game, MetaDataList::getDefaultGameMDD()));
 		return true;
 	}
 

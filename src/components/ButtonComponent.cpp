@@ -22,7 +22,8 @@ bool ButtonComponent::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("a", input))
 	{
-		mPressedFunc();
+		if(mPressedFunc)
+			mPressedFunc();
 		return true;
 	}
 

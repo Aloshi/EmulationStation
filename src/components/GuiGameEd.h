@@ -15,7 +15,8 @@ public:
 	virtual ~GuiGameEd();
 
 private:
-	void save();
+	void saveGame();
+	void deleteGame();
 
 	void populateList(const std::vector<MetaDataDecl>& mdd);
 

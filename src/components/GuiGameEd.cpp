@@ -31,10 +31,12 @@ GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataD
 
 	//initialize buttons
 	mDeleteButton.setText("DELETE", 0x555555FF);
+	mDeleteButton.setPressedFunc([&] { deleteGame(); delete this; });
+
 	mFetchButton.setText("FETCH", 0x555555FF);
 
 	mSaveButton.setText("SAVE", 0x0000FFFF);
-	mSaveButton.setPressedFunc([&] { save(); delete this; });
+	mSaveButton.setPressedFunc([&] { saveGame(); delete this; });
 
 	//initialize metadata list
 	addChild(&mList);
@@ -90,10 +92,17 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter);
 }
 
-void GuiGameEd::save()
+void GuiGameEd::saveGame()
 {
 	for(unsigned int i = 0; i < mLabels.size(); i++)
 	{
 		mGame->metadata()->set(mLabels.at(i)->getValue(), mEditors.at(i)->getValue());
 	}
+}
+
+void GuiGameEd::deleteGame()
+{
+	//mSystem->getRootFolder()->removeFileRecursive(mGame);
+	//delete mGame;
+	//mGame = NULL;
 }
