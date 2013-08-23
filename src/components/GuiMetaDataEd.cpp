@@ -1,17 +1,19 @@
-#include "GuiGameEd.h"
+#include "GuiMetaDataEd.h"
 #include "../Renderer.h"
 #include "../Log.h"
 
 #define MDED_RESERVED_ROWS 3
 
-GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataDecl>& mdd) : GuiComponent(window), 
+GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, 
+	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
 	mBox(mWindow, ":/frame.png", 0xAAAAAAFF, 0xCCCCCCFF),
 	mList(window, Eigen::Vector2i(3, mdd.size() + MDED_RESERVED_ROWS)),
-	mPathDisp(window),
-	mGame(game),
+	mHeader(window),
+	mMetaData(md), 
+	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc), 
 	mDeleteButton(window), mFetchButton(window), mSaveButton(window)
 {
-	LOG(LogInfo) << "Creating GuiGameEd";
+	LOG(LogInfo) << "Creating GuiMetaDataEd";
 
 	//set size to 80% by 80% of the window
 	mSize << Renderer::getScreenWidth() * 0.8f, Renderer::getScreenHeight() * 0.8f;
@@ -23,33 +25,34 @@ GuiGameEd::GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataD
 	mBox.fitTo(mSize);
 
 	//initialize path display
-	addChild(&mPathDisp);
-	mPathDisp.setPosition(0, 0);
-	mPathDisp.setSize(mSize.x(), 0);
-	mPathDisp.setCentered(true);
-	mPathDisp.setText(mGame->getBaseName());
+	addChild(&mHeader);
+	mHeader.setPosition(0, 0);
+	mHeader.setSize(mSize.x(), 0);
+	mHeader.setCentered(true);
+	mHeader.setText(header);
 
 	//initialize buttons
-	mDeleteButton.setText("DELETE", 0x555555FF);
-	mDeleteButton.setPressedFunc([&] { deleteGame(); delete this; });
+	mDeleteButton.setText("DELETE", mDeleteFunc ? 0xFF0000FF : 0x555555FF);
+	if(mDeleteFunc)
+		mDeleteButton.setPressedFunc([&] { mDeleteFunc(); delete this; });
 
 	mFetchButton.setText("FETCH", 0x555555FF);
 
 	mSaveButton.setText("SAVE", 0x0000FFFF);
-	mSaveButton.setPressedFunc([&] { saveGame(); delete this; });
+	mSaveButton.setPressedFunc([&] { save(); delete this; });
 
 	//initialize metadata list
 	addChild(&mList);
 	populateList(mdd);
-	mList.setPosition((mSize.x() - mList.getSize().x()) / 2, mPathDisp.getSize().y() + 4);
+	mList.setPosition((mSize.x() - mList.getSize().x()) / 2, mHeader.getSize().y() + 4);
 }
 
-GuiGameEd::~GuiGameEd()
+GuiMetaDataEd::~GuiMetaDataEd()
 {
-	LOG(LogInfo) << "Deleted GuiGameEd";
+	LOG(LogInfo) << "Deleted GuiMetaDataEd";
 }
 
-void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
+void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
 {
 	//      PATH		//(centered, not part of componentlist)
 
@@ -81,7 +84,7 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 
 		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
 		ed->setSize(mSize.x() / 2, ed->getSize().y());
-		ed->setValue(mGame->metadata()->get(iter->key));
+		ed->setValue(mMetaData->get(iter->key));
 		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
 		mEditors.push_back(ed);
 
@@ -92,17 +95,13 @@ void GuiGameEd::populateList(const std::vector<MetaDataDecl>& mdd)
 	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter);
 }
 
-void GuiGameEd::saveGame()
+void GuiMetaDataEd::save()
 {
 	for(unsigned int i = 0; i < mLabels.size(); i++)
 	{
-		mGame->metadata()->set(mLabels.at(i)->getValue(), mEditors.at(i)->getValue());
+		mMetaData->set(mLabels.at(i)->getValue(), mEditors.at(i)->getValue());
 	}
-}
 
-void GuiGameEd::deleteGame()
-{
-	//mSystem->getRootFolder()->removeFileRecursive(mGame);
-	//delete mGame;
-	//mGame = NULL;
+	if(mSavedCallback)
+		mSavedCallback();
 }

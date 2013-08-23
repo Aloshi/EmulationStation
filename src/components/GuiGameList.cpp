@@ -6,7 +6,7 @@
 #include <boost/filesystem.hpp>
 #include "../Log.h"
 #include "../Settings.h"
-#include "GuiGameEd.h"
+#include "GuiMetaDataEd.h"
 
 std::vector<FolderData::SortState> GuiGameList::sortStates;
 
@@ -127,7 +127,13 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	{
 		GameData* game = dynamic_cast<GameData*>(mList.getSelectedObject());
 		if(game)
-			mWindow->pushGui(new GuiGameEd(mWindow, game, MetaDataList::getDefaultGameMDD()));
+		{
+			FolderData* root = mSystem->getRootFolder();
+			mWindow->pushGui(new GuiMetaDataEd(mWindow, game->metadata(), MetaDataList::getDefaultGameMDD(), game->getBaseName(),
+				[&] { updateDetailData(); }, 
+				[game, root, this] { root->removeFileRecursive(game); updateList(); }
+			));
+		}
 		return true;
 	}
 

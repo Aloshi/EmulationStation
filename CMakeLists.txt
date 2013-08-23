@@ -151,7 +151,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameEd.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
@@ -198,7 +198,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameEd.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp

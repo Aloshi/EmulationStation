@@ -7,16 +7,17 @@
 #include "../GameData.h"
 #include "NinePatchComponent.h"
 #include "ButtonComponent.h"
+#include <functional>
 
-class GuiGameEd : public GuiComponent
+class GuiMetaDataEd : public GuiComponent
 {
 public:
-	GuiGameEd(Window* window, GameData* game, const std::vector<MetaDataDecl>& mdd);
-	virtual ~GuiGameEd();
+	GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd,
+		const std::string& header, std::function<void()> savedCallback, std::function<void()> deleteFunc);
+	virtual ~GuiMetaDataEd();
 
 private:
-	void saveGame();
-	void deleteGame();
+	void save();
 
 	void populateList(const std::vector<MetaDataDecl>& mdd);
 
@@ -24,12 +25,14 @@ private:
 
 	ComponentListComponent mList;
 
-	TextComponent mPathDisp;
+	TextComponent mHeader;
 
 	std::vector<TextComponent*> mLabels;
 	std::vector<GuiComponent*> mEditors;
 
-	GameData* mGame;
+	MetaDataList* mMetaData;
+	std::function<void()> mSavedCallback;
+	std::function<void()> mDeleteFunc;
 
 	ButtonComponent mDeleteButton;
 	ButtonComponent mFetchButton;
