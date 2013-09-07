@@ -6,7 +6,8 @@
 #include "ComponentListComponent.h"
 
 TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
-	mBox(window, 0, 0, 0, 0), mFocused(false), mAllowResize(true)
+	mBox(window, 0, 0, 0, 0), mFocused(false), 
+	mScrollOffset(0.0f), mCursor(0), mEditing(false)
 {
 	addChild(&mBox);
 	
@@ -53,18 +54,79 @@ std::string TextEditComponent::getValue() const
 
 void TextEditComponent::textInput(const char* text)
 {
-	if(mFocused)
+	if(mEditing)
 	{
 		if(text[0] == '\b')
 		{
-			if(mText.length() > 0)
-				mText.erase(mText.end() - 1, mText.end());
+			if(mCursor > 0)
+			{
+				mText.erase(mText.begin() + mCursor - 1, mText.begin() + mCursor);
+				mCursor--;
+			}
 		}else{
-			mText += text;
+			mText.insert(mCursor, text);
+			mCursor++;
 		}
 	}
 
 	onTextChanged();
+	onCursorChanged();
+}
+
+bool TextEditComponent::input(InputConfig* config, Input input)
+{
+	if(input.value == 0)
+		return false;
+
+	if(config->isMappedTo("a", input) && mFocused && !mEditing)
+	{
+		mEditing = true;
+		return true;
+	}
+
+	if(mEditing)
+	{
+		if(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_RETURN)
+		{
+			textInput("\n");
+			return true;
+		}
+
+		if(config->isMappedTo("b", input))
+		{
+			mEditing = false;
+			return true;
+		}
+
+		if(config->isMappedTo("up", input))
+		{
+
+		}else if(config->isMappedTo("down", input))
+		{
+
+		}else if(config->isMappedTo("left", input))
+		{
+			mCursor--;
+			if(mCursor < 0)
+				mCursor = 0;
+
+			onCursorChanged();
+		}else if(config->isMappedTo("right", input))
+		{
+			mCursor++;
+			if(mText.length() == 0)
+				mCursor = 0;
+			if(mCursor > (int)mText.length() - 1)
+				mCursor = mText.length() - 1;
+
+			onCursorChanged();
+		}
+
+		//consume all input when editing text
+		return true;
+	}
+
+	return false;
 }
 
 void TextEditComponent::onTextChanged()
@@ -73,25 +135,20 @@ void TextEditComponent::onTextChanged()
 
 	std::string wrappedText = f->wrapText(mText, mSize.x());
 	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(wrappedText, 0, 0, 0x00000000 | getOpacity()));
-
-	if(mAllowResize)
-	{
-		float y = f->sizeText(wrappedText).y();
-		if(y == 0)
-			y = (float)f->getHeight();
-		
-		setSize(mSize.x(), y);
-	}
-	
-	ComponentListComponent* cmp = dynamic_cast<ComponentListComponent*>(getParent());
-	if(cmp)
-		cmp->updateComponent(this);
 }
 
-void TextEditComponent::setAllowResize(bool allow)
+void TextEditComponent::onCursorChanged()
 {
-	mAllowResize = allow;
-	onTextChanged();
+	std::shared_ptr<Font> font = getFont();
+	Eigen::Vector2f textSize = font->getWrappedTextCursorOffset(mText, mSize.x(), mCursor); //font->sizeWrappedText(mText.substr(0, mCursor), mSize.x());
+
+	if(mScrollOffset + mSize.y() < textSize.y() + font->getHeight()) //need to scroll down?
+	{
+		mScrollOffset = textSize.y() - mSize.y() + font->getHeight();
+	}else if(mScrollOffset > textSize.y()) //need to scroll up?
+	{
+		mScrollOffset = textSize.y();
+	}
 }
 
 void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
@@ -99,13 +156,29 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 	renderChildren(trans);
 
+	Eigen::Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());
+	Eigen::Vector3f dimScaled = trans * Eigen::Vector3f(mSize.x(), mSize.y(), 0);
+	Eigen::Vector2i clipDim((int)dimScaled.x() - trans.translation().x(), (int)dimScaled.y() - trans.translation().y());
+	Renderer::pushClipRect(clipPos, clipDim);
+
+	trans.translate(Eigen::Vector3f(0, -mScrollOffset, 0));
+
 	Renderer::setMatrix(trans);
-	
+
+	std::shared_ptr<Font> f = getFont();
 	if(mTextCache != NULL)
 	{
-		std::shared_ptr<Font> f = getFont();
 		f->renderTextCache(mTextCache.get());
 	}
+
+	//draw cursor
+	if(mEditing)
+	{
+		Eigen::Vector2f cursorPos = f->getWrappedTextCursorOffset(mText, mSize.x(), mCursor);
+		Renderer::drawRect(cursorPos.x(), cursorPos.y(), 3, f->getHeight(), 0x000000FF);
+	}
+
+	Renderer::popClipRect();
 }
 
 std::shared_ptr<Font> TextEditComponent::getFont()

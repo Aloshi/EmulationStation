@@ -12,6 +12,7 @@ public:
 	TextEditComponent(Window* window);
 	
 	void textInput(const char* text) override;
+	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
 	void onFocusGained() override;
@@ -22,14 +23,16 @@ public:
 	void setValue(const std::string& val) override;
 	std::string getValue() const override;
 
-	void setAllowResize(bool allow); //Allow automatic resizing of height to accomodate more text.
-
 private:
 	void onTextChanged();
+	void onCursorChanged();
 
 	std::string mText;
 	bool mFocused;
-	bool mAllowResize;
+
+	bool mEditing;
+	float mScrollOffset;
+	int mCursor;
 
 	std::shared_ptr<Font> getFont();
 

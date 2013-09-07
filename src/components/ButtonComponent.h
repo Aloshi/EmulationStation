@@ -15,13 +15,22 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
-	void setText(const std::string& text, unsigned int color);
+	void setText(const std::string& text, unsigned int focusedTextColor, unsigned int unfocusedTextColor = 0x555555FF);
 
 	void onSizeChanged() override;
+	void onFocusGained() override;
+	void onFocusLost() override;
 
 private:
 	std::shared_ptr<Font> getFont();
 	std::function<void()> mPressedFunc;
+
+	bool mFocused;
+	unsigned int mTextColorFocused;
+	unsigned int mTextColorUnfocused;
+	int mTextPulseTime;
+
+	unsigned int getCurTextColor() const;
 
 	std::string mText;
 	std::unique_ptr<TextCache> mTextCache;

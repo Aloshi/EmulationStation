@@ -57,6 +57,7 @@ public:
 
 	void drawWrappedText(std::string text, const Eigen::Vector2f& offset, float xLen, unsigned int color);
 	Eigen::Vector2f sizeWrappedText(std::string text, float xLen) const;
+	Eigen::Vector2f getWrappedTextCursorOffset(std::string text, float xLen, int cursor) const;
 
 	void drawCenteredText(std::string text, float xOffset, float y, unsigned int color);
 

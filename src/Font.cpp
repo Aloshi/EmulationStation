@@ -383,6 +383,7 @@ std::string Font::wrapText(std::string text, float xLen) const
 		newline = word.find('\n', 0);
 		if(newline != std::string::npos)
 		{
+			//get everything up to the newline
 			word = word.substr(0, newline);
 			text.erase(0, newline + 1);
 		}else{
@@ -404,8 +405,7 @@ std::string Font::wrapText(std::string text, float xLen) const
 		if(textSize.x() > xLen || text.length() == 0 || newline != std::string::npos)
 		{
 			//output line now
-			if(textSize.x() > 0) //make sure it's not blank
-				out += line + '\n';
+			out += line + '\n';
 
 			//move the word we skipped to the next line
 			line = word;
@@ -425,6 +425,48 @@ Eigen::Vector2f Font::sizeWrappedText(std::string text, float xLen) const
 {
 	text = wrapText(text, xLen);
 	return sizeText(text);
+}
+
+Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, int cursor) const
+{
+	std::string wrappedText = wrapText(text, xLen);
+
+	float lineWidth = 0.0f;
+	float y = 0.0f;
+
+	unsigned int stop = (unsigned int)cursor;
+	unsigned int wrapOffset = 0;
+	for(unsigned int i = 0; i < stop; i++)
+	{
+		unsigned char wrappedLetter = wrappedText[i + wrapOffset];
+		unsigned char letter = text[i];
+
+		if(wrappedLetter == '\n' && letter != '\n')
+		{
+			//this is where the wordwrap inserted a newline
+			//reset lineWidth and increment y, but don't consume a cursor character
+			lineWidth = 0.0f;
+			y += getHeight();
+
+			wrapOffset++;
+			i--;
+			continue;
+		}
+
+		if(letter == '\n')
+		{
+			lineWidth = 0.0f;
+			y += getHeight();
+			continue;
+		}
+
+		if(letter < 32 || letter >= 128)
+			letter = 127;
+
+		lineWidth += charData[letter].advX * fontScale;
+	}
+
+	return Eigen::Vector2f(lineWidth, y);
 }
 
 //=============================================================================================================

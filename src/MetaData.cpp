@@ -107,8 +107,16 @@ GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataType as)
 {
 	switch(as)
 	{
+	case MD_MULTILINE_STRING:
+		{
+			TextEditComponent* comp = new TextEditComponent(window);
+			comp->setSize(comp->getSize().x(), comp->getSize().y() * 3);
+			return comp;
+		}
 	default:
-		TextEditComponent* comp = new TextEditComponent(window);
-		return comp;
+		{
+			TextEditComponent* comp = new TextEditComponent(window);
+			return comp;
+		}
 	}
 }
