@@ -7,7 +7,7 @@
 
 TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
 	mBox(window, 0, 0, 0, 0), mFocused(false), 
-	mScrollOffset(0.0f), mCursor(0), mEditing(false)
+	mScrollOffset(0.0f, 0.0f), mCursor(0), mEditing(false)
 {
 	addChild(&mBox);
 	
@@ -88,7 +88,9 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 	{
 		if(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_RETURN)
 		{
-			textInput("\n");
+			if(isMultiline())
+				textInput("\n");
+
 			return true;
 		}
 
@@ -116,8 +118,8 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 			mCursor++;
 			if(mText.length() == 0)
 				mCursor = 0;
-			if(mCursor > (int)mText.length() - 1)
-				mCursor = mText.length() - 1;
+			if(mCursor >= (int)mText.length())
+				mCursor = mText.length();
 
 			onCursorChanged();
 		}
@@ -133,21 +135,35 @@ void TextEditComponent::onTextChanged()
 {
 	std::shared_ptr<Font> f = getFont();
 
-	std::string wrappedText = f->wrapText(mText, mSize.x());
+	std::string wrappedText = (isMultiline() ? f->wrapText(mText, mSize.x()) : mText);
 	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(wrappedText, 0, 0, 0x00000000 | getOpacity()));
 }
 
 void TextEditComponent::onCursorChanged()
 {
 	std::shared_ptr<Font> font = getFont();
-	Eigen::Vector2f textSize = font->getWrappedTextCursorOffset(mText, mSize.x(), mCursor); //font->sizeWrappedText(mText.substr(0, mCursor), mSize.x());
 
-	if(mScrollOffset + mSize.y() < textSize.y() + font->getHeight()) //need to scroll down?
+	if(isMultiline())
 	{
-		mScrollOffset = textSize.y() - mSize.y() + font->getHeight();
-	}else if(mScrollOffset > textSize.y()) //need to scroll up?
-	{
-		mScrollOffset = textSize.y();
+		Eigen::Vector2f textSize = font->getWrappedTextCursorOffset(mText, mSize.x(), mCursor); 
+
+		if(mScrollOffset.y() + mSize.y() < textSize.y() + font->getHeight()) //need to scroll down?
+		{
+			mScrollOffset[1] = textSize.y() - mSize.y() + font->getHeight();
+		}else if(mScrollOffset.y() > textSize.y()) //need to scroll up?
+		{
+			mScrollOffset[1] = textSize.y();
+		}
+	}else{
+		Eigen::Vector2f cursorPos = font->sizeText(mText.substr(0, mCursor));
+
+		if(mScrollOffset.x() + mSize.x() < cursorPos.x())
+		{
+			mScrollOffset[0] = cursorPos.x() - mSize.x();
+		}else if(mScrollOffset.x() > cursorPos.x())
+		{
+			mScrollOffset[0] = cursorPos.x();
+		}
 	}
 }
 
@@ -161,7 +177,7 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Vector2i clipDim((int)dimScaled.x() - trans.translation().x(), (int)dimScaled.y() - trans.translation().y());
 	Renderer::pushClipRect(clipPos, clipDim);
 
-	trans.translate(Eigen::Vector3f(0, -mScrollOffset, 0));
+	trans.translate(Eigen::Vector3f(-mScrollOffset.x(), -mScrollOffset.y(), 0));
 
 	Renderer::setMatrix(trans);
 
@@ -174,7 +190,15 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 	//draw cursor
 	if(mEditing)
 	{
-		Eigen::Vector2f cursorPos = f->getWrappedTextCursorOffset(mText, mSize.x(), mCursor);
+		Eigen::Vector2f cursorPos;
+		if(isMultiline())
+		{
+			cursorPos = f->getWrappedTextCursorOffset(mText, mSize.x(), mCursor);
+		}else{
+			cursorPos = f->sizeText(mText.substr(0, mCursor));
+			cursorPos[1] = 0;
+		}
+
 		Renderer::drawRect(cursorPos.x(), cursorPos.y(), 3, f->getHeight(), 0x000000FF);
 	}
 
@@ -185,3 +209,9 @@ std::shared_ptr<Font> TextEditComponent::getFont()
 {
 	return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL);
 }
+
+bool TextEditComponent::isMultiline()
+{
+	return (getSize().y() > (float)getFont()->getHeight());
+}
+

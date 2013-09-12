@@ -27,11 +27,13 @@ private:
 	void onTextChanged();
 	void onCursorChanged();
 
+	bool isMultiline();
+
 	std::string mText;
 	bool mFocused;
 
 	bool mEditing;
-	float mScrollOffset;
+	Eigen::Vector2f mScrollOffset;
 	int mCursor;
 
 	std::shared_ptr<Font> getFont();
