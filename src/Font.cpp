@@ -502,7 +502,7 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 		{
 			y += (float)getHeight();
 			x = offsetX;
-			memset(&vert[i], 0, 6 * sizeof(float));
+			memset(&vert[i], 0, 6 * sizeof(TextCache::Vertex));
 			continue;
 		}
 
