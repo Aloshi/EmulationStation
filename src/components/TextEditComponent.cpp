@@ -6,7 +6,7 @@
 #include "ComponentListComponent.h"
 
 TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
-	mBox(window, 0, 0, 0, 0), mFocused(false), 
+	mBox(window, ":/textbox.png"), mFocused(false), 
 	mScrollOffset(0.0f, 0.0f), mCursor(0), mEditing(false)
 {
 	addChild(&mBox);
@@ -18,27 +18,25 @@ TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
 
 void TextEditComponent::onFocusGained()
 {
-	mBox.setHorizontalImage(":/glow_hor.png");
-	mBox.setVerticalImage(":/glow_vert.png");
-	mBox.setBorderColor(0x51CCFF00 | getOpacity());
-
+	mBox.setImagePath(":/textbox_glow.png");
+	mBox.setEdgeColor(0x51CCFF00 | getOpacity());
+	
 	SDL_StartTextInput();
 	mFocused = true;
 }
 
 void TextEditComponent::onFocusLost()
 {
-	mBox.setHorizontalImage(":/glow_off_hor.png");
-	mBox.setVerticalImage(":/glow_off_vert.png");
-	mBox.setBorderColor(0xFFFFFF00 | getOpacity());
-
+	mBox.setImagePath(":/textbox.png");
+	mBox.setEdgeColor(0xFFFFFF00 | getOpacity());
+	
 	SDL_StopTextInput();
 	mFocused = false;
 }
 
 void TextEditComponent::onSizeChanged()
 {
-	mBox.setSize(mSize);
+	mBox.fitTo(getSize());
 }
 
 void TextEditComponent::setValue(const std::string& val)
@@ -90,11 +88,13 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 		{
 			if(isMultiline())
 				textInput("\n");
+			else
+				mEditing = false;
 
 			return true;
 		}
 
-		if(config->isMappedTo("b", input))
+		if((config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_ESCAPE) || (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("b", input)))
 		{
 			mEditing = false;
 			return true;
@@ -199,7 +199,7 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 			cursorPos[1] = 0;
 		}
 
-		Renderer::drawRect(cursorPos.x(), cursorPos.y(), 3, f->getHeight(), 0x000000FF);
+		Renderer::drawRect((int)cursorPos.x(), (int)cursorPos.y(), 3, f->getHeight(), 0x000000FF);
 	}
 
 	Renderer::popClipRect();

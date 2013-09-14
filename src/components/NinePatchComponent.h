@@ -14,10 +14,15 @@ public:
 
 	void fitTo(Eigen::Vector2f size);
 
+	void setImagePath(const std::string& path);
+	void setEdgeColor(unsigned int edgeColor);
+	void setCenterColor(unsigned int centerColor);
+
 private:
 	Eigen::Vector2f getCornerSize() const;
 
 	void buildVertices();
+	void updateColors();
 
 	struct Vertex
 	{
@@ -28,6 +33,7 @@ private:
 	Vertex* mVertices;
 	GLubyte* mColors;
 
+	std::string mPath;
 	unsigned int mEdgeColor;
 	unsigned int mCenterColor;
 	std::shared_ptr<TextureResource> mTexture;

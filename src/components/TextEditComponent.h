@@ -2,6 +2,7 @@
 
 #include "../GuiComponent.h"
 #include "GuiBox.h"
+#include "NinePatchComponent.h"
 
 class Font;
 class TextCache;
@@ -38,7 +39,7 @@ private:
 
 	std::shared_ptr<Font> getFont();
 
-	GuiBox mBox;
+	NinePatchComponent mBox;
 
 	std::unique_ptr<TextCache> mTextCache;
 };

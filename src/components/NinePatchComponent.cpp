@@ -5,10 +5,16 @@
 
 NinePatchComponent::NinePatchComponent(Window* window, const std::string& path, unsigned int edgeColor, unsigned int centerColor) : GuiComponent(window),
 	mEdgeColor(edgeColor), mCenterColor(centerColor), 
-	mTexture(TextureResource::get(*window->getResourceManager(), path)), 
+	mPath(path),
 	mVertices(NULL), mColors(NULL)
 {
 	buildVertices();
+}
+
+void NinePatchComponent::updateColors()
+{
+	Renderer::buildGLColorArray(mColors, mEdgeColor, 6 * 9);
+	Renderer::buildGLColorArray(&mColors[4 * 6 * 4], mCenterColor, 6);
 }
 
 void NinePatchComponent::buildVertices()
@@ -18,6 +24,8 @@ void NinePatchComponent::buildVertices()
 
 	if(mColors != NULL)
 		delete[] mColors;
+
+	mTexture = TextureResource::get(*mWindow->getResourceManager(), mPath);
 
 	if(mTexture->getSize() == Eigen::Vector2i::Zero())
 	{
@@ -29,8 +37,7 @@ void NinePatchComponent::buildVertices()
 
 	mVertices = new Vertex[6 * 9];
 	mColors = new GLubyte[6 * 9 * 4];
-	Renderer::buildGLColorArray(mColors, mEdgeColor, 6 * 9);
-	Renderer::buildGLColorArray(&mColors[4 * 6 * 4], mCenterColor, 6);
+	updateColors();
 
 	const Eigen::Vector2f ts = mTexture->getSize().cast<float>();
 
@@ -162,4 +169,22 @@ void NinePatchComponent::fitTo(Eigen::Vector2f size)
 {
 	setSize(size + Eigen::Vector2f(getCornerSize().x() * 2, getCornerSize().y() * 2));
 	setPosition(-getCornerSize().x(), -getCornerSize().y());
+}
+
+void NinePatchComponent::setImagePath(const std::string& path)
+{
+	mPath = path;
+	buildVertices();
+}
+
+void NinePatchComponent::setEdgeColor(unsigned int edgeColor)
+{
+	mEdgeColor = edgeColor;
+	updateColors();
+}
+
+void NinePatchComponent::setCenterColor(unsigned int centerColor)
+{
+	mCenterColor = centerColor;
+	updateColors();
 }
