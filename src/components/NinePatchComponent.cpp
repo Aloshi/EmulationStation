@@ -165,10 +165,14 @@ Eigen::Vector2f NinePatchComponent::getCornerSize() const
 	return Eigen::Vector2f(16, 16);
 }
 
-void NinePatchComponent::fitTo(Eigen::Vector2f size)
+void NinePatchComponent::fitTo(Eigen::Vector2f size, Eigen::Vector3f position, Eigen::Vector2f padding)
 {
+	size += padding;
+	position[0] -= padding.x() / 2;
+	position[1] -= padding.y() / 2;
+
 	setSize(size + Eigen::Vector2f(getCornerSize().x() * 2, getCornerSize().y() * 2));
-	setPosition(-getCornerSize().x(), -getCornerSize().y());
+	setPosition(-getCornerSize().x() + position.x(), -getCornerSize().y() + position.y());
 }
 
 void NinePatchComponent::setImagePath(const std::string& path)

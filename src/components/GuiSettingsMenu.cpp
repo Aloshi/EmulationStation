@@ -5,7 +5,7 @@
 
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window), 
 	mList(window, Eigen::Vector2i(2, 4)), 
-	mBox(mWindow, 0, 0, 0, 0),
+	mBox(mWindow, ":/frame.png", 0x444444FF),
 	mDrawFramerateSwitch(window),
 	mVolumeSlider(window, 0, 100, 1),
 	mDisableSoundsSwitch(window, false),
@@ -58,12 +58,7 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
 
 	//set up borders/background
-	mBox.setPosition(mList.getPosition());
-	mBox.setSize(mList.getSize());
-	mBox.setCornerImage(":/corner.png");
-	mBox.setVerticalImage(":/bar.png");
-	mBox.setHorizontalImage(":/bar.png");
-	mBox.setBorderColor(0x333333FF);
+	mBox.fitTo(mList.getSize(), mList.getPosition(), Eigen::Vector2f(8, 8));
 }
 
 GuiSettingsMenu::~GuiSettingsMenu()

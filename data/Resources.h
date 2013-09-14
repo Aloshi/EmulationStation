@@ -5,14 +5,8 @@
 #include <string>
 #include <map>
 
-extern const size_t bar_png_size;
-extern const unsigned char bar_png_data[];
-
 extern const size_t button_png_size;
 extern const unsigned char button_png_data[];
-
-extern const size_t corner_png_size;
-extern const unsigned char corner_png_data[];
 
 extern const size_t ES_logo_16_png_size;
 extern const unsigned char ES_logo_16_png_data[];

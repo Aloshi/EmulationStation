@@ -210,8 +210,6 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/ResourceUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_16_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_32_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/bar_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/corner_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/frame_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_png.cpp

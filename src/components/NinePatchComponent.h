@@ -12,7 +12,7 @@ public:
 
 	void onSizeChanged() override;
 
-	void fitTo(Eigen::Vector2f size);
+	void fitTo(Eigen::Vector2f size, Eigen::Vector3f position = Eigen::Vector3f::Zero(), Eigen::Vector2f padding = Eigen::Vector2f::Zero());
 
 	void setImagePath(const std::string& path);
 	void setEdgeColor(unsigned int edgeColor);
