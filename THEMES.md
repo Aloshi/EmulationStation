@@ -126,6 +126,8 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<fastSelectColor>` - the hex color to use for the letter display on the Fast Select box.
 
+**WARNING:** the "box*" tags *WILL BE REMOVED* in future versions of EmulationStation. They have been replaced by a "nine patch" image that provides the (almost) the same functionality with less hassle.
+
 `<boxBackground>` - path to a background image file. ~ and . are expanded.
 
 `<boxBackgroundTiled />` - if present, the background will be tiled instead of stretched.
