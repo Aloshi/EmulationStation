@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "GuiBox.h"
 #include "NinePatchComponent.h"
 
 class Font;

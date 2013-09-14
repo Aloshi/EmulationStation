@@ -117,7 +117,7 @@ private:
 //clip rect to our size
 //render a "selected" effect behind component with focus somehow
 //  an edge filter would be cool, but we can't really do that without shader support
-//  a transparent rect will work for now, but it's kind of ugly...maybe a GuiBox
+//  a transparent rect will work for now, but it's kind of ugly...
 //glTranslatef by our render offset
 //  doesn't handle getGlobalOffset for our components...would need parenting for that
 

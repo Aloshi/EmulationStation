@@ -8,7 +8,8 @@ NinePatchComponent::NinePatchComponent(Window* window, const std::string& path, 
 	mPath(path),
 	mVertices(NULL), mColors(NULL)
 {
-	buildVertices();
+	if(!mPath.empty())
+		buildVertices();
 }
 
 void NinePatchComponent::updateColors()

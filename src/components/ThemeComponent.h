@@ -5,7 +5,6 @@
 
 #include "../GuiComponent.h"
 #include "../pugiXML/pugixml.hpp"
-#include "GuiBox.h"
 #include "../AudioManager.h"
 #include "../Font.h"
 
