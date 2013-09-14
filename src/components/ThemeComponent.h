@@ -18,8 +18,6 @@ public:
 
 	void readXML(std::string path, bool detailed);
 
-	GuiBoxData getBoxData();
-
 	unsigned int getColor(std::string name);
 	bool getBool(std::string name);
 	float getFloat(std::string name);
@@ -52,8 +50,6 @@ private:
 	std::map<std::string, std::shared_ptr<Sound>> mSoundMap;
 	std::map<std::string, std::string> mStringMap;
 
-	GuiBoxData mBoxData;
-	
 	std::shared_ptr<Font> mListFont;
 	std::shared_ptr<Font> mDescFont;
 	std::shared_ptr<Font> mFastSelectFont;

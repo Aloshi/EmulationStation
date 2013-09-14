@@ -33,8 +33,6 @@ std::string ThemeComponent::getString(std::string name)
 	return mStringMap[name];
 }
 
-GuiBoxData ThemeComponent::getBoxData() { return mBoxData; }
-
 std::shared_ptr<Font> ThemeComponent::getListFont()
 {
 	if(mListFont)
@@ -108,14 +106,7 @@ void ThemeComponent::setDefaults()
 	mSoundMap["menuOpen"]->loadFile("");
 
 	mStringMap["imageNotFoundPath"] = "";
-
-	mBoxData.backgroundPath = "";
-	mBoxData.backgroundTiled = false;
-	mBoxData.horizontalPath = "";
-	mBoxData.horizontalTiled = false;
-	mBoxData.verticalPath = "";
-	mBoxData.verticalTiled = false;
-	mBoxData.cornerPath = "";
+	mStringMap["fastSelectFrame"] = "";
 
 	mListFont.reset();
 	mDescFont.reset();
@@ -189,15 +180,6 @@ void ThemeComponent::readXML(std::string path, bool detailed)
 	mBoolMap["hideHeader"] = root.child("hideHeader") != 0;
 	mBoolMap["hideDividers"] = root.child("hideDividers") != 0;
 
-	//GuiBox theming data
-	mBoxData.backgroundPath = expandPath(root.child("boxBackground").text().get());
-	mBoxData.backgroundTiled = root.child("boxBackgroundTiled") != 0;
-	mBoxData.horizontalPath = expandPath(root.child("boxHorizontal").text().get());
-	mBoxData.horizontalTiled = root.child("boxHorizontalTiled") != 0;
-	mBoxData.verticalPath = expandPath(root.child("boxVertical").text().get());
-	mBoxData.verticalTiled = root.child("boxVerticalTiled") != 0;
-	mBoxData.cornerPath = expandPath(root.child("boxCorner").text().get());
-
 	//list stuff
 	mBoolMap["listCentered"] = !root.child("listLeftAlign");
 	mFloatMap["listOffsetX"] = strToFloat(root.child("listOffsetX").text().get(), mFloatMap["listOffsetX"]);
@@ -221,6 +203,7 @@ void ThemeComponent::readXML(std::string path, bool detailed)
 	mFloatMap["gameImageOriginY"] = resolveExp(artOriginY, mFloatMap["gameImageOriginY"]);
 
 	mStringMap["imageNotFoundPath"] = expandPath(root.child("gameImageNotFound").text().get());
+	mStringMap["fastSelectFrame"] = expandPath(root.child("fastSelectFrame").text().get());
 
 	//sounds
 	mSoundMap["menuScroll"]->loadFile(expandPath(root.child("menuScrollSound").text().get()));

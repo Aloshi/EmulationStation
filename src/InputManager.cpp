@@ -164,7 +164,7 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 			return true;
 		}
 
-		if(ev.key.repeat && !SDL_IsTextInputActive())
+		if(ev.key.repeat)
 			return false;
 
 		if(ev.key.keysym.sym == SDLK_F4)

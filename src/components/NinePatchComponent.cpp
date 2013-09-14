@@ -124,7 +124,7 @@ void NinePatchComponent::buildVertices()
 void NinePatchComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	if(mTexture)
+	if(mTexture && mVertices != NULL)
 	{
 		Renderer::setMatrix(trans);
 

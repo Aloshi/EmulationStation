@@ -7,14 +7,14 @@
 #include "../Sound.h"
 #include "ThemeComponent.h"
 #include "TextListComponent.h"
-#include "GuiBox.h"
+#include "NinePatchComponent.h"
 
 class GuiGameList;
 
 class GuiFastSelect : public GuiComponent
 {
 public:
-	GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, ThemeComponent * theme);
+	GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, ThemeComponent* theme);
 	~GuiFastSelect();
 
 	bool input(InputConfig* config, Input input) override;
@@ -30,19 +30,19 @@ private:
 	void scroll();
 	void setLetterID(int id);
 
+	GuiGameList* mParent;
 	TextListComponent<FileData*>* mList;
+	ThemeComponent * mTheme;
+	NinePatchComponent mBox;
 
 	size_t mLetterID;
-	GuiGameList* mParent;
-
-	GuiBox* mBox;
-	int mTextColor;
+	
+	unsigned int mTextColor;
 
 	int mScrollTimer, mScrollOffset;
 	bool mScrolling;
 
 	std::shared_ptr<Sound> mScrollSound;
-	ThemeComponent * mTheme;
 };
 
 #endif

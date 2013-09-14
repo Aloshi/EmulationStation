@@ -63,11 +63,13 @@ If EmulationStation is running in "basic" mode, it will try to use `<themeBasic>
 
 Components
 ==========
+
 A theme is made up of components, which have various types. At the moment, the only type is `image`. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
 
 
 The "image" component
 =====================
+
 Used to display an image.
 
 `<path>` - path to the image file. Most common file types are supported, and . and ~ are properly expanded.
@@ -83,6 +85,7 @@ Used to display an image.
 
 Display tags
 ============
+
 Display tags define some "meta" display attributes about your theme. Display tags must be at the root of the `<theme>` tree - for example, they can't be inside a component tag. They are not required.
 
 
@@ -124,23 +127,11 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 **Fast Select box attributes:**
 
-`<fastSelectColor>` - the hex color to use for the letter display on the Fast Select box.
+`<fastSelectColor>` - the hex color to use for the letter display on the fast select box.
 
-`<boxBackground>` - path to a background image file. ~ and . are expanded.
+`<fastSelectFrame>` - the path to a "nine patch" image to use for the "background" of the fast select box. See the "Nine Patches" section for more info.
 
-`<boxBackgroundTiled />` - if present, the background will be tiled instead of stretched.
-
-`<boxHorizontal>` - path to the "left" border image file. It will be flipped for the right border. ~ and . are expanded.
-
-`<boxHorizontalTiled />` - if present, the horizontal image will be tiled instead of stretched downwards.
-
-`<boxVertical>` - path to the "top" border image file. It will be flipped for the bottom border. ~ and . are expanded.
-
-`<boxVerticalTiled />` - if present, the vertical image will be tiled instead of stretched to the right.
-
-`<boxCorner>` - path to the "top left corner" image file. It will be flipped for the top right, bottom right, and bottom left corners. ~ and . are expanded.
-
-There is also a `<fastSelectFont>` font tag (see the Fonts section for more info).
+`<fastSelectFont>`  - font definition to use for the fast select letter. See the "Fonts" section for more info.
 
 
 Fonts
@@ -157,7 +148,7 @@ Fonts are defined like so:
 
 You can leave off any tags you don't want to use, and they'll use the default. Size is defined as a percentage of the screen height. "." and "~" are expanded for paths.
 
-NOTE: If your font size is too big, it'll overrun the maximum texture size.
+NOTE: If your font size is too big, it'll overrun the maximum OpenGL texture size. ES will attempt to rasterize it in progressively smaller sizes until one fits, then upscale it.
 
 **Font tags:**
 
@@ -166,6 +157,7 @@ NOTE: If your font size is too big, it'll overrun the maximum texture size.
 `<descriptionFont>` - font to use for description text.
 
 `<fastSelectFont>` - font to use for the fast select letter.
+
 
 Audio
 =====
@@ -179,6 +171,12 @@ Themes can also define menu sounds. These tags go in the root of the `<theme>` t
 `<menuBackSound>` - path to the sound to play when the user "goes up" from a folder in the game list.
 
 `<menuOpenSound>` - path to the sound to play when the user opens a menu (either the "main menu" or the fast select menu).
+
+
+Nine Patches
+============
+
+EmulationStation borrows the concept of "nine patches" from Android (or "9-Slices"). Currently the implementation is very simple and hard-coded to only use 48x48px images (16x16px for each "patch"). Check the `data/resources` directory for some examples (button.png, frame.png).
 
 
 List of variables

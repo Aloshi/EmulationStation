@@ -3,12 +3,14 @@
 #include <iostream>
 #include "GuiGameList.h"
 
+#define DEFAULT_FS_IMAGE ":/frame.png"
+
 const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
 
 GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, ThemeComponent * theme)
-    : GuiComponent(window), mParent(parent), mList(list), mTheme(theme)
+	: GuiComponent(window), mParent(parent), mList(list), mTheme(theme), mBox(mWindow, "")
 {
 	mLetterID = LETTERS.find(toupper(startLetter));
 	if(mLetterID == std::string::npos)
@@ -22,27 +24,34 @@ GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, TextListCompon
 	mScrollOffset = 0;
 
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
-	mBox = new GuiBox(window, sw * 0.2f, sh * 0.2f, sw * 0.6f, sh * 0.6f);
-	mBox->setData(mTheme->getBoxData());
+
+
+	if(theme->getString("fastSelectFrame").empty())
+	{
+		mBox.setImagePath(DEFAULT_FS_IMAGE);
+		//mBox.setEdgeColor(0x0096ffFF);
+		mBox.setEdgeColor(0x005493FF);
+		mBox.setCenterColor(0x5e5e5eFF);
+	}else{
+		mBox.setImagePath(theme->getString("fastSelectFrame"));
+	}
+
+	mBox.setPosition(sw * 0.2f, sh * 0.2f);
+	mBox.setSize(sw * 0.6f, sh * 0.6f);
 }
 
 GuiFastSelect::~GuiFastSelect()
 {
 	mParent->updateDetailData();
-	delete mBox;
 }
 
 void GuiFastSelect::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::setMatrix(trans);
 
 	unsigned int sw = Renderer::getScreenWidth(), sh = Renderer::getScreenHeight();
 
-	if(!mBox->hasBackground())
-		Renderer::drawRect((int)(sw * 0.3f), (int)(sh * 0.3f), (int)(sw * 0.4f), (int)(sh * 0.4f), 0x000FF0AA);
-
-	mBox->render(trans);
+	mBox.render(trans);
 
 	Renderer::setMatrix(trans);
 	std::shared_ptr<Font> letterFont = mTheme->getFastSelectFont();
