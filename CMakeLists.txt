@@ -156,6 +156,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
@@ -204,6 +205,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp

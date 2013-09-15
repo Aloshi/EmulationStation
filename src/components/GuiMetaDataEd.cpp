@@ -1,6 +1,7 @@
 #include "GuiMetaDataEd.h"
 #include "../Renderer.h"
 #include "../Log.h"
+#include "AsyncReqComponent.h"
 
 #define MDED_RESERVED_ROWS 3
 
@@ -37,6 +38,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 		mDeleteButton.setPressedFunc([&] { mDeleteFunc(); delete this; });
 
 	mFetchButton.setText("FETCH", 0x555555FF);
+	mFetchButton.setPressedFunc([&] { fetch(); });
 
 	mSaveButton.setText("SAVE", 0x0000FFFF);
 	mSaveButton.setPressedFunc([&] { save(); delete this; });
@@ -72,7 +74,7 @@ void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
 
 	//fetch button
 	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), &mFetchButton, true, ComponentListComponent::AlignCenter);
-	
+
 	y++;
 
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
@@ -104,4 +106,9 @@ void GuiMetaDataEd::save()
 
 	if(mSavedCallback)
 		mSavedCallback();
+}
+
+void GuiMetaDataEd::fetch()
+{
+	
 }

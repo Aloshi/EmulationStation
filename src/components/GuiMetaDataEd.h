@@ -18,6 +18,7 @@ public:
 
 private:
 	void save();
+	void fetch();
 
 	void populateList(const std::vector<MetaDataDecl>& mdd);
 
