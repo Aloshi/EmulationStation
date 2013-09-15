@@ -49,6 +49,24 @@ if(DEFINED BCMHOST)
     add_definitions(-D_RPI_)
 endif()
 
+#-------------------------------------------------------------------------------
+#set up _WIN32_WINNT variable (used by boost::asio) on Windows
+macro(get_WIN32_WINNT version)
+    if (WIN32 AND CMAKE_SYSTEM_VERSION)
+        set(ver ${CMAKE_SYSTEM_VERSION})
+        string(REPLACE "." "" ver ${ver})
+        string(REGEX REPLACE "([0-9])" "0\\1" ver ${ver})
+
+        set(${version} "0x${ver}")
+    endif()
+endmacro()
+
+if(WIN32)
+    get_WIN32_WINNT(ver)
+    add_definitions(-D_WIN32_WINNT=${ver})
+endif()
+#-------------------------------------------------------------------------------
+
 if(MSVC)
     set(CMAKE_DEBUG_POSTFIX "d")
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
@@ -122,6 +140,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.h
@@ -167,6 +186,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.cpp
