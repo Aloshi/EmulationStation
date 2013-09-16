@@ -175,6 +175,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
@@ -223,6 +224,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
