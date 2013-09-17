@@ -35,7 +35,9 @@ void Settings::setDefaults()
 
 	mIntMap["DIMTIME"] = 30*1000;
 
-    mIntMap["GameListSortIndex"] = 0;
+	mIntMap["GameListSortIndex"] = 0;
+
+	mScraper = NULL; //TODO
 }
 
 template <typename K, typename V>
@@ -83,6 +85,11 @@ void Settings::loadFile()
 		setInt(node.attribute("name").as_string(), node.attribute("value").as_int());
 	for(pugi::xml_node node = doc.child("float"); node; node = node.next_sibling())
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
+}
+
+IScraper* Settings::getScraper()
+{
+	return mScraper;
 }
 
 //Print a warning message if the setting we're trying to get doesn't already exist in the map, then return the value in the map.

@@ -8,19 +8,23 @@
 #include "NinePatchComponent.h"
 #include "ButtonComponent.h"
 #include <functional>
+#include "../scrapers/Scraper.h"
 
 class GuiMetaDataEd : public GuiComponent
 {
 public:
-	GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd,
+	GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams params, 
 		const std::string& header, std::function<void()> savedCallback, std::function<void()> deleteFunc);
 	virtual ~GuiMetaDataEd();
 
 private:
 	void save();
 	void fetch();
+	void fetchDone(std::vector<MetaDataList> results);
 
 	void populateList(const std::vector<MetaDataDecl>& mdd);
+
+	ScraperSearchParams mScraperParams;
 
 	NinePatchComponent mBox;
 

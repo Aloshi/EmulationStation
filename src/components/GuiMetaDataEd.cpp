@@ -2,11 +2,13 @@
 #include "../Renderer.h"
 #include "../Log.h"
 #include "AsyncReqComponent.h"
+#include "../Settings.h"
 
 #define MDED_RESERVED_ROWS 3
 
-GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, 
+GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
+	mScraperParams(scraperParams), 
 	mBox(mWindow, ":/frame.png", 0xAAAAAAFF, 0xCCCCCCFF),
 	mList(window, Eigen::Vector2i(3, mdd.size() + MDED_RESERVED_ROWS)),
 	mHeader(window),
@@ -110,5 +112,11 @@ void GuiMetaDataEd::save()
 
 void GuiMetaDataEd::fetch()
 {
+	Settings::getInstance()->getScraper()->getResultsAsync(mScraperParams, mWindow, std::bind(&GuiMetaDataEd::fetchDone, this, std::placeholders::_1));
+}
+
+void GuiMetaDataEd::fetchDone(std::vector<MetaDataList> results)
+{
 	
 }
+
