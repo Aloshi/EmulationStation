@@ -155,7 +155,7 @@ void parseGamelist(SystemData* system)
 				game = createGameFromPath(path, system);
 
 			//load the metadata
-			*(game->metadata()) = MetaDataList::createFromXML(MetaDataList::getDefaultGameMDD(), gameNode);
+			*(game->metadata()) = MetaDataList::createFromXML(system->getGameMDD(), gameNode);
 
 			//make sure name gets set if one didn't exist
 			if(game->metadata()->get("name").empty())
@@ -166,13 +166,13 @@ void parseGamelist(SystemData* system)
 	}
 }
 
-void addGameDataNode(pugi::xml_node& parent, const GameData* game)
+void addGameDataNode(pugi::xml_node& parent, const GameData* game, SystemData* system)
 {
 	//create game and add to parent node
 	pugi::xml_node newGame = parent.append_child("game");
 
 	//write metadata
-	const_cast<GameData*>(game)->metadata()->appendToXML(newGame, MetaDataList::getDefaultGameMDD());
+	const_cast<GameData*>(game)->metadata()->appendToXML(newGame, system->getGameMDD());
 	
 	if(newGame.children().begin() == newGame.child("name") //first element is name
 		&& ++newGame.children().begin() == newGame.children().end() //theres only one element
@@ -254,7 +254,7 @@ void updateGamelist(SystemData* system)
 
 				//either the game content was removed, because it needs to be updated,
 				//or didn't exist in the first place, so just add it
-				addGameDataNode(root, game);
+				addGameDataNode(root, game, system);
 			}
 			++fit;
 		}

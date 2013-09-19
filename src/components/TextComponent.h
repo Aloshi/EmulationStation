@@ -8,7 +8,7 @@ class TextComponent : public GuiComponent
 {
 public:
 	TextComponent(Window* window);
-	TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, Eigen::Vector3f pos, Eigen::Vector2f size);
+	TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, Eigen::Vector3f pos = Eigen::Vector3f::Zero(), Eigen::Vector2f size = Eigen::Vector2f::Zero());
 
 	void setFont(std::shared_ptr<Font> font);
 	void onSizeChanged() override;
@@ -21,9 +21,9 @@ public:
 	std::string getValue() const override;
 	void setValue(const std::string& value) override;
 	
-private:
 	std::shared_ptr<Font> getFont() const;
-	
+
+private:
 	void calculateExtent();
 
 	void onTextChanged();
@@ -32,7 +32,7 @@ private:
 	std::shared_ptr<Font> mFont;
 	Eigen::Matrix<bool, 1, 2> mAutoCalcExtent;
 	std::string mText;
-	std::unique_ptr<TextCache> mTextCache;
+	std::shared_ptr<TextCache> mTextCache;
 	bool mCentered;
 };
 

@@ -20,7 +20,7 @@ public:
 private:
 	void save();
 	void fetch();
-	void fetchDone(std::vector<MetaDataList> results);
+	void fetchDone(MetaDataList result);
 
 	void populateList(const std::vector<MetaDataDecl>& mdd);
 
@@ -35,6 +35,7 @@ private:
 	std::vector<TextComponent*> mLabels;
 	std::vector<GuiComponent*> mEditors;
 
+	std::vector<MetaDataDecl> mMetaDataDecl;
 	MetaDataList* mMetaData;
 	std::function<void()> mSavedCallback;
 	std::function<void()> mDeleteFunc;

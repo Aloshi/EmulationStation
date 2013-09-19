@@ -3,10 +3,11 @@
 #include "pugiXML/pugixml.hpp"
 #include "platform.h"
 #include <boost/filesystem.hpp>
+#include "scrapers/GamesDBScraper.h"
 
 Settings* Settings::sInstance = NULL;
 
-Settings::Settings()
+Settings::Settings() : mScraper(NULL)
 {
 	setDefaults();
 	loadFile();
@@ -37,7 +38,10 @@ void Settings::setDefaults()
 
 	mIntMap["GameListSortIndex"] = 0;
 
-	mScraper = NULL; //TODO
+	if(mScraper)
+		delete mScraper;
+
+	mScraper = new GamesDBScraper(); //TODO
 }
 
 template <typename K, typename V>

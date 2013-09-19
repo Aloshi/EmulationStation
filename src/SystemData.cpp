@@ -334,3 +334,8 @@ bool SystemData::hasGamelist()
 	else
 		return true;
 }
+
+std::vector<MetaDataDecl> SystemData::getGameMDD()
+{
+	return MetaDataList::getDefaultGameMDD();
+}

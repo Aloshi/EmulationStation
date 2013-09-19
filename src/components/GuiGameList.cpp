@@ -132,7 +132,7 @@ bool GuiGameList::input(InputConfig* config, Input input)
 			ScraperSearchParams searchParams;
 			searchParams.game = game;
 			searchParams.system = mSystem;
-			mWindow->pushGui(new GuiMetaDataEd(mWindow, game->metadata(), MetaDataList::getDefaultGameMDD(), searchParams, game->getBaseName(),
+			mWindow->pushGui(new GuiMetaDataEd(mWindow, game->metadata(), mSystem->getGameMDD(), searchParams, game->getBaseName(),
 				[&] { updateDetailData(); }, 
 				[game, root, this] { root->removeFileRecursive(game); updateList(); }
 			));

@@ -1,5 +1,6 @@
 #include "GamesDBScraper.h"
 #include "../components/AsyncReqComponent.h"
+#include "../Log.h"
 
 std::vector<MetaDataList> GamesDBScraper::getResults(ScraperSearchParams params)
 {
@@ -18,6 +19,16 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 {
 	std::vector<MetaDataList> mdl;
 
+	MetaDataList md(params.system->getGameMDD());
+	md.set("name", "JUNK RESULT #1");
+	md.set("desc", "Black triangles");
+	mdl.push_back(md);
+
+	MetaDataList md2(params.system->getGameMDD());
+	md2.set("name", "JUNK RESULT #2");
+	md2.set("desc", "Test results are very exciting. Sort of. A little. If you squint. A lot.");
+	mdl.push_back(md2);
+
 	return mdl;
 }
 
@@ -34,4 +45,3 @@ void GamesDBScraper::getResultsAsync(ScraperSearchParams params, Window* window,
 
 	window->pushGui(req);
 }
-

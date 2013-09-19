@@ -172,9 +172,11 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/Scraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
@@ -221,6 +223,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.cpp

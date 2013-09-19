@@ -6,6 +6,7 @@ class ComponentListComponent : public GuiComponent
 {
 public:
 	ComponentListComponent(Window* window, Eigen::Vector2i gridDimensions);
+	virtual ~ComponentListComponent();
 
 	enum UpdateBehavior
 	{
@@ -20,6 +21,8 @@ public:
 	//DO NOT USE NEGATIVE NUMBERS FOR POSITION OR SIZE.
 	void setEntry(Eigen::Vector2i pos, Eigen::Vector2i size, GuiComponent* component, bool canFocus, AlignmentType align, 
 		Eigen::Matrix<bool, 1, 2> autoFit = Eigen::Matrix<bool, 1, 2>(true, true), UpdateBehavior updateType = UpdateAlways);
+
+	void removeEntriesIn(Eigen::Vector2i pos, Eigen::Vector2i size);
 
 	void onPositionChanged() override;
 
@@ -37,6 +40,8 @@ public:
 	bool cursorValid();
 
 	GuiComponent* getSelectedComponent();
+
+	void moveCursor(Eigen::Vector2i dir);
 
 private:
 	class ComponentEntry
@@ -58,17 +63,15 @@ private:
 		}
 	};
 
-	//Offset we render components by (for scrolling).
+	//Offset we render components by (for scrolling). [unimplemented]
 	Eigen::Vector2f mComponentOffset;
 
 	Eigen::Vector2i mGridSize;
 	ComponentEntry** mGrid;
-	std::vector<ComponentEntry> mEntries;
+	std::vector<ComponentEntry*> mEntries;
 	void makeCells(Eigen::Vector2i size);
 	void setCell(unsigned int x, unsigned int y, ComponentEntry* entry);
 	ComponentEntry* getCell(unsigned int x, unsigned int y);
-
-	Eigen::Vector2i mSelectedCellIndex;
 
 	unsigned int getColumnWidth(int col);
 	unsigned int getRowHeight(int row);
@@ -81,7 +84,6 @@ private:
 	Eigen::Vector3f getCellOffset(Eigen::Vector2i gridPos);
 	void updateSize();
 
-	void moveCursor(Eigen::Vector2i dir);
 	void onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i to);
 	Eigen::Vector2i mCursor;
 
@@ -100,43 +102,15 @@ private:
 //       scroll to prev/next selectable component in grid Y
 //     if input == left/right
 //       scroll to prev/next selectable component in grid X
-//     if input == accept
-//       call registered function?
 
 //entry struct/class
 //  GuiComponent* component - component to work with
 //  bool canFocus - can we pass input to this? (necessary for labels to not be selectable)
-//  Function* selectFunc?
 //  UpdateBehavior update - how to handle updates (all the time or only when focused)
 
 //update
-//animate component offset to display selected component within the bounds
 //pass update to all entries with appropriate update behavior
 
 //render
 //clip rect to our size
 //render a "selected" effect behind component with focus somehow
-//  an edge filter would be cool, but we can't really do that without shader support
-//  a transparent rect will work for now, but it's kind of ugly...
-//glTranslatef by our render offset
-//  doesn't handle getGlobalOffset for our components...would need parenting for that
-
-//methods
-//List::setEntry(Vector2i gridPos, GuiComponent* component, bool canFocus, AlignmentType align, 
-//		Function* selectFunc = NULL, UpdateBehavior updateType = UpdateAlways);
-
-//example of setting up the SettingsMenu list:
-//ComponentListComponent list;
-//int row = 0;
-//TextComponent* label = new TextComponent(Vector2i(0, 0), "Debug:", font, lblColor, etc);
-//
-//list.setEntry(Vector2i(-1, row), label, false, AlignRight);
-//list.setEntry(Vector2i(0, row++), &mDebugSwitch, true, AlignLeft);
-//...
-//list.setEntry(Rect(-1, row, 2, 1), &mSaveButton, true, AlignCenter);
-
-//example of setting up GameGrid list:
-//ComponentListComponent list;
-//for(int y = 0; y < yMax; y++)
-//	for(int x = 0; x < xMax; x++)
-//		list.setEntry(Vector2i(x, y), getGameImage(x, y), true, AlignCenter, &this->onSelectGame);

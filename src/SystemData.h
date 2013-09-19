@@ -5,6 +5,7 @@
 #include <string>
 #include "FolderData.h"
 #include "Window.h"
+#include "MetaData.h"
 
 class GameData;
 
@@ -21,6 +22,7 @@ public:
 	std::string getExtension();
 	std::string getGamelistPath();
 	bool hasGamelist();
+	std::vector<MetaDataDecl> getGameMDD();
 
 	void launchGame(Window* window, GameData* game);
 

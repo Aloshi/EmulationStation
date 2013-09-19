@@ -22,7 +22,7 @@ void ButtonComponent::setPressedFunc(std::function<void()> f)
 
 bool ButtonComponent::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("a", input))
+	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		if(mPressedFunc)
 			mPressedFunc();

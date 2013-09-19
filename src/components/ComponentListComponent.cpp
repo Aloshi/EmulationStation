@@ -13,6 +13,14 @@ ComponentListComponent::ComponentListComponent(Window* window, Eigen::Vector2i g
 	makeCells(gridDimensions);
 }
 
+ComponentListComponent::~ComponentListComponent()
+{
+	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
+	{
+		delete *iter;
+	}
+}
+
 void ComponentListComponent::makeCells(Eigen::Vector2i size)
 {
 	if(mGrid)
@@ -57,7 +65,7 @@ void ComponentListComponent::setEntry(Eigen::Vector2i pos, Eigen::Vector2i size,
 		return;
 	}
 
-	ComponentEntry entry(Eigen::Vector2i(pos.x(), pos.y()), Eigen::Vector2i(size.x(), size.y()), component, updateType, canFocus, align);
+	ComponentEntry* entry = new ComponentEntry(Eigen::Vector2i(pos.x(), pos.y()), Eigen::Vector2i(size.x(), size.y()), component, updateType, canFocus, align);
 	
 	mEntries.push_back(entry);
 
@@ -65,7 +73,7 @@ void ComponentListComponent::setEntry(Eigen::Vector2i pos, Eigen::Vector2i size,
 	{
 		for(int x = pos.x(); x < pos.x() + size.x(); x++)
 		{
-			setCell(x, y, &mEntries.back());
+			setCell(x, y, mEntries.back());
 		}
 	}
 
@@ -81,11 +89,38 @@ void ComponentListComponent::setEntry(Eigen::Vector2i pos, Eigen::Vector2i size,
 	//	setColumnWidth(pos.x(), (unsigned int)component->getSize().x());
 	//if(autoFit.y() && (int)getRowHeight(pos.y()) < component->getSize().y())
 	//	setRowHeight(pos.y(), (unsigned int)component->getSize().y());
-	updateCellSize(&mEntries.back(), autoFit.x(), autoFit.y());
+	updateCellSize(mEntries.back(), autoFit.x(), autoFit.y());
 
 	component->setPosition(getCellOffset(pos));
 
 	updateSize();
+}
+
+void ComponentListComponent::removeEntriesIn(Eigen::Vector2i pos, Eigen::Vector2i size)
+{
+	auto iter = mEntries.begin();
+	while(iter != mEntries.end())
+	{
+		if((*iter)->pos.x() >= pos.x() && (*iter)->pos.x() < pos.x() + size.x()
+			&& (*iter)->pos.y() >= pos.y() && (*iter)->pos.y() < pos.y() + size.y())
+		{
+			delete *iter;
+			iter = mEntries.erase(iter);
+		}else{
+			iter++;
+		}
+	}
+
+	for(int y = pos.y(); y < pos.y() + size.y(); y++)
+	{
+		for(int x = pos.x(); x < pos.x() + size.x(); x++)
+		{
+			setCell(x, y, NULL);
+		}
+	}
+
+	if(!cursorValid())
+		resetCursor();
 }
 
 void ComponentListComponent::forceRowHeight(int row, unsigned int size)
@@ -99,7 +134,7 @@ void ComponentListComponent::forceRowHeight(int row, unsigned int size)
 void ComponentListComponent::forceColumnWidth(int col, unsigned int size)
 {
 	mColumnWidths[col] = size;
-	mRowHeightForced[col] = true;
+	mColumnWidthForced[col] = true;
 	updateSize();
 	updateComponentOffsets();
 }
@@ -174,7 +209,7 @@ void ComponentListComponent::updateComponentOffsets()
 {
 	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
 	{
-		iter->component->setPosition(getCellOffset(iter->pos));
+		(*iter)->component->setPosition(getCellOffset((*iter)->pos));
 	}
 }
 
@@ -229,9 +264,9 @@ void ComponentListComponent::updateComponent(GuiComponent* cmp)
 {
 	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
 	{
-		if(iter->component == cmp)
+		if((*iter)->component == cmp)
 		{
-			updateCellSize(&(*iter));
+			updateCellSize(*iter);
 		}
 	}
 }
@@ -277,7 +312,7 @@ void ComponentListComponent::resetCursor()
 	}
 
 	const Eigen::Vector2i origCursor = mCursor;
-	mCursor << mEntries.at(0).pos[0], mEntries.at(0).pos[1];
+	mCursor << mEntries.at(0)->pos[0], mEntries.at(0)->pos[1];
 	onCursorMoved(origCursor, mCursor);
 }
 
@@ -356,15 +391,15 @@ void ComponentListComponent::update(int deltaTime)
 {
 	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
 	{
-		switch(iter->updateType)
+		switch((*iter)->updateType)
 		{
 		case UpdateAlways:
-			iter->component->update(deltaTime);
+			(*iter)->component->update(deltaTime);
 			break;
 
 		case UpdateFocused:
-			if(cursorValid() && getCell(mCursor.x(), mCursor.y())->component == iter->component)
-				iter->component->update(deltaTime);
+			if(cursorValid() && getCell(mCursor.x(), mCursor.y())->component == (*iter)->component)
+				(*iter)->component->update(deltaTime);
 			break;
 		}
 	}
@@ -373,13 +408,9 @@ void ComponentListComponent::update(int deltaTime)
 void ComponentListComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::setMatrix(trans);
-
-	Renderer::drawRect(0, 0, (int)getSize().x(), (int)getSize().y(), 0xFFFFFFAA);
-
 	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
 	{
-		iter->component->render(trans);
+		(*iter)->component->render(trans);
 	}
 
 	

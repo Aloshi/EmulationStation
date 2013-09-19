@@ -101,7 +101,7 @@ void TextComponent::onTextChanged()
 	calculateExtent();
 
 	std::shared_ptr<Font> f = getFont();
-	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(f->wrapText(mText, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
+	mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(mText, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
 }
 
 void TextComponent::setValue(const std::string& value)

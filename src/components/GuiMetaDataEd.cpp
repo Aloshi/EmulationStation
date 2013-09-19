@@ -3,6 +3,7 @@
 #include "../Log.h"
 #include "AsyncReqComponent.h"
 #include "../Settings.h"
+#include "GuiGameScraper.h"
 
 #define MDED_RESERVED_ROWS 3
 
@@ -10,28 +11,19 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
 	mScraperParams(scraperParams), 
 	mBox(mWindow, ":/frame.png", 0xAAAAAAFF, 0xCCCCCCFF),
-	mList(window, Eigen::Vector2i(3, mdd.size() + MDED_RESERVED_ROWS)),
+	mList(window, Eigen::Vector2i(2, mdd.size() + MDED_RESERVED_ROWS)),
 	mHeader(window),
+	mMetaDataDecl(mdd), 
 	mMetaData(md), 
 	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc), 
 	mDeleteButton(window), mFetchButton(window), mSaveButton(window)
 {
-	LOG(LogInfo) << "Creating GuiMetaDataEd";
-
-	//set size to 80% by 80% of the window
-	mSize << Renderer::getScreenWidth() * 0.8f, Renderer::getScreenHeight() * 0.8f;
-
-	//center us
-	mPosition << (Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2, 0.0f;
-
+	unsigned int sw = Renderer::getScreenWidth();
+	unsigned int sh = Renderer::getScreenHeight();
+	
 	addChild(&mBox);
-	mBox.fitTo(mSize);
-
-	//initialize path display
+	
 	addChild(&mHeader);
-	mHeader.setPosition(0, 0);
-	mHeader.setSize(mSize.x(), 0);
-	mHeader.setCentered(true);
 	mHeader.setText(header);
 
 	//initialize buttons
@@ -39,8 +31,8 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	if(mDeleteFunc)
 		mDeleteButton.setPressedFunc([&] { mDeleteFunc(); delete this; });
 
-	mFetchButton.setText("FETCH", 0x555555FF);
-	mFetchButton.setPressedFunc([&] { fetch(); });
+	mFetchButton.setText("FETCH", 0x00FF00FF);
+	mFetchButton.setPressedFunc(std::bind(&GuiMetaDataEd::fetch, this));
 
 	mSaveButton.setText("SAVE", 0x0000FFFF);
 	mSaveButton.setPressedFunc([&] { save(); delete this; });
@@ -48,12 +40,26 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	//initialize metadata list
 	addChild(&mList);
 	populateList(mdd);
-	mList.setPosition((mSize.x() - mList.getSize().x()) / 2, mHeader.getSize().y() + 4);
+	mList.setPosition((sw - mList.getSize().x()) / 2.0f, (sh - mList.getSize().y()) / 2.0f); //center it
+	mList.resetCursor();
+
+	mBox.fitTo(mList.getSize(), mList.getPosition(), Eigen::Vector2f(12, 12));
+
+	mHeader.setPosition(mList.getPosition());
+	mHeader.setSize(mList.getSize().x(), 0);
+	mHeader.setCentered(true);
 }
 
 GuiMetaDataEd::~GuiMetaDataEd()
 {
-	LOG(LogInfo) << "Deleted GuiMetaDataEd";
+	for(auto iter = mLabels.begin(); iter != mLabels.end(); iter++)
+	{
+		delete *iter;
+	}
+	for(auto iter = mEditors.begin(); iter != mEditors.end(); iter++)
+	{
+		delete *iter;
+	}
 }
 
 void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
@@ -71,11 +77,11 @@ void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
 
 	int y = 0;
 
-	//delete button
-	mList.setEntry(Vector2i(0, y), Vector2i(1, 1), &mDeleteButton, true, ComponentListComponent::AlignCenter);
-
 	//fetch button
-	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), &mFetchButton, true, ComponentListComponent::AlignCenter);
+	mList.setEntry(Vector2i(0, y), Vector2i(1, 1), &mFetchButton, true, ComponentListComponent::AlignLeft);
+
+	//delete button
+	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), &mDeleteButton, true, ComponentListComponent::AlignRight);
 
 	y++;
 
@@ -87,7 +93,7 @@ void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
 		mLabels.push_back(label);
 
 		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
-		ed->setSize(mSize.x() / 2, ed->getSize().y());
+		ed->setSize(Renderer::getScreenWidth() * 0.4f, ed->getSize().y());
 		ed->setValue(mMetaData->get(iter->key));
 		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
 		mEditors.push_back(ed);
@@ -112,11 +118,16 @@ void GuiMetaDataEd::save()
 
 void GuiMetaDataEd::fetch()
 {
-	Settings::getInstance()->getScraper()->getResultsAsync(mScraperParams, mWindow, std::bind(&GuiMetaDataEd::fetchDone, this, std::placeholders::_1));
+	GuiGameScraper* scr = new GuiGameScraper(mWindow, mScraperParams, std::bind(&GuiMetaDataEd::fetchDone, this, std::placeholders::_1));
+	mWindow->pushGui(scr);
+	scr->search();
 }
 
-void GuiMetaDataEd::fetchDone(std::vector<MetaDataList> results)
+void GuiMetaDataEd::fetchDone(MetaDataList result)
 {
-	
+	for(unsigned int i = 0; i < mEditors.size(); i++)
+	{
+		const std::string key = mMetaDataDecl.at(i).key;
+		mEditors.at(i)->setValue(result.get(key));
+	}
 }
-

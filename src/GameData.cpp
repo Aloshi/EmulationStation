@@ -5,7 +5,7 @@
 #include <sstream>
 
 GameData::GameData(SystemData* system, std::string path)
-	: mSystem(system), mPath(path), mBaseName(boost::filesystem::path(path).stem().string()), mMetaData(MetaDataList::getDefaultGameMDD())
+	: mSystem(system), mPath(path), mBaseName(boost::filesystem::path(path).stem().string()), mMetaData(system->getGameMDD())
 {
 	if(mMetaData.get("name").empty())
 		mMetaData.set("name", mBaseName);
