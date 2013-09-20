@@ -10,7 +10,7 @@ public:
 	void getResultsAsync(ScraperSearchParams params, Window* window, std::function<void(std::vector<MetaDataList>)> returnFunc) override;
 
 private:
-	std::shared_ptr<HttpReq> makeHttpReq();
+	std::shared_ptr<HttpReq> makeHttpReq(ScraperSearchParams params);
 	std::vector<MetaDataList> parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq>);
 };
 
