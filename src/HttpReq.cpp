@@ -8,6 +8,38 @@ boost::asio::io_service HttpReq::io_service;
 HttpReq::HttpReq(const std::string& server, const std::string& path)
 	: mResolver(io_service), mSocket(io_service), mStatus(REQ_IN_PROGRESS)
 {
+	start(server, path);
+}
+
+HttpReq::HttpReq(const std::string& url)
+	: mResolver(io_service), mSocket(io_service), mStatus(REQ_IN_PROGRESS)
+{
+	size_t startpos = 0;
+
+	if(url.substr(startpos, 7) == "http://")
+		startpos = 7;
+	else if(url.substr(0, 8) == "https://")
+		startpos = 8;
+
+	if(url.substr(startpos, 4) == "www.")
+		startpos += 4;
+
+	size_t pathStart = url.find('/', startpos);
+	std::string server = url.substr(startpos, pathStart - startpos);
+	std::string path = url.substr(pathStart, std::string::npos);
+	
+	start(server, path);
+}
+
+HttpReq::~HttpReq()
+{
+	mResolver.cancel();
+	mSocket.close();
+	while(status() == REQ_IN_PROGRESS); //otherwise you get really weird heap-allocation-related crashes
+}
+
+void HttpReq::start(const std::string& server, const std::string& path)
+{
 	std::ostream req_str(&mRequest);
 	req_str << "GET " << path << " HTTP/1.0\r\n";
 	req_str << "Host: " << server << "\r\n";
@@ -20,7 +52,6 @@ HttpReq::HttpReq(const std::string& server, const std::string& path)
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::iterator));
 }
-
 
 void HttpReq::handleResolve(const boost::system::error_code& err, tcp::resolver::iterator endpoint_iterator)
 {

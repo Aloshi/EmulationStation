@@ -23,6 +23,8 @@ public:
 	void setValue(const std::string& val) override;
 	std::string getValue() const override;
 
+	bool isEditing() const;
+
 private:
 	void onTextChanged();
 	void onCursorChanged();

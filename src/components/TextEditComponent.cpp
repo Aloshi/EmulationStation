@@ -137,6 +137,9 @@ void TextEditComponent::onTextChanged()
 
 	std::string wrappedText = (isMultiline() ? f->wrapText(mText, mSize.x()) : mText);
 	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(wrappedText, 0, 0, 0x00000000 | getOpacity()));
+
+	if(mCursor > (int)mText.length())
+		mCursor = mText.length();
 }
 
 void TextEditComponent::onCursorChanged()
@@ -215,3 +218,7 @@ bool TextEditComponent::isMultiline()
 	return (getSize().y() > (float)getFont()->getHeight());
 }
 
+bool TextEditComponent::isEditing() const
+{
+	return mEditing;
+}

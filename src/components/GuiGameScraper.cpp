@@ -13,6 +13,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mResultName(window, "", Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)),
 	mResultInfo(window),
 	mResultDesc(window, "", Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL)),
+	mResultThumbnail(window), 
 
 	mSearchLabel(window, "Search for: ", Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL)),
 	mSearchText(window),
@@ -57,13 +58,16 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mResultName.setColor(0x3B56CCFF);
 	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mResultName, false, ComponentListComponent::AlignLeft);
 
-	
 	mResultDesc.setText(params.game->metadata()->get("desc"));
 	mResultDesc.setSize(colWidth, 0);
 	mResultInfo.addChild(&mResultDesc);
 	mResultInfo.setSize(mResultDesc.getSize().x(), mResultDesc.getFont()->getHeight() * 3.0f);
 	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mResultInfo, false, ComponentListComponent::AlignLeft);
 	
+	mResultThumbnail.setOrigin(0.5f, 0.5f);
+	mResultThumbnail.setResize(colWidth, mResultInfo.getSize().y(), false);
+	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mResultThumbnail, false, ComponentListComponent::AlignCenter);
+
 	//y = 3 is a spacer row
 
 	mList.setEntry(Vector2i(0, 4), Vector2i(1, 1), &mSearchLabel, false, ComponentListComponent::AlignLeft);
@@ -87,6 +91,8 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mBox.fitTo(mList.getSize(), mList.getPosition());
 
 	mResultInfo.setAutoScroll(2200, 0.015f);
+
+	mList.resetCursor();
 }
 
 void GuiGameScraper::search()
@@ -135,7 +141,7 @@ bool GuiGameScraper::input(InputConfig* config, Input input)
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		//if you're on a result
-		if(getSelectedIndex())
+		if(getSelectedIndex() != -1)
 		{
 			mDoneFunc(mScraperResults.at(getSelectedIndex()));
 			delete this;
@@ -149,9 +155,10 @@ bool GuiGameScraper::input(InputConfig* config, Input input)
 		return true;
 	}
 
+	bool wasEditing = mSearchText.isEditing();
 	bool ret = GuiComponent::input(config, input);
 
-	if(config->isMappedTo("up", input) || config->isMappedTo("down", input))
+	if(config->isMappedTo("up", input) || config->isMappedTo("down", input) && input.value != 0)
 	{
 		//update game info pane
 		int i = getSelectedIndex();
@@ -161,8 +168,46 @@ bool GuiGameScraper::input(InputConfig* config, Input input)
 			mResultDesc.setText(mScraperResults.at(i).get("desc"));
 			mResultInfo.setScrollPos(Eigen::Vector2d(0, 0));
 			mResultInfo.resetAutoScrollTimer();
+
+			std::string thumb = mScraperResults.at(i).get("thumbnail");
+			mResultThumbnail.setImage("");
+			if(!thumb.empty())
+				mThumbnailReq = std::unique_ptr<HttpReq>(new HttpReq(thumb));
+			else
+				mThumbnailReq.reset();
 		}
 	}
 
+	//stopped editing
+	if(wasEditing && !mSearchText.isEditing())
+	{
+		//update results
+		search();
+	}
+
 	return ret;
+}
+
+void GuiGameScraper::update(int deltaTime)
+{
+	if(mThumbnailReq && mThumbnailReq->status() != HttpReq::REQ_IN_PROGRESS)
+	{
+		updateThumbnail();
+	}
+
+	GuiComponent::update(deltaTime);
+}
+
+void GuiGameScraper::updateThumbnail()
+{
+	if(mThumbnailReq && mThumbnailReq->status() == HttpReq::REQ_SUCCESS)
+	{
+		std::string content = mThumbnailReq->getContent();
+		mResultThumbnail.setImage(content.data(), content.length());
+	}else{
+		LOG(LogWarning) << "thumbnail req failed: " << mThumbnailReq->getErrorMsg();
+		mResultThumbnail.setImage("");
+	}
+
+	mThumbnailReq.reset();
 }

@@ -20,6 +20,7 @@ public:
 
 	void copyScreen(); //Copy the entire screen into a texture for us to use.
 	void setImage(std::string path); //Loads the image at the given filepath.
+	void setImage(const char* image, size_t length); //Loads image from memory.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
 	void setResize(float width, float height, bool allowUpscale);

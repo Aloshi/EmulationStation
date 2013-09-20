@@ -79,6 +79,34 @@ void TextureResource::initFromScreen()
 	mTextureSize[1] = height;
 }
 
+void TextureResource::initFromMemory(const char* data, size_t length)
+{
+	deinit();
+
+	size_t width, height;
+	std::vector<unsigned char> imageRGBA = ImageIO::loadFromMemoryRGBA32((const unsigned char*)(data), length, width, height);
+
+	if(imageRGBA.size() == 0)
+	{
+		LOG(LogError) << "Could not initialize texture from memory (invalid data)!";
+		return;
+	}
+
+	//now for the openGL texture stuff
+	glGenTextures(1, &mTextureID);
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageRGBA.data());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	mTextureSize << width, height;
+}
+
 void TextureResource::deinit()
 {
 	if(mTextureID != 0)

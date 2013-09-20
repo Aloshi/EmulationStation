@@ -27,6 +27,9 @@ class HttpReq
 {
 public:
 	HttpReq(const std::string& server, const std::string& path);
+	HttpReq(const std::string& url);
+
+	~HttpReq();
 
 	enum Status
 	{
@@ -47,6 +50,7 @@ public:
 private:
 	static boost::asio::io_service io_service;
 
+	void start(const std::string& server, const std::string& path);
 	void handleResolve(const boost::system::error_code& err, tcp::resolver::iterator endpoint_iterator);
 	void handleConnect(const boost::system::error_code& err);
 	void handleWriteRequest(const boost::system::error_code& err);

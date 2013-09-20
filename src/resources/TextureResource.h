@@ -21,6 +21,7 @@ public:
 	void bind() const;
 	
 	void initFromScreen();
+	void initFromMemory(const char* image, size_t length);
 
 private:
 	TextureResource(const ResourceManager& rm, const std::string& path);

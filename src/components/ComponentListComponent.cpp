@@ -104,6 +104,9 @@ void ComponentListComponent::removeEntriesIn(Eigen::Vector2i pos, Eigen::Vector2
 		if((*iter)->pos.x() >= pos.x() && (*iter)->pos.x() < pos.x() + size.x()
 			&& (*iter)->pos.y() >= pos.y() && (*iter)->pos.y() < pos.y() + size.y())
 		{
+			if((*iter)->component->getParent() == this)
+				(*iter)->component->setParent(NULL);
+
 			delete *iter;
 			iter = mEntries.erase(iter);
 		}else{
@@ -305,14 +308,22 @@ bool ComponentListComponent::input(InputConfig* config, Input input)
 
 void ComponentListComponent::resetCursor()
 {
-	if(mEntries.size() == 0)
+	auto iter = mEntries.begin();
+	while(iter != mEntries.end())
+	{
+		if((*iter)->canFocus)
+			break;
+		iter++;
+	}
+
+	if(iter == mEntries.end())
 	{
 		mCursor = Eigen::Vector2i(-1, -1);
 		return;
 	}
 
 	const Eigen::Vector2i origCursor = mCursor;
-	mCursor << mEntries.at(0)->pos[0], mEntries.at(0)->pos[1];
+	mCursor << (*iter)->pos[0], (*iter)->pos[1];
 	onCursorMoved(origCursor, mCursor);
 }
 

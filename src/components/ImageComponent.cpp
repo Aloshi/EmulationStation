@@ -81,6 +81,16 @@ void ImageComponent::setImage(std::string path)
 	resize();
 }
 
+void ImageComponent::setImage(const char* path, size_t length)
+{
+	mTexture.reset();
+
+	mTexture = TextureResource::get(*mWindow->getResourceManager(), "");
+	mTexture->initFromMemory(path, length);
+
+	resize();
+}
+
 void ImageComponent::setOrigin(float originX, float originY)
 {
 	mOrigin << originX, originY;

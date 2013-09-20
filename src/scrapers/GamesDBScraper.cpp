@@ -54,6 +54,18 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 		mdl.push_back(MetaDataList(params.system->getGameMDD()));
 		mdl.back().set("name", game.child("GameTitle").text().get());
 		mdl.back().set("desc", game.child("Overview").text().get());
+		pugi::xml_node images = game.child("Images");
+
+		if(images)
+		{
+			pugi::xml_node art = images.find_child_by_attribute("boxart", "side", "front");
+
+			if(art)
+			{
+				mdl.back().set("thumbnail", baseImageUrl + art.attribute("thumb").as_string());
+				mdl.back().set("image", baseImageUrl + art.text().get());
+			}
+		}
 
 		resultNum++;
 		game = game.next_sibling("Game");
@@ -75,4 +87,3 @@ void GamesDBScraper::getResultsAsync(ScraperSearchParams params, Window* window,
 
 	window->pushGui(req);
 }
-
