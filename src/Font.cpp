@@ -415,7 +415,7 @@ std::string Font::wrapText(std::string text, float xLen) const
 		}
 	}
 
-	if(!out.empty()) //chop off the last newline
+	if(!out.empty() && newline == std::string::npos) //chop off the last newline if we added one
 		out.erase(out.length() - 1, 1);
 
 	return out;
