@@ -28,6 +28,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mList(window, 0.0f, 0.0f, Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)), 
 	mScreenshot(window),
 	mDescription(window), 
+	mRating(window), 
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
 	mHeaderText(mWindow), 
@@ -50,7 +51,8 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	}
 
 	mImageAnimation.addChild(&mScreenshot);
-	mDescContainer.addChild(&mDescription);
+	mDescContainer.addChild(&mRating);
+	//mDescContainer.addChild(&mDescription);
 
 	//scale delay with screen width (higher width = more text per line)
 	//the scroll speed is automatically scaled by component size
