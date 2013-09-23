@@ -14,7 +14,7 @@
 class GuiGameScraper : public GuiComponent
 {
 public:
-	GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(MetaDataList)> doneFunc, std::function<void()> skipFunc = NULL);
+	GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(MetaDataList)> doneFunc, std::function<void()> skipFunc = nullptr);
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
