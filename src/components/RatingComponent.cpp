@@ -4,8 +4,8 @@
 
 RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 {
-	mFilledTexture = TextureResource::get(*window->getResourceManager(), ":/button.png");
-	mUnfilledTexture = TextureResource::get(*window->getResourceManager(), ":/button.png");
+	mFilledTexture = TextureResource::get(*window->getResourceManager(), ":/star_filled.png");
+	mUnfilledTexture = TextureResource::get(*window->getResourceManager(), ":/star_unfilled.png");
 	mValue = 0.5f;
 	mSize << 64 * 5.0f, 64;
 	updateVertices();
@@ -14,12 +14,16 @@ RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 void RatingComponent::setValue(const std::string& value)
 {
 	mValue = stof(value);
+	if(mValue > 1.0f)
+		mValue = 1.0f;
+	else if(mValue < 0.0f)
+		mValue = 0.0f;
 	updateVertices();
 }
 
 std::string RatingComponent::getValue() const
 {
-	return std::to_string(mValue);
+	return std::to_string((long double)mValue);
 }
 
 void RatingComponent::onSizeChanged()
@@ -31,30 +35,30 @@ void RatingComponent::updateVertices()
 {
 	const float numStars = 5.0f;
 
-	float h = getSize().y();
-	float w = h * mValue * numStars;
-	float fw = h * numStars;
+	const float h = getSize().y();
+	const float w = h * mValue * numStars;
+	const float fw = h * numStars;
 
-	mVertices[0].pos << 0, 0;
-		mVertices[0].tex << 0, 0;
+	mVertices[0].pos << 0.0f, 0.0f;
+		mVertices[0].tex << 0.0f, 1.0f;
 	mVertices[1].pos << w, h;
-		mVertices[1].tex << mValue * numStars, 1.0f;
-	mVertices[2].pos << 0, h;
-		mVertices[2].tex << 0, 1.0f;
+		mVertices[1].tex << mValue * numStars, 0.0f;
+	mVertices[2].pos << 0.0f, h;
+		mVertices[2].tex << 0.0f, 0.0f;
 
 	mVertices[3] = mVertices[0];
-	mVertices[4].pos << w, 0;
-		mVertices[5].tex << mValue * numStars, 0;
+	mVertices[4].pos << w, 0.0f;
+		mVertices[4].tex << mValue * numStars, 1.0f;
 	mVertices[5] = mVertices[1];
 
 	mVertices[6] = mVertices[4];
 	mVertices[7].pos << fw, h;
-		mVertices[7].tex << numStars, 1.0f;
+		mVertices[7].tex << numStars, 0.0f;
 	mVertices[8] = mVertices[1];
 
 	mVertices[9] = mVertices[6];
-	mVertices[10].pos << fw, 0;
-		mVertices[10].tex << numStars, 0;
+	mVertices[10].pos << fw, 0.0f;
+		mVertices[10].tex << numStars, 1.0f;
 	mVertices[11] = mVertices[7];
 }
 
@@ -69,12 +73,10 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	//glEnableClientState(GL_COLOR_ARRAY);
-
+	
 	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
-	//glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
-
+	
 	mFilledTexture->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -83,8 +85,7 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	//glDisableClientState(GL_COLOR_ARRAY);
-
+	
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
 

@@ -46,7 +46,6 @@ public:
 	void sort(ComparisonFunction & comparisonFunction = compareFileName, bool ascending = true);
 	static bool compareFileName(const FileData* file1, const FileData* file2);
 	static bool compareRating(const FileData* file1, const FileData* file2);
-	static bool compareUserRating(const FileData* file1, const FileData* file2);
 	static bool compareTimesPlayed(const FileData* file1, const FileData* file2);
 	static bool compareLastPlayed(const FileData* file1, const FileData* file2);
 	static std::string getSortStateName(ComparisonFunction & comparisonFunction = compareFileName, bool ascending = true);

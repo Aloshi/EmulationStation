@@ -48,7 +48,7 @@ public:
 private:
 	void updateList();
 	void updateTheme();
-	void clearDetailData();
+	void hideDetailData();
 	void doTransition(int dir);
 
 	std::string getThemeFile();

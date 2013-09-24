@@ -20,7 +20,6 @@ FolderData::FolderData(SystemData* system, std::string path, std::string name)
 	if (sortStateNameMap.empty()) {
 		sortStateNameMap[compareFileName] = "file name";
 		sortStateNameMap[compareRating] = "rating";
-		sortStateNameMap[compareUserRating] = "user rating";
 		sortStateNameMap[compareTimesPlayed] = "times played";
 		sortStateNameMap[compareLastPlayed] = "last time played";
 	}
@@ -83,17 +82,6 @@ bool FolderData::compareRating(const FileData* file1, const FileData* file2)
 	const GameData * game2 = dynamic_cast<const GameData*>(file2);
 	if (game1 != nullptr && game2 != nullptr) {
 		return const_cast<GameData*>(game1)->metadata()->getFloat("rating") < const_cast<GameData*>(game2)->metadata()->getFloat("rating");
-	}
-	return false;
-}
-
-bool FolderData::compareUserRating(const FileData* file1, const FileData* file2)
-{
-	//we need game data. try to cast
-	const GameData * game1 = dynamic_cast<const GameData*>(file1);
-	const GameData * game2 = dynamic_cast<const GameData*>(file2);
-	if (game1 != nullptr && game2 != nullptr) {
-		return const_cast<GameData*>(game1)->metadata()->getFloat("userrating") < const_cast<GameData*>(game2)->metadata()->getFloat("userrating");
 	}
 	return false;
 }

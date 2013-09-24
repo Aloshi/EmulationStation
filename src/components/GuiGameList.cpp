@@ -40,10 +40,8 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	if (sortStates.empty()) {
 		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, true, "file name, ascending"));
 		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, false, "file name, descending"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareRating, true, "database rating, ascending"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareRating, false, "database rating, descending"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, true, "your rating, ascending"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareUserRating, false, "your rating, descending"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareRating, true, "rating, ascending"));
+		sortStates.push_back(FolderData::SortState(FolderData::compareRating, false, "rating, descending"));
         sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, true, "played least often"));
         sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, false, "played most often"));
 		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, true, "played least recently"));
@@ -52,7 +50,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
 	mImageAnimation.addChild(&mScreenshot);
 	mDescContainer.addChild(&mRating);
-	//mDescContainer.addChild(&mDescription);
+	mDescContainer.addChild(&mDescription);
 
 	//scale delay with screen width (higher width = more text per line)
 	//the scroll speed is automatically scaled by component size
@@ -232,7 +230,7 @@ bool GuiGameList::input(InputConfig* config, Input input)
 			if(input.value == 0)
 				updateDetailData();
 			else
-				clearDetailData();
+				hideDetailData();
 		}
 		return true;
 	}
@@ -364,49 +362,50 @@ void GuiGameList::updateTheme()
 
 void GuiGameList::updateDetailData()
 {
-	if(!isDetailed())
+	if(!isDetailed() || !mList.getSelectedObject() || mList.getSelectedObject()->isFolder())
 	{
-		mScreenshot.setImage("");
-		mDescription.setText("");
+		hideDetailData();
 	}else{
-		//if we've selected a game
-		if(mList.getSelectedObject() && !mList.getSelectedObject()->isFolder())
-		{
-			GameData* game = (GameData*)mList.getSelectedObject();
-			//set image to either "not found" image or metadata image
-			if(game->metadata()->get("image").empty())
-				mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
-			else
-				mScreenshot.setImage(game->metadata()->get("image"));
+		if(mDescContainer.getParent() != this)
+			addChild(&mDescContainer);
 
-			Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
-			mScreenshot.setPosition(getImagePos() - imgOffset);
+		GameData* game = (GameData*)mList.getSelectedObject();
+		//set image to either "not found" image or metadata image
+		if(game->metadata()->get("image").empty())
+			mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
+		else
+			mScreenshot.setImage(game->metadata()->get("image"));
 
-			mImageAnimation.fadeIn(35);
-			mImageAnimation.move(imgOffset.x(), imgOffset.y(), 20);
+		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
+		mScreenshot.setPosition(getImagePos() - imgOffset);
 
-			mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, getImagePos().y() + mScreenshot.getSize().y() + 12, 0));
-			mDescContainer.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), Renderer::getScreenHeight() - mDescContainer.getPosition().y()));
-			mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
-			mDescContainer.resetAutoScrollTimer();
+		mImageAnimation.fadeIn(35);
+		mImageAnimation.move(imgOffset.x(), imgOffset.y(), 20);
 
-			mDescription.setPosition(0, 0);
-			mDescription.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), 0));
-			mDescription.setText(game->metadata()->get("desc"));
-		}else{
-			mScreenshot.setImage("");
-			mDescription.setText("");
-		}
+		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, getImagePos().y() + mScreenshot.getSize().y() + 12, 0));
+		mDescContainer.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), Renderer::getScreenHeight() - mDescContainer.getPosition().y()));
+		mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
+		mDescContainer.resetAutoScrollTimer();
+
+		const float colwidth = mDescContainer.getSize().x();
+		float ratingHeight = colwidth * 0.3f / 5.0f;
+		mRating.setSize(ratingHeight * 5.0f, ratingHeight);
+
+		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
+		mRating.setValue(game->metadata()->get("rating"));
+
+		mDescription.setPosition(0, mRating.getSize().y());
+		mDescription.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), 0));
+		mDescription.setText(game->metadata()->get("desc"));
 	}
 }
 
-void GuiGameList::clearDetailData()
+void GuiGameList::hideDetailData()
 {
-	if(isDetailed())
-	{
-		mImageAnimation.fadeOut(35);
-		mDescription.setText("");
-	}
+	if(mDescContainer.getParent() == this)
+		removeChild(&mDescContainer);
+
+	mImageAnimation.fadeOut(35);
 }
 
 GuiGameList* GuiGameList::create(Window* window)

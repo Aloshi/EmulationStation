@@ -241,6 +241,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/frame_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_glow_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_filled_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_unfilled_png.cpp
 )
 
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)

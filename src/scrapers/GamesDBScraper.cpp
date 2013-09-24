@@ -54,6 +54,7 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 		mdl.push_back(MetaDataList(params.system->getGameMDD()));
 		mdl.back().set("name", game.child("GameTitle").text().get());
 		mdl.back().set("desc", game.child("Overview").text().get());
+		mdl.back().set("releasedate", game.child("ReleaseDate").text().get());
 		pugi::xml_node images = game.child("Images");
 
 		if(images)
