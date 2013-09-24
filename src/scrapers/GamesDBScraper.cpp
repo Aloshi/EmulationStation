@@ -20,7 +20,7 @@ std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 	if(cleanName.empty())
 		cleanName = params.game->getCleanName();
 	
-	path += "name=" + cleanName;
+	path += "name=" + HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method
 
 	return std::make_shared<HttpReq>("thegamesdb.net", path);
