@@ -11,6 +11,7 @@ public:
 	std::string getValue() const override;
 	void setValue(const std::string& value) override;
 
+	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans);
 
 	void onSizeChanged() override;

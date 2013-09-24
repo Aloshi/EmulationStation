@@ -92,3 +92,16 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 	renderChildren(trans);
 }
 
+bool RatingComponent::input(InputConfig* config, Input input)
+{
+	if(config->isMappedTo("a", input) && input.value != 0)
+	{
+		mValue += 0.2f;
+		if(mValue > 1.0f)
+			mValue = 0.0f;
+
+		updateVertices();
+	}
+
+	return GuiComponent::input(config, input);
+}

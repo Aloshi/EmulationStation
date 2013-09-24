@@ -1,7 +1,9 @@
 #include "MetaData.h"
 #include "components/TextComponent.h"
 #include "Log.h"
+
 #include "components/TextEditComponent.h"
+#include "components/RatingComponent.h"
 
 MetaDataList::MetaDataList()
 {
@@ -98,6 +100,11 @@ GuiComponent* MetaDataList::makeDisplay(Window* window, MetaDataType as)
 {
 	switch(as)
 	{
+	case MD_RATING:
+		{
+			RatingComponent* comp = new RatingComponent(window);
+			return comp;
+		}
 	default:
 		TextComponent* comp = new TextComponent(window);
 		return comp;
@@ -108,6 +115,11 @@ GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataType as)
 {
 	switch(as)
 	{
+	case MD_RATING:
+		{
+			RatingComponent* comp = new RatingComponent(window);
+			return comp;
+		}
 	case MD_MULTILINE_STRING:
 		{
 			TextEditComponent* comp = new TextEditComponent(window);
