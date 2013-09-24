@@ -4,14 +4,6 @@
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
 
-std::vector<MetaDataList> TheArchiveScraper::getResults(ScraperSearchParams params)
-{
-	std::shared_ptr<HttpReq> req = makeHttpReq(params);
-	while(req->status() == HttpReq::REQ_IN_PROGRESS);
-
-	return parseReq(params, req);
-}
-
 std::shared_ptr<HttpReq> TheArchiveScraper::makeHttpReq(ScraperSearchParams params)
 {
 	std::string path = "/2.0/Archive.search/xml/7TTRM4MNTIKR2NNAGASURHJOZJ3QXQC5/";
@@ -67,18 +59,4 @@ std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params
 	}
 
 	return mdl;
-}
-
-void TheArchiveScraper::getResultsAsync(ScraperSearchParams params, Window* window, std::function<void(std::vector<MetaDataList>)> returnFunc)
-{
-	std::shared_ptr<HttpReq> httpreq = makeHttpReq(params);
-	AsyncReqComponent* req = new AsyncReqComponent(window, httpreq,
-		[this, params, returnFunc] (std::shared_ptr<HttpReq> r)
-	{
-		returnFunc(parseReq(params, r));
-	}, [] ()
-	{
-	});
-
-	window->pushGui(req);
 }

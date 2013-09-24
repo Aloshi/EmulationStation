@@ -92,7 +92,7 @@ void Settings::loadFile()
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
 }
 
-IScraper* Settings::getScraper()
+Scraper* Settings::getScraper()
 {
 	return mScraper;
 }

@@ -4,14 +4,6 @@
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
 
-std::vector<MetaDataList> GamesDBScraper::getResults(ScraperSearchParams params)
-{
-	std::shared_ptr<HttpReq> req = makeHttpReq(params);
-	while(req->status() == HttpReq::REQ_IN_PROGRESS);
-
-	return parseReq(params, req);
-}
-
 std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 {
 	std::string path = "/api/GetGame.php?";
@@ -74,18 +66,4 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 	}
 
 	return mdl;
-}
-
-void GamesDBScraper::getResultsAsync(ScraperSearchParams params, Window* window, std::function<void(std::vector<MetaDataList>)> returnFunc)
-{
-	std::shared_ptr<HttpReq> httpreq = makeHttpReq(params);
-	AsyncReqComponent* req = new AsyncReqComponent(window, httpreq,
-		[this, params, returnFunc] (std::shared_ptr<HttpReq> r)
-	{
-		returnFunc(parseReq(params, r));
-	}, [] ()
-	{
-	});
-
-	window->pushGui(req);
 }

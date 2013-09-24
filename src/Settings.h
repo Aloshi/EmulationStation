@@ -23,7 +23,7 @@ public:
 	void setInt(const std::string& name, int value);
 	void setFloat(const std::string& name, float value);
 
-	IScraper* getScraper();
+	Scraper* getScraper();
 private:
 	static Settings* sInstance;
 
@@ -35,7 +35,7 @@ private:
 	std::map<std::string, bool> mBoolMap;
 	std::map<std::string, int> mIntMap;
 	std::map<std::string, float> mFloatMap;
-	IScraper* mScraper;
+	Scraper* mScraper;
 };
 
 #endif
