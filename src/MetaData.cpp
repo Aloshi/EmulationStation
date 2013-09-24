@@ -21,6 +21,7 @@ std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 		{"image",		MD_IMAGE_PATH,			""},
 		{"thumbnail",	MD_IMAGE_PATH,			""},
 		{"rating",		MD_RATING,				"0"},
+		{"releasedate", MD_TIME,				"0"},
 		{"playcount",	MD_INT,					"0"},
 		{"lastplayed",	MD_TIME,				"0"}
 	};
