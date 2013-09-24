@@ -1,4 +1,5 @@
 #include "GamesDBScraper.h"
+#include "../components/GuiGameScraper.h"
 #include "../components/AsyncReqComponent.h"
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
@@ -17,9 +18,9 @@ std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = params.game->getBaseName();
+		cleanName = params.game->getCleanName();
 	
-	path += "name=" + cleanName;
+	path += "name=" + HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method
 
 	return std::make_shared<HttpReq>("thegamesdb.net", path);
@@ -49,7 +50,7 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 	
 	unsigned int resultNum = 0;
 	pugi::xml_node game = data.child("Game");
-	while(game && resultNum < 5)
+	while(game && resultNum < MAX_SCRAPER_RESULTS)
 	{
 		mdl.push_back(MetaDataList(params.system->getGameMDD()));
 		mdl.back().set("name", game.child("GameTitle").text().get());

@@ -11,6 +11,8 @@
 #include "../HttpReq.h"
 #include "ImageComponent.h"
 
+#define MAX_SCRAPER_RESULTS 5
+
 class GuiGameScraper : public GuiComponent
 {
 public:
