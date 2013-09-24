@@ -35,7 +35,7 @@ endif()
 find_package(FreeType REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system filesystem)
+find_package(Boost REQUIRED COMPONENTS system filesystem regex)
 find_package(Eigen3 REQUIRED)
 
 #add ALSA for Linux

@@ -6,6 +6,7 @@
 #include "FolderData.h"
 #include "Window.h"
 #include "MetaData.h"
+#include "PlatformId.h"
 
 class GameData;
 
@@ -38,6 +39,7 @@ private:
 	std::string mStartPath;
 	std::string mSearchExtension;
 	std::string mLaunchCommand;
+	PlatformIds::PlatformId mPlatformId;
 
 	void populateFolder(FolderData* folder);
 
@@ -45,3 +47,4 @@ private:
 };
 
 #endif
+
