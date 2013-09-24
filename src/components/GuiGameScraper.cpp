@@ -4,10 +4,8 @@
 #include "../scrapers/Scraper.h"
 #include "../Settings.h"
 
-#define RESULT_COUNT 5
-
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(MetaDataList)> doneFunc, std::function<void()> skipFunc) : GuiComponent(window), 
-	mList(window, Eigen::Vector2i(2, 7 + RESULT_COUNT)), 
+	mList(window, Eigen::Vector2i(2, 7 + MAX_SCRAPER_RESULTS)), 
 	mBox(window, ":/frame.png"),
 	mHeader(window, params.game->getBaseName(), Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)),
 	mResultName(window, "", Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)),
@@ -78,8 +76,8 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	//y = 5 is a spacer row
 
 	std::shared_ptr<Font> font = Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL);
-	mResultNames.reserve(RESULT_COUNT);
-	for(int i = 0; i < RESULT_COUNT; i ++)
+	mResultNames.reserve(MAX_SCRAPER_RESULTS);
+	for(int i = 0; i < MAX_SCRAPER_RESULTS; i ++)
 	{
 		mResultNames.push_back(TextComponent(mWindow, "RESULT...", font));
 		mResultNames.at(i).setColor(0x111111FF);
