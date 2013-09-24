@@ -18,7 +18,7 @@ std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = params.game->getBaseName();
+		cleanName = params.game->getCleanName();
 	
 	path += "name=" + cleanName;
 	//platform TODO, should use some params.system get method

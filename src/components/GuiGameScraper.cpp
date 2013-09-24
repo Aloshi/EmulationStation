@@ -69,7 +69,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	//y = 3 is a spacer row
 
 	mList.setEntry(Vector2i(0, 4), Vector2i(1, 1), &mSearchLabel, false, ComponentListComponent::AlignLeft);
-	mSearchText.setValue(!params.nameOverride.empty() ? params.nameOverride : params.game->getBaseName());
+	mSearchText.setValue(!params.nameOverride.empty() ? params.nameOverride : params.game->getCleanName());
 	mSearchText.setSize(colWidth * 2 - mSearchLabel.getSize().x() - 20, mSearchText.getSize().y());
 	mList.setEntry(Vector2i(1, 4), Vector2i(1, 1), &mSearchText, true, ComponentListComponent::AlignRight);
 

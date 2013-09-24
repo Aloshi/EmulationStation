@@ -21,6 +21,7 @@ public:
 
 	std::string getBashPath() const;
 	std::string getBaseName() const;
+	std::string getCleanName() const;
 
 	bool isFolder() const override;
 
