@@ -5,6 +5,28 @@
 
 boost::asio::io_service HttpReq::io_service;
 
+std::string HttpReq::urlEncode(const std::string &s)
+{
+    const std::string unreserved = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~";
+
+    std::string escaped="";
+    for(size_t i=0; i<s.length(); i++)
+    {
+        if (unreserved.find_first_of(s[i]) != std::string::npos)
+        {
+            escaped.push_back(s[i]);
+        }
+        else
+        {
+            escaped.append("%");
+            char buf[3];
+            sprintf(buf, "%.2X", s[i]);
+            escaped.append(buf);
+        }
+    }
+    return escaped;
+}
+
 HttpReq::HttpReq(const std::string& server, const std::string& path)
 	: mResolver(io_service), mSocket(io_service), mStatus(REQ_IN_PROGRESS)
 {

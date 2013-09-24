@@ -4,6 +4,7 @@
 #include "platform.h"
 #include <boost/filesystem.hpp>
 #include "scrapers/GamesDBScraper.h"
+#include "scrapers/TheArchiveScraper.h"
 
 Settings* Settings::sInstance = NULL;
 

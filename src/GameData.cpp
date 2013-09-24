@@ -1,5 +1,6 @@
 #include "GameData.h"
 #include <boost/filesystem.hpp>
+#include <boost/regex/v4/regex.hpp>
 #include <iostream>
 #include <ctime>
 #include <sstream>
@@ -55,6 +56,11 @@ std::string GameData::getBashPath() const
 std::string GameData::getBaseName() const
 {
 	return mBaseName;
+}
+
+std::string GameData::getCleanName() const
+{
+	return regex_replace(mBaseName, boost::regex("\\((.*)\\)|\\[(.*)\\]"), "");
 }
 
 void GameData::incTimesPlayed()
