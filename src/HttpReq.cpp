@@ -57,7 +57,8 @@ HttpReq::~HttpReq()
 {
 	mResolver.cancel();
 	mSocket.close();
-	while(status() == REQ_IN_PROGRESS); //otherwise you get really weird heap-allocation-related crashes
+	status(); //poll once
+	//while(status() == REQ_IN_PROGRESS); //otherwise you get really weird heap-allocation-related crashes
 }
 
 void HttpReq::start(const std::string& server, const std::string& path)
