@@ -20,7 +20,8 @@ namespace fs = boost::filesystem;
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
 
-SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, const std::string& command)
+SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, 
+	const std::string& command, PlatformIds::PlatformId platformId)
 {
 	mName = name;
 	mFullName = fullName;
@@ -35,6 +36,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 
 	mSearchExtension = extension;
 	mLaunchCommand = command;
+	mPlatformId = platformId;
 
 	mRootFolder = new FolderData(this, mStartPath, "Search Root");
 
@@ -217,11 +219,14 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
 		std::string name, fullname, path, ext, cmd;
+		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
+
 		name = system.child("name").text().get();
 		fullname = system.child("fullname").text().get();
 		path = system.child("path").text().get();
 		ext = system.child("extension").text().get();
 		cmd = system.child("command").text().get();
+		platformId = (PlatformIds::PlatformId)system.child("platformid").text().as_uint(PlatformIds::PLATFORM_UNKNOWN);
 
 		//validate
 		if(name.empty() || path.empty() || ext.empty() || cmd.empty())
@@ -234,7 +239,7 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, ext, cmd);
+		SystemData* newSys = new SystemData(name, fullname, path, ext, cmd, platformId);
 		if(newSys->getRootFolder()->getFileCount() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
@@ -338,4 +343,9 @@ bool SystemData::hasGamelist()
 std::vector<MetaDataDecl> SystemData::getGameMDD()
 {
 	return MetaDataList::getDefaultGameMDD();
+}
+
+PlatformIds::PlatformId SystemData::getPlatformId()
+{
+	return mPlatformId;
 }

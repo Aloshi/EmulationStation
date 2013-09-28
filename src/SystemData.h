@@ -13,7 +13,8 @@ class GameData;
 class SystemData
 {
 public:
-	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, const std::string& command);
+	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, 
+		const std::string& command, PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN);
 	~SystemData();
 
 	FolderData* getRootFolder();
@@ -22,6 +23,7 @@ public:
 	std::string getStartPath();
 	std::string getExtension();
 	std::string getGamelistPath();
+	PlatformIds::PlatformId getPlatformId();
 	bool hasGamelist();
 	std::vector<MetaDataDecl> getGameMDD();
 
