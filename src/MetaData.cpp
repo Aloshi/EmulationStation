@@ -4,6 +4,7 @@
 
 #include "components/TextEditComponent.h"
 #include "components/RatingComponent.h"
+#include "components/DateTimeComponent.h"
 
 MetaDataList::MetaDataList()
 {
@@ -23,7 +24,7 @@ std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 		{"image",		MD_IMAGE_PATH,			"", 	false},
 		{"thumbnail",	MD_IMAGE_PATH,			"", 	false},
 		{"rating",		MD_RATING,				"0", 	false},
-		{"releasedate", MD_TIME,				"0", 	false},
+		{"releasedate", MD_DATE,				"0", 	false},
 		{"playcount",	MD_INT,					"0", 	true},
 		{"lastplayed",	MD_TIME,				"0", 	true}
 	};
@@ -129,6 +130,17 @@ GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataType as)
 		{
 			TextEditComponent* comp = new TextEditComponent(window);
 			comp->setSize(comp->getSize().x(), comp->getSize().y() * 3);
+			return comp;
+		}
+	case MD_DATE:
+		{
+			DateTimeComponent* comp = new DateTimeComponent(window);
+			return comp;
+		}
+	case MD_TIME:
+		{
+			DateTimeComponent* comp = new DateTimeComponent(window);
+			comp->setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 			return comp;
 		}
 	default:

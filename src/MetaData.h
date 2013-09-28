@@ -17,7 +17,8 @@ enum MetaDataType
 	MD_MULTILINE_STRING,
 	MD_IMAGE_PATH,
 	MD_RATING,
-	MD_TIME
+	MD_DATE,
+	MD_TIME //used for lastplayed
 };
 
 struct MetaDataDecl
@@ -28,7 +29,7 @@ struct MetaDataDecl
 	bool isStatistic; //if true, ignore scraper values for this metadata
 };
 
-boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt);
+boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");
 
 class MetaDataList
 {
@@ -41,7 +42,7 @@ public:
 	MetaDataList(const std::vector<MetaDataDecl>& mdd);
 
 	void set(const std::string& key, const std::string& value);
-	void setTime(const std::string& key, const boost::posix_time::ptime& time);
+	void setTime(const std::string& key, const boost::posix_time::ptime& time); //times are internally stored as ISO strings (e.g. boost::posix_time::to_iso_string(ptime))
 
 	const std::string& get(const std::string& key) const;
 	int getInt(const std::string& key) const;
