@@ -147,7 +147,7 @@ void SystemData::populateFolder(FolderData* folder)
 			//if it matches, add it
 			if(chkExt == extension)
 			{
-				GameData* newGame = new GameData(this, filePath.generic_string());
+				GameData* newGame = new GameData(filePath.generic_string(), MetaDataList(getGameMDD()));
 				folder->pushFileData(newGame);
 				isGame = true;
 				break;

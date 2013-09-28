@@ -90,7 +90,7 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 		loops++;
 	}
 
-	GameData* game = new GameData(system, gameAbsPath);
+	GameData* game = new GameData(gameAbsPath, MetaDataList(system->getGameMDD()));
 	folder->pushFileData(game);
 	return game;
 }
