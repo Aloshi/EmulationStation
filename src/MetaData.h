@@ -25,6 +25,7 @@ struct MetaDataDecl
 	std::string key;
 	MetaDataType type;
 	std::string defaultValue;
+	bool isStatistic;
 };
 
 class MetaDataList

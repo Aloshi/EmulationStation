@@ -5,7 +5,8 @@ namespace PlatformIds
 	enum PlatformId : unsigned int
 	{
 		PLATFORM_UNKNOWN = 0,
-		THREEDO = 1, //can't start with a constant
+
+		THREEDO = 1, //name can't start with a constant
 		AMIGA = 2,
 		ARCADE = 3,
 		ATARI_2600 = 4,
@@ -48,6 +49,7 @@ namespace PlatformIds
 		PLAYSTATION_PORTABLE = 41,
 		SUPER_NINTENDO = 42,
 		TURBOGRAFX_16 = 43,
+
 		PLATFORM_COUNT = 44
 	};
 }

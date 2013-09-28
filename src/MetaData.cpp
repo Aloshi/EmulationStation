@@ -18,14 +18,14 @@ MetaDataList::MetaDataList(const std::vector<MetaDataDecl>& mdd)
 std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 {
 	MetaDataDecl decls[] = { 
-		{"name",		MD_STRING,				""}, 
-		{"desc",		MD_MULTILINE_STRING,	""},
-		{"image",		MD_IMAGE_PATH,			""},
-		{"thumbnail",	MD_IMAGE_PATH,			""},
-		{"rating",		MD_RATING,				"0"},
-		{"releasedate", MD_TIME,				"0"},
-		{"playcount",	MD_INT,					"0"},
-		{"lastplayed",	MD_TIME,				"0"}
+		{"name",		MD_STRING,				"", 	false}, 
+		{"desc",		MD_MULTILINE_STRING,	"", 	false},
+		{"image",		MD_IMAGE_PATH,			"", 	false},
+		{"thumbnail",	MD_IMAGE_PATH,			"", 	false},
+		{"rating",		MD_RATING,				"0", 	false},
+		{"releasedate", MD_TIME,				"0", 	false},
+		{"playcount",	MD_INT,					"0", 	true},
+		{"lastplayed",	MD_TIME,				"0", 	true}
 	};
 
 	std::vector<MetaDataDecl> mdd(decls, decls + sizeof(decls) / sizeof(decls[0]));

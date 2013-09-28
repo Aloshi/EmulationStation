@@ -127,6 +127,10 @@ void GuiMetaDataEd::fetchDone(MetaDataList result)
 {
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
+		//don't overwrite statistics
+		if(mMetaDataDecl.at(i).isStatistic)
+			continue;
+
 		const std::string key = mMetaDataDecl.at(i).key;
 		mEditors.at(i)->setValue(result.get(key));
 	}
