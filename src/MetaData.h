@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include "GuiComponent.h"
-#include <ctime>
+#include <boost/date_time.hpp>
 
 enum MetaDataType
 {
@@ -25,8 +25,10 @@ struct MetaDataDecl
 	std::string key;
 	MetaDataType type;
 	std::string defaultValue;
-	bool isStatistic;
+	bool isStatistic; //if true, ignore scraper values for this metadata
 };
+
+boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt);
 
 class MetaDataList
 {
@@ -39,10 +41,12 @@ public:
 	MetaDataList(const std::vector<MetaDataDecl>& mdd);
 
 	void set(const std::string& key, const std::string& value);
+	void setTime(const std::string& key, const boost::posix_time::ptime& time);
+
 	const std::string& get(const std::string& key) const;
 	int getInt(const std::string& key) const;
 	float getFloat(const std::string& key) const;
-	std::time_t getTime(const std::string& key) const;
+	boost::posix_time::ptime getTime(const std::string& key) const;
 
 	static GuiComponent* makeDisplay(Window* window, MetaDataType as);
 	static GuiComponent* makeEditor(Window* window, MetaDataType as);

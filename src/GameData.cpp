@@ -74,9 +74,8 @@ void GameData::incTimesPlayed()
 
 void GameData::lastPlayedNow()
 {
-	std::stringstream ss;
-	ss << std::time(nullptr);
-	metadata()->set("lastplayed", ss.str());
+	boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
+	metadata()->setTime("lastplayed", time);
 }
 
 MetaDataList* GameData::metadata()

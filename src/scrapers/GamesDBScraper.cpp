@@ -3,6 +3,7 @@
 #include "../components/AsyncReqComponent.h"
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
+#include "../MetaData.h"
 
 std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 {
@@ -47,7 +48,10 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 		mdl.push_back(MetaDataList(params.system->getGameMDD()));
 		mdl.back().set("name", game.child("GameTitle").text().get());
 		mdl.back().set("desc", game.child("Overview").text().get());
-		mdl.back().set("releasedate", game.child("ReleaseDate").text().get());
+
+		boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
+		mdl.back().setTime("releasedate", rd);
+
 		pugi::xml_node images = game.child("Images");
 
 		if(images)

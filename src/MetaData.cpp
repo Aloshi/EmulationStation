@@ -76,6 +76,11 @@ void MetaDataList::set(const std::string& key, const std::string& value)
 	mMap[key] = value;
 }
 
+void MetaDataList::setTime(const std::string& key, const boost::posix_time::ptime& time)
+{
+	mMap[key] = boost::posix_time::to_iso_string(time);
+}
+
 const std::string& MetaDataList::get(const std::string& key) const
 {
 	return mMap.at(key);
@@ -91,9 +96,9 @@ float MetaDataList::getFloat(const std::string& key) const
 	return (float)atof(get(key).c_str());
 }
 
-std::time_t MetaDataList::getTime(const std::string& key) const
+boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
 {
-	return (std::time_t) atoi(get(key).c_str());
+	return string_to_ptime(get(key), "%Y%m%dT%H%M%S%F%q");
 }
 
 GuiComponent* MetaDataList::makeDisplay(Window* window, MetaDataType as)
@@ -132,4 +137,15 @@ GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataType as)
 			return comp;
 		}
 	}
+}
+
+//util function
+boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt)
+{
+	std::istringstream ss(str);
+	ss.imbue(std::locale(std::locale::classic(), new boost::posix_time::time_input_facet(fmt))); //std::locale handles deleting the facet
+	boost::posix_time::ptime time;
+	ss >> time;
+
+	return time;
 }
