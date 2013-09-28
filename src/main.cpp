@@ -111,10 +111,6 @@ bool verifyHomeFolderExists()
 void onExit()
 {
 	Log::close();
-
-	#ifdef _RPI_
-		bcm_host_deinit();
-	#endif
 }
 
 int main(int argc, char* argv[])
@@ -128,10 +124,6 @@ int main(int argc, char* argv[])
 	//if ~/.emulationstation doesn't exist and cannot be created, bail
 	if(!verifyHomeFolderExists())
 		return 1;
-
-	#ifdef _RPI_
-		bcm_host_init();
-	#endif
 
 	//start the logger
 	Log::open();

@@ -82,7 +82,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
             message(SEND_ERROR "You need at least G++ 4.7 to compile EmulationStation!")
     endif()
     #set up compiler flags for GCC
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2") #support C++11 for std::, optimize
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") #support C++11 for std::, optimize
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")  #strip binary
 endif()
 
@@ -251,15 +251,15 @@ set(ES_SOURCES
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)
 
 #add open gl specific sources
-if(${GLSystem} MATCHES "Desktop OpenGL")
+#if(${GLSystem} MATCHES "Desktop OpenGL")
     LIST(APPEND ES_SOURCES
 		${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_sdlgl.cpp
     )
-else()
-    LIST(APPEND ES_SOURCES
-		${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_rpi.cpp
-    )
-endif()
+#else()
+#    LIST(APPEND ES_SOURCES
+#		${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_rpi.cpp
+#    )
+#endif()
 
 #-------------------------------------------------------------------------------
 #define OS specific sources and headers

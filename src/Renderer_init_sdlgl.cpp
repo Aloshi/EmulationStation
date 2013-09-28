@@ -10,6 +10,10 @@
 #include "EmulationStation.h"
 #include "Settings.h"
 
+#ifdef USE_OPENGL_ES
+	#define glOrtho glOrthof
+#endif
+
 namespace Renderer
 {
 	static bool initialCursorState;
@@ -41,7 +45,7 @@ namespace Renderer
 		//SDL_GL_SetSwapInterval(1); //0 for immediate updates, 1 for updates synchronized with the vertical retrace, -1 for late swap tearing
 
 		SDL_DisplayMode dispMode;
-		SDL_GetDisplayMode(0, 0, &dispMode);
+		SDL_GetDesktopDisplayMode(0, &dispMode);
 		if(display_width == 0)
 			display_width = dispMode.w;
 		if(display_height == 0)
