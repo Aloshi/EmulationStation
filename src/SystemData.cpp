@@ -349,3 +349,8 @@ PlatformIds::PlatformId SystemData::getPlatformId()
 {
 	return mPlatformId;
 }
+
+unsigned int SystemData::getGameCount()
+{
+	return mRootFolder->getFilesRecursive(true).size();
+}

@@ -150,6 +150,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/platform.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/PlatformId.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ScraperCmdLine.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.h
@@ -205,6 +206,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/platform.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_draw_gl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ScraperCmdLine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.cpp

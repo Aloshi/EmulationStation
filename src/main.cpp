@@ -15,6 +15,7 @@
 #include "Window.h"
 #include "EmulationStation.h"
 #include "Settings.h"
+#include "ScraperCmdLine.h"
 
 #ifdef _RPI_
 	#include <bcm_host.h>
@@ -23,6 +24,8 @@
 #include <sstream>
 
 namespace fs = boost::filesystem;
+
+bool scrape_cmdline = false;
 
 bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
 {
@@ -61,6 +64,9 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			}else if(strcmp(argv[i], "--windowed") == 0)
 			{
 				Settings::getInstance()->setBool("WINDOWED", true);
+			}else if(strcmp(argv[i], "--scrape") == 0)
+			{
+				scrape_cmdline = true;
 			}else if(strcmp(argv[i], "--help") == 0)
 			{
 				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
@@ -73,6 +79,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				std::cout << "--no-exit			don't show the exit option in the menu\n";
 				std::cout << "--debug				even more logging\n";
 				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
+				std::cout << "--scrape			scrape using command line interface\n";
 
 				#ifdef USE_OPENGL_DESKTOP
 					std::cout << "--windowed			not fullscreen\n";
@@ -132,16 +139,6 @@ int main(int argc, char* argv[])
 	//always close the log and deinit the BCM library on exit
 	atexit(&onExit);
 
-	Window window;
-	if(!window.init(width, height))
-	{
-		LOG(LogError) << "Window failed to initialize!";
-		return 1;
-	}
-
-	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
-	SDL_JoystickEventState(SDL_DISABLE);
-
 	//try loading the system config file
 	if(!SystemData::loadConfig(SystemData::getConfigPath(), true))
 	{
@@ -155,6 +152,22 @@ int main(int argc, char* argv[])
 		LOG(LogError) << "No systems found! Does at least one system have a game present? (check that extensions match!)\n(Also, make sure you've updated your es_systems.cfg for XML!)";
 		return 1;
 	}
+
+	//run the command line scraper ui then quit
+	if(scrape_cmdline)
+	{
+		return run_scraper_cmdline();
+	}
+
+	Window window;
+	if(!window.init(width, height))
+	{
+		LOG(LogError) << "Window failed to initialize!";
+		return 1;
+	}
+
+	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
+	SDL_JoystickEventState(SDL_DISABLE);
 
 	//choose which GUI to open depending on if an input configuration already exists
 	if(fs::exists(InputManager::getConfigPath()))

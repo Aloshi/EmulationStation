@@ -206,7 +206,13 @@ void HttpReq::handleReadContent(const boost::system::error_code& err)
 
 HttpReq::Status HttpReq::status()
 {
-	io_service.poll();
+	try {
+		io_service.poll();
+	} catch(boost::system::system_error& e)
+	{
+		LOG(LogError) << "Boost.ASIO system error!  " << e.what();
+	}
+
 	return mStatus;
 }
 
