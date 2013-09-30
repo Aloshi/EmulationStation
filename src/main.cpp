@@ -16,11 +16,6 @@
 #include "EmulationStation.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
-
-#ifdef _RPI_
-	#include <bcm_host.h>
-#endif
-
 #include <sstream>
 
 namespace fs = boost::filesystem;
@@ -80,11 +75,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				std::cout << "--debug				even more logging\n";
 				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
 				std::cout << "--scrape			scrape using command line interface\n";
-
-				#ifdef USE_OPENGL_DESKTOP
-					std::cout << "--windowed			not fullscreen\n";
-				#endif
-
+				std::cout << "--windowed			not fullscreen\n";
 				std::cout << "--help				summon a sentient, angry tuba\n\n";
 				std::cout << "More information available in README.md.\n";
 				return false; //exit after printing help

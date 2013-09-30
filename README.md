@@ -27,20 +27,20 @@ Building
 EmulationStation uses some C++11 code, which means you'll need to install at least g++-4.7 on Linux, or VS2010 on Windows. 
 For installing and switching to g++-4.7 see [here](http://lektiondestages.blogspot.de/2013/05/installing-and-switching-gccg-versions.html).  You can also just use `export CXX=g++-4.7` to explicitly specify the compiler for CMake (make sure you delete your CMake cache files if it's not working).
 
-EmulationStation has a few dependencies. For building, you'll need SDL2, Boost.System, Boost.Filesystem, Boost.Asio, FreeImage, FreeType, and Eigen3.  You'll also need the DejaVu TrueType font on Linux to run ES.
+EmulationStation has a few dependencies. For building, you'll need SDL2, Boost.System, Boost.Filesystem, Boost.Asio, Boost.Regex, Boost.DateTime, FreeImage, FreeType, and Eigen3.  You'll also need the DejaVu TrueType font on Linux to run ES.
 
 **On Linux:**
 All of this be easily installed with apt-get:
 ```
-sudo apt-get install libsdl2-dev libboost-dev libboost-system-dev libboost-filesystem-dev libfreeimage-dev libfreetype6-dev libeigen3-dev ttf-dejavu libasound2-dev
+sudo apt-get install libsdl2-dev libboost-dev libboost-system-dev libboost-filesystem-dev libboost-regex-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev ttf-dejavu libasound2-dev
 ```
 
-On "desktop" Linux (that is, *not* the Raspberry Pi), you'll also need OpenGL.  Try installing the MESA development package with:
+Unless you're on the Raspberry Pi, you'll also need OpenGL:
 ```
-sudo apt-get libgl1-mesa-dev
+sudo apt-get install libgl1-mesa-dev
 ```
 
-On the Raspberry Pi, there are also a few special libraries, located in /opt/vc/: the Broadcom libraries, libEGL, and GLES.  You shouldn't need to install them.
+On the Raspberry Pi, there are also a few special libraries, located in /opt/vc/: the Broadcom libraries, libEGL, and GLES.  You shouldn't need to install them; they are used by the Raspberry Pi port of SDL 2.
 
 **Generate and Build Makefile with CMake:**
 ```
@@ -52,7 +52,7 @@ make
 
 **On Windows:**
 
-[Boost](http://www.boost.org/users/download/) (you'll need to compile for Boost.Filesystem and Boost.System)
+[Boost](http://www.boost.org/users/download/) (you'll need to compile yourself or get the pre-compiled binaries)
 
 [Eigen3](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 
@@ -66,7 +66,7 @@ make
 
 [CMake](http://www.cmake.org/cmake/resources/software.html) (this is used for generating the Visual Studio project)
 
-(If you don't know how to use CMake, here are some hints: run cmake-gui and point it at your EmulationStation folder.  Point the "build" directory somewhere - I use EmulationStation/build.  Click configure, choose "Visual Studio [year] Project", fill in red fields as they appear, then click Generate.)
+(If you don't know how to use CMake, here are some hints: run cmake-gui and point it at your EmulationStation folder.  Point the "build" directory somewhere - I use EmulationStation/build.  Click configure, choose "Visual Studio [year] Project", fill in red fields as they appear and keep clicking Configure, then click Generate.)
 
 
 Configuring
@@ -78,19 +78,19 @@ When first run, an example systems configuration file will be created at $HOME/.
 **~/.emulationstation/es_input.cfg:**
 When you first start EmulationStation, you will be prompted to configure any input devices you wish to use. The process is thus:
 
-1. Press a button on any device you wish to use. *This includes the keyboard.* If you are unable to configure a device, hold a button on the first device to continue to step 2.
+1. Press a button on any device you wish to use. *This includes the keyboard.* Once you have selected all the devices you wish to configure, hold a button on the first device to continue to step 2.
 
-2. Press the displayed input for each device in sequence.  You will be prompted for Up, Down, Left, Right, A (Select), B (Back), Menu, Select (fast select), PageUp, and PageDown, Volume up and Volume down. If your controller doesn't have enough buttons to map PageUp/PageDown, it will be skipped.
+2. Press the displayed input for each device in sequence.  You will be prompted for Up, Down, Left, Right, A (Select), B (Back), Menu, Select (fast select), PageUp, and PageDown. If your controller doesn't have enough buttons for everything, you can press A to skip the remaining inputs.
 
-3. Your config will be saved to `~/.emulationstation/es_input.cfg`. If you wish to reconfigure, just delete this file.
+3. Your config will be saved to `~/.emulationstation/es_input.cfg`. *If you wish to reconfigure, just delete this file.*
 
-*NOTE: If `~/.emulationstation/es_input.cfg` is present but does not contain any available joysticks or a keyboard, an emergency default keyboard mapping will be provided.*
+*NOTE: If `~/.emulationstation/es_input.cfg` is present but does not contain any available joysticks or a keyboard, an emergency default keyboard mapping will be used.*
 
 As long as ES hasn't frozen, you can always press F4 to close the application.
 
 
 **Keep in mind you'll have to set up your emulator separately from EmulationStation.**
-I am currently also working on a stand-alone tool, [ES-config](https://github.com/Aloshi/ES-config), that will help make configuring emulators easier.
+I am currently also working on a stand-alone tool, [ES-config](https://github.com/Aloshi/ES-config), that should help make configuring emulators easier.
 
 After you launch a game, EmulationStation will return once your system's command terminates (i.e. your emulator closes).
 
@@ -106,6 +106,7 @@ You can use `--help` to view a list of command-line options. Briefly outlined he
 --debug			- print additional output to the console, primarily about input.
 --dimtime [seconds]	- delay before dimming the screen and entering sleep mode. Default is 30, use 0 for never.
 --windowed      - run ES in a window.
+--scrape	- run the interactive command-line metadata scraper.
 ```
 
 Writing an es_systems.cfg
@@ -157,9 +158,7 @@ The following "tags" are replaced by ES in launch commands:
 gamelist.xml
 ============
 
-The gamelist.xml for a system defines metadata for a system's games. This metadata includes an image (e.g. screenshot or box art), description, and name.
-
-**Making a gamelist.xml by hand sucks, so a cool guy named Pendor made a python script which automatically generates a gamelist.xml for you, with boxart automatically downloaded. It can be found here:** https://github.com/elpendor/ES-scraper
+The gamelist.xml for a system defines metadata for a system's games, such as a name, image (like a screenshot or box art), description, release date, and rating.
 
 If a file named gamelist.xml is found in the root of a system's search directory OR within `~/.emulationstation/%NAME%/`, game metadata will be loaded from it. This allows you to define images, descriptions, and different names for files. Note that only standard ASCII characters are supported for text (if you see a weird [X] symbol, you're probably using unicode!).
 Images will be automatically resized to fit within the left column of the screen. Smaller images will load faster, so try to keep your resolution low.
@@ -179,6 +178,8 @@ The path element should be the absolute path of the ROM. Special characters SHOU
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 The switch `--ignore-gamelist` can be used to ignore the gamelist and use the non-detailed view.
+
+*You can use ES's [scraping](http://en.wikipedia.org/wiki/Web_scraping) tools to avoid creating a gamelist.xml by hand.*  A command-line version is also provided - just run emulationstation with `--scrape`.
 
 Themes
 ======
