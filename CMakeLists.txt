@@ -164,6 +164,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/OptionListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/RatingComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.h
@@ -220,6 +221,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/OptionListComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/RatingComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SliderComponent.cpp
