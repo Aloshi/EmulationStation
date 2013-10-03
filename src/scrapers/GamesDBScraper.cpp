@@ -5,6 +5,8 @@
 #include "../pugiXML/pugixml.hpp"
 #include "../MetaData.h"
 
+const char* GamesDBScraper::getName() { return "TheGamesDB"; }
+
 std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 {
 	std::string path = "/api/GetGame.php?";

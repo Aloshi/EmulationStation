@@ -3,13 +3,17 @@
 #include "../Settings.h"
 #include "../VolumeControl.h"
 
+#include "../scrapers/TheArchiveScraper.h"
+#include "../scrapers/GamesDBScraper.h"
+
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window), 
-	mList(window, Eigen::Vector2i(2, 4)), 
+	mList(window, Eigen::Vector2i(2, 5)), 
 	mBox(mWindow, ":/frame.png", 0x444444FF),
 	mDrawFramerateSwitch(window),
 	mVolumeSlider(window, 0, 100, 1),
 	mDisableSoundsSwitch(window, false),
-	mSaveLabel(window)
+	mSaveLabel(window),
+	mScraperOptList(window)
 {
 	loadStates();
 
@@ -20,6 +24,7 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 
 	using namespace Eigen;
 
+	//drawFramerate label
 	TextComponent* label = new TextComponent(mWindow);
 	label->setText("Draw Framerate: ");
 	label->setColor(0x0000FFFF);
@@ -48,11 +53,27 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 
 	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mDisableSoundsSwitch, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(true, true));
 
+	//scraper label
+	label = new TextComponent(mWindow);
+	label->setText("Scraper: ");
+	label->setColor(0x0000FFFF);
+	mLabels.push_back(label);
+	mList.setEntry(Vector2i(0, 3), Vector2i(1, 1), label, false, ComponentListComponent::AlignRight);
+
+	//fill scraper list
+	std::vector< std::shared_ptr<Scraper> > scrapers;
+	scrapers.push_back(std::shared_ptr<Scraper>(new GamesDBScraper()));
+	scrapers.push_back(std::shared_ptr<Scraper>(new TheArchiveScraper()));
+	mScraperOptList.populate(scrapers, [&] (const std::shared_ptr<Scraper>& s) {
+		return mScraperOptList.makeEntry(s->getName(), 0x00FF00FF, s);
+	} );
+
+	mList.setEntry(Vector2i(1, 3), Vector2i(1, 1), &mScraperOptList, true, ComponentListComponent::AlignCenter);
 
 	//save label
 	mSaveLabel.setText("SAVE");
 	mSaveLabel.setColor(0x000000FF);
-	mList.setEntry(Vector2i(0, 3), Vector2i(2, 1), &mSaveLabel, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
+	mList.setEntry(Vector2i(0, 4), Vector2i(2, 1), &mSaveLabel, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
 
 	//center list
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
