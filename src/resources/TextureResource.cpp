@@ -7,9 +7,10 @@
 
 std::map< std::string, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
 
-TextureResource::TextureResource(const ResourceManager& rm, const std::string& path) : mTextureID(0), mPath(path), mTextureSize(Eigen::Vector2i::Zero())
+TextureResource::TextureResource(const std::string& path) : 
+	mTextureID(0), mPath(path), mTextureSize(Eigen::Vector2i::Zero())
 {
-	reload(rm);
+	reload(ResourceManager::getInstance());
 }
 
 TextureResource::~TextureResource()
@@ -17,15 +18,15 @@ TextureResource::~TextureResource()
 	deinit();
 }
 
-void TextureResource::unload(const ResourceManager& rm)
+void TextureResource::unload(std::shared_ptr<ResourceManager>& rm)
 {
 	deinit();
 }
 
-void TextureResource::reload(const ResourceManager& rm)
+void TextureResource::reload(std::shared_ptr<ResourceManager>& rm)
 {
 	if(!mPath.empty())
-		initFromResource(rm.getFileData(mPath));
+		initFromResource(rm->getFileData(mPath));
 }
 
 void TextureResource::initFromResource(const ResourceData data)
@@ -130,12 +131,14 @@ void TextureResource::bind() const
 }
 
 
-std::shared_ptr<TextureResource> TextureResource::get(ResourceManager& rm, const std::string& path)
+std::shared_ptr<TextureResource> TextureResource::get(const std::string& path)
 {
+	std::shared_ptr<ResourceManager>& rm = ResourceManager::getInstance();
+
 	if(path.empty())
 	{
-		std::shared_ptr<TextureResource> tex(new TextureResource(rm, ""));
-		rm.addReloadable(tex); //make sure we're deinitialized even though we do nothing on reinitialization
+		std::shared_ptr<TextureResource> tex(new TextureResource(""));
+		rm->addReloadable(tex); //make sure we're deinitialized even though we do nothing on reinitialization
 		return tex;
 	}
 
@@ -148,8 +151,8 @@ std::shared_ptr<TextureResource> TextureResource::get(ResourceManager& rm, const
 		}
 	}
 
-	std::shared_ptr<TextureResource> tex = std::shared_ptr<TextureResource>(new TextureResource(rm, path));
+	std::shared_ptr<TextureResource> tex = std::shared_ptr<TextureResource>(new TextureResource(path));
 	sTextureMap[path] = std::weak_ptr<TextureResource>(tex);
-	rm.addReloadable(tex);
+	rm->addReloadable(tex);
 	return tex;
 }

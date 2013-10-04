@@ -4,8 +4,8 @@
 
 RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 {
-	mFilledTexture = TextureResource::get(*window->getResourceManager(), ":/star_filled.png");
-	mUnfilledTexture = TextureResource::get(*window->getResourceManager(), ":/star_unfilled.png");
+	mFilledTexture = TextureResource::get(":/star_filled.png");
+	mUnfilledTexture = TextureResource::get(":/star_unfilled.png");
 	mValue = 0.5f;
 	mSize << 64 * 5.0f, 64;
 	updateVertices();

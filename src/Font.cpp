@@ -79,9 +79,9 @@ void Font::initLibrary()
 	}
 }
 
-Font::Font(const ResourceManager& rm, const std::string& path, int size) : fontScale(1.0f), mSize(size), mPath(path)
+Font::Font(int size, const std::string& path) : fontScale(1.0f), mSize(size), mPath(path)
 {
-	reload(rm);
+	reload(ResourceManager::getInstance());
 }
 
 Font::~Font()
@@ -89,17 +89,17 @@ Font::~Font()
 	deinit();
 }
 
-void Font::reload(const ResourceManager& rm)
+void Font::reload(std::shared_ptr<ResourceManager>& rm)
 {
-	init(rm.getFileData(mPath));
+	init(rm->getFileData(mPath));
 }
 
-void Font::unload(const ResourceManager& rm)
+void Font::unload(std::shared_ptr<ResourceManager>& rm)
 {
 	deinit();
 }
 
-std::shared_ptr<Font> Font::get(ResourceManager& rm, const std::string& path, int size)
+std::shared_ptr<Font> Font::get(int size, const std::string& path)
 {
 	if(path.empty())
 	{
@@ -115,9 +115,9 @@ std::shared_ptr<Font> Font::get(ResourceManager& rm, const std::string& path, in
 			return foundFont->second.lock();
 	}
 
-	std::shared_ptr<Font> font = std::shared_ptr<Font>(new Font(rm, path, size));
+	std::shared_ptr<Font> font = std::shared_ptr<Font>(new Font(size, path));
 	sFontMap[def] = std::weak_ptr<Font>(font);
-	rm.addReloadable(font);
+	ResourceManager::getInstance()->addReloadable(font);
 	return font;
 }
 

@@ -231,7 +231,7 @@ std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 
 std::shared_ptr<Font> DateTimeComponent::getFont() const
 {
-	return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
+	return Font::get(FONT_SIZE_MEDIUM);
 }
 
 void DateTimeComponent::updateTextCache()

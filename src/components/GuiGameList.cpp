@@ -25,7 +25,7 @@ bool GuiGameList::isDetailed() const
 
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
 	mTheme(new ThemeComponent(mWindow)),
-	mList(window, 0.0f, 0.0f, Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)), 
+	mList(window, 0.0f, 0.0f, Font::get(FONT_SIZE_MEDIUM)), 
 	mScreenshot(window),
 	mDescription(window), 
 	mRating(window), 
@@ -60,7 +60,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mTransitionImage.setOrigin(0, 0);
 
 	mHeaderText.setColor(0xFF0000FF);
-	mHeaderText.setFont(Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE));
+	mHeaderText.setFont(Font::get(FONT_SIZE_LARGE));
 	mHeaderText.setPosition(0, 1);
 	mHeaderText.setSize((float)Renderer::getScreenWidth(), 0);
 	mHeaderText.setCentered(true);
@@ -329,7 +329,7 @@ void GuiGameList::updateTheme()
 	mList.setScrollSound(mTheme->getSound("menuScroll"));
 
 	mList.setFont(mTheme->getListFont());
-	mList.setPosition(0.0f, Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_LARGE)->getHeight() + 2.0f);
+	mList.setPosition(0.0f, Font::get(FONT_SIZE_LARGE)->getHeight() + 2.0f);
 
 	if(!mTheme->getBool("hideHeader"))
 	{

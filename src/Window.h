@@ -36,7 +36,6 @@ public:
 
 private:
 	InputManager* mInputManager;
-	ResourceManager mResourceManager;
 	std::vector<GuiComponent*> mGuiStack;
 
 	std::vector< std::shared_ptr<Font> > mDefaultFonts;

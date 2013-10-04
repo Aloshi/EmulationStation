@@ -58,14 +58,14 @@ bool Window::init(unsigned int width, unsigned int height)
 
 	mInputManager->init();
 
-	mResourceManager.reloadAll();
+	ResourceManager::getInstance()->reloadAll();
 
 	//keep a reference to the default fonts, so they don't keep getting destroyed/recreated
 	if(mDefaultFonts.empty())
 	{
-		mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_SMALL));
-		mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_MEDIUM));
-		mDefaultFonts.push_back(Font::get(mResourceManager, Font::getDefaultPath(), FONT_SIZE_LARGE));
+		mDefaultFonts.push_back(Font::get(FONT_SIZE_SMALL));
+		mDefaultFonts.push_back(Font::get(FONT_SIZE_MEDIUM));
+		mDefaultFonts.push_back(Font::get(FONT_SIZE_LARGE));
 	}
 
 	return true;
@@ -74,7 +74,7 @@ bool Window::init(unsigned int width, unsigned int height)
 void Window::deinit()
 {
 	mInputManager->deinit();
-	mResourceManager.unloadAll();
+	ResourceManager::getInstance()->unloadAll();
 	Renderer::deinit();
 }
 
@@ -151,11 +151,6 @@ void Window::normalizeNextUpdate()
 InputManager* Window::getInputManager()
 {
 	return mInputManager;
-}
-
-ResourceManager* Window::getResourceManager()
-{
-	return &mResourceManager;
 }
 
 void Window::setZoomFactor(const float& zoom)

@@ -9,6 +9,20 @@ namespace fs = boost::filesystem;
 auto array_deleter = [](unsigned char* p) { delete[] p; };
 auto nop_deleter = [](unsigned char* p) { };
 
+std::shared_ptr<ResourceManager> ResourceManager::sInstance = nullptr;
+
+ResourceManager::ResourceManager()
+{
+}
+
+std::shared_ptr<ResourceManager>& ResourceManager::getInstance()
+{
+	if(!sInstance)
+		sInstance = std::shared_ptr<ResourceManager>(new ResourceManager());
+
+	return sInstance;
+}
+
 const ResourceData ResourceManager::getFileData(const std::string& path) const
 {
 	//check if its embedded
@@ -69,7 +83,7 @@ void ResourceManager::unloadAll()
 	{
 		if(!iter->expired())
 		{
-			iter->lock()->unload(*this);
+			iter->lock()->unload(sInstance);
 			iter++;
 		}else{
 			iter = mReloadables.erase(iter);
@@ -84,7 +98,7 @@ void ResourceManager::reloadAll()
 	{
 		if(!iter->expired())
 		{
-			iter->lock()->reload(*this);
+			iter->lock()->reload(sInstance);
 			iter++;
 		}else{
 			iter = mReloadables.erase(iter);

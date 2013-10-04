@@ -8,7 +8,7 @@ SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(wind
 	//mSize = Vector2u((unsigned int)(Renderer::getScreenWidth() * 0.05), 
 	//	(unsigned int)(Renderer::getScreenHeight() * 0.05));
 
-	mSize = Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->sizeText("OFF");
+	mSize = Font::get(FONT_SIZE_MEDIUM)->sizeText("OFF");
 }
 
 bool SwitchComponent::input(InputConfig* config, Input input)
@@ -29,7 +29,7 @@ void SwitchComponent::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Affine3f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
 
-	Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)->drawText(mState ? "ON" : "OFF", Eigen::Vector2f(0, 0), mState ? 0x00FF00FF : 0xFF0000FF);
+	Font::get(FONT_SIZE_MEDIUM)->drawText(mState ? "ON" : "OFF", Eigen::Vector2f(0, 0), mState ? 0x00FF00FF : 0xFF0000FF);
 
 	//Renderer::popClipRect();
 

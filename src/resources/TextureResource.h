@@ -10,12 +10,12 @@
 class TextureResource : public IReloadable
 {
 public:
-	static std::shared_ptr<TextureResource> get(ResourceManager& rm, const std::string& path);
+	static std::shared_ptr<TextureResource> get(const std::string& path);
 
 	virtual ~TextureResource();
 
-	void unload(const ResourceManager& rm) override;
-	void reload(const ResourceManager& rm) override;
+	void unload(std::shared_ptr<ResourceManager>& rm) override;
+	void reload(std::shared_ptr<ResourceManager>& rm) override;
 	
 	Eigen::Vector2i getSize() const;
 	void bind() const;
@@ -24,7 +24,7 @@ public:
 	void initFromMemory(const char* image, size_t length);
 
 private:
-	TextureResource(const ResourceManager& rm, const std::string& path);
+	TextureResource(const std::string& path);
 
 	void initFromPath();
 	void initFromResource(const ResourceData data);

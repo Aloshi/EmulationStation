@@ -210,7 +210,7 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 
 std::shared_ptr<Font> TextEditComponent::getFont()
 {
-	return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL);
+	return Font::get(FONT_SIZE_SMALL);
 }
 
 bool TextEditComponent::isMultiline()

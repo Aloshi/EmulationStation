@@ -22,7 +22,7 @@ class Font : public IReloadable
 public:
 	static void initLibrary();
 
-	static std::shared_ptr<Font> get(ResourceManager& rm, const std::string& path, int size);
+	static std::shared_ptr<Font> get(int size, const std::string& path = getDefaultPath());
 
 	~Font();
 
@@ -63,8 +63,8 @@ public:
 
 	int getHeight() const;
 
-	void unload(const ResourceManager& rm) override;
-	void reload(const ResourceManager& rm) override;
+	void unload(std::shared_ptr<ResourceManager>& rm) override;
+	void reload(std::shared_ptr<ResourceManager>& rm) override;
 
 	int getSize() const;
 
@@ -78,7 +78,7 @@ private:
 
 	static std::map< std::pair<std::string, int>, std::weak_ptr<Font> > sFontMap;
 
-	Font(const ResourceManager& rm, const std::string& path, int size);
+	Font(int size, const std::string& path);
 
 	void init(ResourceData data);
 	void deinit();

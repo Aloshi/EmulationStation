@@ -26,7 +26,7 @@ void NinePatchComponent::buildVertices()
 	if(mColors != NULL)
 		delete[] mColors;
 
-	mTexture = TextureResource::get(*mWindow->getResourceManager(), mPath);
+	mTexture = TextureResource::get(mPath);
 
 	if(mTexture->getSize() == Eigen::Vector2i::Zero())
 	{

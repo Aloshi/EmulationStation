@@ -52,7 +52,7 @@ std::shared_ptr<Font> TextComponent::getFont() const
 	if(mFont)
 		return mFont;
 	else
-		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM);
+		return Font::get(FONT_SIZE_MEDIUM);
 }
 
 void TextComponent::render(const Eigen::Affine3f& parentTrans)

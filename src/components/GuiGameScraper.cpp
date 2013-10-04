@@ -7,13 +7,13 @@
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(MetaDataList)> doneFunc, std::function<void()> skipFunc) : GuiComponent(window), 
 	mList(window, Eigen::Vector2i(2, 7 + MAX_SCRAPER_RESULTS)), 
 	mBox(window, ":/frame.png"),
-	mHeader(window, params.game->getBaseName(), Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)),
-	mResultName(window, "", Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_MEDIUM)),
+	mHeader(window, params.game->getBaseName(), Font::get(FONT_SIZE_MEDIUM)),
+	mResultName(window, "", Font::get(FONT_SIZE_MEDIUM)),
 	mResultInfo(window),
-	mResultDesc(window, "", Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL)),
+	mResultDesc(window, "", Font::get(FONT_SIZE_SMALL)),
 	mResultThumbnail(window), 
 
-	mSearchLabel(window, "Search for: ", Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL)),
+	mSearchLabel(window, "Search for: ", Font::get(FONT_SIZE_SMALL)),
 	mSearchText(window),
 
 	mSearchParams(params),
@@ -75,7 +75,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 
 	//y = 5 is a spacer row
 
-	std::shared_ptr<Font> font = Font::get(*window->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL);
+	std::shared_ptr<Font> font = Font::get(FONT_SIZE_SMALL);
 	mResultNames.reserve(MAX_SCRAPER_RESULTS);
 	for(int i = 0; i < MAX_SCRAPER_RESULTS; i ++)
 	{

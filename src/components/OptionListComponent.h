@@ -175,7 +175,7 @@ private:
 
 	std::shared_ptr<Font> getFont()
 	{
-		return Font::get(*mWindow->getResourceManager(), Font::getDefaultPath(), FONT_SIZE_SMALL);
+		return Font::get(FONT_SIZE_SMALL);
 	}
 
 

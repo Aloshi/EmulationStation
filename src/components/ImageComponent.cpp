@@ -4,7 +4,6 @@
 #include <math.h>
 #include "../Log.h"
 #include "../Renderer.h"
-#include "../Window.h"
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
@@ -73,10 +72,10 @@ void ImageComponent::setImage(std::string path)
 {
 	mPath = path;
 
-	if(mPath.empty() || !mWindow->getResourceManager()->fileExists(mPath))
+	if(mPath.empty() || !ResourceManager::getInstance()->fileExists(mPath))
 		mTexture.reset();
 	else
-		mTexture = TextureResource::get(*mWindow->getResourceManager(), mPath);
+		mTexture = TextureResource::get(mPath);
 
 	resize();
 }
@@ -85,7 +84,7 @@ void ImageComponent::setImage(const char* path, size_t length)
 {
 	mTexture.reset();
 
-	mTexture = TextureResource::get(*mWindow->getResourceManager(), "");
+	mTexture = TextureResource::get("");
 	mTexture->initFromMemory(path, length);
 
 	resize();
@@ -231,12 +230,11 @@ bool ImageComponent::hasImage()
 	return !mPath.empty();
 }
 
-
 void ImageComponent::copyScreen()
 {
 	mTexture.reset();
 
-	mTexture = TextureResource::get(*mWindow->getResourceManager(), "");
+	mTexture = TextureResource::get("");
 	mTexture->initFromScreen();
 
 	resize();
