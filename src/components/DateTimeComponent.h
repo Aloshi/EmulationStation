@@ -2,7 +2,7 @@
 
 #include "../GuiComponent.h"
 #include <boost/date_time.hpp>
-#include "../Font.h"
+#include "../resources/Font.h"
 
 class DateTimeComponent : public GuiComponent
 {

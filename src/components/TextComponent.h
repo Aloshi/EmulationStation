@@ -2,7 +2,7 @@
 #define _TEXTCOMPONENT_H_
 
 #include "../GuiComponent.h"
-#include "../Font.h"
+#include "../resources/Font.h"
 
 class TextComponent : public GuiComponent
 {

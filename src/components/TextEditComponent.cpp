@@ -1,6 +1,6 @@
 #include "TextEditComponent.h"
 #include "../Log.h"
-#include "../Font.h"
+#include "../resources/Font.h"
 #include "../Window.h"
 #include "../Renderer.h"
 #include "ComponentListComponent.h"

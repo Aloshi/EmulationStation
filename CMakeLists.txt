@@ -137,7 +137,6 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.h
@@ -186,6 +185,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/TheArchiveScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
 	${CMAKE_CURRENT_SOURCE_DIR}/data/Resources.h
@@ -193,7 +193,6 @@ set(ES_HEADERS
 set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.cpp
@@ -240,6 +239,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/TheArchiveScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
 

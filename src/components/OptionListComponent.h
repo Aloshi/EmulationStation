@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "../Font.h"
+#include "../resources/Font.h"
 #include <vector>
 #include <functional>
 #include "../Renderer.h"

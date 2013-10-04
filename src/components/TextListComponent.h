@@ -2,7 +2,7 @@
 #define _TEXTLISTCOMPONENT_H_
 
 #include "../Renderer.h"
-#include "../Font.h"
+#include "../resources/Font.h"
 #include "../GuiComponent.h"
 #include "../InputManager.h"
 #include <vector>

@@ -1,7 +1,7 @@
 #include "GuiDetectDevice.h"
 #include "../Window.h"
 #include "../Renderer.h"
-#include "../Font.h"
+#include "../resources/Font.h"
 #include "GuiInputConfig.h"
 #include <iostream>
 #include <string>

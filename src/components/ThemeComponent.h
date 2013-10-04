@@ -6,7 +6,7 @@
 #include "../GuiComponent.h"
 #include "../pugiXML/pugixml.hpp"
 #include "../AudioManager.h"
-#include "../Font.h"
+#include "../resources/Font.h"
 
 //This class loads an XML-defined list of GuiComponents.
 class ThemeComponent : public GuiComponent

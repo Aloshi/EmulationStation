@@ -2,7 +2,7 @@
 
 #include "../GuiComponent.h"
 #include <functional>
-#include "../Font.h"
+#include "../resources/Font.h"
 #include "NinePatchComponent.h"
 
 class ButtonComponent : public GuiComponent

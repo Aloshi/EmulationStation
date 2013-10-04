@@ -1,7 +1,7 @@
 #include "GuiInputConfig.h"
 #include "../Window.h"
 #include "../Renderer.h"
-#include "../Font.h"
+#include "../resources/Font.h"
 #include "GuiGameList.h"
 #include "../Log.h"
 
