@@ -132,6 +132,12 @@ void GuiMetaDataEd::fetchDone(MetaDataList result)
 			continue;
 
 		const std::string key = mMetaDataDecl.at(i).key;
+		if(mMetaDataDecl.at(i).type == MD_IMAGE_PATH)
+		{
+			std::string url = result.get(key);
+			result.set(key, downloadImage(url, getSaveAsPath(mScraperParams.system->getName(), mScraperParams.game->getCleanName() + "-" + key, url)));
+		}
+
 		mEditors.at(i)->setValue(result.get(key));
 	}
 }

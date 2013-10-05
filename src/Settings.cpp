@@ -36,6 +36,8 @@ void Settings::setDefaults()
 	mBoolMap["DISABLESOUNDS"] = false;
 
 	mIntMap["DIMTIME"] = 30*1000;
+	mIntMap["ScraperResizeWidth"] = 450;
+	mIntMap["ScraperResizeHeight"] = 0;
 
 	mIntMap["GameListSortIndex"] = 0;
 

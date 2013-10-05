@@ -43,12 +43,17 @@ HttpReq::HttpReq(const std::string& url)
 	else if(url.substr(0, 8) == "https://")
 		startpos = 8;
 
-	if(url.substr(startpos, 4) == "www.")
-		startpos += 4;
-
 	size_t pathStart = url.find('/', startpos);
-	std::string server = url.substr(startpos, pathStart - startpos);
-	std::string path = url.substr(pathStart, std::string::npos);
+
+	std::string server, path;
+	if(pathStart == std::string::npos)
+	{
+		server = url;
+		path = "/";
+	}else{
+		server = url.substr(startpos, pathStart - startpos);
+		path = url.substr(pathStart, std::string::npos);
+	}
 	
 	start(server, path);
 }
@@ -57,8 +62,8 @@ HttpReq::~HttpReq()
 {
 	mResolver.cancel();
 	mSocket.close();
-	status(); //poll once
-	//while(status() == REQ_IN_PROGRESS); //otherwise you get really weird heap-allocation-related crashes
+	//status(); //poll once
+	while(status() == REQ_IN_PROGRESS); //otherwise you get really weird heap-allocation-related crashes
 }
 
 void HttpReq::start(const std::string& server, const std::string& path)

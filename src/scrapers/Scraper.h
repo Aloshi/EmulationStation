@@ -30,3 +30,21 @@ private:
 	virtual std::vector<MetaDataList> parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq>) = 0;
 };
 
+//About the same as "~/.emulationstation/downloaded_images/[subdirectory]/[name].[url's extension]".
+//Will create the "downloaded_images" and "subdirectory" directories if they do not exist.
+std::string getSaveAsPath(const std::string& subdirectory, const std::string& name, const std::string& url);
+
+//Returns the path to the downloaded file (saveAs) on completion.
+//Returns empty string if an error occured.
+//Will resize according to Settings::getInt("ScraperResizeWidth") and Settings::getInt("ScraperResizeHeight").
+std::string downloadImage(const std::string& url, const std::string& saveAs);
+
+//Returns (via returnFunc) the path to the downloaded file (saveAs) on completion.
+//Returns empty string if an error occured.
+//Will resize according to Settings::getInt("ScraperResizeWidth") and Settings::getInt("ScraperResizeHeight").
+//Same as downloadImage, just async.
+void downloadImageAsync(Window* window, const std::string& url, const std::string& saveAs, std::function<void(std::string)> returnFunc);
+
+//You can pass 0 for maxWidth or maxHeight to automatically keep the aspect ratio.
+//Will overwrite the image at [path] with the new resized one.
+void resizeImage(const std::string& path, int maxWidth, int maxHeight);
