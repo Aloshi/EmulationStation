@@ -5,7 +5,7 @@
 #include <vector>
 #include <functional>
 #include "../Renderer.h"
-#include "../Window.h"
+#include "NinePatchComponent.h"
 
 //Used to display a list of options.
 //Can select one or multiple options.
@@ -14,8 +14,8 @@ template<typename T>
 class OptionListComponent : public GuiComponent
 {
 public:
-	OptionListComponent(Window* window) : GuiComponent(window),
-		mClosedCallback(nullptr), mCursor(0), mScrollOffset(0)
+	OptionListComponent(Window* window, bool multiSelect = false) : GuiComponent(window),
+		mCursor(0), mScrollOffset(0), mMultiSelect(multiSelect), mEditing(false), mBox(window, ":/textbox.png")
 	{
 	}
 
@@ -28,11 +28,6 @@ public:
 	};
 
 
-	void setClosedCallback(std::function<void(std::vector<const ListEntry*>)> callback)
-	{
-		mClosedCallback = callback;
-	}
-
 	bool input(InputConfig* config, Input input)
 	{
 		if(input.value != 0)
@@ -44,26 +39,32 @@ public:
 			}
 			if(config->isMappedTo("a", input))
 			{
-				select(mCursor);
+				if(mEditing)
+				{
+					select(mCursor);
+					if(!mMultiSelect)
+						close();
+				}else{
+					open();
+				}
+				
 				return true;
 			}
-			if(mEntries.size() > 1)
+			if(mEditing && mEntries.size() > 1)
 			{
 				if(config->isMappedTo("up", input))
 				{
 					if(mCursor > 0)
-					{
 						mCursor--;
-						return true;
-					}
+					
+					return true;
 				}
 				if(config->isMappedTo("down", input))
 				{
 					if(mCursor < mEntries.size() - 1)
-					{
 						mCursor++;
-						return true;
-					}
+
+					return true;
 				}
 			}
 		}
@@ -73,33 +74,84 @@ public:
 
 	void render(const Eigen::Affine3f& parentTrans)
 	{
-		Eigen::Affine3f trans = parentTrans * getTransform();
-
 		std::shared_ptr<Font> font = getFont();
 		
-		Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), 
-			Eigen::Vector2i((int)getSize().x(), (int)getSize().y()));
-
-		for(unsigned int i = mScrollOffset; i < mTextCaches.size(); i++)
+		//draw the option list
+		if(mEditing)
 		{
+			Eigen::Affine3f trans = parentTrans * getTransform();
+
+			unsigned int renderCount = mTextCaches.size() - mScrollOffset;
+
+			float height = (float)renderCount * font->getHeight();
+			trans.translate(Eigen::Vector3f(0, -height / 2 + font->getHeight() * 0.5f, 0));
+
+			mBox.fitTo(Eigen::Vector2f(mSize.x(), height));
+			mBox.render(trans);
+
 			Renderer::setMatrix(trans);
+			Renderer::drawRect(0, 0, (int)getSize().x(), (int)height, 0xFFFFFFFF);
 
-			if(i == mCursor)
-				Renderer::drawRect(0, 0, (int)mSize.x(), font->getHeight(), 0x000000FF);
+			for(unsigned int i = mScrollOffset; i < renderCount; i++)
+			{
+				Renderer::setMatrix(trans);
 
-			font->renderTextCache(mTextCaches.at(i));
-			trans = trans.translate(Eigen::Vector3f(0, (float)font->getHeight(), 0));
+				char rectOpacity = 0x00;
+				if(i == mCursor)
+					rectOpacity += 0x22;
+				if(mEntries.at(i).selected)
+					rectOpacity += 0x44;
+
+				Renderer::drawRect(0, 0, (int)mSize.x(), font->getHeight(), 0x00000000 | rectOpacity);
+
+				Renderer::setMatrix(trans);
+				font->renderTextCache(mTextCaches.at(i));
+
+				trans = trans.translate(Eigen::Vector3f(0, (float)font->getHeight(), 0));
+			}
+		}else{
+			Renderer::setMatrix(parentTrans * getTransform());
+
+			unsigned int color = 0x000000FF;
+
+			if(mMultiSelect)
+			{
+				//draw "# selected"
+				unsigned int selectedCount = 0;
+				for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+				{
+					if(it->selected)
+						selectedCount++;
+				}
+
+				std::stringstream ss;
+				ss << selectedCount << " selected";
+				font->drawText(ss.str(), Eigen::Vector2f(0, 0), color);
+
+			}else{
+				//draw selected option
+				bool found = false;
+				for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+				{
+					if(it->selected)
+					{
+						font->drawText(it->text, Eigen::Vector2f(0, 0), color);
+						found = true;
+						break;
+					}
+				}
+
+				if(!found)
+					font->drawText("Not set", Eigen::Vector2f(0, 0), color);
+			}
 		}
 
-		Renderer::popClipRect();
-
-		trans = parentTrans * getTransform();
-		renderChildren(trans);
+		renderChildren(parentTrans * getTransform());
 	}
 
-	ListEntry makeEntry(const std::string& name, unsigned int color, T obj) const
+	ListEntry makeEntry(const std::string& name, unsigned int color, T obj, bool selected = false) const
 	{
-		ListEntry e = {name, color, false, obj};
+		ListEntry e = {name, color, selected, obj};
 		return e;
 	}
 
@@ -138,14 +190,22 @@ private:
 		if(i >= mEntries.size())
 			return;
 
+		if(!mMultiSelect)
+			for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+				it->selected = false;
+
 		mEntries.at(i).selected = !mEntries.at(i).selected;
 		updateTextCaches();
 	}
 
 	void close()
 	{
-		if(mClosedCallback)
-			mClosedCallback(getSelected());
+		mEditing = false;
+	}
+
+	void open()
+	{
+		mEditing = true;
 	}
 
 	void updateTextCaches()
@@ -159,7 +219,7 @@ private:
 		TextCache* cache;
 		std::shared_ptr<Font> font = getFont();
 		Eigen::Vector2f newSize = getSize();
-		newSize[1] = 0;
+		newSize[1] = (float)font->getHeight();
 		for(unsigned int i = 0; i < mEntries.size(); i++)
 		{
 			cache = font->buildTextCache(mEntries.at(i).text, 0, 0, mEntries.at(i).color);
@@ -167,23 +227,24 @@ private:
 
 			if(cache->metrics.size.x() > newSize.x())
 				newSize[0] = cache->metrics.size.x();
-
-			newSize[1] += cache->metrics.size.y();
 		}
+
 		setSize(newSize);
 	}
 
 	std::shared_ptr<Font> getFont()
 	{
-		return Font::get(FONT_SIZE_SMALL);
+		return Font::get(FONT_SIZE_MEDIUM);
 	}
 
 
-	std::function<void(std::vector<const ListEntry*>)> mClosedCallback;
 	unsigned int mCursor;
 	unsigned int mScrollOffset;
+	bool mMultiSelect;
+	bool mEditing;
+
+	NinePatchComponent mBox;
 
 	std::vector<ListEntry> mEntries;
 	std::vector<TextCache*> mTextCaches;
 };
-

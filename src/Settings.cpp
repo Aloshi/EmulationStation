@@ -4,11 +4,10 @@
 #include "platform.h"
 #include <boost/filesystem.hpp>
 #include "scrapers/GamesDBScraper.h"
-#include "scrapers/TheArchiveScraper.h"
 
 Settings* Settings::sInstance = NULL;
 
-Settings::Settings() : mScraper(NULL)
+Settings::Settings()
 {
 	setDefaults();
 	loadFile();
@@ -41,10 +40,7 @@ void Settings::setDefaults()
 
 	mIntMap["GameListSortIndex"] = 0;
 
-	if(mScraper)
-		delete mScraper;
-
-	mScraper = new GamesDBScraper(); //TODO
+	mScraper = std::shared_ptr<Scraper>(new GamesDBScraper());
 }
 
 template <typename K, typename V>
@@ -67,6 +63,9 @@ void Settings::saveFile()
 	saveMap<std::string, bool>(doc, mBoolMap, "bool");
 	saveMap<std::string, int>(doc, mIntMap, "int");
 	saveMap<std::string, float>(doc, mFloatMap, "float");
+
+	pugi::xml_node scraperNode = doc.append_child("scraper");
+	scraperNode.append_attribute("value").set_value(mScraper->getName());
 
 	doc.save_file(path.c_str());
 }
@@ -92,11 +91,23 @@ void Settings::loadFile()
 		setInt(node.attribute("name").as_string(), node.attribute("value").as_int());
 	for(pugi::xml_node node = doc.child("float"); node; node = node.next_sibling())
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
+
+	if(doc.child("scraper"))
+	{
+		std::shared_ptr<Scraper> scr = createScraperByName(doc.child("scraper").attribute("value").as_string());
+		if(scr)
+			mScraper = scr;
+	}
 }
 
-Scraper* Settings::getScraper()
+std::shared_ptr<Scraper> Settings::getScraper()
 {
 	return mScraper;
+}
+
+void Settings::setScraper(std::shared_ptr<Scraper> scraper)
+{
+	mScraper = scraper;
 }
 
 //Print a warning message if the setting we're trying to get doesn't already exist in the map, then return the value in the map.

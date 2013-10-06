@@ -138,7 +138,7 @@ int run_scraper_cmdline()
 	out << "Alright, let's do this thing!\n";
 	out << "=============================\n";
 
-	Scraper* scraper = Settings::getInstance()->getScraper();
+	std::shared_ptr<Scraper> scraper = Settings::getInstance()->getScraper();
 	for(auto sysIt = systems.begin(); sysIt != systems.end(); sysIt++)
 	{
 		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(true);

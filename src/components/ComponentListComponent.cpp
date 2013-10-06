@@ -419,6 +419,18 @@ void ComponentListComponent::update(int deltaTime)
 void ComponentListComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
+
+	//draw cursor
+	if(cursorValid())
+	{
+		ComponentEntry* entry = getCell(mCursor.x(), mCursor.y());
+		Eigen::Affine3f entryTrans = trans * entry->component->getTransform();
+		Renderer::setMatrix(entryTrans);
+
+		Renderer::drawRect(0, 0, 4, 4, 0xFF0000FF);
+		Renderer::drawRect(0, 0, (int)entry->component->getSize().x(), (int)entry->component->getSize().y(), 0x0000AA22);
+	}
+
 	for(auto iter = mEntries.begin(); iter != mEntries.end(); iter++)
 	{
 		(*iter)->component->render(trans);
@@ -444,16 +456,7 @@ void ComponentListComponent::render(const Eigen::Affine3f& parentTrans)
 		pos[0] += getColumnWidth(x);
 	}*/
 
-	//draw cursor
-	if(cursorValid())
-	{
-		ComponentEntry* entry = getCell(mCursor.x(), mCursor.y());
-		Eigen::Affine3f entryTrans = trans * entry->component->getTransform();
-		Renderer::setMatrix(entryTrans);
-
-		Renderer::drawRect(0, 0, 4, 4, 0xFF0000FF);
-		Renderer::drawRect(0, 0, (int)entry->component->getSize().x(), (int)entry->component->getSize().y(), 0x0000AA22);
-	}
+	
 }
 
 void ComponentListComponent::textInput(const char* text)

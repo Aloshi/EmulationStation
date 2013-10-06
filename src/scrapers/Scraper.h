@@ -30,6 +30,8 @@ private:
 	virtual std::vector<MetaDataList> parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq>) = 0;
 };
 
+std::shared_ptr<Scraper> createScraperByName(const std::string& name);
+
 //About the same as "~/.emulationstation/downloaded_images/[subdirectory]/[name].[url's extension]".
 //Will create the "downloaded_images" and "subdirectory" directories if they do not exist.
 std::string getSaveAsPath(const std::string& subdirectory, const std::string& name, const std::string& url);

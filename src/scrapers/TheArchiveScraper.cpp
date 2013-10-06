@@ -4,7 +4,7 @@
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
 
-const char* TheArchiveScraper::getName() { return "TheArchiveVG"; }
+const char* TheArchiveScraper::getName() { return "TheArchive"; }
 
 std::shared_ptr<HttpReq> TheArchiveScraper::makeHttpReq(ScraperSearchParams params)
 {

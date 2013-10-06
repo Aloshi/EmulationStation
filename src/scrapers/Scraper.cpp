@@ -6,6 +6,9 @@
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
 
+#include "GamesDBScraper.h"
+#include "TheArchiveScraper.h"
+
 std::vector<MetaDataList> Scraper::getResults(ScraperSearchParams params)
 {
 	std::shared_ptr<HttpReq> req = makeHttpReq(params);
@@ -156,4 +159,15 @@ std::string getSaveAsPath(const std::string& subdirectory, const std::string& na
 
 	path += name + ext;
 	return path;
+}
+
+
+std::shared_ptr<Scraper> createScraperByName(const std::string& name)
+{
+	if(name == "TheGamesDB")
+		return std::shared_ptr<Scraper>(new GamesDBScraper());
+	else if(name == "TheArchive")
+		return std::shared_ptr<Scraper>(new TheArchiveScraper());
+
+	return nullptr;
 }
