@@ -2,7 +2,7 @@
 #include <iostream>
 #include "platform.h"
 #include GLHEADER
-#include "Font.h"
+#include "resources/Font.h"
 #include <SDL.h>
 #include "Log.h"
 #include "ImageIO.h"
