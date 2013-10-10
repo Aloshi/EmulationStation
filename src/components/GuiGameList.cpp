@@ -6,7 +6,9 @@
 #include <boost/filesystem.hpp>
 #include "../Log.h"
 #include "../Settings.h"
+
 #include "GuiMetaDataEd.h"
+#include "GuiScraperStart.h"
 
 std::vector<FolderData::SortState> GuiGameList::sortStates;
 
@@ -137,6 +139,12 @@ bool GuiGameList::input(InputConfig* config, Input input)
 				[game, root, this] { root->removeFileRecursive(game); updateList(); }
 			));
 		}
+		return true;
+	}
+
+	if(input.id == SDLK_F5)
+	{
+		mWindow->pushGui(new GuiScraperStart(mWindow));
 		return true;
 	}
 
