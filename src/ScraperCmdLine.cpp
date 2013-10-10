@@ -234,6 +234,40 @@ int run_scraper_cmdline()
 	}
 
 	out << "\n\n";
+	out << "Downloading boxart...\n";
+
+	for(auto sysIt = systems.begin(); sysIt != systems.end(); sysIt++)
+	{
+		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(true);
+
+		for(auto gameIt = files.begin(); gameIt != files.end(); gameIt++)
+		{
+			GameData* game = (GameData*)(*gameIt);
+			std::vector<MetaDataDecl> mdd = (*sysIt)->getGameMDD();
+			for(auto i = mdd.begin(); i != mdd.end(); i++)
+			{
+				std::string key = i->key;
+				std::string url = game->metadata()->get(key);
+
+				if(i->type == MD_IMAGE_PATH && HttpReq::isUrl(url))
+				{
+					std::string urlShort = url.substr(0, url.length() > 35 ? 35 : url.length());
+					if(url.length() != urlShort.length()) urlShort += "...";
+
+					out << "   " << game->metadata()->get("name") << " [from: " << urlShort << "]...\n";
+					game->metadata()->set(key, downloadImage(url, getSaveAsPath((*sysIt)->getName(), game->getCleanName(), url)));
+					if(game->metadata()->get(key).empty())
+					{
+						out << "     FAILED! Skipping.\n";
+						game->metadata()->set(key, url); //result URL to what it was if download failed, retry some other time
+					}
+				}
+			}
+		}
+	}
+
+
+	out << "\n\n";
 	out << "==============================\n";
 	out << "SCRAPE COMPLETE!\n";
 	out << "==============================\n";

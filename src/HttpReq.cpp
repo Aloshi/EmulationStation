@@ -2,6 +2,7 @@
 #include "HttpReq.h"
 #include <boost/bind.hpp>
 #include "Log.h"
+#include <boost/filesystem.hpp>
 
 boost::asio::io_service HttpReq::io_service;
 
@@ -25,6 +26,13 @@ std::string HttpReq::urlEncode(const std::string &s)
         }
     }
     return escaped;
+}
+
+bool HttpReq::isUrl(const std::string& str)
+{
+	//the worst guess
+	return (!str.empty() && !boost::filesystem::exists(str) && 
+		(str.find("http://") != std::string::npos || str.find("https://") != std::string::npos || str.find("www.") != std::string::npos));
 }
 
 HttpReq::HttpReq(const std::string& server, const std::string& path)

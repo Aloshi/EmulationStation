@@ -48,6 +48,7 @@ public:
 	std::string getContent();
 
 	static std::string urlEncode(const std::string &s);
+	static bool isUrl(const std::string& s);
 
 private:
 	static boost::asio::io_service io_service;

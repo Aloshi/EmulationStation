@@ -4,6 +4,7 @@
 #include "AsyncReqComponent.h"
 #include "../Settings.h"
 #include "GuiGameScraper.h"
+#include <boost/filesystem.hpp>
 
 #define MDED_RESERVED_ROWS 3
 
@@ -125,19 +126,39 @@ void GuiMetaDataEd::fetch()
 
 void GuiMetaDataEd::fetchDone(MetaDataList result)
 {
+	//this is a little tricky:
+	//go through the list of returned results, if anything is an image and the path looks like a URL:
+	//  (1) start an async download + resize (will create an AsyncReq that blocks further user input)
+	//      (when this is finished, call result.set(key, newly_downloaded_file_path) and call fetchDone() again)
+	//  (2) return from this function immediately
+	for(auto it = mMetaDataDecl.begin(); it != mMetaDataDecl.end(); it++)
+	{
+		std::string key = it->key;
+		std::string val = result.get(it->key);
+
+		//val is /probably/ a URL
+		if(it->type == MD_IMAGE_PATH && HttpReq::isUrl(val))
+		{
+			downloadImageAsync(mWindow, val, getSaveAsPath(mScraperParams.system->getName(), mScraperParams.game->getCleanName() + "-" + key, val), 
+				[this, result, key] (std::string filePath) mutable -> void {
+					//skip it
+					if(filePath.empty())
+						LOG(LogError) << "Error resolving boxart";
+
+					result.set(key, filePath);
+					this->fetchDone(result);
+			});
+			return;
+		}
+	}
+
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
 		//don't overwrite statistics
 		if(mMetaDataDecl.at(i).isStatistic)
 			continue;
 
-		const std::string key = mMetaDataDecl.at(i).key;
-		if(mMetaDataDecl.at(i).type == MD_IMAGE_PATH)
-		{
-			std::string url = result.get(key);
-			result.set(key, downloadImage(url, getSaveAsPath(mScraperParams.system->getName(), mScraperParams.game->getCleanName() + "-" + key, url)));
-		}
-
+		const std::string& key = mMetaDataDecl.at(i).key;
 		mEditors.at(i)->setValue(result.get(key));
 	}
 }
