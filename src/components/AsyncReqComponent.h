@@ -3,6 +3,7 @@
 #include "../GuiComponent.h"
 #include "../HttpReq.h"
 #include <functional>
+#include <memory>
 
 /* Usage example:
 	std::shared_ptr<HttpReq> httpreq = std::make_shared<HttpReq>("cdn.garcya.us", "/wp-content/uploads/2010/04/TD250.jpg");
