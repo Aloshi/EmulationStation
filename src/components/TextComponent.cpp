@@ -32,8 +32,24 @@ void TextComponent::setFont(std::shared_ptr<Font> font)
 void TextComponent::setColor(unsigned int color)
 {
 	mColor = color;
-	mOpacity = mColor & 0x000000FF;
-	onTextChanged();
+
+	unsigned char opacity = mColor & 0x000000FF;
+	GuiComponent::setOpacity(opacity);
+
+	onColorChanged();
+}
+
+void TextComponent::setOpacity(unsigned char opacity)
+{
+	mColor = (mColor & 0xFFFFFF00) | opacity;
+	onColorChanged();
+
+	GuiComponent::setOpacity(opacity);
+}
+
+unsigned char TextComponent::getOpacity() const
+{
+	return mColor & 0x000000FF;
 }
 
 void TextComponent::setText(const std::string& text)
@@ -102,6 +118,14 @@ void TextComponent::onTextChanged()
 
 	std::shared_ptr<Font> f = getFont();
 	mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(mText, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
+}
+
+void TextComponent::onColorChanged()
+{
+	if(mTextCache)
+	{
+		mTextCache->setColor(mColor);
+	}
 }
 
 void TextComponent::setValue(const std::string& value)

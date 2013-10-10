@@ -20,6 +20,9 @@ public:
 
 	std::string getValue() const override;
 	void setValue(const std::string& value) override;
+
+	unsigned char getOpacity() const override;
+	void setOpacity(unsigned char opacity) override;
 	
 	std::shared_ptr<Font> getFont() const;
 
@@ -27,6 +30,7 @@ private:
 	void calculateExtent();
 
 	void onTextChanged();
+	void onColorChanged();
 
 	unsigned int mColor;
 	std::shared_ptr<Font> mFont;

@@ -48,8 +48,8 @@ public:
 	unsigned int getChildCount() const;
 	GuiComponent* getChild(unsigned int i) const;
 
-	unsigned char getOpacity() const;
-	void setOpacity(unsigned char opacity);
+	virtual unsigned char getOpacity() const;
+	virtual void setOpacity(unsigned char opacity);
 
 	const Eigen::Affine3f getTransform();
 

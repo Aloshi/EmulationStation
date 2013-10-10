@@ -149,6 +149,10 @@ unsigned char GuiComponent::getOpacity() const
 void GuiComponent::setOpacity(unsigned char opacity)
 {
 	mOpacity = opacity;
+	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	{
+		(*it)->setOpacity(opacity);
+	}
 }
 
 const Eigen::Affine3f GuiComponent::getTransform()
