@@ -1,10 +1,8 @@
 #pragma once
 
-#include <boost/asio.hpp>
-
-using boost::asio::ip::tcp;
-
-//Based on: http://www.boost.org/doc/libs/1_51_0/doc/html/boost_asio/example/http/client/async_client.cpp
+#include <curl/curl.h>
+#include <sstream>
+#include <map>
 
 /* Usage:
  * HttpReq myRequest("www.google.com", "/index.html");
@@ -26,7 +24,6 @@ using boost::asio::ip::tcp;
 class HttpReq
 {
 public:
-	HttpReq(const std::string& server, const std::string& path);
 	HttpReq(const std::string& url);
 
 	~HttpReq();
@@ -51,25 +48,21 @@ public:
 	static bool isUrl(const std::string& s);
 
 private:
-	static boost::asio::io_service io_service;
+	static size_t write_content(void* buff, size_t size, size_t nmemb, void* req_ptr);
+	//static int update_progress(void* req_ptr, double dlTotal, double dlNow, double ulTotal, double ulNow);
 
-	void start(const std::string& server, const std::string& path);
-	void handleResolve(const boost::system::error_code& err, tcp::resolver::iterator endpoint_iterator);
-	void handleConnect(const boost::system::error_code& err);
-	void handleWriteRequest(const boost::system::error_code& err);
-	void handleReadStatusLine(const boost::system::error_code& err);
-	void handleReadHeaders(const boost::system::error_code& err);
-	void handleReadContent(const boost::system::error_code& err);
+	//god dammit libcurl why can't you have some way to check the status of an individual handle
+	//why do I have to handle ALL messages at once
+	static std::map<CURL*, HttpReq*> s_requests;
 
-	void onError(const boost::system::error_code& error);
+	static CURLM* s_multi_handle;
 
-	tcp::resolver mResolver;
-	tcp::socket mSocket;
-	boost::asio::streambuf mRequest;
-	boost::asio::streambuf mResponse;
+	void onError(const char* msg);
+
+	CURL* mHandle;
 
 	Status mStatus;
+
 	std::stringstream mContent;
-	unsigned int mResponseStatusCode;
-	boost::system::error_code mError;
+	std::string mErrorMsg;
 };

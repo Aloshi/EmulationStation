@@ -4,7 +4,9 @@
 #include "Log.h"
 #include <boost/filesystem.hpp>
 
-boost::asio::io_service HttpReq::io_service;
+CURLM* HttpReq::s_multi_handle = curl_multi_init();
+
+std::map<CURL*, HttpReq*> HttpReq::s_requests;
 
 std::string HttpReq::urlEncode(const std::string &s)
 {
@@ -35,195 +37,108 @@ bool HttpReq::isUrl(const std::string& str)
 		(str.find("http://") != std::string::npos || str.find("https://") != std::string::npos || str.find("www.") != std::string::npos));
 }
 
-HttpReq::HttpReq(const std::string& server, const std::string& path)
-	: mResolver(io_service), mSocket(io_service), mStatus(REQ_IN_PROGRESS)
-{
-	start(server, path);
-}
-
 HttpReq::HttpReq(const std::string& url)
-	: mResolver(io_service), mSocket(io_service), mStatus(REQ_IN_PROGRESS)
+	: mStatus(REQ_IN_PROGRESS), mHandle(NULL)
 {
-	size_t startpos = 0;
+	mHandle = curl_easy_init();
 
-	if(url.substr(startpos, 7) == "http://")
-		startpos = 7;
-	else if(url.substr(0, 8) == "https://")
-		startpos = 8;
-
-	size_t pathStart = url.find('/', startpos);
-
-	std::string server, path;
-	if(pathStart == std::string::npos)
+	if(mHandle == NULL)
 	{
-		server = url;
-		path = "/";
-	}else{
-		server = url.substr(startpos, pathStart - startpos);
-		path = url.substr(pathStart, std::string::npos);
+		mStatus = REQ_IO_ERROR;
+		onError("curl_easy_init failed");
+		return;
 	}
-	
-	start(server, path);
+
+	//set the url
+	CURLcode err = curl_easy_setopt(mHandle, CURLOPT_URL, url.c_str());
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//tell curl how to write the data
+	err = curl_easy_setopt(mHandle, CURLOPT_WRITEFUNCTION, &HttpReq::write_content);
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//give curl a pointer to this HttpReq so we know where to write the data *to* in our write function
+	err = curl_easy_setopt(mHandle, CURLOPT_WRITEDATA, this);
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//add the handle to our multi
+	CURLMcode merr = curl_multi_add_handle(s_multi_handle, mHandle);
+	if(merr != CURLM_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_multi_strerror(merr));
+		return;
+	}
+
+	s_requests[mHandle] = this;
 }
 
 HttpReq::~HttpReq()
 {
-	mResolver.cancel();
-	mSocket.close();
-	//status(); //poll once
-	while(status() == REQ_IN_PROGRESS); //otherwise you get really weird heap-allocation-related crashes
-}
-
-void HttpReq::start(const std::string& server, const std::string& path)
-{
-	std::ostream req_str(&mRequest);
-	req_str << "GET " << path << " HTTP/1.0\r\n";
-	req_str << "Host: " << server << "\r\n";
-	req_str << "Accept: */*\r\n";
-	req_str << "Connection: close\r\n\r\n";
-
-	tcp::resolver::query query(server, "http");
-	mResolver.async_resolve(query,
-		boost::bind(&HttpReq::handleResolve, this, 
-			boost::asio::placeholders::error,
-			boost::asio::placeholders::iterator));
-}
-
-void HttpReq::handleResolve(const boost::system::error_code& err, tcp::resolver::iterator endpoint_iterator)
-{
-	if (!err)
+	if(mHandle)
 	{
-		// Attempt a connection to each endpoint in the list until we
-		// successfully establish a connection.
-		boost::asio::async_connect(mSocket, endpoint_iterator,
-			boost::bind(&HttpReq::handleConnect, this,
-				boost::asio::placeholders::error));
-	}
-	else
-	{
-		onError(err);
-	}
-}
+		s_requests.erase(mHandle);
 
-void HttpReq::handleConnect(const boost::system::error_code& err)
-{
-	if (!err)
-	{
-		// The connection was successful. Send the request.
-		boost::asio::async_write(mSocket, mRequest,
-			boost::bind(&HttpReq::handleWriteRequest, this,
-			boost::asio::placeholders::error));
-	}
-	else
-	{
-		onError(err);
-	}
-}
+		CURLMcode merr = curl_multi_remove_handle(s_multi_handle, mHandle);
 
-void HttpReq::handleWriteRequest(const boost::system::error_code& err)
-{
-	if (!err)
-	{
-		// Read the response status line. The response_ streambuf will
-		// automatically grow to accommodate the entire line. The growth may be
-		// limited by passing a maximum size to the streambuf constructor.
-		boost::asio::async_read_until(mSocket, mResponse, "\r\n",
-			boost::bind(&HttpReq::handleReadStatusLine, this,
-			boost::asio::placeholders::error));
-	}
-	else
-	{
-		onError(err);
-	}
-}
+		if(merr != CURLM_OK)
+			LOG(LogError) << "Error removing curl_easy handle from curl_multi: " << curl_multi_strerror(merr);
 
-void HttpReq::handleReadStatusLine(const boost::system::error_code& err)
-{
-	if (!err)
-	{
-		// Check that response is OK.
-		std::istream response_stream(&mResponse);
-		std::string http_version;
-		response_stream >> http_version;
-		response_stream >> mResponseStatusCode;
-		std::string status_message;
-		std::getline(response_stream, status_message);
-		if(!response_stream || http_version.substr(0, 5) != "HTTP/")
-		{
-			mStatus = REQ_INVALID_RESPONSE;
-			return;
-		}
-		if(mResponseStatusCode != 200)
-		{
-			mStatus = REQ_BAD_STATUS_CODE;
-			return;
-		}
-
-		// Read the response headers, which are terminated by a blank line.
-		boost::asio::async_read_until(mSocket, mResponse, "\r\n\r\n",
-			boost::bind(&HttpReq::handleReadHeaders, this,
-				boost::asio::placeholders::error));
-	}
-	else
-	{
-		onError(err);
-	}
-}
-
-void HttpReq::handleReadHeaders(const boost::system::error_code& err)
-{
-	if (!err)
-	{
-		// Process the response headers.
-		std::istream response_stream(&mResponse);
-		std::string header;
-		while (std::getline(response_stream, header) && header != "\r"); //and by process we mean ignore
-
-		// Write whatever content we already have to output.
-		if (mResponse.size() > 0)
-			mContent << &mResponse;
-		
-		// Start reading remaining data until EOF.
-		boost::asio::async_read(mSocket, mResponse,
-			boost::asio::transfer_at_least(1),
-			boost::bind(&HttpReq::handleReadContent, this,
-				boost::asio::placeholders::error));
-	}
-	else
-	{
-		onError(err);
-	}
-}
-
-void HttpReq::handleReadContent(const boost::system::error_code& err)
-{
-	if (!err)
-	{
-		// Write all of the data that has been read so far.
-		mContent << &mResponse;
-
-		// Continue reading remaining data until EOF.
-		boost::asio::async_read(mSocket, mResponse,
-			boost::asio::transfer_at_least(1),
-			boost::bind(&HttpReq::handleReadContent, this,
-				boost::asio::placeholders::error));
-	}else{
-		if (err != boost::asio::error::eof)
-		{
-			onError(err);
-		}else{
-			mStatus = REQ_SUCCESS;
-		}
+		curl_easy_cleanup(mHandle);
 	}
 }
 
 HttpReq::Status HttpReq::status()
 {
-	try {
-		io_service.poll();
-	} catch(boost::system::system_error& e)
+	if(mStatus == REQ_IN_PROGRESS)
 	{
-		LOG(LogError) << "Boost.ASIO system error!  " << e.what();
+		int handle_count;
+		CURLMcode merr = curl_multi_perform(s_multi_handle, &handle_count);
+		if(merr != CURLM_OK && merr != CURLM_CALL_MULTI_PERFORM)
+		{
+			mStatus = REQ_IO_ERROR;
+			onError(curl_multi_strerror(merr));
+			return mStatus;
+		}
+
+		int msgs_left;
+		CURLMsg* msg;
+		while(msg = curl_multi_info_read(s_multi_handle, &msgs_left))
+		{
+			if(msg->msg == CURLMSG_DONE)
+			{
+				HttpReq* req = s_requests[msg->easy_handle];
+				
+				if(req == NULL)
+				{
+					LOG(LogError) << "Cannot find easy handle!";
+					continue;
+				}
+
+				if(msg->data.result == CURLE_OK)
+				{
+					req->mStatus = REQ_SUCCESS;
+				}else{
+					req->mStatus = REQ_IO_ERROR;
+					req->onError(curl_easy_strerror(msg->data.result));
+				}
+			}
+		}
 	}
 
 	return mStatus;
@@ -233,35 +148,36 @@ std::string HttpReq::getContent()
 {
 	if(mStatus != REQ_SUCCESS)
 	{
-		LOG(LogError) << "Called getContent() on an unsuccessful HttpReq!";
+		LOG(LogError) << "Called getContent() on an incomplete HttpReq!";
 		return "";
 	}
 
 	return mContent.str();
 }
 
-//only called for boost-level errors (REQ_IO_ERROR)
-void HttpReq::onError(const boost::system::error_code& err)
+void HttpReq::onError(const char* msg)
 {
-	mError = err;
-	mStatus = REQ_IO_ERROR;
+	mErrorMsg = msg;
 }
 
 std::string HttpReq::getErrorMsg()
 {
-	switch(mStatus)
-	{
-	case REQ_BAD_STATUS_CODE:
-		return "Bad status code";
-	case REQ_INVALID_RESPONSE:
-		return "Invalid response from server";
-	case REQ_IO_ERROR:
-		return mError.message();
-	case REQ_IN_PROGRESS:
-		return "Not done yet";
-	case REQ_SUCCESS:
-		return "No error";
-	default:
-		return "???";
-	}
+	return mErrorMsg;
 }
+
+//used as a curl callback
+//size = size of an element, nmemb = number of elements
+//return value is number of elements successfully read
+size_t HttpReq::write_content(void* buff, size_t size, size_t nmemb, void* req_ptr)
+{
+	std::stringstream& ss = ((HttpReq*)req_ptr)->mContent;
+	ss.write((char*)buff, size * nmemb);
+
+	return nmemb;
+}
+
+//used as a curl callback
+/*int HttpReq::update_progress(void* req_ptr, double dlTotal, double dlNow, double ulTotal, double ulNow)
+{
+	
+}*/

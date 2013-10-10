@@ -17,7 +17,7 @@ std::shared_ptr<HttpReq> TheArchiveScraper::makeHttpReq(ScraperSearchParams para
 	path += HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method
 
-	return std::make_shared<HttpReq>("api.archive.vg", path);
+	return std::make_shared<HttpReq>("api.archive.vg" + path);
 }
 
 std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq> req)

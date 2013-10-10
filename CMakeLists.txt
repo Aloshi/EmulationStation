@@ -37,6 +37,7 @@ find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
 find_package(Eigen3 REQUIRED)
+find_package(CURL REQUIRED)
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -102,6 +103,7 @@ set(ES_INCLUDE_DIRS
     ${SDL2_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
+    ${CURL_INCLUDE_DIR}
 )
 
 #add ALSA for Linux
@@ -294,6 +296,7 @@ set(ES_LIBRARIES
     ${FreeImage_LIBRARIES}
 	${SDL2_LIBRARY}
     ${SDL2MAIN_LIBRARY}
+    ${CURL_LIBRARIES}
 )
 
 #add ALSA for Linux

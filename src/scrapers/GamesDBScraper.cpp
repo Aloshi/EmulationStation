@@ -70,7 +70,7 @@ std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 		path += HttpReq::urlEncode(gamesdb_platformid_map.at(params.system->getPlatformId()));
 	}
 
-	return std::make_shared<HttpReq>("thegamesdb.net", path);
+	return std::make_shared<HttpReq>("thegamesdb.net" + path);
 }
 
 std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq> req)
