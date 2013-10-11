@@ -388,7 +388,7 @@ void GuiGameList::updateDetailData()
 		mScreenshot.setPosition(getImagePos() - imgOffset);
 
 		mImageAnimation.fadeIn(35);
-		mImageAnimation.move(imgOffset.x(), imgOffset.y(), 20);
+		mImageAnimation.move((int)imgOffset.x(), (int)imgOffset.y(), 20);
 
 		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, getImagePos().y() + mScreenshot.getSize().y() + 12, 0));
 		mDescContainer.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), Renderer::getScreenHeight() - mDescContainer.getPosition().y()));

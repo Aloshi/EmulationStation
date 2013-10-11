@@ -17,12 +17,12 @@ public:
 	OptionListComponent(Window* window, bool multiSelect = false) : GuiComponent(window),
 		mCursor(0), mScrollOffset(0), mMultiSelect(multiSelect), mEditing(false), mBox(window, ":/textbox.png")
 	{
+		setSize(getFont()->sizeText("Not set"));
 	}
 
 	struct ListEntry
 	{
 		std::string text;
-		unsigned int color;
 		bool selected;
 		T object;
 	};
@@ -149,9 +149,12 @@ public:
 		renderChildren(parentTrans * getTransform());
 	}
 
-	ListEntry makeEntry(const std::string& name, unsigned int color, T obj, bool selected = false) const
+	ListEntry makeEntry(const std::string& name, T obj, bool selected = false) const
 	{
-		ListEntry e = {name, color, selected, obj};
+		ListEntry e;
+		e.text = name;
+		e.object = obj;
+		e.selected = selected;
 		return e;
 	}
 
@@ -184,6 +187,19 @@ public:
 
 		return ret;
 	}
+
+	std::vector<T> getSelectedObjects()
+	{
+		std::vector<T> ret;
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		{
+			if((*it).selected)
+				ret.push_back(it->object);
+		}
+
+		return ret;
+	}
+
 private:
 	void select(unsigned int i)
 	{
@@ -205,6 +221,7 @@ private:
 
 	void open()
 	{
+		mCursor = 0;
 		mEditing = true;
 	}
 
@@ -222,7 +239,7 @@ private:
 		newSize[1] = (float)font->getHeight();
 		for(unsigned int i = 0; i < mEntries.size(); i++)
 		{
-			cache = font->buildTextCache(mEntries.at(i).text, 0, 0, mEntries.at(i).color);
+			cache = font->buildTextCache(mEntries.at(i).text, 0, 0, 0x000000FF);
 			mTextCaches.push_back(cache);
 
 			if(cache->metrics.size.x() > newSize.x())

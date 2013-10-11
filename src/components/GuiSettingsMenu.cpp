@@ -65,7 +65,7 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	scrapers.push_back(std::shared_ptr<Scraper>(new GamesDBScraper()));
 	scrapers.push_back(std::shared_ptr<Scraper>(new TheArchiveScraper()));
 	mScraperOptList.populate(scrapers, [&] (const std::shared_ptr<Scraper>& s) {
-		return mScraperOptList.makeEntry(s->getName(), 0x00FF00FF, s, s->getName() == Settings::getInstance()->getScraper()->getName());
+		return mScraperOptList.makeEntry(s->getName(), s, s->getName() == Settings::getInstance()->getScraper()->getName());
 	} );
 
 	mList.setEntry(Vector2i(1, 3), Vector2i(1, 1), &mScraperOptList, true, ComponentListComponent::AlignCenter);
