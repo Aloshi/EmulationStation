@@ -1,4 +1,5 @@
 #include "GuiScraperStart.h"
+#include "GuiMsgBoxOk.h"
 
 GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mBox(window, ":/frame.png"),
@@ -55,6 +56,8 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 void GuiScraperStart::start()
 {
 	std::queue<ScraperSearchParams> searches = getSearches(mSystemsOpt.getSelectedObjects(), mFiltersOpt.getSelectedObjects()[0]);
+
+	mWindow->pushGui(new GuiMsgBoxOk(mWindow, "this isn't implemented yet"));
 }
 
 std::queue<ScraperSearchParams> GuiScraperStart::getSearches(std::vector<SystemData*> systems, GameFilterFunc selector)
