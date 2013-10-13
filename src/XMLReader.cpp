@@ -4,6 +4,7 @@
 #include "pugiXML/pugixml.hpp"
 #include <boost/filesystem.hpp>
 #include "Log.h"
+#include "Settings.h"
 
 //this is obviously an incredibly inefficient way to go about searching
 //but I don't think it'll matter too much with the size of most collections
@@ -192,6 +193,9 @@ void updateGamelist(SystemData* system)
 	//because there might be information missing in our systemdata which would then miss in the new XML.
 	//We have the complete information for every game though, so we can simply remove a game
 	//we already have in the system from the XML, and then add it back from its GameData information...
+
+	if(Settings::getInstance()->getBool("DisableGamelistWrites"))
+		return;
 
 	std::string xmlpath = system->getGamelistPath();
 	if(xmlpath.empty())
