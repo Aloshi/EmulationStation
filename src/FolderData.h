@@ -31,6 +31,8 @@ public:
 	~FolderData();
 
 	bool isFolder() const;
+        boost::posix_time::ptime isSelected() const override;
+        void setSelected(bool isSelected) override;
 	const std::string & getName() const;
 	const std::string & getPath() const;
 
@@ -44,6 +46,7 @@ public:
 	void pushFileData(FileData* file);
 
 	void sort(ComparisonFunction & comparisonFunction = compareFileName, bool ascending = true);
+        void reselect();
 	static bool compareFileName(const FileData* file1, const FileData* file2);
 	static bool compareRating(const FileData* file1, const FileData* file2);
 	static bool compareTimesPlayed(const FileData* file1, const FileData* file2);
@@ -55,6 +58,7 @@ private:
 	std::string mPath;
 	std::string mName;
 	std::vector<FileData*> mFileVector;
+        boost::posix_time::ptime mSelected;
 };
 
 #endif

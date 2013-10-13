@@ -53,7 +53,7 @@ void GuiMenu::executeCommand(std::string command)
 	{
 		//reload the game list
 		SystemData::loadConfig(SystemData::getConfigPath(), false);
-		mParent->setSystemId(0);
+		mParent->reselectSystem();
 	}else if(command == "es_settings")
 	{
 		mWindow->pushGui(new GuiSettingsMenu(mWindow));

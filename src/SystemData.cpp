@@ -47,6 +47,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 		parseGamelist(this);
 
 	mRootFolder->sort();
+        mRootFolder->reselect();
 }
 
 SystemData::~SystemData()

@@ -76,7 +76,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
 	mTransitionAnimation.addChild(this);
 
-	setSystemId(0);
+        reselectSystem();
 }
 
 GuiGameList::~GuiGameList()
@@ -123,7 +123,9 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	if(mLockInput)
 		return false;
 
+        mList.getSelectedObject()->setSelected(0);
 	mList.input(config, input);
+        mList.getSelectedObject()->setSelected(true);
 
 	if(input.id == SDLK_F3)
 	{
@@ -292,19 +294,44 @@ void GuiGameList::sort(FolderData::ComparisonFunction & comparisonFunction, bool
 	updateDetailData();
 }
 
+void GuiGameList::reselectSystem()
+{
+        boost::posix_time::ptime lastSelectionTime = boost::date_time::min_date_time;
+        int lastSelectedSystemId = 0;
+        for (unsigned int systemId = 0; systemId < SystemData::sSystemVector.size(); ++systemId)
+        {
+                SystemData *sd = SystemData::sSystemVector.at(systemId);
+                if (sd->getRootFolder()->isSelected() != boost::date_time::not_a_date_time)
+                        if (lastSelectionTime < sd->getRootFolder()->isSelected())
+                        {
+                                lastSelectionTime = sd->getRootFolder()->isSelected();
+                                lastSelectedSystemId = systemId;
+                        }
+        }
+        setSystemId(lastSelectedSystemId);
+}
+
 void GuiGameList::updateList()
 {
 	mList.clear();
 
+        unsigned int selectId = 0;
+        boost::posix_time::ptime selectIdSelectionTime(boost::date_time::min_date_time);
 	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)
 	{
 		FileData* file = mFolder->getFile(i);
-
+                if (file->isSelected() != boost::date_time::not_a_date_time
+                               && file->isSelected() > selectIdSelectionTime)
+                {
+                        selectId = i;
+                        selectIdSelectionTime = file->isSelected();
+                }
 		if(file->isFolder())
 			mList.addObject(file->getName(), file, mTheme->getColor("secondary"));
 		else
 			mList.addObject(file->getName(), file, mTheme->getColor("primary"));
 	}
+        mList.setSelection(selectId);
 }
 
 std::string GuiGameList::getThemeFile()

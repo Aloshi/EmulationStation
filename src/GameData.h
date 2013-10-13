@@ -23,6 +23,8 @@ public:
 	std::string getCleanName() const;
 
 	bool isFolder() const override;
+        boost::posix_time::ptime isSelected() const override;
+        void setSelected(bool isSelected) override;
 
 	MetaDataList* metadata();
 

@@ -26,7 +26,8 @@ std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 		{"rating",		MD_RATING,				"0", 	false},
 		{"releasedate", MD_DATE,				"0", 	false},
 		{"playcount",	MD_INT,					"0", 	true},
-		{"lastplayed",	MD_TIME,				"0", 	true}
+		{"lastplayed",	MD_TIME,				"0", 	true},
+		{"selected",	MD_SELECTED,				"", 	true}
 	};
 
 	std::vector<MetaDataDecl> mdd(decls, decls + sizeof(decls) / sizeof(decls[0]));
@@ -138,6 +139,12 @@ GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataType as)
 			return comp;
 		}
 	case MD_TIME:
+		{
+			DateTimeComponent* comp = new DateTimeComponent(window);
+			comp->setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
+			return comp;
+		}
+	case MD_SELECTED:
 		{
 			DateTimeComponent* comp = new DateTimeComponent(window);
 			comp->setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);

@@ -2,7 +2,6 @@
 #define _GUIGAMELIST_H_
 
 #include "../GuiComponent.h"
-#include "TextListComponent.h"
 #include "ImageComponent.h"
 #include "ThemeComponent.h"
 #include "AnimationComponent.h"
@@ -12,6 +11,7 @@
 #include "../SystemData.h"
 #include "../GameData.h"
 #include "../FolderData.h"
+#include "TextListComponent.h"
 #include "ScrollableContainer.h"
 #include "RatingComponent.h"
 
@@ -27,6 +27,7 @@ public:
 	virtual ~GuiGameList();
 
 	void setSystemId(int id);
+        void reselectSystem();
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
