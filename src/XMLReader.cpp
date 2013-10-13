@@ -100,7 +100,7 @@ void parseGamelist(SystemData* system)
 {
 	std::string xmlpath = system->getGamelistPath();
 
-	if(xmlpath.empty())
+	if(!boost::filesystem::exists(xmlpath))
 		return;
 
 	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\"...";
@@ -198,7 +198,7 @@ void updateGamelist(SystemData* system)
 		return;
 
 	std::string xmlpath = system->getGamelistPath();
-	if(xmlpath.empty())
+	if(!boost::filesystem::exists(xmlpath))
 		return;
 
 	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\" before writing...";

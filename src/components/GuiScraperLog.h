@@ -11,6 +11,7 @@ class GuiScraperLog : public GuiComponent
 {
 public:
 	GuiScraperLog(Window* window, const std::queue<ScraperSearchParams>& params, bool manualMode);
+	~GuiScraperLog();
 
 	void start();
 
@@ -36,4 +37,7 @@ private:
 	
 	TextComponent mStatus;
 	boost::circular_buffer< std::shared_ptr<TextComponent> > mTextLines;
+
+	unsigned int mSuccessCount;
+	unsigned int mSkippedCount;
 };

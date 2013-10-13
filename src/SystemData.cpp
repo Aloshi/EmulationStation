@@ -326,18 +326,12 @@ std::string SystemData::getGamelistPath()
 
 	filePath = getHomePath();
 	filePath += "/.emulationstation/"+ getName() + "/gamelist.xml";
-	if(fs::exists(filePath))
-		return filePath;
-
-	return "";
+	return filePath;
 }
 
 bool SystemData::hasGamelist()
 {
-	if(getGamelistPath().empty())
-		return false;
-	else
-		return true;
+	return (fs::exists(getGamelistPath()));
 }
 
 std::vector<MetaDataDecl> SystemData::getGameMDD()

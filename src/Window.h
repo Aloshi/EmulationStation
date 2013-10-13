@@ -34,6 +34,9 @@ public:
 
 	void setFadePercent(const float& perc);
 
+	bool getAllowSleep();
+	void setAllowSleep(bool sleep);
+	
 private:
 	InputManager* mInputManager;
 	std::vector<GuiComponent*> mGuiStack;
@@ -55,6 +58,8 @@ private:
 
 	void postProcess();
 	float mFadePercent;
+
+	bool mAllowSleep;
 };
 
 #endif

@@ -3,13 +3,15 @@
 #include "GuiGameScraper.h"
 #include "../Renderer.h"
 #include "../Log.h"
+#include "../XMLReader.h"
 
 GuiScraperLog::GuiScraperLog(Window* window, const std::queue<ScraperSearchParams>& searches, bool manualMode) : GuiComponent(window), 
 	mManualMode(manualMode), 
 	mBox(window, ":/frame.png"),
 	mSearches(searches),
 	mStatus(window), 
-	mTextLines(40)
+	mTextLines(40), 
+	mSuccessCount(0), mSkippedCount(0)
 {
 	addChild(&mBox);
 	addChild(&mStatus);
@@ -25,6 +27,13 @@ GuiScraperLog::GuiScraperLog(Window* window, const std::queue<ScraperSearchParam
 	mBox.setEdgeColor(0x111111FF);
 	mBox.setCenterColor(0xDFDFDFFF);
 	mBox.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(8, 0));
+
+	mWindow->setAllowSleep(false);
+}
+
+GuiScraperLog::~GuiScraperLog()
+{
+	mWindow->setAllowSleep(true);
 }
 
 void GuiScraperLog::start()
@@ -77,7 +86,15 @@ void GuiScraperLog::resultFetched(ScraperSearchParams params, MetaDataList mdl)
 
 void GuiScraperLog::resultResolved(ScraperSearchParams params, MetaDataList mdl)
 {
+	//apply new metadata
+	*params.game->metadata() = mdl;
+
 	writeLine("   Success!", 0x00FF00FF);
+
+	//write changes to gamelist.xml
+	updateGamelist(params.system);
+
+	mSuccessCount++;
 
 	next();
 }
@@ -91,14 +108,21 @@ void GuiScraperLog::resultEmpty(ScraperSearchParams search)
 
 	LOG(LogInfo) << "Scraper skipping [" << search.game->getCleanName() << "]";
 
+	mSkippedCount++;
+
 	next();
 }
 
 void GuiScraperLog::done()
 {
-	writeLine("====================", 0x000000FF);
-	writeLine("DONE!!", 0x00FF00FF);
-	writeLine("====================", 0x000000FF);
+	writeLine("===================================", 0x000000FF);
+	
+	std::stringstream ss;
+	ss << mSuccessCount << " successful, " << mSkippedCount << " skipped";
+	writeLine(ss.str(), 0x000000FF);
+
+	writeLine("DONE!! Press anything to continue.", 0x00FF00FF);
+	writeLine("===================================", 0x000000FF);
 
 	//done with everything!
 }
