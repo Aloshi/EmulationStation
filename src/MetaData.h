@@ -28,6 +28,7 @@ struct MetaDataDecl
 	MetaDataType type;
 	std::string defaultValue;
 	bool isStatistic; //if true, ignore scraper values for this metadata
+        bool isInternal; //if true, hide in metadata editor
 };
 
 boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");
