@@ -23,7 +23,7 @@ std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 		{"desc",		MD_MULTILINE_STRING,	"", 	false},
 		{"image",		MD_IMAGE_PATH,			"", 	false},
 		{"thumbnail",	MD_IMAGE_PATH,			"", 	false},
-		{"rating",		MD_RATING,				"0", 	false},
+		{"rating",		MD_RATING,				"0.000000", 	false},
 		{"releasedate", MD_DATE,				"0", 	false},
 		{"playcount",	MD_INT,					"0", 	true},
 		{"lastplayed",	MD_TIME,				"0", 	true},
