@@ -24,6 +24,8 @@ public:
 	};
 
 	void setDisplayMode(DisplayMode mode);
+	void setColor(unsigned int color);
+	void setFont(std::shared_ptr<Font> font);
 
 private:
 	std::shared_ptr<Font> getFont() const;
@@ -44,4 +46,5 @@ private:
 
 	std::unique_ptr<TextCache> mTextCache;
 	std::vector<Eigen::Vector4f> mCursorBoxes;
+	std::shared_ptr<Font> mFont;
 };

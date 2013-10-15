@@ -31,10 +31,11 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mScreenshot(window),
 	mDescription(window), 
 	mRating(window), 
+	mLastPlayed(window),
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
 	mHeaderText(mWindow), 
-    sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex")),
+	sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex")),
 	mLockInput(false),
 	mEffectFunc(NULL), mEffectTime(0), mGameLaunchEffectLength(700)
 {
@@ -50,8 +51,11 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, false, "played most recently"));
 	}
 
+    mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
+
 	mImageAnimation.addChild(&mScreenshot);
 	mDescContainer.addChild(&mRating);
+	mDescContainer.addChild(&mLastPlayed);
 	mDescContainer.addChild(&mDescription);
 
 	//scale delay with screen width (higher width = more text per line)
@@ -76,7 +80,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
 	mTransitionAnimation.addChild(this);
 
-        reselectSystem();
+    reselectSystem();
 }
 
 GuiGameList::~GuiGameList()
@@ -384,6 +388,8 @@ void GuiGameList::updateTheme()
 		mScreenshot.setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 		mScreenshot.setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
 
+		mLastPlayed.setColor(mTheme->getColor("description"));
+		mLastPlayed.setFont(mTheme->getDescriptionFont());
 		mDescription.setColor(mTheme->getColor("description"));
 		mDescription.setFont(mTheme->getDescriptionFont());
 	}else{
@@ -428,6 +434,10 @@ void GuiGameList::updateDetailData()
 
 		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
 		mRating.setValue(game->metadata()->get("rating"));
+
+                mLastPlayed.setSize(colwidth - mRating.getSize().x(), ratingHeight);
+                mLastPlayed.setPosition(0, 0);
+                mLastPlayed.setValue(game->metadata()->get("lastplayed"));
 
 		mDescription.setPosition(0, mRating.getSize().y());
 		mDescription.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), 0));

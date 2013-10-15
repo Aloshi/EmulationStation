@@ -16,6 +16,14 @@ void DateTimeComponent::setDisplayMode(DisplayMode mode)
 	mDisplayMode = mode;
 }
 
+void DateTimeComponent::setColor(unsigned int color)
+{
+    if (mTextCache)
+    {
+        mTextCache->setColor(color);
+    }
+}
+
 bool DateTimeComponent::input(InputConfig* config, Input input)
 {
 	if(input.value == 0)
@@ -229,9 +237,17 @@ std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 	return ss.str();
 }
 
+void DateTimeComponent::setFont(std::shared_ptr<Font> font)
+{
+    mFont = font;
+}
+
 std::shared_ptr<Font> DateTimeComponent::getFont() const
 {
-	return Font::get(FONT_SIZE_MEDIUM);
+	if(mFont)
+		return mFont;
+	else
+		return Font::get(FONT_SIZE_MEDIUM);
 }
 
 void DateTimeComponent::updateTextCache()
