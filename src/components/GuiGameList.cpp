@@ -42,6 +42,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mScreenshot(window),
 	mDescription(window), 
 	mRating(window), 
+	mReleaseDateLabel(window), 
 	mReleaseDate(window), 
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
@@ -63,6 +64,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	}
 
 	mImageAnimation.addChild(&mScreenshot);
+	mDescContainer.addChild(&mReleaseDateLabel);
 	mDescContainer.addChild(&mReleaseDate);
 	mDescContainer.addChild(&mRating);
 	mDescContainer.addChild(&mDescription);
@@ -370,6 +372,8 @@ void GuiGameList::updateTheme()
 		mScreenshot.setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 		mScreenshot.setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
 
+		mReleaseDateLabel.setColor(mTheme->getColor("description"));
+		mReleaseDateLabel.setFont(mTheme->getDescriptionFont());
 		mReleaseDate.setColor(mTheme->getColor("description"));
 		mReleaseDate.setFont(mTheme->getDescriptionFont());
 
@@ -424,7 +428,9 @@ void GuiGameList::updateDetailData()
 		float ratingHeight = colwidth * 0.3f / 5.0f;
 		mRating.setSize(ratingHeight * 5.0f, ratingHeight);
 
-		mReleaseDate.setPosition(0, 0);
+		mReleaseDateLabel.setPosition(0, 0);
+		mReleaseDateLabel.setText("Released: ");
+		mReleaseDate.setPosition(mReleaseDateLabel.getPosition().x() + mReleaseDateLabel.getSize().x(), mReleaseDateLabel.getPosition().y());
 		mReleaseDate.setValue(game->metadata()->get("releasedate"));
 
 		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
