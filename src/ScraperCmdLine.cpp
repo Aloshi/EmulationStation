@@ -255,7 +255,11 @@ int run_scraper_cmdline()
 					if(url.length() != urlShort.length()) urlShort += "...";
 
 					out << "   " << game->metadata()->get("name") << " [from: " << urlShort << "]...\n";
-					game->metadata()->set(key, downloadImage(url, getSaveAsPath((*sysIt)->getName(), game->getCleanName(), url)));
+
+					ScraperSearchParams p;
+					p.game = game;
+					p.system = *sysIt;
+					game->metadata()->set(key, downloadImage(url, getSaveAsPath(p, key, url)));
 					if(game->metadata()->get(key).empty())
 					{
 						out << "     FAILED! Skipping.\n";

@@ -8,7 +8,7 @@
 #include <iomanip>
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
-	mZoomFactor(1.0f), mCenterPoint(0, 0), mMatrix(Eigen::Affine3f::Identity()), mFadePercent(0.0f)
+	mZoomFactor(1.0f), mCenterPoint(0, 0), mMatrix(Eigen::Affine3f::Identity()), mFadePercent(0.0f), mAllowSleep(true)
 {
 	mInputManager = new InputManager(this);
 	setCenterPoint(Eigen::Vector2f(Renderer::getScreenWidth() / 2, Renderer::getScreenHeight() / 2));
@@ -187,4 +187,14 @@ void Window::postProcess()
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
 		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | ((unsigned char)(mFadePercent * 255)));
 	}
+}
+
+bool Window::getAllowSleep()
+{
+	return mAllowSleep;
+}
+
+void Window::setAllowSleep(bool sleep)
+{
+	mAllowSleep = sleep;
 }

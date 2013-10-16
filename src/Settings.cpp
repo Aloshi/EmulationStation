@@ -33,12 +33,14 @@ void Settings::setDefaults()
 	mBoolMap["DEBUG"] = false;
 	mBoolMap["WINDOWED"] = false;
 	mBoolMap["DISABLESOUNDS"] = false;
+	mBoolMap["DisableGamelistWrites"] = false;
 
 	mIntMap["DIMTIME"] = 30*1000;
 	mIntMap["ScraperResizeWidth"] = 450;
 	mIntMap["ScraperResizeHeight"] = 0;
 
 	mIntMap["GameListSortIndex"] = 0;
+
 
 	mScraper = std::shared_ptr<Scraper>(new GamesDBScraper());
 }

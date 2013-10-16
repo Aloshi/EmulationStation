@@ -228,7 +228,7 @@ int main(int argc, char* argv[])
 		//sleeping entails setting a flag to start skipping frames
 		//and initially drawing a black semi-transparent rect to dim the screen
 		timeSinceLastEvent += deltaTime;
-		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("DIMTIME") && Settings::getInstance()->getInt("DIMTIME") != 0)
+		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("DIMTIME") && Settings::getInstance()->getInt("DIMTIME") != 0 && window.getAllowSleep())
 		{
 			sleeping = true;
 			timeSinceLastEvent = 0;

@@ -128,6 +128,8 @@ void GuiMetaDataEd::fetch()
 
 void GuiMetaDataEd::fetchDone(MetaDataList result)
 {
+	//TODO - replace this with resolveMetaDataAssetsAsync!
+
 	//this is a little tricky:
 	//go through the list of returned results, if anything is an image and the path looks like a URL:
 	//  (1) start an async download + resize (will create an AsyncReq that blocks further user input)
@@ -141,7 +143,7 @@ void GuiMetaDataEd::fetchDone(MetaDataList result)
 		//val is /probably/ a URL
 		if(it->type == MD_IMAGE_PATH && HttpReq::isUrl(val))
 		{
-			downloadImageAsync(mWindow, val, getSaveAsPath(mScraperParams.system->getName(), mScraperParams.game->getCleanName() + "-" + key, val), 
+			downloadImageAsync(mWindow, val, getSaveAsPath(mScraperParams, key, val), 
 				[this, result, key] (std::string filePath) mutable -> void {
 					//skip it
 					if(filePath.empty())
