@@ -19,10 +19,21 @@ Eigen::Vector3f GuiGameList::getImagePos()
 
 bool GuiGameList::isDetailed() const
 {
-	if(mSystem == NULL)
+	if(!mFolder)
 		return false;
 
-	return mSystem->hasGamelist();
+	//return true if any game has an image specified
+	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)
+	{
+		if(!mFolder->getFile(i)->isFolder())
+		{
+			GameData* game = (GameData*)(mFolder->getFile(i));
+			if(!game->metadata()->get("image").empty())
+				return true;
+		}
+	}
+
+	return false;
 }
 
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
@@ -31,6 +42,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mScreenshot(window),
 	mDescription(window), 
 	mRating(window), 
+	mReleaseDate(window), 
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
 	mHeaderText(mWindow), 
@@ -51,6 +63,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	}
 
 	mImageAnimation.addChild(&mScreenshot);
+	mDescContainer.addChild(&mReleaseDate);
 	mDescContainer.addChild(&mRating);
 	mDescContainer.addChild(&mDescription);
 
@@ -357,14 +370,15 @@ void GuiGameList::updateTheme()
 		mScreenshot.setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
 		mScreenshot.setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
 
+		mReleaseDate.setColor(mTheme->getColor("description"));
+		mReleaseDate.setFont(mTheme->getDescriptionFont());
+
 		mDescription.setColor(mTheme->getColor("description"));
 		mDescription.setFont(mTheme->getDescriptionFont());
 	}else{
 		mList.setCentered(true);
 		mList.setPosition(0, mList.getPosition().y());
 		mList.setTextOffsetX(0);
-
-		//mDescription.setFont(nullptr);
 	}
 }
 
@@ -378,11 +392,22 @@ void GuiGameList::updateDetailData()
 			addChild(&mDescContainer);
 
 		GameData* game = (GameData*)mList.getSelectedObject();
+
 		//set image to either "not found" image or metadata image
-		if(game->metadata()->get("image").empty())
-			mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
-		else
+		if(!boost::filesystem::exists(game->metadata()->get("image")))
+		{
+			//image doesn't exist
+			if(mTheme->getString("imageNotFoundPath").empty())
+			{
+				//"not found" image doesn't exist
+				mScreenshot.setImage("");
+				mScreenshot.setSize(0, 0); //clear old size
+			}else{
+				mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
+			}
+		}else{
 			mScreenshot.setImage(game->metadata()->get("image"));
+		}
 
 		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
 		mScreenshot.setPosition(getImagePos() - imgOffset);
@@ -398,6 +423,9 @@ void GuiGameList::updateDetailData()
 		const float colwidth = mDescContainer.getSize().x();
 		float ratingHeight = colwidth * 0.3f / 5.0f;
 		mRating.setSize(ratingHeight * 5.0f, ratingHeight);
+
+		mReleaseDate.setPosition(0, 0);
+		mReleaseDate.setValue(game->metadata()->get("releasedate"));
 
 		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
 		mRating.setValue(game->metadata()->get("rating"));

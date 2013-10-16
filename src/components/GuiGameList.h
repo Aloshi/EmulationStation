@@ -14,6 +14,7 @@
 #include "../FolderData.h"
 #include "ScrollableContainer.h"
 #include "RatingComponent.h"
+#include "DateTimeComponent.h"
 
 //This is where the magic happens - GuiGameList is the parent of almost every graphical element in ES at the moment.
 //It has a TextListComponent child that handles the game list, a ThemeComponent that handles the theming system, and an ImageComponent for game images.
@@ -60,8 +61,11 @@ private:
 
 	TextListComponent<FileData*> mList;
 	ImageComponent mScreenshot;
+
 	TextComponent mDescription;
 	RatingComponent mRating;
+	DateTimeComponent mReleaseDate;
+
 	ScrollableContainer mDescContainer;
 	AnimationComponent mImageAnimation;
 	ThemeComponent* mTheme;
