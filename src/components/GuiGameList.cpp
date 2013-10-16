@@ -386,8 +386,8 @@ void GuiGameList::updateTheme()
 		mList.setTextOffsetX((int)(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth()));
 
 		mScreenshots.setPosition(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
-		//mScreenshots.setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
-		//mScreenshots.setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
+		mScreenshots.setSize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight());
+
 
 		mLastPlayed.setColor(mTheme->getColor("description"));
 		mLastPlayed.setFont(mTheme->getDescriptionFont());
@@ -420,6 +420,7 @@ void GuiGameList::updateDetailData()
                     delete ic;
                 }
                 mImgs.clear();
+
 		if(game->metadata()->getSize("image") == 0)
                 {
                         ImageComponent *ic = new ImageComponent(mWindow);
@@ -432,18 +433,17 @@ void GuiGameList::updateDetailData()
                     {
                         ImageComponent *ic = new ImageComponent(mWindow);
                         ic->setImage(game->metadata()->getElemAt("image", i));
-                        ic->setOrigin(0.0f, 0.0f);
-                        ic->setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
-                        ic->setPosition(0.0f, offset);
+                        ic->setOrigin(0.5f, 0.f);
+                        ic->setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), 0.f, mTheme->getBool("gameImageUpscale"));
+                        ic->setPosition(mScreenshots.getSize().x()/2.f, offset);
                         offset += ic->getSize().y() + mTheme->getFloat("gameImageSpace");
                         mImgs.push_back(ic);
                         mScreenshots.addChild(ic);
                     }
                 }
+
 		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
-		//mScreenshots.setPosition(getImagePos() - imgOffset);
-		mScreenshots.setPosition(0.0f, 0.0f);
-                mScreenshots.setSize(0.5f, 0.5f);
+		mScreenshots.setPosition(getImagePos() - imgOffset);
 		mScreenshots.setScrollPos(Eigen::Vector2d(0, 0));
 		mScreenshots.resetAutoScrollTimer();
 
