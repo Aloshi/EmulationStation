@@ -9,6 +9,7 @@
 #include "TextComponent.h"
 #include "NinePatchComponent.h"
 #include "OptionListComponent.h"
+#include "ButtonComponent.h"
 #include "../scrapers/Scraper.h"
 
 class GuiSettingsMenu : public GuiComponent
@@ -31,8 +32,9 @@ private:
 	SliderComponent mVolumeSlider;
 	SwitchComponent mDisableSoundsSwitch;
 	OptionListComponent< std::shared_ptr<Scraper> > mScraperOptList;
-	TextComponent mSaveLabel;
-
+	SwitchComponent mScrapeRatingsSwitch;
+	ButtonComponent mSaveButton;
+	
 	std::vector<GuiComponent*> mLabels;
 };
 

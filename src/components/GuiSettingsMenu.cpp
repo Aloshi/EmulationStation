@@ -7,13 +7,14 @@
 #include "../scrapers/GamesDBScraper.h"
 
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window), 
-	mList(window, Eigen::Vector2i(2, 5)), 
+	mList(window, Eigen::Vector2i(2, 6)), 
 	mBox(mWindow, ":/frame.png", 0x444444FF),
 	mDrawFramerateSwitch(window),
 	mVolumeSlider(window, 0, 100, 1),
 	mDisableSoundsSwitch(window, false),
-	mSaveLabel(window),
-	mScraperOptList(window)
+	mScraperOptList(window), 
+	mScrapeRatingsSwitch(window), 
+	mSaveButton(window)
 {
 	loadStates();
 
@@ -70,10 +71,19 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 
 	mList.setEntry(Vector2i(1, 3), Vector2i(1, 1), &mScraperOptList, true, ComponentListComponent::AlignCenter);
 
-	//save label
-	mSaveLabel.setText("SAVE");
-	mSaveLabel.setColor(0x000000FF);
-	mList.setEntry(Vector2i(0, 4), Vector2i(2, 1), &mSaveLabel, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
+	//scrape ratings label
+	label = new TextComponent(mWindow);
+	label->setText("Scrape ratings? ");
+	label->setColor(0x0000FFFF);
+	mLabels.push_back(label);
+	mList.setEntry(Vector2i(0, 4), Vector2i(1, 1), label, false, ComponentListComponent::AlignRight);
+	
+	mList.setEntry(Vector2i(1, 4), Vector2i(1, 1), &mScrapeRatingsSwitch, true, ComponentListComponent::AlignCenter);
+
+	//save button
+	mSaveButton.setText("SAVE", 0x00FF00FF);
+	mSaveButton.setPressedFunc([this] () { applyStates(); delete this; });
+	mList.setEntry(Vector2i(0, 5), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
 
 	//center list
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
@@ -96,15 +106,9 @@ bool GuiSettingsMenu::input(InputConfig* config, Input input)
 	if(GuiComponent::input(config, input))
 		return true;
 
+	//cancel if b is pressed
 	if(config->isMappedTo("b", input) && input.value)
 	{
-		delete this;
-		return true;
-	}
-
-	if(config->isMappedTo("a", input) && mList.getSelectedComponent() == &mSaveLabel && input.value)
-	{
-		applyStates();
 		delete this;
 		return true;
 	}
@@ -120,6 +124,8 @@ void GuiSettingsMenu::loadStates()
 	mVolumeSlider.setValue((float)VolumeControl::getInstance()->getVolume());
 
 	mDisableSoundsSwitch.setState(s->getBool("DISABLESOUNDS"));
+
+	mScrapeRatingsSwitch.setState(s->getBool("ScrapeRatings"));
 }
 
 void GuiSettingsMenu::applyStates()
@@ -133,6 +139,8 @@ void GuiSettingsMenu::applyStates()
 
 	if(mScraperOptList.getSelected().size() > 0)
 		s->setScraper(mScraperOptList.getSelected()[0]->object);
+
+	s->setBool("ScrapeRatings", mScrapeRatingsSwitch.getState());
 
 	s->saveFile();
 }
