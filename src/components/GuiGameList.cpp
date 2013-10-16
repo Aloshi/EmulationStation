@@ -151,8 +151,11 @@ bool GuiGameList::input(InputConfig* config, Input input)
 			searchParams.system = mSystem;
 			mWindow->pushGui(new GuiMetaDataEd(mWindow, game->metadata(), mSystem->getGameMDD(), searchParams, game->getBaseName(),
 				[&] { updateDetailData(); }, 
-				[game, root, this] { root->removeFileRecursive(game); updateList(); }
-			));
+				[game, root, this] { 
+					boost::filesystem::remove(game->getPath());
+					root->removeFileRecursive(game); 
+					updateList(); 
+			}));
 		}
 		return true;
 	}

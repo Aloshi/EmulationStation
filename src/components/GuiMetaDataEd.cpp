@@ -5,6 +5,7 @@
 #include "../Settings.h"
 #include "GuiGameScraper.h"
 #include <boost/filesystem.hpp>
+#include "GuiMsgBoxYesNo.h"
 
 #define MDED_RESERVED_ROWS 3
 
@@ -30,7 +31,11 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	//initialize buttons
 	mDeleteButton.setText("DELETE", mDeleteFunc ? 0xFF0000FF : 0x555555FF);
 	if(mDeleteFunc)
-		mDeleteButton.setPressedFunc([&] { mDeleteFunc(); delete this; });
+	{
+		std::function<void()> deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
+		std::function<void()> pressedFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "This will delete a file!\nAre you sure?", deleteFileAndSelf)); };
+		mDeleteButton.setPressedFunc(pressedFunc);
+	}
 
 	mFetchButton.setText("FETCH", 0x00FF00FF);
 	mFetchButton.setPressedFunc(std::bind(&GuiMetaDataEd::fetch, this));
@@ -163,4 +168,19 @@ void GuiMetaDataEd::fetchDone(MetaDataList result)
 		const std::string& key = mMetaDataDecl.at(i).key;
 		mEditors.at(i)->setValue(result.get(key));
 	}
+}
+
+
+bool GuiMetaDataEd::input(InputConfig* config, Input input)
+{
+	if(GuiComponent::input(config, input))
+		return true;
+
+	if(input.value != 0 && config->isMappedTo("b", input))
+	{
+		delete this;
+		return true;
+	}
+
+	return false;
 }
