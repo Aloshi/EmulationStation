@@ -98,6 +98,7 @@ void ThemeComponent::setDefaults()
 	mFloatMap["gameImageOffsetX"] = mFloatMap["listOffsetX"] / 2;
 	mFloatMap["gameImageOffsetY"] = (float)FONT_SIZE_LARGE / (float)Renderer::getScreenHeight();
 	mFloatMap["gameImageWidth"] = mFloatMap["listOffsetX"];
+        mFloatMap["gameImageSpace"] = 5.f;
 	mFloatMap["gameImageHeight"] = 0;
 
 	mSoundMap["menuScroll"]->loadFile("");
@@ -201,6 +202,7 @@ void ThemeComponent::readXML(std::string path, bool detailed)
 	mFloatMap["gameImageHeight"] = resolveExp(artHeight, mFloatMap["gameImageHeight"]);
 	mFloatMap["gameImageOriginX"] = resolveExp(artOriginX, mFloatMap["gameImageOriginX"]);
 	mFloatMap["gameImageOriginY"] = resolveExp(artOriginY, mFloatMap["gameImageOriginY"]);
+        mFloatMap["gameImageSpace"] = strToFloat(root.child("gameImageSpace").text().get(), mFloatMap["gameImageSpace"]);
 
 	mStringMap["imageNotFoundPath"] = expandPath(root.child("gameImageNotFound").text().get());
 	mStringMap["fastSelectFrame"] = expandPath(root.child("fastSelectFrame").text().get());

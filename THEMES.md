@@ -117,6 +117,8 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<gameImagePos>` - two values for the position of the game art, in the form of `[x] [y]`, as a percentage. Default is `$infoWidth/2 $headerHeight`. 
 
+`<gameImageSpace>` - Defines the border space between two images. Default is 5 pixels.
+
 `<gameImageDim>` - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `$infoWidth 0` (width fits within the info column). The image will only be resized if at least one axis is nonzero *and* exceeded by the image's size. You should always leave at least one axis as zero to preserve the aspect ratio.
 
 `<gameImageOrigin>` - two values for the origin of the game art, in the form of `[x] [y]`, as a percentage. Default is `0.5 0` (top-center of the image).

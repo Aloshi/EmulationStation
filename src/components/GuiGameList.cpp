@@ -28,7 +28,7 @@ bool GuiGameList::isDetailed() const
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
 	mTheme(new ThemeComponent(mWindow)),
 	mList(window, 0.0f, 0.0f, Font::get(FONT_SIZE_MEDIUM)), 
-	mScreenshot(window),
+	mScreenshots(window),
 	mDescription(window), 
 	mRating(window), 
 	mLastPlayed(window),
@@ -51,9 +51,9 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, false, "played most recently"));
 	}
 
-    mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
+        mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 
-	mImageAnimation.addChild(&mScreenshot);
+	mImageAnimation.addChild(&mScreenshots);
 	mDescContainer.addChild(&mRating);
 	mDescContainer.addChild(&mLastPlayed);
 	mDescContainer.addChild(&mDescription);
@@ -61,6 +61,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	//scale delay with screen width (higher width = more text per line)
 	//the scroll speed is automatically scaled by component size
 	mDescContainer.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
+	mScreenshots.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
 
 	mTransitionImage.setPosition((float)Renderer::getScreenWidth(), 0);
 	mTransitionImage.setOrigin(0, 0);
@@ -73,7 +74,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
 	addChild(mTheme);
 	addChild(&mHeaderText);
-	addChild(&mScreenshot);
+	addChild(&mScreenshots);
 	addChild(&mDescContainer);
 	addChild(&mList);
 	addChild(&mTransitionImage);
@@ -384,9 +385,9 @@ void GuiGameList::updateTheme()
 		mList.setPosition(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth(), mList.getPosition().y());
 		mList.setTextOffsetX((int)(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth()));
 
-		mScreenshot.setPosition(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
-		mScreenshot.setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
-		mScreenshot.setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
+		mScreenshots.setPosition(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+		//mScreenshots.setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
+		//mScreenshots.setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
 
 		mLastPlayed.setColor(mTheme->getColor("description"));
 		mLastPlayed.setFont(mTheme->getDescriptionFont());
@@ -409,21 +410,47 @@ void GuiGameList::updateDetailData()
 	}else{
 		if(mDescContainer.getParent() != this)
 			addChild(&mDescContainer);
+		if(mScreenshots.getParent() != this)
+			addChild(&mScreenshots);
 
 		GameData* game = (GameData*)mList.getSelectedObject();
 		//set image to either "not found" image or metadata image
+                for (ImageComponent *ic: mImgs) {
+                    mScreenshots.removeChild(ic);
+                    delete ic;
+                }
+                mImgs.clear();
 		if(game->metadata()->getSize("image") == 0)
-			mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
-		else
-			mScreenshot.setImage(game->metadata()->getElemAt("image", 0));
-
+                {
+                        ImageComponent *ic = new ImageComponent(mWindow);
+			ic->setImage(mTheme->getString("imageNotFoundPath"));
+                        mImgs.push_back(ic);
+                        mScreenshots.addChild(ic);
+                } else {
+                    float offset = 0.0f;
+                    for (unsigned int i=0; i<game->metadata()->getSize("image"); ++i)
+                    {
+                        ImageComponent *ic = new ImageComponent(mWindow);
+                        ic->setImage(game->metadata()->getElemAt("image", i));
+                        ic->setOrigin(0.0f, 0.0f);
+                        ic->setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
+                        ic->setPosition(0.0f, offset);
+                        offset += ic->getSize().y() + mTheme->getFloat("gameImageSpace");
+                        mImgs.push_back(ic);
+                        mScreenshots.addChild(ic);
+                    }
+                }
 		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
-		mScreenshot.setPosition(getImagePos() - imgOffset);
+		//mScreenshots.setPosition(getImagePos() - imgOffset);
+		mScreenshots.setPosition(0.0f, 0.0f);
+                mScreenshots.setSize(0.5f, 0.5f);
+		mScreenshots.setScrollPos(Eigen::Vector2d(0, 0));
+		mScreenshots.resetAutoScrollTimer();
 
 		mImageAnimation.fadeIn(35);
 		mImageAnimation.move((int)imgOffset.x(), (int)imgOffset.y(), 20);
 
-		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, getImagePos().y() + mScreenshot.getSize().y() + 12, 0));
+		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, getImagePos().y() + mScreenshots.getSize().y() + 12, 0));
 		mDescContainer.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), Renderer::getScreenHeight() - mDescContainer.getPosition().y()));
 		mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
 		mDescContainer.resetAutoScrollTimer();
@@ -538,7 +565,7 @@ void GuiGameList::updateGameLaunchEffect(int t)
 	const int fadeDelay = endTime - 600;
 	const int fadeTime = endTime - fadeDelay - 100;
 
-	Eigen::Vector2f imageCenter(mScreenshot.getCenter());
+	Eigen::Vector2f imageCenter((mScreenshots.getSize().x()/2 + mScreenshots.getPosition().x()), (mScreenshots.getSize().y()/2 + mScreenshots.getPosition().y()));
 	if(!isDetailed())
 	{
 		imageCenter << mList.getPosition().x() + mList.getSize().x() / 2, mList.getPosition().y() + mList.getSize().y() / 2;

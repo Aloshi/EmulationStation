@@ -60,8 +60,10 @@ private:
 	std::stack<FolderData*> mFolderStack;
 	int mSystemId;
 
+        std::deque<ImageComponent*> mImgs;
+
 	TextListComponent<FileData*> mList;
-	ImageComponent mScreenshot;
+        ScrollableContainer mScreenshots;
 	TextComponent mDescription;
 	RatingComponent mRating;
         DateTimeComponent mLastPlayed;
