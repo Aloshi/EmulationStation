@@ -34,9 +34,10 @@ void Settings::setDefaults()
 	mBoolMap["WINDOWED"] = false;
 	mBoolMap["DISABLESOUNDS"] = false;
 	mBoolMap["DisableGamelistWrites"] = false;
+	mBoolMap["ScrapeRatings"] = true;
 
 	mIntMap["DIMTIME"] = 30*1000;
-	mIntMap["ScraperResizeWidth"] = 450;
+	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
 
 	mIntMap["GameListSortIndex"] = 0;

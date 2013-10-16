@@ -198,19 +198,25 @@ void updateGamelist(SystemData* system)
 		return;
 
 	std::string xmlpath = system->getGamelistPath();
-	if(!boost::filesystem::exists(xmlpath))
-		return;
-
-	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\" before writing...";
 
 	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
 
-	if(!result)
+	if(boost::filesystem::exists(xmlpath))
 	{
-		LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
-		return;
+		//parse an existing file first
+		LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\" before writing...";
+
+		pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
+		if(!result)
+		{
+			LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
+			return;
+		}
+	}else{
+		//set up an empty gamelist to append to
+		doc.append_child("gameList");
 	}
+
 
 	pugi::xml_node root = doc.child("gameList");
 	if(!root)

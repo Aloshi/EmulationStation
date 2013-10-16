@@ -7,6 +7,8 @@
 #include <boost/circular_buffer.hpp>
 #include "TextComponent.h"
 
+//A "terminal" of sorts for scraping.
+//Doesn't accept input, but renders log-style messages and handles the callback chain for multi-game scraping.
 class GuiScraperLog : public GuiComponent
 {
 public:

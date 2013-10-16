@@ -13,6 +13,12 @@ RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 
 void RatingComponent::setValue(const std::string& value)
 {
+	if(value.empty())
+	{
+		mValue = 0.0f;
+		return;
+	}
+
 	mValue = stof(value);
 	if(mValue > 1.0f)
 		mValue = 1.0f;

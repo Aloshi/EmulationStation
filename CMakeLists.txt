@@ -178,6 +178,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxOk.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxYesNo.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
@@ -236,6 +237,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxOk.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxYesNo.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp

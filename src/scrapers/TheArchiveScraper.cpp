@@ -47,7 +47,9 @@ std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params
 		mdl.push_back(MetaDataList(params.system->getGameMDD()));
 		mdl.back().set("name", game.child("title").text().get());
 		mdl.back().set("desc", game.child("description").text().get());
-		
+
+		//Archive.search does not return ratings
+
 		pugi::xml_node image = game.child("box_front");
 		pugi::xml_node thumbnail = game.child("box_front_small");
 
