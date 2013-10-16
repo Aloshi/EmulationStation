@@ -5,6 +5,8 @@
 #include "components/TextEditComponent.h"
 #include "components/RatingComponent.h"
 #include "components/DateTimeComponent.h"
+#include <sstream>
+#include <cstring>
 
 MetaDataList::MetaDataList()
 {
@@ -21,7 +23,7 @@ std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 	MetaDataDecl decls[] = { 
 		{"name",		MD_STRING,				"", 		false,	false}, 
 		{"desc",		MD_MULTILINE_STRING,	"", 		false,	false},
-		{"image",		MD_IMAGE_PATH,			"", 		false,	false},
+		{"image",		MD_IMAGE_PATH_LIST,			"", 		false,	false},
 		{"thumbnail",	MD_IMAGE_PATH,			"", 		false,	false},
 		{"rating",		MD_RATING,				"0.000000",	false,	false},
 		{"releasedate", MD_DATE,				"0", 		false,	false},
@@ -34,20 +36,73 @@ std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 	return mdd;
 }
 
+unsigned int MetaDataList::getSize(const std::string &key)
+{
+    std::ostringstream ostr;
+    ostr << key << "#";
+    const std::string keyWithSep(ostr.str());
+    unsigned int size = std::count_if(
+            mMap.begin(),
+            mMap.end(),
+            [&keyWithSep](const std::pair<std::string, std::string> &key_value){
+                return keyWithSep.size() < key_value.first.size() && std::strncmp(keyWithSep.c_str(), key_value.first.c_str(), keyWithSep.size()) == 0;
+            }
+        );
+    return size;
+}
+
+const std::string &MetaDataList::getElemAt(const std::string &key, unsigned int npos)
+{
+    std::ostringstream ostr;
+    ostr << key << "#" << npos;
+    const std::string &result = mMap.at(ostr.str());
+    return result;
+}
+
+void MetaDataList::clearList(const std::string &key)
+{
+    const std::string keyWithSep(key+"#");
+    for (auto iter = mMap.begin(); iter != mMap.end();)
+    {
+        if (keyWithSep.compare(0, keyWithSep.size(), iter->first) == 0)
+            mMap.erase(iter++);
+        else
+            ++iter;
+    }
+}
+
+void MetaDataList::push_back(const std::string &key, const std::string &value)
+{
+    std::ostringstream ostr;
+    ostr << key << "#" << getSize(key);
+    mMap[ostr.str()] = value;
+}
+
+void MetaDataList::set(const std::string &key, unsigned int npos, const std::string &value)
+{
+    std::ostringstream ostr;
+    ostr << key << "#" << npos;
+    mMap[ostr.str()] = value;
+}
+
 MetaDataList MetaDataList::createFromXML(const std::vector<MetaDataDecl>& mdd, pugi::xml_node node)
 {
 	MetaDataList mdl;
 
+        // set up defaults
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
-	{
-		pugi::xml_node md = node.child(iter->key.c_str());
-		if(md)
-		{
-			mdl.set(iter->key, md.text().get());
-		}else{
-			mdl.set(iter->key, iter->defaultValue);
-		}
-	}
+        {
+                if (iter->type != MD_IMAGE_PATH_LIST)
+                        mdl.set(iter->key, iter->defaultValue);
+        }
+        // overwrite settings from xml
+        for (pugi::xml_node::iterator iter = node.begin(); iter != node.end(); ++iter)
+        {
+                if (std::string(iter->name()) == "image") 
+                        mdl.push_back(iter->name(), iter->text().get());
+                else
+                        mdl.set(iter->name(), iter->text().get());
+        }
 
 	return mdl;
 }
@@ -56,20 +111,25 @@ void MetaDataList::appendToXML(pugi::xml_node parent, const std::vector<MetaData
 {
 	for(auto iter = mMap.begin(); iter != mMap.end(); iter++)
 	{
-		bool write = true;
+                std::string tagName;
 		for(auto mddIter = ignoreDefaults.begin(); mddIter != ignoreDefaults.end(); mddIter++)
 		{
 			if(mddIter->key == iter->first)
 			{
-				if(iter->second == mddIter->defaultValue)
-					write = false;
-
+                                if(iter->second != mddIter->defaultValue)
+                                        tagName = iter->first;
 				break;
-			}
+			} else if (mddIter->type == MD_IMAGE_PATH_LIST 
+                                        && mddIter->key.size() < iter->first.size()
+                                        && std::strncmp(mddIter->key.c_str(), iter->first.c_str(), mddIter->key.size()) == 0)
+                        {
+                                tagName = iter->first.substr(0, iter->first.find('#'));
+                                break;
+                        }
 		}
 
-		if(write)
-			parent.append_child(iter->first.c_str()).text().set(iter->second.c_str());
+		if(!tagName.empty())
+			parent.append_child(tagName.c_str()).text().set(iter->second.c_str());
 	}
 }
 

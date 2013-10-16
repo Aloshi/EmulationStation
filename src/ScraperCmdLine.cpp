@@ -157,7 +157,7 @@ int run_scraper_cmdline()
 			//need to take into account filter_choice
 			if(filter_choice == FILTER_MISSING_IMAGES)
 			{
-				if(!params.game->metadata()->get("image").empty()) //maybe should also check if the image file exists/is a URL
+				if(params.game->metadata()->getSize("image") != 0) //maybe should also check if the image file exists/is a URL
 				{
 					out << "   Skipping, metadata \"image\" entry is not empty.\n";
 					continue;

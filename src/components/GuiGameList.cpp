@@ -412,10 +412,10 @@ void GuiGameList::updateDetailData()
 
 		GameData* game = (GameData*)mList.getSelectedObject();
 		//set image to either "not found" image or metadata image
-		if(game->metadata()->get("image").empty())
+		if(game->metadata()->getSize("image") == 0)
 			mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
 		else
-			mScreenshot.setImage(game->metadata()->get("image"));
+			mScreenshot.setImage(game->metadata()->getElemAt("image", 0));
 
 		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
 		mScreenshot.setPosition(getImagePos() - imgOffset);
