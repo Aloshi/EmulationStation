@@ -3,7 +3,7 @@
 #include "../Log.h"
 
 ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window), 
-	mAutoScrollDelay(0), mAutoScrollSpeed(0), mAutoScrollTimer(0), mScrollPos(0, 0), mScrollDir(0, 0)
+	mAutoScrollDelay(0), mAutoScrollSpeed(0), mAutoScrollTimer(0), mScrollPos(0, 0), mScrollDir(0, 0), mLoopForever(false), mLoopBorderDist(0.f)
 {
 }
 
@@ -23,7 +23,27 @@ void ScrollableContainer::render(const Eigen::Affine3f& parentTrans)
 
 	GuiComponent::renderChildren(trans);
 
+
+        if (mLoopForever && getSize().y() < getContentSize().y())
+        {
+                Eigen::Vector2f contentSize = getContentSize();
+                while(mScrollPos.y() + getSize().y() > contentSize.y())
+                {
+                        trans.translate(Eigen::Vector3f(0.f, (float)(contentSize.y()+mLoopBorderDist), 0.f));
+                        Renderer::setMatrix(trans);
+
+                        GuiComponent::renderChildren(trans);
+                        contentSize[1] += contentSize.y() + mLoopBorderDist;
+                }
+        }
+
 	Renderer::popClipRect();
+}
+
+void ScrollableContainer::setLoopForever(bool loopForever, float loopBorderDist)
+{
+        mLoopForever = loopForever;
+        mLoopBorderDist = loopBorderDist;
 }
 
 void ScrollableContainer::setAutoScroll(int delay, double speed)
@@ -78,10 +98,20 @@ void ScrollableContainer::update(int deltaTime)
 
 	
 	Eigen::Vector2f contentSize = getContentSize();
-	if(mScrollPos.x() + getSize().x() > contentSize.x())
-		mScrollPos[0] = (double)contentSize.x() - getSize().x();
-	if(mScrollPos.y() + getSize().y() > contentSize.y())
-		mScrollPos[1] = (double)contentSize.y() - getSize().y();
+        if (mLoopForever && getSize().y() < getContentSize().y())
+        {
+                if(mScrollPos.y() + getSize().y() > contentSize.y()*2)
+                        mScrollPos[1] -= (contentSize.y() + mLoopBorderDist);
+        } else {
+                if(mScrollPos.x() + getSize().x() > contentSize.x())
+                {
+                        mScrollPos[0] = (double)contentSize.x() - getSize().x();
+                }
+                if(mScrollPos.y() + getSize().y() > contentSize.y())
+                {
+                        mScrollPos[1] = (double)contentSize.y() - getSize().y();
+                }
+        }
 
 	GuiComponent::update(deltaTime);
 }

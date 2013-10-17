@@ -10,6 +10,9 @@ public:
 	Eigen::Vector2d getScrollPos() const;
 	void setScrollPos(const Eigen::Vector2d& pos);
 	void setAutoScroll(int delay, double speed); //Use 0 for speed to disable.
+        // don't stop scrolling at the end - instead circle forever forwards 
+        // loopBorderDist is the distance between the last and the looped first child
+        void setLoopForever(bool loopForever = true, float loopBorderDist = 0.f);
 	void resetAutoScrollTimer();
 
 	void update(int deltaTime) override;
@@ -23,4 +26,6 @@ private:
 	int mAutoScrollDelay;
 	double mAutoScrollSpeed;
 	int mAutoScrollTimer;
+        bool mLoopForever;
+        float mLoopBorderDist;
 };

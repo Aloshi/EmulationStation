@@ -79,6 +79,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	//the scroll speed is automatically scaled by component size
 	mDescContainer.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
 	mScreenshots.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
+        mScreenshots.setLoopForever();
 
 	mTransitionImage.setPosition((float)Renderer::getScreenWidth(), 0);
 	mTransitionImage.setOrigin(0, 0);
@@ -410,6 +411,7 @@ void GuiGameList::updateTheme()
 
 		mScreenshots.setPosition(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
 		mScreenshots.setSize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight());
+                mScreenshots.setLoopForever(true, mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight());
 
 
 		mLastPlayedLabel.setColor(mTheme->getColor("description"));
