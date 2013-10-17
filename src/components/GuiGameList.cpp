@@ -42,6 +42,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mScreenshots(window),
 	mDescription(window), 
 	mRating(window), 
+        mLastPlayedLabel(window),
 	mLastPlayed(window),
 	mReleaseDateLabel(window), 
 	mReleaseDate(window), 
@@ -70,6 +71,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mDescContainer.addChild(&mReleaseDateLabel);
 	mDescContainer.addChild(&mReleaseDate);
 	mDescContainer.addChild(&mRating);
+        mDescContainer.addChild(&mLastPlayedLabel);
 	mDescContainer.addChild(&mLastPlayed);
 	mDescContainer.addChild(&mDescription);
 
@@ -410,6 +412,8 @@ void GuiGameList::updateTheme()
 		mScreenshots.setSize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight());
 
 
+		mLastPlayedLabel.setColor(mTheme->getColor("description"));
+		mLastPlayedLabel.setFont(mTheme->getDescriptionFont());
 		mLastPlayed.setColor(mTheme->getColor("description"));
 		mLastPlayed.setFont(mTheme->getDescriptionFont());
 		mReleaseDateLabel.setColor(mTheme->getColor("description"));
@@ -495,8 +499,10 @@ void GuiGameList::updateDetailData()
 		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
 		mRating.setValue(game->metadata()->get("rating"));
 
+                mLastPlayedLabel.setPosition(0, mReleaseDateLabel.getPosition().y() + mReleaseDateLabel.getSize().y());
+                mLastPlayedLabel.setText("Last played: ");
                 mLastPlayed.setSize(colwidth - mRating.getSize().x(), ratingHeight);
-                mLastPlayed.setPosition(0, mReleaseDateLabel.getPosition().y() + mReleaseDateLabel.getSize().y());
+                mLastPlayed.setPosition(mLastPlayedLabel.getPosition().x() + mLastPlayedLabel.getSize().x(), mLastPlayedLabel.getPosition().y());
                 mLastPlayed.setValue(game->metadata()->get("lastplayed"));
 
 		mDescription.setPosition(0, mRating.getSize().y());

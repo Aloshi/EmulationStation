@@ -66,6 +66,7 @@ private:
         ScrollableContainer mScreenshots;
 	TextComponent mDescription;
 	RatingComponent mRating;
+        TextComponent mLastPlayedLabel;
         DateTimeComponent mLastPlayed;
 	TextComponent mReleaseDateLabel;
 	DateTimeComponent mReleaseDate;
