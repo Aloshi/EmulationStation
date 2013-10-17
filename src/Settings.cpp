@@ -34,9 +34,10 @@ void Settings::setDefaults()
 	mBoolMap["WINDOWED"] = false;
 	mBoolMap["DISABLESOUNDS"] = false;
 	mBoolMap["DisableGamelistWrites"] = false;
+	mBoolMap["ScrapeRatings"] = true;
 
 	mIntMap["DIMTIME"] = 30*1000;
-	mIntMap["ScraperResizeWidth"] = 450;
+	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
 
 	mIntMap["GameListSortIndex"] = 0;
@@ -87,11 +88,11 @@ void Settings::loadFile()
 		return;
 	}
 
-	for(pugi::xml_node node = doc.child("bool"); node; node = node.next_sibling())
+	for(pugi::xml_node node = doc.child("bool"); node; node = node.next_sibling("bool"))
 		setBool(node.attribute("name").as_string(), node.attribute("value").as_bool());
-	for(pugi::xml_node node = doc.child("int"); node; node = node.next_sibling())
+	for(pugi::xml_node node = doc.child("int"); node; node = node.next_sibling("int"))
 		setInt(node.attribute("name").as_string(), node.attribute("value").as_int());
-	for(pugi::xml_node node = doc.child("float"); node; node = node.next_sibling())
+	for(pugi::xml_node node = doc.child("float"); node; node = node.next_sibling("float"))
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
 
 	if(doc.child("scraper"))

@@ -4,6 +4,8 @@
 #include "TextComponent.h"
 #include <functional>
 
+//A simple popup message box with callbacks for when the user dismisses it.
+//Make sure you remember to push it onto the window!
 class GuiMsgBoxOk : public GuiComponent
 {
 public:

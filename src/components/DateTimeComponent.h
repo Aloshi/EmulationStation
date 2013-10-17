@@ -46,5 +46,7 @@ private:
 
 	std::unique_ptr<TextCache> mTextCache;
 	std::vector<Eigen::Vector4f> mCursorBoxes;
+
+	unsigned int mColor;
 	std::shared_ptr<Font> mFont;
 };

@@ -5,7 +5,8 @@
 #include "../Log.h"
 
 DateTimeComponent::DateTimeComponent(Window* window) : GuiComponent(window), 
-	mEditing(false), mEditIndex(0), mDisplayMode(DISP_DATE), mRelativeUpdateAccumulator(0)
+	mEditing(false), mEditIndex(0), mDisplayMode(DISP_DATE), mRelativeUpdateAccumulator(0), 
+	mColor(0x000000FF)
 {
 	mSize << 64, (float)getFont()->getHeight();
 	updateTextCache();
@@ -14,14 +15,6 @@ DateTimeComponent::DateTimeComponent(Window* window) : GuiComponent(window),
 void DateTimeComponent::setDisplayMode(DisplayMode mode)
 {
 	mDisplayMode = mode;
-}
-
-void DateTimeComponent::setColor(unsigned int color)
-{
-    if (mTextCache)
-    {
-        mTextCache->setColor(color);
-    }
 }
 
 bool DateTimeComponent::input(InputConfig* config, Input input)
@@ -237,17 +230,12 @@ std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 	return ss.str();
 }
 
-void DateTimeComponent::setFont(std::shared_ptr<Font> font)
-{
-    mFont = font;
-}
-
 std::shared_ptr<Font> DateTimeComponent::getFont() const
 {
 	if(mFont)
 		return mFont;
-	else
-		return Font::get(FONT_SIZE_MEDIUM);
+
+	return Font::get(FONT_SIZE_MEDIUM);
 }
 
 void DateTimeComponent::updateTextCache()
@@ -255,7 +243,7 @@ void DateTimeComponent::updateTextCache()
 	DisplayMode mode = getCurrentDisplayMode();
 	const std::string dispString = getDisplayString(mode);
 	std::shared_ptr<Font> font = getFont();
-	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, 0x000000FF));
+	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
 
 	//set up cursor positions
 	mCursorBoxes.clear();
@@ -282,4 +270,21 @@ void DateTimeComponent::updateTextCache()
 	mCursorBoxes.push_back(Eigen::Vector4f(start[0], start[1], diff[0], diff[1]));
 
 	//if mode == DISP_DATE_TIME do times too but I don't wanna do the logic for editing times because no one will ever use it so screw it
+}
+
+void DateTimeComponent::setColor(unsigned int color)
+{
+	mColor = color;
+	if(mTextCache)
+		mTextCache->setColor(color);
+}
+
+void DateTimeComponent::setFont(std::shared_ptr<Font> font)
+{
+	mFont = font;
+
+	if(getSize().y() < mFont->getHeight())
+		setSize(getSize().x(), (float)mFont->getHeight());
+
+	updateTextCache();
 }

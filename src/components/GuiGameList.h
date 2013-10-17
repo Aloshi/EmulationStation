@@ -67,6 +67,9 @@ private:
 	TextComponent mDescription;
 	RatingComponent mRating;
         DateTimeComponent mLastPlayed;
+	TextComponent mReleaseDateLabel;
+	DateTimeComponent mReleaseDate;
+
 	ScrollableContainer mDescContainer;
 	AnimationComponent mImageAnimation;
 	ThemeComponent* mTheme;

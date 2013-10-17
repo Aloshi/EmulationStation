@@ -19,10 +19,21 @@ Eigen::Vector3f GuiGameList::getImagePos()
 
 bool GuiGameList::isDetailed() const
 {
-	if(mSystem == NULL)
+	if(!mFolder)
 		return false;
 
-	return mSystem->hasGamelist();
+	//return true if any game has an image specified
+	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)
+	{
+		if(!mFolder->getFile(i)->isFolder())
+		{
+			GameData* game = (GameData*)(mFolder->getFile(i));
+			if(game->metadata()->getSize("image") != 0)
+				return true;
+		}
+	}
+
+	return false;
 }
 
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
@@ -32,6 +43,8 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mDescription(window), 
 	mRating(window), 
 	mLastPlayed(window),
+	mReleaseDateLabel(window), 
+	mReleaseDate(window), 
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
 	mHeaderText(mWindow), 
@@ -54,6 +67,8 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
         mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 
 	mImageAnimation.addChild(&mScreenshots);
+	mDescContainer.addChild(&mReleaseDateLabel);
+	mDescContainer.addChild(&mReleaseDate);
 	mDescContainer.addChild(&mRating);
 	mDescContainer.addChild(&mLastPlayed);
 	mDescContainer.addChild(&mDescription);
@@ -146,8 +161,11 @@ bool GuiGameList::input(InputConfig* config, Input input)
 			searchParams.system = mSystem;
 			mWindow->pushGui(new GuiMetaDataEd(mWindow, game->metadata(), mSystem->getGameMDD(), searchParams, game->getBaseName(),
 				[&] { updateDetailData(); }, 
-				[game, root, this] { root->removeFileRecursive(game); updateList(); }
-			));
+				[game, root, this] { 
+					boost::filesystem::remove(game->getPath());
+					root->removeFileRecursive(game); 
+					updateList(); 
+			}));
 		}
 		return true;
 	}
@@ -394,14 +412,17 @@ void GuiGameList::updateTheme()
 
 		mLastPlayed.setColor(mTheme->getColor("description"));
 		mLastPlayed.setFont(mTheme->getDescriptionFont());
+		mReleaseDateLabel.setColor(mTheme->getColor("description"));
+		mReleaseDateLabel.setFont(mTheme->getDescriptionFont());
+		mReleaseDate.setColor(mTheme->getColor("description"));
+		mReleaseDate.setFont(mTheme->getDescriptionFont());
+
 		mDescription.setColor(mTheme->getColor("description"));
 		mDescription.setFont(mTheme->getDescriptionFont());
 	}else{
 		mList.setCentered(true);
 		mList.setPosition(0, mList.getPosition().y());
 		mList.setTextOffsetX(0);
-
-		//mDescription.setFont(nullptr);
 	}
 }
 
@@ -417,6 +438,7 @@ void GuiGameList::updateDetailData()
 			addChild(&mScreenshots);
 
 		GameData* game = (GameData*)mList.getSelectedObject();
+
 		//set image to either "not found" image or metadata image
                 for (ImageComponent *ic: mImgs) {
                     mScreenshots.removeChild(ic);
@@ -426,10 +448,13 @@ void GuiGameList::updateDetailData()
 
 		if(game->metadata()->getSize("image") == 0)
                 {
+                    if (!mTheme->getString("imageNotFoundPath").empty())
+                    {
                         ImageComponent *ic = new ImageComponent(mWindow);
 			ic->setImage(mTheme->getString("imageNotFoundPath"));
                         mImgs.push_back(ic);
                         mScreenshots.addChild(ic);
+                    }
                 } else {
                     float offset = 0.0f;
                     for (unsigned int i=0; i<game->metadata()->getSize("image"); ++i)
@@ -462,11 +487,16 @@ void GuiGameList::updateDetailData()
 		float ratingHeight = colwidth * 0.3f / 5.0f;
 		mRating.setSize(ratingHeight * 5.0f, ratingHeight);
 
+		mReleaseDateLabel.setPosition(0, 0);
+		mReleaseDateLabel.setText("Released: ");
+		mReleaseDate.setPosition(mReleaseDateLabel.getPosition().x() + mReleaseDateLabel.getSize().x(), mReleaseDateLabel.getPosition().y());
+		mReleaseDate.setValue(game->metadata()->get("releasedate"));
+
 		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
 		mRating.setValue(game->metadata()->get("rating"));
 
                 mLastPlayed.setSize(colwidth - mRating.getSize().x(), ratingHeight);
-                mLastPlayed.setPosition(0, 0);
+                mLastPlayed.setPosition(0, mReleaseDateLabel.getPosition().y() + mReleaseDateLabel.getSize().y());
                 mLastPlayed.setValue(game->metadata()->get("lastplayed"));
 
 		mDescription.setPosition(0, mRating.getSize().y());

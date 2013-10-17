@@ -1,6 +1,9 @@
 #include "GuiMsgBoxOk.h"
 #include "../Renderer.h"
 
+#define MSG_WIDTH 0.8f
+#define MSG_PADDING ((1 - MSG_WIDTH) / 2)
+
 GuiMsgBoxOk::GuiMsgBoxOk(Window* window, const std::string& text, std::function<void()> callback) : GuiComponent(window),
 	mCallback(callback),
 	mText(window),
@@ -8,17 +11,17 @@ GuiMsgBoxOk::GuiMsgBoxOk(Window* window, const std::string& text, std::function<
 {
 	mText.setCentered(true);
 	mText.setColor(0x00BB00FF);
-	mText.setSize((float)Renderer::getScreenWidth(), 0);
+	mText.setSize(Renderer::getScreenWidth() * MSG_WIDTH, 0);
 	mText.setText(text);
 
 	mOkText.setCentered(true);
 	mOkText.setColor(0x0044BBFF);
 	mOkText.setFont(Font::get(FONT_SIZE_SMALL));
-	mOkText.setSize((float)Renderer::getScreenWidth(), 0);
+	mOkText.setSize(Renderer::getScreenWidth() * MSG_WIDTH, 0);
 	mOkText.setText("[A]");
 
-	mText.setPosition(0, (Renderer::getScreenHeight() - mText.getSize().y() - mOkText.getSize().y()) / 2);
-	mOkText.setPosition(0, mText.getPosition().y() + mText.getSize().y());
+	mText.setPosition(Renderer::getScreenWidth() * MSG_PADDING, (Renderer::getScreenHeight() - mText.getSize().y() - mOkText.getSize().y()) / 2);
+	mOkText.setPosition(Renderer::getScreenWidth() * MSG_PADDING, mText.getPosition().y() + mText.getSize().y());
 }
 
 bool GuiMsgBoxOk::input(InputConfig* config, Input input)

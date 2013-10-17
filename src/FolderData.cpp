@@ -211,6 +211,7 @@ void FolderData::removeFileRecursive(FileData* f)
 	{
 		if(*iter == f)
 		{
+			delete *iter;
 			iter = mFileVector.erase(iter);
 		}else{
 			

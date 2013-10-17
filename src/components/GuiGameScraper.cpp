@@ -120,6 +120,9 @@ void GuiGameScraper::onSearchDone(std::vector<MetaDataList> results)
 			mList.setEntry(Eigen::Vector2i(0, 6 + i), Eigen::Vector2i(1, 1), &mResultNames.at(i), true, ComponentListComponent::AlignLeft);
 		}
 	}
+
+	mList.resetCursor();
+	mList.moveCursor(Eigen::Vector2i(0, 1)); //move cursor to first game if there is one
 }
 
 int GuiGameScraper::getSelectedIndex()

@@ -12,6 +12,9 @@
 
 typedef std::function<bool(SystemData*, GameData*)> GameFilterFunc;
 
+//The starting point for a multi-game scrape.
+//Allows the user to set various parameters (to set filters, to set which systems to scrape, to enable manual mode).
+//Generates a list of "searches" that will be carried out by GuiScraperLog.
 class GuiScraperStart : public GuiComponent
 {
 public:
@@ -20,6 +23,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 
 private:
+	void pressedStart();
 	void start();
 	std::queue<ScraperSearchParams> getSearches(std::vector<SystemData*> systems, GameFilterFunc selector);
 

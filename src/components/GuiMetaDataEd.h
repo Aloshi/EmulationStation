@@ -17,6 +17,8 @@ public:
 		const std::string& header, std::function<void()> savedCallback, std::function<void()> deleteFunc);
 	virtual ~GuiMetaDataEd();
 
+	bool input(InputConfig* config, Input input) override;
+
 private:
 	void save();
 	void fetch();

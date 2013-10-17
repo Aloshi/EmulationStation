@@ -1,5 +1,6 @@
 #include "GuiScraperStart.h"
 #include "GuiScraperLog.h"
+#include "GuiMsgBoxYesNo.h"
 
 GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mBox(window, ":/frame.png"),
@@ -44,13 +45,29 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mManualSwitch, true, ComponentListComponent::AlignLeft);
 
 	mStartButton.setText("GO GO GO GO", 0x00FF00FF);
-	mStartButton.setPressedFunc(std::bind(&GuiScraperStart::start, this));
+	mStartButton.setPressedFunc(std::bind(&GuiScraperStart::pressedStart, this));
 	mList.setEntry(Vector2i(0, 3), Vector2i(2, 1), &mStartButton, true, ComponentListComponent::AlignCenter);
 
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
 
 	mBox.setEdgeColor(0x333333FF);
 	mBox.fitTo(mList.getSize(), mList.getPosition(), Eigen::Vector2f(8, 8));
+}
+
+void GuiScraperStart::pressedStart()
+{
+	std::vector<SystemData*> sys = mSystemsOpt.getSelectedObjects();
+	for(auto it = sys.begin(); it != sys.end(); it++)
+	{
+		if((*it)->getPlatformId() == PlatformIds::PLATFORM_UNKNOWN)
+		{
+			mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "Warning: some of your selected systems do not have a platform ID set. Results may be even more inaccurate than usual!\nContinue anyway?", 
+				std::bind(&GuiScraperStart::start, this)));
+			return;
+		}
+	}
+
+	start();
 }
 
 void GuiScraperStart::start()
