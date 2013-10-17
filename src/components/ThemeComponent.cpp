@@ -119,7 +119,7 @@ void ThemeComponent::setDefaults()
 	mFloatMap["gameImageOffsetX"] = mFloatMap["listOffsetX"] / 2;
 	mFloatMap["gameImageOffsetY"] = (float)FONT_SIZE_LARGE / (float)Renderer::getScreenHeight();
 	mFloatMap["gameImageWidth"] = mFloatMap["listOffsetX"];
-        mFloatMap["gameImageSpace"] = 5.f;
+        mFloatMap["gameImageSpace"] = .01f;
 	mFloatMap["gameImageHeight"] = 0;
 
 	mSoundMap["menuScroll"]->loadFile("");

@@ -137,7 +137,7 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<gameImagePos>` - two values for the position of the game art, in the form of `[x] [y]`, as a percentage. Default is `$infoWidth/2 $headerHeight`. 
 
-`<gameImageSpace>` - Defines the border space between two images. Default is 5 pixels.
+`<gameImageSpace>` - Defines the border space between two images. Default is 0.01.
 
 `<gameImageDim>` - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `$infoWidth 0` (width fits within the info column). All images will be placed inside this box (below each other). Images will be centered horizontally inside the box and resized if they are too large for the specified with. If gameImageUpscale has been defined than smaller images will be upscale to the with defined for gameImageDim. If not all images fit inside the area it will start scrolling.
 

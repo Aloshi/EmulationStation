@@ -468,7 +468,7 @@ void GuiGameList::updateDetailData()
                         ic->setOrigin(0.5f, 0.f);
                         ic->setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), 0.f, mTheme->getBool("gameImageUpscale"));
                         ic->setPosition(mScreenshots.getSize().x()/2.f, offset);
-                        offset += ic->getSize().y() + mTheme->getFloat("gameImageSpace");
+                        offset += ic->getSize().y() + mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight();
                         mImgs.push_back(ic);
                         mScreenshots.addChild(ic);
                     }
