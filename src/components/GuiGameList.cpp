@@ -111,6 +111,9 @@ void GuiGameList::setSystemId(int id)
 
 	mFolder = mSystem->getRootFolder();
 
+        mTheme->setVar("SYSTEM_NAME", mSystem->getName());
+        mTheme->setVar("SYSTEM_FULLNAME", mSystem->getFullName());
+        mTheme->setVar("SYSTEM_GAMECOUNT", std::to_string(mSystem->getGameCount()));
 	updateTheme();
 	updateList();
 	updateDetailData();

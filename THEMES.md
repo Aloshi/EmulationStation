@@ -64,15 +64,19 @@ If EmulationStation is running in "basic" mode, it will try to use `<themeBasic>
 Components
 ==========
 
-A theme is made up of components, which have various types. At the moment, the only type is `image`. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
+A theme is made up of components, which have various types. At the moment, only types `image` and `text` are supported. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
 
+Components may use the following variables to setup system dependend paths or texts:
+`%SYSTEM_NAME%` - replaced with the name of the current system (e.g. "nes")
+`%SYSTEM_FULLNAME%` - replaced with the full name of the current system (e.g. "Nintento Entertainment System")
+`%SYSTEM_GAMECOUNT%` - number of games available.
 
 The "image" component
 =====================
 
 Used to display an image.
 
-`<path>` - path to the image file. Most common file types are supported, and . and ~ are properly expanded.
+`<path>` - path to the image file. Most common file types are supported, and . and ~ and %VAR% are properly expanded.
 
 `<pos>` - the position, as two screen percentages, at which to display the image.
 
@@ -82,6 +86,22 @@ Used to display an image.
 
 `<tiled />` - if present, the image is tiled instead of resized.
 
+`<upscale/>` - if present the image will be resized larger than the original image if necessary.
+
+The "text" component
+====================
+
+`<content>` - The actual text to display (may contain variables).
+
+`<pos>` - the position, as two screen percentages, at which to display the image.
+
+`<dim>` - the dimensions, as two screen percentages, that the image will be resized to. Make one axis 0 to keep the aspect ratio.
+
+`<font>` - specifies the font to be used for the text (see definition of fontTag below).
+
+`<color>` - specifies the color for the text. Default is listPrimaryColor.
+
+`<center>` - if present the text is centered.
 
 Display tags
 ============

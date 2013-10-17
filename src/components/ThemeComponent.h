@@ -27,6 +27,8 @@ public:
 	std::shared_ptr<Font> getDescriptionFont();
 	std::shared_ptr<Font> getFastSelectFont();
 
+        void setVar(const std::string &name, const std::string &value);
+
 private:
 	void setDefaults();
 	void deleteComponents();
@@ -48,6 +50,7 @@ private:
 	std::map<std::string, float> mFloatMap;
 	std::map<std::string, std::shared_ptr<Sound>> mSoundMap;
 	std::map<std::string, std::string> mStringMap;
+        std::map<std::string, std::string> mVariables;
 
 	std::shared_ptr<Font> mListFont;
 	std::shared_ptr<Font> mDescFont;
