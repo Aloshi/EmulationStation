@@ -52,6 +52,9 @@ private:
 	void updateTheme();
 	void hideDetailData();
 	void doTransition(int dir);
+        // check the screenshot dump directory and add new screenshots to the game
+        void importFreshScreenshots(const boost::posix_time::ptime &since);
+
 
 	std::string getThemeFile();
 
