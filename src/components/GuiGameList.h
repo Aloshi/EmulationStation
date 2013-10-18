@@ -13,6 +13,7 @@
 #include "../FolderData.h"
 #include "TextListComponent.h"
 #include "ScrollableContainer.h"
+#include "VerticalImageAutoScrollbox.h"
 #include "RatingComponent.h"
 #include "DateTimeComponent.h"
 
@@ -63,10 +64,8 @@ private:
 	std::stack<FolderData*> mFolderStack;
 	int mSystemId;
 
-        std::deque<ImageComponent*> mImgs;
-
 	TextListComponent<FileData*> mList;
-        ScrollableContainer mScreenshots;
+        VerticalImageAutoScrollbox mScreenshots;
 	TextComponent mDescription;
 	RatingComponent mRating;
         TextComponent mLastPlayedLabel;

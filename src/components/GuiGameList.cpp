@@ -122,8 +122,7 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	//scale delay with screen width (higher width = more text per line)
 	//the scroll speed is automatically scaled by component size
 	mDescContainer.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
-	mScreenshots.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
-        mScreenshots.setLoopForever();
+	mScreenshots.setAutoScroll(1500, 500);
 
 	mTransitionImage.setPosition((float)Renderer::getScreenWidth(), 0);
 	mTransitionImage.setOrigin(0, 0);
@@ -455,8 +454,8 @@ void GuiGameList::updateTheme()
 
 		mScreenshots.setPosition(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
 		mScreenshots.setSize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight());
-                mScreenshots.setLoopForever(true, mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight());
-
+                mScreenshots.setAllowImageUpscale(mTheme->getBool("gameImageUpscale"));
+                mScreenshots.setBorderSpace(mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight());
 
 		mLastPlayedLabel.setColor(mTheme->getColor("description"));
 		mLastPlayedLabel.setFont(mTheme->getDescriptionFont());
@@ -489,41 +488,34 @@ void GuiGameList::updateDetailData()
 
 		GameData* game = (GameData*)mList.getSelectedObject();
 
-		//set image to either "not found" image or metadata image
-                for (ImageComponent *ic: mImgs) {
-                    mScreenshots.removeChild(ic);
-                    delete ic;
+                // remove old images
+                while (mScreenshots.getChildCount() > 0)
+                {
+                        GuiComponent *p = mScreenshots.getChild(0);
+                        mScreenshots.removeChild(p);
+                        delete p;
                 }
-                mImgs.clear();
-
+		//set image to either "not found" image or metadata image
 		if(game->metadata()->getSize("image") == 0)
                 {
                     if (!mTheme->getString("imageNotFoundPath").empty())
                     {
                         ImageComponent *ic = new ImageComponent(mWindow);
 			ic->setImage(mTheme->getString("imageNotFoundPath"));
-                        mImgs.push_back(ic);
-                        mScreenshots.addChild(ic);
+                        mScreenshots.addImage(ic);
                     }
                 } else {
-                    float offset = 0.0f;
                     for (unsigned int i=0; i<game->metadata()->getSize("image"); ++i)
                     {
                         ImageComponent *ic = new ImageComponent(mWindow);
                         ic->setImage(game->metadata()->getElemAt("image", i));
-                        ic->setOrigin(0.5f, 0.f);
-                        ic->setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), 0.f, mTheme->getBool("gameImageUpscale"));
-                        ic->setPosition(mScreenshots.getSize().x()/2.f, offset);
-                        offset += ic->getSize().y() + mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight();
-                        mImgs.push_back(ic);
-                        mScreenshots.addChild(ic);
+                        mScreenshots.addImage(ic);
                     }
                 }
 
 		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
-		mScreenshots.setPosition(getImagePos() - imgOffset);
-		mScreenshots.setScrollPos(Eigen::Vector2d(0, 0));
-		mScreenshots.resetAutoScrollTimer();
+		mScreenshots.setPosition(getImagePos() - imgOffset); // TODO this line needed?
+		mScreenshots.reset();
 
 		mImageAnimation.fadeIn(35);
 		mImageAnimation.move((int)imgOffset.x(), (int)imgOffset.y(), 20);
