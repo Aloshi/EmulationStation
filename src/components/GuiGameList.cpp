@@ -17,6 +17,50 @@ Eigen::Vector3f GuiGameList::getImagePos()
 	return Eigen::Vector3f(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), 0.0f);
 }
 
+namespace {
+
+        // return a list of files that were modified after the given timestamp
+        std::vector<std::string> newFilesInDirSince(const std::string &path, const boost::posix_time::ptime &since)
+        {
+                std::vector<std::string> result;
+                if (!path.empty())
+                {
+                        for (boost::filesystem::directory_iterator it(path), end; it != end; ++it)
+                        {
+                                std::time_t t = boost::filesystem::last_write_time( *it );
+                                const boost::posix_time::ptime lastWriteTime = boost::posix_time::from_time_t( t );
+                                if (lastWriteTime >= since)
+                                        result.push_back(it->path().generic_string());
+                        }
+                }
+                return result;
+        }
+        // move the given list of files to the destination directory, renaming then to basename-<no>.ext.
+        // no existing files will be overwritten!
+        std::vector<std::string> moveAndRenameFiles(const std::vector<std::string> &files, const std::string &basename, const std::string &destDir)
+        {
+                std::vector<std::string> result;
+                unsigned int no = 0;
+                boost::filesystem::path srcPath, dstPath;
+                for (auto fname: files)
+                {
+                        srcPath = fname;
+                        do {
+                                dstPath = destDir;
+                                dstPath /= basename;
+                                dstPath += "-";
+                                dstPath += std::to_string(no++);
+                                dstPath += srcPath.extension();
+                        } while (boost::filesystem::exists(dstPath));
+                        LOG(LogDebug) << "moving screenshot " << srcPath.generic_string() << " to " << dstPath.generic_string() << std::endl;
+                        boost::filesystem::rename(srcPath, dstPath);
+                        result.push_back(dstPath.generic_string());
+                }
+                return result;
+        }
+}
+
+
 bool GuiGameList::isDetailed() const
 {
 	if(!mFolder)
@@ -625,7 +669,9 @@ void GuiGameList::updateGameLaunchEffect(int t)
 	{
 		//effect done
 		mTransitionImage.setImage(""); //fixes "tried to bind uninitialized texture!" since copyScreen()'d textures don't reinit
+                boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
 		mSystem->launchGame(mWindow, (GameData*)mList.getSelectedObject());
+                importFreshScreenshots(time);
 		mEffectFunc = &GuiGameList::updateGameReturnEffect;
 		mEffectTime = 0;
 		mGameLaunchEffectLength = 700;
@@ -639,4 +685,23 @@ void GuiGameList::updateGameReturnEffect(int t)
 
 	if(t >= mGameLaunchEffectLength)
 		mEffectFunc = NULL;
+}
+
+void GuiGameList::importFreshScreenshots(const boost::posix_time::ptime &since)
+{
+        if (mSystem->getEmulatorScreenshotDumpDir().empty() || mSystem->getScreenshotDir().empty())
+                return; // not configured
+
+        std::vector<std::string> newScreenshots(newFilesInDirSince(mSystem->getEmulatorScreenshotDumpDir(), since));
+        if (newScreenshots.empty())
+                return; // no new screenshots found
+
+        GameData* game = dynamic_cast<GameData*>(mList.getSelectedObject());
+        if (game == nullptr)
+                return; // impossible
+
+	LOG(LogInfo) << "Found " << newScreenshots.size() << " new screenshots for game " << game->getName() << std::endl;
+        newScreenshots = moveAndRenameFiles(newScreenshots, game->getBaseName(), mSystem->getScreenshotDir());
+        for (auto fname: newScreenshots)
+                game->metadata()->push_back("image", fname);
 }

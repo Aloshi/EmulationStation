@@ -19,20 +19,34 @@ namespace fs = boost::filesystem;
 
 std::string SystemData::getStartPath() { return mStartPath; }
 std::string SystemData::getExtension() { return mSearchExtension; }
+std::string SystemData::getScreenshotDir() { return mScreenshotDir; }
+std::string SystemData::getEmulatorScreenshotDumpDir() { return mEmulatorScreenshotDumpDir; }
+
+namespace
+{
+	//expand home symbol if the startpath contains ~
+	void expandTilde(std::string &path)
+	{
+		if(path[0] == '~')
+		{
+			path.erase(0, 1);
+			path.insert(0, getHomePath());
+		}
+	}
+}
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, 
-	const std::string& command, PlatformIds::PlatformId platformId)
+	const std::string& command, const std::string &emulatorScreenshotDumpDir, const std::string &screenshotDir, PlatformIds::PlatformId platformId)
 {
 	mName = name;
 	mFullName = fullName;
 	mStartPath = startPath;
+	mScreenshotDir = screenshotDir;
+	mEmulatorScreenshotDumpDir = emulatorScreenshotDumpDir;
 
-	//expand home symbol if the startpath contains ~
-	if(mStartPath[0] == '~')
-	{
-		mStartPath.erase(0, 1);
-		mStartPath.insert(0, getHomePath());
-	}
+	expandTilde(mStartPath);
+	expandTilde(mScreenshotDir);
+	expandTilde(mEmulatorScreenshotDumpDir);
 
 	mSearchExtension = extension;
 	mLaunchCommand = command;
@@ -219,7 +233,7 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
-		std::string name, fullname, path, ext, cmd;
+		std::string name, fullname, path, ext, cmd, emulatorScreenshotDumpDir, screenshotDir;
 		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
@@ -227,6 +241,8 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 		path = system.child("path").text().get();
 		ext = system.child("extension").text().get();
 		cmd = system.child("command").text().get();
+                emulatorScreenshotDumpDir = system.child("emulatorScreenshotDumpDir").text().get();
+                screenshotDir = system.child("screenshotDir").text().get();
 		platformId = (PlatformIds::PlatformId)system.child("platformid").text().as_uint(PlatformIds::PLATFORM_UNKNOWN);
 
 		//validate
@@ -240,7 +256,7 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, ext, cmd, platformId);
+		SystemData* newSys = new SystemData(name, fullname, path, ext, cmd, emulatorScreenshotDumpDir, screenshotDir, platformId);
 		if(newSys->getRootFolder()->getFileCount() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
@@ -281,6 +297,11 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		%BASENAME% is replaced by the \"base\" name of the ROM.  For example, \"/foo/bar.rom\" would have a basename of \"bar\". Useful for MAME.\n"
 			"		%ROM_RAW% is the raw, unescaped path to the ROM. -->\n"
 			"		<command>retroarch -L ~/cores/libretro-fceumm.so %ROM%</command>\n"
+			"\n"
+			"		<!-- Where does the emulator store screenshots? Screenshots created during playing a game will be automatically moved to the screenshotDir and added to the game. -->\n"
+			"		<emulatorScreenshotDumpDir>~/retroarch/screenshots</emulatorScreenshotDumpDir>\n"
+			"		<!-- New screenshots will be renamed to %ROMNAME%-<id>.png and stored in the screenshotDir -->\n"
+			"		<screenshotDir>~/snaps/nes/</screenshotDir>\n"
 			"\n"
 			"	</system>\n"
 			"</systemList>\n";
