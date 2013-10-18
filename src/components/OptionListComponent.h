@@ -6,6 +6,7 @@
 #include <functional>
 #include "../Renderer.h"
 #include "NinePatchComponent.h"
+#include "../Window.h"
 
 //Used to display a list of options.
 //Can select one or multiple options.
