@@ -8,6 +8,16 @@
 #include <sstream>
 #include <cstring>
 
+namespace 
+{
+        std::string genListIndexName(const std::string &key, unsigned int idx)
+        {
+                std::ostringstream ostr;
+                ostr << key << "#" << std::to_string(idx);
+                return ostr.str();
+        }
+}
+
 MetaDataList::MetaDataList()
 {
 }
@@ -15,7 +25,8 @@ MetaDataList::MetaDataList()
 MetaDataList::MetaDataList(const std::vector<MetaDataDecl>& mdd)
 {
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
-		set(iter->key, iter->defaultValue);
+                if (iter->key != "image")
+                        set(iter->key, iter->defaultValue);
 }
 
 std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
@@ -36,27 +47,24 @@ std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
 	return mdd;
 }
 
-unsigned int MetaDataList::getSize(const std::string &key)
+unsigned int MetaDataList::getSize(const std::string &key) const
 {
-    std::ostringstream ostr;
-    ostr << key << "#";
-    const std::string keyWithSep(ostr.str());
-    unsigned int size = std::count_if(
-            mMap.begin(),
-            mMap.end(),
-            [&keyWithSep](const std::pair<std::string, std::string> &key_value){
-                return keyWithSep.size() < key_value.first.size() && std::strncmp(keyWithSep.c_str(), key_value.first.c_str(), keyWithSep.size()) == 0;
-            }
-        );
-    return size;
+            const std::string keyWithSep(key + "#");
+            unsigned int size = std::count_if(
+                            mMap.begin(),
+                            mMap.end(),
+                            [&keyWithSep](const std::pair<std::string, std::string> &key_value){
+                                        return keyWithSep.size() < key_value.first.size() &&
+                                                std::strncmp(keyWithSep.c_str(), key_value.first.c_str(), keyWithSep.size()) == 0;
+                            }
+                        );
+            return size;
 }
 
-const std::string &MetaDataList::getElemAt(const std::string &key, unsigned int npos)
+const std::string &MetaDataList::getElemAt(const std::string &key, unsigned int npos) const
 {
-    std::ostringstream ostr;
-    ostr << key << "#" << npos;
-    const std::string &result = mMap.at(ostr.str());
-    return result;
+        const std::string &result = mMap.at(genListIndexName(key, npos));
+        return result;
 }
 
 void MetaDataList::clearList(const std::string &key)
@@ -73,16 +81,13 @@ void MetaDataList::clearList(const std::string &key)
 
 void MetaDataList::push_back(const std::string &key, const std::string &value)
 {
-    std::ostringstream ostr;
-    ostr << key << "#" << getSize(key);
-    mMap[ostr.str()] = value;
+        const std::string newTailName = genListIndexName(key, getSize(key));
+        mMap[newTailName] = value;
 }
 
 void MetaDataList::set(const std::string &key, unsigned int npos, const std::string &value)
 {
-    std::ostringstream ostr;
-    ostr << key << "#" << npos;
-    mMap[ostr.str()] = value;
+    mMap[genListIndexName(key, npos)] = value;
 }
 
 MetaDataList MetaDataList::createFromXML(const std::vector<MetaDataDecl>& mdd, pugi::xml_node node)
@@ -99,6 +104,7 @@ MetaDataList MetaDataList::createFromXML(const std::vector<MetaDataDecl>& mdd, p
         for (pugi::xml_node::iterator iter = node.begin(); iter != node.end(); ++iter)
         {
                 if (std::string(iter->name()) == "image") 
+                        // multiple image tags possible
                         mdl.push_back(iter->name(), iter->text().get());
                 else
                         mdl.set(iter->name(), iter->text().get());
@@ -135,7 +141,13 @@ void MetaDataList::appendToXML(pugi::xml_node parent, const std::vector<MetaData
 
 void MetaDataList::set(const std::string& key, const std::string& value)
 {
-	mMap[key] = value;
+        if (key == "image")
+        {
+                LOG(LogWarning) << " Deprecation warning: MetaData for '" << key << "' is now of type list - using only first entry for backward compatibility";
+                set(key, 0, value);
+        } else {
+                mMap[key] = value;
+        }
 }
 
 void MetaDataList::setTime(const std::string& key, const boost::posix_time::ptime& time)
@@ -145,7 +157,27 @@ void MetaDataList::setTime(const std::string& key, const boost::posix_time::ptim
 
 const std::string& MetaDataList::get(const std::string& key) const
 {
-	return mMap.at(key);
+        try {
+                return mMap.at(key);
+        } catch (std::out_of_range &) {
+                // backward compatible access for lists (only returning first element)
+                if (getSize(key) > 0) {
+                        LOG(LogWarning) << " Deprecation warning: MetaData for '" << key << "' is now of type list - using only first entry for backward compatibility";
+                        return mMap.at(genListIndexName(key, 0));
+                }
+                // interface might have changed to list?
+                const std::vector<MetaDataDecl> mdd = getDefaultGameMDD();
+                for (const MetaDataDecl &m: mdd)
+                {
+                        if (m.key == key) {
+                                // type is list - but we have no value to return!
+                                // cannot return reference to temporary, so we define a constant value instead
+                                static const std::string emptyListValue;
+                                return emptyListValue;
+                        }
+                }
+                throw; // retrow
+        }
 }
 
 int MetaDataList::getInt(const std::string& key) const

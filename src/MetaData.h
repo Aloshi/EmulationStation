@@ -45,8 +45,8 @@ public:
 	MetaDataList(const std::vector<MetaDataDecl>& mdd);
 
         // accessor methods for list values (i.e. images)
-        unsigned int getSize(const std::string &key);
-        const std::string &getElemAt(const std::string &key, unsigned int pos);
+        unsigned int getSize(const std::string &key) const;
+        const std::string &getElemAt(const std::string &key, unsigned int pos) const;
         void clearList(const std::string &key);
         void push_back(const std::string &key, const std::string &value);
         void set(const std::string &key, unsigned int npos, const std::string &value);
