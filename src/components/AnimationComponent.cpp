@@ -81,6 +81,18 @@ void AnimationComponent::addChild(GuiComponent* gui)
 	mChildren.push_back(gui);
 }
 
+void AnimationComponent::removeChild(GuiComponent* gui)
+{
+        for (std::vector<GuiComponent*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
+        {
+                if (*it == gui)
+                {
+                        mChildren.erase(it);
+                        return;
+                }
+        }
+}
+
 void AnimationComponent::moveChildren(int offsetx, int offsety)
 {
 	Eigen::Vector3f move((float)offsetx, (float)offsety, 0);

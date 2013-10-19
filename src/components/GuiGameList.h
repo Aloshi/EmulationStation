@@ -65,7 +65,8 @@ private:
 	int mSystemId;
 
 	TextListComponent<FileData*> mList;
-        VerticalImageAutoScrollbox mScreenshots;
+	ImageComponent *mScreenshot;
+        VerticalImageAutoScrollbox *mScreenshots;
 	TextComponent mDescription;
 	RatingComponent mRating;
         TextComponent mLastPlayedLabel;

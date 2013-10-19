@@ -197,7 +197,8 @@ void ThemeComponent::readXML(std::string path, bool detailed)
 
 	mBoolMap["hideHeader"] = root.child("hideHeader") != 0;
 	mBoolMap["hideDividers"] = root.child("hideDividers") != 0;
-        mBoolMap["gameImageUpscale"] = root.child("gameImageUpscale") != 0;
+        mBoolMap["gameImagesUpscale"] = root.child("gameImagesUpscale") != 0;
+        mBoolMap["gameImagesMulti"] = root.child("gameImagesMulti") != 0;
 
 	//list stuff
 	mBoolMap["listCentered"] = !root.child("listLeftAlign");

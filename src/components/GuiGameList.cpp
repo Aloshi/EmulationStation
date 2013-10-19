@@ -83,7 +83,8 @@ bool GuiGameList::isDetailed() const
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
 	mTheme(new ThemeComponent(mWindow)),
 	mList(window, 0.0f, 0.0f, Font::get(FONT_SIZE_MEDIUM)), 
-	mScreenshots(window),
+	mScreenshot(nullptr),
+	mScreenshots(nullptr),
 	mDescription(window), 
 	mRating(window), 
         mLastPlayedLabel(window),
@@ -111,7 +112,6 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
         mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 
-	mImageAnimation.addChild(&mScreenshots);
 	mDescContainer.addChild(&mReleaseDateLabel);
 	mDescContainer.addChild(&mReleaseDate);
 	mDescContainer.addChild(&mRating);
@@ -122,7 +122,6 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	//scale delay with screen width (higher width = more text per line)
 	//the scroll speed is automatically scaled by component size
 	mDescContainer.setAutoScroll((int)(1500 + (Renderer::getScreenWidth() * 0.5)), 0.025f);
-	mScreenshots.setAutoScroll(1500, 500);
 
 	mTransitionImage.setPosition((float)Renderer::getScreenWidth(), 0);
 	mTransitionImage.setOrigin(0, 0);
@@ -135,7 +134,6 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
 	addChild(mTheme);
 	addChild(&mHeaderText);
-	addChild(&mScreenshots);
 	addChild(&mDescContainer);
 	addChild(&mList);
 	addChild(&mTransitionImage);
@@ -148,6 +146,20 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 GuiGameList::~GuiGameList()
 {
 	delete mTheme;
+        if (mScreenshot != nullptr)
+        {
+                mImageAnimation.removeChild(mScreenshot);
+                removeChild(mScreenshot);
+                delete mScreenshot;
+                mScreenshot = nullptr;
+        }
+        if (mScreenshots != nullptr)
+        {
+                mImageAnimation.removeChild(mScreenshots);
+                removeChild(mScreenshots);
+                delete mScreenshots;
+                mScreenshots = nullptr;
+        }
 }
 
 void GuiGameList::setSystemId(int id)
@@ -452,10 +464,56 @@ void GuiGameList::updateTheme()
 		mList.setPosition(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth(), mList.getPosition().y());
 		mList.setTextOffsetX((int)(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth()));
 
-		mScreenshots.setPosition(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
-		mScreenshots.setSize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight());
-                mScreenshots.setAllowImageUpscale(mTheme->getBool("gameImageUpscale"));
-                mScreenshots.setBorderSpace(mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight());
+                if (mTheme->getBool("gameImagesMulti"))
+                {
+                        if (mScreenshots == nullptr)
+                        {
+                                if (mScreenshot != nullptr)
+                                {
+                                        mImageAnimation.removeChild(mScreenshot);
+                                        removeChild(mScreenshot);
+                                        delete mScreenshot;
+                                        mScreenshot = nullptr;
+                                }
+                                mScreenshots = new VerticalImageAutoScrollbox(mWindow);
+                                mImageAnimation.addChild(mScreenshots);
+                                mScreenshots->setAutoScroll(1500, 500);
+                                addChild(mScreenshots);
+                        }
+                        mScreenshots->setPosition(
+                                        mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+                        mScreenshots->setSize(
+                                        mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight());
+                        mScreenshots->setAllowImageUpscale(mTheme->getBool("gameImagesUpscale"));
+                        mScreenshots->setBorderSpace(mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight());
+                } else {
+                        if (mScreenshot == nullptr)
+                        {
+                                if (mScreenshots != nullptr)
+                                {
+                                        mImageAnimation.removeChild(mScreenshots);
+                                        removeChild(mScreenshots);
+                                        delete mScreenshots;
+                                        mScreenshots = nullptr;
+                                }
+                                mScreenshot = new ImageComponent(mWindow);
+                                mImageAnimation.addChild(mScreenshot);
+                                addChild(mScreenshot);
+                        }
+                        mScreenshot->setPosition(
+                                        mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+                        mScreenshot->setOrigin(
+                                        mTheme->getFloat("gameImageOriginX"),
+                                        mTheme->getFloat("gameImageOriginY"));
+                        mScreenshot->setResize(
+                                        mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(),
+                                        false);
+                }
+
 
 		mLastPlayedLabel.setColor(mTheme->getColor("description"));
 		mLastPlayedLabel.setFont(mTheme->getDescriptionFont());
@@ -483,44 +541,70 @@ void GuiGameList::updateDetailData()
 	}else{
 		if(mDescContainer.getParent() != this)
 			addChild(&mDescContainer);
-		if(mScreenshots.getParent() != this)
-			addChild(&mScreenshots);
+                if(mScreenshot != nullptr && mScreenshot->getParent() != this)
+			addChild(mScreenshot);
+                else if(mScreenshots != nullptr && mScreenshots->getParent() != this)
+			addChild(mScreenshots);
 
 		GameData* game = (GameData*)mList.getSelectedObject();
 
-                // remove old images
-                while (mScreenshots.getChildCount() > 0)
+                float gameImageYOffset = 0.f;
+                Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
+                if (mScreenshot != nullptr)
                 {
-                        GuiComponent *p = mScreenshots.getChild(0);
-                        mScreenshots.removeChild(p);
-                        delete p;
-                }
-		//set image to either "not found" image or metadata image
-		if(game->metadata()->getSize("image") == 0)
-                {
-                    if (!mTheme->getString("imageNotFoundPath").empty())
-                    {
-                        ImageComponent *ic = new ImageComponent(mWindow);
-			ic->setImage(mTheme->getString("imageNotFoundPath"));
-                        mScreenshots.addImage(ic);
-                    }
-                } else {
-                    for (unsigned int i=0; i<game->metadata()->getSize("image"); ++i)
-                    {
-                        ImageComponent *ic = new ImageComponent(mWindow);
-                        ic->setImage(game->metadata()->getElemAt("image", i));
-                        mScreenshots.addImage(ic);
-                    }
-                }
+                        //set image to either "not found" image or metadata image
+                        if(game->metadata()->getSize("image") == 0 || !boost::filesystem::exists(game->metadata()->getElemAt("image", 0)))
+                        {
+                                //image doesn't exist
+                                if(mTheme->getString("imageNotFoundPath").empty())
+                                {
+                                        //"not found" image doesn't exist
+                                        mScreenshot->setImage("");
+                                        mScreenshot->setSize(0, 0); //clear old size
+                                }else{
+                                        mScreenshot->setImage(mTheme->getString("imageNotFoundPath"));
+                                }
+                        }else{
+                                mScreenshot->setImage(game->metadata()->getElemAt("image", 0));
+                        }
 
-		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
-		mScreenshots.setPosition(getImagePos() - imgOffset); // TODO this line needed?
-		mScreenshots.reset();
+                        mScreenshot->setPosition(getImagePos() - imgOffset);
+                        gameImageYOffset = getImagePos().y() + mScreenshot->getSize().y();
+                } else if (mScreenshots != nullptr) {
+                        // remove old images
+                        while (mScreenshots->getChildCount() > 0)
+                        {
+                                GuiComponent *p = mScreenshots->getChild(0);
+                                mScreenshots->removeChild(p);
+                                delete p;
+                        }
+                        //set image to either "not found" image or metadata image
+                        if(game->metadata()->getSize("image") == 0)
+                        {
+                                if (!mTheme->getString("imageNotFoundPath").empty())
+                                {
+                                        ImageComponent *ic = new ImageComponent(mWindow);
+                                        ic->setImage(mTheme->getString("imageNotFoundPath"));
+                                        mScreenshots->addImage(ic);
+                                }
+                        } else {
+                                for (unsigned int i=0; i<game->metadata()->getSize("image"); ++i)
+                                {
+                                        ImageComponent *ic = new ImageComponent(mWindow);
+                                        ic->setImage(game->metadata()->getElemAt("image", i));
+                                        mScreenshots->addImage(ic);
+                                }
+                        }
+
+                        mScreenshots->setPosition(getImagePos() - imgOffset); 
+                        mScreenshots->reset();
+                        gameImageYOffset = getImagePos().y() + mScreenshots->getSize().y();
+                }
 
 		mImageAnimation.fadeIn(35);
 		mImageAnimation.move((int)imgOffset.x(), (int)imgOffset.y(), 20);
 
-		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, getImagePos().y() + mScreenshots.getSize().y() + 12, 0));
+		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, gameImageYOffset + 12, 0));
 		mDescContainer.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), Renderer::getScreenHeight() - mDescContainer.getPosition().y()));
 		mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
 		mDescContainer.resetAutoScrollTimer();
@@ -642,7 +726,14 @@ void GuiGameList::updateGameLaunchEffect(int t)
 	const int fadeDelay = endTime - 600;
 	const int fadeTime = endTime - fadeDelay - 100;
 
-	Eigen::Vector2f imageCenter((mScreenshots.getSize().x()/2 + mScreenshots.getPosition().x()), (mScreenshots.getSize().y()/2 + mScreenshots.getPosition().y()));
+        Eigen::Vector2f imageCenter;
+        if (mScreenshot != nullptr)
+        {
+                imageCenter = mScreenshot->getCenter();
+        } else if (mScreenshots != nullptr) {
+                imageCenter[0] = (mScreenshots->getSize().x()/2 + mScreenshots->getPosition().x());
+                imageCenter[1] = (mScreenshots->getSize().y()/2 + mScreenshots->getPosition().y());
+        }
 	if(!isDetailed())
 	{
 		imageCenter << mList.getPosition().x() + mList.getSize().x() / 2, mList.getPosition().y() + mList.getSize().y() / 2;
