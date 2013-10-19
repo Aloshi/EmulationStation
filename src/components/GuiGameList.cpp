@@ -33,6 +33,7 @@ namespace {
                                         result.push_back(it->path().generic_string());
                         }
                 }
+                std::sort(result.begin(), result.end()); // lexical order usually also is chronological order for generated screenshot filenames
                 return result;
         }
         // move the given list of files to the destination directory, renaming then to basename-<no>.ext.
@@ -755,6 +756,7 @@ void GuiGameList::updateGameLaunchEffect(int t)
                 boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
 		mSystem->launchGame(mWindow, (GameData*)mList.getSelectedObject());
                 importFreshScreenshots(time);
+                updateDetailData(); // update metadata that may be used in theme (e.g. last played timestamp, new screenshots etc.)
 		mEffectFunc = &GuiGameList::updateGameReturnEffect;
 		mEffectTime = 0;
 		mGameLaunchEffectLength = 700;
