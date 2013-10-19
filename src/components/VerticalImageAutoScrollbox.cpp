@@ -54,7 +54,6 @@ void VerticalImageAutoScrollbox::addImage(ImageComponent *img)
                 img->setPosition(posX, last_img->getPosition().y() + last_img->getSize().y() + mBorderSpace);
         }
         img->setResize(getSize().x(), 0.f, mAllowUpscaling);
-        std::cout << __PRETTY_FUNCTION__ << " imgpos " << img->getPosition().x() << "," << img->getPosition().y() << std::endl;
         addChild(img);
 }
 
