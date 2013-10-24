@@ -50,6 +50,7 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 			mEditing = false;
 			mTime = mTimeBeforeEdit;
 			updateTextCache();
+			return true;
 		}
 
 		int incDir = 0;
