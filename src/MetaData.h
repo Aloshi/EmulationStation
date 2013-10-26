@@ -16,9 +16,11 @@ enum MetaDataType
 	//specialized types
 	MD_MULTILINE_STRING,
 	MD_IMAGE_PATH,
+	MD_IMAGE_PATH_LIST,
 	MD_RATING,
 	MD_DATE,
-	MD_TIME //used for lastplayed
+	MD_TIME, //used for lastplayed
+        MD_SELECTED // last selected item
 };
 
 struct MetaDataDecl
@@ -27,6 +29,7 @@ struct MetaDataDecl
 	MetaDataType type;
 	std::string defaultValue;
 	bool isStatistic; //if true, ignore scraper values for this metadata
+        bool isInternal; //if true, hide in metadata editor
 };
 
 boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");
@@ -40,6 +43,13 @@ public:
 
 	//MetaDataDecl required to set our defaults.
 	MetaDataList(const std::vector<MetaDataDecl>& mdd);
+
+        // accessor methods for list values (i.e. images)
+        unsigned int getSize(const std::string &key) const;
+        const std::string &getElemAt(const std::string &key, unsigned int pos) const;
+        void clearList(const std::string &key);
+        void push_back(const std::string &key, const std::string &value);
+        void set(const std::string &key, unsigned int npos, const std::string &value);
 
 	void set(const std::string& key, const std::string& value);
 	void setTime(const std::string& key, const boost::posix_time::ptime& time); //times are internally stored as ISO strings (e.g. boost::posix_time::to_iso_string(ptime))

@@ -2,7 +2,6 @@
 #define _GUIGAMELIST_H_
 
 #include "../GuiComponent.h"
-#include "TextListComponent.h"
 #include "ImageComponent.h"
 #include "ThemeComponent.h"
 #include "AnimationComponent.h"
@@ -12,7 +11,9 @@
 #include "../SystemData.h"
 #include "../GameData.h"
 #include "../FolderData.h"
+#include "TextListComponent.h"
 #include "ScrollableContainer.h"
+#include "VerticalImageAutoScrollbox.h"
 #include "RatingComponent.h"
 #include "DateTimeComponent.h"
 
@@ -28,6 +29,7 @@ public:
 	virtual ~GuiGameList();
 
 	void setSystemId(int id);
+        void reselectSystem();
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
@@ -51,6 +53,9 @@ private:
 	void updateTheme();
 	void hideDetailData();
 	void doTransition(int dir);
+        // check the screenshot dump directory and add new screenshots to the game
+        void importFreshScreenshots(const boost::posix_time::ptime &since);
+
 
 	std::string getThemeFile();
 
@@ -60,10 +65,12 @@ private:
 	int mSystemId;
 
 	TextListComponent<FileData*> mList;
-	ImageComponent mScreenshot;
-
+	ImageComponent *mScreenshot;
+        VerticalImageAutoScrollbox *mScreenshots;
 	TextComponent mDescription;
 	RatingComponent mRating;
+        TextComponent mLastPlayedLabel;
+        DateTimeComponent mLastPlayed;
 	TextComponent mReleaseDateLabel;
 	DateTimeComponent mReleaseDate;
 

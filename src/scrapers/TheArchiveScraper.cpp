@@ -54,7 +54,7 @@ std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params
 		pugi::xml_node thumbnail = game.child("box_front_small");
 
 		if (image)
-			mdl.back().set("image",image.text().get());
+			mdl.back().set("image", 0, image.text().get());
 		if (thumbnail)
 			mdl.back().set("thumbnail", thumbnail.text().get());
 

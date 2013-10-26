@@ -64,15 +64,19 @@ If EmulationStation is running in "basic" mode, it will try to use `<themeBasic>
 Components
 ==========
 
-A theme is made up of components, which have various types. At the moment, the only type is `image`. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
+A theme is made up of components, which have various types. At the moment, only types `image` and `text` are supported. Components are rendered in the order they are defined - that means you'll want to define the background first, a header image second, etc.
 
+Components may use the following variables to setup system dependend paths or texts:
+`%SYSTEM_NAME%` - replaced with the name of the current system (e.g. "nes")
+`%SYSTEM_FULLNAME%` - replaced with the full name of the current system (e.g. "Nintento Entertainment System")
+`%SYSTEM_GAMECOUNT%` - number of games available.
 
 The "image" component
 =====================
 
 Used to display an image.
 
-`<path>` - path to the image file. Most common file types are supported, and . and ~ are properly expanded.
+`<path>` - path to the image file. Most common file types are supported, and . and ~ and %VAR% are properly expanded.
 
 `<pos>` - the position, as two screen percentages, at which to display the image.
 
@@ -82,6 +86,22 @@ Used to display an image.
 
 `<tiled />` - if present, the image is tiled instead of resized.
 
+`<upscale/>` - if present the image will be resized larger than the original image if necessary.
+
+The "text" component
+====================
+
+`<content>` - The actual text to display (may contain variables).
+
+`<pos>` - the position, as two screen percentages, at which to display the image.
+
+`<dim>` - the dimensions, as two screen percentages, that the image will be resized to. Make one axis 0 to keep the aspect ratio.
+
+`<font>` - specifies the font to be used for the text (see definition of fontTag below).
+
+`<color>` - specifies the color for the text. Default is listPrimaryColor.
+
+`<center>` - if present the text is centered.
 
 Display tags
 ============
@@ -117,11 +137,19 @@ Display tags define some "meta" display attributes about your theme. Display tag
 
 `<gameImagePos>` - two values for the position of the game art, in the form of `[x] [y]`, as a percentage. Default is `$infoWidth/2 $headerHeight`. 
 
-`<gameImageDim>` - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `$infoWidth 0` (width fits within the info column). The image will only be resized if at least one axis is nonzero *and* exceeded by the image's size. You should always leave at least one axis as zero to preserve the aspect ratio.
+`<gameImageDim>` - two values for the dimensions of the game art, in the form of `[width] [height]`, as a percentage of the screen. Default is `$infoWidth 0` (width fits within the info column). All images will be placed inside this box (below each other). Images will be centered horizontally inside the box and resized if they are too large for the specified with. If gameImageUpscale has been defined than smaller images will be upscale to the with defined for gameImageDim. If not all images fit inside the area it will start scrolling.
 
 `<gameImageOrigin>` - two values for the origin of the game art, in the form of `[x] [y]`, as a percentage. Default is `0.5 0` (top-center of the image).
 
 `<gameImageNotFound>` - path to the image to display if a game's image is missing. '.' and '~' are expanded.
+
+***Support for multiple images for one game:***
+
+`<gameImagesMulti>` - if present multiple images will be placed inside the rectangle defined by gameImagePos and gameImageDim.
+
+`<gameImagesSpace>` - Defines the border space between two images. Default is 0.01.
+
+`<gameImagesUpscale>` - if present, game images smaller than the defined gameImageDim will be upscaled.
 
 
 

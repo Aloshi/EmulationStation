@@ -24,7 +24,6 @@ public:
 	};
 
 	void setDisplayMode(DisplayMode mode);
-
 	void setColor(unsigned int color);
 	void setFont(std::shared_ptr<Font> font);
 

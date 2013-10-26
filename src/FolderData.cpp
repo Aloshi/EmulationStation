@@ -35,6 +35,37 @@ FolderData::~FolderData()
 	mFileVector.clear();
 }
 
+boost::posix_time::ptime FolderData::isSelected() const
+{
+    return mSelected;
+}
+
+void FolderData::setSelected(bool isSelected)
+{
+    if (isSelected)
+    {
+        mSelected = boost::posix_time::second_clock::universal_time();
+    }
+    else
+    {
+        mSelected = boost::date_time::not_a_date_time;
+    }
+}
+
+void FolderData::reselect()
+{
+        mSelected = boost::date_time::min_date_time;
+        for (FileData *file: mFileVector)
+        {
+                FolderData *folder = dynamic_cast<FolderData*>(file);
+                if (folder)
+                        folder->reselect();
+                if (file->isSelected() != boost::date_time::not_a_date_time
+                                && mSelected < file->isSelected())
+                        mSelected = file->isSelected();
+        }
+}
+
 void FolderData::pushFileData(FileData* file)
 {
 	mFileVector.push_back(file);

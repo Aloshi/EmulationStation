@@ -8,6 +8,27 @@
 #include "../Renderer.h"
 #include "../Log.h"
 
+namespace {
+
+    std::string &strreplace(std::string& str, std::string replace, std::string with)
+    {
+        size_t pos = str.find(replace);
+
+        if(pos != std::string::npos)
+            return str.replace(pos, replace.length(), with.c_str(), with.length());
+        else
+            return str;
+    }
+
+    std::string &strreplace(std::string& str, const std::map<std::string, std::string> vars) 
+    {
+        for (auto key_val: vars)
+                str = strreplace(str, std::string("%" + key_val.first + "%"), key_val.second);
+        return str;
+    }
+
+}
+
 unsigned int ThemeComponent::getColor(std::string name)
 {
 	return mColorMap[name];
@@ -98,6 +119,7 @@ void ThemeComponent::setDefaults()
 	mFloatMap["gameImageOffsetX"] = mFloatMap["listOffsetX"] / 2;
 	mFloatMap["gameImageOffsetY"] = (float)FONT_SIZE_LARGE / (float)Renderer::getScreenHeight();
 	mFloatMap["gameImageWidth"] = mFloatMap["listOffsetX"];
+        mFloatMap["gameImageSpace"] = .01f;
 	mFloatMap["gameImageHeight"] = 0;
 
 	mSoundMap["menuScroll"]->loadFile("");
@@ -128,10 +150,6 @@ void ThemeComponent::deleteComponents()
 
 void ThemeComponent::readXML(std::string path, bool detailed)
 {
-	if(mPath == path)
-		return;
-
-	setDefaults();
 	deleteComponents();
 
 	mPath = path;
@@ -179,6 +197,8 @@ void ThemeComponent::readXML(std::string path, bool detailed)
 
 	mBoolMap["hideHeader"] = root.child("hideHeader") != 0;
 	mBoolMap["hideDividers"] = root.child("hideDividers") != 0;
+        mBoolMap["gameImagesUpscale"] = root.child("gameImagesUpscale") != 0;
+        mBoolMap["gameImagesMulti"] = root.child("gameImagesMulti") != 0;
 
 	//list stuff
 	mBoolMap["listCentered"] = !root.child("listLeftAlign");
@@ -201,6 +221,7 @@ void ThemeComponent::readXML(std::string path, bool detailed)
 	mFloatMap["gameImageHeight"] = resolveExp(artHeight, mFloatMap["gameImageHeight"]);
 	mFloatMap["gameImageOriginX"] = resolveExp(artOriginX, mFloatMap["gameImageOriginX"]);
 	mFloatMap["gameImageOriginY"] = resolveExp(artOriginY, mFloatMap["gameImageOriginY"]);
+        mFloatMap["gameImageSpace"] = strToFloat(root.child("gameImageSpace").text().get(), mFloatMap["gameImageSpace"]);
 
 	mStringMap["imageNotFoundPath"] = expandPath(root.child("gameImageNotFound").text().get());
 	mStringMap["fastSelectFrame"] = expandPath(root.child("fastSelectFrame").text().get());
@@ -255,6 +276,8 @@ GuiComponent* ThemeComponent::createElement(pugi::xml_node data, GuiComponent* p
 
 		bool tiled = data.child("tiled") != 0;
 
+		bool upscale = data.child("upscale") != 0;
+
 		//split position and dimension information
 		std::string posX, posY;
 		splitString(pos, ' ', &posX, &posY);
@@ -274,7 +297,7 @@ GuiComponent* ThemeComponent::createElement(pugi::xml_node data, GuiComponent* p
 		float ox = strToFloat(originX);
 		float oy = strToFloat(originY);
 
-		ImageComponent* comp = new ImageComponent(mWindow, x, y, "", w, h, true);
+		ImageComponent* comp = new ImageComponent(mWindow, x, y, "", w, h, upscale);
 		comp->setOrigin(ox, oy);
 		comp->setTiling(tiled);
 		comp->setImage(path);
@@ -282,10 +305,46 @@ GuiComponent* ThemeComponent::createElement(pugi::xml_node data, GuiComponent* p
 		addChild(comp);
 		return comp;
 	}
+        else if (type == "text")
+        {
+                std::string content = data.child("content").text().get();
+                content = strreplace(content, mVariables);
+		std::string pos = data.child("pos").text().get();
+		std::string dim = data.child("dim").text().get();
+                unsigned int color = resolveColor(data.child("color").text().get(), mColorMap["primary"]);
+                std::shared_ptr<Font> font = resolveFont(data.child("font"), Font::getDefaultPath(), FONT_SIZE_LARGE);
+
+		//split position and dimension information
+		std::string posX, posY;
+		splitString(pos, ' ', &posX, &posY);
+
+		std::string dimW, dimH;
+		splitString(dim, ' ', &dimW, &dimH);
+		//resolve to pixels from percentages/variables
+		float x = resolveExp(posX) * Renderer::getScreenWidth();
+		float y = resolveExp(posY) * Renderer::getScreenHeight();
+		float w = resolveExp(dimW) * Renderer::getScreenWidth();
+		float h = resolveExp(dimH) * Renderer::getScreenHeight();
+
+		bool centered = data.child("center") != 0;
+
+                TextComponent *comp = new TextComponent(mWindow, content, font, Eigen::Vector3f(x, y, 0.f), Eigen::Vector2f(w, h));
+                comp->setCentered(centered);
+                comp->setColor(color);
+
+                addChild(comp);
+                return comp;
+        }
 
 
 	LOG(LogError) << "Theme component type \"" << type << "\" unknown!";
 	return NULL;
+}
+
+//stores variable value use in theme.xml via %NAME%
+void ThemeComponent::setVar(const std::string &name, const std::string &value)
+{
+        mVariables[name] = value;
 }
 
 //expands a file path (./ becomes the directory of this theme file, ~/ becomes $HOME/)
@@ -293,7 +352,9 @@ std::string ThemeComponent::expandPath(std::string path)
 {
 	if(path.empty())
 		return "";
-	
+        
+        path = strreplace(path, mVariables);
+
 	if(path[0] == '~')
 		path = getHomePath() + path.substr(1, path.length() - 1);
 	else if(path[0] == '.')

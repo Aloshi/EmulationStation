@@ -17,6 +17,51 @@ Eigen::Vector3f GuiGameList::getImagePos()
 	return Eigen::Vector3f(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), 0.0f);
 }
 
+namespace {
+
+        // return a list of files that were modified after the given timestamp
+        std::vector<std::string> newFilesInDirSince(const std::string &path, const boost::posix_time::ptime &since)
+        {
+                std::vector<std::string> result;
+                if (!path.empty())
+                {
+                        for (boost::filesystem::directory_iterator it(path), end; it != end; ++it)
+                        {
+                                std::time_t t = boost::filesystem::last_write_time( *it );
+                                const boost::posix_time::ptime lastWriteTime = boost::posix_time::from_time_t( t );
+                                if (lastWriteTime >= since)
+                                        result.push_back(it->path().generic_string());
+                        }
+                }
+                std::sort(result.begin(), result.end()); // lexical order usually also is chronological order for generated screenshot filenames
+                return result;
+        }
+        // move the given list of files to the destination directory, renaming then to basename-<no>.ext.
+        // no existing files will be overwritten!
+        std::vector<std::string> moveAndRenameFiles(const std::vector<std::string> &files, const std::string &basename, const std::string &destDir)
+        {
+                std::vector<std::string> result;
+                unsigned int no = 0;
+                boost::filesystem::path srcPath, dstPath;
+                for (auto fname: files)
+                {
+                        srcPath = fname;
+                        do {
+                                dstPath = destDir;
+                                dstPath /= basename;
+                                dstPath += "-";
+                                dstPath += std::to_string(no++);
+                                dstPath += srcPath.extension();
+                        } while (boost::filesystem::exists(dstPath));
+                        LOG(LogDebug) << "moving screenshot " << srcPath.generic_string() << " to " << dstPath.generic_string() << std::endl;
+                        boost::filesystem::rename(srcPath, dstPath);
+                        result.push_back(dstPath.generic_string());
+                }
+                return result;
+        }
+}
+
+
 bool GuiGameList::isDetailed() const
 {
 	if(!mFolder)
@@ -28,7 +73,7 @@ bool GuiGameList::isDetailed() const
 		if(!mFolder->getFile(i)->isFolder())
 		{
 			GameData* game = (GameData*)(mFolder->getFile(i));
-			if(!game->metadata()->get("image").empty())
+			if(game->metadata()->getSize("image") != 0)
 				return true;
 		}
 	}
@@ -39,15 +84,18 @@ bool GuiGameList::isDetailed() const
 GuiGameList::GuiGameList(Window* window) : GuiComponent(window), 
 	mTheme(new ThemeComponent(mWindow)),
 	mList(window, 0.0f, 0.0f, Font::get(FONT_SIZE_MEDIUM)), 
-	mScreenshot(window),
+	mScreenshot(nullptr),
+	mScreenshots(nullptr),
 	mDescription(window), 
 	mRating(window), 
+        mLastPlayedLabel(window),
+	mLastPlayed(window),
 	mReleaseDateLabel(window), 
 	mReleaseDate(window), 
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
 	mHeaderText(mWindow), 
-    sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex")),
+	sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex")),
 	mLockInput(false),
 	mEffectFunc(NULL), mEffectTime(0), mGameLaunchEffectLength(700)
 {
@@ -63,10 +111,13 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, false, "played most recently"));
 	}
 
-	mImageAnimation.addChild(&mScreenshot);
+        mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
+
 	mDescContainer.addChild(&mReleaseDateLabel);
 	mDescContainer.addChild(&mReleaseDate);
 	mDescContainer.addChild(&mRating);
+        mDescContainer.addChild(&mLastPlayedLabel);
+	mDescContainer.addChild(&mLastPlayed);
 	mDescContainer.addChild(&mDescription);
 
 	//scale delay with screen width (higher width = more text per line)
@@ -84,19 +135,32 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 
 	addChild(mTheme);
 	addChild(&mHeaderText);
-	addChild(&mScreenshot);
 	addChild(&mDescContainer);
 	addChild(&mList);
 	addChild(&mTransitionImage);
 
 	mTransitionAnimation.addChild(this);
 
-	setSystemId(0);
+    reselectSystem();
 }
 
 GuiGameList::~GuiGameList()
 {
 	delete mTheme;
+        if (mScreenshot != nullptr)
+        {
+                mImageAnimation.removeChild(mScreenshot);
+                removeChild(mScreenshot);
+                delete mScreenshot;
+                mScreenshot = nullptr;
+        }
+        if (mScreenshots != nullptr)
+        {
+                mImageAnimation.removeChild(mScreenshots);
+                removeChild(mScreenshots);
+                delete mScreenshots;
+                mScreenshots = nullptr;
+        }
 }
 
 void GuiGameList::setSystemId(int id)
@@ -121,6 +185,9 @@ void GuiGameList::setSystemId(int id)
 
 	mFolder = mSystem->getRootFolder();
 
+        mTheme->setVar("SYSTEM_NAME", mSystem->getName());
+        mTheme->setVar("SYSTEM_FULLNAME", mSystem->getFullName());
+        mTheme->setVar("SYSTEM_GAMECOUNT", std::to_string(mSystem->getGameCount()));
 	updateTheme();
 	updateList();
 	updateDetailData();
@@ -138,7 +205,9 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	if(mLockInput)
 		return false;
 
+        mList.getSelectedObject()->setSelected(0);
 	mList.input(config, input);
+        mList.getSelectedObject()->setSelected(true);
 
 	if(input.id == SDLK_F3)
 	{
@@ -310,19 +379,44 @@ void GuiGameList::sort(FolderData::ComparisonFunction & comparisonFunction, bool
 	updateDetailData();
 }
 
+void GuiGameList::reselectSystem()
+{
+        boost::posix_time::ptime lastSelectionTime = boost::date_time::min_date_time;
+        int lastSelectedSystemId = 0;
+        for (unsigned int systemId = 0; systemId < SystemData::sSystemVector.size(); ++systemId)
+        {
+                SystemData *sd = SystemData::sSystemVector.at(systemId);
+                if (sd->getRootFolder()->isSelected() != boost::date_time::not_a_date_time)
+                        if (lastSelectionTime < sd->getRootFolder()->isSelected())
+                        {
+                                lastSelectionTime = sd->getRootFolder()->isSelected();
+                                lastSelectedSystemId = systemId;
+                        }
+        }
+        setSystemId(lastSelectedSystemId);
+}
+
 void GuiGameList::updateList()
 {
 	mList.clear();
 
+        unsigned int selectId = 0;
+        boost::posix_time::ptime selectIdSelectionTime(boost::date_time::min_date_time);
 	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)
 	{
 		FileData* file = mFolder->getFile(i);
-
+                if (file->isSelected() != boost::date_time::not_a_date_time
+                               && file->isSelected() > selectIdSelectionTime)
+                {
+                        selectId = i;
+                        selectIdSelectionTime = file->isSelected();
+                }
 		if(file->isFolder())
 			mList.addObject(file->getName(), file, mTheme->getColor("secondary"));
 		else
 			mList.addObject(file->getName(), file, mTheme->getColor("primary"));
 	}
+        mList.setSelection(selectId);
 }
 
 std::string GuiGameList::getThemeFile()
@@ -371,10 +465,61 @@ void GuiGameList::updateTheme()
 		mList.setPosition(mTheme->getFloat("listOffsetX") * Renderer::getScreenWidth(), mList.getPosition().y());
 		mList.setTextOffsetX((int)(mTheme->getFloat("listTextOffsetX") * Renderer::getScreenWidth()));
 
-		mScreenshot.setPosition(mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
-		mScreenshot.setOrigin(mTheme->getFloat("gameImageOriginX"), mTheme->getFloat("gameImageOriginY"));
-		mScreenshot.setResize(mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(), mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(), false);
+                if (mTheme->getBool("gameImagesMulti"))
+                {
+                        if (mScreenshots == nullptr)
+                        {
+                                if (mScreenshot != nullptr)
+                                {
+                                        mImageAnimation.removeChild(mScreenshot);
+                                        removeChild(mScreenshot);
+                                        delete mScreenshot;
+                                        mScreenshot = nullptr;
+                                }
+                                mScreenshots = new VerticalImageAutoScrollbox(mWindow);
+                                mImageAnimation.addChild(mScreenshots);
+                                mScreenshots->setAutoScroll(1500, 500);
+                                addChild(mScreenshots);
+                        }
+                        mScreenshots->setPosition(
+                                        mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+                        mScreenshots->setSize(
+                                        mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight());
+                        mScreenshots->setAllowImageUpscale(mTheme->getBool("gameImagesUpscale"));
+                        mScreenshots->setBorderSpace(mTheme->getFloat("gameImageSpace") * Renderer::getScreenHeight());
+                } else {
+                        if (mScreenshot == nullptr)
+                        {
+                                if (mScreenshots != nullptr)
+                                {
+                                        mImageAnimation.removeChild(mScreenshots);
+                                        removeChild(mScreenshots);
+                                        delete mScreenshots;
+                                        mScreenshots = nullptr;
+                                }
+                                mScreenshot = new ImageComponent(mWindow);
+                                mImageAnimation.addChild(mScreenshot);
+                                addChild(mScreenshot);
+                        }
+                        mScreenshot->setPosition(
+                                        mTheme->getFloat("gameImageOffsetX") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageOffsetY") * Renderer::getScreenHeight());
+                        mScreenshot->setOrigin(
+                                        mTheme->getFloat("gameImageOriginX"),
+                                        mTheme->getFloat("gameImageOriginY"));
+                        mScreenshot->setResize(
+                                        mTheme->getFloat("gameImageWidth") * Renderer::getScreenWidth(),
+                                        mTheme->getFloat("gameImageHeight") * Renderer::getScreenHeight(),
+                                        false);
+                }
 
+
+		mLastPlayedLabel.setColor(mTheme->getColor("description"));
+		mLastPlayedLabel.setFont(mTheme->getDescriptionFont());
+		mLastPlayed.setColor(mTheme->getColor("description"));
+		mLastPlayed.setFont(mTheme->getDescriptionFont());
 		mReleaseDateLabel.setColor(mTheme->getColor("description"));
 		mReleaseDateLabel.setFont(mTheme->getDescriptionFont());
 		mReleaseDate.setColor(mTheme->getColor("description"));
@@ -397,32 +542,70 @@ void GuiGameList::updateDetailData()
 	}else{
 		if(mDescContainer.getParent() != this)
 			addChild(&mDescContainer);
+                if(mScreenshot != nullptr && mScreenshot->getParent() != this)
+			addChild(mScreenshot);
+                else if(mScreenshots != nullptr && mScreenshots->getParent() != this)
+			addChild(mScreenshots);
 
 		GameData* game = (GameData*)mList.getSelectedObject();
 
-		//set image to either "not found" image or metadata image
-		if(!boost::filesystem::exists(game->metadata()->get("image")))
-		{
-			//image doesn't exist
-			if(mTheme->getString("imageNotFoundPath").empty())
-			{
-				//"not found" image doesn't exist
-				mScreenshot.setImage("");
-				mScreenshot.setSize(0, 0); //clear old size
-			}else{
-				mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
-			}
-		}else{
-			mScreenshot.setImage(game->metadata()->get("image"));
-		}
+                float gameImageYOffset = 0.f;
+                Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
+                if (mScreenshot != nullptr)
+                {
+                        //set image to either "not found" image or metadata image
+                        if(game->metadata()->getSize("image") == 0 || !boost::filesystem::exists(game->metadata()->getElemAt("image", 0)))
+                        {
+                                //image doesn't exist
+                                if(mTheme->getString("imageNotFoundPath").empty())
+                                {
+                                        //"not found" image doesn't exist
+                                        mScreenshot->setImage("");
+                                        mScreenshot->setSize(0, 0); //clear old size
+                                }else{
+                                        mScreenshot->setImage(mTheme->getString("imageNotFoundPath"));
+                                }
+                        }else{
+                                mScreenshot->setImage(game->metadata()->getElemAt("image", 0));
+                        }
 
-		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
-		mScreenshot.setPosition(getImagePos() - imgOffset);
+                        mScreenshot->setPosition(getImagePos() - imgOffset);
+                        gameImageYOffset = getImagePos().y() + mScreenshot->getSize().y();
+                } else if (mScreenshots != nullptr) {
+                        // remove old images
+                        while (mScreenshots->getChildCount() > 0)
+                        {
+                                GuiComponent *p = mScreenshots->getChild(0);
+                                mScreenshots->removeChild(p);
+                                delete p;
+                        }
+                        //set image to either "not found" image or metadata image
+                        if(game->metadata()->getSize("image") == 0)
+                        {
+                                if (!mTheme->getString("imageNotFoundPath").empty())
+                                {
+                                        ImageComponent *ic = new ImageComponent(mWindow);
+                                        ic->setImage(mTheme->getString("imageNotFoundPath"));
+                                        mScreenshots->addImage(ic);
+                                }
+                        } else {
+                                for (unsigned int i=0; i<game->metadata()->getSize("image"); ++i)
+                                {
+                                        ImageComponent *ic = new ImageComponent(mWindow);
+                                        ic->setImage(game->metadata()->getElemAt("image", i));
+                                        mScreenshots->addImage(ic);
+                                }
+                        }
+
+                        mScreenshots->setPosition(getImagePos() - imgOffset); 
+                        mScreenshots->reset();
+                        gameImageYOffset = getImagePos().y() + mScreenshots->getSize().y();
+                }
 
 		mImageAnimation.fadeIn(35);
 		mImageAnimation.move((int)imgOffset.x(), (int)imgOffset.y(), 20);
 
-		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, getImagePos().y() + mScreenshot.getSize().y() + 12, 0));
+		mDescContainer.setPosition(Eigen::Vector3f(Renderer::getScreenWidth() * 0.03f, gameImageYOffset + 12, 0));
 		mDescContainer.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), Renderer::getScreenHeight() - mDescContainer.getPosition().y()));
 		mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
 		mDescContainer.resetAutoScrollTimer();
@@ -438,6 +621,12 @@ void GuiGameList::updateDetailData()
 
 		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
 		mRating.setValue(game->metadata()->get("rating"));
+
+                mLastPlayedLabel.setPosition(0, mReleaseDateLabel.getPosition().y() + mReleaseDateLabel.getSize().y());
+                mLastPlayedLabel.setText("Last played: ");
+                mLastPlayed.setSize(colwidth - mRating.getSize().x(), ratingHeight);
+                mLastPlayed.setPosition(mLastPlayedLabel.getPosition().x() + mLastPlayedLabel.getSize().x(), mLastPlayedLabel.getPosition().y());
+                mLastPlayed.setValue(game->metadata()->get("lastplayed"));
 
 		mDescription.setPosition(0, mRating.getSize().y());
 		mDescription.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), 0));
@@ -538,7 +727,14 @@ void GuiGameList::updateGameLaunchEffect(int t)
 	const int fadeDelay = endTime - 600;
 	const int fadeTime = endTime - fadeDelay - 100;
 
-	Eigen::Vector2f imageCenter(mScreenshot.getCenter());
+        Eigen::Vector2f imageCenter;
+        if (mScreenshot != nullptr)
+        {
+                imageCenter = mScreenshot->getCenter();
+        } else if (mScreenshots != nullptr) {
+                imageCenter[0] = (mScreenshots->getSize().x()/2 + mScreenshots->getPosition().x());
+                imageCenter[1] = (mScreenshots->getSize().y()/2 + mScreenshots->getPosition().y());
+        }
 	if(!isDetailed())
 	{
 		imageCenter << mList.getPosition().x() + mList.getSize().x() / 2, mList.getPosition().y() + mList.getSize().y() / 2;
@@ -557,7 +753,10 @@ void GuiGameList::updateGameLaunchEffect(int t)
 	{
 		//effect done
 		mTransitionImage.setImage(""); //fixes "tried to bind uninitialized texture!" since copyScreen()'d textures don't reinit
+                boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
 		mSystem->launchGame(mWindow, (GameData*)mList.getSelectedObject());
+                importFreshScreenshots(time);
+                updateDetailData(); // update metadata that may be used in theme (e.g. last played timestamp, new screenshots etc.)
 		mEffectFunc = &GuiGameList::updateGameReturnEffect;
 		mEffectTime = 0;
 		mGameLaunchEffectLength = 700;
@@ -571,4 +770,23 @@ void GuiGameList::updateGameReturnEffect(int t)
 
 	if(t >= mGameLaunchEffectLength)
 		mEffectFunc = NULL;
+}
+
+void GuiGameList::importFreshScreenshots(const boost::posix_time::ptime &since)
+{
+        if (mSystem->getEmulatorScreenshotDumpDir().empty() || mSystem->getScreenshotDir().empty())
+                return; // not configured
+
+        std::vector<std::string> newScreenshots(newFilesInDirSince(mSystem->getEmulatorScreenshotDumpDir(), since));
+        if (newScreenshots.empty())
+                return; // no new screenshots found
+
+        GameData* game = dynamic_cast<GameData*>(mList.getSelectedObject());
+        if (game == nullptr)
+                return; // impossible
+
+	LOG(LogInfo) << "Found " << newScreenshots.size() << " new screenshots for game " << game->getName() << std::endl;
+        newScreenshots = moveAndRenameFiles(newScreenshots, game->getBaseName(), mSystem->getScreenshotDir());
+        for (auto fname: newScreenshots)
+                game->metadata()->push_back("image", fname);
 }

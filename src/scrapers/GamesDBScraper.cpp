@@ -123,7 +123,7 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 			if(art)
 			{
 				mdl.back().set("thumbnail", baseImageUrl + art.attribute("thumb").as_string());
-				mdl.back().set("image", baseImageUrl + art.text().get());
+				mdl.back().set("image", 0, baseImageUrl + art.text().get());
 			}
 		}
 

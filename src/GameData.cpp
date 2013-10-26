@@ -17,6 +17,23 @@ bool GameData::isFolder() const
 	return false;
 }
 
+boost::posix_time::ptime GameData::isSelected() const
+{
+    return const_cast<GameData*>(this)->metadata()->getTime("selected");
+}
+
+void GameData::setSelected(bool isSelected)
+{
+    if (isSelected)
+    {
+        metadata()->setTime("selected", boost::posix_time::second_clock::universal_time());
+    }
+    else
+    {
+        metadata()->set("selected", "");
+    }
+}
+
 const std::string& GameData::getName() const
 {
 	return mMetaData.get("name");

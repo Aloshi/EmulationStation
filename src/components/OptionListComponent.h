@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include "../Renderer.h"
+#include "../Window.h"
 #include "NinePatchComponent.h"
 #include "../Window.h"
 

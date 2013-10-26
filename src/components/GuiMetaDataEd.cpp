@@ -93,18 +93,20 @@ void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
 
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
 	{
-		TextComponent* label = new TextComponent(mWindow);
-		label->setText(iter->key);
-		mList.setEntry(Vector2i(0, y), Vector2i(1, 1), label, false, ComponentListComponent::AlignLeft);
-		mLabels.push_back(label);
+		if (!iter->isInternal) {
+			TextComponent* label = new TextComponent(mWindow);
+			label->setText(iter->key);
+			mList.setEntry(Vector2i(0, y), Vector2i(1, 1), label, false, ComponentListComponent::AlignLeft);
+			mLabels.push_back(label);
 
-		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
-		ed->setSize(Renderer::getScreenWidth() * 0.4f, ed->getSize().y());
-		ed->setValue(mMetaData->get(iter->key));
-		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
-		mEditors.push_back(ed);
+			GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
+			ed->setSize(Renderer::getScreenWidth() * 0.4f, ed->getSize().y());
+			ed->setValue(mMetaData->get(iter->key));
+			mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
+			mEditors.push_back(ed);
 
-		y++;
+			y++;
+		}
 	}
 
 	//save button

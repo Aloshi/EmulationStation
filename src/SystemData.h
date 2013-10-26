@@ -14,7 +14,7 @@ class SystemData
 {
 public:
 	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-		const std::string& command, PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN);
+		const std::string& command, const std::string &emulatorScreenshotDumpDir, const std::string &screenshotDir, PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN);
 	~SystemData();
 
 	FolderData* getRootFolder();
@@ -22,10 +22,12 @@ public:
 	std::string getName();
 	std::string getFullName();
 	std::string getStartPath();
+	std::string getGamelistPath();
+        std::string getScreenshotDir();
+        std::string getEmulatorScreenshotDumpDir();
 	std::vector<std::string> getExtensions();
 	PlatformIds::PlatformId getPlatformId();
 
-	std::string getGamelistPath();
 	bool hasGamelist();
 	std::vector<MetaDataDecl> getGameMDD();
 
@@ -45,6 +47,8 @@ private:
 	std::string mStartPath;
 	std::vector<std::string> mSearchExtensions;
 	std::string mLaunchCommand;
+        std::string mScreenshotDir;
+        std::string mEmulatorScreenshotDumpDir;
 	PlatformIds::PlatformId mPlatformId;
 
 	void populateFolder(FolderData* folder);
