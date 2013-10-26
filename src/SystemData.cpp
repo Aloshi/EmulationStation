@@ -18,7 +18,7 @@ std::vector<SystemData*> SystemData::sSystemVector;
 namespace fs = boost::filesystem;
 
 std::string SystemData::getStartPath() { return mStartPath; }
-std::string SystemData::getExtension() { return mSearchExtension; }
+std::vector<std::string> SystemData::getExtensions() { return mSearchExtensions; }
 std::string SystemData::getScreenshotDir() { return mScreenshotDir; }
 std::string SystemData::getEmulatorScreenshotDumpDir() { return mEmulatorScreenshotDumpDir; }
 
@@ -35,7 +35,7 @@ namespace
 	}
 }
 
-SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, 
+SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
 	const std::string& command, const std::string &emulatorScreenshotDumpDir, const std::string &screenshotDir, PlatformIds::PlatformId platformId)
 {
 	mName = name;
@@ -48,7 +48,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	expandTilde(mScreenshotDir);
 	expandTilde(mEmulatorScreenshotDumpDir);
 
-	mSearchExtension = extension;
+	mSearchExtensions = extensions;
 	mLaunchCommand = command;
 	mPlatformId = platformId;
 
@@ -137,42 +137,31 @@ void SystemData::populateFolder(FolderData* folder)
 		}
 	}
 
+	fs::path filePath;
+	std::string extension;
+	bool isGame;
 	for(fs::directory_iterator end, dir(folderPath); dir != end; ++dir)
 	{
-		fs::path filePath = (*dir).path();
+		filePath = (*dir).path();
 
 		if(filePath.stem().string().empty())
 			continue;
 
 		//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
 		//we first get the extension of the file itself:
-		std::string extension = filePath.extension().string();
-		std::string chkExt;
-		size_t extPos = 0;
-
-		//folders *can* also match the extension and be added as games - this is mostly just to support higan
+		extension = filePath.extension().string();
+		
+		//fyi, folders *can* also match the extension and be added as games - this is mostly just to support higan
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
-		bool isGame = false;
-		do {
-			//now we loop through every extension in the list
-			size_t cpos = extPos;
-			extPos = mSearchExtension.find(" ", extPos);
-			chkExt = mSearchExtension.substr(cpos, ((extPos == std::string::npos) ? mSearchExtension.length() - cpos: extPos - cpos));
 
-			//if it matches, add it
-			if(chkExt == extension)
-			{
-				GameData* newGame = new GameData(filePath.generic_string(), MetaDataList(getGameMDD()));
-				folder->pushFileData(newGame);
-				isGame = true;
-				break;
-			}else if(extPos != std::string::npos) //if not, add one to the "next position" marker to skip the space when reading the next extension
-			{
-				extPos++;
-			}
+		isGame = false;
+		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
+		{
+			GameData* newGame = new GameData(filePath.generic_string(), MetaDataList(getGameMDD()));
+			folder->pushFileData(newGame);
+			isGame = true;
+		}
 
-		} while(extPos != std::string::npos && chkExt != "" && chkExt.find(".") != std::string::npos);
-	
 		//add directories that also do not match an extension as folders
 		if(!isGame && fs::is_directory(filePath))
 		{
@@ -233,20 +222,32 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
-		std::string name, fullname, path, ext, cmd, emulatorScreenshotDumpDir, screenshotDir;
+		std::string name, fullname, path, cmd, emulatorScreenshotDumpDir, screenshotDir;
 		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
 		fullname = system.child("fullname").text().get();
 		path = system.child("path").text().get();
-		ext = system.child("extension").text().get();
+
+		//convert extensions list from a string into a vector of strings
+		const pugi::char_t* extStr = system.child("extension").text().get();
+		std::vector<std::string> extensions;
+		std::vector<char> buff(strlen(extStr) + 1);
+		strcpy(buff.data(), extStr);
+		char* ext = strtok(buff.data(), " ");
+		while(ext != NULL)
+		{
+			extensions.push_back(ext);
+			ext = strtok(NULL, " ");
+		}
+
 		cmd = system.child("command").text().get();
                 emulatorScreenshotDumpDir = system.child("emulatorScreenshotDumpDir").text().get();
                 screenshotDir = system.child("screenshotDir").text().get();
 		platformId = (PlatformIds::PlatformId)system.child("platformid").text().as_uint(PlatformIds::PLATFORM_UNKNOWN);
 
 		//validate
-		if(name.empty() || path.empty() || ext.empty() || cmd.empty())
+		if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
 		{
 			LOG(LogError) << "System \"" << name << "\" is missing name, path, extension, or command!";
 			continue;
@@ -256,7 +257,7 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, ext, cmd, emulatorScreenshotDumpDir, screenshotDir, platformId);
+		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, emulatorScreenshotDumpDir, screenshotDir, platformId);
 		if(newSys->getRootFolder()->getFileCount() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";

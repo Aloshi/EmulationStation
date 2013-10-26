@@ -13,21 +13,24 @@ class GameData;
 class SystemData
 {
 public:
-	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::string& extension, 
+	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
 		const std::string& command, const std::string &emulatorScreenshotDumpDir, const std::string &screenshotDir, PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN);
 	~SystemData();
 
 	FolderData* getRootFolder();
+
 	std::string getName();
 	std::string getFullName();
 	std::string getStartPath();
-	std::string getExtension();
 	std::string getGamelistPath();
         std::string getScreenshotDir();
         std::string getEmulatorScreenshotDumpDir();
+	std::vector<std::string> getExtensions();
 	PlatformIds::PlatformId getPlatformId();
+
 	bool hasGamelist();
 	std::vector<MetaDataDecl> getGameMDD();
+
 	unsigned int getGameCount();
 
 	void launchGame(Window* window, GameData* game);
@@ -42,7 +45,7 @@ private:
 	std::string mName;
 	std::string mFullName;
 	std::string mStartPath;
-	std::string mSearchExtension;
+	std::vector<std::string> mSearchExtensions;
 	std::string mLaunchCommand;
         std::string mScreenshotDir;
         std::string mEmulatorScreenshotDumpDir;

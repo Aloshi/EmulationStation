@@ -42,6 +42,10 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+
+#ifdef USE_OPENGL_ES
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+#endif
 		//SDL_GL_SetSwapInterval(1); //0 for immediate updates, 1 for updates synchronized with the vertical retrace, -1 for late swap tearing
 
 		SDL_DisplayMode dispMode;
