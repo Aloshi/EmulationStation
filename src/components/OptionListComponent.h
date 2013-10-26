@@ -167,7 +167,7 @@ private:
 	{
 	public:
 		OptionListPopup(Window* window, OptionListComponent<T>& optList) : GuiComponent(window), 
-			mOptList(optList), mBox(window, ":/textbox.png"), mCursor(0), mScrollOffset(0)
+			mOptList(optList), mBox(window, ":/textbox.png"), mCursor(0), mScrollOffset(0), mCursorTimer(0)
 		{
 			//find global position
 			GuiComponent* p = &mOptList;
@@ -185,7 +185,11 @@ private:
 
 			std::shared_ptr<Font> font = mOptList.getFont();
 
-			unsigned int renderCount = mTextCaches.size() - mScrollOffset;
+			unsigned int renderCount = getPageSize();
+			if(renderCount + mScrollOffset > mTextCaches.size())
+				renderCount = mTextCaches.size() - mScrollOffset;
+
+			unsigned int renderTo = mScrollOffset + renderCount;
 
 			float height = (float)renderCount * font->getHeight();
 			trans.translate(Eigen::Vector3f(0, -height / 2 + font->getHeight() * 0.5f, 0));
@@ -196,7 +200,7 @@ private:
 			Renderer::setMatrix(trans);
 			Renderer::drawRect(0, 0, (int)getSize().x(), (int)height, 0xFFFFFFFF);
 
-			for(unsigned int i = mScrollOffset; i < renderCount; i++)
+			for(unsigned int i = mScrollOffset; i < renderTo; i++)
 			{
 				Renderer::setMatrix(trans);
 
@@ -232,29 +236,64 @@ private:
 				
 					return true;
 				}
-				if(mOptList.mEntries.size() > 1)
+				if(config->isMappedTo("up", input))
 				{
-					if(config->isMappedTo("up", input))
-					{
-						if(mCursor > 0)
-							mCursor--;
-					
-						return true;
-					}
-					if(config->isMappedTo("down", input))
-					{
-						if(mCursor < mOptList.mEntries.size() - 1)
-							mCursor++;
-
-						return true;
-					}
+					mCursorDir = -1;
+					mCursorTimer = -350;
+					moveCursor();
+					return true;
 				}
+				if(config->isMappedTo("down", input))
+				{
+					mCursorDir = 1;
+					mCursorTimer = -350;
+					moveCursor();
+					return true;
+				}
+			}else{
+				if(config->isMappedTo("up", input) || config->isMappedTo("down", input))
+					mCursorDir = 0;
 			}
 
 			return GuiComponent::input(config, input);
 		}
+		
+		void update(int deltaTime)
+		{
+			if(mCursorDir != 0)
+			{
+				mCursorTimer += deltaTime;
+				while(mCursorTimer >= 100)
+				{
+					moveCursor();
+					mCursorTimer -= 100;
+				}
+			}
+		}
 
 	private:
+		void moveCursor()
+		{
+			if(mOptList.mEntries.size() == 0)
+				return;
+			
+			if(mCursorDir < 0) //scroll up
+			{
+				if(mCursor > 0)
+					mCursor--;
+						
+				if(mCursor < mScrollOffset)
+					mScrollOffset--;
+			}else if(mCursorDir > 0) //scroll down
+			{
+				if(mCursor < mOptList.mEntries.size() - 1)
+							mCursor++;
+
+				if(mCursor - mScrollOffset >= getPageSize())
+					mScrollOffset++;
+			}
+		}
+
 		void close()
 		{
 			delete this;
@@ -277,10 +316,17 @@ private:
 			}
 		}
 
+		unsigned int getPageSize()
+		{
+			return 5;
+		}
+
 		OptionListComponent<T>& mOptList;
 		NinePatchComponent mBox;
 
 		unsigned int mCursor;
+		int mCursorDir;
+		int mCursorTimer;
 		unsigned int mScrollOffset;
 		std::vector<TextCache*> mTextCaches;
 	};
