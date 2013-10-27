@@ -129,7 +129,7 @@ void SystemData::populateFolder(FolderData* folder)
 	{
 		filePath = (*dir).path();
 
-		if(filePath.stem().string().empty())
+		if(filePath.stem().empty())
 			continue;
 
 		//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
