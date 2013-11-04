@@ -177,7 +177,7 @@ std::shared_ptr<Scraper> createScraperByName(const std::string& name)
 
 void resolveMetaDataAssetsAsync(Window* window, const ScraperSearchParams& params, MetaDataList mdl, std::function<void(MetaDataList)> returnFunc)
 {
-	std::vector<MetaDataDecl> mdd = params.system->getGameMDD();
+	const std::vector<MetaDataDecl>& mdd = params.game->metadata()->getMDD();
 	for(auto it = mdd.begin(); it != mdd.end(); it++)
 	{
 		std::string key = it->key;

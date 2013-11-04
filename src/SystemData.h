@@ -27,8 +27,7 @@ public:
 
 	std::string getGamelistPath();
 	bool hasGamelist();
-	std::vector<MetaDataDecl> getGameMDD();
-
+	
 	unsigned int getGameCount();
 
 	void launchGame(Window* window, GameData* game);

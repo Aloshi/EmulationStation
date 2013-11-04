@@ -243,7 +243,7 @@ int run_scraper_cmdline()
 		for(auto gameIt = files.begin(); gameIt != files.end(); gameIt++)
 		{
 			GameData* game = (GameData*)(*gameIt);
-			std::vector<MetaDataDecl> mdd = (*sysIt)->getGameMDD();
+			const std::vector<MetaDataDecl>& mdd = game->metadata()->getMDD();
 			for(auto i = mdd.begin(); i != mdd.end(); i++)
 			{
 				std::string key = i->key;

@@ -44,7 +44,7 @@ std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params
 	pugi::xml_node game = data.child("game");
 	while(game && resultNum < MAX_SCRAPER_RESULTS)
 	{
-		mdl.push_back(MetaDataList(params.system->getGameMDD()));
+		mdl.push_back(MetaDataList(GAME_METADATA));
 		mdl.back().set("name", game.child("title").text().get());
 		mdl.back().set("desc", game.child("description").text().get());
 

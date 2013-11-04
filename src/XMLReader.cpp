@@ -91,7 +91,7 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 		loops++;
 	}
 
-	GameData* game = new GameData(gameAbsPath, MetaDataList(system->getGameMDD()));
+	GameData* game = new GameData(gameAbsPath, MetaDataList(GAME_METADATA));
 	folder->pushFileData(game);
 	return game;
 }
@@ -156,7 +156,7 @@ void parseGamelist(SystemData* system)
 				game = createGameFromPath(path, system);
 
 			//load the metadata
-			*(game->metadata()) = MetaDataList::createFromXML(system->getGameMDD(), gameNode);
+			*(game->metadata()) = MetaDataList::createFromXML(GAME_METADATA, gameNode);
 
 			//make sure name gets set if one didn't exist
 			if(game->metadata()->get("name").empty())
@@ -173,7 +173,7 @@ void addGameDataNode(pugi::xml_node& parent, const GameData* game, SystemData* s
 	pugi::xml_node newGame = parent.append_child("game");
 
 	//write metadata
-	const_cast<GameData*>(game)->metadata()->appendToXML(newGame, system->getGameMDD());
+	const_cast<GameData*>(game)->metadata()->appendToXML(newGame, true);
 	
 	if(newGame.children().begin() == newGame.child("name") //first element is name
 		&& ++newGame.children().begin() == newGame.children().end() //theres only one element

@@ -142,7 +142,7 @@ void SystemData::populateFolder(FolderData* folder)
 		isGame = false;
 		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
 		{
-			GameData* newGame = new GameData(filePath.generic_string(), MetaDataList(getGameMDD()));
+			GameData* newGame = new GameData(filePath.generic_string(), MetaDataList(GAME_METADATA));
 			folder->pushFileData(newGame);
 			isGame = true;
 		}
@@ -333,11 +333,6 @@ std::string SystemData::getGamelistPath()
 bool SystemData::hasGamelist()
 {
 	return (fs::exists(getGamelistPath()));
-}
-
-std::vector<MetaDataDecl> SystemData::getGameMDD()
-{
-	return MetaDataList::getDefaultGameMDD();
 }
 
 PlatformIds::PlatformId SystemData::getPlatformId()

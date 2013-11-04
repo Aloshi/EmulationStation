@@ -6,36 +6,57 @@
 #include "components/RatingComponent.h"
 #include "components/DateTimeComponent.h"
 
-MetaDataList::MetaDataList()
+
+MetaDataDecl gameDecls[] = { 
+	{"name",		MD_STRING,				"", 	false}, 
+	{"desc",		MD_MULTILINE_STRING,	"", 	false},
+	{"image",		MD_IMAGE_PATH,			"", 	false},
+	{"thumbnail",	MD_IMAGE_PATH,			"", 	false},
+	{"rating",		MD_RATING,				"0", 	false},
+	{"releasedate", MD_DATE,				"0", 	false},
+	{"playcount",	MD_INT,					"0", 	true},
+	{"lastplayed",	MD_TIME,				"0", 	true}
+};
+const std::vector<MetaDataDecl> gameMDD(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0]));
+
+MetaDataDecl folderDecls[] = { 
+	{"name",		MD_STRING,				"", 	false}, 
+	{"desc",		MD_MULTILINE_STRING,	"", 	false},
+	{"image",		MD_IMAGE_PATH,			"", 	false},
+	{"thumbnail",	MD_IMAGE_PATH,			"", 	false},
+};
+const std::vector<MetaDataDecl> folderMDD(folderDecls, folderDecls + sizeof(folderDecls) / sizeof(folderDecls[0]));
+
+const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type)
 {
+	switch(type)
+	{
+	case GAME_METADATA:
+		return gameMDD;
+	case FOLDER_METADATA:
+		return folderMDD;
+	}
+
+	LOG(LogError) << "Invalid MDD type";
+	return gameMDD;
 }
 
-MetaDataList::MetaDataList(const std::vector<MetaDataDecl>& mdd)
+
+
+MetaDataList::MetaDataList(MetaDataListType type)
+	: mType(type)
 {
+	const std::vector<MetaDataDecl>& mdd = getMDD();
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
 		set(iter->key, iter->defaultValue);
 }
 
-std::vector<MetaDataDecl> MetaDataList::getDefaultGameMDD()
-{
-	MetaDataDecl decls[] = { 
-		{"name",		MD_STRING,				"", 	false}, 
-		{"desc",		MD_MULTILINE_STRING,	"", 	false},
-		{"image",		MD_IMAGE_PATH,			"", 	false},
-		{"thumbnail",	MD_IMAGE_PATH,			"", 	false},
-		{"rating",		MD_RATING,				"0", 	false},
-		{"releasedate", MD_DATE,				"0", 	false},
-		{"playcount",	MD_INT,					"0", 	true},
-		{"lastplayed",	MD_TIME,				"0", 	true}
-	};
 
-	std::vector<MetaDataDecl> mdd(decls, decls + sizeof(decls) / sizeof(decls[0]));
-	return mdd;
-}
-
-MetaDataList MetaDataList::createFromXML(const std::vector<MetaDataDecl>& mdd, pugi::xml_node node)
+MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node node)
 {
-	MetaDataList mdl;
+	MetaDataList mdl(type);
+
+	const std::vector<MetaDataDecl>& mdd = mdl.getMDD();
 
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
 	{
@@ -51,19 +72,25 @@ MetaDataList MetaDataList::createFromXML(const std::vector<MetaDataDecl>& mdd, p
 	return mdl;
 }
 
-void MetaDataList::appendToXML(pugi::xml_node parent, const std::vector<MetaDataDecl>& ignoreDefaults) const
+void MetaDataList::appendToXML(pugi::xml_node parent, bool ignoreDefaults) const
 {
+	const std::vector<MetaDataDecl>& mdd = getMDD();
+
 	for(auto iter = mMap.begin(); iter != mMap.end(); iter++)
 	{
 		bool write = true;
-		for(auto mddIter = ignoreDefaults.begin(); mddIter != ignoreDefaults.end(); mddIter++)
-		{
-			if(mddIter->key == iter->first)
-			{
-				if(iter->second == mddIter->defaultValue)
-					write = false;
 
-				break;
+		if(ignoreDefaults)
+		{
+			for(auto mddIter = mdd.begin(); mddIter != mdd.end(); mddIter++)
+			{
+				if(mddIter->key == iter->first)
+				{
+					if(iter->second == mddIter->defaultValue)
+						write = false;
+
+					break;
+				}
 			}
 		}
 

@@ -31,16 +31,22 @@ struct MetaDataDecl
 
 boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");
 
+enum MetaDataListType
+{
+	GAME_METADATA,
+	FOLDER_METADATA
+};
+
+const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type);
+
 class MetaDataList
 {
 public:
-	static std::vector<MetaDataDecl> getDefaultGameMDD();
+	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node node);
+	void appendToXML(pugi::xml_node parent, bool ignoreDefaults = false) const;
 
-	static MetaDataList createFromXML(const std::vector<MetaDataDecl>& mdd, pugi::xml_node node);
-
-	//MetaDataDecl required to set our defaults.
-	MetaDataList(const std::vector<MetaDataDecl>& mdd);
-
+	MetaDataList(MetaDataListType type);
+	
 	void set(const std::string& key, const std::string& value);
 	void setTime(const std::string& key, const boost::posix_time::ptime& time); //times are internally stored as ISO strings (e.g. boost::posix_time::to_iso_string(ptime))
 
@@ -52,11 +58,11 @@ public:
 	static GuiComponent* makeDisplay(Window* window, MetaDataType as);
 	static GuiComponent* makeEditor(Window* window, MetaDataType as);
 
-	void appendToXML(pugi::xml_node parent, const std::vector<MetaDataDecl>& ignoreDefaults = std::vector<MetaDataDecl>()) const;
+	inline MetaDataListType getType() const { return mType; }
+	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDByType(getType()); }
 
 private:
-	MetaDataList();
-
+	MetaDataListType mType;
 	std::map<std::string, std::string> mMap;
 };
 
@@ -64,7 +70,8 @@ private:
 
 //options for storing metadata...
 //store internally everything as a string - this is all going to be read to/from XML anyway, after all
-//store using individual get/set functions ala Settings - this is a fair amount of work but the most explicit, for better or worse
+//	- problem: this does not play nice with lists of values
+//store using individual get/set functions ala Settings - this is a fair amount of work but the most explicit and type-safe, for better or worse
 
 //let's think about some of the special types we would like to support...
 //image paths, sound paths, ratings, play counts

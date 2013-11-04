@@ -99,7 +99,7 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 	pugi::xml_node game = data.child("Game");
 	while(game && resultNum < MAX_SCRAPER_RESULTS)
 	{
-		mdl.push_back(MetaDataList(params.system->getGameMDD()));
+		mdl.push_back(MetaDataList(GAME_METADATA));
 		mdl.back().set("name", game.child("GameTitle").text().get());
 		mdl.back().set("desc", game.child("Overview").text().get());
 
