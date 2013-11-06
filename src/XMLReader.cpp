@@ -1,6 +1,5 @@
 #include "XMLReader.h"
 #include "SystemData.h"
-#include "GameData.h"
 #include "pugiXML/pugixml.hpp"
 #include <boost/filesystem.hpp>
 #include "Log.h"
@@ -8,27 +7,25 @@
 
 //this is obviously an incredibly inefficient way to go about searching
 //but I don't think it'll matter too much with the size of most collections
-GameData* searchFolderByPath(FolderData* folder, std::string const& path)
+FileData* searchFolderByPath(FileData* folder, std::string const& path)
 {
-	for(unsigned int i = 0; i < folder->getFileCount(); i++)
+	for(auto it = folder->getChildren().begin(); it != folder->getChildren().end(); it++)
 	{
-		FileData* file = folder->getFile(i);
-
-		if(file->isFolder())
+		if((*it)->getType() == FOLDER)
 		{
-			GameData* result = searchFolderByPath((FolderData*)file, path);
+			FileData* result = searchFolderByPath(*it, path);
 			if(result)
-				return (GameData*)result;
+				return result;
 		}else{
-			if(file->getPath() == path)
-				return (GameData*)file;
+			if((*it)->getPath().generic_string() == path)
+				return *it;
 		}
 	}
 
 	return NULL;
 }
 
-GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
+FileData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 {
 	std::string gamePath = gameAbsPath;
 	std::string sysPath = system->getStartPath();
@@ -46,11 +43,10 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 
 
 	//make our way through the directory tree finding each folder in our path or creating it if it doesn't exist
-	FolderData* folder = system->getRootFolder();
+	FileData* folder = system->getRootFolder();
 
 	size_t separator = 0;
 	size_t nextSeparator = 0;
-	unsigned int loops = 0;
 	while(nextSeparator != std::string::npos)
 	{
 		//determine which chunk of the path we're testing right now
@@ -63,12 +59,11 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 
 		//see if the folder already exists
 		bool foundFolder = false;
-		for(unsigned int i = 0; i < folder->getFileCount(); i++)
+		for(auto it = folder->getChildren().begin(); it != folder->getChildren().end(); it++)
 		{
-			FileData* checkFolder = folder->getFile(i);
-			if(checkFolder->isFolder() && checkFolder->getName() == checkName)
+			if((*it)->getType() == FOLDER && (*it)->getName() == checkName)
 			{
-				folder = (FolderData*)checkFolder;
+				folder = *it;
 				foundFolder = true;
 				break;
 			}
@@ -77,22 +72,14 @@ GameData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 		//the folder didn't already exist, so create it
 		if(!foundFolder)
 		{
-			FolderData* newFolder = new FolderData(system, folder->getPath() + "/" + checkName, checkName);
-			folder->pushFileData(newFolder);
+			FileData* newFolder = new FileData(FOLDER, folder->getPath() / checkName);
+			folder->addChild(newFolder);
 			folder = newFolder;
 		}
-
-		//if for some reason this function is broken, break out of this while instead of freezing
-		if(loops > gamePath.length() * 2)
-		{
-			LOG(LogError) << "createGameFromPath breaking out of loop for path \"" << gamePath << "\" to prevent infinite loop (please report this)";
-			break;
-		}
-		loops++;
 	}
 
-	GameData* game = new GameData(gameAbsPath, MetaDataList(GAME_METADATA));
-	folder->pushFileData(game);
+	FileData* game = new FileData(GAME, gameAbsPath);
+	folder->addChild(game);
 	return game;
 }
 
@@ -150,40 +137,41 @@ void parseGamelist(SystemData* system)
 
 		if(boost::filesystem::exists(path))
 		{
-			GameData* game = searchFolderByPath(system->getRootFolder(), path);
+			FileData* game = searchFolderByPath(system->getRootFolder(), path);
 
 			if(game == NULL)
 				game = createGameFromPath(path, system);
 
 			//load the metadata
-			*(game->metadata()) = MetaDataList::createFromXML(GAME_METADATA, gameNode);
+			std::string defaultName = game->metadata.get("name");
+			game->metadata = MetaDataList::createFromXML(GAME_METADATA, gameNode);
 
 			//make sure name gets set if one didn't exist
-			if(game->metadata()->get("name").empty())
-				game->metadata()->set("name", game->getBaseName());
+			if(game->metadata.get("name").empty())
+				game->metadata.set("name", defaultName);
 		}else{
 			LOG(LogWarning) << "Game at \"" << path << "\" does not exist!";
 		}
 	}
 }
 
-void addGameDataNode(pugi::xml_node& parent, const GameData* game, SystemData* system)
+void addGameDataNode(pugi::xml_node& parent, const FileData* game, SystemData* system)
 {
 	//create game and add to parent node
 	pugi::xml_node newGame = parent.append_child("game");
 
 	//write metadata
-	const_cast<GameData*>(game)->metadata()->appendToXML(newGame, true);
+	game->metadata.appendToXML(newGame, true);
 	
 	if(newGame.children().begin() == newGame.child("name") //first element is name
 		&& ++newGame.children().begin() == newGame.children().end() //theres only one element
-		&& newGame.child("name").text().get() == game->getBaseName()) //the name is the default
+		&& newGame.child("name").text().get() == getCleanFileName(game->getPath())) //the name is the default
 	{
 		//if the only info is the default name, don't bother with this node
 		parent.remove_child(newGame);
 	}else{
 		//there's something useful in there so we'll keep the node, add the path
-		newGame.prepend_child("path").text().set(game->getPath().c_str());
+		newGame.prepend_child("path").text().set(game->getPath().generic_string().c_str());
 	}
 }
 
@@ -230,18 +218,16 @@ void updateGamelist(SystemData* system)
 	}
 
 	//now we have all the information from the XML. now iterate through all our games and add information from there
-	FolderData * rootFolder = system->getRootFolder();
+	FileData* rootFolder = system->getRootFolder();
 	if (rootFolder != nullptr)
 	{
 		//get only files, no folders
-		std::vector<FileData*> files = rootFolder->getFilesRecursive(true);
+		std::vector<FileData*> files = rootFolder->getFilesRecursive(GAME);
 		//iterate through all files, checking if they're already in the XML
 		std::vector<FileData*>::const_iterator fit = files.cbegin();
 		while(fit != files.cend())
 		{
-			//try to cast to gamedata
-			const GameData * game = dynamic_cast<const GameData*>(*fit);
-			if (game != nullptr)
+			if((*fit)->getType() == GAME)
 			{
 				//worked. check if this games' path can be found somewhere in the XML
 				for(pugi::xml_node gameNode = root.child("game"); gameNode; gameNode = gameNode.next_sibling("game"))
@@ -256,7 +242,7 @@ void updateGamelist(SystemData* system)
 
 					//check paths. use the same directory separators
 					boost::filesystem::path nodePath(pathNode.text().get());
-					boost::filesystem::path gamePath(game->getPath());
+					boost::filesystem::path gamePath((*fit)->getPath());
 					if (nodePath.generic_string() == gamePath.generic_string())
 					{
 						//found the game. remove it. it will be added again later with updated values
@@ -268,7 +254,7 @@ void updateGamelist(SystemData* system)
 
 				//either the game content was removed, because it needs to be updated,
 				//or didn't exist in the first place, so just add it
-				addGameDataNode(root, game, system);
+				addGameDataNode(root, *fit, system);
 			}
 			++fit;
 		}

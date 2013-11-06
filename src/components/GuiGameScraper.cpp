@@ -7,7 +7,7 @@
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(MetaDataList)> doneFunc, std::function<void()> skipFunc) : GuiComponent(window), 
 	mList(window, Eigen::Vector2i(2, 7 + MAX_SCRAPER_RESULTS)), 
 	mBox(window, ":/frame.png"),
-	mHeader(window, params.game->getBaseName(), Font::get(FONT_SIZE_MEDIUM)),
+	mHeader(window, getCleanFileName(params.game->getPath()), Font::get(FONT_SIZE_MEDIUM)),
 	mResultName(window, "", Font::get(FONT_SIZE_MEDIUM)),
 	mResultInfo(window),
 	mResultDesc(window, "", Font::get(FONT_SIZE_SMALL)),
@@ -56,7 +56,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mResultName.setColor(0x3B56CCFF);
 	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mResultName, false, ComponentListComponent::AlignLeft);
 
-	mResultDesc.setText(params.game->metadata()->get("desc"));
+	mResultDesc.setText(params.game->metadata.get("desc"));
 	mResultDesc.setSize(colWidth, 0);
 	mResultInfo.addChild(&mResultDesc);
 	mResultInfo.setSize(mResultDesc.getSize().x(), mResultDesc.getFont()->getHeight() * 3.0f);
@@ -69,7 +69,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	//y = 3 is a spacer row
 
 	mList.setEntry(Vector2i(0, 4), Vector2i(1, 1), &mSearchLabel, false, ComponentListComponent::AlignLeft);
-	mSearchText.setValue(!params.nameOverride.empty() ? params.nameOverride : params.game->getCleanName());
+	mSearchText.setValue(!params.nameOverride.empty() ? params.nameOverride : getCleanFileName(params.game->getPath()));
 	mSearchText.setSize(colWidth * 2 - mSearchLabel.getSize().x() - 20, mSearchText.getSize().y());
 	mList.setEntry(Vector2i(1, 4), Vector2i(1, 1), &mSearchText, true, ComponentListComponent::AlignRight);
 

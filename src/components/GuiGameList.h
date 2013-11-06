@@ -10,8 +10,6 @@
 #include <string>
 #include <stack>
 #include "../SystemData.h"
-#include "../GameData.h"
-#include "../FolderData.h"
 #include "ScrollableContainer.h"
 #include "RatingComponent.h"
 #include "DateTimeComponent.h"
@@ -20,9 +18,6 @@
 //It has a TextListComponent child that handles the game list, a ThemeComponent that handles the theming system, and an ImageComponent for game images.
 class GuiGameList : public GuiComponent
 {
-	static std::vector<FolderData::SortState> sortStates;
-	size_t sortStateIndex;
-
 public:
 	GuiGameList(Window* window);
 	virtual ~GuiGameList();
@@ -35,11 +30,7 @@ public:
 
 	void updateDetailData();
 
-    const FolderData::SortState & getSortState() const;
-	void setSortIndex(size_t index);
-	void setNextSortIndex();
-	void setPreviousSortIndex();
-	void sort(FolderData::ComparisonFunction & comparisonFunction = FolderData::compareFileName, bool ascending = true);
+	void sort(const FileData::SortType& type);
 
 	static GuiGameList* create(Window* window);
 
@@ -55,8 +46,8 @@ private:
 	std::string getThemeFile();
 
 	SystemData* mSystem;
-	FolderData* mFolder;
-	std::stack<FolderData*> mFolderStack;
+	FileData* mFolder;
+	std::stack<FileData*> mFolderStack;
 	int mSystemId;
 
 	TextListComponent<FileData*> mList;

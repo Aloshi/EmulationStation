@@ -60,7 +60,7 @@ std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = params.game->getCleanName();
+		cleanName = getCleanFileName(params.game->getPath());
 	
 	path += "name=" + HttpReq::urlEncode(cleanName);
 

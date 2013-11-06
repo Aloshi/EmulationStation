@@ -2,12 +2,15 @@
 #include "../Renderer.h"
 #include <iostream>
 #include "GuiGameList.h"
+#include "../FileSorts.h"
 
 #define DEFAULT_FS_IMAGE ":/frame.png"
 
 const std::string GuiFastSelect::LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const int GuiFastSelect::SCROLLSPEED = 100;
 const int GuiFastSelect::SCROLLDELAY = 507;
+
+int GuiFastSelect::sortTypeId = 0;
 
 GuiFastSelect::GuiFastSelect(Window* window, GuiGameList* parent, TextListComponent<FileData*>* list, char startLetter, ThemeComponent * theme)
 	: GuiComponent(window), mParent(parent), mList(list), mTheme(theme), mBox(mWindow, "")
@@ -60,7 +63,7 @@ void GuiFastSelect::render(const Eigen::Affine3f& parentTrans)
 	letterFont->drawCenteredText(LETTERS.substr(mLetterID, 1), 0, sh * 0.5f - (letterFont->getHeight() * 0.5f), mTextColor);
     subtextFont->drawCenteredText("Sort order:", 0, sh * 0.6f - (subtextFont->getHeight() * 0.5f), mTextColor);
 
-    std::string sortString = "<- " + mParent->getSortState().description + " ->";
+	std::string sortString = "<- " + FileSorts::SortTypes.at(sortTypeId).description + " ->";
     subtextFont->drawCenteredText(sortString, 0, sh * 0.6f + (subtextFont->getHeight() * 0.5f), mTextColor);
 }
 
@@ -82,13 +85,16 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 
 	if(config->isMappedTo("left", input) && input.value != 0)
 	{
-		mParent->setPreviousSortIndex();
+		sortTypeId--;
+		if(sortTypeId < 0)
+			sortTypeId = FileSorts::SortTypes.size() - 1;
+
         mScrollSound->play();
 		return true;
 	}
     else if(config->isMappedTo("right", input) && input.value != 0)
 	{
-		mParent->setNextSortIndex();
+		sortTypeId = (sortTypeId + 1) % FileSorts::SortTypes.size();
         mScrollSound->play();
 		return true;
 	}
@@ -104,6 +110,7 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 	if(config->isMappedTo("select", input) && input.value == 0)
 	{
 		setListPos();
+		mParent->sort(FileSorts::SortTypes.at(sortTypeId));
 		delete this;
 		return true;
 	}

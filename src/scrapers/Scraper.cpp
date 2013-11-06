@@ -143,7 +143,7 @@ std::string downloadImage(const std::string& url, const std::string& saveAs)
 std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& url)
 {
 	const std::string subdirectory = params.system->getName();
-	const std::string name = params.game->getCleanName() + "-" + suffix;
+	const std::string name = getCleanFileName(params.game->getPath()) + "-" + suffix;
 
 	std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
 
@@ -177,7 +177,7 @@ std::shared_ptr<Scraper> createScraperByName(const std::string& name)
 
 void resolveMetaDataAssetsAsync(Window* window, const ScraperSearchParams& params, MetaDataList mdl, std::function<void(MetaDataList)> returnFunc)
 {
-	const std::vector<MetaDataDecl>& mdd = params.game->metadata()->getMDD();
+	const std::vector<MetaDataDecl>& mdd = params.game->metadata.getMDD();
 	for(auto it = mdd.begin(); it != mdd.end(); it++)
 	{
 		std::string key = it->key;
@@ -190,7 +190,7 @@ void resolveMetaDataAssetsAsync(Window* window, const ScraperSearchParams& param
 				if(savedAs.empty())
 				{
 					//error
-					LOG(LogError) << "Could not resolve image for [" << params.game->getCleanName() << "]! Skipping.";
+					LOG(LogError) << "Could not resolve image for [" << getCleanFileName(params.game->getPath()) << "]! Skipping.";
 				}
 
 				mdl.set(key, savedAs);

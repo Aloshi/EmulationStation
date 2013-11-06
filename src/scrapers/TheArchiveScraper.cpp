@@ -12,7 +12,7 @@ std::shared_ptr<HttpReq> TheArchiveScraper::makeHttpReq(ScraperSearchParams para
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = params.game->getCleanName();
+		cleanName = getCleanFileName(params.game->getPath());
 	
 	path += HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method

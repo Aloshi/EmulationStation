@@ -141,7 +141,7 @@ int run_scraper_cmdline()
 	std::shared_ptr<Scraper> scraper = Settings::getInstance()->getScraper();
 	for(auto sysIt = systems.begin(); sysIt != systems.end(); sysIt++)
 	{
-		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(true);
+		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(GAME);
 
 		ScraperSearchParams params;
 		params.system = (*sysIt);
@@ -149,15 +149,15 @@ int run_scraper_cmdline()
 		for(auto gameIt = files.begin(); gameIt != files.end(); gameIt++)
 		{
 			params.nameOverride = "";
-			params.game = (GameData*)(*gameIt);
+			params.game = *gameIt;
 
 			//print original search term
-			out << params.game->getCleanName() << "...\n";
+			out << getCleanFileName(params.game->getPath()) << "...\n";
 
 			//need to take into account filter_choice
 			if(filter_choice == FILTER_MISSING_IMAGES)
 			{
-				if(!params.game->metadata()->get("image").empty()) //maybe should also check if the image file exists/is a URL
+				if(!params.game->metadata.get("image").empty()) //maybe should also check if the image file exists/is a URL
 				{
 					out << "   Skipping, metadata \"image\" entry is not empty.\n";
 					continue;
@@ -212,7 +212,7 @@ int run_scraper_cmdline()
 
 					if(choice >= 0 && choice < (int)mdls.size())
 					{
-						*params.game->metadata() = mdls.at(choice);
+						params.game->metadata = mdls.at(choice);
 						break;
 					}else{
 						out << "Invalid choice.\n";
@@ -223,7 +223,7 @@ int run_scraper_cmdline()
 					//automatic mode
 					//always choose the first choice
 					out << "   name -> " << mdls.at(0).get("name") << "\n";
-					*params.game->metadata() = mdls.at(0);
+					params.game->metadata = mdls.at(0);
 					break;
 				}
 
@@ -238,32 +238,32 @@ int run_scraper_cmdline()
 
 	for(auto sysIt = systems.begin(); sysIt != systems.end(); sysIt++)
 	{
-		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(true);
+		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(GAME);
 
 		for(auto gameIt = files.begin(); gameIt != files.end(); gameIt++)
 		{
-			GameData* game = (GameData*)(*gameIt);
-			const std::vector<MetaDataDecl>& mdd = game->metadata()->getMDD();
+			FileData* game = *gameIt;
+			const std::vector<MetaDataDecl>& mdd = game->metadata.getMDD();
 			for(auto i = mdd.begin(); i != mdd.end(); i++)
 			{
 				std::string key = i->key;
-				std::string url = game->metadata()->get(key);
+				std::string url = game->metadata.get(key);
 
 				if(i->type == MD_IMAGE_PATH && HttpReq::isUrl(url))
 				{
 					std::string urlShort = url.substr(0, url.length() > 35 ? 35 : url.length());
 					if(url.length() != urlShort.length()) urlShort += "...";
 
-					out << "   " << game->metadata()->get("name") << " [from: " << urlShort << "]...\n";
+					out << "   " << game->metadata.get("name") << " [from: " << urlShort << "]...\n";
 
 					ScraperSearchParams p;
 					p.game = game;
 					p.system = *sysIt;
-					game->metadata()->set(key, downloadImage(url, getSaveAsPath(p, key, url)));
-					if(game->metadata()->get(key).empty())
+					game->metadata.set(key, downloadImage(url, getSaveAsPath(p, key, url)));
+					if(game->metadata.get(key).empty())
 					{
 						out << "     FAILED! Skipping.\n";
-						game->metadata()->set(key, url); //result URL to what it was if download failed, retry some other time
+						game->metadata.set(key, url); //result URL to what it was if download failed, retry some other time
 					}
 				}
 			}

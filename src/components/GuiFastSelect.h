@@ -3,13 +3,13 @@
 
 #include "../GuiComponent.h"
 #include "../SystemData.h"
-#include "../FolderData.h"
 #include "../Sound.h"
 #include "ThemeComponent.h"
 #include "TextListComponent.h"
 #include "NinePatchComponent.h"
 
 class GuiGameList;
+
 
 class GuiFastSelect : public GuiComponent
 {
@@ -25,6 +25,8 @@ private:
 	static const std::string LETTERS;
 	static const int SCROLLSPEED;
 	static const int SCROLLDELAY;
+
+	static int sortTypeId;
 
 	void setListPos();
 	void scroll();

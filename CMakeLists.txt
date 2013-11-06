@@ -138,8 +138,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/FileSorts.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.h
@@ -198,8 +197,8 @@ set(ES_HEADERS
 )
 set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/FolderData.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/GameData.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/FileSorts.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.cpp

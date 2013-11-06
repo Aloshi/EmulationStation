@@ -52,7 +52,7 @@ void GuiScraperLog::next()
 	ScraperSearchParams search = mSearches.front();
 	mSearches.pop();
 
-	writeLine(search.game->getCleanName(), 0x0000FFFF);
+	writeLine(getCleanFileName(search.game->getPath()), 0x0000FFFF);
 
 	if(mManualMode)
 	{
@@ -87,7 +87,7 @@ void GuiScraperLog::resultFetched(ScraperSearchParams params, MetaDataList mdl)
 void GuiScraperLog::resultResolved(ScraperSearchParams params, MetaDataList mdl)
 {
 	//apply new metadata
-	*params.game->metadata() = mdl;
+	params.game->metadata = mdl;
 
 	writeLine("   Success!", 0x00FF00FF);
 
@@ -106,7 +106,7 @@ void GuiScraperLog::resultEmpty(ScraperSearchParams search)
 	else
 		writeLine("   NO RESULTS, skipping", 0xFF0000FF);
 
-	LOG(LogInfo) << "Scraper skipping [" << search.game->getCleanName() << "]";
+	LOG(LogInfo) << "Scraper skipping [" << getCleanFileName(search.game->getPath()) << "]";
 
 	mSkippedCount++;
 

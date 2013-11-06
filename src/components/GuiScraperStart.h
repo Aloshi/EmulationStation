@@ -10,7 +10,7 @@
 #include "../scrapers/Scraper.h"
 #include <queue>
 
-typedef std::function<bool(SystemData*, GameData*)> GameFilterFunc;
+typedef std::function<bool(SystemData*, FileData*)> GameFilterFunc;
 
 //The starting point for a multi-game scrape.
 //Allows the user to set various parameters (to set filters, to set which systems to scrape, to enable manual mode).

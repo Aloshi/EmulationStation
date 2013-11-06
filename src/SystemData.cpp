@@ -1,5 +1,4 @@
 #include "SystemData.h"
-#include "GameData.h"
 #include "XMLReader.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
@@ -12,13 +11,11 @@
 #include "InputManager.h"
 #include <iostream>
 #include "Settings.h"
+#include "FileSorts.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
 namespace fs = boost::filesystem;
-
-std::string SystemData::getStartPath() { return mStartPath; }
-std::vector<std::string> SystemData::getExtensions() { return mSearchExtensions; }
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
 	const std::string& command, PlatformIds::PlatformId platformId)
@@ -38,7 +35,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mLaunchCommand = command;
 	mPlatformId = platformId;
 
-	mRootFolder = new FolderData(this, mStartPath, "Search Root");
+	mRootFolder = new FileData(FOLDER, mStartPath);
+	mRootFolder->metadata.set("name", "Search Root");
 
 	if(!Settings::getInstance()->getBool("PARSEGAMELISTONLY"))
 		populateFolder(mRootFolder);
@@ -46,15 +44,17 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
 		parseGamelist(this);
 
-	mRootFolder->sort();
+	mRootFolder->sort(FileSorts::SortTypes.at(0));
 }
 
 SystemData::~SystemData()
 {
 	//save changed game data back to xml
-	if(!Settings::getInstance()->getBool("IGNOREGAMELIST")) {
+	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
+	{
 		updateGamelist(this);
 	}
+
 	delete mRootFolder;
 }
 
@@ -68,7 +68,33 @@ std::string strreplace(std::string& str, std::string replace, std::string with)
 		return str;
 }
 
-void SystemData::launchGame(Window* window, GameData* game)
+std::string escapePath(const boost::filesystem::path& path)
+{
+	// a quick and dirty way to insert a backslash before most characters that would mess up a bash path;
+	// someone with regex knowledge should make this into a one-liner
+	std::string pathStr = path.generic_string();
+
+	const char* invalidChars = " '\"\\!$^&*(){}[]?;<>";
+	for(unsigned int i = 0; i < pathStr.length(); i++)
+	{
+		char c;
+		unsigned int charNum = 0;
+		do {
+			c = invalidChars[charNum];
+			if(pathStr[i] == c)
+			{
+				pathStr.insert(i, "\\");
+				i++;
+				break;
+			}
+			charNum++;
+		} while(c != '\0');
+	}
+
+	return pathStr;
+}
+
+void SystemData::launchGame(Window* window, FileData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
@@ -78,9 +104,13 @@ void SystemData::launchGame(Window* window, GameData* game)
 
 	std::string command = mLaunchCommand;
 
-	command = strreplace(command, "%ROM%", game->getBashPath());
-	command = strreplace(command, "%BASENAME%", game->getBaseName());
-	command = strreplace(command, "%ROM_RAW%", game->getPath());
+	const std::string rom = escapePath(game->getPath());
+	const std::string basename = game->getPath().stem().string();
+	const std::string rom_raw = game->getPath().string();
+
+	command = strreplace(command, "%ROM%", rom);
+	command = strreplace(command, "%BASENAME%", basename);
+	command = strreplace(command, "%ROM_RAW%", rom_raw);
 
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";
@@ -97,25 +127,31 @@ void SystemData::launchGame(Window* window, GameData* game)
 	AudioManager::getInstance()->init();
 	window->normalizeNextUpdate();
 
-	//update number of times the game has been launched and the time
-	game->incTimesPlayed();
-	game->lastPlayedNow();
+	//update number of times the game has been launched
+	int timesPlayed = game->metadata.getInt("playcount") + 1;
+	game->metadata.set("playcount", std::to_string(static_cast<long long>(timesPlayed)));
+
+	//update last played time
+	boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
+	game->metadata.setTime("lastplayed", time);
 }
 
-void SystemData::populateFolder(FolderData* folder)
+void SystemData::populateFolder(FileData* folder)
 {
-	std::string folderPath = folder->getPath();
+	const fs::path& folderPath = folder->getPath();
 	if(!fs::is_directory(folderPath))
 	{
 		LOG(LogWarning) << "Error - folder with path \"" << folderPath << "\" is not a directory!";
 		return;
 	}
 
+	const std::string folderStr = folderPath.generic_string();
+
 	//make sure that this isn't a symlink to a thing we already have
 	if(fs::is_symlink(folderPath))
 	{
 		//if this symlink resolves to somewhere that's at the beginning of our path, it's gonna recurse
-		if(folderPath.find(fs::canonical(folderPath).string()) == 0)
+		if(folderStr.find(fs::canonical(folderPath).generic_string()) == 0)
 		{
 			LOG(LogWarning) << "Skipping infinitely recursive symlink \"" << folderPath << "\"";
 			return;
@@ -142,37 +178,24 @@ void SystemData::populateFolder(FolderData* folder)
 		isGame = false;
 		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
 		{
-			GameData* newGame = new GameData(filePath.generic_string(), MetaDataList(GAME_METADATA));
-			folder->pushFileData(newGame);
+			FileData* newGame = new FileData(GAME, filePath.generic_string());
+			folder->addChild(newGame);
 			isGame = true;
 		}
 
 		//add directories that also do not match an extension as folders
 		if(!isGame && fs::is_directory(filePath))
 		{
-			FolderData* newFolder = new FolderData(this, filePath.generic_string(), filePath.stem().string());
+			FileData* newFolder = new FileData(FOLDER, filePath.generic_string());
 			populateFolder(newFolder);
 
 			//ignore folders that do not contain games
-			if(newFolder->getFileCount() == 0)
+			if(newFolder->getChildren().size() == 0)
 				delete newFolder;
 			else
-				folder->pushFileData(newFolder);
+				folder->addChild(newFolder);
 		}
 	}
-}
-
-std::string SystemData::getName()
-{
-	return mName;
-}
-
-std::string SystemData::getFullName()
-{
-	if(mFullName.empty())
-		return mName;
-	else
-		return mFullName;
 }
 
 //creates systems from information located in a config file
@@ -241,7 +264,7 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 		path = genericPath.generic_string();
 
 		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformId);
-		if(newSys->getRootFolder()->getFileCount() == 0)
+		if(newSys->getRootFolder()->getChildren().size() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
 			delete newSys;
@@ -312,22 +335,16 @@ std::string SystemData::getConfigPath()
 	return(home + "/.emulationstation/es_systems.cfg");
 }
 
-FolderData* SystemData::getRootFolder()
+std::string SystemData::getGamelistPath() const
 {
-	return mRootFolder;
-}
+	fs::path filePath;
 
-std::string SystemData::getGamelistPath()
-{
-	std::string filePath;
-
-	filePath = mRootFolder->getPath() + "/gamelist.xml";
+	filePath = mRootFolder->getPath() / "gamelist.xml";
 	if(fs::exists(filePath))
-		return filePath;
+		return filePath.generic_string();
 
-	filePath = getHomePath();
-	filePath += "/.emulationstation/"+ getName() + "/gamelist.xml";
-	return filePath;
+	filePath = getHomePath() + "/.emulationstation/"+ getName() + "/gamelist.xml";
+	return filePath.generic_string();
 }
 
 bool SystemData::hasGamelist()
@@ -335,12 +352,7 @@ bool SystemData::hasGamelist()
 	return (fs::exists(getGamelistPath()));
 }
 
-PlatformIds::PlatformId SystemData::getPlatformId()
+unsigned int SystemData::getGameCount() const
 {
-	return mPlatformId;
-}
-
-unsigned int SystemData::getGameCount()
-{
-	return mRootFolder->getFilesRecursive(true).size();
+	return mRootFolder->getFilesRecursive(GAME).size();
 }

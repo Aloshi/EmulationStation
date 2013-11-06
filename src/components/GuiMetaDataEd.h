@@ -4,7 +4,6 @@
 #include "ComponentListComponent.h"
 #include "../MetaData.h"
 #include "TextComponent.h"
-#include "../GameData.h"
 #include "NinePatchComponent.h"
 #include "ButtonComponent.h"
 #include <functional>

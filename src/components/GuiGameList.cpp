@@ -10,8 +10,6 @@
 #include "GuiMetaDataEd.h"
 #include "GuiScraperStart.h"
 
-std::vector<FolderData::SortState> GuiGameList::sortStates;
-
 Eigen::Vector3f GuiGameList::getImagePos()
 {
 	return Eigen::Vector3f(Renderer::getScreenWidth() * mTheme->getFloat("gameImageOffsetX"), Renderer::getScreenHeight() * mTheme->getFloat("gameImageOffsetY"), 0.0f);
@@ -23,16 +21,12 @@ bool GuiGameList::isDetailed() const
 		return false;
 
 	//return true if any game has an image specified
-	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)
+	for(auto it = mFolder->getChildren().begin(); it != mFolder->getChildren().end(); it++)
 	{
-		if(!mFolder->getFile(i)->isFolder())
-		{
-			GameData* game = (GameData*)(mFolder->getFile(i));
-			if(!game->metadata()->get("image").empty())
-				return true;
-		}
+		if(!(*it)->getThumbnailPath().empty())
+			return true;
 	}
-
+	
 	return false;
 }
 
@@ -47,22 +41,9 @@ GuiGameList::GuiGameList(Window* window) : GuiComponent(window),
 	mDescContainer(window), 
 	mTransitionImage(window, 0.0f, 0.0f, "", (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), true), 
 	mHeaderText(mWindow), 
-    sortStateIndex(Settings::getInstance()->getInt("GameListSortIndex")),
 	mLockInput(false),
 	mEffectFunc(NULL), mEffectTime(0), mGameLaunchEffectLength(700)
 {
-	//first object initializes the vector
-	if (sortStates.empty()) {
-		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, true, "file name, ascending"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareFileName, false, "file name, descending"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareRating, true, "rating, ascending"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareRating, false, "rating, descending"));
-        sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, true, "played least often"));
-        sortStates.push_back(FolderData::SortState(FolderData::compareTimesPlayed, false, "played most often"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, true, "played least recently"));
-		sortStates.push_back(FolderData::SortState(FolderData::compareLastPlayed, false, "played most recently"));
-	}
-
 	mImageAnimation.addChild(&mScreenshot);
 	mDescContainer.addChild(&mReleaseDateLabel);
 	mDescContainer.addChild(&mReleaseDate);
@@ -142,18 +123,18 @@ bool GuiGameList::input(InputConfig* config, Input input)
 
 	if(input.id == SDLK_F3)
 	{
-		GameData* game = dynamic_cast<GameData*>(mList.getSelectedObject());
-		if(game)
+		FileData* game = mList.getSelectedObject();
+		if(game->getType() == GAME)
 		{
-			FolderData* root = mSystem->getRootFolder();
+			FileData* root = mSystem->getRootFolder();
 			ScraperSearchParams searchParams;
 			searchParams.game = game;
 			searchParams.system = mSystem;
-			mWindow->pushGui(new GuiMetaDataEd(mWindow, game->metadata(), game->metadata()->getMDD(), searchParams, game->getBaseName(),
+			mWindow->pushGui(new GuiMetaDataEd(mWindow, &game->metadata, game->metadata.getMDD(), searchParams, game->getPath().stem().string(),
 				[&] { updateDetailData(); }, 
 				[game, root, this] { 
 					boost::filesystem::remove(game->getPath());
-					root->removeFileRecursive(game); 
+					root->removeChild(game);
 					updateList(); 
 			}));
 		}
@@ -166,16 +147,16 @@ bool GuiGameList::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(config->isMappedTo("a", input) && mFolder->getFileCount() > 0 && input.value != 0)
+	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		//play select sound
 		mTheme->getSound("menuSelect")->play();
 
 		FileData* file = mList.getSelectedObject();
-		if(file->isFolder()) //if you selected a folder, add this directory to the stack, and use the selected one
+		if(file->getType() == FOLDER) //if you selected a folder, add this directory to the stack, and use the selected one
 		{
 			mFolderStack.push(mFolder);
-			mFolder = (FolderData*)file;
+			mFolder = file;
 			updateList();
 			updateDetailData();
 			return true;
@@ -225,16 +206,6 @@ bool GuiGameList::input(InputConfig* config, Input input)
 		}
 	}
 
-	//change sort order
-	if(config->isMappedTo("sortordernext", input) && input.value != 0) {
-		setNextSortIndex();
-		//std::cout << "Sort order is " << FolderData::getSortStateName(sortStates.at(sortStateIndex).comparisonFunction, sortStates.at(sortStateIndex).ascending) << std::endl;
-	}
-	else if(config->isMappedTo("sortorderprevious", input) && input.value != 0) {
-		setPreviousSortIndex();
-		//std::cout << "Sort order is " << FolderData::getSortStateName(sortStates.at(sortStateIndex).comparisonFunction, sortStates.at(sortStateIndex).ascending) << std::endl;
-	}
-
 	//open the "start menu"
 	if(config->isMappedTo("menu", input) && input.value != 0)
 	{
@@ -264,48 +235,10 @@ bool GuiGameList::input(InputConfig* config, Input input)
 	return false;
 }
 
-const FolderData::SortState & GuiGameList::getSortState() const
-{
-    return sortStates.at(sortStateIndex);
-}
-
-void GuiGameList::setSortIndex(size_t index)
-{
-	//make the index valid
-	if (index >= sortStates.size()) {
-		index = 0;
-	}
-	if (index != sortStateIndex) {
-		//get sort state from vector and sort list
-		sortStateIndex = index;
-		sort(sortStates.at(sortStateIndex).comparisonFunction, sortStates.at(sortStateIndex).ascending);
-	}
-    //save new index to settings
-    Settings::getInstance()->setInt("GameListSortIndex", sortStateIndex);
-}
-
-void GuiGameList::setNextSortIndex()
-{
-	//make the index wrap around
-	if ((sortStateIndex - 1) >= sortStates.size()) {
-		setSortIndex(0);
-	}
-	setSortIndex(sortStateIndex + 1);
-}
-
-void GuiGameList::setPreviousSortIndex()
-{
-	//make the index wrap around
-	if (((int)sortStateIndex - 1) < 0) {
-		setSortIndex(sortStates.size() - 1);
-	}
-	setSortIndex(sortStateIndex - 1);
-}
-
-void GuiGameList::sort(FolderData::ComparisonFunction & comparisonFunction, bool ascending)
+void GuiGameList::sort(const FileData::SortType& type)
 {
 	//resort list and update it
-	mFolder->sort(comparisonFunction, ascending);
+	mFolder->sort(type);
 	updateList();
 	updateDetailData();
 }
@@ -314,14 +247,12 @@ void GuiGameList::updateList()
 {
 	mList.clear();
 
-	for(unsigned int i = 0; i < mFolder->getFileCount(); i++)
+	for(auto it = mFolder->getChildren().begin(); it != mFolder->getChildren().end(); it++)
 	{
-		FileData* file = mFolder->getFile(i);
-
-		if(file->isFolder())
-			mList.addObject(file->getName(), file, mTheme->getColor("secondary"));
+		if((*it)->getType() == FOLDER)
+			mList.addObject((*it)->getName(), *it, mTheme->getColor("secondary"));
 		else
-			mList.addObject(file->getName(), file, mTheme->getColor("primary"));
+			mList.addObject((*it)->getName(), *it, mTheme->getColor("primary"));
 	}
 }
 
@@ -391,17 +322,17 @@ void GuiGameList::updateTheme()
 
 void GuiGameList::updateDetailData()
 {
-	if(!isDetailed() || !mList.getSelectedObject() || mList.getSelectedObject()->isFolder())
+	if(!isDetailed() || !mList.getSelectedObject() || mList.getSelectedObject()->getType() == FOLDER)
 	{
 		hideDetailData();
 	}else{
 		if(mDescContainer.getParent() != this)
 			addChild(&mDescContainer);
 
-		GameData* game = (GameData*)mList.getSelectedObject();
+		FileData* game = mList.getSelectedObject();
 
 		//set image to either "not found" image or metadata image
-		if(!boost::filesystem::exists(game->metadata()->get("image")))
+		if(!boost::filesystem::exists(game->metadata.get("image")))
 		{
 			//image doesn't exist
 			if(mTheme->getString("imageNotFoundPath").empty())
@@ -413,7 +344,7 @@ void GuiGameList::updateDetailData()
 				mScreenshot.setImage(mTheme->getString("imageNotFoundPath"));
 			}
 		}else{
-			mScreenshot.setImage(game->metadata()->get("image"));
+			mScreenshot.setImage(game->metadata.get("image"));
 		}
 
 		Eigen::Vector3f imgOffset = Eigen::Vector3f(Renderer::getScreenWidth() * 0.10f, 0, 0);
@@ -434,14 +365,14 @@ void GuiGameList::updateDetailData()
 		mReleaseDateLabel.setPosition(0, 0);
 		mReleaseDateLabel.setText("Released: ");
 		mReleaseDate.setPosition(mReleaseDateLabel.getPosition().x() + mReleaseDateLabel.getSize().x(), mReleaseDateLabel.getPosition().y());
-		mReleaseDate.setValue(game->metadata()->get("releasedate"));
+		mReleaseDate.setValue(game->metadata.get("releasedate"));
 
 		mRating.setPosition(colwidth - mRating.getSize().x() - 12, 0);
-		mRating.setValue(game->metadata()->get("rating"));
+		mRating.setValue(game->metadata.get("rating"));
 
 		mDescription.setPosition(0, mRating.getSize().y());
 		mDescription.setSize(Eigen::Vector2f(Renderer::getScreenWidth() * (mTheme->getFloat("listOffsetX") - 0.03f), 0));
-		mDescription.setText(game->metadata()->get("desc"));
+		mDescription.setText(game->metadata.get("desc"));
 	}
 }
 
@@ -557,7 +488,7 @@ void GuiGameList::updateGameLaunchEffect(int t)
 	{
 		//effect done
 		mTransitionImage.setImage(""); //fixes "tried to bind uninitialized texture!" since copyScreen()'d textures don't reinit
-		mSystem->launchGame(mWindow, (GameData*)mList.getSelectedObject());
+		mSystem->launchGame(mWindow, mList.getSelectedObject());
 		mEffectFunc = &GuiGameList::updateGameReturnEffect;
 		mEffectTime = 0;
 		mGameLaunchEffectLength = 700;

@@ -2,7 +2,6 @@
 
 #include "../MetaData.h"
 #include "../SystemData.h"
-#include "../GameData.h"
 #include "../HttpReq.h"
 #include <vector>
 #include <functional>
@@ -12,7 +11,7 @@ class Window;
 struct ScraperSearchParams
 {
 	SystemData* system;
-	GameData* game;
+	FileData* game;
 
 	std::string nameOverride;
 };
