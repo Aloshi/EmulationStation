@@ -20,7 +20,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window, float offsetX, float offsetY, std::string path, float targetWidth, float targetHeight, bool allowUpscale) : GuiComponent(window), 
-	mTiled(false), mAllowUpscale(allowUpscale), mFlipX(false), mFlipY(false), mOrigin(0.5, 0.5), mTargetSize(targetWidth, targetHeight), mColorShift(0xFFFFFFFF)
+	mTiled(false), mAllowUpscale(allowUpscale), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(targetWidth, targetHeight), mColorShift(0xFFFFFFFF)
 {
 	setPosition(offsetX, offsetY);
 
@@ -70,13 +70,17 @@ void ImageComponent::resize()
 
 void ImageComponent::setImage(std::string path)
 {
-	mPath = path;
-
-	if(mPath.empty() || !ResourceManager::getInstance()->fileExists(mPath))
+	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
 		mTexture.reset();
 	else
-		mTexture = TextureResource::get(mPath);
+		mTexture = TextureResource::get(path);
 
+	resize();
+}
+
+void ImageComponent::setImage(const std::shared_ptr<TextureResource>& texture)
+{
+	mTexture = texture;
 	resize();
 }
 
@@ -227,7 +231,7 @@ void ImageComponent::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* col
 
 bool ImageComponent::hasImage()
 {
-	return !mPath.empty();
+	return (bool)mTexture;
 }
 
 void ImageComponent::copyScreen()

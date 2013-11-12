@@ -5,10 +5,19 @@
 #include <boost/filesystem.hpp>
 #include "MetaData.h"
 
+class SystemData;
+
 enum FileType
 {
 	GAME = 1,   // Cannot have children.
 	FOLDER = 2
+};
+
+enum FileChangeType
+{
+	FILE_ADDED,
+	FILE_METADATA_CHANGED,
+	FILE_REMOVED
 };
 
 // Used for loading/saving gamelist.xml.
@@ -21,7 +30,7 @@ std::string getCleanFileName(const boost::filesystem::path& path);
 class FileData
 {
 public:
-	FileData(FileType type, const boost::filesystem::path& path);
+	FileData(FileType type, const boost::filesystem::path& path, SystemData* system);
 	virtual ~FileData();
 
 	inline const std::string& getName() const { return metadata.get("name"); }
@@ -29,6 +38,7 @@ public:
 	inline const boost::filesystem::path& getPath() const { return mPath; }
 	inline FileData* getParent() const { return mParent; }
 	inline const std::vector<FileData*>& getChildren() const { return mChildren; }
+	inline SystemData* getSystem() const { return mSystem; }
 	
 	virtual const std::string& getThumbnailPath() const;
 
@@ -57,6 +67,7 @@ public:
 private:
 	FileType mType;
 	boost::filesystem::path mPath;
+	SystemData* mSystem;
 	FileData* mParent;
 	std::vector<FileData*> mChildren;
 };

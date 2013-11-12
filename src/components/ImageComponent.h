@@ -21,6 +21,7 @@ public:
 	void copyScreen(); //Copy the entire screen into a texture for us to use.
 	void setImage(std::string path); //Loads the image at the given filepath.
 	void setImage(const char* image, size_t length); //Loads image from memory.
+	void setImage(const std::shared_ptr<TextureResource>& texture); //Use an already existing texture.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
 	void setResize(float width, float height, bool allowUpscale);
@@ -47,8 +48,6 @@ private:
 	void resize();
 	void buildImageArray(int x, int y, GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1); //writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position
 	void drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int count = 6); //draws the given set of points and texture coordinates, number of coordinate pairs may be specified (default 6)
-
-	std::string mPath;
 
 	unsigned int mColorShift;
 

@@ -2,8 +2,8 @@
 #include "../Window.h"
 #include "../Renderer.h"
 #include "../resources/Font.h"
-#include "GuiGameList.h"
 #include "../Log.h"
+#include "../views/ViewController.h"
 
 static const int inputCount = 10;
 static std::string inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown"};
@@ -38,7 +38,7 @@ bool GuiInputConfig::input(InputConfig* config, Input input)
 				mWindow->pushGui(new GuiInputConfig(mWindow, mWindow->getInputManager()->getInputConfigByPlayer(mTargetConfig->getPlayerNum() + 1)));
 			}else{
 				mWindow->getInputManager()->writeConfig();
-				GuiGameList::create(mWindow);
+				mWindow->getViewController()->goToSystemSelect();
 			}
 			delete this;
 			return true;

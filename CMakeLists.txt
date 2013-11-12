@@ -154,10 +154,11 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ThemeData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
@@ -172,24 +173,28 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextListComponent.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxOk.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxYesNo.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperStart.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperLog.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/Scraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/TheArchiveScraper.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugiconfig.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.hpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/BasicGameListView.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/DetailedGameListView.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GameListView.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
@@ -215,10 +220,11 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/ThemeData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimationComponent.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
@@ -231,26 +237,30 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ThemeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxOk.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxYesNo.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperStart.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperLog.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/Scraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/TheArchiveScraper.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pugiXML/pugixml.cpp
+    
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/BasicGameListView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/DetailedGameListView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GameListView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/data/ResourceUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_16_png.cpp

@@ -9,8 +9,8 @@ std::string getCleanFileName(const fs::path& path)
 }
 
 
-FileData::FileData(FileType type, const fs::path& path)
-	: mType(type), mPath(path), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
+FileData::FileData(FileType type, const fs::path& path, SystemData* system)
+	: mType(type), mPath(path), mSystem(system), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
@@ -21,6 +21,9 @@ FileData::~FileData()
 {
 	if(mParent)
 		mParent->removeChild(this);
+
+	while(mChildren.size())
+		delete mChildren.back();
 }
 
 const std::string& FileData::getThumbnailPath() const

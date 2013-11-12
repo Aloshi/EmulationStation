@@ -6,11 +6,14 @@
 #include "Log.h"
 #include "Settings.h"
 #include <iomanip>
+#include "views/ViewController.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mZoomFactor(1.0f), mCenterPoint(0, 0), mMatrix(Eigen::Affine3f::Identity()), mFadePercent(0.0f), mAllowSleep(true)
 {
 	mInputManager = new InputManager(this);
+	mViewController = new ViewController(this);
+	pushGui(mViewController);
 	setCenterPoint(Eigen::Vector2f(Renderer::getScreenWidth() / 2, Renderer::getScreenHeight() / 2));
 }
 
@@ -88,8 +91,11 @@ void Window::input(InputConfig* config, Input input)
 	{
 		VolumeControl::getInstance()->setVolume(VolumeControl::getInstance()->getVolume() - 5);
 	}
-	else if(peekGui())
-		this->peekGui()->input(config, input);
+	else
+	{
+		if(peekGui())
+			this->peekGui()->input(config, input);
+	}
 }
 
 void Window::update(int deltaTime)
@@ -125,10 +131,6 @@ void Window::update(int deltaTime)
 
 void Window::render()
 {
-	//there's nothing to render, which should pretty much never happen
-	if(mGuiStack.size() == 0)
-		std::cout << "guistack empty\n";
-
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
 		mGuiStack.at(i)->render(mMatrix);
@@ -146,11 +148,6 @@ void Window::render()
 void Window::normalizeNextUpdate()
 {
 	mNormalizeNextUpdate = true;
-}
-
-InputManager* Window::getInputManager()
-{
-	return mInputManager;
 }
 
 void Window::setZoomFactor(const float& zoom)

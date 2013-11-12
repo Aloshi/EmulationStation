@@ -35,8 +35,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mLaunchCommand = command;
 	mPlatformId = platformId;
 
-	mRootFolder = new FileData(FOLDER, mStartPath);
-	mRootFolder->metadata.set("name", "Search Root");
+	mRootFolder = new FileData(FOLDER, mStartPath, this);
+	mRootFolder->metadata.set("name", mFullName);
 
 	if(!Settings::getInstance()->getBool("PARSEGAMELISTONLY"))
 		populateFolder(mRootFolder);
@@ -45,6 +45,9 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 		parseGamelist(this);
 
 	mRootFolder->sort(FileSorts::SortTypes.at(0));
+
+	mTheme = std::make_shared<ThemeData>();
+	mTheme->loadFile(getThemePath());
 }
 
 SystemData::~SystemData()
@@ -178,7 +181,7 @@ void SystemData::populateFolder(FileData* folder)
 		isGame = false;
 		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
 		{
-			FileData* newGame = new FileData(GAME, filePath.generic_string());
+			FileData* newGame = new FileData(GAME, filePath.generic_string(), this);
 			folder->addChild(newGame);
 			isGame = true;
 		}
@@ -186,7 +189,7 @@ void SystemData::populateFolder(FileData* folder)
 		//add directories that also do not match an extension as folders
 		if(!isGame && fs::is_directory(filePath))
 		{
-			FileData* newFolder = new FileData(FOLDER, filePath.generic_string());
+			FileData* newFolder = new FileData(FOLDER, filePath.generic_string(), this);
 			populateFolder(newFolder);
 
 			//ignore folders that do not contain games
@@ -347,7 +350,19 @@ std::string SystemData::getGamelistPath() const
 	return filePath.generic_string();
 }
 
-bool SystemData::hasGamelist()
+std::string SystemData::getThemePath() const
+{
+	fs::path filePath;
+
+	filePath = mRootFolder->getPath() / "theme.xml";
+	if(fs::exists(filePath))
+		return filePath.generic_string();
+
+	filePath = getHomePath() + "/.emulationstation/" + getName() + "/theme.xml";
+	return filePath.generic_string();
+}
+
+bool SystemData::hasGamelist() const
 {
 	return (fs::exists(getGamelistPath()));
 }

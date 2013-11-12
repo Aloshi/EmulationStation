@@ -3,9 +3,10 @@
 
 #include "GuiComponent.h"
 #include "InputManager.h"
-#include "resources/ResourceManager.h"
 #include <vector>
 #include "resources/Font.h"
+
+class ViewController;
 
 class Window
 {
@@ -24,8 +25,8 @@ public:
 	bool init(unsigned int width = 0, unsigned int height = 0);
 	void deinit();
 
-	InputManager* getInputManager();
-	ResourceManager* getResourceManager();
+	inline InputManager* getInputManager() { return mInputManager; }
+	inline ViewController* getViewController() { return mViewController; }
 
 	void normalizeNextUpdate();
 
@@ -39,6 +40,7 @@ public:
 	
 private:
 	InputManager* mInputManager;
+	ViewController* mViewController;
 	std::vector<GuiComponent*> mGuiStack;
 
 	std::vector< std::shared_ptr<Font> > mDefaultFonts;

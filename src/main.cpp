@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include "Renderer.h"
-#include "components/GuiGameList.h"
+#include "views/ViewController.h"
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "components/GuiDetectDevice.h"
@@ -127,8 +127,15 @@ int main(int argc, char* argv[])
 	Log::open();
 	LOG(LogInfo) << "EmulationStation - " << PROGRAM_VERSION_STRING;
 
-	//always close the log and deinit the BCM library on exit
+	//always close the log on exit
 	atexit(&onExit);
+
+	Window window;
+	if(!scrape_cmdline && !window.init(width, height))
+	{
+		LOG(LogError) << "Window failed to initialize!";
+		return 1;
+	}
 
 	//try loading the system config file
 	if(!SystemData::loadConfig(SystemData::getConfigPath(), true))
@@ -144,17 +151,10 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	//run the command line scraper ui then quit
+	//run the command line scraper then quit
 	if(scrape_cmdline)
 	{
 		return run_scraper_cmdline();
-	}
-
-	Window window;
-	if(!window.init(width, height))
-	{
-		LOG(LogError) << "Window failed to initialize!";
-		return 1;
 	}
 
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
 	//choose which GUI to open depending on if an input configuration already exists
 	if(fs::exists(InputManager::getConfigPath()))
 	{
-		GuiGameList::create(&window);
+		window.getViewController()->goToSystemSelect();
 	}else{
 		window.pushGui(new GuiDetectDevice(&window));
 	}

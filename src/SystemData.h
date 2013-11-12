@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "MetaData.h"
 #include "PlatformId.h"
+#include "ThemeData.h"
 
 class SystemData
 {
@@ -21,9 +22,11 @@ public:
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
 	inline PlatformIds::PlatformId getPlatformId() const { return mPlatformId; }
+	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
 	std::string getGamelistPath() const;
-	bool hasGamelist();
+	bool hasGamelist() const;
+	std::string getThemePath() const;
 	
 	unsigned int getGameCount() const;
 
@@ -43,6 +46,7 @@ private:
 	std::vector<std::string> mSearchExtensions;
 	std::string mLaunchCommand;
 	PlatformIds::PlatformId mPlatformId;
+	std::shared_ptr<ThemeData> mTheme;
 
 	void populateFolder(FileData* folder);
 

@@ -72,13 +72,13 @@ FileData* createGameFromPath(std::string gameAbsPath, SystemData* system)
 		//the folder didn't already exist, so create it
 		if(!foundFolder)
 		{
-			FileData* newFolder = new FileData(FOLDER, folder->getPath() / checkName);
+			FileData* newFolder = new FileData(FOLDER, folder->getPath() / checkName, system);
 			folder->addChild(newFolder);
 			folder = newFolder;
 		}
 	}
 
-	FileData* game = new FileData(GAME, gameAbsPath);
+	FileData* game = new FileData(GAME, gameAbsPath, system);
 	folder->addChild(game);
 	return game;
 }
