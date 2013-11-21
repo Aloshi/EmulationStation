@@ -22,7 +22,8 @@ std::map<std::string, unsigned int> ThemeData::sDefaultColors = boost::assign::m
 
 std::map<std::string, ImageDef> ThemeData::sDefaultImages = boost::assign::map_list_of
 	("backgroundImage", ImageDef("", true))
-	("headerImage", ImageDef("", false));
+	("headerImage", ImageDef("", false))
+	("infoBackgroundImage", ImageDef("", false));
 
 std::map<std::string, SoundDef> ThemeData::sDefaultSounds = boost::assign::map_list_of
 	("scrollSound", SoundDef(""))

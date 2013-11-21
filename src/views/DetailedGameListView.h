@@ -18,6 +18,7 @@ private:
 	void updateInfoPanel();
 
 	ImageComponent mImage;
+	ImageComponent mInfoBackground;
 
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;

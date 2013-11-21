@@ -97,6 +97,7 @@ Pretty much any image format is supported.
 
 `<backgroundImage>` - No default.
 `<headerImage>` - No default.
+`<infoBackgroundImage>` - No default.
 
 Sounds
 ======

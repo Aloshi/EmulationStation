@@ -3,9 +3,17 @@
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root) : 
 	BasicGameListView(window, root), 
 	mDescContainer(window), mDescription(window), 
-	mImage(window)
+	mImage(window), mInfoBackground(window)
 {
-	const float padding = 0.02f;
+	mHeaderImage.setPosition(mSize.x() * 0.25f, 0);
+	mHeaderImage.setResize(mSize.x() * 0.5f, 0, true);
+
+	mInfoBackground.setPosition(0, mSize.y() * 0.5f, 0);
+	mInfoBackground.setOrigin(0, 0.5f);
+	mInfoBackground.setResize(mSize.x() * 0.5f, mSize.y(), true);
+	addChild(&mInfoBackground);
+
+	const float padding = 0.01f;
 
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
 	mList.setSize(mSize.x() * (0.50f - 2*padding), mList.getSize().y());
@@ -34,6 +42,7 @@ void DetailedGameListView::setTheme(const std::shared_ptr<ThemeData>& theme)
 
 	mDescription.setFont(theme->getFont("descriptionFont"));
 	mDescription.setColor(theme->getColor("descriptionColor"));
+	mInfoBackground.setImage(theme->getImage("infoBackgroundImage").getTexture());
 }
 
 void DetailedGameListView::updateInfoPanel()

@@ -13,7 +13,7 @@ BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	mHeaderText.setPosition(0, 0);
 	mHeaderText.setCentered(true);
 	
-	mHeaderImage.setResize(0, mSize.y() * 0.2f, false);
+	mHeaderImage.setResize(0, mSize.y() * 0.185f, false);
 	mHeaderImage.setOrigin(0.5f, 0.0f);
 	mHeaderImage.setPosition(mSize.x() / 2, 0);
 

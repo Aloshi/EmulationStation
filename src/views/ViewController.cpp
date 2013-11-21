@@ -101,7 +101,23 @@ std::shared_ptr<GameListView> ViewController::getSystemView(SystemData* system)
 
 	if(system != NULL)
 	{
-		view = std::shared_ptr<GameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+		//decide type
+		bool detailed = false;
+		std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
+		for(auto it = files.begin(); it != files.end(); it++)
+		{
+			if(!(*it)->getThumbnailPath().empty())
+			{
+				detailed = true;
+				break;
+			}
+		}
+
+		if(detailed)
+			view = std::shared_ptr<GameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+		else
+			view = std::shared_ptr<GameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
+
 		view->setTheme(system->getTheme());
 	}else{
 		LOG(LogError) << "null system"; // should eventually return an "all games" gamelist view
