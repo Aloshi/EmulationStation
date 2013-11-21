@@ -180,5 +180,15 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 	//should really do some clipping here
 	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
-		it->second->render(trans);
+	{
+		Eigen::Vector3f pos = it->second->getPosition();
+		Eigen::Vector2f size = it->second->getSize();
+
+		Eigen::Vector3f camPos = -trans.translation();
+		Eigen::Vector2f camSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+		if(pos.x() + size.x() >= camPos.x() && pos.y() + size.y() >= camPos.y() && 
+			pos.x() <= camPos.x() + camSize.x() && pos.y() <= camPos.y() + camSize.y())
+				it->second->render(trans);
+	}
 }

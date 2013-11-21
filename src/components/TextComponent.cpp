@@ -83,7 +83,7 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 
 		if(mCentered)
 		{
-			Eigen::Vector2f textSize = font->sizeWrappedText(mText, getSize().x());
+			const Eigen::Vector2f& textSize = mTextCache->metrics.size;
 			Eigen::Vector2f pos((getSize().x() - textSize.x()) / 2, 0);
 
 			Eigen::Affine3f centeredTrans = trans;

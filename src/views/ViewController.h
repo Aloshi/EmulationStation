@@ -14,8 +14,7 @@ public:
 	void goToPrevSystem();
 	void goToSystem(SystemData* system);
 	void goToSystemSelect();
-	void showQuickSystemSelect();
-
+	
 	void onFileChanged(FileData* file, FileChangeType change);
 
 	// Plays a nice launch effect and launches the game at the end of it.

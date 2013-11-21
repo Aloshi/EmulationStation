@@ -37,6 +37,7 @@ public:
 		std::string name;
 		T object;
 		unsigned int colorId;
+		std::shared_ptr<TextCache> textCache;
 	};
 
 	void add(const std::string& name, const T& obj, unsigned int colorId);
@@ -52,7 +53,7 @@ public:
 	void stopScrolling();
 	inline bool isScrolling() const { return mScrollDir != 0; }
 
-	inline void setTheme(const std::shared_ptr<ThemeData>& theme) { mTheme = theme; }
+	void setTheme(const std::shared_ptr<ThemeData>& theme);
 	inline void setCentered(bool centered) { mCentered = centered; }
 
 	enum CursorState {
@@ -113,8 +114,7 @@ template <typename T>
 void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::setMatrix(trans);
-
+	
 	std::shared_ptr<Font> font = mTheme->getFont(THEME_FONT);
 
 	const int cutoff = 0;
@@ -155,10 +155,11 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		//draw selector bar
 		if(mCursor == i)
 		{
+			Renderer::setMatrix(trans);
 			Renderer::drawRect(0, (int)y, (int)getSize().x(), font->getHeight(), mTheme->getColor(THEME_SELECTOR_COLOR));
 		}
 
-		ListRow row = mRowVector.at((unsigned int)i);
+		ListRow& row = mRowVector.at((unsigned int)i);
 
 		float x = (float)(mCursor == i ? -mMarqueeOffset : 0);
 
@@ -168,11 +169,22 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		else
 			color = mTheme->getColor(THEME_ENTRY_COLOR[row.colorId]);
 
-		if(mCentered)
-			font->drawCenteredText(row.name, x, y, color);
-		else
-			font->drawText(row.name, Eigen::Vector2f(x, y), color);
+		if(!row.textCache)
+			row.textCache = std::unique_ptr<TextCache>(font->buildTextCache(row.name, 0, 0, 0x000000FF));
 
+		row.textCache->setColor(color);
+
+		Eigen::Vector3f offset(x, y, 0);
+
+		if(mCentered)
+			offset[0] += (mSize.x() - row.textCache->metrics.size.x()) / 2;
+
+		Eigen::Affine3f drawTrans = trans;
+		drawTrans.translate(offset);
+		Renderer::setMatrix(drawTrans);
+
+		font->renderTextCache(row.textCache.get());
+		
 		y += entrySize;
 	}
 
@@ -368,6 +380,16 @@ void TextListComponent<T>::onCursorChanged(CursorState state)
 {
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
+}
+
+template <typename T>
+void TextListComponent<T>::setTheme(const std::shared_ptr<ThemeData>& theme)
+{
+	mTheme = theme;
+
+	// invalidate text caches in case font changed
+	for(auto it = mRowVector.begin(); it != mRowVector.end(); it++)
+		it->textCache.reset();
 }
 
 #endif
