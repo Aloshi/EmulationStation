@@ -19,6 +19,7 @@ private:
 
 	ImageComponent mImage;
 	ImageComponent mInfoBackground;
+	ImageComponent mDivider;
 
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;
