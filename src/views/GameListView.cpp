@@ -1,6 +1,7 @@
 #include "GameListView.h"
 #include "../Window.h"
 #include "../components/GuiMetaDataEd.h"
+#include "../components/GuiMenu.h"
 
 bool GameListView::input(InputConfig* config, Input input)
 {
@@ -19,9 +20,10 @@ bool GameListView::input(InputConfig* config, Input input)
 				delete file; //free it
 		}));
 		return true;
-	}else if(config->isMappedTo("start", input) && input.value != 0)
+	}else if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		// open menu
+		mWindow->pushGui(new GuiMenu(mWindow));
 	}
 
 	return GuiComponent::input(config, input);

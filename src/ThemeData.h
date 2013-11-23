@@ -60,10 +60,14 @@ public:
 	void setDefaults();
 	void loadFile(const std::string& path);
 
+	inline const FontDef& getFontDef(const std::string& identifier) const { return mFontMap.at(identifier); }
 	inline std::shared_ptr<Font> getFont(const std::string& identifier) const { return mFontMap.at(identifier).get(); }
 	inline const ImageDef& getImage(const std::string& identifier) const { return mImageMap.at(identifier); }
 	inline unsigned int getColor(const std::string& identifier) const { return mColorMap.at(identifier); }
 	void playSound(const std::string& identifier) const;
+
+	inline void setFont(const std::string& identifier, FontDef def) { mFontMap[identifier] = def; }
+	inline void setColor(const std::string& identifier, unsigned int color) { mColorMap[identifier] = color; }
 
 private:
 	static std::map<std::string, ImageDef> sDefaultImages;
