@@ -65,6 +65,7 @@ Fonts are defined like so:
 
 `<listFont>` - Default size: 0.045.
 `<descriptionFont>` - Default size: 0.035.
+`<fastSelectLetterFont>` - Default size: 0.15.
 
 Colors
 ======
@@ -81,6 +82,8 @@ or
 `<listSelectorColor>` - Default: 000000FF.
 `<listSelectedColor>` - Default: 00000000.
 `<descriptionColor>` - Default: 48474DFF.
+`<fastSelectLetterColor>` - Default: FFFFFFFF.
+`<fastSelectTextColor>` - Default: DDDDDDFF.
 
 Images
 ======
@@ -98,6 +101,7 @@ Pretty much any image format is supported.
 `<backgroundImage>` - No default.
 `<headerImage>` - No default.
 `<infoBackgroundImage>` - No default.
+`<verticalDividerImage>` - No default.
 
 Sounds
 ======

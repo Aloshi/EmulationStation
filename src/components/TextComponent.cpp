@@ -2,6 +2,7 @@
 #include "../Renderer.h"
 #include "../Log.h"
 #include "../Window.h"
+#include "../ThemeData.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
 	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
@@ -136,4 +137,10 @@ void TextComponent::setValue(const std::string& value)
 std::string TextComponent::getValue() const
 {
 	return mText;
+}
+
+void TextComponent::setFromTheme(const std::shared_ptr<ThemeData>& theme, const std::string& fontIdentifier, const std::string& colorIdentifier)
+{
+	setFont(theme->getFont(fontIdentifier));
+	setColor(theme->getColor(colorIdentifier));
 }

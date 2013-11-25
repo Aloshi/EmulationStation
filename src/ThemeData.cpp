@@ -11,14 +11,17 @@
 // Defaults
 std::map<std::string, FontDef > ThemeData::sDefaultFonts = boost::assign::map_list_of
 	("listFont", FontDef(0.045f, ""))
-	("descriptionFont", FontDef(0.035f, ""));
+	("descriptionFont", FontDef(0.035f, ""))
+	("fastSelectLetterFont", FontDef(0.15f, ""));
 
 std::map<std::string, unsigned int> ThemeData::sDefaultColors = boost::assign::map_list_of
 	("listPrimaryColor", 0x0000FFFF)
 	("listSecondaryColor", 0x00FF00FF)
 	("listSelectorColor", 0x000000FF)
 	("listSelectedColor", 0x00000000)
-	("descriptionColor", 0x48474DFF);
+	("descriptionColor", 0x48474DFF)
+	("fastSelectLetterColor", 0xFFFFFFFF)
+	("fastSelectTextColor", 0xDDDDDDFF);
 
 std::map<std::string, ImageDef> ThemeData::sDefaultImages = boost::assign::map_list_of
 	("backgroundImage", ImageDef("", true))

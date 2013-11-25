@@ -15,7 +15,7 @@ public:
 
 	virtual bool input(InputConfig* config, Input input) override;
 
-	virtual void setTheme(const std::shared_ptr<ThemeData>& theme) override;
+	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
 	inline FileData* getCursor() { return mList.getSelected(); }
 	virtual void setCursor(FileData* file) override;

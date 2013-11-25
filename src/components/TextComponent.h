@@ -4,6 +4,8 @@
 #include "../GuiComponent.h"
 #include "../resources/Font.h"
 
+class ThemeData;
+
 class TextComponent : public GuiComponent
 {
 public:
@@ -25,6 +27,8 @@ public:
 	void setOpacity(unsigned char opacity) override;
 	
 	std::shared_ptr<Font> getFont() const;
+
+	void setFromTheme(const std::shared_ptr<ThemeData>& theme, const std::string& fontIdentifier, const std::string& colorIdentifier);
 
 private:
 	void calculateExtent();

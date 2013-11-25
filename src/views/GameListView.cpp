@@ -2,6 +2,8 @@
 #include "../Window.h"
 #include "../components/GuiMetaDataEd.h"
 #include "../components/GuiMenu.h"
+#include "../components/GuiFastSelect.h"
+#include "ViewController.h"
 
 bool GameListView::input(InputConfig* config, Input input)
 {
@@ -24,7 +26,17 @@ bool GameListView::input(InputConfig* config, Input input)
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));
+	}else if(config->isMappedTo("select", input) && input.value != 0)
+	{
+		// open fast select
+		mWindow->pushGui(new GuiFastSelect(mWindow, this));
 	}
 
 	return GuiComponent::input(config, input);
+}
+
+void GameListView::setTheme(const std::shared_ptr<ThemeData>& theme)
+{
+	mTheme = theme;
+	onThemeChanged(theme);
 }

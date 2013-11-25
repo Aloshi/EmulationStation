@@ -29,7 +29,7 @@ BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	addChild(&mHeaderText);
 }
 
-void BasicGameListView::setTheme(const std::shared_ptr<ThemeData>& theme)
+void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
 	const ImageDef& bg = theme->getImage("backgroundImage");
 	mBackground.setTiling(bg.tile);
@@ -68,6 +68,14 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 			populateList(cursor->getParent());
 			mList.setCursor(cursor);
 		}
+	}
+
+	// the root file was sorted (so children were sorted too)
+	if(file == mRoot && change == FILE_SORTED)
+	{
+		FileData* cursor = getCursor();
+		populateList(cursor->getParent());
+		mList.setCursor(cursor);
 	}
 }
 

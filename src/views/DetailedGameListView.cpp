@@ -39,10 +39,10 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	updateInfoPanel();
 }
 
-void DetailedGameListView::setTheme(const std::shared_ptr<ThemeData>& theme)
+void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
 	mHeaderImage.setResize(mSize.x() * 0.5f, 0, true);
-	BasicGameListView::setTheme(theme);
+	BasicGameListView::onThemeChanged(theme);
 
 	if(mHeaderImage.getPosition().y() + mHeaderImage.getSize().y() > mImage.getPosition().y())
 		mHeaderImage.setResize(0, mSize.y() * 0.185f, true);
