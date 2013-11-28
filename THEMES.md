@@ -102,6 +102,7 @@ Pretty much any image format is supported.
 `<headerImage>` - No default.
 `<infoBackgroundImage>` - No default.
 `<verticalDividerImage>` - No default.
+`<fastSelectBackgroundImage>` - Nine patch.  Default is the "button.png" resource.
 
 Sounds
 ======
@@ -110,10 +111,11 @@ Sounds are defined like this:
 `<resourceName>./some/path/here.wav</resourceName>`
 Only .wav files are supported.
 
-`<scrollSound>` - No default.
-`<gameSelectSound>` - No default.
-`<backSound>` - No default.
-`<menuOpenSound>` - No default.
+`<scrollSound>` - No default. Played when a list scrolls.
+`<gameSelectSound>` - No default. Played when a game is launched.
+`<backSound>` - No default. Played when leaving a folder in the game list.
+`<menuOpenSound>` - No default. Played when the menu is opened.
+`<menuCloseSound>` - No default. Played when the menu is closed.
 
 
 Nine Patches

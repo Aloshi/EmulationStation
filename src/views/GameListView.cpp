@@ -21,15 +21,19 @@ bool GameListView::input(InputConfig* config, Input input)
 				onFileChanged(file, FILE_REMOVED); //tell the view
 				delete file; //free it
 		}));
+		mTheme->playSound("menuOpenSound");
 		return true;
 	}else if(config->isMappedTo("menu", input) && input.value != 0)
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));
+		mTheme->playSound("menuOpenSound");
+		return true;
 	}else if(config->isMappedTo("select", input) && input.value != 0)
 	{
 		// open fast select
 		mWindow->pushGui(new GuiFastSelect(mWindow, this));
+		return true;
 	}
 
 	return GuiComponent::input(config, input);

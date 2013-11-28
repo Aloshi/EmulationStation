@@ -27,13 +27,15 @@ std::map<std::string, ImageDef> ThemeData::sDefaultImages = boost::assign::map_l
 	("backgroundImage", ImageDef("", true))
 	("headerImage", ImageDef("", false))
 	("infoBackgroundImage", ImageDef("", false))
-	("verticalDividerImage", ImageDef("", false));
+	("verticalDividerImage", ImageDef("", false))
+	("fastSelectBackgroundImage", ImageDef(":/button.png", false));
 
 std::map<std::string, SoundDef> ThemeData::sDefaultSounds = boost::assign::map_list_of
 	("scrollSound", SoundDef(""))
 	("gameSelectSound", SoundDef(""))
 	("backSound", SoundDef(""))
-	("menuOpenSound", SoundDef(""));
+	("menuOpenSound", SoundDef(""))
+	("menuCloseSound", SoundDef(""));
 
 
 

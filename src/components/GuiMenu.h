@@ -13,6 +13,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 
 private:
+	std::shared_ptr<ThemeData> mTheme;
 	NinePatchComponent mBackground;
 	TextListComponent< std::function<void()> > mList;
 };

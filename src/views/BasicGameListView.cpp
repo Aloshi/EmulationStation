@@ -159,6 +159,7 @@ bool BasicGameListView::input(InputConfig* config, Input input)
 				populateList(mCursorStack.top()->getParent());
 				mList.setCursor(mCursorStack.top());
 				mCursorStack.pop();
+				mTheme->playSound("backSound");
 			}else{
 				mList.stopScrolling();
 				mWindow->getViewController()->goToSystemSelect();

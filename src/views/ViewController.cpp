@@ -86,6 +86,7 @@ void ViewController::launch(FileData* game)
 	}
 
 	// Effect TODO
+	game->getSystem()->getTheme()->playSound("gameSelectSound");
 	game->getSystem()->launchGame(mWindow, game);
 }
 

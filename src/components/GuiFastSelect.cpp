@@ -6,13 +6,14 @@
 static const std::string LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 GuiFastSelect::GuiFastSelect(Window* window, GameListView* gamelist) : GuiComponent(window), 
-	mBackground(window, ":/button.png"), mSortText(window), mLetterText(window), mGameList(gamelist)
+	mBackground(window), mSortText(window), mLetterText(window), mGameList(gamelist)
 {
 	setPosition(Renderer::getScreenWidth() * 0.2f, Renderer::getScreenHeight() * 0.2f);
 	setSize(Renderer::getScreenWidth() * 0.6f, Renderer::getScreenHeight() * 0.6f);
 
 	const std::shared_ptr<ThemeData>& theme = mGameList->getTheme();
 
+	mBackground.setImagePath(theme->getImage("fastSelectBackgroundImage").path);
 	mBackground.fitTo(mSize);
 	addChild(&mBackground);
 

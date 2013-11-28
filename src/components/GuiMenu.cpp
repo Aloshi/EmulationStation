@@ -38,12 +38,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mBackground(window, ":/
 	mBackground.fitTo(Eigen::Vector2f(mList.getSize().x(), mSize.y()), Eigen::Vector3f(mList.getPosition().x(), 0, 0));
 	addChild(&mBackground);
 
-	std::shared_ptr<ThemeData> theme = std::make_shared<ThemeData>();
-	theme->setFont("listFont", FontDef(0.09f, theme->getFontDef("listFont").path));
-	theme->setColor("listSelectorColor", 0xBBBBBBFF);
-	theme->setColor("listPrimaryColor", 0x0000FFFF);
-	theme->setColor("listSecondaryColor", 0xFF0000FF);
-	mList.setTheme(theme);
+	mTheme = std::make_shared<ThemeData>();
+	mTheme->setFont("listFont", FontDef(0.09f, mTheme->getFontDef("listFont").path));
+	mTheme->setColor("listSelectorColor", 0xBBBBBBFF);
+	mTheme->setColor("listPrimaryColor", 0x0000FFFF);
+	mTheme->setColor("listSecondaryColor", 0xFF0000FF);
+	mList.setTheme(mTheme);
 
 	addChild(&mList);
 }
@@ -54,6 +54,7 @@ bool GuiMenu::input(InputConfig* config, Input input)
 	{
 		if(config->isMappedTo("b", input) || config->isMappedTo("menu", input))
 		{
+			mTheme->playSound("menuCloseSound");
 			delete this;
 			return true;
 		}else if(config->isMappedTo("a", input) && mList.getList().size() > 0)
