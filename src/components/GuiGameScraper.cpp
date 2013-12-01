@@ -123,6 +123,7 @@ void GuiGameScraper::onSearchDone(std::vector<MetaDataList> results)
 
 	mList.resetCursor();
 	mList.moveCursor(Eigen::Vector2i(0, 1)); //move cursor to first game if there is one
+	updateInfoPane();
 }
 
 int GuiGameScraper::getSelectedIndex()
@@ -161,22 +162,7 @@ bool GuiGameScraper::input(InputConfig* config, Input input)
 
 	if(config->isMappedTo("up", input) || config->isMappedTo("down", input) && input.value != 0)
 	{
-		//update game info pane
-		int i = getSelectedIndex();
-		if(i != -1)
-		{
-			mResultName.setText(mScraperResults.at(i).get("name"));
-			mResultDesc.setText(mScraperResults.at(i).get("desc"));
-			mResultInfo.setScrollPos(Eigen::Vector2d(0, 0));
-			mResultInfo.resetAutoScrollTimer();
-
-			std::string thumb = mScraperResults.at(i).get("thumbnail");
-			mResultThumbnail.setImage("");
-			if(!thumb.empty())
-				mThumbnailReq = std::unique_ptr<HttpReq>(new HttpReq(thumb));
-			else
-				mThumbnailReq.reset();
-		}
+		updateInfoPane();
 	}
 
 	//stopped editing
@@ -187,6 +173,25 @@ bool GuiGameScraper::input(InputConfig* config, Input input)
 	}
 
 	return ret;
+}
+
+void GuiGameScraper::updateInfoPane()
+{
+	int i = getSelectedIndex();
+	if(i != -1)
+	{
+		mResultName.setText(mScraperResults.at(i).get("name"));
+		mResultDesc.setText(mScraperResults.at(i).get("desc"));
+		mResultInfo.setScrollPos(Eigen::Vector2d(0, 0));
+		mResultInfo.resetAutoScrollTimer();
+
+		std::string thumb = mScraperResults.at(i).get("thumbnail");
+		mResultThumbnail.setImage("");
+		if(!thumb.empty())
+			mThumbnailReq = std::unique_ptr<HttpReq>(new HttpReq(thumb));
+		else
+			mThumbnailReq.reset();
+	}
 }
 
 void GuiGameScraper::update(int deltaTime)

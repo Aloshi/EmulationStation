@@ -25,6 +25,7 @@ public:
 private:
 	int getSelectedIndex();
 	void onSearchDone(std::vector<MetaDataList> results);
+	void updateInfoPane();
 	void updateThumbnail();
 
 	ComponentListComponent mList;

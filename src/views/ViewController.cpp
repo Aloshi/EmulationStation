@@ -4,6 +4,7 @@
 
 #include "BasicGameListView.h"
 #include "DetailedGameListView.h"
+#include "GridGameListView.h"
 
 ViewController::ViewController(Window* window)
 	: GuiComponent(window), mCurrentView(nullptr), mCameraPos(Eigen::Affine3f::Identity())
@@ -113,11 +114,14 @@ std::shared_ptr<GameListView> ViewController::getSystemView(SystemData* system)
 				break;
 			}
 		}
-
+		
 		if(detailed)
 			view = std::shared_ptr<GameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
 		else
 			view = std::shared_ptr<GameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
+		
+
+		//view = std::shared_ptr<GameListView>(new GridGameListView(mWindow, system->getRootFolder()));
 
 		view->setTheme(system->getTheme());
 	}else{

@@ -164,6 +164,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageGridComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/OptionListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/RatingComponent.h
@@ -195,6 +196,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/BasicGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/DetailedGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GameListView.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GridGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
@@ -264,6 +266,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/BasicGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/DetailedGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GameListView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GridGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/data/ResourceUtil.cpp
