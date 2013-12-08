@@ -109,7 +109,7 @@ std::shared_ptr<Font> Font::get(int size, const std::string& path)
 			return foundFont->second.lock();
 	}
 
-	std::shared_ptr<Font> font = std::shared_ptr<Font>(new Font(size, path));
+	std::shared_ptr<Font> font = std::shared_ptr<Font>(new Font(def.second, def.first));
 	sFontMap[def] = std::weak_ptr<Font>(font);
 	ResourceManager::getInstance()->addReloadable(font);
 	return font;
@@ -138,7 +138,7 @@ void Font::buildAtlas(ResourceData data)
 {
 	if(FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face))
 	{
-		LOG(LogError) << "Error creating font face!";
+		LOG(LogError) << "Error creating font face! (mPath: " << mPath << ", data.length: " << data.length << ")";
 		return;
 	}
 
