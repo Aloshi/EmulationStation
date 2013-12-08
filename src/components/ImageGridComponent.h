@@ -130,7 +130,7 @@ void ImageGridComponent<T>::remove(const T& obj)
 	{
 		if((*it).object == obj)
 		{
-			if(mCursor > 0 && it - mRowVector.begin() >= mCursor)
+			if(mCursor > 0 && it - mEntries.begin() >= mCursor)
 			{
 				mCursor--;
 				onCursorChanged(CURSOR_STOPPED);
