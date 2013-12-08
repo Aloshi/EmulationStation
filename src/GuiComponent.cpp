@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Log.h"
 #include "Renderer.h"
+#include "animations/AnimationController.h"
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
 	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity())
@@ -32,6 +33,9 @@ bool GuiComponent::input(InputConfig* config, Input input)
 
 void GuiComponent::update(int deltaTime)
 {
+	if(mAnimationController)
+		mAnimationController->update(deltaTime);
+	
 	for(unsigned int i = 0; i < getChildCount(); i++)
 	{
 		getChild(i)->update(deltaTime);
@@ -180,4 +184,14 @@ void GuiComponent::textInput(const char* text)
 	{
 		(*iter)->textInput(text);
 	}
+}
+
+void GuiComponent::setAnimation(Animation* anim, std::function<void()> finishedCallback, bool reverse)
+{
+	mAnimationController = std::shared_ptr<AnimationController>(new AnimationController(anim, finishedCallback, reverse));
+}
+
+void GuiComponent::stopAnimation()
+{
+	mAnimationController.reset();
 }

@@ -199,6 +199,11 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GridGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/Animation.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/AnimationController.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/LaunchAnimation.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/MoveCameraAnimation.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
@@ -268,6 +273,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GridGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/AnimationController.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/data/ResourceUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_16_png.cpp

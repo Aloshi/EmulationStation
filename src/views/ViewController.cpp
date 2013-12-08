@@ -5,9 +5,11 @@
 #include "BasicGameListView.h"
 #include "DetailedGameListView.h"
 #include "GridGameListView.h"
+#include "../animations/LaunchAnimation.h"
+#include "../animations/MoveCameraAnimation.h"
 
 ViewController::ViewController(Window* window)
-	: GuiComponent(window), mCurrentView(nullptr), mCameraPos(Eigen::Affine3f::Identity())
+	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0)
 {
 	mState.viewing = START_SCREEN;
 }
@@ -16,6 +18,7 @@ void ViewController::goToSystemSelect()
 {
 	mState.viewing = SYSTEM_SELECT;
 	goToSystem(SystemData::sSystemVector.at(0));
+	//playViewTransition();
 }
 
 SystemData* getSystemCyclic(SystemData* from, bool reverse)
@@ -68,6 +71,12 @@ void ViewController::goToSystem(SystemData* system)
 	mState.data.system = system;
 
 	mCurrentView = getSystemView(system);
+	playViewTransition();
+}
+
+void ViewController::playViewTransition()
+{
+	setAnimation(new MoveCameraAnimation(mCamera, mCurrentView->getPosition()));
 }
 
 void ViewController::onFileChanged(FileData* file, FileChangeType change)
@@ -78,7 +87,7 @@ void ViewController::onFileChanged(FileData* file, FileChangeType change)
 	}
 }
 
-void ViewController::launch(FileData* game)
+void ViewController::launch(FileData* game, const Eigen::Vector3f& center)
 {
 	if(game->getType() != GAME)
 	{
@@ -86,9 +95,16 @@ void ViewController::launch(FileData* game)
 		return;
 	}
 
-	// Effect TODO
+	
 	game->getSystem()->getTheme()->playSound("gameSelectSound");
-	game->getSystem()->launchGame(mWindow, game);
+
+	Eigen::Affine3f origCamera = mCamera;
+	setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), [this, origCamera, center, game] 
+	{
+		game->getSystem()->launchGame(mWindow, game);
+		mCamera = origCamera;
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), nullptr, true);
+	});
 }
 
 std::shared_ptr<GameListView> ViewController::getSystemView(SystemData* system)
@@ -120,7 +136,6 @@ std::shared_ptr<GameListView> ViewController::getSystemView(SystemData* system)
 		else
 			view = std::shared_ptr<GameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 		
-
 		//view = std::shared_ptr<GameListView>(new GridGameListView(mWindow, system->getRootFolder()));
 
 		view->setTheme(system->getTheme());
@@ -146,46 +161,24 @@ bool ViewController::input(InputConfig* config, Input input)
 	return false;
 }
 
-
-float clamp(float min, float max, float val)
-{
-	if(val < min)
-		val = min;
-	else if(val > max)
-		val = max;
-
-	return val;
-}
-
-//http://en.wikipedia.org/wiki/Smoothstep
-float smoothStep(float edge0, float edge1, float x)
-{
-	// Scale, and clamp x to 0..1 range
-	x = clamp(0, 1, (x - edge0)/(edge1 - edge0));
-        
-	// Evaluate polynomial
-	return x*x*x*(x*(x*6 - 15) + 10);
-}
-
 void ViewController::update(int deltaTime)
 {
 	if(mCurrentView)
 	{
 		mCurrentView->update(deltaTime);
-
-		// move camera towards current view (should use smoothstep)
-		Eigen::Vector3f diff = (mCurrentView->getPosition() + mCameraPos.translation()) * 0.0075f * (float)deltaTime;
-		mCameraPos.translate(-diff);
 	}
+
+	GuiComponent::update(deltaTime);
 }
 
 void ViewController::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * mCameraPos;
+	Eigen::Affine3f trans = mCamera * parentTrans;
 
-	//should really do some clipping here
+	// draw systems
 	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
 	{
+		// clipping
 		Eigen::Vector3f pos = it->second->getPosition();
 		Eigen::Vector2f size = it->second->getSize();
 
@@ -195,5 +188,12 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 		if(pos.x() + size.x() >= camPos.x() && pos.y() + size.y() >= camPos.y() && 
 			pos.x() <= camPos.x() + camSize.x() && pos.y() <= camPos.y() + camSize.y())
 				it->second->render(trans);
+	}
+
+	// fade out
+	if(mFadeOpacity)
+	{
+		Renderer::setMatrix(Eigen::Affine3f::Identity());
+		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | (unsigned char)(mFadeOpacity * 255));
 	}
 }

@@ -2,9 +2,12 @@
 #define _GUICOMPONENT_H_
 
 #include "InputConfig.h"
+#include <memory>
 #include <Eigen/Dense>
 
 class Window;
+class Animation;
+class AnimationController;
 
 class GuiComponent
 {
@@ -48,6 +51,10 @@ public:
 	unsigned int getChildCount() const;
 	GuiComponent* getChild(unsigned int i) const;
 
+	// animation will be automatically deleted when it completes or is stopped.
+	void setAnimation(Animation* animation, std::function<void()> finishedCallback = nullptr, bool reverse = false);
+	void stopAnimation();
+
 	virtual unsigned char getOpacity() const;
 	virtual void setOpacity(unsigned char opacity);
 
@@ -73,6 +80,7 @@ protected:
 
 private:
 	Eigen::Affine3f mTransform; //Don't access this directly! Use getTransform()!
+	std::shared_ptr<AnimationController> mAnimationController;
 };
 
 #endif
