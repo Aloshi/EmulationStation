@@ -87,7 +87,7 @@ void ViewController::onFileChanged(FileData* file, FileChangeType change)
 	}
 }
 
-void ViewController::launch(FileData* game, const Eigen::Vector3f& center)
+void ViewController::launch(FileData* game, Eigen::Vector3f center)
 {
 	if(game->getType() != GAME)
 	{
@@ -99,6 +99,7 @@ void ViewController::launch(FileData* game, const Eigen::Vector3f& center)
 	game->getSystem()->getTheme()->playSound("gameSelectSound");
 
 	Eigen::Affine3f origCamera = mCamera;
+	center += mCurrentView->getPosition();
 	setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), [this, origCamera, center, game] 
 	{
 		game->getSystem()->launchGame(mWindow, game);
@@ -175,18 +176,19 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = mCamera * parentTrans;
 
+	// camera position, position + size
+	Eigen::Vector3f viewStart = trans.inverse().translation();
+	Eigen::Vector3f viewEnd = trans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
+
 	// draw systems
 	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
 	{
 		// clipping
-		Eigen::Vector3f pos = it->second->getPosition();
-		Eigen::Vector2f size = it->second->getSize();
+		Eigen::Vector3f guiStart = it->second->getPosition();
+		Eigen::Vector3f guiEnd = it->second->getPosition() + Eigen::Vector3f(it->second->getSize().x(), it->second->getSize().y(), 0);
 
-		Eigen::Vector3f camPos = -trans.translation();
-		Eigen::Vector2f camSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-
-		if(pos.x() + size.x() >= camPos.x() && pos.y() + size.y() >= camPos.y() && 
-			pos.x() <= camPos.x() + camSize.x() && pos.y() <= camPos.y() + camSize.y())
+		if(guiEnd.x() >= viewStart.x() && guiEnd.y() >= viewStart.y() &&
+			guiStart.x() <= viewEnd.x() && guiStart.y() <= viewEnd.y())
 				it->second->render(trans);
 	}
 
