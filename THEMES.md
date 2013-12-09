@@ -7,8 +7,9 @@ Themes are loaded like this:
 
 1. Initialize to default values.
 2. If `$HOME/.emulationstation/es_theme_default.xml` exists, load it.
-3a. If there is a `theme.xml` present in the root of a system's `path` directory, load it.
-3b.   IF NOT, If `$HOME/.emulationstation/%SYSTEMNAME%/theme.xml` exists, load it.
+3. If there is a `theme.xml` present in the root of a system's `path` directory, load it.
+
+   IF NOT, If `$HOME/.emulationstation/%SYSTEMNAME%/theme.xml` exists, load it.
 
 Example
 =======
@@ -45,6 +46,7 @@ Example
 Themes must be enclosed in a `<theme>` tag.
 
 All paths automatically expand `./` to the folder containing the theme.xml.
+
 All paths automatically expand `~/` to the home directory ($HOME on Linux, %HOMEPATH% on Windows).
 
 Stuff you can define
@@ -63,8 +65,11 @@ Fonts are defined like so:
 </resourceName>
 ```
 
+
 `<listFont>` - Default size: 0.045.
+
 `<descriptionFont>` - Default size: 0.035.
+
 `<fastSelectLetterFont>` - Default size: 0.15.
 
 Colors
@@ -73,16 +78,26 @@ Colors
 Colors are defined in hex, like this:
 
 `<resourceName>00FF00FF</resourceName>`
+
 or
+
 `<resourceName>00FF00</resourceName>`
+
 (without the alpha channel specified - will assume FF)
 
+
 `<listPrimaryColor>` - Default: 0000FFFF.
+
 `<listSecondaryColor>` - Default: 00FF00FF.
+
 `<listSelectorColor>` - Default: 000000FF.
+
 `<listSelectedColor>` - Default: 00000000.
+
 `<descriptionColor>` - Default: 48474DFF.
+
 `<fastSelectLetterColor>` - Default: FFFFFFFF.
+
 `<fastSelectTextColor>` - Default: DDDDDDFF.
 
 Images
@@ -98,23 +113,35 @@ Images are defined like this:
 ```
 Pretty much any image format is supported.
 
+
 `<backgroundImage>` - No default.
+
 `<headerImage>` - No default.
+
 `<infoBackgroundImage>` - No default.
+
 `<verticalDividerImage>` - No default.
+
 `<fastSelectBackgroundImage>` - Nine patch.  Default is the "button.png" resource.
 
 Sounds
 ======
 
 Sounds are defined like this:
+
 `<resourceName>./some/path/here.wav</resourceName>`
+
 Only .wav files are supported.
 
+
 `<scrollSound>` - No default. Played when a list scrolls.
+
 `<gameSelectSound>` - No default. Played when a game is launched.
+
 `<backSound>` - No default. Played when leaving a folder in the game list.
+
 `<menuOpenSound>` - No default. Played when the menu is opened.
+
 `<menuCloseSound>` - No default. Played when the menu is closed.
 
 
