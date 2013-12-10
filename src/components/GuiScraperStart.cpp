@@ -31,11 +31,11 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mList.setEntry(Vector2i(0, 0), Vector2i(1, 1), &mFilterLabel, false, ComponentListComponent::AlignRight);
 	mList.setEntry(Vector2i(1, 0), Vector2i(1, 1), &mFiltersOpt, true, ComponentListComponent::AlignLeft);
 
-	//add systems (with all selected)
+	//add systems (all with a platformid specified selected)
 	std::vector<SystemData*> sys = SystemData::sSystemVector;
 	mSystemsOpt.populate(sys, 
 		[&](SystemData* s) { 
-			return mSystemsOpt.makeEntry(s->getName(), s, true); 
+			return mSystemsOpt.makeEntry(s->getName(), s, s->getPlatformId() != PlatformIds::PLATFORM_UNKNOWN); 
 	});
 
 	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mSystemsLabel, false, ComponentListComponent::AlignRight);
