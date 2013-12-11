@@ -122,6 +122,8 @@ Pretty much any image format is supported.
 
 `<verticalDividerImage>` - No default.
 
+`<systemImage>` - No default.  Large image, shown in the system select menu.
+
 `<fastSelectBackgroundImage>` - Nine patch.  Default is the "button.png" resource.
 
 Sounds

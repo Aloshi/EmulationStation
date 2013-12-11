@@ -17,8 +17,9 @@ ViewController::ViewController(Window* window)
 void ViewController::goToSystemSelect()
 {
 	mState.viewing = SYSTEM_SELECT;
-	goToSystem(SystemData::sSystemVector.at(0));
-	//playViewTransition();
+	mCurrentView = getSystemListView();
+	playViewTransition();
+	LOG(LogInfo) << "going to system select";
 }
 
 SystemData* getSystemCyclic(SystemData* from, bool reverse)
@@ -43,7 +44,7 @@ SystemData* getSystemCyclic(SystemData* from, bool reverse)
 	}
 }
 
-void ViewController::goToNextSystem()
+void ViewController::goToNextGameList()
 {
 	assert(mState.viewing == SYSTEM);
 
@@ -51,10 +52,10 @@ void ViewController::goToNextSystem()
 	if(system == NULL)
 		return;
 	
-	goToSystem(getSystemCyclic(system, false));
+	goToGameList(getSystemCyclic(system, false));
 }
 
-void ViewController::goToPrevSystem()
+void ViewController::goToPrevGameList()
 {
 	assert(mState.viewing == SYSTEM);
 
@@ -62,15 +63,15 @@ void ViewController::goToPrevSystem()
 	if(system == NULL)
 		return;
 	
-	goToSystem(getSystemCyclic(system, true));
+	goToGameList(getSystemCyclic(system, true));
 }
 
-void ViewController::goToSystem(SystemData* system)
+void ViewController::goToGameList(SystemData* system)
 {
-	mState.viewing = SYSTEM;
+	mState.viewing = GAME_LIST;
 	mState.data.system = system;
 
-	mCurrentView = getSystemView(system);
+	mCurrentView = getGameListView(system);
 	playViewTransition();
 }
 
@@ -81,7 +82,7 @@ void ViewController::playViewTransition()
 
 void ViewController::onFileChanged(FileData* file, FileChangeType change)
 {
-	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
+	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
 		it->second->onFileChanged(file, change);
 	}
@@ -108,11 +109,11 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 	});
 }
 
-std::shared_ptr<GameListView> ViewController::getSystemView(SystemData* system)
+std::shared_ptr<GameListView> ViewController::getGameListView(SystemData* system)
 {
 	//if we already made one, return that one
-	auto exists = mSystemViews.find(system);
-	if(exists != mSystemViews.end())
+	auto exists = mGameListViews.find(system);
+	if(exists != mGameListViews.end())
 		return exists->second;
 
 	//if we didn't, make it, remember it, and return it
@@ -146,12 +147,22 @@ std::shared_ptr<GameListView> ViewController::getSystemView(SystemData* system)
 
 	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
 	int id = std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
-	view->setPosition(id * (float)Renderer::getScreenWidth(), 0);
+	view->setPosition(id * (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight() * 2);
 
-	mSystemViews[system] = view;
+	mGameListViews[system] = view;
 	return view;
 }
 
+std::shared_ptr<SystemListView> ViewController::getSystemListView()
+{
+	if(!mSystemListView)
+	{
+		mSystemListView = std::shared_ptr<SystemListView>(new SystemListView(mWindow));
+		mSystemListView->setPosition(0, (float)Renderer::getScreenHeight());
+	}
+
+	return mSystemListView;
+}
 
 
 bool ViewController::input(InputConfig* config, Input input)
@@ -180,8 +191,11 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Vector3f viewStart = trans.inverse().translation();
 	Eigen::Vector3f viewEnd = trans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
 
-	// draw systems
-	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
+	// draw systemlist
+	mSystemListView->render(trans);
+
+	// draw gamelists
+	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
 		// clipping
 		Eigen::Vector3f guiStart = it->second->getPosition();

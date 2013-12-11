@@ -197,6 +197,8 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/DetailedGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GridGameListView.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/SystemListView.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/SystemView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/Animation.h
@@ -272,6 +274,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/DetailedGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/GridGameListView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/SystemListView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/SystemView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/AnimationController.cpp

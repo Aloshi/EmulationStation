@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameListView.h"
+#include "SystemListView.h"
 
 class SystemData;
 
@@ -10,9 +11,9 @@ public:
 	ViewController(Window* window);
 
 	// Navigation.
-	void goToNextSystem();
-	void goToPrevSystem();
-	void goToSystem(SystemData* system);
+	void goToNextGameList();
+	void goToPrevGameList();
+	void goToGameList(SystemData* system);
 	void goToSystemSelect();
 	
 	void onFileChanged(FileData* file, FileChangeType change);
@@ -29,14 +30,14 @@ public:
 	{
 		START_SCREEN,
 		SYSTEM_SELECT,
-		SYSTEM
+		GAME_LIST
 	};
 
 	struct State
 	{
 		ViewMode viewing;
 
-		inline SystemData* getSystem() const { assert(viewing == SYSTEM); return data.system; }
+		inline SystemData* getSystem() const { assert(viewing == GAME_LIST); return data.system; }
 
 	private:
 		friend ViewController;
@@ -50,11 +51,13 @@ public:
 
 private:
 	void playViewTransition();
-	std::shared_ptr<GameListView> getSystemView(SystemData* system);
-
+	std::shared_ptr<GameListView> getGameListView(SystemData* system);
+	std::shared_ptr<SystemListView> getSystemListView();
+	
 	std::shared_ptr<GuiComponent> mCurrentView;
-	std::map< SystemData*, std::shared_ptr<GameListView> > mSystemViews;
-
+	std::map< SystemData*, std::shared_ptr<GameListView> > mGameListViews;
+	std::shared_ptr<SystemListView> mSystemListView;
+	
 	Eigen::Affine3f mCamera;
 	float mFadeOpacity;
 

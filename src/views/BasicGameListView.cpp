@@ -169,12 +169,12 @@ bool BasicGameListView::input(InputConfig* config, Input input)
 		}else if(config->isMappedTo("right", input))
 		{
 			mList.stopScrolling();
-			mWindow->getViewController()->goToNextSystem();
+			mWindow->getViewController()->goToNextGameList();
 			return true;
 		}else if(config->isMappedTo("left", input))
 		{
 			mList.stopScrolling();
-			mWindow->getViewController()->goToPrevSystem();
+			mWindow->getViewController()->goToPrevGameList();
 			return true;
 		}
 	}
