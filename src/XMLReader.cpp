@@ -84,6 +84,12 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 			if(found)
 				return treeNode;
 
+			if(type == FOLDER)
+			{
+				LOG(LogWarning) << "gameList: folder doesn't already exist, won't create";
+				return NULL;
+			}
+
 			FileData* file = new FileData(type, path, system);
 			treeNode->addChild(file);
 			return file;
@@ -95,7 +101,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 			// if type is a folder it's gonna be empty, so don't bother
 			if(type == FOLDER)
 			{
-				LOG(LogWarning) << "folder doesn't already exist, won't create metadata for folder";
+				LOG(LogWarning) << "gameList: folder doesn't already exist, won't create";
 				return NULL;
 			}
 			
