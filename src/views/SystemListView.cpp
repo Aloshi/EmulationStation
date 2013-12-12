@@ -71,6 +71,7 @@ void SystemListView::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = mCamera * getTransform() * parentTrans;
 
+	// TODO: clipping
 	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
 	{
 		it->second->render(trans);
