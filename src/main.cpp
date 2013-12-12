@@ -131,10 +131,15 @@ int main(int argc, char* argv[])
 	atexit(&onExit);
 
 	Window window;
-	if(!scrape_cmdline && !window.init(width, height))
+	if(!scrape_cmdline)
 	{
-		LOG(LogError) << "Window failed to initialize!";
-		return 1;
+		if(!window.init(width, height))
+		{
+			LOG(LogError) << "Window failed to initialize!";
+			return 1;
+		}
+
+		window.renderLoadingScreen();
 	}
 
 	//try loading the system config file
@@ -159,6 +164,10 @@ int main(int argc, char* argv[])
 
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
+
+	// preload what we can right away instead of waiting for the user to select it
+	// this makes for no delays when accessing content, but a longer startup time
+	window.getViewController()->preload();
 
 	//choose which GUI to open depending on if an input configuration already exists
 	if(fs::exists(InputManager::getConfigPath()))

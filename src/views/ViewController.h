@@ -10,6 +10,10 @@ class ViewController : public GuiComponent
 public:
 	ViewController(Window* window);
 
+	// Try to completely populate the GameListView map.
+	// Caches things so there's no pauses during transitions.
+	void preload();
+
 	// Navigation.
 	void goToNextGameList();
 	void goToPrevGameList();

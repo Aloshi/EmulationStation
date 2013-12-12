@@ -19,7 +19,6 @@ void ViewController::goToSystemSelect()
 	mState.viewing = SYSTEM_SELECT;
 	mCurrentView = getSystemListView();
 	playViewTransition();
-	LOG(LogInfo) << "going to system select";
 }
 
 SystemData* getSystemCyclic(SystemData* from, bool reverse)
@@ -46,7 +45,7 @@ SystemData* getSystemCyclic(SystemData* from, bool reverse)
 
 void ViewController::goToNextGameList()
 {
-	assert(mState.viewing == SYSTEM);
+	assert(mState.viewing == GAME_LIST);
 
 	SystemData* system = mState.data.system;
 	if(system == NULL)
@@ -57,7 +56,7 @@ void ViewController::goToNextGameList()
 
 void ViewController::goToPrevGameList()
 {
-	assert(mState.viewing == SYSTEM);
+	assert(mState.viewing == GAME_LIST);
 
 	SystemData* system = mState.data.system;
 	if(system == NULL)
@@ -211,5 +210,13 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 	{
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
 		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | (unsigned char)(mFadeOpacity * 255));
+	}
+}
+
+void ViewController::preload()
+{
+	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	{
+		getGameListView(*it);
 	}
 }

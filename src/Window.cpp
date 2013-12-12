@@ -9,16 +9,17 @@
 #include "views/ViewController.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
-	mZoomFactor(1.0f), mCenterPoint(0, 0), mMatrix(Eigen::Affine3f::Identity()), mFadePercent(0.0f), mAllowSleep(true)
+	mAllowSleep(true)
 {
 	mInputManager = new InputManager(this);
 	mViewController = new ViewController(this);
 	pushGui(mViewController);
-	setCenterPoint(Eigen::Vector2f(Renderer::getScreenWidth() / 2, Renderer::getScreenHeight() / 2));
 }
 
 Window::~Window()
 {
+	delete mViewController; // this would get deleted down below, but just to be safe, delete it here
+
 	//delete all our GUIs
 	while(peekGui())
 		delete peekGui();
@@ -131,12 +132,11 @@ void Window::update(int deltaTime)
 
 void Window::render()
 {
+	Eigen::Affine3f transform = Eigen::Affine3f::Identity();
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
-		mGuiStack.at(i)->render(mMatrix);
+		mGuiStack.at(i)->render(transform);
 	}
-
-	postProcess();
 
 	if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
 	{
@@ -150,42 +150,6 @@ void Window::normalizeNextUpdate()
 	mNormalizeNextUpdate = true;
 }
 
-void Window::setZoomFactor(const float& zoom)
-{
-	mZoomFactor = zoom;
-	updateMatrix();
-}
-
-void Window::setCenterPoint(const Eigen::Vector2f& point)
-{
-	mCenterPoint = point;
-	updateMatrix();
-}
-
-void Window::updateMatrix()
-{
-	const float sw = Renderer::getScreenWidth() / mZoomFactor;
-	const float sh = Renderer::getScreenHeight() / mZoomFactor;
-
-	mMatrix = Eigen::Affine3f::Identity();
-	mMatrix = mMatrix.scale(Eigen::Vector3f(mZoomFactor, mZoomFactor, 1));
-	mMatrix = mMatrix.translate(Eigen::Vector3f(sw / 2 - mCenterPoint.x(), sh / 2 - mCenterPoint.y(), 0));
-}
-
-void Window::setFadePercent(const float& perc)
-{
-	mFadePercent = perc;
-}
-
-void Window::postProcess()
-{
-	if(mFadePercent > 0.0f)
-	{
-		Renderer::setMatrix(Eigen::Affine3f::Identity());
-		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | ((unsigned char)(mFadePercent * 255)));
-	}
-}
-
 bool Window::getAllowSleep()
 {
 	return mAllowSleep;
@@ -194,4 +158,12 @@ bool Window::getAllowSleep()
 void Window::setAllowSleep(bool sleep)
 {
 	mAllowSleep = sleep;
+}
+
+void Window::renderLoadingScreen()
+{
+	Renderer::setMatrix(Eigen::Affine3f::Identity());
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF);
+	mDefaultFonts.at(2)->drawCenteredText("LOADING", 0, (Renderer::getScreenHeight() - mDefaultFonts.at(2)->getHeight()) / 2.0f , 0xFFFFFFFF);
+	Renderer::swapBuffers();
 }
