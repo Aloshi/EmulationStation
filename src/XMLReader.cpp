@@ -5,82 +5,110 @@
 #include "Log.h"
 #include "Settings.h"
 
-//this is obviously an incredibly inefficient way to go about searching
-//but I don't think it'll matter too much with the size of most collections
-FileData* searchFolderByPath(FileData* folder, std::string const& path)
+namespace fs = boost::filesystem;
+
+// example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
+fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool& contains)
 {
-	for(auto it = folder->getChildren().begin(); it != folder->getChildren().end(); it++)
+	fs::path p = fs::canonical(path);
+	fs::path r = fs::canonical(relativeTo);
+
+	if(p.root_path() != r.root_path())
 	{
-		if((*it)->getType() == FOLDER)
-		{
-			FileData* result = searchFolderByPath(*it, path);
-			if(result)
-				return result;
-		}else{
-			if((*it)->getPath().generic_string() == path)
-				return *it;
-		}
+		contains = false;
+		return p;
 	}
 
-	return NULL;
+	fs::path result;
+
+	// find point of divergence
+	auto itr_path = p.begin();
+    auto itr_relative_to = r.begin();
+    while(*itr_path == *itr_relative_to && itr_path != p.end() && itr_relative_to != r.end())
+	{
+        ++itr_path;
+        ++itr_relative_to;
+    }
+
+	if(itr_relative_to != r.end())
+	{
+		contains = false;
+		return p;
+	}
+
+	while(itr_path != p.end())
+	{
+		if(*itr_path != fs::path("."))
+			result = result / *itr_path;
+
+		++itr_path;
+	}
+
+	contains = true;
+	return result;
 }
 
-FileData* createGameFromPath(std::string gameAbsPath, SystemData* system)
+FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& path, FileType type)
 {
-	std::string gamePath = gameAbsPath;
-	std::string sysPath = system->getStartPath();
-
-	//strip out the system path stuff so it's relative to the system root folder
-	unsigned int i = 0;
-	while(i < gamePath.length() && i < sysPath.length() && gamePath[i] == sysPath[i])
-		i++;
-
-	gamePath = gamePath.substr(i, gamePath.length() - i);
-
-
-	if(gamePath[0] != '/')
-		gamePath.insert(0, "/");
-
-
-	//make our way through the directory tree finding each folder in our path or creating it if it doesn't exist
-	FileData* folder = system->getRootFolder();
-
-	size_t separator = 0;
-	size_t nextSeparator = 0;
-	while(nextSeparator != std::string::npos)
+	// first, verify that path is within the system's root folder
+	FileData* root = system->getRootFolder();
+	
+	bool contains = false;
+	fs::path relative = removeCommonPath(path, root->getPath(), contains);
+	if(!contains)
 	{
-		//determine which chunk of the path we're testing right now
-		nextSeparator = gamePath.find('/', separator + 1);
-		if(nextSeparator == std::string::npos)
-			break;
+		LOG(LogError) << "File path \"" << path << "\" is outside system path \"" << system->getStartPath() << "\"";
+		return NULL;
+	}
 
-		std::string checkName = gamePath.substr(separator + 1, nextSeparator - separator - 1);
-		separator = nextSeparator;
-
-		//see if the folder already exists
-		bool foundFolder = false;
-		for(auto it = folder->getChildren().begin(); it != folder->getChildren().end(); it++)
+	auto path_it = relative.begin();
+	FileData* treeNode = root;
+	bool found = false;
+	while(path_it != relative.end())
+	{
+		const std::vector<FileData*>& children = treeNode->getChildren();
+		found = false;
+		for(auto child_it = children.begin(); child_it != children.end(); child_it++)
 		{
-			if((*it)->getType() == FOLDER && (*it)->getName() == checkName)
+			if((*child_it)->getPath().filename() == *path_it)
 			{
-				folder = *it;
-				foundFolder = true;
+				treeNode = *child_it;
+				found = true;
 				break;
 			}
 		}
 
-		//the folder didn't already exist, so create it
-		if(!foundFolder)
+		// this is the end
+		if(path_it == --relative.end())
 		{
-			FileData* newFolder = new FileData(FOLDER, folder->getPath() / checkName, system);
-			folder->addChild(newFolder);
-			folder = newFolder;
+			if(found)
+				return treeNode;
+
+			FileData* file = new FileData(type, path, system);
+			treeNode->addChild(file);
+			return file;
 		}
+
+		if(!found)
+		{
+			// don't create folders unless it's leading up to a game
+			// if type is a folder it's gonna be empty, so don't bother
+			if(type == FOLDER)
+			{
+				LOG(LogWarning) << "folder doesn't already exist, won't create metadata for folder";
+				return NULL;
+			}
+			
+			// create missing folder
+			FileData* folder = new FileData(FOLDER, treeNode->getPath().stem() / *path_it, system);
+			treeNode->addChild(folder);
+			treeNode = folder;
+		}
+
+		path_it++;
 	}
 
-	FileData* game = new FileData(GAME, gameAbsPath, system);
-	folder->addChild(game);
-	return game;
+	return NULL;
 }
 
 void parseGamelist(SystemData* system)
@@ -108,49 +136,36 @@ void parseGamelist(SystemData* system)
 		return;
 	}
 
-	for(pugi::xml_node gameNode = root.child("game"); gameNode; gameNode = gameNode.next_sibling("game"))
+	const char* tagList[2] = { "game", "folder" };
+	FileType typeList[2] = { GAME, FOLDER };
+	for(int i = 0; i < 2; i++)
 	{
-		pugi::xml_node pathNode = gameNode.child("path");
-		if(!pathNode)
+		const char* tag = tagList[i];
+		FileType type = typeList[i];
+		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
-			LOG(LogError) << "<game> node contains no <path> child!";
-			continue;
-		}
+			boost::filesystem::path path = boost::filesystem::path(fileNode.child("path").text().get());
+			
+			if(!boost::filesystem::exists(path))
+			{
+				LOG(LogWarning) << "File \"" << path << "\" does not exist! Ignoring.";
+				continue;
+			}
 
-		//convert path to generic directory seperators
-		boost::filesystem::path gamePath(pathNode.text().get());
-		std::string path = gamePath.generic_string();
-
-		//expand '.'
-		if(path[0] == '.')
-		{
-			path.erase(0, 1);
-			path.insert(0, boost::filesystem::path(xmlpath).parent_path().generic_string());
-		}
-
-		//expand '~'
-		if(path[0] == '~')
-		{
-			path.erase(0, 1);
-			path.insert(0, getHomePath());
-		}
-
-		if(boost::filesystem::exists(path))
-		{
-			FileData* game = searchFolderByPath(system->getRootFolder(), path);
-
-			if(game == NULL)
-				game = createGameFromPath(path, system);
+			FileData* file = findOrCreateFile(system, path, type);
+			if(!file)
+			{
+				LOG(LogError) << "Error finding/creating FileData for \"" << path << "\", skipping.";
+				continue;
+			}
 
 			//load the metadata
-			std::string defaultName = game->metadata.get("name");
-			game->metadata = MetaDataList::createFromXML(GAME_METADATA, gameNode);
+			std::string defaultName = file->metadata.get("name");
+			file->metadata = MetaDataList::createFromXML(GAME_METADATA, fileNode);
 
 			//make sure name gets set if one didn't exist
-			if(game->metadata.get("name").empty())
-				game->metadata.set("name", defaultName);
-		}else{
-			LOG(LogWarning) << "Game at \"" << path << "\" does not exist!";
+			if(file->metadata.get("name").empty())
+				file->metadata.set("name", defaultName);
 		}
 	}
 }
@@ -175,6 +190,27 @@ void addGameDataNode(pugi::xml_node& parent, const FileData* game, SystemData* s
 	}
 }
 
+void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* tag, SystemData* system)
+{
+	//create game and add to parent node
+	pugi::xml_node newNode = parent.append_child(tag);
+
+	//write metadata
+	file->metadata.appendToXML(newNode, true);
+	
+	if(newNode.children().begin() == newNode.child("name") //first element is name
+		&& ++newNode.children().begin() == newNode.children().end() //theres only one element
+		&& newNode.child("name").text().get() == getCleanFileName(file->getPath())) //the name is the default
+	{
+		//if the only info is the default name, don't bother with this node
+		//delete it and ultimately do nothing
+		parent.remove_child(newNode);
+	}else{
+		//there's something useful in there so we'll keep the node, add the path
+		newNode.prepend_child("path").text().set(file->getPath().generic_string().c_str());
+	}
+}
+
 void updateGamelist(SystemData* system)
 {
 	//We do this by reading the XML again, adding changes and then writing it back,
@@ -192,9 +228,8 @@ void updateGamelist(SystemData* system)
 	if(boost::filesystem::exists(xmlpath))
 	{
 		//parse an existing file first
-		LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\" before writing...";
-
 		pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
+		
 		if(!result)
 		{
 			LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
@@ -222,40 +257,37 @@ void updateGamelist(SystemData* system)
 	if (rootFolder != nullptr)
 	{
 		//get only files, no folders
-		std::vector<FileData*> files = rootFolder->getFilesRecursive(GAME);
+		std::vector<FileData*> files = rootFolder->getFilesRecursive(GAME | FOLDER);
 		//iterate through all files, checking if they're already in the XML
 		std::vector<FileData*>::const_iterator fit = files.cbegin();
 		while(fit != files.cend())
 		{
-			if((*fit)->getType() == GAME)
-			{
-				//worked. check if this games' path can be found somewhere in the XML
-				for(pugi::xml_node gameNode = root.child("game"); gameNode; gameNode = gameNode.next_sibling("game"))
-				{
-					//get path from game node
-					pugi::xml_node pathNode = gameNode.child("path");
-					if(!pathNode)
-					{
-						LOG(LogError) << "<game> node contains no <path> child!";
-						continue;
-					}
+			const char* tag = ((*fit)->getType() == GAME) ? "game" : "folder";
 
-					//check paths. use the same directory separators
-					boost::filesystem::path nodePath(pathNode.text().get());
-					boost::filesystem::path gamePath((*fit)->getPath());
-					if (nodePath.generic_string() == gamePath.generic_string())
-					{
-						//found the game. remove it. it will be added again later with updated values
-						root.remove_child(gameNode);
-						//break node search loop
-						break;
-					}
+			// check if the file already exists in the XML
+			// if it does, remove it before adding
+			for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
+			{
+				pugi::xml_node pathNode = fileNode.child("path");
+				if(!pathNode)
+				{
+					LOG(LogError) << "<" << tag << "> node contains no <path> child!";
+					continue;
 				}
 
-				//either the game content was removed, because it needs to be updated,
-				//or didn't exist in the first place, so just add it
-				addGameDataNode(root, *fit, system);
+				boost::filesystem::path nodePath(pathNode.text().get());
+				boost::filesystem::path gamePath((*fit)->getPath());
+				if(fs::canonical(nodePath) == fs::canonical(gamePath))
+				{
+					// found it
+					root.remove_child(fileNode);
+					break;
+				}
 			}
+
+			// it was either removed or never existed to begin with; either way, we can add it now
+			addFileDataNode(root, *fit, tag, system);
+
 			++fit;
 		}
 		//now write the file
