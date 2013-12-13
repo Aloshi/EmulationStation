@@ -7,11 +7,19 @@
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
 	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity())
 {
+	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
+		mAnimationMap[i] = NULL;
 }
 
 GuiComponent::~GuiComponent()
 {
 	mWindow->removeGui(this);
+
+	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
+	{
+		if(mAnimationMap[i])
+			delete mAnimationMap[i];
+	}
 
 	if(mParent)
 		mParent->removeChild(this);
@@ -33,8 +41,19 @@ bool GuiComponent::input(InputConfig* config, Input input)
 
 void GuiComponent::update(int deltaTime)
 {
-	if(mAnimationController)
-		mAnimationController->update(deltaTime);
+	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
+	{
+		AnimationController* anim = mAnimationMap[i];
+		if(anim)
+		{
+			bool done = anim->update(deltaTime);
+			if(done)
+			{
+				mAnimationMap[i] = NULL;
+				delete anim;
+			}
+		}
+	}
 	
 	for(unsigned int i = 0; i < getChildCount(); i++)
 	{
@@ -186,12 +205,23 @@ void GuiComponent::textInput(const char* text)
 	}
 }
 
-void GuiComponent::setAnimation(Animation* anim, std::function<void()> finishedCallback, bool reverse)
+void GuiComponent::setAnimation(Animation* anim, std::function<void()> finishedCallback, bool reverse, unsigned char slot)
 {
-	mAnimationController = std::shared_ptr<AnimationController>(new AnimationController(anim, finishedCallback, reverse));
+	assert(slot < MAX_ANIMATIONS);
+
+	AnimationController* oldAnim = mAnimationMap[slot];
+	mAnimationMap[slot] = new AnimationController(anim, finishedCallback, reverse);
+
+	if(oldAnim)
+		delete oldAnim;
 }
 
-void GuiComponent::stopAnimation()
+void GuiComponent::stopAnimation(unsigned char slot)
 {
-	mAnimationController.reset();
+	assert(slot < MAX_ANIMATIONS);
+	if(mAnimationMap[slot])
+	{
+		delete mAnimationMap[slot];
+		mAnimationMap[slot] = NULL;
+	}
 }

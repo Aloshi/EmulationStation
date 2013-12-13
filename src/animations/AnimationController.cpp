@@ -13,7 +13,7 @@ AnimationController::~AnimationController()
 	delete mAnimation;
 }
 
-void AnimationController::update(int deltaTime)
+bool AnimationController::update(int deltaTime)
 {
 	mTime += deltaTime;
 	float t = (float)mTime / mAnimation->getDuration();
@@ -26,13 +26,7 @@ void AnimationController::update(int deltaTime)
 	mAnimation->apply(mReverse ? 1.0f - t : t);
 
 	if(t == 1.0f)
-	{
-		if(mFinishedCallback)
-		{
-			// in case mFinishedCallback causes us to be deleted, use a copy
-			auto copy = mFinishedCallback;
-			mFinishedCallback = nullptr;
-			copy();
-		}
-	}
+		return true;
+
+	return false;
 }

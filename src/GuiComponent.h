@@ -52,8 +52,8 @@ public:
 	GuiComponent* getChild(unsigned int i) const;
 
 	// animation will be automatically deleted when it completes or is stopped.
-	void setAnimation(Animation* animation, std::function<void()> finishedCallback = nullptr, bool reverse = false);
-	void stopAnimation();
+	void setAnimation(Animation* animation, std::function<void()> finishedCallback = nullptr, bool reverse = false, unsigned char slot = 0);
+	void stopAnimation(unsigned char slot);
 
 	virtual unsigned char getOpacity() const;
 	virtual void setOpacity(unsigned char opacity);
@@ -78,9 +78,12 @@ protected:
 	Eigen::Vector3f mPosition;
 	Eigen::Vector2f mSize;
 
+public:
+	const static unsigned char MAX_ANIMATIONS = 4;
+
 private:
 	Eigen::Affine3f mTransform; //Don't access this directly! Use getTransform()!
-	std::shared_ptr<AnimationController> mAnimationController;
+	AnimationController* mAnimationMap[MAX_ANIMATIONS];
 };
 
 #endif

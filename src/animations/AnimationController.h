@@ -12,7 +12,8 @@ public:
 	AnimationController(Animation* anim, std::function<void()> finishedCallback = nullptr, bool reverse = false);
 	virtual ~AnimationController();
 
-	void update(int deltaTime);
+	// Returns true if the animation is complete.
+	bool update(int deltaTime);
 
 private:
 	Animation* mAnimation;

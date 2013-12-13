@@ -7,10 +7,13 @@
 #include "GridGameListView.h"
 #include "../animations/LaunchAnimation.h"
 #include "../animations/MoveCameraAnimation.h"
+#include "../animations/LambdaAnimation.h"
 
 ViewController::ViewController(Window* window)
-	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0)
+	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(1)
 {
+	// slot 1 so the fade carries over
+	setAnimation(new LambdaAnimation([&] (float t) { mFadeOpacity = lerp<float>(1.0f, 0.0f, t); }, 900), nullptr, false, 1);
 	mState.viewing = START_SCREEN;
 }
 
@@ -95,11 +98,13 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 		return;
 	}
 
-	
 	game->getSystem()->getTheme()->playSound("gameSelectSound");
 
 	Eigen::Affine3f origCamera = mCamera;
+	origCamera.translation() = -mCurrentView->getPosition();
+
 	center += mCurrentView->getPosition();
+	stopAnimation(1); // make sure the fade in isn't still playing
 	setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), [this, origCamera, center, game] 
 	{
 		game->getSystem()->launchGame(mWindow, game);

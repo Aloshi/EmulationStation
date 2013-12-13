@@ -182,7 +182,7 @@ int main(int argc, char* argv[])
 
 	bool sleeping = false;
 	unsigned int timeSinceLastEvent = 0;
-	int lastTime = 0;
+	int lastTime = SDL_GetTicks();
 	bool running = true;
 
 	while(running)
@@ -230,8 +230,8 @@ int main(int argc, char* argv[])
 			deltaTime = 1000;
 
 		window.update(deltaTime);
-		Renderer::swapBuffers(); //swap here so we can read the last screen state during updates (see ImageComponent::copyScreen())
 		window.render();
+		Renderer::swapBuffers();
 
 		//sleep if we're past our threshold
 		//sleeping entails setting a flag to start skipping frames
