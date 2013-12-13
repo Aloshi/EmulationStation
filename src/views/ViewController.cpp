@@ -10,7 +10,7 @@
 #include "../animations/LambdaAnimation.h"
 
 ViewController::ViewController(Window* window)
-	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(1)
+	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(1), mLockInput(false)
 {
 	// slot 1 so the fade carries over
 	setAnimation(new LambdaAnimation([&] (float t) { mFadeOpacity = lerp<float>(1.0f, 0.0f, t); }, 900), nullptr, false, 1);
@@ -105,10 +105,12 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 
 	center += mCurrentView->getPosition();
 	stopAnimation(1); // make sure the fade in isn't still playing
+	mLockInput = true;
 	setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), [this, origCamera, center, game] 
 	{
 		game->getSystem()->launchGame(mWindow, game);
 		mCamera = origCamera;
+		mLockInput = false;
 		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), nullptr, true);
 	});
 }
@@ -171,6 +173,9 @@ std::shared_ptr<SystemListView> ViewController::getSystemListView()
 
 bool ViewController::input(InputConfig* config, Input input)
 {
+	if(mLockInput)
+		return true;
+
 	if(mCurrentView)
 		return mCurrentView->input(config, input);
 

@@ -64,6 +64,7 @@ private:
 	
 	Eigen::Affine3f mCamera;
 	float mFadeOpacity;
+	bool mLockInput;
 
 	State mState;
 };
