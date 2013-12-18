@@ -110,6 +110,8 @@ bool verifyHomeFolderExists()
 //called on exit, assuming we get far enough to have the log initialized
 void onExit()
 {
+	Renderer::deinit();
+
 	Log::close();
 
 	#ifdef _RPI_
