@@ -231,8 +231,7 @@ int main(int argc, char* argv[])
 
 		window.update(deltaTime);
 		window.render();
-		Renderer::swapBuffers();
-
+		
 		//sleep if we're past our threshold
 		//sleeping entails setting a flag to start skipping frames
 		//and initially drawing a black semi-transparent rect to dim the screen
@@ -242,8 +241,9 @@ int main(int argc, char* argv[])
 			sleeping = true;
 			timeSinceLastEvent = 0;
 			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000A0);
-			Renderer::swapBuffers();
 		}
+
+		Renderer::swapBuffers();
 
 		Log::flush();
 	}
