@@ -43,39 +43,42 @@ void GridGameListView::setCursor(FileData* file)
 
 bool GridGameListView::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("a", input))
+	if(input.value != 0)
 	{
-		if(mGrid.getList().size() > 0)
+		if(config->isMappedTo("a", input))
 		{
-			FileData* cursor = getCursor();
-			if(cursor->getType() == GAME)
+			if(mGrid.getList().size() > 0)
 			{
-				mWindow->getViewController()->launch(cursor);
-			}else{
-				// it's a folder
-				if(cursor->getChildren().size() > 0)
+				FileData* cursor = getCursor();
+				if(cursor->getType() == GAME)
 				{
-					mCursorStack.push(cursor);
-					populateList(cursor);
+					mWindow->getViewController()->launch(cursor);
+				}else{
+					// it's a folder
+					if(cursor->getChildren().size() > 0)
+					{
+						mCursorStack.push(cursor);
+						populateList(cursor);
+					}
 				}
-			}
 				
+				return true;
+			}
+		}else if(config->isMappedTo("b", input))
+		{
+			if(mCursorStack.size())
+			{
+				populateList(mCursorStack.top()->getParent());
+				mGrid.setCursor(mCursorStack.top());
+				mCursorStack.pop();
+				mTheme->playSound("backSound");
+			}else{
+				mGrid.stopScrolling();
+				mWindow->getViewController()->goToSystemSelect();
+			}
+
 			return true;
 		}
-	}else if(config->isMappedTo("b", input))
-	{
-		if(mCursorStack.size())
-		{
-			populateList(mCursorStack.top()->getParent());
-			mGrid.setCursor(mCursorStack.top());
-			mCursorStack.pop();
-			mTheme->playSound("backSound");
-		}else{
-			mGrid.stopScrolling();
-			mWindow->getViewController()->goToSystemSelect();
-		}
-
-		return true;
 	}
 	return GameListView::input(config, input);
 }
