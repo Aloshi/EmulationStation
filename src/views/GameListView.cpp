@@ -23,12 +23,6 @@ bool GameListView::input(InputConfig* config, Input input)
 		}));
 		mTheme->playSound("menuOpenSound");
 		return true;
-	}else if(config->isMappedTo("menu", input) && input.value != 0)
-	{
-		// open menu
-		mWindow->pushGui(new GuiMenu(mWindow));
-		mTheme->playSound("menuOpenSound");
-		return true;
 	}else if(config->isMappedTo("select", input) && input.value != 0)
 	{
 		// open fast select

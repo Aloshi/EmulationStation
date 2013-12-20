@@ -5,6 +5,7 @@
 #include "BasicGameListView.h"
 #include "DetailedGameListView.h"
 #include "GridGameListView.h"
+#include "../components/GuiMenu.h"
 #include "../animations/LaunchAnimation.h"
 #include "../animations/MoveCameraAnimation.h"
 #include "../animations/LambdaAnimation.h"
@@ -175,6 +176,15 @@ bool ViewController::input(InputConfig* config, Input input)
 {
 	if(mLockInput)
 		return true;
+
+	// open menu
+	if(config->isMappedTo("menu", input) && input.value != 0)
+	{
+		// open menu
+		mWindow->pushGui(new GuiMenu(mWindow));
+		ThemeData().playSound("menuOpenSound");
+		return true;
+	}
 
 	if(mCurrentView)
 		return mCurrentView->input(config, input);
