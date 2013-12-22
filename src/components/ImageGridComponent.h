@@ -24,7 +24,7 @@ public:
 	void clear();
 
 	void setCursor(const T& select);
-	void setCursor(typename const std::vector<Entry>::const_iterator& it);
+	void setCursor(typename std::vector<Entry>::const_iterator& it);
 
 	inline const T& getSelected() const { return mEntries.at(mCursor).object; }
 	inline const std::vector<Entry>& getList() const { return mEntries; }
@@ -173,7 +173,7 @@ void ImageGridComponent<T>::setCursor(const T& obj)
 }
 
 template<typename T>
-void ImageGridComponent<T>::setCursor(typename const std::vector<Entry>::const_iterator& it)
+void ImageGridComponent<T>::setCursor(typename std::vector<Entry>::const_iterator& it)
 {
 	assert(it != mEntries.end());
 	mCursor = it - mEntries.begin();
