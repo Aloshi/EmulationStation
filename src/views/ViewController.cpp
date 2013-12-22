@@ -2,9 +2,9 @@
 #include "../Log.h"
 #include "../SystemData.h"
 
-#include "BasicGameListView.h"
-#include "DetailedGameListView.h"
-#include "GridGameListView.h"
+#include "gamelist/BasicGameListView.h"
+#include "gamelist/DetailedGameListView.h"
+#include "gamelist/GridGameListView.h"
 #include "../components/GuiMenu.h"
 #include "../animations/LaunchAnimation.h"
 #include "../animations/MoveCameraAnimation.h"
@@ -116,7 +116,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 	});
 }
 
-std::shared_ptr<GameListView> ViewController::getGameListView(SystemData* system)
+std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* system)
 {
 	//if we already made one, return that one
 	auto exists = mGameListViews.find(system);
@@ -124,7 +124,7 @@ std::shared_ptr<GameListView> ViewController::getGameListView(SystemData* system
 		return exists->second;
 
 	//if we didn't, make it, remember it, and return it
-	std::shared_ptr<GameListView> view;
+	std::shared_ptr<IGameListView> view;
 
 	if(system != NULL)
 	{
@@ -141,11 +141,11 @@ std::shared_ptr<GameListView> ViewController::getGameListView(SystemData* system
 		}
 		
 		if(detailed)
-			view = std::shared_ptr<GameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
 		else
-			view = std::shared_ptr<GameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
+			view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 		
-		//view = std::shared_ptr<GameListView>(new GridGameListView(mWindow, system->getRootFolder()));
+		view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
 
 		view->setTheme(system->getTheme());
 	}else{
@@ -238,5 +238,23 @@ void ViewController::preload()
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
 		getGameListView(*it);
+	}
+}
+
+void ViewController::reloadGameListView(IGameListView* view)
+{
+	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	{
+		if(it->second.get() == view)
+		{
+			SystemData* system = it->first;
+			FileData* cursor = view->getCursor();
+			mGameListViews.erase(it);
+
+			std::shared_ptr<IGameListView> newView = getGameListView(system);
+			newView->setCursor(cursor);
+			mCurrentView = newView;
+			break;
+		}
 	}
 }

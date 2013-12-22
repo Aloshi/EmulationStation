@@ -1,4 +1,6 @@
 #include "DetailedGameListView.h"
+#include "../../Window.h"
+#include "../ViewController.h"
 
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root) : 
 	BasicGameListView(window, root), 
@@ -75,10 +77,11 @@ void DetailedGameListView::updateInfoPanel()
 	}
 }
 
-void DetailedGameListView::onFileChanged(FileData* file, FileChangeType type)
+void DetailedGameListView::launch(FileData* game)
 {
-	BasicGameListView::onFileChanged(file, type);
+	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
+	if(mImage.hasImage())
+		target = mImage.getPosition();
 
-	if(type == FILE_METADATA_CHANGED && file == getCursor())
-		updateInfoPanel();
+	mWindow->getViewController()->launch(game, target);
 }

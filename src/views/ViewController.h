@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameListView.h"
+#include "gamelist/IGameListView.h"
 #include "SystemListView.h"
 
 class SystemData;
@@ -13,6 +13,10 @@ public:
 	// Try to completely populate the GameListView map.
 	// Caches things so there's no pauses during transitions.
 	void preload();
+
+	// If a basic view detected a metadata change, it can request to recreate
+	// the current gamelist view (as it may change to be detailed).
+	void reloadGameListView(IGameListView* gamelist);
 
 	// Navigation.
 	void goToNextGameList();
@@ -55,11 +59,11 @@ public:
 
 private:
 	void playViewTransition();
-	std::shared_ptr<GameListView> getGameListView(SystemData* system);
+	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
 	std::shared_ptr<SystemListView> getSystemListView();
 	
 	std::shared_ptr<GuiComponent> mCurrentView;
-	std::map< SystemData*, std::shared_ptr<GameListView> > mGameListViews;
+	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
 	std::shared_ptr<SystemListView> mSystemListView;
 	
 	Eigen::Affine3f mCamera;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "../views/GameListView.h"
+#include "../views/gamelist/IGameListView.h"
 
 #include "NinePatchComponent.h"
 #include "TextComponent.h"
@@ -9,7 +9,7 @@
 class GuiFastSelect : public GuiComponent
 {
 public:
-	GuiFastSelect(Window* window, GameListView* gamelist);
+	GuiFastSelect(Window* window, IGameListView* gamelist);
 
 	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
@@ -31,5 +31,5 @@ private:
 	TextComponent mSortText;
 	TextComponent mLetterText;
 
-	GameListView* mGameList;
+	IGameListView* mGameList;
 };

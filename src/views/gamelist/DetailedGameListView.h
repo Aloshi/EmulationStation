@@ -1,9 +1,7 @@
 #pragma once
 
 #include "BasicGameListView.h"
-#include "../components/ImageComponent.h"
-#include "../components/TextComponent.h"
-#include "../components/ScrollableContainer.h"
+#include "../../components/ScrollableContainer.h"
 
 class DetailedGameListView : public BasicGameListView
 {
@@ -12,7 +10,8 @@ public:
 
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
-	virtual void onFileChanged(FileData* file, FileChangeType change);
+protected:
+	virtual void launch(FileData* game) override;
 
 private:
 	void updateInfoPanel();
@@ -24,4 +23,3 @@ private:
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;
 };
-

@@ -49,6 +49,7 @@ public:
 	inline const std::vector<ListRow>& getList() const { return mRowVector; }
 
 	void setCursor(const T& select);
+	void setCursor(typename const std::vector<ListRow>::const_iterator& it);
 
 	void stopScrolling();
 	inline bool isScrolling() const { return mScrollDir != 0; }
@@ -373,6 +374,15 @@ void TextListComponent<T>::setCursor(const T& obj)
 	}
 
 	LOG(LogError) << "Tried to set cursor to object we couldn't find";
+}
+
+
+template <typename T>
+void TextListComponent<T>::setCursor(typename const std::vector<ListRow>::const_iterator& it)
+{
+	assert(it != mRowVector.end());
+	mCursor = it - mRowVector.begin();
+	onCursorChanged(CURSOR_STOPPED);
 }
 
 template <typename T>

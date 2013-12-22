@@ -1,24 +1,24 @@
 #pragma once
 
-#include "../FileData.h"
-#include "../Renderer.h"
+#include "../../FileData.h"
+#include "../../Renderer.h"
 
 class Window;
 class GuiComponent;
 class FileData;
 class ThemeData;
 
-//GameListView needs to know:
+//IGameListView needs to know:
 //  What theme data to use
 //  The root FileData for the tree it should explore
 
-class GameListView : public GuiComponent
+class IGameListView : public GuiComponent
 {
 public:
-	GameListView(Window* window, FileData* root) : GuiComponent(window), mRoot(root)
+	IGameListView(Window* window, FileData* root) : GuiComponent(window), mRoot(root)
 		{ setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight()); }
 
-	virtual ~GameListView() {}
+	virtual ~IGameListView() {}
 
 	// Called when a new file is added, a file is removed, a file's metadata changes, or a file's children are sorted.
 	// NOTE: FILE_SORTED is only reported for the topmost FileData, where the sort started.
