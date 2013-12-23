@@ -240,6 +240,7 @@ int main(int argc, char* argv[])
 		{
 			sleeping = true;
 			timeSinceLastEvent = 0;
+			Renderer::setMatrix(Eigen::Affine3f::Identity());
 			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000A0);
 		}
 
