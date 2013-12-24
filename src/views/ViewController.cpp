@@ -145,7 +145,8 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 		else
 			view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 		
-		view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
+		// uncomment for experimental "image grid" view
+		//view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
 
 		view->setTheme(system->getTheme());
 	}else{
