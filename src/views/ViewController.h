@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gamelist/IGameListView.h"
-#include "SystemListView.h"
+#include "SystemView.h"
 
 class SystemData;
 
@@ -22,8 +22,9 @@ public:
 	void goToNextGameList();
 	void goToPrevGameList();
 	void goToGameList(SystemData* system);
-	void goToSystemSelect();
-	
+	void goToSystemView(SystemData* system);
+	void goToStart();
+
 	void onFileChanged(FileData* file, FileChangeType change);
 
 	// Plays a nice launch effect and launches the game at the end of it.
@@ -36,6 +37,7 @@ public:
 
 	enum ViewMode
 	{
+		NOTHING,
 		START_SCREEN,
 		SYSTEM_SELECT,
 		GAME_LIST
@@ -60,11 +62,11 @@ public:
 private:
 	void playViewTransition();
 	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
-	std::shared_ptr<SystemListView> getSystemListView();
+	std::shared_ptr<SystemView> getSystemView(SystemData* system);
 	
 	std::shared_ptr<GuiComponent> mCurrentView;
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
-	std::shared_ptr<SystemListView> mSystemListView;
+	std::map< SystemData*, std::shared_ptr<SystemView> > mSystemViews;
 	
 	Eigen::Affine3f mCamera;
 	float mFadeOpacity;

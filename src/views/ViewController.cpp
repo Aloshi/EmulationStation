@@ -15,58 +15,39 @@ ViewController::ViewController(Window* window)
 {
 	// slot 1 so the fade carries over
 	setAnimation(new LambdaAnimation([&] (float t) { mFadeOpacity = lerp<float>(1.0f, 0.0f, t); }, 900), nullptr, false, 1);
-	mState.viewing = START_SCREEN;
+	mState.viewing = NOTHING;
 }
 
-void ViewController::goToSystemSelect()
+void ViewController::goToStart()
+{
+	// TODO
+	/* mState.viewing = START_SCREEN;
+	mCurrentView.reset();
+	playViewTransition(); */
+	goToSystemView(SystemData::sSystemVector.at(0));
+}
+
+void ViewController::goToSystemView(SystemData* system)
 {
 	mState.viewing = SYSTEM_SELECT;
-	mCurrentView = getSystemListView();
+	mCurrentView = getSystemView(system);
 	playViewTransition();
-}
-
-SystemData* getSystemCyclic(SystemData* from, bool reverse)
-{
-	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
-
-	if(reverse)
-	{
-		auto it = std::find(sysVec.rbegin(), sysVec.rend(), from);
-		assert(it != sysVec.rend());
-		it++;
-		if(it == sysVec.rend())
-			it = sysVec.rbegin();
-		return *it;
-	}else{
-		auto it = std::find(sysVec.begin(), sysVec.end(), from);
-		assert(it != sysVec.end());
-		it++;
-		if(it == sysVec.end())
-			it = sysVec.begin();
-		return *it;
-	}
 }
 
 void ViewController::goToNextGameList()
 {
 	assert(mState.viewing == GAME_LIST);
-
-	SystemData* system = mState.data.system;
-	if(system == NULL)
-		return;
-	
-	goToGameList(getSystemCyclic(system, false));
+	SystemData* system = getState().getSystem();
+	assert(system);
+	goToGameList(system->getNext());
 }
 
 void ViewController::goToPrevGameList()
 {
 	assert(mState.viewing == GAME_LIST);
-
-	SystemData* system = mState.data.system;
-	if(system == NULL)
-		return;
-	
-	goToGameList(getSystemCyclic(system, true));
+	SystemData* system = getState().getSystem();
+	assert(system);
+	goToGameList(system->getPrev());
 }
 
 void ViewController::goToGameList(SystemData* system)
@@ -80,7 +61,10 @@ void ViewController::goToGameList(SystemData* system)
 
 void ViewController::playViewTransition()
 {
-	setAnimation(new MoveCameraAnimation(mCamera, mCurrentView->getPosition()));
+	Eigen::Vector3f target(Eigen::Vector3f::Identity());
+	if(mCurrentView) 
+		target = mCurrentView->getPosition();
+	setAnimation(new MoveCameraAnimation(mCamera, target));
 }
 
 void ViewController::onFileChanged(FileData* file, FileChangeType change)
@@ -126,32 +110,27 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	//if we didn't, make it, remember it, and return it
 	std::shared_ptr<IGameListView> view;
 
-	if(system != NULL)
+	//decide type
+	bool detailed = false;
+	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
+	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		//decide type
-		bool detailed = false;
-		std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
-		for(auto it = files.begin(); it != files.end(); it++)
+		if(!(*it)->getThumbnailPath().empty())
 		{
-			if(!(*it)->getThumbnailPath().empty())
-			{
-				detailed = true;
-				break;
-			}
+			detailed = true;
+			break;
 		}
-		
-		if(detailed)
-			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
-		else
-			view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
-		
-		// uncomment for experimental "image grid" view
-		//view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
-
-		view->setTheme(system->getTheme());
-	}else{
-		LOG(LogError) << "null system"; // should eventually return an "all games" gamelist view
 	}
+		
+	if(detailed)
+		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+	else
+		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
+		
+	// uncomment for experimental "image grid" view
+	//view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
+
+	view->setTheme(system->getTheme());
 
 	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
 	int id = std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
@@ -161,15 +140,18 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	return view;
 }
 
-std::shared_ptr<SystemListView> ViewController::getSystemListView()
+std::shared_ptr<SystemView> ViewController::getSystemView(SystemData* system)
 {
-	if(!mSystemListView)
-	{
-		mSystemListView = std::shared_ptr<SystemListView>(new SystemListView(mWindow));
-		mSystemListView->setPosition(0, (float)Renderer::getScreenHeight());
-	}
+	//if we already made one, return that one
+	auto exists = mSystemViews.find(system);
+	if(exists != mSystemViews.end())
+		return exists->second;
 
-	return mSystemListView;
+	//if we didn't, make it, remember it, and return it
+	std::shared_ptr<SystemView> view = std::shared_ptr<SystemView>(new SystemView(mWindow, system));
+	view->setPosition((system->getIterator() - SystemData::sSystemVector.begin()) * (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	mSystemViews[system] = view;
+	return view;
 }
 
 
@@ -211,8 +193,12 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Vector3f viewStart = trans.inverse().translation();
 	Eigen::Vector3f viewEnd = trans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
 
-	// draw systemlist
-	if(mSystemListView) mSystemListView->render(trans);
+	// draw systemviews
+	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
+	{
+		// should do clipping
+		it->second->render(trans);
+	}
 
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
@@ -238,6 +224,7 @@ void ViewController::preload()
 {
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
+		getSystemView(*it);
 		getGameListView(*it);
 	}
 }
@@ -248,13 +235,17 @@ void ViewController::reloadGameListView(IGameListView* view)
 	{
 		if(it->second.get() == view)
 		{
+			bool isCurrent = (mCurrentView == it->second);
 			SystemData* system = it->first;
 			FileData* cursor = view->getCursor();
 			mGameListViews.erase(it);
 
 			std::shared_ptr<IGameListView> newView = getGameListView(system);
 			newView->setCursor(cursor);
-			mCurrentView = newView;
+
+			if(isCurrent)
+				mCurrentView = newView;
+
 			break;
 		}
 	}

@@ -14,6 +14,8 @@ public:
 
 	void updateData();
 
+	bool input(InputConfig* config, Input input) override;
+
 private:
 	SystemData* mSystem;
 

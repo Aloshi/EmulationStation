@@ -39,6 +39,25 @@ public:
 
 	static std::vector<SystemData*> sSystemVector;
 
+	inline std::vector<SystemData*>::const_iterator getIterator() const { return std::find(sSystemVector.begin(), sSystemVector.end(), this); };
+	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.rbegin(), sSystemVector.rend(), this); };
+	
+	inline SystemData* getNext() const
+	{
+		auto it = getIterator();
+		it++;
+		if(it == sSystemVector.end()) it = sSystemVector.begin();
+		return *it;
+	}
+
+	inline SystemData* getPrev() const
+	{
+		auto it = getRevIterator();
+		it++;
+		if(it == sSystemVector.rend()) it = sSystemVector.rbegin();
+		return *it;
+	}
+
 private:
 	std::string mName;
 	std::string mFullName;

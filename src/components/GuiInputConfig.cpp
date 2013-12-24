@@ -38,7 +38,7 @@ bool GuiInputConfig::input(InputConfig* config, Input input)
 				mWindow->pushGui(new GuiInputConfig(mWindow, mWindow->getInputManager()->getInputConfigByPlayer(mTargetConfig->getPlayerNum() + 1)));
 			}else{
 				mWindow->getInputManager()->writeConfig();
-				mWindow->getViewController()->goToSystemSelect();
+				mWindow->getViewController()->goToStart();
 			}
 			delete this;
 			return true;

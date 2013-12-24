@@ -172,7 +172,7 @@ int main(int argc, char* argv[])
 	//choose which GUI to open depending on if an input configuration already exists
 	if(fs::exists(InputManager::getConfigPath()))
 	{
-		window.getViewController()->goToSystemSelect();
+		window.getViewController()->goToStart();
 	}else{
 		window.pushGui(new GuiDetectDevice(&window));
 	}

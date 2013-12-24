@@ -2,6 +2,8 @@
 #include "../SystemData.h"
 #include "../Renderer.h"
 #include "../Log.h"
+#include "../Window.h"
+#include "ViewController.h"
 
 SystemView::SystemView(Window* window, SystemData* system) : GuiComponent(window), 
 	mSystem(system),
@@ -46,4 +48,28 @@ void SystemView::updateData()
 	}
 
 	mImage.setImage(mSystem->getTheme()->getImage("systemImage").getTexture());
+}
+
+bool SystemView::input(InputConfig* config, Input input)
+{
+	if(input.value != 0)
+	{
+		if(config->isMappedTo("left", input))
+		{
+			mWindow->getViewController()->goToSystemView(mSystem->getPrev());
+			return true;
+		}
+		if(config->isMappedTo("right", input))
+		{
+			mWindow->getViewController()->goToSystemView(mSystem->getNext());
+			return true;
+		}
+		if(config->isMappedTo("a", input))
+		{
+			mWindow->getViewController()->goToGameList(mSystem);
+			return true;
+		}
+	}
+
+	return GuiComponent::input(config, input);
 }

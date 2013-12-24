@@ -80,7 +80,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				getTheme()->playSound("backSound");
 			}else{
 				onFocusLost();
-				mWindow->getViewController()->goToSystemSelect();
+				mWindow->getViewController()->goToSystemView(getCursor()->getSystem());
 			}
 
 			return true;
