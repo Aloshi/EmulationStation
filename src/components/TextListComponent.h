@@ -13,13 +13,6 @@
 #include "../ThemeData.h"
 #include <functional>
 
-#define THEME_FONT "listFont"
-#define THEME_SELECTOR_COLOR "listSelectorColor"
-#define THEME_HIGHLIGHTED_COLOR "listSelectedColor"
-#define THEME_SCROLL_SOUND "listScrollSound"
-static const int THEME_COLOR_ID_COUNT = 2;
-static const char* const THEME_ENTRY_COLOR[THEME_COLOR_ID_COUNT] = { "listPrimaryColor", "listSecondaryColor" };
-
 //A graphical list. Supports multiple colors for rows and scrolling.
 template <typename T>
 class TextListComponent : public GuiComponent
@@ -54,15 +47,27 @@ public:
 	void stopScrolling();
 	inline bool isScrolling() const { return mScrollDir != 0; }
 
-	void setTheme(const std::shared_ptr<ThemeData>& theme);
 	inline void setCentered(bool centered) { mCentered = centered; }
 
-	enum CursorState {
+	enum CursorState
+	{
 		CURSOR_STOPPED,
 		CURSOR_SCROLLING
 	};
 
 	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
+
+	inline void setFont(const std::shared_ptr<Font>& font)
+	{
+		mFont = font;
+		for(auto it = mRowVector.begin(); it != mRowVector.end(); it++)
+			it->textCache.reset();
+	}
+
+	inline void setSelectorColor(unsigned int color) { mSelectorColor = color; }
+	inline void setSelectedColor(unsigned int color) { mSelectedColor = color; }
+	inline void setScrollSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
+	inline void setColor(unsigned int id, unsigned int color) { mColors[id] = color; }
 
 private:
 	static const int MARQUEE_DELAY = 900;
@@ -81,13 +86,19 @@ private:
 	int mMarqueeOffset;
 	int mMarqueeTime;
 
-	std::shared_ptr<ThemeData> mTheme;
 	bool mCentered;
 
 	std::vector<ListRow> mRowVector;
 	int mCursor;
 
 	std::function<void(CursorState state)> mCursorChangedCallback;
+
+	std::shared_ptr<Font> mFont;
+	unsigned int mSelectorColor;
+	unsigned int mSelectedColor;
+	std::shared_ptr<Sound> mScrollSound;
+	static const unsigned int COLOR_ID_COUNT = 2;
+	unsigned int mColors[COLOR_ID_COUNT];
 };
 
 template <typename T>
@@ -103,7 +114,11 @@ TextListComponent<T>::TextListComponent(Window* window) :
 
 	mCentered = true;
 
-	mTheme = ThemeData::getDefault();
+	mFont = Font::get(FONT_SIZE_MEDIUM);
+	mSelectorColor = 0x000000FF;
+	mSelectedColor = 0;
+	mColors[0] = 0x0000FFFF;
+	mColors[1] = 0x00FF00FF;
 }
 
 template <typename T>
@@ -116,7 +131,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
 	
-	std::shared_ptr<Font> font = mTheme->getFont(THEME_FONT);
+	std::shared_ptr<Font>& font = mFont;
 
 	const int cutoff = 0;
 	const int entrySize = font->getHeight() + 5;
@@ -157,7 +172,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		if(mCursor == i)
 		{
 			Renderer::setMatrix(trans);
-			Renderer::drawRect(0, (int)y, (int)getSize().x(), font->getHeight(), mTheme->getColor(THEME_SELECTOR_COLOR));
+			Renderer::drawRect(0, (int)y, (int)getSize().x(), font->getHeight(), mSelectorColor);
 		}
 
 		ListRow& row = mRowVector.at((unsigned int)i);
@@ -165,10 +180,10 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		float x = (float)(mCursor == i ? -mMarqueeOffset : 0);
 
 		unsigned int color;
-		if(mCursor == i && mTheme->getColor(THEME_HIGHLIGHTED_COLOR))
-			color = mTheme->getColor(THEME_HIGHLIGHTED_COLOR);
+		if(mCursor == i && mSelectedColor)
+			color = mSelectedColor;
 		else
-			color = mTheme->getColor(THEME_ENTRY_COLOR[row.colorId]);
+			color = mColors[row.colorId];
 
 		if(!row.textCache)
 			row.textCache = std::unique_ptr<TextCache>(font->buildTextCache(row.name, 0, 0, 0x000000FF));
@@ -273,7 +288,7 @@ void TextListComponent<T>::update(int deltaTime)
 		//if we're not scrolling and this object's text goes outside our size, marquee it!
 		std::string text = getSelectedName();
 
-		Eigen::Vector2f textSize = mTheme->getFont(THEME_FONT)->sizeText(text);
+		Eigen::Vector2f textSize = mFont->sizeText(text);
 
 		//it's long enough to marquee
 		if(textSize.x() - mMarqueeOffset > getSize().x() - 12)
@@ -311,18 +326,16 @@ void TextListComponent<T>::scroll()
 	}
 
 	onCursorChanged(CURSOR_SCROLLING);
-	mTheme->playSound("scrollSound");
+
+	if(mScrollSound)
+		mScrollSound->play();
 }
 
 //list management stuff
 template <typename T>
 void TextListComponent<T>::add(const std::string& name, const T& obj, unsigned int color)
 {
-	if(color >= THEME_COLOR_ID_COUNT)
-	{
-		LOG(LogError) << "Invalid row color Id (" << color << ")";
-		color = 0;
-	}
+	assert(color < COLOR_ID_COUNT);
 
 	ListRow row = {name, obj, color};
 	mRowVector.push_back(row);
@@ -390,16 +403,6 @@ void TextListComponent<T>::onCursorChanged(CursorState state)
 {
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
-}
-
-template <typename T>
-void TextListComponent<T>::setTheme(const std::shared_ptr<ThemeData>& theme)
-{
-	mTheme = theme;
-
-	// invalidate text caches in case font changed
-	for(auto it = mRowVector.begin(); it != mRowVector.end(); it++)
-		it->textCache.reset();
 }
 
 #endif

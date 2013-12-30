@@ -10,6 +10,8 @@ public:
 
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
+	virtual const char* getName() const override { return "detailed"; }
+
 protected:
 	virtual void launch(FileData* game) override;
 
@@ -17,9 +19,7 @@ private:
 	void updateInfoPanel();
 
 	ImageComponent mImage;
-	ImageComponent mInfoBackground;
-	ImageComponent mDivider;
-
+	
 	ScrollableContainer mDescContainer;
 	TextComponent mDescription;
 };

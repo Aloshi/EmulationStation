@@ -1,82 +1,146 @@
 #pragma once
 
+#include <iostream>
+#include <sstream>
 #include <memory>
 #include <map>
 #include <string>
-#include "resources/Font.h"
-#include "resources/TextureResource.h"
-#include "Renderer.h"
-#include "AudioManager.h"
-#include "Sound.h"
+#include <boost/filesystem.hpp>
+#include <boost/variant.hpp>
+#include <Eigen/Dense>
+#include "pugiXML/pugixml.hpp"
+#include "GuiComponent.h"
 
-struct FontDef
+template<typename T>
+class TextListComponent;
+
+class Sound;
+class ImageComponent;
+class NinePatchComponent;
+class TextComponent;
+class Window;
+
+namespace ThemeFlags
 {
-	FontDef() {}
-	FontDef(float sz, const std::string& p) : path(p), size(sz) {}
+	enum PropertyFlags : unsigned int
+	{
+		PATH = 1,
+		POSITION = 2,
+		SIZE = 4,
+		ORIGIN = 8,
+		COLOR = 16,
+		FONT_PATH = 32,
+		FONT_SIZE = 64,
+		TILING = 128,
+		SOUND = 256,
+		CENTER = 512,
+		TEXT = 1024
+	};
+}
 
-	std::string path;
-	float size;
+class ThemeException : public std::exception
+{
+protected:
+	std::string msg;
 
-	inline const std::shared_ptr<Font>& get() const { if(!font) font = Font::get((int)(size * Renderer::getScreenHeight()), path); return font; }
+public:
+	virtual const char* what() const throw() { return msg.c_str(); }
 
-private:
-	mutable std::shared_ptr<Font> font;
+	template<typename T>
+	friend ThemeException& operator<<(ThemeException& e, T msg);
+	
+	inline void setFile(const std::string& filename) { *this << "Error loading theme from \"" << filename << "\":\n   "; }
 };
 
-struct ImageDef
+template<typename T>
+ThemeException& operator<<(ThemeException& e, T appendMsg)
 {
-	ImageDef() {}
-	ImageDef(const std::string& p, bool t) : path(p), tile(t) {}
-
-	std::string path;
-	bool tile;
-
-	inline const std::shared_ptr<TextureResource>& getTexture() const { if(!texture && !path.empty()) texture = TextureResource::get(path); return texture; }
-
-private:
-	mutable std::shared_ptr<TextureResource> texture;
-};
-
-struct SoundDef
-{
-	SoundDef() {}
-	SoundDef(const std::string& p) : path(p) { sound = std::shared_ptr<Sound>(new Sound(path)); AudioManager::getInstance()->registerSound(sound); }
-
-	std::string path;
-
-	inline const std::shared_ptr<Sound>& get() const { return sound; }
-
-private:
-	std::shared_ptr<Sound> sound;
-};
+	std::stringstream ss;
+	ss << e.msg << appendMsg;
+	e.msg = ss.str();
+	return e;
+}
 
 class ThemeData
 {
+private:
+
+	class ThemeElement
+	{
+	public:
+		bool extra;
+		std::string type;
+
+		std::map< std::string, boost::variant<Eigen::Vector2f, std::string, unsigned int, float, bool> > properties;
+
+		template<typename T>
+		T get(const std::string& prop) { return boost::get<T>(properties.at(prop)); }
+
+		inline bool has(const std::string& prop) { return (properties.find(prop) != properties.end()); }
+	};
+
+	class ThemeView
+	{
+	public:
+		ThemeView() : mExtrasDirty(true) {}
+		virtual ~ThemeView() { for(auto it = mExtras.begin(); it != mExtras.end(); it++) delete *it; }
+
+		std::map<std::string, ThemeElement> elements;
+		
+		const std::vector<GuiComponent*>& getExtras(Window* window);
+
+	private:
+		bool mExtrasDirty;
+		std::vector<GuiComponent*> mExtras;
+	};
+
 public:
-	static const std::shared_ptr<ThemeData>& getDefault();
 
 	ThemeData();
 
-	void setDefaults();
+	// throws ThemeException
 	void loadFile(const std::string& path);
 
-	inline const FontDef& getFontDef(const std::string& identifier) const { return mFontMap.at(identifier); }
-	inline std::shared_ptr<Font> getFont(const std::string& identifier) const { return mFontMap.at(identifier).get(); }
-	inline const ImageDef& getImage(const std::string& identifier) const { return mImageMap.at(identifier); }
-	inline unsigned int getColor(const std::string& identifier) const { return mColorMap.at(identifier); }
-	void playSound(const std::string& identifier) const;
+	enum ElementPropertyType
+	{
+		NORMALIZED_PAIR,
+		PATH,
+		STRING,
+		COLOR,
+		FLOAT,
+		BOOLEAN
+	};
 
-	inline void setFont(const std::string& identifier, FontDef def) { mFontMap[identifier] = def; }
-	inline void setColor(const std::string& identifier, unsigned int color) { mColorMap[identifier] = color; }
+	void renderExtras(const std::string& view, Window* window, const Eigen::Affine3f& transform);
+
+	void applyToImage(const std::string& view, const std::string& element, ImageComponent* image, unsigned int properties);
+	void applyToNinePatch(const std::string& view, const std::string& element, NinePatchComponent* patch, unsigned int properties);
+	void applyToText(const std::string& view, const std::string& element, TextComponent* text, unsigned int properties);
+
+	template <typename T>
+	void applyToTextList(const std::string& view, const std::string& element, TextListComponent<T>* list, unsigned int properties);
+
+	void playSound(const std::string& name);
 
 private:
-	static std::map<std::string, ImageDef> sDefaultImages;
-	static std::map<std::string, unsigned int> sDefaultColors;
-	static std::map<std::string, FontDef > sDefaultFonts;
-	static std::map<std::string, SoundDef> sDefaultSounds;
+	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
 
-	std::map<std::string, ImageDef> mImageMap;
-	std::map<std::string, unsigned int> mColorMap;
-	std::map<std::string, FontDef > mFontMap;
-	std::map< std::string, SoundDef > mSoundMap;
+	boost::filesystem::path mPath;
+	float mVersion;
+
+	ThemeView parseView(const pugi::xml_node& view);
+	ThemeElement parseElement(const pugi::xml_node& element, const std::map<std::string, ElementPropertyType>& typeMap);
+
+	ThemeElement* getElement(const std::string& viewName, const std::string& elementName);
+
+	std::map<std::string, ThemeView> mViews;
+
+	std::map< std::string, std::shared_ptr<Sound> > mSoundCache;
 };
+
+
+template <typename T>
+void ThemeData::applyToTextList(const std::string& view, const std::string& element, TextListComponent<T>* list, unsigned int properties)
+{
+
+}

@@ -4,81 +4,125 @@
 #include "Sound.h"
 #include "resources/TextureResource.h"
 #include "Log.h"
-#include <boost/filesystem.hpp>
-#include <boost/assign.hpp>
 #include "pugiXML/pugixml.hpp"
+#include <boost/assign.hpp>
 
-// Defaults
-std::map<std::string, FontDef > ThemeData::sDefaultFonts = boost::assign::map_list_of
-	("listFont", FontDef(0.045f, ""))
-	("descriptionFont", FontDef(0.035f, ""))
-	("fastSelectLetterFont", FontDef(0.15f, ""));
+std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > ThemeData::sElementMap = boost::assign::map_list_of
+	("image", boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("origin", NORMALIZED_PAIR)
+		("path", PATH)
+		("tile", BOOLEAN))
+	("text", boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("text", STRING)
+		("color", COLOR)
+		("fontPath", PATH)
+		("fontSize", FLOAT)
+		("center", BOOLEAN))
+	("textlist", boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("selectorColor", COLOR)
+		("selectedColor", COLOR)
+		("primaryColor", COLOR)
+		("secondaryColor", COLOR)
+		("fontPath", PATH)
+		("fontSize", FLOAT))
+	("sound", boost::assign::map_list_of
+		("path", PATH));
 
-std::map<std::string, unsigned int> ThemeData::sDefaultColors = boost::assign::map_list_of
-	("listPrimaryColor", 0x0000FFFF)
-	("listSecondaryColor", 0x00FF00FF)
-	("listSelectorColor", 0x000000FF)
-	("listSelectedColor", 0x00000000)
-	("descriptionColor", 0x48474DFF)
-	("fastSelectLetterColor", 0xFFFFFFFF)
-	("fastSelectTextColor", 0xDDDDDDFF);
+namespace fs = boost::filesystem;
 
-std::map<std::string, ImageDef> ThemeData::sDefaultImages = boost::assign::map_list_of
-	("backgroundImage", ImageDef("", true))
-	("headerImage", ImageDef("", false))
-	("infoBackgroundImage", ImageDef("", false))
-	("verticalDividerImage", ImageDef("", false))
-	("fastSelectBackgroundImage", ImageDef(":/button.png", false))
-	("systemImage", ImageDef("", false));
+#define MINIMUM_THEME_VERSION 3
+#define CURRENT_THEME_VERSION 3
 
-std::map<std::string, SoundDef> ThemeData::sDefaultSounds = boost::assign::map_list_of
-	("scrollSound", SoundDef(""))
-	("gameSelectSound", SoundDef(""))
-	("backSound", SoundDef(""))
-	("menuOpenSound", SoundDef(""))
-	("menuCloseSound", SoundDef(""));
-
-
-
-const std::shared_ptr<ThemeData>& ThemeData::getDefault()
-{
-	static const std::shared_ptr<ThemeData> def = std::shared_ptr<ThemeData>(new ThemeData());
-	return def;
-}
+// still TODO:
+// * how to do <include>?
 
 ThemeData::ThemeData()
 {
-	setDefaults();
-
-	std::string defaultDir = getHomePath() + "/.emulationstation/es_theme_default.xml";
-	if(boost::filesystem::exists(defaultDir))
-		loadFile(defaultDir);
+	mVersion = 0;
 }
 
-void ThemeData::setDefaults()
+void ThemeData::loadFile(const std::string& path)
 {
-	mFontMap.clear();
-	mImageMap.clear();
-	mColorMap.clear();
-	mSoundMap.clear();
+	ThemeException error;
+	error.setFile(path);
 
-	mFontMap = sDefaultFonts;
-	mImageMap = sDefaultImages;
-	mColorMap = sDefaultColors;
-	mSoundMap = sDefaultSounds;
+	mPath = path;
+
+	if(!fs::exists(path))
+		throw error << "Missing file!";
+
+	mVersion = 0;
+	mViews.clear();
+
+	pugi::xml_document doc;
+	pugi::xml_parse_result res = doc.load_file(path.c_str());
+	if(!res)
+		throw error << "XML parsing error: \n    " << res.description();
+
+	pugi::xml_node root = doc.child("theme");
+	if(!root)
+		throw error << "Missing <theme> tag!";
+
+	// parse version
+	mVersion = root.child("version").text().as_float(-404);
+	if(mVersion == -404)
+		throw error << "<version> tag missing!\n   It's either out of date or you need to add <version>" << CURRENT_THEME_VERSION << "</version> inside your <theme> tag.";
+
+
+	if(mVersion < MINIMUM_THEME_VERSION)
+		throw error << "Theme is version " << mVersion << ". Minimum supported version is " << MINIMUM_THEME_VERSION << ".";
+
+	// parse views
+	for(pugi::xml_node node = root.child("view"); node; node = node.next_sibling("view"))
+	{
+		if(!node.attribute("name"))
+			throw error << "View missing \"name\" attribute!";
+
+		ThemeView view = parseView(node);
+
+		if(view.elements.size() > 0)
+			mViews[node.attribute("name").as_string()] = view;
+	}
 }
 
-unsigned int getHexColor(const char* str, unsigned int defaultColor)
+ThemeData::ThemeView ThemeData::parseView(const pugi::xml_node& root)
 {
+	ThemeView view;
+	ThemeException error;
+	error.setFile(mPath.string());
+
+	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
+	{
+		if(!node.attribute("name"))
+			throw error << "Element of type \"" << node.name() << "\" missing \"name\" attribute!";
+
+		auto elemTypeIt = sElementMap.find(node.name());
+		if(elemTypeIt == sElementMap.end())
+			throw error << "Unknown element of type \"" << node.name() << "\"!";
+
+		ThemeElement element = parseElement(node, elemTypeIt->second);
+
+		view.elements[node.attribute("name").as_string()] = element;
+	}
+
+	return view;
+}
+
+unsigned int getHexColor(const char* str)
+{
+	ThemeException error;
 	if(!str)
-		return defaultColor;
+		throw error << "Empty color";
 
 	size_t len = strlen(str);
 	if(len != 6 && len != 8)
-	{
-		LOG(LogError) << "Invalid theme color \"" << str << "\" (must be 6 or 8 characters)";
-		return defaultColor;
-	}
+		throw error << "Invalid color (bad length, \"" << str << "\" - must be 6 or 8)";
 
 	unsigned int val;
 	std::stringstream ss;
@@ -91,13 +135,12 @@ unsigned int getHexColor(const char* str, unsigned int defaultColor)
 	return val;
 }
 
-std::string resolvePath(const char* in, const std::string& relative)
+std::string resolvePath(const char* in, const fs::path& relative)
 {
 	if(!in || in[0] == '\0')
 		return in;
 
-	boost::filesystem::path relPath(relative);
-	relPath = relPath.parent_path();
+	fs::path relPath = relative.parent_path();
 	
 	boost::filesystem::path path(in);
 	
@@ -114,102 +157,63 @@ std::string resolvePath(const char* in, const std::string& relative)
 	return path.generic_string();
 }
 
-void ThemeData::loadFile(const std::string& themePath)
+
+ThemeData::ThemeElement ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::string, ElementPropertyType>& typeMap)
 {
-	if(themePath.empty() || !boost::filesystem::exists(themePath))
-		return;
+	ThemeException error;
+	error.setFile(mPath.string());
 
-	pugi::xml_document doc;
-	pugi::xml_parse_result result = doc.load_file(themePath.c_str());
-	if(!result)
+	ThemeElement element;
+	element.extra = root.attribute("extra").as_bool(false);
+
+	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
 	{
-		LOG(LogWarning) << "Could not parse theme file \"" << themePath << "\":\n   " << result.description();
-		return;
-	}
+		auto typeIt = typeMap.find(node.name());
+		if(typeIt == typeMap.end())
+			throw error << "Unknown property type \"" << node.name() << "\" (for element of type " << root.name() << ").";
 
-	pugi::xml_node root = doc.child("theme");
-
-	// Fonts
-	for(auto it = mFontMap.begin(); it != mFontMap.end(); it++)
-	{
-		pugi::xml_node node = root.child(it->first.c_str());
-		if(node)
+		switch(typeIt->second)
 		{
-			std::string path = resolvePath(node.child("path").text().as_string(it->second.path.c_str()), themePath);
-			if(!boost::filesystem::exists(path))
-			{
-				LOG(LogWarning) << "Font \"" << path << "\" doesn't exist!";
-				path = it->second.path;
-			}
+		case NORMALIZED_PAIR:
+		{
+			std::string str = std::string(node.text().as_string());
 
-			float size = node.child("size").text().as_float(it->second.size);
-			mFontMap[it->first] = FontDef(size, path);
-			root.remove_child(node);
+			size_t divider = str.find(' ');
+			if(divider == std::string::npos) 
+				throw error << "invalid normalized pair (\"" << str.c_str() << "\")";
+
+			std::string first = str.substr(0, divider);
+			std::string second = str.substr(divider, std::string::npos);
+
+			Eigen::Vector2f val(atof(first.c_str()), atof(second.c_str()));
+
+			element.properties[node.name()] = val;
+			break;
+		}
+		case STRING:
+			element.properties[node.name()] = std::string(node.text().as_string());
+			break;
+		case PATH:
+		{
+			std::string path = resolvePath(node.text().as_string(), mPath.string());
+			if(!fs::exists(path))
+				LOG(LogWarning) << "  Warning: theme \"" << mPath << "\" - could not find file \"" << node.text().get() << "\" (resolved to \"" << path << "\")";
+			element.properties[node.name()] = path;
+			break;
+		}
+		case COLOR:
+			element.properties[node.name()] = getHexColor(node.text().as_string());
+			break;
+		case FLOAT:
+			element.properties[node.name()] = node.text().as_float();
+			break;
+		case BOOLEAN:
+			element.properties[node.name()] = node.text().as_bool();
+			break;
+		default:
+			throw error << "Unknown ElementPropertyType for " << root.attribute("name").as_string() << " property " << node.name();
 		}
 	}
 
-	// Images
-	for(auto it = mImageMap.begin(); it != mImageMap.end(); it++)
-	{
-		pugi::xml_node node = root.child(it->first.c_str());
-		if(node)
-		{
-			std::string path = resolvePath(node.child("path").text().as_string(it->second.path.c_str()), themePath);
-			if(!boost::filesystem::exists(path))
-			{
-				LOG(LogWarning) << "Image \"" << path << "\" doesn't exist!";
-				path = it->second.path;
-			}
-
-			bool tile = node.child("tile").text().as_bool(it->second.tile);
-			mImageMap[it->first] = ImageDef(path, tile);
-			root.remove_child(node);
-		}
-	}
-
-	// Colors
-	for(auto it = mColorMap.begin(); it != mColorMap.end(); it++)
-	{
-		pugi::xml_node node = root.child(it->first.c_str());
-		if(node)
-		{
-			mColorMap[it->first] = getHexColor(node.text().as_string(NULL), it->second);
-			root.remove_child(node);
-		}
-	}
-
-	// Sounds
-	for(auto it = mSoundMap.begin(); it != mSoundMap.end(); it++)
-	{
-		pugi::xml_node node = root.child(it->first.c_str());
-		if(node)
-		{
-			std::string path = resolvePath(node.text().as_string(it->second.path.c_str()), themePath);
-			if(!boost::filesystem::exists(path))
-			{
-				LOG(LogWarning) << "Sound \"" << path << "\" doesn't exist!";
-				path = it->second.path;
-			}
-
-			mSoundMap[it->first] = SoundDef(path);
-			root.remove_child(node);
-		}
-	}
-
-	if(root.begin() != root.end())
-	{
-		std::stringstream ss;
-		ss << "Unused theme identifiers:\n";
-		for(auto it = root.children().begin(); it != root.children().end(); it++)
-		{
-			ss << "    " << it->name() << "\n";
-		}
-
-		LOG(LogWarning) << ss.str();
-	}
-}
-
-void ThemeData::playSound(const std::string& identifier) const
-{
-	mSoundMap.at(identifier).get()->play();
+	return element;
 }

@@ -47,7 +47,14 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mRootFolder->sort(FileSorts::SortTypes.at(0));
 
 	mTheme = std::make_shared<ThemeData>();
-	mTheme->loadFile(getThemePath());
+	try
+	{
+		mTheme->loadFile(getThemePath());
+	} catch(ThemeException& e)
+	{
+		LOG(LogError) << e.what();
+		mTheme = std::make_shared<ThemeData>(); // reset to empty
+	}
 }
 
 SystemData::~SystemData()

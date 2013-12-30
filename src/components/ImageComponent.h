@@ -23,8 +23,10 @@ public:
 	void setImage(const char* image, size_t length); //Loads image from memory.
 	void setImage(const std::shared_ptr<TextureResource>& texture); //Use an already existing texture.
 	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
+	inline void setOrigin(Eigen::Vector2f origin) { setOrigin(origin.x(), origin.y()); }
 	void setTiling(bool tile); //Enables or disables tiling. Must be called before loading an image or resizing will be weird.
 	void setResize(float width, float height, bool allowUpscale);
+	inline void setResize(Eigen::Vector2f size, bool allowUpscale) { setResize(size.x(), size.y(), allowUpscale); }
 	void setColorShift(unsigned int color);
 
 	void setFlipX(bool flip);

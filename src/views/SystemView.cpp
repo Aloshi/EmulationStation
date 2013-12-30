@@ -35,19 +35,23 @@ SystemView::SystemView(Window* window, SystemData* system) : GuiComponent(window
 
 void SystemView::updateData()
 {
+	using namespace ThemeFlags;
+
+	mHeaderImage.setImage("");
+	mSystem->getTheme()->applyToImage("common", "header", &mHeaderImage, PATH);
+
 	// header
-	if(mSystem->getTheme()->getImage("headerImage").path.empty())
+	if(mHeaderImage.hasImage())
 	{
+		// use image
+		mHeaderText.setText("");
+	}else{
 		// use text
 		mHeaderImage.setImage("");
 		mHeaderText.setText(mSystem->getFullName());
-	}else{
-		// use image
-		mHeaderText.setText("");
-		mHeaderImage.setImage(mSystem->getTheme()->getImage("headerImage").getTexture());
 	}
 
-	mImage.setImage(mSystem->getTheme()->getImage("systemImage").getTexture());
+	mSystem->getTheme()->applyToImage("common", "system", &mImage, PATH);
 }
 
 bool SystemView::input(InputConfig* config, Input input)

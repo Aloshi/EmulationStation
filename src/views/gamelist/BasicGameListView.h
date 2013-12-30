@@ -16,6 +16,8 @@ public:
 	virtual FileData* getCursor() override;
 	virtual void setCursor(FileData* file) override;
 
+	virtual const char* getName() const override { return "basic"; }
+
 protected:
 	virtual void populateList(const std::vector<FileData*>& files) override;
 	virtual void launch(FileData* game) override;

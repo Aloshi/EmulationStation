@@ -17,6 +17,8 @@ public:
 
 	virtual bool input(InputConfig* config, Input input) override;
 
+	virtual const char* getName() const override { return "grid"; }
+
 protected:
 	virtual void populateList(const std::vector<FileData*>& files) override;
 	virtual void launch(FileData* game) override;

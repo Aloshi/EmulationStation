@@ -23,14 +23,10 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 
 void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
-	const ImageDef& bg = theme->getImage("backgroundImage");
-	mBackground.setTiling(bg.tile);
-	mBackground.setImage(bg.getTexture());
-	
-	const ImageDef& hdr = theme->getImage("headerImage");
-	mHeaderImage.setTiling(hdr.tile);
-	mHeaderImage.setImage(hdr.getTexture());
-	
+	using namespace ThemeFlags;
+	theme->applyToImage("common", "background", &mBackground, PATH | TILING);
+	theme->applyToImage("common", "header", &mHeaderImage, PATH);
+
 	if(mHeaderImage.hasImage())
 	{
 		removeChild(&mHeaderText);

@@ -18,7 +18,8 @@ BasicGameListView::BasicGameListView(Window* window, FileData* root)
 void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
 	ISimpleGameListView::onThemeChanged(theme);
-	mList.setTheme(theme);
+	using namespace ThemeFlags;
+	theme->applyToTextList(getName(), "gamelist", &mList, POSITION | ThemeFlags::SIZE | COLOR | SOUND);
 }
 
 void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)

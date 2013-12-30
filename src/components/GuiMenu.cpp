@@ -39,11 +39,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mBackground(window, ":/
 	addChild(&mBackground);
 
 	mTheme = std::make_shared<ThemeData>();
-	mTheme->setFont("listFont", FontDef(0.09f, mTheme->getFontDef("listFont").path));
-	mTheme->setColor("listSelectorColor", 0xBBBBBBFF);
-	mTheme->setColor("listPrimaryColor", 0x0000FFFF);
-	mTheme->setColor("listSecondaryColor", 0xFF0000FF);
-	mList.setTheme(mTheme);
+	using namespace ThemeFlags;
+	mTheme->applyToTextList< std::function<void()> >("common", "menu", &mList, FONT_PATH | COLOR);
+	mList.setSelectorColor(0xBBBBBBFF);
+	mList.setColor(0, 0x0000FFFF);
+	mList.setColor(1, 0xFF0000FF);
+	// TODO - set font size to 0.09f
 
 	addChild(&mList);
 }

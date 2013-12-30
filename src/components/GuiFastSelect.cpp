@@ -12,20 +12,23 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	setSize(Renderer::getScreenWidth() * 0.6f, Renderer::getScreenHeight() * 0.6f);
 
 	const std::shared_ptr<ThemeData>& theme = mGameList->getTheme();
+	using namespace ThemeFlags;
 
-	mBackground.setImagePath(theme->getImage("fastSelectBackgroundImage").path);
+	theme->applyToNinePatch("fastSelect", "background", &mBackground, PATH);
 	mBackground.fitTo(mSize);
 	addChild(&mBackground);
 
 	mLetterText.setSize(mSize.x(), mSize.y() * 0.75f);
 	mLetterText.setCentered(true);
-	mLetterText.setFromTheme(theme, "fastSelectLetterFont", "fastSelectLetterColor");
+	theme->applyToText("fastSelect", "letter", &mLetterText, FONT_PATH | COLOR);
+	// TODO - set font size
 	addChild(&mLetterText);
 
 	mSortText.setPosition(0, mSize.y() * 0.75f);
 	mSortText.setSize(mSize.x(), mSize.y() * 0.25f);
 	mSortText.setCentered(true);
-	mSortText.setFromTheme(theme, "descriptionFont", "fastSelectTextColor");
+	theme->applyToText("fastSelect", "subtext", &mSortText, FONT_PATH | COLOR);
+	// TODO - set font size
 	addChild(&mSortText);
 
 	mSortId = 0; // TODO
