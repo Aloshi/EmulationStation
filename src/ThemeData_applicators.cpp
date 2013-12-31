@@ -9,12 +9,27 @@
 
 using namespace ThemeFlags;
 
+
 Eigen::Vector2f getScale(GuiComponent* comp)
 {
 	if(comp && comp->getParent())
 		return comp->getParent()->getSize();
 	
 	return Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+}
+
+void ThemeData::applyPosAndSize(ThemeElement* elem, GuiComponent* comp, unsigned int properties)
+{
+	Eigen::Vector2f scale = getScale(comp);
+
+	if(properties & POSITION && elem->has("pos"))
+	{
+		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
+		comp->setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+	}
+
+	if(properties & ThemeFlags::SIZE && elem->has("size"))
+		comp->setSize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
 }
 
 ThemeData::ThemeElement* ThemeData::getElement(const std::string& viewName, const std::string& elementName)
@@ -76,11 +91,7 @@ void ThemeData::applyToNinePatch(const std::string& viewName, const std::string&
 		patch->setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
 	}
 
-	if(properties & PATH && elem->has("path"))
-		patch->setImagePath(elem->get<std::string>("path"));
-
-	if(properties & ThemeFlags::SIZE && elem->has("size"))
-		patch->setSize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
+	applyPosAndSize(elem, patch, properties);
 }
 
 void ThemeData::applyToText(const std::string& viewName, const std::string& elementName, TextComponent* text, unsigned int properties)

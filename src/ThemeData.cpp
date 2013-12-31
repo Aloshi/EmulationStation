@@ -39,81 +39,7 @@ namespace fs = boost::filesystem;
 #define MINIMUM_THEME_VERSION 3
 #define CURRENT_THEME_VERSION 3
 
-// still TODO:
-// * how to do <include>?
-
-ThemeData::ThemeData()
-{
-	mVersion = 0;
-}
-
-void ThemeData::loadFile(const std::string& path)
-{
-	ThemeException error;
-	error.setFile(path);
-
-	mPath = path;
-
-	if(!fs::exists(path))
-		throw error << "Missing file!";
-
-	mVersion = 0;
-	mViews.clear();
-
-	pugi::xml_document doc;
-	pugi::xml_parse_result res = doc.load_file(path.c_str());
-	if(!res)
-		throw error << "XML parsing error: \n    " << res.description();
-
-	pugi::xml_node root = doc.child("theme");
-	if(!root)
-		throw error << "Missing <theme> tag!";
-
-	// parse version
-	mVersion = root.child("version").text().as_float(-404);
-	if(mVersion == -404)
-		throw error << "<version> tag missing!\n   It's either out of date or you need to add <version>" << CURRENT_THEME_VERSION << "</version> inside your <theme> tag.";
-
-
-	if(mVersion < MINIMUM_THEME_VERSION)
-		throw error << "Theme is version " << mVersion << ". Minimum supported version is " << MINIMUM_THEME_VERSION << ".";
-
-	// parse views
-	for(pugi::xml_node node = root.child("view"); node; node = node.next_sibling("view"))
-	{
-		if(!node.attribute("name"))
-			throw error << "View missing \"name\" attribute!";
-
-		ThemeView view = parseView(node);
-
-		if(view.elements.size() > 0)
-			mViews[node.attribute("name").as_string()] = view;
-	}
-}
-
-ThemeData::ThemeView ThemeData::parseView(const pugi::xml_node& root)
-{
-	ThemeView view;
-	ThemeException error;
-	error.setFile(mPath.string());
-
-	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
-	{
-		if(!node.attribute("name"))
-			throw error << "Element of type \"" << node.name() << "\" missing \"name\" attribute!";
-
-		auto elemTypeIt = sElementMap.find(node.name());
-		if(elemTypeIt == sElementMap.end())
-			throw error << "Unknown element of type \"" << node.name() << "\"!";
-
-		ThemeElement element = parseElement(node, elemTypeIt->second);
-
-		view.elements[node.attribute("name").as_string()] = element;
-	}
-
-	return view;
-}
-
+// helper
 unsigned int getHexColor(const char* str)
 {
 	ThemeException error;
@@ -135,6 +61,7 @@ unsigned int getHexColor(const char* str)
 	return val;
 }
 
+// helper
 std::string resolvePath(const char* in, const fs::path& relative)
 {
 	if(!in || in[0] == '\0')
@@ -158,12 +85,130 @@ std::string resolvePath(const char* in, const fs::path& relative)
 }
 
 
-ThemeData::ThemeElement ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::string, ElementPropertyType>& typeMap)
+
+ThemeData::ThemeData()
+{
+	mVersion = 0;
+}
+
+void ThemeData::loadFile(const std::string& path)
+{
+	mPaths.push_back(path);
+
+	ThemeException error;
+	error.setFiles(mPaths);
+
+	if(!fs::exists(path))
+		throw error << "File does not exist!";
+
+	mVersion = 0;
+	mViews.clear();
+
+	pugi::xml_document doc;
+	pugi::xml_parse_result res = doc.load_file(path.c_str());
+	if(!res)
+		throw error << "XML parsing error: \n    " << res.description();
+
+	pugi::xml_node root = doc.child("theme");
+	if(!root)
+		throw error << "Missing <theme> tag!";
+
+	// parse version
+	mVersion = root.child("version").text().as_float(-404);
+	if(mVersion == -404)
+		throw error << "<version> tag missing!\n   It's either out of date or you need to add <version>" << CURRENT_THEME_VERSION << "</version> inside your <theme> tag.";
+
+	if(mVersion < MINIMUM_THEME_VERSION)
+		throw error << "Theme is version " << mVersion << ". Minimum supported version is " << MINIMUM_THEME_VERSION << ".";
+
+	parseIncludes(root);
+	parseViews(root);
+}
+
+
+void ThemeData::parseIncludes(const pugi::xml_node& root)
 {
 	ThemeException error;
-	error.setFile(mPath.string());
+	error.setFiles(mPaths);
 
-	ThemeElement element;
+	for(pugi::xml_node node = root.child("include"); node; node = node.next_sibling("include"))
+	{
+		const char* relPath = node.text().get();
+		std::string path = resolvePath(relPath, mPaths.back());
+		if(!ResourceManager::getInstance()->fileExists(path))
+			throw error << "Included file \"" << relPath << "\" not found! (resolved to \"" << path << "\")";
+
+		error << "    from included file \"" << relPath << "\":\n    ";
+
+		mPaths.push_back(path);
+
+		pugi::xml_document includeDoc;
+		pugi::xml_parse_result result = includeDoc.load_file(path.c_str());
+		if(!result)
+			throw error << "Error parsing file: \n    " << result.description();
+
+		pugi::xml_node root = includeDoc.child("theme");
+		if(!root)
+			throw error << "Missing <theme> tag!";
+
+		parseIncludes(root);
+		parseViews(root);
+
+		mPaths.pop_back();
+	}
+}
+
+void ThemeData::parseViews(const pugi::xml_node& root)
+{
+	ThemeException error;
+	error.setFiles(mPaths);
+
+	pugi::xml_node common = root.find_child_by_attribute("view", "name", "common");
+
+	// parse views
+	for(pugi::xml_node node = root.child("view"); node; node = node.next_sibling("view"))
+	{
+		if(!node.attribute("name"))
+			throw error << "View missing \"name\" attribute!";
+
+		const char* viewKey = node.attribute("name").as_string();
+		ThemeView& view = mViews.insert(std::make_pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
+
+		// load common first
+		if(common && node != common)
+			parseView(common, view);
+
+		parseView(node, view);
+	}
+}
+
+void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
+{
+	ThemeException error;
+	error.setFiles(mPaths);
+
+	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
+	{
+		if(!node.attribute("name"))
+			throw error << "Element of type \"" << node.name() << "\" missing \"name\" attribute!";
+
+		auto elemTypeIt = sElementMap.find(node.name());
+		if(elemTypeIt == sElementMap.end())
+			throw error << "Unknown element of type \"" << node.name() << "\"!";
+
+		const char* elemKey = node.attribute("name").as_string();
+
+		parseElement(node, elemTypeIt->second, 
+			view.elements.insert(std::make_pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
+	}
+}
+
+
+void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element)
+{
+	ThemeException error;
+	error.setFiles(mPaths);
+
 	element.extra = root.attribute("extra").as_bool(false);
 
 	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
@@ -195,9 +240,16 @@ ThemeData::ThemeElement ThemeData::parseElement(const pugi::xml_node& root, cons
 			break;
 		case PATH:
 		{
-			std::string path = resolvePath(node.text().as_string(), mPath.string());
-			if(!fs::exists(path))
-				LOG(LogWarning) << "  Warning: theme \"" << mPath << "\" - could not find file \"" << node.text().get() << "\" (resolved to \"" << path << "\")";
+			std::string path = resolvePath(node.text().as_string(), mPaths.back().string());
+			if(!ResourceManager::getInstance()->fileExists(path))
+			{
+				std::stringstream ss;
+				ss << "  Warning " << error.msg; // "from theme yadda yadda, included file yadda yadda
+				ss << "could not find file \"" << node.text().get() << "\" ";
+				if(node.text().get() != path)
+					ss << "(which resolved to \"" << path << "\") ";
+				LOG(LogWarning) << ss.str();
+			}
 			element.properties[node.name()] = path;
 			break;
 		}
@@ -214,6 +266,10 @@ ThemeData::ThemeElement ThemeData::parseElement(const pugi::xml_node& root, cons
 			throw error << "Unknown ElementPropertyType for " << root.attribute("name").as_string() << " property " << node.name();
 		}
 	}
+}
 
-	return element;
+ThemeData::ThemeView::~ThemeView()
+{
+	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
+		delete *it;
 }

@@ -4,6 +4,7 @@
 #include <sstream>
 #include <memory>
 #include <map>
+#include <deque>
 #include <string>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
@@ -40,16 +41,21 @@ namespace ThemeFlags
 
 class ThemeException : public std::exception
 {
-protected:
+public:
 	std::string msg;
 
-public:
 	virtual const char* what() const throw() { return msg.c_str(); }
 
 	template<typename T>
 	friend ThemeException& operator<<(ThemeException& e, T msg);
 	
-	inline void setFile(const std::string& filename) { *this << "Error loading theme from \"" << filename << "\":\n   "; }
+	inline void setFiles(const std::deque<boost::filesystem::path>& deque)
+	{
+		*this << "from theme \"" << deque.front().string() << "\"\n";
+		for(auto it = deque.begin() + 1; it != deque.end(); it++)
+			*this << "  (from included file \"" << (*it).string() << "\")\n";
+		*this << "    ";
+	}
 };
 
 template<typename T>
@@ -81,17 +87,17 @@ private:
 
 	class ThemeView
 	{
+	private:
+		bool mExtrasDirty;
+		std::vector<GuiComponent*> mExtras;
+
 	public:
 		ThemeView() : mExtrasDirty(true) {}
-		virtual ~ThemeView() { for(auto it = mExtras.begin(); it != mExtras.end(); it++) delete *it; }
+		virtual ~ThemeView();
 
 		std::map<std::string, ThemeElement> elements;
 		
 		const std::vector<GuiComponent*>& getExtras(Window* window);
-
-	private:
-		bool mExtrasDirty;
-		std::vector<GuiComponent*> mExtras;
 	};
 
 public:
@@ -123,13 +129,18 @@ public:
 	void playSound(const std::string& name);
 
 private:
+	void applyPosAndSize(ThemeElement* elem, GuiComponent* comp, unsigned int properties);
+
+private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
 
-	boost::filesystem::path mPath;
+	std::deque<boost::filesystem::path> mPaths;
 	float mVersion;
 
-	ThemeView parseView(const pugi::xml_node& view);
-	ThemeElement parseElement(const pugi::xml_node& element, const std::map<std::string, ElementPropertyType>& typeMap);
+	void parseIncludes(const pugi::xml_node& themeRoot);
+	void parseViews(const pugi::xml_node& themeRoot);
+	void parseView(const pugi::xml_node& viewNode, ThemeView& view);
+	void parseElement(const pugi::xml_node& elementNode, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element);
 
 	ThemeElement* getElement(const std::string& viewName, const std::string& elementName);
 
