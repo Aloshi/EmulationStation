@@ -18,6 +18,8 @@ public:
 	void setEdgeColor(unsigned int edgeColor);
 	void setCenterColor(unsigned int centerColor);
 
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+
 private:
 	Eigen::Vector2f getCornerSize() const;
 

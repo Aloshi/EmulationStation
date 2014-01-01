@@ -4,6 +4,7 @@
 #include <math.h>
 #include "../Log.h"
 #include "../Renderer.h"
+#include "../ThemeData.h"
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
@@ -242,4 +243,38 @@ void ImageComponent::copyScreen()
 	mTexture->initFromScreen();
 
 	resize();
+}
+
+void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	LOG(LogInfo) << " req image [" << view << "." << element << "]  (flags: " << properties << ")";
+
+	using namespace ThemeFlags;
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "image");
+	if(!elem)
+	{
+		LOG(LogInfo) << "    (missing)";
+		return;
+	}
+
+	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	
+	if(properties & POSITION && elem->has("pos"))
+	{
+		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
+		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+	}
+
+	if(properties & ThemeFlags::SIZE && elem->has("size"))
+		setResize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale), true);
+
+	if(properties & ORIGIN && elem->has("origin"))
+		setOrigin(elem->get<Eigen::Vector2f>("origin"));
+
+	if(properties & PATH && elem->has("path"))
+		setImage(elem->get<std::string>("path"));
+	
+	if(properties & TILING && elem->has("tile"))
+		setTiling(elem->get<bool>("tile"));
 }

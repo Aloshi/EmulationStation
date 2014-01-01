@@ -28,6 +28,8 @@ public:
 	
 	std::shared_ptr<Font> getFont() const;
 
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+
 private:
 	void calculateExtent();
 

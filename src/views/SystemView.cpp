@@ -38,7 +38,7 @@ void SystemView::updateData()
 	using namespace ThemeFlags;
 
 	mHeaderImage.setImage("");
-	mSystem->getTheme()->applyToImage("common", "header", &mHeaderImage, PATH);
+	mHeaderImage.applyTheme(mSystem->getTheme(), "system", "header", PATH);
 
 	// header
 	if(mHeaderImage.hasImage())
@@ -51,7 +51,7 @@ void SystemView::updateData()
 		mHeaderText.setText(mSystem->getFullName());
 	}
 
-	mSystem->getTheme()->applyToImage("common", "system", &mImage, PATH);
+	mImage.applyTheme(mSystem->getTheme(), "system", "system", PATH);
 }
 
 bool SystemView::input(InputConfig* config, Input input)

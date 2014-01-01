@@ -24,6 +24,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	struct ListRow
 	{
@@ -403,6 +404,29 @@ void TextListComponent<T>::onCursorChanged(CursorState state)
 {
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
+}
+
+template <typename T>
+void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "textlist");
+
+	using namespace ThemeFlags;
+	if(properties & COLOR)
+	{
+		if(elem->has("selectorColor"))
+			setSelectorColor(elem->get<unsigned int>("selectorColor"));
+		if(elem->has("selectedColor"))
+			setSelectedColor(elem->get<unsigned int>("selectedColor"));
+		if(elem->has("primaryColor"))
+			setColor(0, elem->get<unsigned int>("primaryColor"));
+		if(elem->has("secondaryColor"))
+			setColor(1, elem->get<unsigned int>("secondaryColor"));
+	}
+
+	setFont(Font::getFromTheme(elem, properties, mFont));
 }
 
 #endif

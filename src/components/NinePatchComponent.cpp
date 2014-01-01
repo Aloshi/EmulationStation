@@ -2,6 +2,7 @@
 #include "../Window.h"
 #include "../Log.h"
 #include "../Renderer.h"
+#include "../ThemeData.h"
 
 NinePatchComponent::NinePatchComponent(Window* window, const std::string& path, unsigned int edgeColor, unsigned int centerColor) : GuiComponent(window),
 	mEdgeColor(edgeColor), mCenterColor(centerColor), 
@@ -192,4 +193,18 @@ void NinePatchComponent::setCenterColor(unsigned int centerColor)
 {
 	mCenterColor = centerColor;
 	updateColors();
+}
+
+void NinePatchComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	using namespace ThemeFlags;
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "ninepatch");
+	if(!elem)
+		return;
+
+	if(properties & PATH && elem->has("path"))
+		setImagePath(elem->get<std::string>("path"));
 }

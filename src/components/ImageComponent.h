@@ -41,6 +41,8 @@ public:
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+
 private:
 	Eigen::Vector2f mTargetSize;
 	Eigen::Vector2f mOrigin;

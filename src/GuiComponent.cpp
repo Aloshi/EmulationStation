@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "Renderer.h"
 #include "animations/AnimationController.h"
+#include "ThemeData.h"
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
 	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity())
@@ -224,4 +225,21 @@ void GuiComponent::stopAnimation(unsigned char slot)
 		delete mAnimationMap[slot];
 		mAnimationMap[slot] = NULL;
 	}
+}
+
+void GuiComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "");
+
+	using namespace ThemeFlags;
+	if(properties & POSITION && elem->has("pos"))
+	{
+		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
+		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+	}
+
+	if(properties & ThemeFlags::SIZE && elem->has("size"))
+		setSize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
 }

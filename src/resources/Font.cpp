@@ -553,3 +553,22 @@ void TextCache::setColor(unsigned int color)
 {
 	Renderer::buildGLColorArray(const_cast<GLubyte*>(colors), color, vertCount);
 }
+
+std::shared_ptr<Font> Font::getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig)
+{
+	using namespace ThemeFlags;
+	if(!(properties & FONT_PATH) && !(properties & FONT_SIZE))
+		return orig;
+	
+	std::shared_ptr<Font> font;
+	int size = (orig ? orig->mSize : FONT_SIZE_MEDIUM);
+	std::string path = (orig ? orig->mPath : getDefaultPath());
+
+	float sh = (float)Renderer::getScreenHeight();
+	if(properties & FONT_SIZE && elem->has("fontSize")) 
+		size = (int)(sh * elem->get<float>("fontSize"));
+	if(properties & FONT_PATH && elem->has("fontPath"))
+		path = elem->get<std::string>("fontPath");
+
+	return get(size, path);
+}

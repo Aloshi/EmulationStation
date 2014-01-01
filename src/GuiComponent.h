@@ -8,6 +8,7 @@
 class Window;
 class Animation;
 class AnimationController;
+class ThemeData;
 
 class GuiComponent
 {
@@ -65,6 +66,10 @@ public:
 
 	virtual void onFocusGained() {};
 	virtual void onFocusLost() {};
+
+	// Default implementation just handles <pos> and <size> tags as normalized float pairs.
+	// You probably want to keep this behavior for any derived classes as well as add your own.
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties);
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;

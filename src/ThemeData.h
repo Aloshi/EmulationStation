@@ -69,7 +69,7 @@ ThemeException& operator<<(ThemeException& e, T appendMsg)
 
 class ThemeData
 {
-private:
+public:
 
 	class ThemeElement
 	{
@@ -80,11 +80,12 @@ private:
 		std::map< std::string, boost::variant<Eigen::Vector2f, std::string, unsigned int, float, bool> > properties;
 
 		template<typename T>
-		T get(const std::string& prop) { return boost::get<T>(properties.at(prop)); }
+		T get(const std::string& prop) const { return boost::get<T>(properties.at(prop)); }
 
-		inline bool has(const std::string& prop) { return (properties.find(prop) != properties.end()); }
+		inline bool has(const std::string& prop) const { return (properties.find(prop) != properties.end()); }
 	};
 
+private:
 	class ThemeView
 	{
 	private:
@@ -119,17 +120,10 @@ public:
 
 	void renderExtras(const std::string& view, Window* window, const Eigen::Affine3f& transform);
 
-	void applyToImage(const std::string& view, const std::string& element, ImageComponent* image, unsigned int properties);
-	void applyToNinePatch(const std::string& view, const std::string& element, NinePatchComponent* patch, unsigned int properties);
-	void applyToText(const std::string& view, const std::string& element, TextComponent* text, unsigned int properties);
-
-	template <typename T>
-	void applyToTextList(const std::string& view, const std::string& element, TextListComponent<T>* list, unsigned int properties);
-
 	void playSound(const std::string& name);
 
-private:
-	void applyPosAndSize(ThemeElement* elem, GuiComponent* comp, unsigned int properties);
+	// If expectedType is an empty string, will do no type checking.
+	const ThemeElement* getElement(const std::string& view, const std::string& element, const std::string& expectedType) const;
 
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
@@ -142,16 +136,24 @@ private:
 	void parseView(const pugi::xml_node& viewNode, ThemeView& view);
 	void parseElement(const pugi::xml_node& elementNode, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element);
 
-	ThemeElement* getElement(const std::string& viewName, const std::string& elementName);
-
 	std::map<std::string, ThemeView> mViews;
 
 	std::map< std::string, std::shared_ptr<Sound> > mSoundCache;
 };
 
 
-template <typename T>
-void ThemeData::applyToTextList(const std::string& view, const std::string& element, TextListComponent<T>* list, unsigned int properties)
-{
-
-}
+// okay ideas for applying themes to GuiComponents:
+// 1. ThemeData::applyToImage(component, args)
+//   NO, BECAUSE:
+//     - for templated types (TextListComponent) have to include the whole template in a header
+//     - inconsistent definitions if mixing templated types (some in a .cpp, some in a .h/.inl)
+// 2. template<typename T> ThemeData::apply(component, args) with specialized templates
+//   NO, BECAUSE:
+//     - doesn't solve the first drawback
+//     - can't customize arguments for specific types
+// 3. GuiComponent::applyTheme(theme, args)  - WINNER
+//   NO, BECAUSE:
+//     - can't access private members of ThemeData
+//        - can't this be solved with enough getters?
+//           - theme->hasElement and theme->getProperty will require 2x as many map lookups (4 vs 2)
+//              - why not just return a const ThemeElement...

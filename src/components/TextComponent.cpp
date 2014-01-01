@@ -138,3 +138,25 @@ std::string TextComponent::getValue() const
 {
 	return mText;
 }
+
+void TextComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	using namespace ThemeFlags;
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "text");
+	if(!elem)
+		return;
+
+	if(properties & COLOR && elem->has("color"))
+		setColor(elem->get<unsigned int>("color"));
+
+	if(properties & CENTER && elem->has("center"))
+		setCentered(elem->get<bool>("center"));
+
+	if(properties & TEXT && elem->has("text"))
+		setText(elem->get<std::string>("text"));
+
+	setFont(Font::getFromTheme(elem, properties, mFont));
+}

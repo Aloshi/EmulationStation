@@ -40,7 +40,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mBackground(window, ":/
 
 	mTheme = std::make_shared<ThemeData>();
 	using namespace ThemeFlags;
-	mTheme->applyToTextList< std::function<void()> >("common", "menu", &mList, FONT_PATH | COLOR);
+	mList.applyTheme(mTheme, "common", "menu", FONT_PATH | COLOR);
 	mList.setSelectorColor(0xBBBBBBFF);
 	mList.setColor(0, 0x0000FFFF);
 	mList.setColor(1, 0xFF0000FF);

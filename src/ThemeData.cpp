@@ -209,6 +209,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 	ThemeException error;
 	error.setFiles(mPaths);
 
+	element.type = root.name();
 	element.extra = root.attribute("extra").as_bool(false);
 
 	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
@@ -272,4 +273,51 @@ ThemeData::ThemeView::~ThemeView()
 {
 	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
 		delete *it;
+}
+
+
+const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, const std::string& element, const std::string& expectedType) const
+{
+	auto viewIt = mViews.find(view);
+	if(viewIt == mViews.end())
+	{
+		// also check common if the view never existed to begin with
+		viewIt = mViews.find("common");
+		if(viewIt == mViews.end())
+			return NULL;
+	}
+
+	auto elemIt = viewIt->second.elements.find(element);
+	if(elemIt == viewIt->second.elements.end()) return NULL;
+
+	if(elemIt->second.type != expectedType && !expectedType.empty())
+	{
+		LOG(LogWarning) << " requested mismatched theme type for [" << view << "." << element << "] - expected \"" 
+			<< expectedType << "\", got \"" << elemIt->second.type << "\"";
+		return NULL;
+	}
+
+	return &elemIt->second;
+}
+
+void ThemeData::playSound(const std::string& elementName)
+{
+	const ThemeElement* elem = getElement("common", elementName, "sound");
+	if(!elem)
+		return;
+
+	if(elem->has("path"))
+	{
+		const std::string path = elem->get<std::string>("path");
+		auto cacheIt = mSoundCache.find(path);
+		if(cacheIt != mSoundCache.end())
+		{
+			cacheIt->second->play();
+			return;
+		}
+		
+		std::shared_ptr<Sound> sound = std::shared_ptr<Sound>(new Sound(path));
+		sound->play();
+		mSoundCache[path] = sound;
+	}
 }

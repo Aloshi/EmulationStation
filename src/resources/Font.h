@@ -8,6 +8,7 @@
 #include FT_FREETYPE_H
 #include <Eigen/Dense>
 #include "ResourceManager.h"
+#include "../ThemeData.h"
 
 class TextCache;
 
@@ -69,6 +70,9 @@ public:
 	int getSize() const;
 
 	static std::string getDefaultPath();
+
+	static std::shared_ptr<Font> getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig);
+
 private:
 	static int getDpiX();
 	static int getDpiY();

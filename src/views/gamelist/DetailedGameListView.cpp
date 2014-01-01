@@ -26,6 +26,7 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mDescContainer.setAutoScroll((int)(1600 + mDescContainer.getSize().x()), 0.025f);
 	addChild(&mDescContainer);
 
+	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
 
@@ -41,7 +42,7 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 		mHeaderImage.setResize(0, mSize.y() * 0.185f, true);
 
 	using namespace ThemeFlags;
-	theme->applyToText("detailed", "description", &mDescription, POSITION | FONT_PATH | FONT_SIZE);
+	mDescription.applyTheme(theme, getName(), "description", POSITION | FONT_PATH | FONT_SIZE | COLOR);
 }
 
 void DetailedGameListView::updateInfoPanel()
