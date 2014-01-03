@@ -232,6 +232,8 @@ void GuiComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std
 	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "");
+	if(!elem)
+		return;
 
 	using namespace ThemeFlags;
 	if(properties & POSITION && elem->has("pos"))

@@ -35,16 +35,18 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mBackground(window, ":/
 	mList.setPosition(mSize.x() * 0.175f, mSize.y() * 0.05f);
 	mList.setSize(mSize.x() * 0.65f, mSize.y() * 0.9f);
 
+	using namespace ThemeFlags;
+	mBackground.applyTheme(mTheme, "menu", "background", PATH);
 	mBackground.fitTo(Eigen::Vector2f(mList.getSize().x(), mSize.y()), Eigen::Vector3f(mList.getPosition().x(), 0, 0));
 	addChild(&mBackground);
 
 	mTheme = std::make_shared<ThemeData>();
-	using namespace ThemeFlags;
-	mList.applyTheme(mTheme, "common", "menu", FONT_PATH | COLOR);
+	
+	mList.setFont(Font::get((int)(0.09f * Renderer::getScreenHeight())));
+	mList.applyTheme(mTheme, "menu", "menulist", FONT_PATH | COLOR);
 	mList.setSelectorColor(0xBBBBBBFF);
 	mList.setColor(0, 0x0000FFFF);
 	mList.setColor(1, 0xFF0000FF);
-	// TODO - set font size to 0.09f
 
 	addChild(&mList);
 }

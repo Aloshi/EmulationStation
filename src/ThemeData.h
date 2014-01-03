@@ -35,7 +35,9 @@ namespace ThemeFlags
 		TILING = 128,
 		SOUND = 256,
 		CENTER = 512,
-		TEXT = 1024
+		TEXT = 1024,
+
+		ALL = 0xFFFFFFFF
 	};
 }
 
@@ -67,6 +69,20 @@ ThemeException& operator<<(ThemeException& e, T appendMsg)
 	return e;
 }
 
+class ThemeExtras : public GuiComponent
+{
+public:
+	ThemeExtras(Window* window) : GuiComponent(window) {};
+
+	// will take ownership of the components within extras (delete them in destructor or when setExtras is called again)
+	void setExtras(const std::vector<GuiComponent*>& extras);
+
+	virtual ~ThemeExtras();
+
+private:
+	std::vector<GuiComponent*> mExtras;
+};
+
 class ThemeData
 {
 public:
@@ -88,17 +104,8 @@ public:
 private:
 	class ThemeView
 	{
-	private:
-		bool mExtrasDirty;
-		std::vector<GuiComponent*> mExtras;
-
 	public:
-		ThemeView() : mExtrasDirty(true) {}
-		virtual ~ThemeView();
-
 		std::map<std::string, ThemeElement> elements;
-		
-		const std::vector<GuiComponent*>& getExtras(Window* window);
 	};
 
 public:
@@ -125,6 +132,8 @@ public:
 	// If expectedType is an empty string, will do no type checking.
 	const ThemeElement* getElement(const std::string& view, const std::string& element, const std::string& expectedType) const;
 
+	static std::vector<GuiComponent*> makeExtras(const std::shared_ptr<ThemeData>& theme, const std::string& view, Window* window);
+
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
 
@@ -140,7 +149,6 @@ private:
 
 	std::map< std::string, std::shared_ptr<Sound> > mSoundCache;
 };
-
 
 // okay ideas for applying themes to GuiComponents:
 // 1. ThemeData::applyToImage(component, args)

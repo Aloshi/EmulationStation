@@ -42,6 +42,8 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 		mHeaderImage.setResize(0, mSize.y() * 0.185f, true);
 
 	using namespace ThemeFlags;
+	mImage.applyTheme(theme, getName(), "gameimage", POSITION | ThemeFlags::SIZE);
+	mDescContainer.applyTheme(theme, getName(), "infoPanel", POSITION | ThemeFlags::SIZE);
 	mDescription.applyTheme(theme, getName(), "description", POSITION | FONT_PATH | FONT_SIZE | COLOR);
 }
 

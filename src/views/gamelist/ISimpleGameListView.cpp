@@ -4,7 +4,7 @@
 #include "../ViewController.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
-	mHeaderText(window), mHeaderImage(window), mBackground(window)
+	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
 {
 	mHeaderText.setText("Header");
 	mHeaderText.setSize(mSize.x(), 0);
@@ -19,14 +19,16 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 
 	addChild(&mHeaderText);
 	addChild(&mBackground);
+	addChild(&mThemeExtras);
 }
 
 void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
 	using namespace ThemeFlags;
 	mBackground.applyTheme(theme, getName(), "background", PATH | TILING);
-	mHeaderImage.applyTheme(theme, getName(), "header", PATH);
-	
+	mHeaderImage.applyTheme(theme, getName(), "header", POSITION | ThemeFlags::SIZE | PATH);
+	mThemeExtras.setExtras(ThemeData::makeExtras(theme, getName(), mWindow));
+
 	if(mHeaderImage.hasImage())
 	{
 		removeChild(&mHeaderText);

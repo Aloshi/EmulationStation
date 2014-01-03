@@ -269,7 +269,8 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	if(properties & ThemeFlags::SIZE && elem->has("size"))
 		setResize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale), true);
 
-	if(properties & ORIGIN && elem->has("origin"))
+	// position + size also implies origin
+	if((properties & ORIGIN || (properties & POSITION && properties & ThemeFlags::SIZE)) && elem->has("origin"))
 		setOrigin(elem->get<Eigen::Vector2f>("origin"));
 
 	if(properties & PATH && elem->has("path"))

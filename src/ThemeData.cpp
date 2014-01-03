@@ -7,6 +7,9 @@
 #include "pugiXML/pugixml.hpp"
 #include <boost/assign.hpp>
 
+#include "components/ImageComponent.h"
+#include "components/TextComponent.h"
+
 std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > ThemeData::sElementMap = boost::assign::map_list_of
 	("image", boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
@@ -31,6 +34,9 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 		("secondaryColor", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT))
+	("container", boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR))
 	("sound", boost::assign::map_list_of
 		("path", PATH));
 
@@ -211,7 +217,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 	element.type = root.name();
 	element.extra = root.attribute("extra").as_bool(false);
-
+	
 	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
 	{
 		auto typeIt = typeMap.find(node.name());
@@ -269,12 +275,6 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 	}
 }
 
-ThemeData::ThemeView::~ThemeView()
-{
-	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
-		delete *it;
-}
-
 
 const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, const std::string& element, const std::string& expectedType) const
 {
@@ -320,4 +320,49 @@ void ThemeData::playSound(const std::string& elementName)
 		sound->play();
 		mSoundCache[path] = sound;
 	}
+}
+
+
+std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData>& theme, const std::string& view, Window* window)
+{
+	std::vector<GuiComponent*> comps;
+
+	auto viewIt = theme->mViews.find(view);
+	if(viewIt == theme->mViews.end())
+		return comps;
+	
+	for(auto it = viewIt->second.elements.begin(); it != viewIt->second.elements.end(); it++)
+	{
+		if(it->second.extra)
+		{
+			GuiComponent* comp = NULL;
+			const std::string& t = it->second.type;
+			if(t == "image")
+				comp = new ImageComponent(window);
+			else if(t == "text")
+				comp = new TextComponent(window);
+
+			comp->applyTheme(theme, view, it->first, ThemeFlags::ALL);
+			comps.push_back(comp);
+		}
+	}
+
+	return comps;
+}
+
+void ThemeExtras::setExtras(const std::vector<GuiComponent*>& extras)
+{
+	// delete old extras (if any)
+	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
+		delete *it;
+
+	mExtras = extras;
+	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
+		addChild(*it);
+}
+
+ThemeExtras::~ThemeExtras()
+{
+	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
+		delete *it;
 }
