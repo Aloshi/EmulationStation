@@ -127,12 +127,12 @@ public:
 
 	void renderExtras(const std::string& view, Window* window, const Eigen::Affine3f& transform);
 
-	void playSound(const std::string& name);
-
 	// If expectedType is an empty string, will do no type checking.
 	const ThemeElement* getElement(const std::string& view, const std::string& element, const std::string& expectedType) const;
 
 	static std::vector<GuiComponent*> makeExtras(const std::shared_ptr<ThemeData>& theme, const std::string& view, Window* window);
+
+	static const std::shared_ptr<ThemeData>& getDefault();
 
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
@@ -146,8 +146,6 @@ private:
 	void parseElement(const pugi::xml_node& elementNode, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element);
 
 	std::map<std::string, ThemeView> mViews;
-
-	std::map< std::string, std::shared_ptr<Sound> > mSoundCache;
 };
 
 // okay ideas for applying themes to GuiComponents:

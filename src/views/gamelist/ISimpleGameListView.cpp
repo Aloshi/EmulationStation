@@ -2,6 +2,7 @@
 #include "../../ThemeData.h"
 #include "../../Window.h"
 #include "../ViewController.h"
+#include "../../Sound.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
@@ -57,6 +58,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			FileData* cursor = getCursor();
 			if(cursor->getType() == GAME)
 			{
+				Sound::getFromTheme(getTheme(), getName(), "launch")->play();
 				launch(cursor);
 			}else{
 				// it's a folder
@@ -75,7 +77,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				populateList(mCursorStack.top()->getParent()->getChildren());
 				setCursor(mCursorStack.top());
 				mCursorStack.pop();
-				getTheme()->playSound("backSound");
+				Sound::getFromTheme(getTheme(), getName(), "back")->play();
 			}else{
 				onFocusLost();
 				mWindow->getViewController()->goToSystemView(getCursor()->getSystem());

@@ -21,7 +21,7 @@ bool IGameListView::input(InputConfig* config, Input input)
 				onFileChanged(file, FILE_REMOVED); //tell the view
 				delete file; //free it
 		}));
-		mTheme->playSound("menuOpenSound");
+		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
 		return true;
 	}else if(config->isMappedTo("select", input) && input.value != 0)
 	{

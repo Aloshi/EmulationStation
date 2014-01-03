@@ -2,6 +2,35 @@
 #include "AudioManager.h"
 #include "Log.h"
 #include "Settings.h"
+#include "ThemeData.h"
+
+std::map< std::string, std::shared_ptr<Sound> > Sound::sMap;
+
+std::shared_ptr<Sound> Sound::get(const std::string& path)
+{
+	auto it = sMap.find(path);
+	if(it != sMap.end())
+		return it->second;
+
+	std::shared_ptr<Sound> sound = std::shared_ptr<Sound>(new Sound(path));
+	AudioManager::getInstance()->registerSound(sound);
+	sMap[path] = sound;
+	return sound;
+}
+
+std::shared_ptr<Sound> Sound::getFromTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element)
+{
+	LOG(LogInfo) << " req sound [" << view << "." << element << "]";
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "sound");
+	if(!elem || !elem->has("path"))
+	{
+		LOG(LogInfo) << "   (missing)";
+		return get("");
+	}
+
+	return get(elem->get<std::string>("path"));
+}
 
 Sound::Sound(const std::string & path) : mSampleData(NULL), mSamplePos(0), mSampleLength(0), playing(false)
 {

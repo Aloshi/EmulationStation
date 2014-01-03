@@ -2,8 +2,11 @@
 #define _SOUND_H_
 
 #include <string>
+#include <map>
+#include <memory>
 #include "SDL_audio.h"
 
+class ThemeData;
 
 class Sound
 {
@@ -15,7 +18,9 @@ class Sound
 	bool playing;
 
 public:
-	Sound(const std::string & path = "");
+	static std::shared_ptr<Sound> get(const std::string& path);
+	static std::shared_ptr<Sound> getFromTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& elem);
+
 	~Sound();
 
 	void init();
@@ -32,6 +37,10 @@ public:
 	void setPosition(Uint32 newPosition);
 	Uint32 getLength() const;
 	Uint32 getLengthMS() const;
+
+private:
+	Sound(const std::string & path = "");
+	static std::map< std::string, std::shared_ptr<Sound> > sMap;
 };
 
 #endif

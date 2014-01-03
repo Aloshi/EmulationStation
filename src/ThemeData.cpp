@@ -33,7 +33,8 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 		("primaryColor", COLOR)
 		("secondaryColor", COLOR)
 		("fontPath", PATH)
-		("fontSize", FLOAT))
+		("fontSize", FLOAT)
+		("scrollSound", PATH))
 	("container", boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR))
@@ -300,28 +301,17 @@ const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, co
 	return &elemIt->second;
 }
 
-void ThemeData::playSound(const std::string& elementName)
+const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 {
-	const ThemeElement* elem = getElement("common", elementName, "sound");
-	if(!elem)
-		return;
-
-	if(elem->has("path"))
+	static std::shared_ptr<ThemeData> theme = nullptr;
+	if(theme == nullptr)
 	{
-		const std::string path = elem->get<std::string>("path");
-		auto cacheIt = mSoundCache.find(path);
-		if(cacheIt != mSoundCache.end())
-		{
-			cacheIt->second->play();
-			return;
-		}
-		
-		std::shared_ptr<Sound> sound = std::shared_ptr<Sound>(new Sound(path));
-		sound->play();
-		mSoundCache[path] = sound;
+		theme = std::shared_ptr<ThemeData>(new ThemeData());
+		theme->loadFile(getHomePath() + "/.emulationstation/es_theme_default.xml");
 	}
-}
 
+	return theme;
+}
 
 std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData>& theme, const std::string& view, Window* window)
 {

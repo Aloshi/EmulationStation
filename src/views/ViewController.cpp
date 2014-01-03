@@ -83,8 +83,6 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 		return;
 	}
 
-	game->getSystem()->getTheme()->playSound("gameSelectSound");
-
 	Eigen::Affine3f origCamera = mCamera;
 	origCamera.translation() = -mCurrentView->getPosition();
 
@@ -165,7 +163,6 @@ bool ViewController::input(InputConfig* config, Input input)
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));
-		ThemeData().playSound("menuOpenSound");
 		return true;
 	}
 

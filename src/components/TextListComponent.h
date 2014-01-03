@@ -69,6 +69,7 @@ public:
 	inline void setSelectedColor(unsigned int color) { mSelectedColor = color; }
 	inline void setScrollSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
 	inline void setColor(unsigned int id, unsigned int color) { mColors[id] = color; }
+	inline void setSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
 
 private:
 	static const int MARQUEE_DELAY = 900;
@@ -429,6 +430,9 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	}
 
 	setFont(Font::getFromTheme(elem, properties, mFont));
+	
+	if(properties & SOUND && elem->has("scrollSound"))
+		setSound(Sound::get(elem->get<std::string>("scrollSound")));
 }
 
 #endif

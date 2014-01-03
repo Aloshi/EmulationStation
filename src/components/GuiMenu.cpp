@@ -35,18 +35,20 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mBackground(window, ":/
 	mList.setPosition(mSize.x() * 0.175f, mSize.y() * 0.05f);
 	mList.setSize(mSize.x() * 0.65f, mSize.y() * 0.9f);
 
+	mTheme = ThemeData::getDefault();
+
 	using namespace ThemeFlags;
 	mBackground.applyTheme(mTheme, "menu", "background", PATH);
 	mBackground.fitTo(Eigen::Vector2f(mList.getSize().x(), mSize.y()), Eigen::Vector3f(mList.getPosition().x(), 0, 0));
 	addChild(&mBackground);
 
-	mTheme = std::make_shared<ThemeData>();
-	
 	mList.setFont(Font::get((int)(0.09f * Renderer::getScreenHeight())));
-	mList.applyTheme(mTheme, "menu", "menulist", FONT_PATH | COLOR);
+	mList.applyTheme(mTheme, "menu", "menulist", FONT_PATH | COLOR | SOUND);
 	mList.setSelectorColor(0xBBBBBBFF);
 	mList.setColor(0, 0x0000FFFF);
 	mList.setColor(1, 0xFF0000FF);
+
+	Sound::getFromTheme(mTheme, "menu", "menuOpen")->play();
 
 	addChild(&mList);
 }
@@ -57,7 +59,7 @@ bool GuiMenu::input(InputConfig* config, Input input)
 	{
 		if(config->isMappedTo("b", input) || config->isMappedTo("menu", input))
 		{
-			mTheme->playSound("menuCloseSound");
+			Sound::getFromTheme(mTheme, "menu", "menuClose")->play();
 			delete this;
 			return true;
 		}else if(config->isMappedTo("a", input) && mList.getList().size() > 0)
