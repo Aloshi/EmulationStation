@@ -38,6 +38,10 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 	("container", boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR))
+	("ninepatch", boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("path", PATH))
 	("sound", boost::assign::map_list_of
 		("path", PATH));
 
