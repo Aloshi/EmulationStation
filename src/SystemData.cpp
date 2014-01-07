@@ -238,6 +238,12 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 	//actually read the file
 	pugi::xml_node systemList = doc.child("systemList");
 
+	if(!systemList)
+	{
+		LOG(LogError) << "es_systems.cfg is missing the <systemList> tag!";
+		return false;
+	}
+
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
 		std::string name, fullname, path, cmd;

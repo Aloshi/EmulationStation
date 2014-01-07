@@ -10,7 +10,8 @@ SystemView::SystemView(Window* window, SystemData* system) : GuiComponent(window
 
 	mHeaderImage(window),
 	mHeaderText(window),
-	mImage(window)
+	mImage(window),
+	mExtras(window)
 {
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
@@ -26,6 +27,7 @@ SystemView::SystemView(Window* window, SystemData* system) : GuiComponent(window
 	mImage.setPosition(mSize.x() / 2, mSize.y() * 0.6f);
 	mImage.setResize(0, mSize.y() * 0.8f, false);
 
+	addChild(&mExtras);
 	addChild(&mImage);
 	addChild(&mHeaderText);
 	addChild(&mHeaderImage);
@@ -37,8 +39,10 @@ void SystemView::updateData()
 {
 	using namespace ThemeFlags;
 
+	mExtras.setExtras(ThemeData::makeExtras(mSystem->getTheme(), "system", mWindow));
+
 	mHeaderImage.setImage("");
-	mHeaderImage.applyTheme(mSystem->getTheme(), "system", "header", PATH);
+	mHeaderImage.applyTheme(mSystem->getTheme(), "system", "header", ALL);
 
 	// header
 	if(mHeaderImage.hasImage())
@@ -51,7 +55,7 @@ void SystemView::updateData()
 		mHeaderText.setText(mSystem->getFullName());
 	}
 
-	mImage.applyTheme(mSystem->getTheme(), "system", "system", PATH);
+	mImage.applyTheme(mSystem->getTheme(), "system", "system", ALL);
 }
 
 bool SystemView::input(InputConfig* config, Input input)

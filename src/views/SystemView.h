@@ -22,4 +22,5 @@ private:
 	TextComponent mHeaderText;
 	ImageComponent mHeaderImage;
 	ImageComponent mImage;
+	ThemeExtras mExtras;
 };

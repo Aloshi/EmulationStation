@@ -200,8 +200,8 @@ Reference
 	* image name="header" - POSITION | SIZE | PATH
 
 #### system
-	* image name="header" - PATH
-	* image name="system" - PATH
+	* image name="header" - ALL
+	* image name="system" - ALL
 
 #### menu
 	* ninepatch name="background" - PATH

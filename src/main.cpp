@@ -24,62 +24,59 @@ bool scrape_cmdline = false;
 
 bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
 {
-	if(argc > 1)
+	for(int i = 1; i < argc; i++)
 	{
-		for(int i = 1; i < argc; i++)
+		if(strcmp(argv[i], "-w") == 0)
 		{
-			if(strcmp(argv[i], "-w") == 0)
-			{
-				*width = atoi(argv[i + 1]);
-				i++; //skip the argument value
-			}else if(strcmp(argv[i], "-h") == 0)
-			{
-				*height = atoi(argv[i + 1]);
-				i++; //skip the argument value
-			}else if(strcmp(argv[i], "--gamelist-only") == 0)
-			{
-				Settings::getInstance()->setBool("PARSEGAMELISTONLY", true);
-			}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
-			{
-				Settings::getInstance()->setBool("IGNOREGAMELIST", true);
-			}else if(strcmp(argv[i], "--draw-framerate") == 0)
-			{
-				Settings::getInstance()->setBool("DRAWFRAMERATE", true);
-			}else if(strcmp(argv[i], "--no-exit") == 0)
-			{
-				Settings::getInstance()->setBool("DONTSHOWEXIT", true);
-			}else if(strcmp(argv[i], "--debug") == 0)
-			{
-				Settings::getInstance()->setBool("DEBUG", true);
-				Log::setReportingLevel(LogDebug);
-			}else if(strcmp(argv[i], "--dimtime") == 0)
-			{
-				Settings::getInstance()->setInt("DIMTIME", atoi(argv[i + 1]) * 1000);
-				i++; //skip the argument value
-			}else if(strcmp(argv[i], "--windowed") == 0)
-			{
-				Settings::getInstance()->setBool("WINDOWED", true);
-			}else if(strcmp(argv[i], "--scrape") == 0)
-			{
-				scrape_cmdline = true;
-			}else if(strcmp(argv[i], "--help") == 0)
-			{
-				std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
-				std::cout << "Command line arguments:\n";
-				std::cout << "-w [width in pixels]		set screen width\n";
-				std::cout << "-h [height in pixels]		set screen height\n";
-				std::cout << "--gamelist-only			skip automatic game detection, only read from gamelist.xml\n";
-				std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
-				std::cout << "--draw-framerate		display the framerate\n";
-				std::cout << "--no-exit			don't show the exit option in the menu\n";
-				std::cout << "--debug				even more logging\n";
-				std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
-				std::cout << "--scrape			scrape using command line interface\n";
-				std::cout << "--windowed			not fullscreen\n";
-				std::cout << "--help				summon a sentient, angry tuba\n\n";
-				std::cout << "More information available in README.md.\n";
-				return false; //exit after printing help
-			}
+			*width = atoi(argv[i + 1]);
+			i++; //skip the argument value
+		}else if(strcmp(argv[i], "-h") == 0)
+		{
+			*height = atoi(argv[i + 1]);
+			i++; //skip the argument value
+		}else if(strcmp(argv[i], "--gamelist-only") == 0)
+		{
+			Settings::getInstance()->setBool("PARSEGAMELISTONLY", true);
+		}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
+		{
+			Settings::getInstance()->setBool("IGNOREGAMELIST", true);
+		}else if(strcmp(argv[i], "--draw-framerate") == 0)
+		{
+			Settings::getInstance()->setBool("DRAWFRAMERATE", true);
+		}else if(strcmp(argv[i], "--no-exit") == 0)
+		{
+			Settings::getInstance()->setBool("DONTSHOWEXIT", true);
+		}else if(strcmp(argv[i], "--debug") == 0)
+		{
+			Settings::getInstance()->setBool("DEBUG", true);
+			Log::setReportingLevel(LogDebug);
+		}else if(strcmp(argv[i], "--dimtime") == 0)
+		{
+			Settings::getInstance()->setInt("DIMTIME", atoi(argv[i + 1]) * 1000);
+			i++; //skip the argument value
+		}else if(strcmp(argv[i], "--windowed") == 0)
+		{
+			Settings::getInstance()->setBool("WINDOWED", true);
+		}else if(strcmp(argv[i], "--scrape") == 0)
+		{
+			scrape_cmdline = true;
+		}else if(strcmp(argv[i], "--help") == 0)
+		{
+			std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
+			std::cout << "Command line arguments:\n";
+			std::cout << "-w [width in pixels]		set screen width\n";
+			std::cout << "-h [height in pixels]		set screen height\n";
+			std::cout << "--gamelist-only			skip automatic game detection, only read from gamelist.xml\n";
+			std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
+			std::cout << "--draw-framerate		display the framerate\n";
+			std::cout << "--no-exit			don't show the exit option in the menu\n";
+			std::cout << "--debug				even more logging\n";
+			std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
+			std::cout << "--scrape			scrape using command line interface\n";
+			std::cout << "--windowed			not fullscreen, should be used in conjunction with -w and -h\n";
+			std::cout << "--help				summon a sentient, angry tuba\n\n";
+			std::cout << "More information available in README.md.\n";
+			return false; //exit after printing help
 		}
 	}
 
