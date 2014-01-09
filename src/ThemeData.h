@@ -73,11 +73,10 @@ class ThemeExtras : public GuiComponent
 {
 public:
 	ThemeExtras(Window* window) : GuiComponent(window) {};
+	virtual ~ThemeExtras();
 
 	// will take ownership of the components within extras (delete them in destructor or when setExtras is called again)
 	void setExtras(const std::vector<GuiComponent*>& extras);
-
-	virtual ~ThemeExtras();
 
 private:
 	std::vector<GuiComponent*> mExtras;
@@ -106,6 +105,7 @@ private:
 	{
 	public:
 		std::map<std::string, ThemeElement> elements;
+		std::vector<std::string> orderedKeys;
 	};
 
 public:
@@ -147,19 +147,3 @@ private:
 
 	std::map<std::string, ThemeView> mViews;
 };
-
-// okay ideas for applying themes to GuiComponents:
-// 1. ThemeData::applyToImage(component, args)
-//   NO, BECAUSE:
-//     - for templated types (TextListComponent) have to include the whole template in a header
-//     - inconsistent definitions if mixing templated types (some in a .cpp, some in a .h/.inl)
-// 2. template<typename T> ThemeData::apply(component, args) with specialized templates
-//   NO, BECAUSE:
-//     - doesn't solve the first drawback
-//     - can't customize arguments for specific types
-// 3. GuiComponent::applyTheme(theme, args)  - WINNER
-//   NO, BECAUSE:
-//     - can't access private members of ThemeData
-//        - can't this be solved with enough getters?
-//           - theme->hasElement and theme->getProperty will require 2x as many map lookups (4 vs 2)
-//              - why not just return a const ThemeElement...

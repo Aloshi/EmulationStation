@@ -211,6 +211,9 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 
 		parseElement(node, elemTypeIt->second, 
 			view.elements.insert(std::make_pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
+
+		if(std::find(view.orderedKeys.begin(), view.orderedKeys.end(), elemKey) == view.orderedKeys.end())
+			view.orderedKeys.push_back(elemKey);
 	}
 }
 
@@ -325,18 +328,19 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 	if(viewIt == theme->mViews.end())
 		return comps;
 	
-	for(auto it = viewIt->second.elements.begin(); it != viewIt->second.elements.end(); it++)
+	for(auto it = viewIt->second.orderedKeys.begin(); it != viewIt->second.orderedKeys.end(); it++)
 	{
-		if(it->second.extra)
+		ThemeElement& elem = viewIt->second.elements.at(*it);
+		if(elem.extra)
 		{
 			GuiComponent* comp = NULL;
-			const std::string& t = it->second.type;
+			const std::string& t = elem.type;
 			if(t == "image")
 				comp = new ImageComponent(window);
 			else if(t == "text")
 				comp = new TextComponent(window);
 
-			comp->applyTheme(theme, view, it->first, ThemeFlags::ALL);
+			comp->applyTheme(theme, view, *it, ThemeFlags::ALL);
 			comps.push_back(comp);
 		}
 	}
