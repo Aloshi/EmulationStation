@@ -46,15 +46,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 
 	mRootFolder->sort(FileSorts::SortTypes.at(0));
 
-	mTheme = std::make_shared<ThemeData>();
-	try
-	{
-		mTheme->loadFile(getThemePath());
-	} catch(ThemeException& e)
-	{
-		LOG(LogError) << e.what();
-		mTheme = std::make_shared<ThemeData>(); // reset to empty
-	}
+	loadTheme();
 }
 
 SystemData::~SystemData()
@@ -383,4 +375,17 @@ bool SystemData::hasGamelist() const
 unsigned int SystemData::getGameCount() const
 {
 	return mRootFolder->getFilesRecursive(GAME).size();
+}
+
+void SystemData::loadTheme()
+{
+	mTheme = std::make_shared<ThemeData>();
+	try
+	{
+		mTheme->loadFile(getThemePath());
+	} catch(ThemeException& e)
+	{
+		LOG(LogError) << e.what();
+		mTheme = std::make_shared<ThemeData>(); // reset to empty
+	}
 }

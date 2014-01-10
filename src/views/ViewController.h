@@ -16,7 +16,7 @@ public:
 
 	// If a basic view detected a metadata change, it can request to recreate
 	// the current gamelist view (as it may change to be detailed).
-	void reloadGameListView(IGameListView* gamelist);
+	void reloadGameListView(IGameListView* gamelist, bool reloadTheme = false);
 
 	// Navigation.
 	void goToNextGameList();

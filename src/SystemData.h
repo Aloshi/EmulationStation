@@ -58,6 +58,9 @@ public:
 		return *it;
 	}
 
+	// Load or re-load theme.
+	void loadTheme();
+
 private:
 	std::string mName;
 	std::string mFullName;

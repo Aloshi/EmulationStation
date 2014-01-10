@@ -4,9 +4,11 @@
 #include "../../components/GuiMenu.h"
 #include "../../components/GuiFastSelect.h"
 #include "../ViewController.h"
+#include "../../Settings.h"
 
 bool IGameListView::input(InputConfig* config, Input input)
 {
+	// F3 to open metadata editor
 	if(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_F3 && input.value != 0)
 	{
 		// open metadata editor
@@ -23,6 +25,15 @@ bool IGameListView::input(InputConfig* config, Input input)
 		}));
 		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
 		return true;
+
+	// Ctrl-R to reload a view when debugging
+	}else if(Settings::getInstance()->getBool("DEBUG") && config->getDeviceId() == DEVICE_KEYBOARD && 
+		(SDL_GetModState() & (KMOD_LCTRL | KMOD_RCTRL)) && input.id == SDLK_r && input.value != 0)
+	{
+		LOG(LogDebug) << "reloading view";
+		mWindow->getViewController()->reloadGameListView(this, true);
+		return true;
+	// select opens the fast select GUI
 	}else if(config->isMappedTo("select", input) && input.value != 0)
 	{
 		// open fast select

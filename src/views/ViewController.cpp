@@ -226,7 +226,7 @@ void ViewController::preload()
 	}
 }
 
-void ViewController::reloadGameListView(IGameListView* view)
+void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 {
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -236,6 +236,9 @@ void ViewController::reloadGameListView(IGameListView* view)
 			SystemData* system = it->first;
 			FileData* cursor = view->getCursor();
 			mGameListViews.erase(it);
+
+			if(reloadTheme)
+				system->loadTheme();
 
 			std::shared_ptr<IGameListView> newView = getGameListView(system);
 			newView->setCursor(cursor);
