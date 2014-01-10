@@ -315,7 +315,19 @@ const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 	if(theme == nullptr)
 	{
 		theme = std::shared_ptr<ThemeData>(new ThemeData());
-		theme->loadFile(getHomePath() + "/.emulationstation/es_theme_default.xml");
+
+		const std::string path = getHomePath() + "/.emulationstation/es_theme_default.xml";
+		if(fs::exists(path))
+		{
+			try
+			{
+				theme->loadFile(path);
+			} catch(ThemeException& e)
+			{
+				LOG(LogError) << e.what();
+				theme = std::shared_ptr<ThemeData>(new ThemeData()); //reset to empty
+			}
+		}
 	}
 
 	return theme;
