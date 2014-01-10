@@ -20,10 +20,10 @@ Eigen::Vector2f ImageComponent::getCenter() const
 		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
 }
 
-ImageComponent::ImageComponent(Window* window, float offsetX, float offsetY, std::string path, float targetWidth, float targetHeight, bool allowUpscale) : GuiComponent(window), 
-	mTiled(false), mAllowUpscale(allowUpscale), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(targetWidth, targetHeight), mColorShift(0xFFFFFFFF)
+ImageComponent::ImageComponent(Window* window, const Eigen::Vector2f& pos, const std::string& path) : GuiComponent(window), 
+	mTiled(false), mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
 {
-	setPosition(offsetX, offsetY);
+	setPosition(pos.x(), pos.y());
 
 	if(!path.empty())
 		setImage(path);
@@ -38,35 +38,44 @@ void ImageComponent::resize()
 	if(!mTexture)
 		return;
 
-	mSize << (float)getTextureSize().x(), (float)getTextureSize().y();
-	
-	//(we don't resize tiled images)
-	if(!mTiled && (mTargetSize.x() || mTargetSize.y()))
-	{
-		Eigen::Vector2f resizeScale(Eigen::Vector2f::Zero());
-
-		if(mTargetSize.x() && (mAllowUpscale || mSize.x() > mTargetSize.x()))
-		{
-			resizeScale[0] = mTargetSize.x() / mSize.x();
-		}
-		if(mTargetSize.y() && (mAllowUpscale || mSize.y() > mTargetSize.y()))
-		{
-			resizeScale[1] = mTargetSize.y() / mSize.y();
-		}
-
-		if(resizeScale.x() && !resizeScale.y())
-			resizeScale[1] = resizeScale.x();
-		if(resizeScale[1] && !resizeScale.x())
-			resizeScale[0] = resizeScale.y();
-
-		if(resizeScale.x())
-			mSize[0] = (mSize.x() * resizeScale.x());
-		if(resizeScale.y())
-			mSize[1] = (mSize.y() * resizeScale.y());
-	}
+	const Eigen::Vector2f textureSize((float)getTextureSize().x(), (float)getTextureSize().y());
 
 	if(mTiled)
+	{
 		mSize = mTargetSize;
+	}else{
+		if(mTargetIsMax)
+		{
+			mSize = textureSize;
+
+			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
+			
+			if(resizeScale.x() < resizeScale.y())
+			{
+				mSize[0] *= resizeScale.x();
+				mSize[1] *= resizeScale.x();
+			}else{
+				mSize[0] *= resizeScale.y();
+				mSize[1] *= resizeScale.y();
+			}
+
+		}else{
+			// if both components are set, we just stretch
+			// if no components are set, we don't resize at all
+			mSize = mTargetSize.isZero() ? textureSize : mTargetSize;
+
+			// if only one component is set, we resize in a way that maintains aspect ratio
+			if(!mTargetSize.x() && mTargetSize.y())
+			{
+				mSize[0] = (mTargetSize.y() / mSize.y()) * mSize.x();
+				mSize[1] = mTargetSize.y();
+			}else if(mTargetSize.x() && !mTargetSize.y())
+			{
+				mSize[0] = mTargetSize.x();
+				mSize[1] = (mTargetSize.x() / mSize.x()) * mSize.y();
+			}
+		}
+	}
 }
 
 void ImageComponent::setImage(std::string path)
@@ -104,16 +113,20 @@ void ImageComponent::setTiling(bool tile)
 {
 	mTiled = tile;
 
-	if(mTiled)
-		mAllowUpscale = false;
-
 	resize();
 }
 
-void ImageComponent::setResize(float width, float height, bool allowUpscale)
+void ImageComponent::setResize(float width, float height)
 {
 	mTargetSize << width, height;
-	mAllowUpscale = allowUpscale;
+	mTargetIsMax = false;
+	resize();
+}
+
+void ImageComponent::setMaxSize(float width, float height)
+{
+	mTargetSize << width, height;
+	mTargetIsMax = true;
 	resize();
 }
 
@@ -266,8 +279,13 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
 	}
 
-	if(properties & ThemeFlags::SIZE && elem->has("size"))
-		setResize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale), true);
+	if(properties & ThemeFlags::SIZE)
+	{
+		if(elem->has("size"))
+			setResize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
+		else if(elem->has("maxSize"))
+			setMaxSize(elem->get<Eigen::Vector2f>("maxSize").cwiseProduct(scale));
+	}
 
 	// position + size also implies origin
 	if((properties & ORIGIN || (properties & POSITION && properties & ThemeFlags::SIZE)) && elem->has("origin"))

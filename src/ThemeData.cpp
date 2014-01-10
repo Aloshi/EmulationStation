@@ -14,6 +14,7 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 	("image", boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
+		("maxSize", NORMALIZED_PAIR)
 		("origin", NORMALIZED_PAIR)
 		("path", PATH)
 		("tile", BOOLEAN))

@@ -63,8 +63,8 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mResultInfo, false, ComponentListComponent::AlignLeft);
 	
 	mResultThumbnail.setOrigin(0.5f, 0.5f);
-	mResultThumbnail.setResize(colWidth, mResultInfo.getSize().y(), false);
-	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mResultThumbnail, false, ComponentListComponent::AlignCenter);
+	mResultThumbnail.setMaxSize(colWidth, mResultInfo.getSize().y() + mResultName.getSize().y());
+	mList.setEntry(Vector2i(1, 1), Vector2i(1, 2), &mResultThumbnail, false, ComponentListComponent::AlignCenter);
 
 	//y = 3 is a spacer row
 

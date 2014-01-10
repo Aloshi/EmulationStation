@@ -317,7 +317,7 @@ void ImageGridComponent<T>::buildImages()
 
 			image.setPosition((squareSize.x() + padding.x()) * (x + 0.5f) + offset.x(), (squareSize.y() + padding.y()) * (y + 0.5f) + offset.y());
 			image.setOrigin(0.5f, 0.5f);
-			image.setResize(squareSize.x(), squareSize.y(), true);
+			image.setResize(squareSize.x(), squareSize.y());
 			image.setImage("");
 		}
 	}
@@ -357,10 +357,10 @@ void ImageGridComponent<T>::updateImages()
 		if(i == mCursor)
 		{
 			image.setColorShift(0xFFFFFFFF);
-			image.setResize(squareSize.x() + getPadding().x() * 0.95f, squareSize.y() + getPadding().y() * 0.95f, true);
+			image.setResize(squareSize.x() + getPadding().x() * 0.95f, squareSize.y() + getPadding().y() * 0.95f);
 		}else{
 			image.setColorShift(0xAAAAAABB);
-			image.setResize(squareSize.x(), squareSize.y(), true);
+			image.setResize(squareSize.x(), squareSize.y());
 		}
 
 		image.setImage(mEntries.at(i).texture);

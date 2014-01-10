@@ -222,6 +222,7 @@ Reference
 #### image
 	* `pos` - type: NORMALIZED_PAIR.
 	* `size` - type: NORMALIZED_PAIR.
+	* `maxSize` - type: NORMALIZED_PAIR.
 	* `origin` - type: NORMALIZED_PAIR.
 	* `path` - type: PATH.
 	* `tile` - type: BOOLEAN.
