@@ -7,13 +7,14 @@
 #include "../scrapers/GamesDBScraper.h"
 
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window), 
-	mList(window, Eigen::Vector2i(2, 6)), 
+	mList(window, Eigen::Vector2i(2, 7)), 
 	mBox(mWindow, ":/frame.png", 0x444444FF),
 	mDrawFramerateSwitch(window),
-	mVolumeSlider(window, 0, 100, 1),
+	mVolumeSlider(window, 0, 100, 1, "%"),
 	mDisableSoundsSwitch(window, false),
 	mScraperOptList(window), 
 	mScrapeRatingsSwitch(window), 
+	mDimSlider(window, 0, 60, 1, "s"),
 	mSaveButton(window)
 {
 	loadStates();
@@ -80,10 +81,20 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	
 	mList.setEntry(Vector2i(1, 4), Vector2i(1, 1), &mScrapeRatingsSwitch, true, ComponentListComponent::AlignCenter);
 
+	// dim time label
+	label = new TextComponent(mWindow);
+	label->setText("Dim after: ");
+	label->setColor(0x0000FFFF);
+	mLabels.push_back(label);
+	mList.setEntry(Vector2i(0, 5), Vector2i(1, 1), label, false, ComponentListComponent::AlignRight);
+
+	// dim slider
+	mList.setEntry(Vector2i(1, 5), Vector2i(1, 1), &mDimSlider, true, ComponentListComponent::AlignCenter);
+
 	//save button
 	mSaveButton.setText("SAVE", 0x00FF00FF);
 	mSaveButton.setPressedFunc([this] () { applyStates(); delete this; });
-	mList.setEntry(Vector2i(0, 5), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
+	mList.setEntry(Vector2i(0, 6), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
 
 	//center list
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
@@ -126,6 +137,8 @@ void GuiSettingsMenu::loadStates()
 	mDisableSoundsSwitch.setState(s->getBool("DISABLESOUNDS"));
 
 	mScrapeRatingsSwitch.setState(s->getBool("ScrapeRatings"));
+
+	mDimSlider.setValue((float)(s->getInt("DIMTIME") / 1000));
 }
 
 void GuiSettingsMenu::applyStates()
@@ -141,6 +154,8 @@ void GuiSettingsMenu::applyStates()
 		s->setScraper(mScraperOptList.getSelected()[0]->object);
 
 	s->setBool("ScrapeRatings", mScrapeRatingsSwitch.getState());
+
+	s->setInt("DIMTIME", (int)(mDimSlider.getValue() * 1000));
 
 	s->saveFile();
 }

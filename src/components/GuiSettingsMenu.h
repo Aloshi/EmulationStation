@@ -33,6 +33,7 @@ private:
 	SwitchComponent mDisableSoundsSwitch;
 	OptionListComponent< std::shared_ptr<Scraper> > mScraperOptList;
 	SwitchComponent mScrapeRatingsSwitch;
+	SliderComponent mDimSlider;
 	ButtonComponent mSaveButton;
 	
 	std::vector<GuiComponent*> mLabels;

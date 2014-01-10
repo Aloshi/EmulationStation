@@ -38,8 +38,8 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 	mHeaderImage.setResize(mSize.x() * 0.5f, 0, true);
 	BasicGameListView::onThemeChanged(theme);
 
-	if(mHeaderImage.getPosition().y() + mHeaderImage.getSize().y() > mImage.getPosition().y())
-		mHeaderImage.setResize(0, mSize.y() * 0.185f, true);
+	//if(mHeaderImage.getPosition().y() + mHeaderImage.getSize().y() > mImage.getPosition().y())
+	//	mHeaderImage.setResize(0, mSize.y() * 0.185f, true);
 
 	using namespace ThemeFlags;
 	mImage.applyTheme(theme, getName(), "gameimage", POSITION | ThemeFlags::SIZE);
