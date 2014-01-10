@@ -433,6 +433,9 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	
 	if(properties & SOUND && elem->has("scrollSound"))
 		setSound(Sound::get(elem->get<std::string>("scrollSound")));
+
+	if(properties & CENTER && elem->has("center"))
+		mCentered = elem->get<bool>("center");
 }
 
 #endif

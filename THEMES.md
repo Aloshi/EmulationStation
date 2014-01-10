@@ -243,6 +243,7 @@ Reference
 	* `fontPath` - type: PATH.
 	* `fontSize` - type: FLOAT.
 	* `scrollSound` - type: PATH.
+	* `center` - type: BOOLEAN.
 
 #### container
 	* `pos` - type: NORMALIZED_PAIR.

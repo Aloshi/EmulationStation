@@ -34,7 +34,8 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 		("secondaryColor", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)
-		("scrollSound", PATH))
+		("scrollSound", PATH)
+		("center", BOOLEAN))
 	("container", boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR))
