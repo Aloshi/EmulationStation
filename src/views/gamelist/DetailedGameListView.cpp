@@ -40,7 +40,7 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 	using namespace ThemeFlags;
 	mImage.applyTheme(theme, getName(), "gameimage", POSITION | ThemeFlags::SIZE);
 	mDescContainer.applyTheme(theme, getName(), "infoPanel", POSITION | ThemeFlags::SIZE);
-	mDescription.applyTheme(theme, getName(), "description", POSITION | FONT_PATH | FONT_SIZE | COLOR);
+	mDescription.applyTheme(theme, getName(), "description", POSITION | ThemeFlags::SIZE | FONT_PATH | FONT_SIZE | COLOR);
 }
 
 void DetailedGameListView::updateInfoPanel()
