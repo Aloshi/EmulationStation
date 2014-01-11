@@ -67,13 +67,15 @@ void ImageComponent::resize()
 			// if only one component is set, we resize in a way that maintains aspect ratio
 			if(!mTargetSize.x() && mTargetSize.y())
 			{
-				mSize[0] = (mTargetSize.y() / mSize.y()) * mSize.x();
+				mSize[0] = (mTargetSize.y() / textureSize.y()) * textureSize.x();
 				mSize[1] = mTargetSize.y();
 			}else if(mTargetSize.x() && !mTargetSize.y())
 			{
 				mSize[0] = mTargetSize.x();
-				mSize[1] = (mTargetSize.x() / mSize.x()) * mSize.y();
+				mSize[1] = (mTargetSize.x() / textureSize.x()) * textureSize.y();
 			}
+
+			LOG(LogInfo) << "resized to: " << mSize.x() << ", " << mSize.y();
 		}
 	}
 }
