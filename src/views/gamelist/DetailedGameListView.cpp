@@ -39,8 +39,10 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 
 	using namespace ThemeFlags;
 	mImage.applyTheme(theme, getName(), "gameimage", POSITION | ThemeFlags::SIZE);
-	mDescContainer.applyTheme(theme, getName(), "infoPanel", POSITION | ThemeFlags::SIZE);
-	mDescription.applyTheme(theme, getName(), "description", POSITION | ThemeFlags::SIZE | FONT_PATH | FONT_SIZE | COLOR);
+
+	mDescContainer.applyTheme(theme, getName(), "description", POSITION | ThemeFlags::SIZE);
+	mDescription.setSize(mDescContainer.getSize().x(), 0);
+	mDescription.applyTheme(theme, getName(), "description", FONT_PATH | FONT_SIZE | COLOR);
 }
 
 void DetailedGameListView::updateInfoPanel()
@@ -56,6 +58,7 @@ void DetailedGameListView::updateInfoPanel()
 		
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.resetAutoScrollTimer();
+		mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
 	}
 }
 

@@ -80,7 +80,10 @@ void ScrollableContainer::update(int deltaTime)
 	Eigen::Vector2f contentSize = getContentSize();
 	if(mScrollPos.x() + getSize().x() > contentSize.x())
 		mScrollPos[0] = (double)contentSize.x() - getSize().x();
-	if(mScrollPos.y() + getSize().y() > contentSize.y())
+
+	if(contentSize.y() < getSize().y())
+		mScrollPos[1] = 0;
+	else if(mScrollPos.y() + getSize().y() > contentSize.y())
 		mScrollPos[1] = (double)contentSize.y() - getSize().y();
 
 	GuiComponent::update(deltaTime);

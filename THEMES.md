@@ -194,8 +194,7 @@ Reference
 	* image name="header" - POSITION | SIZE | PATH
 	* textlist name="gamelist" - ALL
 	* image name="gameimage" - POSITION | SIZE
-	* container name="infoPanel" - POSITION | SIZE
-	* text name="description" - POSITION | FONT_PATH | FONT_SIZE | COLOR
+	* text name="description" - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR
 
 #### grid
 	* image name="background" - PATH | TILING
@@ -215,6 +214,16 @@ Reference
 	* ninepatch name="background" - PATH
 	* text name="letter" - FONT_PATH | COLOR
 	* text name="subtext" - FONT_PATH | COLOR
+
+
+## Types of properties:
+
+* NORMALIZED_PAIR - two decimals, in the range [0..1].  For example, `0.25 0.5`.
+* PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` or `%HOMEPATH%`, depending on platform).  If the first character is a `.`, it will be expanded to the theme file's directory.
+* BOOLEAN - `true`/`1` or `false`/`0`.
+* COLOR - a hexidecimal RGB or RGBA color (6 or 8 digits).  If 6 digits, will assume the alpha channel is `FF` (not transparent).
+* FLOAT - a decimal.
+* STRING - a string of text.
 
 
 ## Types of elements and their properties:
@@ -248,10 +257,6 @@ Reference
 	* `scrollSound` - type: PATH.
 	* `center` - type: BOOLEAN.
 
-#### container
-	* `pos` - type: NORMALIZED_PAIR.
-	* `size` - type: NORMALIZED_PAIR.
-
 #### ninepatch
 	* `pos` - type: NORMALIZED_PAIR.
 	* `size` - type: NORMALIZED_PAIR.
@@ -264,16 +269,6 @@ A quick word on the "ninepatch" type - EmulationStation borrows the concept of "
 
 
 *Note that a view may choose to only make only certain properties on a particular element themable.*
-
-
-## Types of properties:
-
-* NORMALIZED_PAIR - two decimals, in the range [0..1].  For example, `0.25 0.5`.
-* PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` or `%HOMEPATH%`, depending on platform).  If the first character is a `.`, it will be expanded to the theme file's directory.
-* BOOLEAN - `true`/`1` or `false`/`0`.
-* COLOR - a hexidecimal RGB or RGBA color (6 or 8 digits).  If 6 digits, will assume the alpha channel is `FF` (not transparent).
-* FLOAT - a decimal.
-* STRING - a string of text.
 
 
 
