@@ -245,6 +245,7 @@ void DateTimeComponent::updateTextCache()
 	const std::string dispString = getDisplayString(mode);
 	std::shared_ptr<Font> font = getFont();
 	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
+	setSize(mTextCache->metrics.size);
 
 	//set up cursor positions
 	mCursorBoxes.clear();

@@ -80,8 +80,6 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 
 	if(font && !mText.empty())
 	{
-		Renderer::setMatrix(trans);
-
 		if(mCentered)
 		{
 			const Eigen::Vector2f& textSize = mTextCache->metrics.size;
@@ -90,6 +88,8 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 			Eigen::Affine3f centeredTrans = trans;
 			centeredTrans = centeredTrans.translate(Eigen::Vector3f(pos.x(), pos.y(), 0));
 			Renderer::setMatrix(centeredTrans);
+		}else{
+			Renderer::setMatrix(trans);
 		}
 
 		font->renderTextCache(mTextCache.get());
@@ -118,7 +118,27 @@ void TextComponent::onTextChanged()
 	calculateExtent();
 
 	std::shared_ptr<Font> f = getFont();
-	mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(mText, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
+	const bool wrap = (mSize.y() == 0 || (int)mSize.y() > f->getHeight());
+	Eigen::Vector2f size = f->sizeText(mText);
+	if(!wrap && mSize.x() && mText.size() && size.x() > mSize.x())
+	{
+		// abbreviate text
+		const std::string abbrev = "..";
+		Eigen::Vector2f abbrevSize = f->sizeText(abbrev);
+
+		std::string text = mText;
+		while(text.size() && size.x() + abbrevSize.x() > mSize.x())
+		{
+			text.erase(text.size() - 1, 1);
+			size = f->sizeText(text);
+		}
+
+		text.append(abbrev);
+
+		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(text, 0, 0, (mColor >> 8 << 8) | mOpacity));
+	}else{
+		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(mText, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
+	}
 }
 
 void TextComponent::onColorChanged()

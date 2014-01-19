@@ -106,6 +106,11 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 		boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
 		mdl.back().setTime("releasedate", rd);
 
+		mdl.back().set("developer", game.child("Developer").text().get());
+		mdl.back().set("publisher", game.child("Publisher").text().get());
+		mdl.back().set("genre", game.child("Genres").first_child().text().get());
+		mdl.back().set("players", game.child("Players").text().get());
+
 		if(Settings::getInstance()->getBool("ScrapeRatings") && game.child("Rating"))
 		{
 			float ratingVal = (game.child("Rating").text().as_int() / 10.0f);
