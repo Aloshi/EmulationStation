@@ -28,6 +28,8 @@ public:
 	void setColor(unsigned int color);
 	void setFont(std::shared_ptr<Font> font);
 
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+
 private:
 	std::shared_ptr<Font> getFont() const;
 

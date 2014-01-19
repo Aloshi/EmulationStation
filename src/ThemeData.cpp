@@ -44,6 +44,12 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("path", PATH))
+	("datetime", boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("color", COLOR)
+		("fontPath", PATH)
+		("fontSize", FLOAT))
 	("sound", boost::assign::map_list_of
 		("path", PATH));
 

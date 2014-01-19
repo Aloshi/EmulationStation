@@ -289,3 +289,19 @@ void DateTimeComponent::setFont(std::shared_ptr<Font> font)
 
 	updateTextCache();
 }
+
+void DateTimeComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	using namespace ThemeFlags;
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "datetime");
+	if(!elem)
+		return;
+
+	if(properties & COLOR && elem->has("color"))
+		setColor(elem->get<unsigned int>("color"));
+
+	setFont(Font::getFromTheme(elem, properties, mFont));
+}

@@ -5,9 +5,12 @@
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root) : 
 	BasicGameListView(window, root), 
 	mDescContainer(window), mDescription(window), 
-	mImage(window)
+	mImage(window),
+
+	mLblRating(window), mLblReleaseDate(window), mLblLastPlayed(window), mLblPlayCount(window),
+	mRating(window), mReleaseDate(window), mLastPlayed(window), mPlayCount(window)
 {
-	mHeaderImage.setPosition(mSize.x() * 0.25f, 0);
+	//mHeaderImage.setPosition(mSize.x() * 0.25f, 0);
 
 	const float padding = 0.01f;
 
@@ -16,10 +19,26 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mList.setCentered(false);
 	mList.setCursorChangedCallback([&](TextListComponent<FileData*>::CursorState state) { updateInfoPanel(); });
 
+	// image
 	mImage.setOrigin(0.5f, 0.5f);
 	mImage.setPosition(mSize.x() * 0.25f, mList.getPosition().y() + mSize.y() * 0.2125f);
-	mImage.setMaxSize(mSize.x() * (0.50f - 2*padding), mSize.y() * 0.425f);
+	mImage.setMaxSize(mSize.x() * (0.50f - 2*padding), mSize.y() * 0.4f);
 	addChild(&mImage);
+
+	// metadata labels + values
+	mLblRating.setText("Rating: ");
+	addChild(&mLblRating);
+	addChild(&mRating);
+	mLblReleaseDate.setText("Released: ");
+	addChild(&mLblReleaseDate);
+	addChild(&mReleaseDate);
+	mLblLastPlayed.setText("Last played: ");
+	addChild(&mLblLastPlayed);
+	mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
+	addChild(&mLastPlayed);
+	mLblPlayCount.setText("Play count: ");
+	addChild(&mLblPlayCount);
+	addChild(&mPlayCount);
 
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2*padding), mSize.y() - mDescContainer.getPosition().y());
@@ -30,6 +49,9 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
 
+
+	initMDLabels();
+	initMDValues();
 	updateInfoPanel();
 }
 
@@ -40,9 +62,94 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 	using namespace ThemeFlags;
 	mImage.applyTheme(theme, getName(), "gameimage", POSITION | ThemeFlags::SIZE);
 
+	initMDLabels();
+	std::vector<TextComponent*> labels = getMDLabels();
+	assert(labels.size() == 4);
+	const char* lblElements[4] = {
+		"md_lbl_rating", "md_lbl_releasedate", "md_lbl_lastplayed", "md_lbl_playcount"
+	};
+
+	for(unsigned int i = 0; i < labels.size(); i++)
+	{
+		labels[i]->applyTheme(theme, getName(), lblElements[i], ALL ^ ThemeFlags::TEXT);
+	}
+
+
+	initMDValues();
+	std::vector<GuiComponent*> values = getMDValues();
+	assert(values.size() == 4);
+	const char* valElements[4] = {
+		"md_rating", "md_releasedate", "md_lastplayed", "md_playcount"
+	};
+
+	for(unsigned int i = 0; i < values.size(); i++)
+	{
+		values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
+	}
+
 	mDescContainer.applyTheme(theme, getName(), "description", POSITION | ThemeFlags::SIZE);
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescription.applyTheme(theme, getName(), "description", FONT_PATH | FONT_SIZE | COLOR);
+}
+
+void DetailedGameListView::initMDLabels()
+{
+	using namespace Eigen;
+
+	std::vector<TextComponent*> components = getMDLabels();
+
+	const unsigned int colCount = 2;
+	const unsigned int rowCount = components.size() / 2;
+
+	Vector3f start(mSize.x() * 0.01f, mSize.y() * 0.625f, 0.0f);
+	
+	const float colSize = (mSize.x() * 0.48f) / colCount;
+	const float rowPadding = 0.01f * mSize.y();
+
+	for(unsigned int i = 0; i < components.size(); i++)
+	{
+		const unsigned int row = i % rowCount;
+		Vector3f pos(0.0f, 0.0f, 0.0f);
+		if(row == 0)
+		{
+			pos = start + Vector3f(colSize * (i / rowCount), 0, 0);
+		}else{
+			// work from the last component
+			GuiComponent* lc = components[i-1];
+			pos = lc->getPosition() + Vector3f(0, lc->getSize().y() + rowPadding, 0);
+		}
+
+		components[i]->setFont(Font::get(FONT_SIZE_SMALL));
+		components[i]->setPosition(pos);
+	}
+}
+
+void DetailedGameListView::initMDValues()
+{
+	using namespace Eigen;
+
+	std::vector<TextComponent*> labels = getMDLabels();
+	std::vector<GuiComponent*> values = getMDValues();
+
+	std::shared_ptr<Font> defaultFont = Font::get(FONT_SIZE_SMALL);
+	mRating.setSize(defaultFont->getHeight() * 5.0f, (float)defaultFont->getHeight());
+	mReleaseDate.setFont(defaultFont);
+	mLastPlayed.setFont(defaultFont);
+	mPlayCount.setFont(defaultFont);
+
+	float bottom = 0.0f;
+	for(unsigned int i = 0; i < labels.size(); i++)
+	{
+		const float heightDiff = (labels[i]->getSize().y() - values[i]->getSize().y()) / 2;
+		values[i]->setPosition(labels[i]->getPosition() + Vector3f(labels[i]->getSize().x(), heightDiff, 0));
+
+		float testBot = values[i]->getPosition().y() + values[i]->getSize().y();
+		if(testBot > bottom)
+			bottom = testBot;
+	}
+
+	mDescContainer.setPosition(mDescContainer.getPosition().x(), bottom + mSize.y() * 0.01f);
+	mDescContainer.setSize(mDescContainer.getSize().x(), mSize.y() - mDescContainer.getPosition().y());
 }
 
 void DetailedGameListView::updateInfoPanel()
@@ -55,6 +162,10 @@ void DetailedGameListView::updateInfoPanel()
 		mDescription.setText("");
 	}else{
 		mImage.setImage(file->metadata.get("image"));
+		mRating.setValue(file->metadata.get("rating"));
+		mReleaseDate.setValue(file->metadata.get("releasedate"));
+		mLastPlayed.setValue(file->metadata.get("lastplayed"));
+		mPlayCount.setValue(file->metadata.get("playcount"));
 		
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.resetAutoScrollTimer();
@@ -69,4 +180,24 @@ void DetailedGameListView::launch(FileData* game)
 		target = mImage.getPosition();
 
 	mWindow->getViewController()->launch(game, target);
+}
+
+std::vector<TextComponent*> DetailedGameListView::getMDLabels()
+{
+	std::vector<TextComponent*> ret;
+	ret.push_back(&mLblRating);
+	ret.push_back(&mLblReleaseDate);
+	ret.push_back(&mLblLastPlayed);
+	ret.push_back(&mLblPlayCount);
+	return ret;
+}
+
+std::vector<GuiComponent*> DetailedGameListView::getMDValues()
+{
+	std::vector<GuiComponent*> ret;
+	ret.push_back(&mRating);
+	ret.push_back(&mReleaseDate);
+	ret.push_back(&mLastPlayed);
+	ret.push_back(&mPlayCount);
+	return ret;
 }
