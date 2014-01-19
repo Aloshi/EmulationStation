@@ -111,3 +111,19 @@ bool RatingComponent::input(InputConfig* config, Input input)
 
 	return GuiComponent::input(config, input);
 }
+
+void RatingComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	using namespace ThemeFlags;
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "rating");
+	if(!elem)
+		return;
+
+	if(properties & PATH && elem->has("filledPath"))
+		mFilledTexture = TextureResource::get(elem->get<std::string>("filledPath"), true);
+	if(properties & PATH && elem->has("unfilledPath"))
+		mUnfilledTexture = TextureResource::get(elem->get<std::string>("unfilledPath"), true);
+}

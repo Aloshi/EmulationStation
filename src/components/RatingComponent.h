@@ -15,6 +15,9 @@ public:
 	void render(const Eigen::Affine3f& parentTrans);
 
 	void onSizeChanged() override;
+
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
+
 private:
 	void updateVertices();
 

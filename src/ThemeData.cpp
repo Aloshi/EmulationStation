@@ -50,6 +50,11 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 		("color", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT))
+	("rating", boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("filledPath", PATH)
+		("unfilledPath", PATH))
 	("sound", boost::assign::map_list_of
 		("path", PATH));
 
