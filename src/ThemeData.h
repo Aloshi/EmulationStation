@@ -32,10 +32,9 @@ namespace ThemeFlags
 		COLOR = 16,
 		FONT_PATH = 32,
 		FONT_SIZE = 64,
-		TILING = 128,
-		SOUND = 256,
-		CENTER = 512,
-		TEXT = 1024,
+		SOUND = 128,
+		CENTER = 256,
+		TEXT = 512,
 
 		ALL = 0xFFFFFFFF
 	};

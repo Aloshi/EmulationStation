@@ -21,7 +21,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window, const Eigen::Vector2f& pos, const std::string& path) : GuiComponent(window), 
-	mTiled(false), mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
 {
 	setPosition(pos.x(), pos.y());
 
@@ -40,7 +40,7 @@ void ImageComponent::resize()
 
 	const Eigen::Vector2f textureSize((float)getTextureSize().x(), (float)getTextureSize().y());
 
-	if(mTiled)
+	if(mTexture->isTiled())
 	{
 		mSize = mTargetSize;
 	}else{
@@ -74,19 +74,27 @@ void ImageComponent::resize()
 				mSize[0] = mTargetSize.x();
 				mSize[1] = (mTargetSize.x() / textureSize.x()) * textureSize.y();
 			}
-
-			LOG(LogInfo) << "resized to: " << mSize.x() << ", " << mSize.y();
 		}
 	}
 }
 
-void ImageComponent::setImage(std::string path)
+void ImageComponent::setImage(std::string path, bool tile)
 {
 	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
 		mTexture.reset();
 	else
-		mTexture = TextureResource::get(path);
+		mTexture = TextureResource::get(path, tile);
 
+	resize();
+}
+
+void ImageComponent::setImage(const char* path, size_t length, bool tile)
+{
+	mTexture.reset();
+
+	mTexture = TextureResource::get("", tile);
+	mTexture->initFromMemory(path, length);
+	
 	resize();
 }
 
@@ -96,26 +104,9 @@ void ImageComponent::setImage(const std::shared_ptr<TextureResource>& texture)
 	resize();
 }
 
-void ImageComponent::setImage(const char* path, size_t length)
-{
-	mTexture.reset();
-
-	mTexture = TextureResource::get("");
-	mTexture->initFromMemory(path, length);
-
-	resize();
-}
-
 void ImageComponent::setOrigin(float originX, float originY)
 {
 	mOrigin << originX, originY;
-}
-
-void ImageComponent::setTiling(bool tile)
-{
-	mTiled = tile;
-
-	resize();
 }
 
 void ImageComponent::setResize(float width, float height)
@@ -157,7 +148,7 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 		GLfloat points[12], texs[12];
 		GLubyte colors[6*4];
 
-		if(mTiled)
+		if(mTexture->isTiled())
 		{
 			float xCount = mSize.x() / getTextureSize().x();
 			float yCount = mSize.y() / getTextureSize().y();
@@ -250,16 +241,6 @@ bool ImageComponent::hasImage()
 	return (bool)mTexture;
 }
 
-void ImageComponent::copyScreen()
-{
-	mTexture.reset();
-
-	mTexture = TextureResource::get("");
-	mTexture->initFromScreen();
-
-	resize();
-}
-
 void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
 	LOG(LogInfo) << " req image [" << view << "." << element << "]  (flags: " << properties << ")";
@@ -294,8 +275,8 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		setOrigin(elem->get<Eigen::Vector2f>("origin"));
 
 	if(properties & PATH && elem->has("path"))
-		setImage(elem->get<std::string>("path"));
-	
-	if(properties & TILING && elem->has("tile"))
-		setTiling(elem->get<bool>("tile"));
+	{
+		bool tile = (elem->has("tile") && elem->get<bool>("tile"));
+		setImage(elem->get<std::string>("path"), tile);
+	}
 }
