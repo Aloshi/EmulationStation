@@ -34,6 +34,11 @@ std::string RatingComponent::getValue() const
 
 void RatingComponent::onSizeChanged()
 {
+	if(mSize.y() == 0)
+		mSize[1] = mSize.x() / 5.0f;
+	else if(mSize.x() == 0)
+		mSize[0] = mSize.y() * 5.0f;
+
 	updateVertices();
 }
 

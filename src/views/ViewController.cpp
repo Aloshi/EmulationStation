@@ -69,10 +69,9 @@ void ViewController::playViewTransition()
 
 void ViewController::onFileChanged(FileData* file, FileChangeType change)
 {
-	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
-	{
+	auto it = mGameListViews.find(file->getSystem());
+	if(it != mGameListViews.end())
 		it->second->onFileChanged(file, change);
-	}
 }
 
 void ViewController::launch(FileData* game, Eigen::Vector3f center)
@@ -95,6 +94,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 		mCamera = origCamera;
 		mLockInput = false;
 		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), nullptr, true);
+		this->onFileChanged(game, FILE_METADATA_CHANGED);
 	});
 }
 

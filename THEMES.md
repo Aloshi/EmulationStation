@@ -299,8 +299,8 @@ Reference
 Common to almost all elements is a `pos` and `size` property of the NORMALIZED_PAIR type.  They are normalized in terms of their "parent" object's size; 99% of the time, this is just the size of the screen.  In this case, `<pos>0 0</pos>` would correspond to the top left corner, and `<pos>1 1</pos>` the bottom right corner (a positive Y value points further down).  `pos` almost always refers to the top left corner of your element.  You *can* use numbers outside of the [0..1] range if you want to place an element partially or completely off-screen.
 
 The order you define properties in does not matter.
-
 Remember, you do *not* need to specify every property!
+*Note that a view may choose to only make only certain properties on a particular element themable!*
 
 #### image
 
@@ -308,10 +308,11 @@ Can be created as an extra.
 
 * `pos` - type: NORMALIZED_PAIR.
 * `size` - type: NORMALIZED_PAIR.
+	- If only one axis is specified (and the other is zero), the other will be automatically calculated in accordance with the image's aspect ratio.
 * `maxSize` - type: NORMALIZED_PAIR.
 	- The image will be resized as large as possible so that it fits within this size and maintains its aspect ratio.  Use this instead of `size` when you don't know what kind of image you're using so it doesn't get grossly oversized on one axis (e.g. with a game's image metadata).
 * `origin` - type: NORMALIZED_PAIR.
-	- Where on the image `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the image exactly in the middle of the screen.
+	- Where on the image `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the image exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
 * `path` - type: PATH.
 	- Path to the image file.  Most common extensions are supported (including .jpg, .png, and unanimated .gif).
 * `tile` - type: BOOLEAN.
@@ -323,6 +324,7 @@ Can be created as an extra.
 
 * `pos` - type: NORMALIZED_PAIR.
 * `size` - type: NORMALIZED_PAIR.
+	- You should only set this if you want your text to behave like a "textbox" - that is, your text is multi-line and should wrap.
 * `text` - type: STRING.
 * `color` - type: COLOR.
 * `fontPath` - type: PATH.
@@ -359,13 +361,30 @@ Can be created as an extra.
 
 EmulationStation borrows the concept of "nine patches" from Android (or "9-Slices"). Currently the implementation is very simple and hard-coded to only use 48x48px images (16x16px for each "patch"). Check the `data/resources` directory for some examples (button.png, frame.png).
 
+#### rating
+
+* `pos` - type: NORMALIZED_PAIR.
+* `size` - type: NORMALIZED_PAIR.
+	- Only one value is actually used. The other value should be zero.  (e.g. specify width OR height, but not both.  This is done to maintain the aspect ratio.)
+* `filledPath` - type: PATH.
+	- Path to the "filled star" image.  Image must be square (width equals height).
+* `unfilledPath` - type: PATH.
+	- Path to the "unfilled star" image.  Image must be square (width equals height).
+
+#### datetime
+
+* `pos` - type: NORMALIZED_PAIR.
+* `size` - type: NORMALIZED_PAIR.
+	- You should probably not set this.  Leave it to `fontSize`.
+* `color` - type: COLOR.
+* `fontPath` - type: PATH.
+* `fontSize` - type: FLOAT.
+
 #### sound
 
 * `path` - type: PATH.
 	- Path to the sound file.  Only .wav files are currently supported.
 
-
-*Note that a view may choose to only make only certain properties on a particular element themable!*
 
 
 [*Check out the "official" themes for some more examples!*](http://aloshi.com/emulationstation#themes)
