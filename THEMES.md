@@ -9,7 +9,7 @@ Simple Example
 
 Here is a very simple theme that changes the description text's color:
 
-```
+```xml
 <theme>
 	<version>3</version>
 	<view name="detailed">
@@ -37,7 +37,7 @@ Everything must be inside a `<theme>` tag.
 
 A *view* can be thought of as a particular "screen" within EmulationStation.  Views are defined like this:
 
-```
+```xml
 <view name="ViewNameHere">
 	... define elements here ...
 </view>
@@ -47,7 +47,7 @@ A *view* can be thought of as a particular "screen" within EmulationStation.  Vi
 
 An *element* is a particular visual element, such as an image or a piece of text.  You can either modify an element that already exists for a particular view (as is done in the "description" example), like this:
 
-```
+```xml
 	<elementTypeHere name="ExistingElementNameHere">
 		... define properties here ...
 	</elementTypeHere>
@@ -55,7 +55,7 @@ An *element* is a particular visual element, such as an image or a piece of text
 
 Or, you can create your own elements by adding `extra="true"` (as is done in the "my_image" example) like this:
 
-```
+```xml
 	<elementTypeHere name="YourUniqueElementNameHere" extra="true">
 		... define properties here ...
 	</elementTypeHere>
@@ -67,7 +67,7 @@ Or, you can create your own elements by adding `extra="true"` (as is done in the
 
 *Properties* control how a particular *element* looks - for example, its position, size, image path, etc.  There different types of properties that determine what kinds of values you can use - you can read about them below in the "Reference" section.  Properties are defined like this:
 
-```
+```xml
 		<propertyNameHere>ValueHere</propertyNameHere>
 ```
 
@@ -84,7 +84,7 @@ It is recommended that if you are writing a theme you launch EmulationStation wi
 You can include theme files within theme files, similar to `#include` in C (though the mechanism is different, the effect is the same).  Example:
 
 `~/.emulationstation/all_themes.xml`:
-```
+```xml
 <theme>
 	<version>3</version>
 	<view name="detailed">
@@ -97,7 +97,7 @@ You can include theme files within theme files, similar to `#include` in C (thou
 ```
 
 `~/.emulationstation/snes/theme.xml`:
-```
+```xml
 <theme>
 	<version>3</version>
 	<include>./../all_themes.xml</include>
@@ -110,7 +110,7 @@ You can include theme files within theme files, similar to `#include` in C (thou
 ```
 
 Is equivalent to this `snes/theme.xml`:
-```
+```xml
 <theme>
 	<version>3</version>
 	<view name="detailed">
@@ -130,7 +130,7 @@ Notice that properties that were not specified got merged (`<fontPath>`) and the
 
 Sometimes you want to apply the same values to the same element across many views.  The "common" view is one way to do this.
 
-```
+```xml
 <theme>
 	<version>3</version>
 	<view name="common">
@@ -147,7 +147,7 @@ Sometimes you want to apply the same values to the same element across many view
 ```
 
 Is equivalent to:
-```
+```xml
 <theme>
 	<version>3</version>
 	<view name="basic">
@@ -221,25 +221,25 @@ Reference
 		* All values will follow to the right of their labels if a position isn't specified.
 
 		* `image name="md_image"` - POSITION | SIZE
-			- Path is the `image` metadata for the currently selected game.
+			- Path is the "image" metadata for the currently selected game.
 		* `rating name="md_rating"` - ALL
-			- The `rating` metadata.
+			- The "rating" metadata.
 		* `datetime name="md_releasedate"` - ALL
-			- The `releasedate` metadata.
+			- The "releasedate" metadata.
 		* `text name="md_developer"` - ALL
-			- The `developer` metadata.
+			- The "developer" metadata.
 		* `text name="md_publisher"` - ALL
-			- The `publisher` metadata.
+			- The "publisher" metadata.
 		* `text name="md_genre"` - ALL
-			- The `genre` metadata.
+			- The "genre" metadata.
 		* `text name="md_players"` - ALL
-			- The `players` metadata (number of players the game supports).
+			- The "players" metadata (number of players the game supports).
 		* `datetime name="md_lastplayed"` - ALL
-			- The `lastplayed` metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
+			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
 		* `text name="md_playcount"` - ALL
-			- The `playcount` metadata (number of times the game has been played).
+			- The "playcount" metadata (number of times the game has been played).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR
-			- Text is the `desc` metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
 
 ---
 
@@ -368,6 +368,7 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 *Note that a view may choose to only make only certain properties on a particular element themable!*
 
 
+[*Check out the "official" themes for some more examples!*](http://aloshi.com/emulationstation#themes)
 
 -Aloshi
 http://www.aloshi.com
