@@ -38,15 +38,15 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mBackground(window, ":/
 	mTheme = ThemeData::getDefault();
 
 	using namespace ThemeFlags;
-	mBackground.applyTheme(mTheme, "menu", "background", PATH);
+	mBackground.applyTheme(mTheme, "menu", "windowBackground", PATH);
 	mBackground.fitTo(Eigen::Vector2f(mList.getSize().x(), mSize.y()), Eigen::Vector3f(mList.getPosition().x(), 0, 0));
 	addChild(&mBackground);
 
 	mList.setFont(Font::get((int)(0.09f * Renderer::getScreenHeight())));
-	mList.applyTheme(mTheme, "menu", "menulist", FONT_PATH | COLOR | SOUND);
 	mList.setSelectorColor(0xBBBBBBFF);
 	mList.setColor(0, 0x0000FFFF);
 	mList.setColor(1, 0xFF0000FF);
+	mList.applyTheme(mTheme, "menu", "menulist", FONT_PATH | COLOR | SOUND);
 
 	Sound::getFromTheme(mTheme, "menu", "menuOpen")->play();
 

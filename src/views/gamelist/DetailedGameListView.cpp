@@ -75,7 +75,7 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 	BasicGameListView::onThemeChanged(theme);
 
 	using namespace ThemeFlags;
-	mImage.applyTheme(theme, getName(), "gameimage", POSITION | ThemeFlags::SIZE);
+	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE);
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
@@ -104,9 +104,9 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 		values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
 	}
 
-	mDescContainer.applyTheme(theme, getName(), "description", POSITION | ThemeFlags::SIZE);
+	mDescContainer.applyTheme(theme, getName(), "md_description", POSITION | ThemeFlags::SIZE);
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
-	mDescription.applyTheme(theme, getName(), "description", FONT_PATH | FONT_SIZE | COLOR);
+	mDescription.applyTheme(theme, getName(), "md_description", FONT_PATH | FONT_SIZE | COLOR);
 }
 
 void DetailedGameListView::initMDLabels()

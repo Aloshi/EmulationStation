@@ -14,7 +14,7 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	const std::shared_ptr<ThemeData>& theme = mGameList->getTheme();
 	using namespace ThemeFlags;
 
-	mBackground.applyTheme(theme, "fastSelect", "background", PATH);
+	mBackground.applyTheme(theme, "fastSelect", "windowBackground", PATH);
 	mBackground.fitTo(mSize);
 	addChild(&mBackground);
 
