@@ -50,6 +50,13 @@ std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params
 
 		//Archive.search does not return ratings
 
+		mdl.back().set("developer", game.child("developer").text().get());
+
+		std::string genre = game.child("genre").text().get();
+		size_t search = genre.find_last_of(" &gt; ");
+		genre = genre.substr(search == std::string::npos ? 0 : search, std::string::npos);
+		mdl.back().set("genre", genre);
+
 		pugi::xml_node image = game.child("box_front");
 		pugi::xml_node thumbnail = game.child("box_front_small");
 
