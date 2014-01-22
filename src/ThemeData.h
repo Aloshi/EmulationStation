@@ -33,7 +33,7 @@ namespace ThemeFlags
 		FONT_PATH = 32,
 		FONT_SIZE = 64,
 		SOUND = 128,
-		CENTER = 256,
+		ALIGNMENT = 256,
 		TEXT = 512,
 
 		ALL = 0xFFFFFFFF

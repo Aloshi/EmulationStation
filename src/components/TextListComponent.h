@@ -48,13 +48,20 @@ public:
 	void stopScrolling();
 	inline bool isScrolling() const { return mScrollDir != 0; }
 
-	inline void setCentered(bool centered) { mCentered = centered; }
-
 	enum CursorState
 	{
 		CURSOR_STOPPED,
 		CURSOR_SCROLLING
 	};
+
+	enum Alignment
+	{
+		ALIGN_LEFT,
+		ALIGN_CENTER,
+		ALIGN_RIGHT
+	};
+
+	inline void setAlignment(Alignment align) { mAlignment = align; }
 
 	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
 
@@ -88,7 +95,7 @@ private:
 	int mMarqueeOffset;
 	int mMarqueeTime;
 
-	bool mCentered;
+	Alignment mAlignment;
 
 	std::vector<ListRow> mRowVector;
 	int mCursor;
@@ -114,7 +121,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
 
-	mCentered = true;
+	mAlignment = ALIGN_CENTER;
 
 	mFont = Font::get(FONT_SIZE_MEDIUM);
 	mSelectorColor = 0x000000FF;
@@ -179,8 +186,6 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 
 		ListRow& row = mRowVector.at((unsigned int)i);
 
-		float x = (float)(mCursor == i ? -mMarqueeOffset : 0);
-
 		unsigned int color;
 		if(mCursor == i && mSelectedColor)
 			color = mSelectedColor;
@@ -192,10 +197,24 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 
 		row.textCache->setColor(color);
 
-		Eigen::Vector3f offset(x, y, 0);
+		Eigen::Vector3f offset(0, y, 0);
 
-		if(mCentered)
-			offset[0] += (mSize.x() - row.textCache->metrics.size.x()) / 2;
+		switch(mAlignment)
+		{
+		case ALIGN_LEFT:
+			offset[0] = 0;
+			break;
+		case ALIGN_CENTER:
+			offset[0] = (mSize.x() - row.textCache->metrics.size.x()) / 2;
+			break;
+		case ALIGN_RIGHT:
+			offset[0] = (mSize.x() - row.textCache->metrics.size.x());
+			break;
+		}
+		
+		if(offset[0] < 0)
+			offset[0] = 0;
+		offset[0] += (float)(mCursor == i ? -mMarqueeOffset : 0);
 
 		Eigen::Affine3f drawTrans = trans;
 		drawTrans.translate(offset);
@@ -434,8 +453,18 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	if(properties & SOUND && elem->has("scrollSound"))
 		setSound(Sound::get(elem->get<std::string>("scrollSound")));
 
-	if(properties & CENTER && elem->has("center"))
-		mCentered = elem->get<bool>("center");
+	if(properties & ALIGNMENT && elem->has("alignment"))
+	{
+		const std::string& str = elem->get<std::string>("alignment");
+		if(str == "left")
+			setAlignment(ALIGN_LEFT);
+		else if(str == "center")
+			setAlignment(ALIGN_CENTER);
+		else if(str == "right")
+			setAlignment(ALIGN_RIGHT);
+		else
+			LOG(LogError) << "Unknown TextListComponent alignment \"" << str << "\"!";
+	}
 }
 
 #endif

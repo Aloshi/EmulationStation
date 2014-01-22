@@ -19,7 +19,7 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
 	mList.setSize(mSize.x() * (0.50f - 2*padding), mList.getSize().y());
-	mList.setCentered(false);
+	mList.setAlignment(TextListComponent<FileData*>::ALIGN_LEFT);
 	mList.setCursorChangedCallback([&](TextListComponent<FileData*>::CursorState state) { updateInfoPanel(); });
 
 	// image

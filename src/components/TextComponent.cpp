@@ -172,7 +172,7 @@ void TextComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const st
 	if(properties & COLOR && elem->has("color"))
 		setColor(elem->get<unsigned int>("color"));
 
-	if(properties & CENTER && elem->has("center"))
+	if(properties & ALIGNMENT && elem->has("center"))
 		setCentered(elem->get<bool>("center"));
 
 	if(properties & TEXT && elem->has("text"))

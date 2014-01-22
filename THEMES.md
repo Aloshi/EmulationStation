@@ -331,8 +331,8 @@ Can be created as an extra.
 	- Path to a truetype font (.ttf).
 * `fontSize` - type: FLOAT.
 	- Size of the font as a percentage of screen height (e.g. for a value of `0.1`, the text's height would be 10% of the screen height).
-* `center` - type: BOOLEAN.
-	- If true, center the text on the x-axis.
+* `alignment` - type: STRING.
+	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.
 
 #### textlist
 
