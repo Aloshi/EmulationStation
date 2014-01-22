@@ -96,6 +96,7 @@ private:
 	int mMarqueeTime;
 
 	Alignment mAlignment;
+	float mHorizontalMargin;
 
 	std::vector<ListRow> mRowVector;
 	int mCursor;
@@ -121,6 +122,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
 
+	mHorizontalMargin = 0;
 	mAlignment = ALIGN_CENTER;
 
 	mFont = Font::get(FONT_SIZE_MEDIUM);
@@ -202,20 +204,25 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		switch(mAlignment)
 		{
 		case ALIGN_LEFT:
-			offset[0] = 0;
+			offset[0] = mHorizontalMargin;
 			break;
 		case ALIGN_CENTER:
 			offset[0] = (mSize.x() - row.textCache->metrics.size.x()) / 2;
+			if(offset[0] < 0)
+				offset[0] = 0;
 			break;
 		case ALIGN_RIGHT:
 			offset[0] = (mSize.x() - row.textCache->metrics.size.x());
+			offset[0] -= mHorizontalMargin;
+			if(offset[0] < 0)
+				offset[0] = 0;
+
 			break;
 		}
 		
-		if(offset[0] < 0)
-			offset[0] = 0;
-		offset[0] += (float)(mCursor == i ? -mMarqueeOffset : 0);
-
+		if(mCursor == i)
+			offset[0] -= mMarqueeOffset;
+		
 		Eigen::Affine3f drawTrans = trans;
 		drawTrans.translate(offset);
 		Renderer::setMatrix(drawTrans);
@@ -312,7 +319,7 @@ void TextListComponent<T>::update(int deltaTime)
 		Eigen::Vector2f textSize = mFont->sizeText(text);
 
 		//it's long enough to marquee
-		if(textSize.x() - mMarqueeOffset > getSize().x() - 12)
+		if(textSize.x() - mMarqueeOffset > getSize().x() - 12 - (mAlignment != ALIGN_CENTER ? mHorizontalMargin : 0))
 		{
 			mMarqueeTime += deltaTime;
 			while(mMarqueeTime > MARQUEE_SPEED)
@@ -453,17 +460,24 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	if(properties & SOUND && elem->has("scrollSound"))
 		setSound(Sound::get(elem->get<std::string>("scrollSound")));
 
-	if(properties & ALIGNMENT && elem->has("alignment"))
+	if(properties & ALIGNMENT)
 	{
-		const std::string& str = elem->get<std::string>("alignment");
-		if(str == "left")
-			setAlignment(ALIGN_LEFT);
-		else if(str == "center")
-			setAlignment(ALIGN_CENTER);
-		else if(str == "right")
-			setAlignment(ALIGN_RIGHT);
-		else
-			LOG(LogError) << "Unknown TextListComponent alignment \"" << str << "\"!";
+		if(elem->has("alignment"))
+		{
+			const std::string& str = elem->get<std::string>("alignment");
+			if(str == "left")
+				setAlignment(ALIGN_LEFT);
+			else if(str == "center")
+				setAlignment(ALIGN_CENTER);
+			else if(str == "right")
+				setAlignment(ALIGN_RIGHT);
+			else
+				LOG(LogError) << "Unknown TextListComponent alignment \"" << str << "\"!";
+		}
+		if(elem->has("horizontalMargin"))
+		{
+			mHorizontalMargin = elem->get<float>("horizontalMargin") * (mParent ? mParent->getSize().x() : (float)Renderer::getScreenWidth());
+		}
 	}
 }
 

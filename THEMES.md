@@ -331,8 +331,8 @@ Can be created as an extra.
 	- Path to a truetype font (.ttf).
 * `fontSize` - type: FLOAT.
 	- Size of the font as a percentage of screen height (e.g. for a value of `0.1`, the text's height would be 10% of the screen height).
-* `alignment` - type: STRING.
-	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.
+* `center` - type: BOOLEAN.
+	- True to center, false to left-align.
 
 #### textlist
 
@@ -350,8 +350,10 @@ Can be created as an extra.
 * `fontSize` - type: FLOAT.
 * `scrollSound` - type: PATH.
 	- Sound that is played when the list is scrolled.
-* `center` - type: BOOLEAN.
-	- True to center, false to left-align.
+* `alignment` - type: STRING.
+	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.
+* `horizontalMargin` - type: FLOAT.
+	- Horizontal offset for text from the alignment point.  If `alignment` is "left", offsets the text to the right.  If `alignment` is "right", offsets text to the left.  No effect if `alignment` is "center".  Given as a percentage of the element's parent's width (same unit as `size`'s X value).
 
 #### ninepatch
 
