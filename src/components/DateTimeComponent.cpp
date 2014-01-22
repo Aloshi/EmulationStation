@@ -213,7 +213,8 @@ std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 			if(dur < hours(24))
 				return std::to_string((long long)dur.hours()) + " hour" + (dur < hours(2) ? "" : "s") + " ago";
 
-			return std::to_string((long long)(ptime() + dur).date().day_count().as_number());
+			long long days = (long long)(dur.hours() / 24);
+			return std::to_string(days) + " day" + (days < 2 ? "" : "s") + " ago";
 		}
 		break;
 	}
