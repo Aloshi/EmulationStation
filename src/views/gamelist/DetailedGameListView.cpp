@@ -205,7 +205,7 @@ void DetailedGameListView::launch(FileData* game)
 {
 	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
 	if(mImage.hasImage())
-		target = mImage.getPosition();
+		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
 
 	mWindow->getViewController()->launch(game, target);
 }

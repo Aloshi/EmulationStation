@@ -40,7 +40,7 @@ public:
 	{
 		cameraOut = Eigen::Affine3f::Identity();
 
-		float zoom = lerp<float>(1.0, 3.0, t*t);
+		float zoom = lerp<float>(1.0, 4.25f, t*t);
 		cameraOut.scale(Eigen::Vector3f(zoom, zoom, 1));
 
 		const float sw = (float)Renderer::getScreenWidth() / zoom;
