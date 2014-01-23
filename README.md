@@ -12,7 +12,7 @@ I found a bug! I have a problem!
 - First, try to check the [issue list](https://github.com/Aloshi/EmulationStation/issues?state=open) for some entries that might match your problem.  Make sure to check closed issues too!
 - If you're running EmulationStation on a on Raspberry Pi and have problems with config file changes not taking effect, content missing after editing, etc., check if your SD card is corrupted (see issues [#78](https://github.com/Aloshi/EmulationStation/issues/78) and [#107](https://github.com/Aloshi/EmulationStation/issues/107)). You can do this with free tools like [h2testw](http://www.heise.de/download/h2testw.html) or [F3](http://oss.digirati.com.br/f3/).
 - Try to update to the latest version of EmulationStation using git (you might need to delete your `es_input.cfg` and `es_settings.cfg` after that to reset them to default values):
-```
+```bash
 cd EmulationStation
 git pull
 export CXX=g++-4.7
@@ -31,12 +31,12 @@ EmulationStation has a few dependencies. For building, you'll need SDL2, Boost (
 
 **On Linux:**
 All of this be easily installed with apt-get:
-```
+```bash
 sudo apt-get install libsdl2-dev libboost-dev libboost-system-dev libboost-filesystem-dev libboost-regex-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl-dev ttf-dejavu libasound2-dev
 ```
 
 Unless you're on the Raspberry Pi, you'll also need OpenGL:
-```
+```bash
 sudo apt-get install libgl1-mesa-dev
 ```
 
@@ -121,7 +121,7 @@ The order EmulationStation displays systems reflects the order you define them i
 
 Here's an example es_systems.cfg:
 
-```
+```xml
 <!-- This is the EmulationStation Systems configuration file.
 All systems must be contained within the <systemList> tag.-->
 
@@ -144,6 +144,9 @@ All systems must be contained within the <systemList> tag.-->
 		<!-- The shell command executed when a game is selected. A few special tags are replaced if found in a command, like %ROM%. -->
 		<command>snesemulator %ROM%</command>
 		<!-- This example would run the bash command "snesemulator /home/user/roms/snes/Super\ Mario\ World.sfc". -->
+
+		<!-- The Platform ID to use for scraping. 42 is the platform ID for the SNES. You can see the full list in src/PlatformIds.h. -->
+		<platformid>42</system>
 	</system>
 </systemList>
 ```
@@ -165,7 +168,7 @@ The gamelist.xml for a system defines metadata for a system's games, such as a n
 If a file named gamelist.xml is found in the root of a system's search directory OR within `~/.emulationstation/%NAME%/`, game metadata will be loaded from it. This allows you to define images, descriptions, and different names for files. Note that only standard ASCII characters are supported for text (if you see a weird [X] symbol, you're probably using unicode!).
 Images will be automatically resized to fit within the left column of the screen. Smaller images will load faster, so try to keep your resolution low.
 An example gamelist.xml:
-```
+```xml
 <gameList>
 	<game>
 		<path>/home/pi/ROMs/nes/mm2.nes</path>

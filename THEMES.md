@@ -317,6 +317,8 @@ Can be created as an extra.
 	- Path to the image file.  Most common extensions are supported (including .jpg, .png, and unanimated .gif).
 * `tile` - type: BOOLEAN.
 	- If true, the image will be tiled instead of stretched to fit its size.  Useful for backgrounds.
+* `color` - type: COLOR.
+	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.
 
 #### text
 
@@ -324,7 +326,10 @@ Can be created as an extra.
 
 * `pos` - type: NORMALIZED_PAIR.
 * `size` - type: NORMALIZED_PAIR.
-	- You should only set this if you want your text to behave like a "textbox" - that is, your text is multi-line and should wrap.
+	- Possible combinations:
+	- `0 0` - automatically size so text fits on one line (expanding horizontally).
+	- `w 0` - automatically wrap text so it doesn't go beyond `w` (expanding vertically).
+	- `w h` - works like a "text box."  If `h` is non-zero and `h` <= `fontSize` (implying it should be a single line of text), text that goes beyond `w` will be truncated with an elipses (...).
 * `text` - type: STRING.
 * `color` - type: COLOR.
 * `fontPath` - type: PATH.

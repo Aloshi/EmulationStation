@@ -279,4 +279,7 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		bool tile = (elem->has("tile") && elem->get<bool>("tile"));
 		setImage(elem->get<std::string>("path"), tile);
 	}
+
+	if(properties & COLOR && elem->has("color"))
+		setColorShift(elem->get<unsigned int>("color"));
 }

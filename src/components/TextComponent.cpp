@@ -123,7 +123,7 @@ void TextComponent::onTextChanged()
 	if(!wrap && mSize.x() && mText.size() && size.x() > mSize.x())
 	{
 		// abbreviate text
-		const std::string abbrev = "..";
+		const std::string abbrev = "...";
 		Eigen::Vector2f abbrevSize = f->sizeText(abbrev);
 
 		std::string text = mText;
