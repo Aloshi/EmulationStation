@@ -98,6 +98,10 @@ private:
 	const std::string mPath;
 };
 
+// Used to store a sort of "pre-rendered" string.
+// When a TextCache is constructed (Font::buildTextCache()), the vertices and texture coordinates of the string are calculated and stored in the TextCache object.
+// Rendering a TextCache (Font::renderTextCache) every frame is MUCH faster than calling Font::drawText() and its variants.
+// Keep in mind you still need the Font object to render a TextCache (as the Font holds the OpenGL texture), and if a Font changes your TextCache may become invalid.
 class TextCache
 {
 public:

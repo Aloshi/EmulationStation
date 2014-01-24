@@ -6,6 +6,11 @@
 
 class ThemeData;
 
+// Used to display text.
+// TextComponent::setSize(x, y) works a little differently than most components:
+//  * (0, 0)                     - will automatically calculate a size that fits the text on one line (expand horizontally)
+//  * (x != 0, 0)                - wrap text so that it does not reach beyond x. Will automatically calculate a vertical size (expand vertically).
+//  * (x != 0, y <= fontHeight)  - will truncate text so it fits within this box.
 class TextComponent : public GuiComponent
 {
 public:
@@ -16,7 +21,7 @@ public:
 	void onSizeChanged() override;
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
-	void setCentered(bool center); //Default is uncentered.
+	void setCentered(bool center); // Will horizontally center text.  Default is false.
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 

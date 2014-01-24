@@ -7,6 +7,8 @@
 #include "../platform.h"
 #include GLHEADER
 
+// An OpenGL texture.
+// Automatically recreates the texture with renderer deinit/reinit.
 class TextureResource : public IReloadable
 {
 public:
@@ -21,6 +23,7 @@ public:
 	Eigen::Vector2i getSize() const;
 	void bind() const;
 	
+	// Warning: will NOT correctly reinitialize when this texture is reloaded (e.g. ES starts/stops playing a game).
 	void initFromMemory(const char* image, size_t length);
 
 private:

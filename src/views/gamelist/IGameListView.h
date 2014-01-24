@@ -8,10 +8,7 @@ class GuiComponent;
 class FileData;
 class ThemeData;
 
-//IGameListView needs to know:
-//  What theme data to use
-//  The root FileData for the tree it should explore
-
+// This is an interface that defines the minimum for a GameListView.
 class IGameListView : public GuiComponent
 {
 public:

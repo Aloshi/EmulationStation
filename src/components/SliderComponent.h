@@ -5,6 +5,7 @@
 class TextCache;
 class Font;
 
+// Used to display/edit a value between some min and max values.
 class SliderComponent : public GuiComponent
 {
 public:

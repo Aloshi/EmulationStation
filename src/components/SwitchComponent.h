@@ -2,6 +2,8 @@
 
 #include "../GuiComponent.h"
 
+// A very simple "on/off" switch.
+// Should hopefully be switched to use images instead of text in the future.
 class SwitchComponent : public GuiComponent
 {
 public:

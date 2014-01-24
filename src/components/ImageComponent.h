@@ -12,29 +12,43 @@
 class ImageComponent : public GuiComponent
 {
 public:
-	//Creates a new GuiImage at the given location. If given an image, it will be loaded. If maxWidth and/or maxHeight are nonzero, the image will be
-	//resized to fit. If only one axis is specified, the other will be set in accordance with the image's aspect ratio. If allowUpscale is false,
-	//the image will only be downscaled, never upscaled (the image's size must surpass at least one nonzero bound).
-	ImageComponent(Window* window, const Eigen::Vector2f& pos = Eigen::Vector2f::Zero(), const std::string& path = "");
+	ImageComponent(Window* window);
 	virtual ~ImageComponent();
 
-	void setImage(std::string path, bool tile = false); //Loads the image at the given filepath.
-	void setImage(const char* image, size_t length, bool tile = false); //Loads image from memory.
-	void setImage(const std::shared_ptr<TextureResource>& texture); //Use an already existing texture.
-	void setOrigin(float originX, float originY); //Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
+	//Loads the image at the given filepath. Will tile if tile is true (retrieves texture as tiling, creates vertices accordingly).
+	void setImage(std::string path, bool tile = false);
+	//Loads an image from memory.
+	void setImage(const char* image, size_t length, bool tile = false);
+	//Use an already existing texture.
+	void setImage(const std::shared_ptr<TextureResource>& texture);
+
+	//Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
+	void setOrigin(float originX, float originY);
 	inline void setOrigin(Eigen::Vector2f origin) { setOrigin(origin.x(), origin.y()); }
+
+	// Resize the image to fit this size. If one axis is zero, scale that axis to maintain aspect ratio.
+	// If both are non-zero, potentially break the aspect ratio.  If both are zero, no resizing.
+	// Can be set before or after an image is loaded.
+	// setMaxSize() and setResize() are mutually exclusive.
 	void setResize(float width, float height);
 	inline void setResize(const Eigen::Vector2f& size) { setResize(size.x(), size.y()); }
+
+	// Resize the image to be as large as possible but fit within a box of this size.
+	// Can be set before or after an image is loaded.
+	// Never breaks the aspect ratio. setMaxSize() and setResize() are mutually exclusive.
 	void setMaxSize(float width, float height);
 	inline void setMaxSize(const Eigen::Vector2f& size) { setMaxSize(size.x(), size.y()); }
+
+	// Multiply all pixels in the image by this color when rendering.
 	void setColorShift(unsigned int color);
 
-	void setFlipX(bool flip);
-	void setFlipY(bool flip);
+	void setFlipX(bool flip); // Mirror on the X axis.
+	void setFlipY(bool flip); // Mirror on the Y axis.
 
-	//You can get the rendered size of the ImageComponent with getSize().
+	// Returns the size of the current texture, or (0, 0) if none is loaded.  May be different than drawn size (use getSize() for that).
 	Eigen::Vector2i getTextureSize() const;
 
+	// Returns the center point of the image (takes origin into account).
 	Eigen::Vector2f getCenter() const;
 
 	bool hasImage();
@@ -49,9 +63,14 @@ private:
 
 	bool mFlipX, mFlipY, mTargetIsMax;
 
+	// Calculates the correct mSize from our resizing information (set by setResize/setMaxSize).
+	// Used internally whenever the resizing parameters or texture change.
 	void resize();
-	void buildImageArray(int x, int y, GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1); //writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position
-	void drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int count = 6); //draws the given set of points and texture coordinates, number of coordinate pairs may be specified (default 6)
+
+	// Writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position.
+	void buildImageArray(int x, int y, GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1);
+	// Draws the given set of points and texture coordinates, number of coordinate pairs may be specified.
+	void drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int count = 6);
 
 	unsigned int mColorShift;
 

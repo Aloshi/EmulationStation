@@ -6,6 +6,7 @@
 class Font;
 class TextCache;
 
+// Used to enter text.
 class TextEditComponent : public GuiComponent
 {
 public:

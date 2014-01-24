@@ -5,20 +5,24 @@
 #include <functional>
 #include <memory>
 
-/* Usage example:
-	std::shared_ptr<HttpReq> httpreq = std::make_shared<HttpReq>("cdn.garcya.us", "/wp-content/uploads/2010/04/TD250.jpg");
-	AsyncReqComponent* req = new AsyncReqComponent(mWindow, httpreq,
-		[] (std::shared_ptr<HttpReq> r)
-	{
-		LOG(LogInfo) << "Request completed";
-		LOG(LogInfo) << "   error, if any: " << r->getErrorMsg();
-	}, [] ()
-	{
-		LOG(LogInfo) << "Request canceled";
-	});
+/* 
+	Used to asynchronously run an HTTP request.
+	Displays a simple animation on the UI to show the application hasn't frozen.  Can be canceled by the user pressing B.
 
-	mWindow->pushGui(req);
-	//we can forget about req, since it will always delete itself
+	Usage example:
+		std::shared_ptr<HttpReq> httpreq = std::make_shared<HttpReq>("cdn.garcya.us", "/wp-content/uploads/2010/04/TD250.jpg");
+		AsyncReqComponent* req = new AsyncReqComponent(mWindow, httpreq,
+			[] (std::shared_ptr<HttpReq> r)
+		{
+			LOG(LogInfo) << "Request completed";
+			LOG(LogInfo) << "   error, if any: " << r->getErrorMsg();
+		}, [] ()
+		{
+			LOG(LogInfo) << "Request canceled";
+		});
+
+		mWindow->pushGui(req);
+		//we can forget about req, since it will always delete itself
 */
 
 class AsyncReqComponent : public GuiComponent

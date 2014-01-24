@@ -20,13 +20,9 @@ Eigen::Vector2f ImageComponent::getCenter() const
 		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
 }
 
-ImageComponent::ImageComponent(Window* window, const Eigen::Vector2f& pos, const std::string& path) : GuiComponent(window), 
+ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
 	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
 {
-	setPosition(pos.x(), pos.y());
-
-	if(!path.empty())
-		setImage(path);
 }
 
 ImageComponent::~ImageComponent()

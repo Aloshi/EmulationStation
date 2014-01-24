@@ -5,6 +5,7 @@
 
 class SystemData;
 
+// Used to smoothly transition the camera between multiple views (e.g. from system to system, from gamelist to gamelist).
 class ViewController : public GuiComponent
 {
 public:

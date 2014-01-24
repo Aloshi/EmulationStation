@@ -2,6 +2,7 @@
 
 #include "Animation.h"
 
+// Useful for simple one-off animations, you can supply the animation's apply(t) method right in the constructor as a lambda.
 class LambdaAnimation : public Animation
 {
 public:
