@@ -179,6 +179,60 @@ Notice that you can still override the "common" view in a specific view definiti
 You probably should not use the "common" view for element positioning.  You also should not use it to create "extra" elements.
 
 
+
+### Theming more than one elements at once
+
+You can theme multiple elements *of the same type* simultaneously.  The `name` attribute actually works as a list (delimited by any characters of ` \t\n,` - that is, whitespace and commas).  This is useful if you want to, say, apply the same color to all the metadata labels:
+
+```xml
+<theme>
+    <version>3</version>
+    <!-- Weird spaces/newline on purpose! -->
+    <view name="detailed">
+    	<text name="md_lbl_rating, md_lbl_releasedate, md_lbl_developer, md_lbl_publisher, 
+    	md_lbl_genre,    md_lbl_players,        md_lbl_lastplayed, md_lbl_playcount">
+        	<color>48474D</color>
+        </text>
+    </view>
+</theme>
+```
+
+Is equivalent to:
+```xml
+<theme>
+    <version>3</version>
+    <view name="detailed">
+    	<text name="md_lbl_rating">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_releasedate">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_developer">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_publisher">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_genre">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_players">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_lastplayed">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_playcount">
+    		<color>48474D</color>
+    	</text>
+    </view>
+</theme>
+```
+
+Just remember, *this only works if the elements have the same type!*
+
+
 Reference
 =========
 

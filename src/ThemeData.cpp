@@ -222,13 +222,22 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 		if(elemTypeIt == sElementMap.end())
 			throw error << "Unknown element of type \"" << node.name() << "\"!";
 
-		const char* elemKey = node.attribute("name").as_string();
+		const char* delim = " \t\n,";
+		const std::string nameAttr = node.attribute("name").as_string();
+		size_t prevOff = nameAttr.find_first_not_of(delim, 0);
+		size_t off =  nameAttr.find_first_of(delim, prevOff);
+		while(off != std::string::npos || prevOff != std::string::npos)
+		{
+			std::string elemKey = nameAttr.substr(prevOff, off - prevOff);
+			prevOff = nameAttr.find_first_not_of(delim, off);
+			off = nameAttr.find_first_of(delim, prevOff);
+			
+			parseElement(node, elemTypeIt->second, 
+				view.elements.insert(std::make_pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
 
-		parseElement(node, elemTypeIt->second, 
-			view.elements.insert(std::make_pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
-
-		if(std::find(view.orderedKeys.begin(), view.orderedKeys.end(), elemKey) == view.orderedKeys.end())
-			view.orderedKeys.push_back(elemKey);
+			if(std::find(view.orderedKeys.begin(), view.orderedKeys.end(), elemKey) == view.orderedKeys.end())
+				view.orderedKeys.push_back(elemKey);
+		}
 	}
 }
 
@@ -255,7 +264,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 			size_t divider = str.find(' ');
 			if(divider == std::string::npos) 
-				throw error << "invalid normalized pair (\"" << str.c_str() << "\")";
+				throw error << "invalid normalized pair (property \"" << node.name() << "\", value \"" << str.c_str() << "\")";
 
 			std::string first = str.substr(0, divider);
 			std::string second = str.substr(divider, std::string::npos);
@@ -293,7 +302,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			element.properties[node.name()] = node.text().as_bool();
 			break;
 		default:
-			throw error << "Unknown ElementPropertyType for " << root.attribute("name").as_string() << " property " << node.name();
+			throw error << "Unknown ElementPropertyType for \"" << root.attribute("name").as_string() << "\", property " << node.name();
 		}
 	}
 }
