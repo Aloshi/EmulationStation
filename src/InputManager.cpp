@@ -228,6 +228,7 @@ void InputManager::loadConfig()
 
 	pugi::xml_node root = doc.child("inputList");
 
+	bool loadedKeyboard = false;
 	for(pugi::xml_node node = root.child("inputConfig"); node; node = node.next_sibling("inputConfig"))
 	{
 		std::string type = node.attribute("type").as_string();
@@ -235,6 +236,7 @@ void InputManager::loadConfig()
 		if(type == "keyboard")
 		{
 			getInputConfigByDevice(DEVICE_KEYBOARD)->loadFromXML(node, mNumPlayers);
+			loadedKeyboard = true;
 			mNumPlayers++;
 		}else if(type == "joystick")
 		{
@@ -265,9 +267,9 @@ void InputManager::loadConfig()
 
 	delete[] configuredDevice;
 
-	if(mNumPlayers == 0)
+	if(!loadedKeyboard)
 	{
-		LOG(LogInfo) << "No input configs loaded. Loading default keyboard config.";
+		LOG(LogInfo) << "No keyboard input found. Loading default keyboard config.";
 		loadDefaultConfig();
 	}
 
