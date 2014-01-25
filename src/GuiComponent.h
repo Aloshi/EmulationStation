@@ -53,6 +53,9 @@ public:
 	GuiComponent* getChild(unsigned int i) const;
 
 	// animation will be automatically deleted when it completes or is stopped.
+	bool isAnimationPlaying(unsigned char slot) const;
+	bool isAnimationReversed(unsigned char slot) const;
+	int getAnimationTime(unsigned char slot) const;
 	void setAnimation(Animation* animation, std::function<void()> finishedCallback = nullptr, bool reverse = false, unsigned char slot = 0);
 	void stopAnimation(unsigned char slot);
 

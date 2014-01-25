@@ -46,7 +46,7 @@ public:
 	void setCursor(typename std::vector<ListRow>::const_iterator& it);
 
 	void stopScrolling();
-	inline bool isScrolling() const { return mScrollDir != 0; }
+	inline bool isScrolling() const { return mScrollDir != 0 && mScrollAccumulator >= 0; }
 
 	enum CursorState
 	{

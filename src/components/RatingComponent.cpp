@@ -82,6 +82,8 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glColor4ub(255, 255, 255, getOpacity());
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	
@@ -99,6 +101,8 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 	
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
+
+	glColor4ub(255, 255, 255, 255);
 
 	renderChildren(trans);
 }

@@ -227,6 +227,23 @@ void GuiComponent::stopAnimation(unsigned char slot)
 	}
 }
 
+bool GuiComponent::isAnimationPlaying(unsigned char slot) const
+{
+	return mAnimationMap[slot] != NULL;
+}
+
+bool GuiComponent::isAnimationReversed(unsigned char slot) const
+{
+	assert(mAnimationMap[slot] != NULL);
+	return mAnimationMap[slot]->isReversed();
+}
+
+int GuiComponent::getAnimationTime(unsigned char slot) const
+{
+	assert(mAnimationMap[slot] != NULL);
+	return mAnimationMap[slot]->getTime();
+}
+
 void GuiComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
 	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());

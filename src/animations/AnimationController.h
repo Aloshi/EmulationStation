@@ -15,6 +15,9 @@ public:
 	// Returns true if the animation is complete.
 	bool update(int deltaTime);
 
+	inline bool isReversed() const { return mReverse; }
+	inline int getTime() const { return mTime; }
+
 private:
 	Animation* mAnimation;
 	std::function<void()> mFinishedCallback;

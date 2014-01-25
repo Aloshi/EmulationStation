@@ -1,6 +1,7 @@
 #include "DetailedGameListView.h"
 #include "../../Window.h"
 #include "../ViewController.h"
+#include "../../animations/LambdaAnimation.h"
 
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root) : 
 	BasicGameListView(window, root), 
@@ -180,10 +181,12 @@ void DetailedGameListView::updateInfoPanel()
 {
 	FileData* file = (mList.getList().size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
 
+	bool fadingOut;
 	if(file == NULL)
 	{
-		mImage.setImage("");
-		mDescription.setText("");
+		//mImage.setImage("");
+		//mDescription.setText("");
+		fadingOut = true;
 	}else{
 		mImage.setImage(file->metadata.get("image"));
 		mRating.setValue(file->metadata.get("rating"));
@@ -198,6 +201,31 @@ void DetailedGameListView::updateInfoPanel()
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.resetAutoScrollTimer();
 		mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
+		fadingOut = false;
+	}
+
+	std::vector<GuiComponent*> comps = getMDValues();
+	comps.push_back(&mImage);
+	comps.push_back(&mDescription);
+	std::vector<TextComponent*> labels = getMDLabels();
+	comps.insert(comps.end(), labels.begin(), labels.end());
+
+	for(auto it = comps.begin(); it != comps.end(); it++)
+	{
+		GuiComponent* comp = *it;
+		// an animation is playing
+		//   then animate if reverse != fadingOut
+		// an animation is not playing
+		//   then animate if opacity != our target opacity
+		if((comp->isAnimationPlaying(0) && comp->isAnimationReversed(0) != fadingOut) || 
+			(!comp->isAnimationPlaying(0) && comp->getOpacity() != (fadingOut ? 0 : 255)))
+		{
+			auto func = [comp](float t)
+			{
+				comp->setOpacity((unsigned char)(lerp<float>(0.0f, 1.0f, t)*255));
+			};
+			comp->setAnimation(new LambdaAnimation(func, 150), nullptr, fadingOut);
+		}
 	}
 }
 
