@@ -32,9 +32,10 @@ bool ButtonComponent::input(InputConfig* config, Input input)
 	return GuiComponent::input(config, input);
 }
 
-void ButtonComponent::setText(const std::string& text, unsigned int focusedColor, unsigned int unfocusedColor)
+void ButtonComponent::setText(const std::string& text, const std::string& helpText, unsigned int focusedColor, unsigned int unfocusedColor)
 {
 	mText = text;
+	mHelpText = helpText;
 	mTextColorFocused = focusedColor;
 	mTextColorUnfocused = unfocusedColor;
 
@@ -42,6 +43,8 @@ void ButtonComponent::setText(const std::string& text, unsigned int focusedColor
 	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(mText, 0, 0, getCurTextColor()));
 
 	setSize(mTextCache->metrics.size + Eigen::Vector2f(12, 12));
+
+	updateHelpPrompts();
 }
 
 void ButtonComponent::onFocusGained()
@@ -85,4 +88,11 @@ unsigned int ButtonComponent::getCurTextColor() const
 		return mTextColorUnfocused;
 	else
 		return mTextColorFocused;
+}
+
+std::vector<HelpPrompt> ButtonComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("a", mHelpText.empty() ? mText.c_str() : mHelpText.c_str()));
+	return prompts;
 }

@@ -43,6 +43,8 @@ public:
 
 	void moveCursor(Eigen::Vector2i dir);
 
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+
 private:
 	class ComponentEntry
 	{

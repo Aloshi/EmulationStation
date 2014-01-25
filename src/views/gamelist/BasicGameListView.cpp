@@ -70,3 +70,13 @@ void BasicGameListView::launch(FileData* game)
 {
 	mWindow->getViewController()->launch(game);
 }
+
+std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("left/right", "change systems"));
+	prompts.push_back(HelpPrompt("up/down", "scroll"));
+	prompts.push_back(HelpPrompt("a", "play"));
+	prompts.push_back(HelpPrompt("b", "back"));
+	return prompts;
+}

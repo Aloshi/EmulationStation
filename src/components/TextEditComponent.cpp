@@ -79,6 +79,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 	if(config->isMappedTo("a", input) && mFocused && !mEditing)
 	{
 		mEditing = true;
+		updateHelpPrompts();
 		return true;
 	}
 
@@ -87,9 +88,12 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 		if(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_RETURN)
 		{
 			if(isMultiline())
+			{
 				textInput("\n");
-			else
+			}else{
 				mEditing = false;
+				updateHelpPrompts();
+			}
 
 			return true;
 		}
@@ -97,6 +101,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 		if((config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_ESCAPE) || (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("b", input)))
 		{
 			mEditing = false;
+			updateHelpPrompts();
 			return true;
 		}
 
@@ -221,4 +226,17 @@ bool TextEditComponent::isMultiline()
 bool TextEditComponent::isEditing() const
 {
 	return mEditing;
+}
+
+std::vector<HelpPrompt> TextEditComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	if(mEditing)
+	{
+		prompts.push_back(HelpPrompt("up/down/left/right", "move cursor"));
+		prompts.push_back(HelpPrompt("b", "stop editing"));
+	}else{
+		prompts.push_back(HelpPrompt("a", "edit"));
+	}
+	return prompts;
 }

@@ -44,7 +44,7 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mManualLabel, false, ComponentListComponent::AlignRight);
 	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mManualSwitch, true, ComponentListComponent::AlignLeft);
 
-	mStartButton.setText("GO GO GO GO", 0x00FF00FF);
+	mStartButton.setText("GO GO GO GO", "begin", 0x00FF00FF);
 	mStartButton.setPressedFunc(std::bind(&GuiScraperStart::pressedStart, this));
 	mList.setEntry(Vector2i(0, 3), Vector2i(2, 1), &mStartButton, true, ComponentListComponent::AlignCenter);
 
@@ -115,4 +115,11 @@ bool GuiScraperStart::input(InputConfig* config, Input input)
 	}
 
 	return false;
+}
+
+std::vector<HelpPrompt> GuiScraperStart::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts = mList.getHelpPrompts();
+	prompts.push_back(HelpPrompt("b", "cancel"));
+	return prompts;
 }

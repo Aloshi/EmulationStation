@@ -23,6 +23,8 @@ public:
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+
 private:
 	void updateVertices();
 

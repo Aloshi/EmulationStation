@@ -10,6 +10,8 @@ class Animation;
 class AnimationController;
 class ThemeData;
 
+typedef std::pair<const char*, const char*> HelpPrompt;
+
 class GuiComponent
 {
 public:
@@ -73,6 +75,12 @@ public:
 	// Default implementation just handles <pos> and <size> tags as normalized float pairs.
 	// You probably want to keep this behavior for any derived classes as well as add your own.
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties);
+
+	// Returns a list of help prompts.
+	virtual std::vector<HelpPrompt> getHelpPrompts() { return std::vector<HelpPrompt>(); };
+
+	// Called whenever help prompts change.
+	void updateHelpPrompts();
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;

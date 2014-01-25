@@ -164,6 +164,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageGridComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.h
@@ -243,6 +244,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/RatingComponent.cpp
@@ -292,6 +294,12 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_glow_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_filled_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_unfilled_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_a_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_b_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_menu_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_up_down_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_left_right_png.cpp
 )
 
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)

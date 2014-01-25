@@ -484,4 +484,40 @@ void ComponentListComponent::onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i
 
 	if(to != Eigen::Vector2i(-1, -1))
 		getCell(to.x(), to.y())->component->onFocusGained();
+
+	updateHelpPrompts();
+}
+
+std::vector<HelpPrompt> ComponentListComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	if(cursorValid())
+		prompts = getSelectedComponent()->getHelpPrompts();
+	
+	bool canScrollVert = true;
+	bool canScrollHoriz = true;
+	for(auto it = prompts.begin(); it != prompts.end(); it++)
+	{
+		if(it->first == "up/down/left/right")
+		{
+			canScrollHoriz = false;
+			canScrollVert = false;
+			break;
+		}else if(it->first == "up/down")
+		{
+			canScrollVert = false;
+		}else if(it->first == "left/right")
+		{
+			canScrollHoriz = false;
+		}
+	}
+
+	if(canScrollHoriz && canScrollVert)
+		prompts.push_back(HelpPrompt("up/down/left/right", "move cursor"));
+	else if(canScrollHoriz)
+		prompts.push_back(HelpPrompt("left/right", "move cursor"));
+	else if(canScrollVert)
+		prompts.push_back(HelpPrompt("up/down", "move cursor"));
+
+	return prompts;
 }

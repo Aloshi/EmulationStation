@@ -7,6 +7,7 @@
 #include "resources/Font.h"
 
 class ViewController;
+class HelpComponent;
 
 class Window
 {
@@ -35,9 +36,12 @@ public:
 	
 	void renderLoadingScreen();
 
+	void setHelpPrompts(const std::vector<HelpPrompt>& prompts);
+
 private:
 	InputManager* mInputManager;
 	ViewController* mViewController;
+	HelpComponent* mHelp;
 	std::vector<GuiComponent*> mGuiStack;
 
 	std::vector< std::shared_ptr<Font> > mDefaultFonts;

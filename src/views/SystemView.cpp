@@ -81,3 +81,10 @@ bool SystemView::input(InputConfig* config, Input input)
 
 	return GuiComponent::input(config, input);
 }
+
+std::vector<HelpPrompt> SystemView::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("a", "select"));
+	return prompts;
+}

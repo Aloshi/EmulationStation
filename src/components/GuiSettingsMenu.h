@@ -20,6 +20,8 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 
+	std::vector<HelpPrompt> getHelpPrompts() override;
+
 private:
 	void loadStates();
 	void applyStates();
@@ -34,6 +36,7 @@ private:
 	OptionListComponent< std::shared_ptr<Scraper> > mScraperOptList;
 	SwitchComponent mScrapeRatingsSwitch;
 	SliderComponent mDimSlider;
+	SwitchComponent mDisableHelpSwitch;
 	ButtonComponent mSaveButton;
 	
 	std::vector<GuiComponent*> mLabels;

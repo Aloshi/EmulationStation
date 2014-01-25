@@ -45,3 +45,10 @@ void SwitchComponent::setState(bool state)
 {
 	mState = state;
 }
+
+std::vector<HelpPrompt> SwitchComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("a", "toggle"));
+	return prompts;
+}

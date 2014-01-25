@@ -41,10 +41,11 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	float sw = (float)Renderer::getScreenWidth();
 	float sh = (float)Renderer::getScreenHeight();
 
-	float colWidth = sw * 0.35f;
-
-	mList.forceColumnWidth(0, (unsigned int)colWidth);
-	mList.forceColumnWidth(1, (unsigned int)colWidth);
+	float listWidth = sw * 0.7f;
+	float col1Width = listWidth * 0.7f;
+	float col2Width = listWidth * 0.3f;
+	mList.forceColumnWidth(0, (unsigned int)col1Width);
+	mList.forceColumnWidth(1, (unsigned int)col2Width);
 
 	using namespace Eigen;
 	
@@ -57,20 +58,19 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mResultName, false, ComponentListComponent::AlignLeft);
 
 	mResultDesc.setText(params.game->metadata.get("desc"));
-	mResultDesc.setSize(colWidth, 0);
+	mResultDesc.setSize(col1Width, 0);
 	mResultInfo.addChild(&mResultDesc);
 	mResultInfo.setSize(mResultDesc.getSize().x(), mResultDesc.getFont()->getHeight() * 3.0f);
 	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mResultInfo, false, ComponentListComponent::AlignLeft);
 	
-	mResultThumbnail.setOrigin(0.5f, 0.5f);
-	mResultThumbnail.setMaxSize(colWidth, mResultInfo.getSize().y() + mResultName.getSize().y());
-	mList.setEntry(Vector2i(1, 1), Vector2i(1, 2), &mResultThumbnail, false, ComponentListComponent::AlignCenter);
+	mResultThumbnail.setMaxSize(col2Width, mResultInfo.getSize().y());
+	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mResultThumbnail, false, ComponentListComponent::AlignCenter);
 
 	//y = 3 is a spacer row
 
 	mList.setEntry(Vector2i(0, 4), Vector2i(1, 1), &mSearchLabel, false, ComponentListComponent::AlignLeft);
 	mSearchText.setValue(!params.nameOverride.empty() ? params.nameOverride : getCleanFileName(params.game->getPath()));
-	mSearchText.setSize(colWidth * 2 - mSearchLabel.getSize().x() - 20, mSearchText.getSize().y());
+	mSearchText.setSize(listWidth - mSearchLabel.getSize().x() - 20, mSearchText.getSize().y());
 	mList.setEntry(Vector2i(1, 4), Vector2i(1, 1), &mSearchText, true, ComponentListComponent::AlignRight);
 
 	//y = 5 is a spacer row
@@ -216,4 +216,15 @@ void GuiGameScraper::updateThumbnail()
 	}
 
 	mThumbnailReq.reset();
+	mList.onPositionChanged(); // a hack to fix the thumbnail position since its size changed
+}
+
+std::vector<HelpPrompt> GuiGameScraper::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts = mList.getHelpPrompts();
+	if(getSelectedIndex() != -1)
+		prompts.push_back(HelpPrompt("a", "accept result"));
+	
+	prompts.push_back(HelpPrompt("b", "cancel/skip"));
+	return prompts;
 }

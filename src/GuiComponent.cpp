@@ -262,3 +262,17 @@ void GuiComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std
 	if(properties & ThemeFlags::SIZE && elem->has("size"))
 		setSize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
 }
+
+void GuiComponent::updateHelpPrompts()
+{
+	if(getParent())
+	{
+		getParent()->updateHelpPrompts();
+		return;
+	}
+
+	std::vector<HelpPrompt> prompts = getHelpPrompts();
+
+	if(mWindow->peekGui() == this)
+		mWindow->setHelpPrompts(prompts);
+}

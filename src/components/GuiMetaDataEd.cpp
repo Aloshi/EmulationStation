@@ -29,7 +29,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mHeader.setText(header);
 
 	//initialize buttons
-	mDeleteButton.setText("DELETE", mDeleteFunc ? 0xFF0000FF : 0x555555FF);
+	mDeleteButton.setText("DELETE", "delete file", mDeleteFunc ? 0xFF0000FF : 0x555555FF);
 	if(mDeleteFunc)
 	{
 		std::function<void()> deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
@@ -37,10 +37,10 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 		mDeleteButton.setPressedFunc(pressedFunc);
 	}
 
-	mFetchButton.setText("FETCH", 0x00FF00FF);
+	mFetchButton.setText("FETCH", "download metadata", 0x00FF00FF);
 	mFetchButton.setPressedFunc(std::bind(&GuiMetaDataEd::fetch, this));
 
-	mSaveButton.setText("SAVE", 0x0000FFFF);
+	mSaveButton.setText("SAVE", "save", 0x0000FFFF);
 	mSaveButton.setPressedFunc([&] { save(); delete this; });
 
 	//initialize metadata list
@@ -183,4 +183,11 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 	}
 
 	return false;
+}
+
+std::vector<HelpPrompt> GuiMetaDataEd::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts = mList.getHelpPrompts();
+	prompts.push_back(HelpPrompt("b", "discard changes"));
+	return prompts;
 }

@@ -26,6 +26,8 @@ public:
 
 	bool isEditing() const;
 
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+
 private:
 	void onTextChanged();
 	void onCursorChanged();

@@ -54,3 +54,12 @@ void GridGameListView::launch(FileData* game)
 {
 	mWindow->getViewController()->launch(game);
 }
+
+std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("up/down/left/right", "scroll"));
+	prompts.push_back(HelpPrompt("a", "launch"));
+	prompts.push_back(HelpPrompt("b", "back"));
+	return prompts;
+}

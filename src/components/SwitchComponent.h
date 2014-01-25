@@ -15,6 +15,8 @@ public:
 	bool getState();
 	void setState(bool state);
 
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+
 private:
 	bool mState;
 };

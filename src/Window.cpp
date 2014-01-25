@@ -7,12 +7,14 @@
 #include "Settings.h"
 #include <iomanip>
 #include "views/ViewController.h"
+#include "components/HelpComponent.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true)
 {
 	mInputManager = new InputManager(this);
 	mViewController = new ViewController(this);
+	mHelp = new HelpComponent(this);
 	pushGui(mViewController);
 }
 
@@ -24,12 +26,14 @@ Window::~Window()
 	while(peekGui())
 		delete peekGui();
 	
+	delete mHelp;
 	delete mInputManager;
 }
 
 void Window::pushGui(GuiComponent* gui)
 {
 	mGuiStack.push_back(gui);
+	setHelpPrompts(gui->getHelpPrompts());
 }
 
 void Window::removeGui(GuiComponent* gui)
@@ -38,7 +42,11 @@ void Window::removeGui(GuiComponent* gui)
 	{
 		if(*i == gui)
 		{
-			mGuiStack.erase(i);
+			i = mGuiStack.erase(i);
+
+			if(i == mGuiStack.end() && mGuiStack.size()) // we just popped the stack and the stack is not empty
+				setHelpPrompts(mGuiStack.back()->getHelpPrompts());
+
 			return;
 		}
 	}
@@ -49,7 +57,7 @@ GuiComponent* Window::peekGui()
 	if(mGuiStack.size() == 0)
 		return NULL;
 
-	return mGuiStack.at(mGuiStack.size() - 1);
+	return mGuiStack.back();
 }
 
 bool Window::init(unsigned int width, unsigned int height)
@@ -71,6 +79,10 @@ bool Window::init(unsigned int width, unsigned int height)
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_MEDIUM));
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_LARGE));
 	}
+
+	// update our help because font sizes probably changed
+	if(peekGui())
+		setHelpPrompts(peekGui()->getHelpPrompts());
 
 	return true;
 }
@@ -138,6 +150,8 @@ void Window::render()
 		mGuiStack.at(i)->render(transform);
 	}
 
+	mHelp->render(transform);
+
 	if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
 	{
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
@@ -166,4 +180,17 @@ void Window::renderLoadingScreen()
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF);
 	mDefaultFonts.at(2)->drawCenteredText("LOADING", 0, (Renderer::getScreenHeight() - mDefaultFonts.at(2)->getHeight()) / 2.0f , 0xFFFFFFFF);
 	Renderer::swapBuffers();
+}
+
+void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts)
+{
+	mHelp->clearPrompts();
+
+	std::map<std::string, bool> seenMap;
+	for(auto it = prompts.begin(); it != prompts.end(); it++)
+	{
+		// only add it if the same icon hasn't already been added
+		if(seenMap.insert(std::make_pair<std::string, bool>(it->first, true)).second)
+			mHelp->addPrompt(it->first, it->second);
+	}
 }

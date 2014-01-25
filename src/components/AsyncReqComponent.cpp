@@ -42,3 +42,10 @@ void AsyncReqComponent::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Vector3f point(cos(mTime * 0.01f) * 12, sin(mTime * 0.01f) * 12, 0);
 	Renderer::drawRect((int)point.x(), (int)point.y(), 8, 8, 0x0000FFFF);
 }
+
+std::vector<HelpPrompt> AsyncReqComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("b", "cancel"));
+	return prompts;
+}

@@ -20,6 +20,8 @@ public:
 	void render(const Eigen::Affine3f& parentTrans) override;
 	
 	void onSizeChanged() override;
+	
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
 	void onValueChanged();

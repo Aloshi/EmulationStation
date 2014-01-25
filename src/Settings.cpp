@@ -33,6 +33,7 @@ void Settings::setDefaults()
 	mBoolMap["DEBUG"] = false;
 	mBoolMap["WINDOWED"] = false;
 	mBoolMap["DISABLESOUNDS"] = false;
+	mBoolMap["DISABLEHELP"] = false;
 	mBoolMap["DisableGamelistWrites"] = false;
 	mBoolMap["ScrapeRatings"] = true;
 

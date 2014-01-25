@@ -15,11 +15,13 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
-	void setText(const std::string& text, unsigned int focusedTextColor, unsigned int unfocusedTextColor = 0x555555FF);
+	void setText(const std::string& text, const std::string& helpText, unsigned int focusedTextColor, unsigned int unfocusedTextColor = 0x555555FF);
 
 	void onSizeChanged() override;
 	void onFocusGained() override;
 	void onFocusLost() override;
+
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
 	std::shared_ptr<Font> getFont();
@@ -33,6 +35,7 @@ private:
 	unsigned int getCurTextColor() const;
 
 	std::string mText;
+	std::string mHelpText;
 	std::unique_ptr<TextCache> mTextCache;
 	NinePatchComponent mBox;
 };

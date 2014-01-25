@@ -136,3 +136,10 @@ void RatingComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const 
 	if(properties & PATH && elem->has("unfilledPath"))
 		mUnfilledTexture = TextureResource::get(elem->get<std::string>("unfilledPath"), true);
 }
+
+std::vector<HelpPrompt> RatingComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("a", "+1 star"));
+	return prompts;
+}

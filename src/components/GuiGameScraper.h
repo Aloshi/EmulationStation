@@ -22,6 +22,9 @@ public:
 	void update(int deltaTime) override;
 
 	void search();
+
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+
 private:
 	int getSelectedIndex();
 	void onSearchDone(std::vector<MetaDataList> results);

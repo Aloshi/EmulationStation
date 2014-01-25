@@ -31,6 +31,7 @@ void ViewController::goToSystemView(SystemData* system)
 {
 	mState.viewing = SYSTEM_SELECT;
 	mCurrentView = getSystemView(system);
+	updateHelpPrompts();
 	playViewTransition();
 }
 
@@ -56,6 +57,7 @@ void ViewController::goToGameList(SystemData* system)
 	mState.data.system = system;
 
 	mCurrentView = getGameListView(system);
+	updateHelpPrompts();
 	playViewTransition();
 }
 
@@ -249,4 +251,16 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 			break;
 		}
 	}
+}
+
+std::vector<HelpPrompt> ViewController::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	if(!mCurrentView)
+		return prompts;
+	
+	prompts = mCurrentView->getHelpPrompts();
+	prompts.push_back(HelpPrompt("menu", "open menu"));
+
+	return prompts;
 }

@@ -29,6 +29,24 @@ extern const unsigned char textbox_png_data[];
 extern const size_t textbox_glow_png_size;
 extern const unsigned char textbox_glow_png_data[];
 
+extern const size_t help_a_png_size;
+extern const unsigned char help_a_png_data[];
+
+extern const size_t help_b_png_size;
+extern const unsigned char help_b_png_data[];
+
+extern const size_t help_dpad_png_size;
+extern const unsigned char help_dpad_png_data[];
+
+extern const size_t help_left_right_png_size;
+extern const unsigned char help_left_right_png_data[];
+
+extern const size_t help_menu_png_size;
+extern const unsigned char help_menu_png_data[];
+
+extern const size_t help_up_down_png_size;
+extern const unsigned char help_up_down_png_data[];
+
 struct Res2hEntry {
     const std::string relativeFileName;
     const size_t size;

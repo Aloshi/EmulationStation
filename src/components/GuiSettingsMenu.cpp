@@ -7,7 +7,7 @@
 #include "../scrapers/GamesDBScraper.h"
 
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window), 
-	mList(window, Eigen::Vector2i(2, 7)), 
+	mList(window, Eigen::Vector2i(2, 8)), 
 	mBox(mWindow, ":/frame.png", 0x444444FF),
 	mDrawFramerateSwitch(window),
 	mVolumeSlider(window, 0, 100, 1, "%"),
@@ -15,6 +15,7 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	mScraperOptList(window), 
 	mScrapeRatingsSwitch(window), 
 	mDimSlider(window, 0, 60, 1, "s"),
+	mDisableHelpSwitch(window),
 	mSaveButton(window)
 {
 	loadStates();
@@ -87,14 +88,20 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	label->setColor(0x0000FFFF);
 	mLabels.push_back(label);
 	mList.setEntry(Vector2i(0, 5), Vector2i(1, 1), label, false, ComponentListComponent::AlignRight);
-
-	// dim slider
 	mList.setEntry(Vector2i(1, 5), Vector2i(1, 1), &mDimSlider, true, ComponentListComponent::AlignCenter);
 
+	// disable help switch
+	label = new TextComponent(mWindow);
+	label->setText("Disable help: ");
+	label->setColor(0x0000FFFF);
+	mLabels.push_back(label);
+	mList.setEntry(Vector2i(0, 6), Vector2i(1, 1), label, false, ComponentListComponent::AlignRight);
+	mList.setEntry(Vector2i(1, 6), Vector2i(1, 1), &mDisableHelpSwitch, true, ComponentListComponent::AlignCenter);
+
 	//save button
-	mSaveButton.setText("SAVE", 0x00FF00FF);
+	mSaveButton.setText("SAVE", "apply & save", 0x00FF00FF);
 	mSaveButton.setPressedFunc([this] () { applyStates(); delete this; });
-	mList.setEntry(Vector2i(0, 6), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
+	mList.setEntry(Vector2i(0, 7), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter, Matrix<bool, 1, 2>(false, true));
 
 	//center list
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
@@ -139,6 +146,8 @@ void GuiSettingsMenu::loadStates()
 	mScrapeRatingsSwitch.setState(s->getBool("ScrapeRatings"));
 
 	mDimSlider.setValue((float)(s->getInt("DIMTIME") / 1000));
+
+	mDisableHelpSwitch.setState(s->getBool("DISABLEHELP"));
 }
 
 void GuiSettingsMenu::applyStates()
@@ -157,5 +166,14 @@ void GuiSettingsMenu::applyStates()
 
 	s->setInt("DIMTIME", (int)(mDimSlider.getValue() * 1000));
 
+	s->setBool("DISABLEHELP", mDisableHelpSwitch.getState());
+
 	s->saveFile();
+}
+
+std::vector<HelpPrompt> GuiSettingsMenu::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts = mList.getHelpPrompts();
+	prompts.push_back(HelpPrompt("b", "discard changes"));
+	return prompts;
 }

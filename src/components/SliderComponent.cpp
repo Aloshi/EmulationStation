@@ -142,3 +142,10 @@ void SliderComponent::onValueChanged()
 		mValueCache->metrics.size[0] = w; // fudge the width
 	}
 }
+
+std::vector<HelpPrompt> SliderComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("left/right", "adjust"));
+	return prompts;
+}
