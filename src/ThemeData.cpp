@@ -10,24 +10,36 @@
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
 
-std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > ThemeData::sElementMap = boost::assign::map_list_of
-	("image", boost::assign::map_list_of
+
+// This is a work around for some ambiguity that is introduced in C++11 that boost::assign::map_list_of leave open.
+// We use makeMap(actualmap) to implicitly convert the boost::assign::map_list_of's return type to ElementMapType.
+// Problem exists with gcc 4.7 and Boost 1.51.  Works fine with MSVC2010 without this hack.
+typedef std::map<std::string, ThemeData::ElementPropertyType> ElementMapType;
+template<typename T>
+ElementMapType makeMap(const T& mapInit)
+{
+	ElementMapType m = mapInit;
+	return m;
+}
+
+std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of
+	("image", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("maxSize", NORMALIZED_PAIR)
 		("origin", NORMALIZED_PAIR)
 		("path", PATH)
 		("tile", BOOLEAN)
-		("color", COLOR))
-	("text", boost::assign::map_list_of
+		("color", COLOR)))
+	("text", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("text", STRING)
 		("color", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)
-		("center", BOOLEAN))
-	("textlist", boost::assign::map_list_of
+		("center", BOOLEAN)))
+	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("selectorColor", COLOR)
@@ -38,27 +50,27 @@ std::map< std::string, std::map<std::string, ThemeData::ElementPropertyType> > T
 		("fontSize", FLOAT)
 		("scrollSound", PATH)
 		("alignment", STRING)
-		("horizontalMargin", FLOAT))
-	("container", boost::assign::map_list_of
+		("horizontalMargin", FLOAT)))
+	("container", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
-		("size", NORMALIZED_PAIR))
-	("ninepatch", boost::assign::map_list_of
+		("size", NORMALIZED_PAIR)))
+	("ninepatch", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
-		("path", PATH))
-	("datetime", boost::assign::map_list_of
+		("path", PATH)))
+	("datetime", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("color", COLOR)
 		("fontPath", PATH)
-		("fontSize", FLOAT))
-	("rating", boost::assign::map_list_of
+		("fontSize", FLOAT)))
+	("rating", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("filledPath", PATH)
-		("unfilledPath", PATH))
-	("sound", boost::assign::map_list_of
-		("path", PATH));
+		("unfilledPath", PATH)))
+	("sound", makeMap(boost::assign::map_list_of
+		("path", PATH)));
 
 namespace fs = boost::filesystem;
 
@@ -198,7 +210,7 @@ void ThemeData::parseViews(const pugi::xml_node& root)
 			throw error << "View missing \"name\" attribute!";
 
 		const char* viewKey = node.attribute("name").as_string();
-		ThemeView& view = mViews.insert(std::make_pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
+		ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
 
 		// load common first
 		if(common && node != common)
@@ -233,7 +245,7 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 			off = nameAttr.find_first_of(delim, prevOff);
 			
 			parseElement(node, elemTypeIt->second, 
-				view.elements.insert(std::make_pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
+				view.elements.insert(std::pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
 
 			if(std::find(view.orderedKeys.begin(), view.orderedKeys.end(), elemKey) == view.orderedKeys.end())
 				view.orderedKeys.push_back(elemKey);
