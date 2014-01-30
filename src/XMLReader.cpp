@@ -281,9 +281,9 @@ void updateGamelist(SystemData* system)
 					continue;
 				}
 
-				boost::filesystem::path nodePath(pathNode.text().get());
-				boost::filesystem::path gamePath((*fit)->getPath());
-				if(fs::canonical(nodePath) == fs::canonical(gamePath))
+				fs::path nodePath(pathNode.text().get());
+				fs::path gamePath((*fit)->getPath());
+				if(nodePath == gamePath || (fs::exists(nodePath) && fs::exists(gamePath) && fs::equivalent(nodePath, gamePath)))
 				{
 					// found it
 					root.remove_child(fileNode);

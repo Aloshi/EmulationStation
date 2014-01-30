@@ -249,7 +249,7 @@ int main(int argc, char* argv[])
 	window.deinit();
 	SystemData::deleteSystems();
 
-	std::cout << "EmulationStation cleanly shutting down...\n";
+	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
 	return 0;
 }
