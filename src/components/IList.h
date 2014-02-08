@@ -160,10 +160,11 @@ protected:
 		mScrollCursorAccumulator += deltaTime;
 		mScrollTierAccumulator += deltaTime;
 
+		int scrollCount = 0;
 		while(mScrollCursorAccumulator >= SCROLL_SPEED[mScrollTier].scrollDelay)
 		{
 			mScrollCursorAccumulator -= SCROLL_SPEED[mScrollTier].scrollDelay;
-			scroll(mScrollVelocity);
+			scrollCount++;
 		}
 
 		// are we ready to go even FASTER?
@@ -172,6 +173,9 @@ protected:
 			mScrollTierAccumulator -= SCROLL_SPEED[mScrollTier].length;
 			mScrollTier++;
 		}
+
+		for(int i = 0; i < scrollCount; i++)
+			scroll(mScrollVelocity);
 	}
 
 	void scroll(int amt)
