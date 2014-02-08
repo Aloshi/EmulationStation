@@ -1,6 +1,6 @@
-#ifndef _TEXTLISTCOMPONENT_H_
-#define _TEXTLISTCOMPONENT_H_
+#pragma once
 
+#include "IList.h"
 #include "../Renderer.h"
 #include "../resources/Font.h"
 #include "../GuiComponent.h"
@@ -15,7 +15,7 @@
 
 //A graphical list. Supports multiple colors for rows and scrolling.
 template <typename T>
-class TextListComponent : public GuiComponent
+class TextListComponent : public GuiComponent, public IList
 {
 public:
 	TextListComponent(Window* window);
@@ -46,8 +46,7 @@ public:
 	void setCursor(typename std::vector<ListRow>::const_iterator& it);
 
 	void stopScrolling();
-	inline bool isScrolling() const { return mScrollDir != 0 && mScrollAccumulator >= 0; }
-
+	
 	enum CursorState
 	{
 		CURSOR_STOPPED,
@@ -78,19 +77,19 @@ public:
 	inline void setColor(unsigned int id, unsigned int color) { mColors[id] = color; }
 	inline void setSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
 
+protected:
+	// IList implementations
+	virtual int getCursorIndex() { return mCursor; }
+	virtual void setCursorIndex(int index) { mCursor = index; onCursorChanged(isScrolling() ? CURSOR_SCROLLING : CURSOR_STOPPED); }
+	virtual int getLength() { return mRowVector.size(); }
+	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
+
 private:
 	static const int MARQUEE_DELAY = 900;
 	static const int MARQUEE_SPEED = 16;
 	static const int MARQUEE_RATE = 3;
 
-	static const int SCROLL_DELAY = 507;
-	static const int SCROLL_TIME = 150;
-
-	void scroll(); //helper method, scrolls in whatever direction scrollDir is
-	void setScrollDir(int val); //helper method, set mScrollDir as well as reset marquee stuff
 	void onCursorChanged(CursorState state);
-
-	int mScrollDir, mScrollAccumulator;
 
 	int mMarqueeOffset;
 	int mMarqueeTime;
@@ -116,9 +115,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	GuiComponent(window)
 {
 	mCursor = 0;
-	mScrollDir = 0;
-	mScrollAccumulator = 0;
-
+	
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
 
@@ -246,28 +243,24 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 		{
 			if(config->isMappedTo("down", input))
 			{
-				setScrollDir(1);
-				scroll();
+				listInput(1);
 				return true;
 			}
 
 			if(config->isMappedTo("up", input))
 			{
-				setScrollDir(-1);
-				scroll();
+				listInput(-1);
 				return true;
 			}
 			if(config->isMappedTo("pagedown", input))
 			{
-				setScrollDir(10);
-				scroll();
+				listInput(10);
 				return true;
 			}
 
 			if(config->isMappedTo("pageup", input))
 			{
-				setScrollDir(-10);
-				scroll();
+				listInput(-10);
 				return true;
 			}
 		}else{
@@ -283,36 +276,11 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 }
 
 template <typename T>
-void TextListComponent<T>::setScrollDir(int val)
-{
-	mScrollDir = val;
-	mMarqueeOffset = 0;
-	mMarqueeTime = -MARQUEE_DELAY;
-	mScrollAccumulator = -SCROLL_DELAY;
-}
-
-template <typename T>
-void TextListComponent<T>::stopScrolling()
-{
-	mScrollAccumulator = 0;
-	mScrollDir = 0;
-	onCursorChanged(CURSOR_STOPPED);
-}
-
-template <typename T>
 void TextListComponent<T>::update(int deltaTime)
 {
-	if(mScrollDir != 0)
+	listUpdate(deltaTime);
+	if(!isScrolling())
 	{
-		mScrollAccumulator += deltaTime;
-
-		while(mScrollAccumulator >= SCROLL_TIME)
-		{
-			mScrollAccumulator -= SCROLL_TIME;
-			scroll();
-		}
-
-	}else{
 		//if we're not scrolling and this object's text goes outside our size, marquee it!
 		std::string text = getSelectedName();
 
@@ -331,32 +299,6 @@ void TextListComponent<T>::update(int deltaTime)
 	}
 
 	GuiComponent::update(deltaTime);
-}
-
-template <typename T>
-void TextListComponent<T>::scroll()
-{
-	mCursor += mScrollDir;
-
-	if(mCursor < 0)
-	{
-		if(mScrollDir < -1)
-			mCursor = 0;
-		else
-			mCursor += mRowVector.size();
-	}
-	if(mCursor >= (int)mRowVector.size())
-	{
-		if(mScrollDir > 1)
-			mCursor = (int)mRowVector.size() - 1;
-		else
-			mCursor -= mRowVector.size();
-	}
-
-	onCursorChanged(CURSOR_SCROLLING);
-
-	if(mScrollSound)
-		mScrollSound->play();
 }
 
 //list management stuff
@@ -395,7 +337,6 @@ void TextListComponent<T>::clear()
 {
 	mRowVector.clear();
 	mCursor = 0;
-	mScrollDir = 0;
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
 	onCursorChanged(CURSOR_STOPPED);
@@ -429,8 +370,18 @@ void TextListComponent<T>::setCursor(typename std::vector<ListRow>::const_iterat
 template <typename T>
 void TextListComponent<T>::onCursorChanged(CursorState state)
 {
+	mMarqueeOffset = 0;
+	mMarqueeTime = -MARQUEE_DELAY;
+
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
+}
+
+template <typename T>
+void TextListComponent<T>::stopScrolling()
+{
+	listInput(0);
+	onCursorChanged(CURSOR_STOPPED);
 }
 
 template <typename T>
@@ -480,5 +431,3 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 		}
 	}
 }
-
-#endif

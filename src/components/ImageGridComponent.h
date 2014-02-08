@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../GuiComponent.h"
+#include "IList.h"
 #include "../components/ImageComponent.h"
 #include "../Log.h"
 
 template<typename T>
-class ImageGridComponent : public GuiComponent
+class ImageGridComponent : public GuiComponent, public IList
 {
 public:
 	ImageGridComponent(Window* window);
@@ -41,6 +42,11 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+
+protected:
+	virtual int getCursorIndex() { return mCursor; }
+	virtual void setCursorIndex(int index) { mCursor = index; onCursorChanged(CURSOR_STOPPED); }
+	virtual int getLength() { return mEntries.size(); }
 
 private:
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
@@ -89,17 +95,9 @@ private:
 	void buildImages();
 	void updateImages();
 
-	static const int SCROLL_DELAY = 507;
-	static const int SCROLL_TIME = 150;
-
-	void setScrollDir(Eigen::Vector2i dir);
-	void scroll();
 	void onCursorChanged(CursorState state);
 
 	int mCursor;
-
-	Eigen::Vector2i mScrollDir;
-	int mScrollAccumulator;
 
 	bool mEntriesDirty;
 
@@ -112,8 +110,6 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : GuiComponent(window)
 {
 	mEntriesDirty = true;
 	mCursor = 0;
-	mScrollDir << 0, 0;
-	mScrollAccumulator = 0;
 }
 
 template<typename T>
@@ -151,7 +147,6 @@ void ImageGridComponent<T>::clear()
 {
 	mEntries.clear();
 	mCursor = 0;
-	mScrollDir << 0, 0;
 	onCursorChanged(CURSOR_STOPPED);
 	mEntriesDirty = true;
 }
@@ -183,35 +178,8 @@ void ImageGridComponent<T>::setCursor(typename std::vector<Entry>::const_iterato
 template<typename T>
 void ImageGridComponent<T>::stopScrolling()
 {
-	mScrollDir = Eigen::Vector2i::Zero();
-}
-
-template<typename T>
-void ImageGridComponent<T>::scroll()
-{
-	if(mEntries.size() == 0)
-		return;
-
-	int offset = 0;
-	Eigen::Vector2i size = getGridSize();
-	
-	offset += mScrollDir.x();
-	offset += mScrollDir.y() * size.x();
-
-	mCursor += offset;
-	if(mCursor < 0)
-		mCursor += mEntries.size();
-	if(mCursor >= (int)mEntries.size())
-		mCursor -= mEntries.size();
-
-	onCursorChanged(CURSOR_SCROLLING);
-}
-
-template<typename T>
-void ImageGridComponent<T>::setScrollDir(Eigen::Vector2i dir)
-{
-	mScrollDir = dir;
-	mScrollAccumulator = -SCROLL_DELAY;
+	listInput(0);
+	onCursorChanged(CURSOR_STOPPED);
 }
 
 template<typename T>
@@ -231,15 +199,13 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 
 		if(dir != Eigen::Vector2i::Zero())
 		{
-			setScrollDir(dir);
-			scroll();
+			listInput(dir.x() + dir.y() * getGridSize().x());
 			return true;
 		}
 	}else{
 		if(config->isMappedTo("up", input) || config->isMappedTo("down", input) || config->isMappedTo("left", input) || config->isMappedTo("right", input))
 		{
-			mScrollDir << 0, 0;
-			onCursorChanged(CURSOR_STOPPED);
+			stopScrolling();
 		}
 	}
 
@@ -249,15 +215,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 template<typename T>
 void ImageGridComponent<T>::update(int deltaTime)
 {
-	if(mScrollDir != Eigen::Vector2i::Zero())
-	{
-		mScrollAccumulator += deltaTime;
-		while(mScrollAccumulator >= SCROLL_TIME)
-		{
-			scroll();
-			mScrollAccumulator -= SCROLL_TIME;
-		}
-	}
+	listUpdate(deltaTime);
 }
 
 template<typename T>
