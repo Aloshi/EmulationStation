@@ -13,46 +13,26 @@
 #include "../ThemeData.h"
 #include <functional>
 
+struct TextListData
+{
+	unsigned int colorId;
+	std::shared_ptr<TextCache> textCache;
+};
+
 //A graphical list. Supports multiple colors for rows and scrolling.
 template <typename T>
-class TextListComponent : public GuiComponent, public IList
+class TextListComponent : public GuiComponent, public IList<TextListData, T>
 {
 public:
 	TextListComponent(Window* window);
-	virtual ~TextListComponent();
-
+	
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
-	struct ListRow
-	{
-		std::string name;
-		T object;
-		unsigned int colorId;
-		std::shared_ptr<TextCache> textCache;
-	};
-
 	void add(const std::string& name, const T& obj, unsigned int colorId);
-	void remove(const T& obj);
-	void clear();
-
-	inline const std::string& getSelectedName() const { return mRowVector.at(mCursor).name; }
-	inline T getSelected() const { return mRowVector.at(mCursor).object; }
-	inline const std::vector<ListRow>& getList() const { return mRowVector; }
-
-	void setCursor(const T& select);
-	void setCursor(typename std::vector<ListRow>::const_iterator& it);
-
-	void stopScrolling();
 	
-	enum CursorState
-	{
-		CURSOR_STOPPED,
-		CURSOR_SCROLLING
-	};
-
 	enum Alignment
 	{
 		ALIGN_LEFT,
@@ -67,8 +47,8 @@ public:
 	inline void setFont(const std::shared_ptr<Font>& font)
 	{
 		mFont = font;
-		for(auto it = mRowVector.begin(); it != mRowVector.end(); it++)
-			it->textCache.reset();
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+			it->data.textCache.reset();
 	}
 
 	inline void setSelectorColor(unsigned int color) { mSelectorColor = color; }
@@ -78,27 +58,19 @@ public:
 	inline void setSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
 
 protected:
-	// IList implementations
-	virtual int getCursorIndex() { return mCursor; }
-	virtual void setCursorIndex(int index) { mCursor = index; onCursorChanged(isScrolling() ? CURSOR_SCROLLING : CURSOR_STOPPED); }
-	virtual int getLength() { return mRowVector.size(); }
 	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
+	virtual void onCursorChanged(const CursorState& state);
 
 private:
 	static const int MARQUEE_DELAY = 900;
 	static const int MARQUEE_SPEED = 16;
 	static const int MARQUEE_RATE = 3;
 
-	void onCursorChanged(CursorState state);
-
 	int mMarqueeOffset;
 	int mMarqueeTime;
 
 	Alignment mAlignment;
 	float mHorizontalMargin;
-
-	std::vector<ListRow> mRowVector;
-	int mCursor;
 
 	std::function<void(CursorState state)> mCursorChangedCallback;
 
@@ -114,8 +86,6 @@ template <typename T>
 TextListComponent<T>::TextListComponent(Window* window) : 
 	GuiComponent(window)
 {
-	mCursor = 0;
-	
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
 
@@ -130,16 +100,18 @@ TextListComponent<T>::TextListComponent(Window* window) :
 }
 
 template <typename T>
-TextListComponent<T>::~TextListComponent()
-{
-}
-
-template <typename T>
 void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
 	
 	std::shared_ptr<Font>& font = mFont;
+
+	if(size() == 0)
+	{
+		Renderer::setMatrix(trans);
+		font->drawText("The list is empty.", Eigen::Vector2f(0, 0), 0xFF0000FF);
+		return;
+	}
 
 	const int cutoff = 0;
 	const int entrySize = font->getHeight() + 5;
@@ -149,26 +121,20 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	//number of entries that can fit on the screen simultaniously
 	int screenCount = (int)mSize.y() / entrySize;
 	
-	if((int)mRowVector.size() >= screenCount)
+	if(size() >= screenCount)
 	{
 		startEntry = mCursor - (int)(screenCount * 0.5);
 		if(startEntry < 0)
 			startEntry = 0;
-		if(startEntry >= (int)mRowVector.size() - screenCount)
-			startEntry = mRowVector.size() - screenCount;
+		if(startEntry >= size() - screenCount)
+			startEntry = size() - screenCount;
 	}
 
 	float y = (float)cutoff;
 
-	if(mRowVector.size() == 0)
-	{
-		font->drawCenteredText("The list is empty.", 0, y, 0xFF0000FF);
-		return;
-	}
-
 	int listCutoff = startEntry + screenCount;
-	if(listCutoff > (int)mRowVector.size())
-		listCutoff = mRowVector.size();
+	if(listCutoff > size())
+		listCutoff = size();
 
 	Eigen::Vector3f dim(getSize().x(), getSize().y(), 0);
 	dim = trans * dim - trans.translation();
@@ -183,18 +149,18 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 			Renderer::drawRect(0, (int)y, (int)getSize().x(), font->getHeight(), mSelectorColor);
 		}
 
-		ListRow& row = mRowVector.at((unsigned int)i);
+		Entry& entry = mEntries.at((unsigned int)i);
 
 		unsigned int color;
 		if(mCursor == i && mSelectedColor)
 			color = mSelectedColor;
 		else
-			color = mColors[row.colorId];
+			color = mColors[entry.data.colorId];
 
-		if(!row.textCache)
-			row.textCache = std::unique_ptr<TextCache>(font->buildTextCache(row.name, 0, 0, 0x000000FF));
+		if(!entry.data.textCache)
+			entry.data.textCache = std::unique_ptr<TextCache>(font->buildTextCache(entry.name, 0, 0, 0x000000FF));
 
-		row.textCache->setColor(color);
+		entry.data.textCache->setColor(color);
 
 		Eigen::Vector3f offset(0, y, 0);
 
@@ -204,12 +170,12 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 			offset[0] = mHorizontalMargin;
 			break;
 		case ALIGN_CENTER:
-			offset[0] = (mSize.x() - row.textCache->metrics.size.x()) / 2;
+			offset[0] = (mSize.x() - entry.data.textCache->metrics.size.x()) / 2;
 			if(offset[0] < 0)
 				offset[0] = 0;
 			break;
 		case ALIGN_RIGHT:
-			offset[0] = (mSize.x() - row.textCache->metrics.size.x());
+			offset[0] = (mSize.x() - entry.data.textCache->metrics.size.x());
 			offset[0] -= mHorizontalMargin;
 			if(offset[0] < 0)
 				offset[0] = 0;
@@ -224,7 +190,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		drawTrans.translate(offset);
 		Renderer::setMatrix(drawTrans);
 
-		font->renderTextCache(row.textCache.get());
+		font->renderTextCache(entry.data.textCache.get());
 		
 		y += entrySize;
 	}
@@ -237,7 +203,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 template <typename T>
 bool TextListComponent<T>::input(InputConfig* config, Input input)
 {
-	if(mRowVector.size() > 0)
+	if(size() > 0)
 	{
 		if(input.value != 0)
 		{
@@ -279,10 +245,10 @@ template <typename T>
 void TextListComponent<T>::update(int deltaTime)
 {
 	listUpdate(deltaTime);
-	if(!isScrolling())
+	if(!isScrolling() && size() > 0)
 	{
 		//if we're not scrolling and this object's text goes outside our size, marquee it!
-		std::string text = getSelectedName();
+		const std::string& text = mEntries.at((unsigned int)mCursor).name;
 
 		Eigen::Vector2f textSize = mFont->sizeText(text);
 
@@ -307,81 +273,21 @@ void TextListComponent<T>::add(const std::string& name, const T& obj, unsigned i
 {
 	assert(color < COLOR_ID_COUNT);
 
-	ListRow row = {name, obj, color};
-	mRowVector.push_back(row);
+	Entry entry;
+	entry.name = name;
+	entry.object = obj;
+	entry.data.colorId = color;
+	static_cast<IList< TextListData, T >*>(this)->add(entry);
 }
 
 template <typename T>
-void TextListComponent<T>::remove(const T& obj)
-{
-	for(auto it = mRowVector.begin(); it != mRowVector.end(); it++)
-	{
-		if((*it).object == obj)
-		{
-			if(mCursor > 0 && it - mRowVector.begin() >= mCursor)
-			{
-				mCursor--;
-				onCursorChanged(CURSOR_STOPPED);
-			}
-
-			mRowVector.erase(it);
-			return;
-		}
-	}
-
-	LOG(LogError) << "Tried to remove an object we couldn't find";
-}
-
-template <typename T>
-void TextListComponent<T>::clear()
-{
-	mRowVector.clear();
-	mCursor = 0;
-	mMarqueeOffset = 0;
-	mMarqueeTime = -MARQUEE_DELAY;
-	onCursorChanged(CURSOR_STOPPED);
-}
-
-template <typename T>
-void TextListComponent<T>::setCursor(const T& obj)
-{
-	for(auto it = mRowVector.begin(); it != mRowVector.end(); it++)
-	{
-		if((*it).object == obj)
-		{
-			mCursor = it - mRowVector.begin();
-			onCursorChanged(CURSOR_STOPPED);
-			return;
-		}
-	}
-
-	LOG(LogError) << "Tried to set cursor to object we couldn't find";
-}
-
-
-template <typename T>
-void TextListComponent<T>::setCursor(typename std::vector<ListRow>::const_iterator& it)
-{
-	assert(it != mRowVector.end());
-	mCursor = it - mRowVector.begin();
-	onCursorChanged(CURSOR_STOPPED);
-}
-
-template <typename T>
-void TextListComponent<T>::onCursorChanged(CursorState state)
+void TextListComponent<T>::onCursorChanged(const CursorState& state)
 {
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
 
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
-}
-
-template <typename T>
-void TextListComponent<T>::stopScrolling()
-{
-	listInput(0);
-	onCursorChanged(CURSOR_STOPPED);
 }
 
 template <typename T>

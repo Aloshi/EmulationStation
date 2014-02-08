@@ -53,14 +53,8 @@ FileData* BasicGameListView::getCursor()
 
 void BasicGameListView::setCursor(FileData* cursor)
 {
-	typedef TextListComponent<FileData*>::ListRow Row;
-	const std::vector<Row>& list = mList.getList();
-	auto found = std::find_if(list.begin(), list.end(), [&](const Row& row) { return (row.object == cursor); });
-
-	if(found != list.end())
+	if(!mList.setCursor(cursor))
 	{
-		mList.setCursor(found);
-	}else{
 		populateList(cursor->getParent()->getChildren());
 		mList.setCursor(cursor);
 	}

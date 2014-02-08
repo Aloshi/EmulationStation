@@ -62,7 +62,7 @@ bool GuiMenu::input(InputConfig* config, Input input)
 			Sound::getFromTheme(mTheme, "menu", "menuClose")->play();
 			delete this;
 			return true;
-		}else if(config->isMappedTo("a", input) && mList.getList().size() > 0)
+		}else if(config->isMappedTo("a", input) && mList.size() > 0)
 		{
 			mList.getSelected()();
 			delete this;

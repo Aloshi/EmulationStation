@@ -244,7 +244,6 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/IList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/RatingComponent.cpp

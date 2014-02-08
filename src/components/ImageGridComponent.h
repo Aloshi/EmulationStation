@@ -5,48 +5,24 @@
 #include "../components/ImageComponent.h"
 #include "../Log.h"
 
+struct ImageGridData
+{
+	std::shared_ptr<TextureResource> texture;
+};
+
 template<typename T>
-class ImageGridComponent : public GuiComponent, public IList
+class ImageGridComponent : public GuiComponent, public IList<ImageGridData, T>
 {
 public:
 	ImageGridComponent(Window* window);
 
-	struct Entry
-	{
-		std::shared_ptr<TextureResource> texture;
-		T object;
-
-		Entry() {}
-		Entry(std::shared_ptr<TextureResource> t, const T& o) : texture(t), object(o) {}
-	};
-
-	void add(const std::string& imagePath, const T& obj);
-	void remove(const T& obj);
-	void clear();
-
-	void setCursor(const T& select);
-	void setCursor(typename std::vector<Entry>::const_iterator& it);
-
-	inline const T& getSelected() const { return mEntries.at(mCursor).object; }
-	inline const std::vector<Entry>& getList() const { return mEntries; }
-
-	enum CursorState {
-		CURSOR_STOPPED,
-		CURSOR_SCROLLING
-	};
-
-	void stopScrolling();
-
+	void add(const std::string& name, const std::string& imagePath, const T& obj);
+	
 	void onSizeChanged() override;
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
-
-protected:
-	virtual int getCursorIndex() { return mCursor; }
-	virtual void setCursorIndex(int index) { mCursor = index; onCursorChanged(CURSOR_STOPPED); }
-	virtual int getLength() { return mEntries.size(); }
 
 private:
 	Eigen::Vector2f getSquareSize(std::shared_ptr<TextureResource> tex = nullptr) const
@@ -73,7 +49,7 @@ private:
 		// calc biggest square size
 		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
 		{
-			Eigen::Vector2f chkSize = getSquareSize(it->texture);
+			Eigen::Vector2f chkSize = getSquareSize(it->data.texture);
 			if(chkSize.x() > squareSize.x())
 				squareSize[0] = chkSize[0];
 			if(chkSize.y() > squareSize.y())
@@ -95,13 +71,10 @@ private:
 	void buildImages();
 	void updateImages();
 
-	void onCursorChanged(CursorState state);
-
-	int mCursor;
+	virtual void onCursorChanged(const CursorState& state);
 
 	bool mEntriesDirty;
 
-	std::vector<Entry> mEntries;
 	std::vector<ImageComponent> mImages;
 };
 
@@ -109,77 +82,17 @@ template<typename T>
 ImageGridComponent<T>::ImageGridComponent(Window* window) : GuiComponent(window)
 {
 	mEntriesDirty = true;
-	mCursor = 0;
 }
 
 template<typename T>
-void ImageGridComponent<T>::add(const std::string& imagePath, const T& obj)
+void ImageGridComponent<T>::add(const std::string& name, const std::string& imagePath, const T& obj)
 {
-	Entry e(ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png"), obj);
-	mEntries.push_back(e);
+	Entry entry;
+	entry.name = name;
+	entry.object = obj;
+	entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png");
+	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
-}
-
-template<typename T>
-void ImageGridComponent<T>::remove(const T& obj)
-{
-	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
-	{
-		if((*it).object == obj)
-		{
-			if(mCursor > 0 && it - mEntries.begin() >= mCursor)
-			{
-				mCursor--;
-				onCursorChanged(CURSOR_STOPPED);
-			}
-
-			mEntriesDirty = true;
-			mEntries.erase(it);
-			return;
-		}
-	}
-
-	LOG(LogError) << "Tried to remove an object we couldn't find";
-}
-
-template<typename T>
-void ImageGridComponent<T>::clear()
-{
-	mEntries.clear();
-	mCursor = 0;
-	onCursorChanged(CURSOR_STOPPED);
-	mEntriesDirty = true;
-}
-
-template<typename T>
-void ImageGridComponent<T>::setCursor(const T& obj)
-{
-	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
-	{
-		if((*it).object == obj)
-		{
-			mCursor = it - mEntries.begin();
-			onCursorChanged(CURSOR_STOPPED);
-			return;
-		}
-	}
-
-	LOG(LogError) << "Tried to set cursor to object we couldn't find";
-}
-
-template<typename T>
-void ImageGridComponent<T>::setCursor(typename std::vector<Entry>::const_iterator& it)
-{
-	assert(it != mEntries.end());
-	mCursor = it - mEntries.begin();
-	onCursorChanged(CURSOR_STOPPED);
-}
-
-template<typename T>
-void ImageGridComponent<T>::stopScrolling()
-{
-	listInput(0);
-	onCursorChanged(CURSOR_STOPPED);
 }
 
 template<typename T>
@@ -239,7 +152,7 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 }
 
 template<typename T>
-void ImageGridComponent<T>::onCursorChanged(CursorState state)
+void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 {
 	updateImages();
 }
@@ -305,13 +218,13 @@ void ImageGridComponent<T>::updateImages()
 	for(unsigned int img = 0; img < mImages.size(); img++)
 	{
 		ImageComponent& image = mImages.at(img);
-		if(i >= mEntries.size())
+		if(i >= (unsigned int)size())
 		{
 			image.setImage("");
 			continue;
 		}
 
-		Eigen::Vector2f squareSize = getSquareSize(mEntries.at(i).texture);
+		Eigen::Vector2f squareSize = getSquareSize(mEntries.at(i).data.texture);
 		if(i == mCursor)
 		{
 			image.setColorShift(0xFFFFFFFF);
@@ -321,7 +234,7 @@ void ImageGridComponent<T>::updateImages()
 			image.setResize(squareSize.x(), squareSize.y());
 		}
 
-		image.setImage(mEntries.at(i).texture);
+		image.setImage(mEntries.at(i).data.texture);
 		i++;
 	}
 }

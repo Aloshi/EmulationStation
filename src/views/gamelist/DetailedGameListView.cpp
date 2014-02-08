@@ -21,7 +21,7 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
 	mList.setSize(mSize.x() * (0.50f - 2*padding), mList.getSize().y());
 	mList.setAlignment(TextListComponent<FileData*>::ALIGN_LEFT);
-	mList.setCursorChangedCallback([&](TextListComponent<FileData*>::CursorState state) { updateInfoPanel(); });
+	mList.setCursorChangedCallback([&](const CursorState& state) { updateInfoPanel(); });
 
 	// image
 	mImage.setOrigin(0.5f, 0.5f);
@@ -179,7 +179,7 @@ void DetailedGameListView::initMDValues()
 
 void DetailedGameListView::updateInfoPanel()
 {
-	FileData* file = (mList.getList().size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
+	FileData* file = (mList.size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
 
 	bool fadingOut;
 	if(file == NULL)

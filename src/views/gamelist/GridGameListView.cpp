@@ -20,14 +20,8 @@ FileData* GridGameListView::getCursor()
 
 void GridGameListView::setCursor(FileData* file)
 {
-	typedef ImageGridComponent<FileData*>::Entry Entry;
-	auto& list = mGrid.getList();
-	auto found = std::find_if(list.begin(), list.end(), [&] (const Entry& e) { return (e.object == file); });
-	
-	if(found != list.end())
+	if(!mGrid.setCursor(file))
 	{
-		mGrid.setCursor(found);
-	}else{
 		populateList(file->getParent()->getChildren());
 		mGrid.setCursor(file);
 	}
@@ -46,7 +40,7 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 	mGrid.clear();
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mGrid.add((*it)->getThumbnailPath(), *it);
+		mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
 	}
 }
 
