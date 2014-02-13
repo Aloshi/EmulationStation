@@ -11,7 +11,7 @@ struct ImageGridData
 };
 
 template<typename T>
-class ImageGridComponent : public GuiComponent, public IList<ImageGridData, T>
+class ImageGridComponent : public IList<ImageGridData, T>
 {
 public:
 	ImageGridComponent(Window* window);
@@ -79,7 +79,7 @@ private:
 };
 
 template<typename T>
-ImageGridComponent<T>::ImageGridComponent(Window* window) : GuiComponent(window)
+ImageGridComponent<T>::ImageGridComponent(Window* window) : IList(window)
 {
 	mEntriesDirty = true;
 }

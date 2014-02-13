@@ -17,6 +17,9 @@ extern const unsigned char ES_logo_32_png_data[];
 extern const size_t frame_png_size;
 extern const unsigned char frame_png_data[];
 
+extern const size_t scroll_gradient_png_size;
+extern const unsigned char scroll_gradient_png_data[];
+
 extern const size_t star_filled_png_size;
 extern const unsigned char star_filled_png_data[];
 

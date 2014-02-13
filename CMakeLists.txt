@@ -291,6 +291,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/frame_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_glow_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_filled_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_unfilled_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_a_png.cpp

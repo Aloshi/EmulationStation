@@ -2,12 +2,13 @@
 
 #include "Resources.h"
 
-const size_t res2hNrOfFiles = 14;
+const size_t res2hNrOfFiles = 15;
 const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/button.png", button_png_size, button_png_data},
     {":/ES_logo_16.png", ES_logo_16_png_size, ES_logo_16_png_data},
     {":/ES_logo_32.png", ES_logo_32_png_size, ES_logo_32_png_data},
     {":/frame.png", frame_png_size, frame_png_data},
+    {":/scroll_gradient.png", scroll_gradient_png_size, scroll_gradient_png_data},
     {":/star_filled.png", star_filled_png_size, star_filled_png_data},
     {":/star_unfilled.png", star_unfilled_png_size, star_unfilled_png_data},
     {":/textbox.png", textbox_png_size, textbox_png_data},
@@ -25,16 +26,17 @@ res2hMapType::value_type mapTemp[] = {
     std::make_pair(":/ES_logo_16.png", res2hFiles[1]),
     std::make_pair(":/ES_logo_32.png", res2hFiles[2]),
     std::make_pair(":/frame.png", res2hFiles[3]),
-    std::make_pair(":/star_filled.png", res2hFiles[4]),
-    std::make_pair(":/star_unfilled.png", res2hFiles[5]),
-    std::make_pair(":/textbox.png", res2hFiles[6]),
-    std::make_pair(":/textbox_glow.png", res2hFiles[7]),
-    std::make_pair(":/help/a.png", res2hFiles[8]),
-    std::make_pair(":/help/b.png", res2hFiles[9]),
-    std::make_pair(":/help/dpad.png", res2hFiles[10]),
-    std::make_pair(":/help/left_right.png", res2hFiles[11]),
-    std::make_pair(":/help/menu.png", res2hFiles[12]),
-    std::make_pair(":/help/up_down.png", res2hFiles[13])
+    std::make_pair(":/scroll_gradient.png", res2hFiles[4]),
+    std::make_pair(":/star_filled.png", res2hFiles[5]),
+    std::make_pair(":/star_unfilled.png", res2hFiles[6]),
+    std::make_pair(":/textbox.png", res2hFiles[7]),
+    std::make_pair(":/textbox_glow.png", res2hFiles[8]),
+    std::make_pair(":/help/a.png", res2hFiles[9]),
+    std::make_pair(":/help/b.png", res2hFiles[10]),
+    std::make_pair(":/help/dpad.png", res2hFiles[11]),
+    std::make_pair(":/help/left_right.png", res2hFiles[12]),
+    std::make_pair(":/help/menu.png", res2hFiles[13]),
+    std::make_pair(":/help/up_down.png", res2hFiles[14])
 };
 
 res2hMapType res2hMap(mapTemp, mapTemp + sizeof mapTemp / sizeof mapTemp[0]);

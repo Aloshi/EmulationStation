@@ -2,6 +2,10 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include "../GuiComponent.h"
+#include "ImageComponent.h"
+#include "../resources/Font.h"
 
 enum CursorState
 {
@@ -18,12 +22,12 @@ struct ScrollTier
 const int SCROLL_SPEED_COUNT = 3;
 const ScrollTier SCROLL_SPEED[SCROLL_SPEED_COUNT] = {
 	{500, 500},
-	{2600, 150},
-	{0, 100}
+	{5000, 114},
+	{0, 8}
 };
 
 template <typename EntryData, typename UserData>
-class IList
+class IList : public GuiComponent
 {
 public:
 	struct Entry
@@ -42,16 +46,28 @@ protected:
 	int mScrollTierAccumulator;
 	int mScrollCursorAccumulator;
 
+	unsigned char mTitleOverlayOpacity;
+	unsigned int mTitleOverlayColor;
+	ImageComponent mGradient;
+	std::shared_ptr<Font> mTitleOverlayFont;
+
 	std::vector<Entry> mEntries;
 	
 public:
-	IList()
+	IList(Window* window) : GuiComponent(window), mGradient(window)
 	{
 		mCursor = 0;
 		mScrollTier = 0;
 		mScrollVelocity = 0;
 		mScrollTierAccumulator = 0;
 		mScrollCursorAccumulator = 0;
+
+		mTitleOverlayOpacity = 0x00;
+		mTitleOverlayColor = 0xFFFFFF00;
+		mGradient.setImage(":/scroll_gradient.png");
+		mGradient.setColorShift(0x000040FF);
+		mGradient.setOpacity(0);
+		mTitleOverlayFont = Font::get(FONT_SIZE_LARGE);
 	}
 
 	bool isScrolling() const
@@ -154,12 +170,24 @@ protected:
 
 	void listUpdate(int deltaTime)
 	{
+		// update the title overlay opacity
+		const int dir = (mScrollTier >= SCROLL_SPEED_COUNT - 1) ? 1 : -1; // fade in if scroll tier is >= 1, otherwise fade out
+		int op = mTitleOverlayOpacity + deltaTime*dir; // we just do a 1-to-1 time -> opacity, no scaling
+		if(op >= 255)
+			mTitleOverlayOpacity = 255;
+		else if(op <= 0)
+			mTitleOverlayOpacity = 0;
+		else
+			mTitleOverlayOpacity = (unsigned char)op;
+
 		if(mScrollVelocity == 0 || size() < 2)
 			return;
 
 		mScrollCursorAccumulator += deltaTime;
 		mScrollTierAccumulator += deltaTime;
 
+		// we delay scrolling until after scroll tier has updated so isScrolling() returns accurately during onCursorChanged callbacks
+		// we don't just do scroll tier first because it would not catch the scrollDelay == tier length case
 		int scrollCount = 0;
 		while(mScrollCursorAccumulator >= SCROLL_SPEED[mScrollTier].scrollDelay)
 		{
@@ -174,8 +202,31 @@ protected:
 			mScrollTier++;
 		}
 
+		// actually perform the scrolling
 		for(int i = 0; i < scrollCount; i++)
 			scroll(mScrollVelocity);
+	}
+
+	void listRenderTitleOverlay(const Eigen::Affine3f& trans)
+	{
+		if(size() == 0 || !mTitleOverlayFont || mTitleOverlayOpacity == 0)
+			return;
+
+		// we don't bother caching this because it's only two letters and will change pretty much every frame if we're scrolling
+		const std::string text = getSelectedName().size() >= 2 ? getSelectedName().substr(0, 2) : "??";
+
+		Eigen::Vector2f off = mTitleOverlayFont->sizeText(text);
+		off[0] = (mSize.x() - off.x()) * 0.7f;
+		off[1] = (mSize.y() - off.y()) * 0.5f;
+		
+		mGradient.setOpacity(mTitleOverlayOpacity);
+		mGradient.render(trans);
+		mTitleOverlayFont->drawText(text, off, (mTitleOverlayColor & 0xFFFFFF00) | mTitleOverlayOpacity); // relies on mGradient's render to Renderer::setMatrix(trans)
+	}
+
+	virtual void onSizeChanged() override
+	{
+		mGradient.setResize(mSize);
 	}
 
 	void scroll(int amt)

@@ -19,7 +19,7 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	const float padding = 0.01f;
 
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
-	mList.setSize(mSize.x() * (0.50f - 2*padding), mList.getSize().y());
+	mList.setSize(mSize.x() * (0.50f - padding), mList.getSize().y());
 	mList.setAlignment(TextListComponent<FileData*>::ALIGN_LEFT);
 	mList.setCursorChangedCallback([&](const CursorState& state) { updateInfoPanel(); });
 

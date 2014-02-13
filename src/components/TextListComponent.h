@@ -3,7 +3,6 @@
 #include "IList.h"
 #include "../Renderer.h"
 #include "../resources/Font.h"
-#include "../GuiComponent.h"
 #include "../InputManager.h"
 #include <vector>
 #include <string>
@@ -21,7 +20,7 @@ struct TextListData
 
 //A graphical list. Supports multiple colors for rows and scrolling.
 template <typename T>
-class TextListComponent : public GuiComponent, public IList<TextListData, T>
+class TextListComponent : public IList<TextListData, T>
 {
 public:
 	TextListComponent(Window* window);
@@ -84,7 +83,7 @@ private:
 
 template <typename T>
 TextListComponent<T>::TextListComponent(Window* window) : 
-	GuiComponent(window)
+	IList(window)
 {
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
@@ -119,7 +118,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	int startEntry = 0;
 
 	//number of entries that can fit on the screen simultaniously
-	int screenCount = (int)mSize.y() / entrySize;
+	int screenCount = (int)(mSize.y() / entrySize + 0.5f);
 	
 	if(size() >= screenCount)
 	{
@@ -196,6 +195,8 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	}
 
 	Renderer::popClipRect();
+
+	listRenderTitleOverlay(trans);
 
 	GuiComponent::renderChildren(trans);
 }
