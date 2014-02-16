@@ -300,6 +300,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_up_down_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_left_right_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
 )
 
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)

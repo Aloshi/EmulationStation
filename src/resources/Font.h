@@ -68,8 +68,9 @@ public:
 	void reload(std::shared_ptr<ResourceManager>& rm) override;
 
 	int getSize() const;
+	inline const std::string& getPath() const { return mPath; }
 
-	static std::string getDefaultPath();
+	inline static const char* getDefaultPath() { return ":/opensans_hebrew_condensed_regular.ttf"; }
 
 	static std::shared_ptr<Font> getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig);
 

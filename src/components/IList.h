@@ -64,9 +64,8 @@ public:
 
 		mTitleOverlayOpacity = 0x00;
 		mTitleOverlayColor = 0xFFFFFF00;
+		mGradient.setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 		mGradient.setImage(":/scroll_gradient.png");
-		mGradient.setColorShift(0x000040FF);
-		mGradient.setOpacity(0);
 		mTitleOverlayFont = Font::get(FONT_SIZE_LARGE);
 	}
 
@@ -216,17 +215,14 @@ protected:
 		const std::string text = getSelectedName().size() >= 2 ? getSelectedName().substr(0, 2) : "??";
 
 		Eigen::Vector2f off = mTitleOverlayFont->sizeText(text);
-		off[0] = (mSize.x() - off.x()) * 0.7f;
-		off[1] = (mSize.y() - off.y()) * 0.5f;
+		off[0] = (Renderer::getScreenWidth() - off.x()) * 0.5f;
+		off[1] = (Renderer::getScreenHeight() - off.y()) * 0.5f;
 		
-		mGradient.setOpacity(mTitleOverlayOpacity);
-		mGradient.render(trans);
-		mTitleOverlayFont->drawText(text, off, (mTitleOverlayColor & 0xFFFFFF00) | mTitleOverlayOpacity); // relies on mGradient's render to Renderer::setMatrix(trans)
-	}
+		Eigen::Affine3f identTrans = Eigen::Affine3f::Identity();
 
-	virtual void onSizeChanged() override
-	{
-		mGradient.setResize(mSize);
+		mGradient.setOpacity(mTitleOverlayOpacity);
+		mGradient.render(identTrans);
+		mTitleOverlayFont->drawText(text, off, (mTitleOverlayColor & 0xFFFFFF00) | mTitleOverlayOpacity); // relies on mGradient's render for Renderer::setMatrix()
 	}
 
 	void scroll(int amt)

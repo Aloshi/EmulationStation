@@ -16,59 +16,6 @@ int Font::getSize() const { return mSize; }
 
 std::map< std::pair<std::string, int>, std::weak_ptr<Font> > Font::sFontMap;
 
-static std::string default_font_path = "";
-
-std::string Font::getDefaultPath()
-{
-	if(!default_font_path.empty())
-		return default_font_path;
-
-	const int fontCount = 4;
-
-#ifdef WIN32
-	std::string fonts[] = {"DejaVuSerif.ttf",
-		"Arial.ttf",
-		"Verdana.ttf",
-		"Tahoma.ttf" };
-
-	//build full font path
-	TCHAR winDir[MAX_PATH];
-	GetWindowsDirectory(winDir, MAX_PATH);
-#ifdef UNICODE
-	char winDirChar[MAX_PATH*2];
-	char DefChar = ' ';
-    WideCharToMultiByte(CP_ACP, 0, winDir, -1, winDirChar, MAX_PATH, &DefChar, NULL);
-	std::string fontPath(winDirChar);
-#else
-	std::string fontPath(winDir);
-#endif
-	fontPath += "\\Fonts\\";
-	//prepend to font file names
-	for(int i = 0; i < fontCount; i++)
-	{
-		fonts[i] = fontPath + fonts[i];
-	}
-#else
-	std::string fonts[] = {"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
-		"/usr/share/fonts/TTF/DejaVuSerif.ttf",
-		"/usr/share/fonts/dejavu/DejaVuSerif.ttf",
-		"font.ttf" };
-#endif
-
-	for(int i = 0; i < fontCount; i++)
-	{
-		if(boost::filesystem::exists(fonts[i]))
-		{
-			default_font_path = fonts[i];
-			return fonts[i];
-		}
-	}
-
-	LOG(LogError) << "Error - could not find the default font!";
-
-	return "";
-}
-
 void Font::initLibrary()
 {
 	if(FT_Init_FreeType(&sLibrary))

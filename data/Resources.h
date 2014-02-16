@@ -17,6 +17,9 @@ extern const unsigned char ES_logo_32_png_data[];
 extern const size_t frame_png_size;
 extern const unsigned char frame_png_data[];
 
+extern const size_t opensans_hebrew_condensed_regular_ttf_size;
+extern const unsigned char opensans_hebrew_condensed_regular_ttf_data[];
+
 extern const size_t scroll_gradient_png_size;
 extern const unsigned char scroll_gradient_png_data[];
 

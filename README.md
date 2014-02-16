@@ -27,12 +27,12 @@ Building
 EmulationStation uses some C++11 code, which means you'll need to install at least g++-4.7 on Linux, or VS2010 on Windows. 
 For installing and switching to g++-4.7 see [here](http://lektiondestages.blogspot.de/2013/05/installing-and-switching-gccg-versions.html).  You can also just use `export CXX=g++-4.7` to explicitly specify the compiler for CMake (make sure you delete your CMake cache files if it's not working).
 
-EmulationStation has a few dependencies. For building, you'll need SDL2, Boost (System, Filesystem, Regex, DateTime), FreeImage, FreeType, Eigen3, and cURL.  You'll also need the DejaVu TrueType font on Linux to run ES.
+EmulationStation has a few dependencies. For building, you'll need SDL2, Boost (System, Filesystem, Regex, DateTime), FreeImage, FreeType, Eigen3, and cURL.
 
 **On Linux:**
 All of this be easily installed with apt-get:
 ```bash
-sudo apt-get install libsdl2-dev libboost-dev libboost-system-dev libboost-filesystem-dev libboost-regex-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl-dev ttf-dejavu libasound2-dev
+sudo apt-get install libsdl2-dev libboost-dev libboost-system-dev libboost-filesystem-dev libboost-regex-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl-dev libasound2-dev
 ```
 
 Unless you're on the Raspberry Pi, you'll also need OpenGL:
