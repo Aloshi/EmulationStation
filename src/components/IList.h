@@ -6,6 +6,7 @@
 #include "../GuiComponent.h"
 #include "ImageComponent.h"
 #include "../resources/Font.h"
+#include "../Renderer.h"
 
 enum CursorState
 {
@@ -148,9 +149,9 @@ public:
 protected:
 	void remove(typename std::vector<Entry>::iterator& it)
 	{
-		if(getCursorIndex() > 0 && it - mEntries.begin() <= getCursorIndex())
+		if(mCursor > 0 && it - mEntries.begin() <= mCursor)
 		{
-			setCursorIndex(mCursor - 1);
+			mCursor--;
 			onCursorChanged(CURSOR_STOPPED);
 		}
 

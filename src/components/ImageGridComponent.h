@@ -13,7 +13,22 @@ struct ImageGridData
 template<typename T>
 class ImageGridComponent : public IList<ImageGridData, T>
 {
+protected:
+	using IList<ImageGridData, T>::mEntries;
+	using IList<ImageGridData, T>::listUpdate;
+	using IList<ImageGridData, T>::listInput;
+	using IList<ImageGridData, T>::listRenderTitleOverlay;
+	using IList<ImageGridData, T>::getTransform;
+	using IList<ImageGridData, T>::mSize;
+	using IList<ImageGridData, T>::mCursor;
+	using IList<ImageGridData, T>::Entry;
+	using IList<ImageGridData, T>::mWindow;
+
 public:
+	using IList<ImageGridData, T>::size;
+	using IList<ImageGridData, T>::isScrolling;
+	using IList<ImageGridData, T>::stopScrolling;
+
 	ImageGridComponent(Window* window);
 
 	void add(const std::string& name, const std::string& imagePath, const T& obj);
@@ -79,7 +94,7 @@ private:
 };
 
 template<typename T>
-ImageGridComponent<T>::ImageGridComponent(Window* window) : IList(window)
+ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData, T>(window)
 {
 	mEntriesDirty = true;
 }
@@ -87,7 +102,7 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList(window)
 template<typename T>
 void ImageGridComponent<T>::add(const std::string& name, const std::string& imagePath, const T& obj)
 {
-	Entry entry;
+	typename IList<ImageGridData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
 	entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png");
@@ -148,7 +163,7 @@ void ImageGridComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		it->render(trans);
 	}
 
-	renderChildren(trans);
+	GuiComponent::renderChildren(trans);
 }
 
 template<typename T>

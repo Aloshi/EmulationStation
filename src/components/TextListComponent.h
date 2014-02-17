@@ -22,7 +22,21 @@ struct TextListData
 template <typename T>
 class TextListComponent : public IList<TextListData, T>
 {
+protected:
+	using IList<TextListData, T>::mEntries;
+	using IList<TextListData, T>::listUpdate;
+	using IList<TextListData, T>::listInput;
+	using IList<TextListData, T>::listRenderTitleOverlay;
+	using IList<TextListData, T>::getTransform;
+	using IList<TextListData, T>::mSize;
+	using IList<TextListData, T>::mCursor;
+	using IList<TextListData, T>::Entry;
+
 public:
+	using IList<TextListData, T>::size;
+	using IList<TextListData, T>::isScrolling;
+	using IList<TextListData, T>::stopScrolling;
+
 	TextListComponent(Window* window);
 	
 	bool input(InputConfig* config, Input input) override;
@@ -46,7 +60,7 @@ public:
 	inline void setFont(const std::shared_ptr<Font>& font)
 	{
 		mFont = font;
-		mTitleOverlayFont = Font::get(FONT_SIZE_LARGE, mFont->getPath());
+		this->mTitleOverlayFont = Font::get(FONT_SIZE_LARGE, mFont->getPath());
 
 		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
 			it->data.textCache.reset();
@@ -61,6 +75,7 @@ public:
 protected:
 	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
 	virtual void onCursorChanged(const CursorState& state);
+
 
 private:
 	static const int MARQUEE_DELAY = 900;
@@ -85,7 +100,7 @@ private:
 
 template <typename T>
 TextListComponent<T>::TextListComponent(Window* window) : 
-	IList(window)
+	IList<TextListData, T>(window)
 {
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
@@ -137,7 +152,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	if(listCutoff > size())
 		listCutoff = size();
 
-	Eigen::Vector3f dim(getSize().x(), getSize().y(), 0);
+	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
 	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)dim.x(), (int)dim.y()));
 
@@ -147,10 +162,10 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		if(mCursor == i)
 		{
 			Renderer::setMatrix(trans);
-			Renderer::drawRect(0, (int)y, (int)getSize().x(), font->getHeight(), mSelectorColor);
+			Renderer::drawRect(0, (int)y, (int)mSize.x(), font->getHeight(), mSelectorColor);
 		}
 
-		Entry& entry = mEntries.at((unsigned int)i);
+		typename IList<TextListData, T>::Entry& entry = mEntries.at((unsigned int)i);
 
 		unsigned int color;
 		if(mCursor == i && mSelectedColor)
@@ -256,7 +271,7 @@ void TextListComponent<T>::update(int deltaTime)
 		Eigen::Vector2f textSize = mFont->sizeText(text);
 
 		//it's long enough to marquee
-		if(textSize.x() - mMarqueeOffset > getSize().x() - 12 - (mAlignment != ALIGN_CENTER ? mHorizontalMargin : 0))
+		if(textSize.x() - mMarqueeOffset > mSize.x() - 12 - (mAlignment != ALIGN_CENTER ? mHorizontalMargin : 0))
 		{
 			mMarqueeTime += deltaTime;
 			while(mMarqueeTime > MARQUEE_SPEED)
@@ -276,7 +291,7 @@ void TextListComponent<T>::add(const std::string& name, const T& obj, unsigned i
 {
 	assert(color < COLOR_ID_COUNT);
 
-	Entry entry;
+	typename IList<TextListData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
 	entry.data.colorId = color;
@@ -336,7 +351,7 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 		}
 		if(elem->has("horizontalMargin"))
 		{
-			mHorizontalMargin = elem->get<float>("horizontalMargin") * (mParent ? mParent->getSize().x() : (float)Renderer::getScreenWidth());
+			mHorizontalMargin = elem->get<float>("horizontalMargin") * (this->mParent ? this->mParent->getSize().x() : (float)Renderer::getScreenWidth());
 		}
 	}
 }
