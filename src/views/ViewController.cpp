@@ -30,7 +30,10 @@ void ViewController::goToStart()
 void ViewController::goToSystemView(SystemData* system)
 {
 	mState.viewing = SYSTEM_SELECT;
-	mCurrentView = getSystemView(system);
+	mState.system = system;
+
+	getSystemListView()->goToSystem(system);
+	mCurrentView = getSystemListView();
 	updateHelpPrompts();
 	playViewTransition();
 }
@@ -54,7 +57,7 @@ void ViewController::goToPrevGameList()
 void ViewController::goToGameList(SystemData* system)
 {
 	mState.viewing = GAME_LIST;
-	mState.data.system = system;
+	mState.system = system;
 
 	mCurrentView = getGameListView(system);
 	updateHelpPrompts();
@@ -140,18 +143,15 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	return view;
 }
 
-std::shared_ptr<SystemView> ViewController::getSystemView(SystemData* system)
+std::shared_ptr<SystemView> ViewController::getSystemListView()
 {
 	//if we already made one, return that one
-	auto exists = mSystemViews.find(system);
-	if(exists != mSystemViews.end())
-		return exists->second;
+	if(mSystemListView)
+		return mSystemListView;
 
-	//if we didn't, make it, remember it, and return it
-	std::shared_ptr<SystemView> view = std::shared_ptr<SystemView>(new SystemView(mWindow, system));
-	view->setPosition((system->getIterator() - SystemData::sSystemVector.begin()) * (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-	mSystemViews[system] = view;
-	return view;
+	mSystemListView = std::shared_ptr<SystemView>(new SystemView(mWindow));
+	mSystemListView->setPosition(0, (float)Renderer::getScreenHeight());
+	return mSystemListView;
 }
 
 
@@ -192,13 +192,9 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Vector3f viewStart = trans.inverse().translation();
 	Eigen::Vector3f viewEnd = trans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
 
-	// draw systemviews
-	for(auto it = mSystemViews.begin(); it != mSystemViews.end(); it++)
-	{
-		// should do clipping
-		it->second->render(trans);
-	}
-
+	// draw systemview
+	getSystemListView()->render(trans);
+	
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -223,7 +219,6 @@ void ViewController::preload()
 {
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
-		getSystemView(*it);
 		getGameListView(*it);
 	}
 }

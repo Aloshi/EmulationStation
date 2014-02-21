@@ -48,14 +48,11 @@ public:
 	{
 		ViewMode viewing;
 
-		inline SystemData* getSystem() const { assert(viewing == GAME_LIST); return data.system; }
+		inline SystemData* getSystem() const { assert(viewing == GAME_LIST || viewing == SYSTEM_SELECT); return system; }
 
 	private:
 		friend ViewController;
-		union
-		{
-			SystemData* system;
-		} data;
+		SystemData* system;
 	};
 
 	inline const State& getState() const { return mState; }
@@ -65,11 +62,11 @@ public:
 private:
 	void playViewTransition();
 	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
-	std::shared_ptr<SystemView> getSystemView(SystemData* system);
+	std::shared_ptr<SystemView> getSystemListView();
 	
 	std::shared_ptr<GuiComponent> mCurrentView;
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
-	std::map< SystemData*, std::shared_ptr<SystemView> > mSystemViews;
+	std::shared_ptr<SystemView> mSystemListView;
 	
 	Eigen::Affine3f mCamera;
 	float mFadeOpacity;

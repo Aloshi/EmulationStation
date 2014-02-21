@@ -4,25 +4,37 @@
 #include "../components/ImageComponent.h"
 #include "../components/TextComponent.h"
 #include "../components/ScrollableContainer.h"
+#include "../components/IList.h"
+#include "../resources/TextureResource.h"
 
 class SystemData;
 
-class SystemView : public GuiComponent
+struct SystemViewData
+{
+	std::shared_ptr<TextCache> title;
+	std::shared_ptr<GuiComponent> logo;
+};
+
+class SystemView : public IList<SystemViewData, SystemData*>
 {
 public:
-	SystemView(Window* window, SystemData* system);
+	SystemView(Window* window);
 
-	void updateData();
+	void goToSystem(SystemData* system);
 
 	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
+	void render(const Eigen::Affine3f& parentTrans) override;
 
 	std::vector<HelpPrompt> getHelpPrompts() override;
+	
+protected:
+	void onCursorChanged(const CursorState& state) override;
 
 private:
-	SystemData* mSystem;
+	inline Eigen::Vector2f logoSize() const { return Eigen::Vector2f(mSize.x() * 0.3f, mSize.y() * 0.25f); }
 
-	TextComponent mHeaderText;
-	ImageComponent mHeaderImage;
-	ImageComponent mImage;
-	ThemeExtras mExtras;
+	void populate();
+
+	float mCamOffset;
 };

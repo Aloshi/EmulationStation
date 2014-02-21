@@ -308,12 +308,8 @@ Reference
 ---
 
 #### system
-* `text name="headerText"` - ALL
-	- A header text, which displays the name of the system.  Displayed at the top center of the screen.  Centered by default.
-* `image name="header"` - ALL
-	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
-* image name="system" - ALL
-	- A large image representing the system (usually a picture of the system itself).  
+* `image name="header"` - PATH
+	- A header (logo) image, to be displayed in the system carousel.
 
 ---
 
