@@ -25,11 +25,14 @@ void SystemView::populate()
 
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
+		const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
+
 		Entry e;
 		e.name = (*it)->getName();
 		e.object = *it;
 
-		if((*it)->getTheme()->getElement("system", "header", "image"))
+		// make logo
+		if(theme->getElement("system", "header", "image"))
 		{
 			ImageComponent* logo = new ImageComponent(mWindow);
 			logo->setMaxSize(logoSize());
@@ -46,8 +49,24 @@ void SystemView::populate()
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 		}
 
-		e.data.title = nullptr;
+		// make title
+		e.data.title = std::shared_ptr<TextComponent>(new TextComponent(mWindow));
+		e.data.title->setFont(Font::get(FONT_SIZE_LARGE));
+		e.data.title->setSize(mSize.x(), (float)FONT_SIZE_LARGE);
+		e.data.title->setText((*it)->getFullName());
+		e.data.title->setCentered(true);
 		
+		// make background
+		if(theme->getElement("system", "systemImage", "image"))
+		{
+			e.data.background = std::shared_ptr<ImageComponent>(new ImageComponent(mWindow));
+			e.data.background->applyTheme(theme, "system", "systemImage", ThemeFlags::PATH);
+			e.data.background->setOpacity((unsigned char)(255 * 0.75f)); // make it 75% opaque
+			e.data.background->setPosition((mSize.x() - e.data.background->getSize().x()) / 2, (mSize.y() - e.data.background->getSize().y()) / 2); // center it (it's drawn at (0, 0))
+		}else{
+			e.data.background = nullptr;
+		}
+
 		this->add(e);
 	}
 }
@@ -95,10 +114,8 @@ void SystemView::onCursorChanged(const CursorState& state)
 {
 	float startPos = mCamOffset;
 
-	const float logoSizeX = logoSize().x() + LOGO_PADDING;
-
-	float posMax = logoSizeX * mEntries.size();
-	float target = mCursor * logoSizeX;
+	float posMax = (float)mEntries.size();
+	float target = (float)mCursor;
 
 	// what's the shortest way to get to our target?
 	// it's one of these...
@@ -121,7 +138,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 		if(f >= posMax)
 			f -= posMax;
 		this->mCamOffset = f;
-	}, 400);
+	}, 500);
 
 	setAnimation(anim);
 }
@@ -131,29 +148,39 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 	if(size() == 0)
 		return;
 
-	const float logoSizeX = logoSize().x() + LOGO_PADDING;
-
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 	
-	// draw background image
-
-	// draw system's stats
-
-	// now for the list elements (logos)
+	// draw the list elements (titles, backgrounds, logos)
 	Eigen::Affine3f logoTrans = trans;
 
+	const float logoSizeX = logoSize().x() + LOGO_PADDING;
+
 	int logoCount = (int)(mSize.x() / logoSizeX) + 2; // how many logos we need to draw
-	int center = (int)(mCamOffset / logoSizeX + 0.5f);
+	int center = (int)(mCamOffset);
 
-	float xOff = (mSize.x() - logoSize().x())/2 - mCamOffset;
-	float yOff = (mSize.y() - logoSize().y())/2;
-
-	// this fixes the case where i != mCursor when wrapping around the end back to zero
-	while(center >= (int)mEntries.size())
+	// draw titles + background images (same transforms)
+	Eigen::Affine3f titleTrans = trans;
+	for(int i = center - 1; i < center + 2; i++)
 	{
-		center -= mEntries.size();
-		xOff += logoSizeX * mEntries.size();
+		int index = i;
+		while(index < 0)
+			index += mEntries.size();
+		while(index >= (int)mEntries.size())
+			index -= mEntries.size();
+
+		titleTrans.translation() = trans.translation() + Eigen::Vector3f((i - mCamOffset) * mSize.x(), 0, 0);
+		
+		// background image (might not exist)
+		if(mEntries.at(index).data.background)
+			mEntries.at(index).data.background->render(titleTrans);
+
+		// title (always exists)
+		mEntries.at(index).data.title->render(titleTrans);
 	}
+
+	// draw logos
+	float xOff = (mSize.x() - logoSize().x())/2 - (mCamOffset * logoSizeX);
+	float yOff = (mSize.y() - logoSize().y())/2;
 
 	for(int i = center - logoCount/2; i < center + logoCount/2 + logoCount%2; i++)
 	{
@@ -168,7 +195,7 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 		std::shared_ptr<GuiComponent> comp = mEntries.at(index).data.logo;
 		if(comp)
 		{
-			if(i == mCursor) //scale our selection up
+			if(index == mCursor) //scale our selection up
 			{
 				// fix the centering because we go by left corner and not center (bleh)
 				logoTrans.translation() -= Eigen::Vector3f((comp->getSize().x() / 2) * (SELECTED_SCALE - 1), (comp->getSize().y() / 2) * (SELECTED_SCALE - 1), 0);

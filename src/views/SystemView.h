@@ -11,8 +11,9 @@ class SystemData;
 
 struct SystemViewData
 {
-	std::shared_ptr<TextCache> title;
+	std::shared_ptr<TextComponent> title;
 	std::shared_ptr<GuiComponent> logo;
+	std::shared_ptr<ImageComponent> background;
 };
 
 class SystemView : public IList<SystemViewData, SystemData*>
@@ -36,5 +37,6 @@ private:
 
 	void populate();
 
+	// unit is list index
 	float mCamOffset;
 };
