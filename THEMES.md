@@ -310,9 +310,7 @@ Reference
 #### system
 * `image name="header"` - PATH
 	- A header (logo) image, to be displayed in the system logo carousel.
-* `image name="systemImage"` - PATH
-	- A background image displayed behind the carousel.  Intended to be a picture of the console on a transparent background (an image with no obvious border).
-
+* You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.
 ---
 
 #### fastSelect

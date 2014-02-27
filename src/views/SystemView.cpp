@@ -49,23 +49,9 @@ void SystemView::populate()
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 		}
 
-		// make title
-		e.data.title = std::shared_ptr<TextComponent>(new TextComponent(mWindow));
-		e.data.title->setFont(Font::get(FONT_SIZE_LARGE));
-		e.data.title->setSize(mSize.x(), (float)FONT_SIZE_LARGE);
-		e.data.title->setText((*it)->getFullName());
-		e.data.title->setCentered(true);
-		
-		// make background
-		if(theme->getElement("system", "systemImage", "image"))
-		{
-			e.data.background = std::shared_ptr<ImageComponent>(new ImageComponent(mWindow));
-			e.data.background->applyTheme(theme, "system", "systemImage", ThemeFlags::PATH);
-			e.data.background->setOpacity((unsigned char)(255 * 0.75f)); // make it 75% opaque
-			e.data.background->setPosition((mSize.x() - e.data.background->getSize().x()) / 2, (mSize.y() - e.data.background->getSize().y()) / 2); // center it (it's drawn at (0, 0))
-		}else{
-			e.data.background = nullptr;
-		}
+		// make background extras
+		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
+		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
 
 		this->add(e);
 	}
@@ -158,8 +144,8 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 	int logoCount = (int)(mSize.x() / logoSizeX) + 2; // how many logos we need to draw
 	int center = (int)(mCamOffset);
 
-	// draw titles + background images (same transforms)
-	Eigen::Affine3f titleTrans = trans;
+	// draw background extras
+	Eigen::Affine3f extrasTrans = trans;
 	for(int i = center - 1; i < center + 2; i++)
 	{
 		int index = i;
@@ -168,14 +154,9 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 		while(index >= (int)mEntries.size())
 			index -= mEntries.size();
 
-		titleTrans.translation() = trans.translation() + Eigen::Vector3f((i - mCamOffset) * mSize.x(), 0, 0);
+		extrasTrans.translation() = trans.translation() + Eigen::Vector3f((i - mCamOffset) * mSize.x(), 0, 0);
 		
-		// background image (might not exist)
-		if(mEntries.at(index).data.background)
-			mEntries.at(index).data.background->render(titleTrans);
-
-		// title (always exists)
-		mEntries.at(index).data.title->render(titleTrans);
+		mEntries.at(index).data.backgroundExtras->render(extrasTrans);
 	}
 
 	// draw logos

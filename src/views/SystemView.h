@@ -11,9 +11,8 @@ class SystemData;
 
 struct SystemViewData
 {
-	std::shared_ptr<TextComponent> title;
 	std::shared_ptr<GuiComponent> logo;
-	std::shared_ptr<ImageComponent> background;
+	std::shared_ptr<ThemeExtras> backgroundExtras;
 };
 
 class SystemView : public IList<SystemViewData, SystemData*>
