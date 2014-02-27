@@ -7,8 +7,8 @@
 #include "../animations/LambdaAnimation.h"
 #include "../SystemData.h"
 
-#define SELECTED_SCALE 1.2f
-#define LOGO_PADDING (logoSize().x() * (SELECTED_SCALE - 1)/2)
+#define SELECTED_SCALE 1.25f
+#define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.075f))
 
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window)
 {
@@ -37,15 +37,16 @@ void SystemView::populate()
 			ImageComponent* logo = new ImageComponent(mWindow);
 			logo->setMaxSize(logoSize());
 			logo->applyTheme((*it)->getTheme(), "system", "header", ThemeFlags::PATH);
-			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, 0);
+			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // vertically and horizontally center
 			e.data.logo = std::shared_ptr<GuiComponent>(logo);
 		}else{
 			// no logo in theme; use text
 			TextComponent* text = new TextComponent(mWindow);
 			text->setFont(Font::get(FONT_SIZE_LARGE));
 			text->setText((*it)->getName());
-			text->setSize(logoSize());
-			text->setCentered(true);
+			text->setSize(logoSize().x(), 0);
+			text->setPosition(0, (logoSize().y() - text->getSize().y()) / 2); // vertically center
+			text->setCentered(true); // horizontally center
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 		}
 
@@ -163,7 +164,11 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 	float xOff = (mSize.x() - logoSize().x())/2 - (mCamOffset * logoSizeX);
 	float yOff = (mSize.y() - logoSize().y())/2;
 
-	for(int i = center - logoCount/2; i < center + logoCount/2 + logoCount%2; i++)
+	// background behind the logos
+	Renderer::setMatrix(trans);
+	Renderer::drawRect(0, yOff - (logoSize().y() * 0.2f) / 2, mSize.x(), logoSize().y() * 1.2f, 0xFFFFFFBB);
+
+	for(int i = center - logoCount/2; i < center + logoCount/2 + 1; i++)
 	{
 		int index = i;
 		while(index < 0)
@@ -179,7 +184,8 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 			if(index == mCursor) //scale our selection up
 			{
 				// fix the centering because we go by left corner and not center (bleh)
-				logoTrans.translation() -= Eigen::Vector3f((comp->getSize().x() / 2) * (SELECTED_SCALE - 1), (comp->getSize().y() / 2) * (SELECTED_SCALE - 1), 0);
+				logoTrans.translation() -= Eigen::Vector3f(((comp->getSize().x() + comp->getPosition().x()) / 2) * (SELECTED_SCALE - 1), 
+					((comp->getSize().y() + comp->getPosition().y()) / 2) * (SELECTED_SCALE - 1), 0);
 				logoTrans.scale(Eigen::Vector3f(SELECTED_SCALE, SELECTED_SCALE, 1.0f));
 				mEntries.at(index).data.logo->render(logoTrans);
 				logoTrans.scale(Eigen::Vector3f(1/SELECTED_SCALE, 1/SELECTED_SCALE, 1.0f));
