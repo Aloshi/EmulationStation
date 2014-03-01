@@ -7,8 +7,8 @@
 #include "../animations/LambdaAnimation.h"
 #include "../SystemData.h"
 
-#define SELECTED_SCALE 1.25f
-#define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.075f))
+#define SELECTED_SCALE 1.5f
+#define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
 
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window)
 {
@@ -138,8 +138,6 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 	
 	// draw the list elements (titles, backgrounds, logos)
-	Eigen::Affine3f logoTrans = trans;
-
 	const float logoSizeX = logoSize().x() + LOGO_PADDING;
 
 	int logoCount = (int)(mSize.x() / logoSizeX) + 2; // how many logos we need to draw
@@ -166,8 +164,10 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 
 	// background behind the logos
 	Renderer::setMatrix(trans);
-	Renderer::drawRect(0, yOff - (logoSize().y() * 0.2f) / 2, mSize.x(), logoSize().y() * 1.2f, 0xFFFFFFBB);
+	Renderer::drawRect(0, (int)(yOff - (logoSize().y() * (SELECTED_SCALE - 1)) / 2), 
+		(int)mSize.x(), (int)(logoSize().y() * SELECTED_SCALE), 0xDDDDDDD8);
 
+	Eigen::Affine3f logoTrans = trans;
 	for(int i = center - logoCount/2; i < center + logoCount/2 + 1; i++)
 	{
 		int index = i;
@@ -183,13 +183,18 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 		{
 			if(index == mCursor) //scale our selection up
 			{
+				comp->setOpacity(0xFF);
+
 				// fix the centering because we go by left corner and not center (bleh)
-				logoTrans.translation() -= Eigen::Vector3f(((comp->getSize().x() + comp->getPosition().x()) / 2) * (SELECTED_SCALE - 1), 
-					((comp->getSize().y() + comp->getPosition().y()) / 2) * (SELECTED_SCALE - 1), 0);
+				// CAN SOMEONE WHO ACTUALLY UNDERSTANDS MATRICES GIVE AN ACTUAL IMPLEMENTATION OF THIS THAT ACTUALLY WORKS?
+				logoTrans.translation() -= Eigen::Vector3f(((comp->getSize().x() + comp->getPosition().x()) * (1/SELECTED_SCALE)) / 2, 
+					((comp->getSize().y() + comp->getPosition().y()) * (1/SELECTED_SCALE)) / 2, 0);
+				
 				logoTrans.scale(Eigen::Vector3f(SELECTED_SCALE, SELECTED_SCALE, 1.0f));
 				mEntries.at(index).data.logo->render(logoTrans);
 				logoTrans.scale(Eigen::Vector3f(1/SELECTED_SCALE, 1/SELECTED_SCALE, 1.0f));
 			}else{
+				comp->setOpacity(0x80);
 				mEntries.at(index).data.logo->render(logoTrans);
 			}
 		}

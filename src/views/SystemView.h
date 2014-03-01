@@ -32,7 +32,7 @@ protected:
 	void onCursorChanged(const CursorState& state) override;
 
 private:
-	inline Eigen::Vector2f logoSize() const { return Eigen::Vector2f(mSize.x() * 0.3f, mSize.y() * 0.25f); }
+	inline Eigen::Vector2f logoSize() const { return Eigen::Vector2f(mSize.x() * 0.25f, mSize.y() * 0.175f); }
 
 	void populate();
 
