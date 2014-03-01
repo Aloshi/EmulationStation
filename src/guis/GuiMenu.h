@@ -1,8 +1,7 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "../components/TextListComponent.h"
-#include "../components/NinePatchComponent.h"
+#include "../components/MenuComponent.h"
 #include <functional>
 
 class GuiMenu : public GuiComponent
@@ -13,7 +12,5 @@ public:
 	bool input(InputConfig* config, Input input) override;
 
 private:
-	std::shared_ptr<ThemeData> mTheme;
-	NinePatchComponent mBackground;
-	TextListComponent< std::function<void()> > mList;
+	MenuComponent mMenu;
 };

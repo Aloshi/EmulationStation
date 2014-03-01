@@ -1,0 +1,164 @@
+#include "ComponentList.h"
+
+#define TOTAL_HORIZONTAL_PADDING_PX 12
+
+ComponentList::ComponentList(Window* window) : IList<ComponentListRow, void*>(window, LIST_SCROLL_STYLE_SLOW, LIST_NEVER_LOOP)
+{
+	mSelectorBarOffset = 0;
+}
+
+void ComponentList::addRow(const ComponentListRow& row)
+{
+	IList<ComponentListRow, void*>::Entry e;
+	e.name = "";
+	e.object = NULL;
+	e.data = row;
+
+	this->add(e);
+
+	for(auto it = mEntries.back().data.elements.begin(); it != mEntries.back().data.elements.end(); it++)
+		addChild(it->component.get());
+
+	updateElementSize(mEntries.back().data);
+	updateElementPosition(mEntries.back().data);
+}
+
+void ComponentList::onSizeChanged()
+{
+	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+	{
+		updateElementSize(it->data);
+		updateElementPosition(it->data);
+	}
+}
+
+bool ComponentList::input(InputConfig* config, Input input)
+{
+	if(size() == 0)
+		return false;
+
+	// give it to the current row's input handler
+	if(mEntries.at(mCursor).data.input_handler && mEntries.at(mCursor).data.input_handler(config, input))
+		return true;
+
+	// input handler didn't consume the input - try to scroll
+	if(config->isMappedTo("up", input))
+	{
+		return listInput(input.value != 0 ? -1 : 0);
+	}else if(config->isMappedTo("down", input))
+	{
+		return listInput(input.value != 0 ? 1 : 0);
+	}
+
+	return false;
+}
+
+void ComponentList::update(int deltaTime)
+{
+	listUpdate(deltaTime);
+}
+
+void ComponentList::onCursorChanged(const CursorState& state)
+{
+	// update the selector bar position
+	// in the future this might be animated
+	mSelectorBarOffset = 0;
+	for(int i = 0; i < mCursor; i++)
+	{
+		mSelectorBarOffset += getRowHeight(mEntries.at(i).data);
+	}
+}
+
+void ComponentList::render(const Eigen::Affine3f& parentTrans)
+{
+	Eigen::Affine3f trans = parentTrans * getTransform();
+
+	// clip our entries inside our bounds
+	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
+	dim = trans * dim - trans.translation();
+	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), 
+		(int)trans.translation().y()), Eigen::Vector2i((int)dim.x(), (int)dim.y()));
+
+	// draw our entries
+	renderChildren(trans);
+
+	Renderer::popClipRect();
+
+	// draw selector bar
+	Renderer::setMatrix(trans);
+
+	// inversion: src * (1 - dst) + dst * 0 = where src = 1
+	// need a function that goes roughly 0x777777 -> 0xFFFFFF
+	// and 0xFFFFFF -> 0x777777
+	// (1 - dst) + 0x77
+	
+	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)getRowHeight(mEntries.at(mCursor).data), 0xFFFFFFFF,
+		GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)getRowHeight(mEntries.at(mCursor).data), 0x777777FF,
+		GL_ONE, GL_ONE);
+	
+	// draw separators
+	float y = 0;
+	for(unsigned int i = 0; i < mEntries.size(); i++)
+	{
+		Renderer::drawRect(0, (int)y, (int)mSize.x(), 1, 0xC6C7C688);
+		y += getRowHeight(mEntries.at(i).data);
+	}
+	Renderer::drawRect(0, (int)y, (int)mSize.x(), 1, 0xC6C7C688);
+}
+
+float ComponentList::getRowHeight(const ComponentListRow& row)
+{
+	// returns the highest component height found in the row
+	float height = 0;
+	for(unsigned int i = 0; i < row.elements.size(); i++)
+	{
+		if(row.elements.at(i).component->getSize().y() > height)
+			height = row.elements.at(i).component->getSize().y();
+	}
+
+	return height;
+}
+
+void ComponentList::updateElementPosition(const ComponentListRow& row)
+{
+	float yOffset = 0;
+	for(auto it = mEntries.begin(); it != mEntries.end() && &it->data != &row; it++)
+	{
+		yOffset += getRowHeight(it->data);
+	}
+
+	// assumes updateElementSize has already been called
+	float rowHeight = getRowHeight(row);
+
+	float x = TOTAL_HORIZONTAL_PADDING_PX / 2;
+	for(unsigned int i = 0; i < row.elements.size(); i++)
+	{
+		const auto comp = row.elements.at(i).component;
+
+		// center vertically
+		comp->setPosition(x, (rowHeight - comp->getSize().y()) / 2 + yOffset);
+		x += comp->getSize().x();
+	}
+}
+
+void ComponentList::updateElementSize(const ComponentListRow& row)
+{
+	float width = mSize.x() - TOTAL_HORIZONTAL_PADDING_PX;
+	std::vector< std::shared_ptr<GuiComponent> > resizeVec;
+
+	for(auto it = row.elements.begin(); it != row.elements.end(); it++)
+	{
+		if(it->resize_width)
+			resizeVec.push_back(it->component);
+		else
+			width -= it->component->getSize().x();
+	}
+
+	// redistribute the "unused" width equally among the components with resize_width set to true
+	width = width / resizeVec.size();
+	for(auto it = resizeVec.begin(); it != resizeVec.end(); it++)
+	{
+		(*it)->setSize(width, (*it)->getSize().y());
+	}
+}

@@ -10,7 +10,7 @@
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
 
-SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window)
+SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP)
 {
 	mCamOffset = 0;
 

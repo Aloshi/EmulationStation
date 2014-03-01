@@ -14,18 +14,38 @@ enum CursorState
 	CURSOR_SCROLLING
 };
 
+enum ListLoopType
+{
+	LIST_ALWAYS_LOOP,
+	LIST_PAUSE_AT_END,
+	LIST_NEVER_LOOP
+};
+
 struct ScrollTier
 {
 	int length; // how long we stay on this level before going to the next
 	int scrollDelay; // how long between scrolls
 };
 
-const int SCROLL_SPEED_COUNT = 3;
-const ScrollTier SCROLL_SPEED[SCROLL_SPEED_COUNT] = {
+struct ScrollTierList
+{
+	const int count;
+	const ScrollTier* tiers;
+};
+
+// default scroll tiers
+const ScrollTier QUICK_SCROLL_TIERS[] = {
 	{500, 500},
 	{5000, 114},
 	{0, 8}
 };
+const ScrollTierList LIST_SCROLL_STYLE_QUICK = { 3, QUICK_SCROLL_TIERS };
+
+const ScrollTier SLOW_SCROLL_TIERS[] = {
+	{500, 500},
+	{0, 150}
+};
+const ScrollTierList LIST_SCROLL_STYLE_SLOW = { 2, SLOW_SCROLL_TIERS };
 
 template <typename EntryData, typename UserData>
 class IList : public GuiComponent
@@ -52,17 +72,21 @@ protected:
 	ImageComponent mGradient;
 	std::shared_ptr<Font> mTitleOverlayFont;
 
+	const ScrollTierList& mTierList;
+	const ListLoopType mLoopType;
+
 	std::vector<Entry> mEntries;
 	
 public:
-	IList(Window* window) : GuiComponent(window), mGradient(window)
+	IList(Window* window, const ScrollTierList& tierList = LIST_SCROLL_STYLE_QUICK, const ListLoopType& loopType = LIST_PAUSE_AT_END) : GuiComponent(window), 
+		mGradient(window), mTierList(tierList), mLoopType(loopType)
 	{
 		mCursor = 0;
 		mScrollTier = 0;
 		mScrollVelocity = 0;
 		mScrollTierAccumulator = 0;
 		mScrollCursorAccumulator = 0;
-
+		
 		mTitleOverlayOpacity = 0x00;
 		mTitleOverlayColor = 0xFFFFFF00;
 		mGradient.setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
@@ -125,7 +149,7 @@ public:
 	}
 	
 	// entry management
-	void add(Entry e)
+	void add(const Entry& e)
 	{
 		mEntries.push_back(e);
 	}
@@ -159,19 +183,22 @@ protected:
 	}
 
 
-	void listInput(int velocity) // a velocity of 0 = stop scrolling
+	bool listInput(int velocity) // a velocity of 0 = stop scrolling
 	{
 		mScrollVelocity = velocity;
 		mScrollTier = 0;
 		mScrollTierAccumulator = 0;
 		mScrollCursorAccumulator = 0;
+
+		int prevCursor = mCursor;
 		scroll(mScrollVelocity);
+		return (prevCursor != mCursor);
 	}
 
 	void listUpdate(int deltaTime)
 	{
 		// update the title overlay opacity
-		const int dir = (mScrollTier >= SCROLL_SPEED_COUNT - 1) ? 1 : -1; // fade in if scroll tier is >= 1, otherwise fade out
+		const int dir = (mScrollTier >= mTierList.count - 1) ? 1 : -1; // fade in if scroll tier is >= 1, otherwise fade out
 		int op = mTitleOverlayOpacity + deltaTime*dir; // we just do a 1-to-1 time -> opacity, no scaling
 		if(op >= 255)
 			mTitleOverlayOpacity = 255;
@@ -189,16 +216,16 @@ protected:
 		// we delay scrolling until after scroll tier has updated so isScrolling() returns accurately during onCursorChanged callbacks
 		// we don't just do scroll tier first because it would not catch the scrollDelay == tier length case
 		int scrollCount = 0;
-		while(mScrollCursorAccumulator >= SCROLL_SPEED[mScrollTier].scrollDelay)
+		while(mScrollCursorAccumulator >= mTierList.tiers[mScrollTier].scrollDelay)
 		{
-			mScrollCursorAccumulator -= SCROLL_SPEED[mScrollTier].scrollDelay;
+			mScrollCursorAccumulator -= mTierList.tiers[mScrollTier].scrollDelay;
 			scrollCount++;
 		}
 
 		// are we ready to go even FASTER?
-		while(mScrollTier < SCROLL_SPEED_COUNT - 1 && mScrollTierAccumulator >= SCROLL_SPEED[mScrollTier].length)
+		while(mScrollTier < mTierList.count - 1 && mScrollTierAccumulator >= mTierList.tiers[mScrollTier].length)
 		{
-			mScrollTierAccumulator -= SCROLL_SPEED[mScrollTier].length;
+			mScrollTierAccumulator -= mTierList.tiers[mScrollTier].length;
 			mScrollTier++;
 		}
 
@@ -237,16 +264,17 @@ protected:
 		// stop at the end if we've been holding down the button for a long time or
 		// we're scrolling faster than one item at a time (e.g. page up/down)
 		// otherwise, loop around
-		if(mScrollTier > 0 || absAmt > 1)
+		if((mLoopType == LIST_PAUSE_AT_END && (mScrollTier > 0 || absAmt > 1)) ||
+			mLoopType == LIST_NEVER_LOOP)
 		{
 			if(cursor < 0)
 				cursor = 0;
 			else if(cursor >= size())
 				cursor = size() - 1;
 		}else{
-			if(cursor < 0)
+			while(cursor < 0)
 				cursor += size();
-			else if(cursor >= size())
+			while(cursor >= size())
 				cursor -= size();
 		}
 

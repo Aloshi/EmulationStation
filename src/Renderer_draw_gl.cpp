@@ -70,7 +70,7 @@ namespace Renderer {
 		}
 	}
 
-	void drawRect(int x, int y, int w, int h, unsigned int color)
+	void drawRect(int x, int y, int w, int h, unsigned int color, GLenum blend_sfactor, GLenum blend_dfactor)
 	{
 #ifdef USE_OPENGL_ES
 		GLshort points[12];
@@ -90,7 +90,7 @@ namespace Renderer {
 		buildGLColorArray(colors, color, 6);
 
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(blend_sfactor, blend_dfactor);
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
 

@@ -9,9 +9,10 @@ TextComponent::TextComponent(Window* window) : GuiComponent(window),
 {
 }
 
-TextComponent::TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
+TextComponent::TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, unsigned int color, Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
 	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
 {
+	setColor(color);
 	setText(text);
 	setFont(font);
 	setPosition(pos);

@@ -5,6 +5,8 @@
 #include "../../guis/GuiFastSelect.h"
 #include "../ViewController.h"
 #include "../../Settings.h"
+#include "../../Log.h"
+#include "../../Sound.h"
 
 bool IGameListView::input(InputConfig* config, Input input)
 {
@@ -37,6 +39,7 @@ bool IGameListView::input(InputConfig* config, Input input)
 	}else if(config->isMappedTo("select", input) && input.value != 0)
 	{
 		// open fast select
+		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
 		mWindow->pushGui(new GuiFastSelect(mWindow, this));
 		return true;
 	}

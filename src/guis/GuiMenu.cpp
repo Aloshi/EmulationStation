@@ -2,72 +2,93 @@
 #include "GuiSettingsMenu.h"
 #include "GuiScraperStart.h"
 #include "../Window.h"
+#include "../Sound.h"
+#include "../Log.h"
+#include "GuiMsgBoxYesNo.h"
 
-GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mBackground(window, ":/button.png"), mList(window)
+GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "Main Menu")
 {
-	mList.add("Settings", [&] { 
-		mWindow->pushGui(new GuiSettingsMenu(mWindow));
-	}, 0);
+	struct MenuEntry
+	{
+		const char* name;
+		unsigned int color;
+		bool add_arrow;
+		std::function<void()> func;
+	};
 
-	mList.add("Scrape Systems", [&] {
-		mWindow->pushGui(new GuiScraperStart(mWindow));
-	}, 0);
-
-	mList.add("Restart", [] { 
-		if(system("sudo shutdown -r now") != 0)
-			LOG(LogWarning) << "Restart terminated with non-zero result!";
-	}, 0);
-
-	mList.add("Shutdown", [] { 
-		if(system("sudo shutdown -h now") != 0)
-			LOG(LogWarning) << "Shutdown terminated with non-zero result!";
-	}, 1);
-
-	mList.add("Exit", [] { 
-		SDL_Event* ev = new SDL_Event();
-        ev->type = SDL_QUIT;
-        SDL_PushEvent(ev);
-	}, 0);
-
+	MenuEntry entries[] = {
+		{ "GENERAL SETTINGS", 0x777777FF, true, 
+			[this] { mWindow->pushGui(new GuiSettingsMenu(mWindow)); }
+		},
+		{ "SCRAPE NOW", 0x777777FF, true, 
+			[this] { mWindow->pushGui(new GuiScraperStart(mWindow)); }
+		},
+		{ "RESTART SYSTEM", 0x990000FF, false, 
+			[this] {
+				mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "Do you really want to restart the system?",
+					[] { 
+						if(system("sudo shutdown -r now") != 0)
+							LOG(LogWarning) << "Restart terminated with non-zero result!";
+					}));
+			}
+		}, 
+		{ "SHUTDOWN SYSTEM", 0x990000FF, false, 
+			[this] {
+				mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "Do you really want to shutdown the system?",
+					[] { 
+						if(system("sudo shutdown -h now") != 0)
+							LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+					}));
+			}
+		},
+		{ "EXIT EMULATIONSTATION", 0x990000FF, false,
+			[] {
+				SDL_Event ev;
+				ev.type = SDL_QUIT;
+				SDL_PushEvent(&ev);
+			}
+		}
+	};
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, (mSize.y() - mMenu.getSize().y()) / 2);
 
-	mList.setPosition(mSize.x() * 0.175f, mSize.y() * 0.05f);
-	mList.setSize(mSize.x() * 0.65f, mSize.y() * 0.9f);
+	std::shared_ptr<Font> font = Font::get(FONT_SIZE_LARGE);
+	
+	// populate the list
+	ComponentListRow row;
 
-	mTheme = ThemeData::getDefault();
+	for(int i = 0; i < (sizeof(entries) / sizeof(entries[0])); i++)
+	{
+		row.elements.clear();
+		row.addElement(std::make_shared<TextComponent>(mWindow, entries[i].name, font, entries[i].color), true);
 
-	using namespace ThemeFlags;
-	mBackground.applyTheme(mTheme, "menu", "windowBackground", PATH);
-	mBackground.fitTo(Eigen::Vector2f(mList.getSize().x(), mSize.y()), Eigen::Vector3f(mList.getPosition().x(), 0, 0));
-	addChild(&mBackground);
+		if(entries[i].add_arrow)
+			row.addElement(std::make_shared<TextComponent>(mWindow, ">", font, entries[i].color), false);
 
-	mList.setFont(Font::get((int)(0.09f * Renderer::getScreenHeight())));
-	mList.setSelectorColor(0xBBBBBBFF);
-	mList.setColor(0, 0x0000FFFF);
-	mList.setColor(1, 0xFF0000FF);
-	mList.applyTheme(mTheme, "menu", "menulist", FONT_PATH | COLOR | SOUND);
+		std::function<void()>& execFunc = entries[i].func;
+		row.input_handler = [execFunc](InputConfig* config, Input input) -> bool
+			{
+				if(config->isMappedTo("a", input) && input.value != 0)
+				{
+					execFunc();
+					return true;
+				}
+				return false;
+		};
 
-	Sound::getFromTheme(mTheme, "menu", "menuOpen")->play();
-
-	addChild(&mList);
+		mMenu.addRow(row);
+	}
+	
+	addChild(&mMenu);
 }
 
 bool GuiMenu::input(InputConfig* config, Input input)
 {
-	if(input.value != 0)
+	if((config->isMappedTo("b", input) || config->isMappedTo("menu", input)) && input.value != 0)
 	{
-		if(config->isMappedTo("b", input) || config->isMappedTo("menu", input))
-		{
-			Sound::getFromTheme(mTheme, "menu", "menuClose")->play();
-			delete this;
-			return true;
-		}else if(config->isMappedTo("a", input) && mList.size() > 0)
-		{
-			mList.getSelected()();
-			delete this;
-			return true;
-		}
+		delete this;
+		return true;
 	}
 
 	return GuiComponent::input(config, input);
