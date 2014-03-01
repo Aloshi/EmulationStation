@@ -1,5 +1,5 @@
 #include "TheArchiveScraper.h"
-#include "../components/GuiGameScraper.h"
+#include "../guis/GuiGameScraper.h"
 #include "../components/AsyncReqComponent.h"
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "TextListComponent.h"
-#include "NinePatchComponent.h"
+#include "../components/TextListComponent.h"
+#include "../components/NinePatchComponent.h"
 #include <functional>
 
 class GuiMenu : public GuiComponent

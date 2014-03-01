@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "TextComponent.h"
+#include "../components/TextComponent.h"
 #include <functional>
 
 //A simple popup message box with callbacks for when the user dismisses it.

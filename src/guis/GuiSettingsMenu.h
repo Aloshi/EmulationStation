@@ -1,15 +1,13 @@
-#ifndef _SETTINGSMENU_H_
-#define _SETTINGSMENU_H_
+#pragma once
 
 #include "../GuiComponent.h"
-#include "ComponentListComponent.h"
-#include <vector>
-#include "SwitchComponent.h"
-#include "SliderComponent.h"
-#include "TextComponent.h"
-#include "NinePatchComponent.h"
-#include "OptionListComponent.h"
-#include "ButtonComponent.h"
+#include "../components/ComponentGrid.h"
+#include "../components/SwitchComponent.h"
+#include "../components/SliderComponent.h"
+#include "../components/TextComponent.h"
+#include "../components/NinePatchComponent.h"
+#include "../components/OptionListComponent.h"
+#include "../components/ButtonComponent.h"
 #include "../scrapers/Scraper.h"
 
 class GuiSettingsMenu : public GuiComponent
@@ -26,7 +24,7 @@ private:
 	void loadStates();
 	void applyStates();
 
-	ComponentListComponent mList;
+	ComponentGrid mList;
 
 	NinePatchComponent mBox;
 
@@ -41,5 +39,3 @@ private:
 	
 	std::vector<GuiComponent*> mLabels;
 };
-
-#endif

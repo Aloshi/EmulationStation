@@ -2,14 +2,14 @@
 
 #include "../GuiComponent.h"
 #include "../scrapers/Scraper.h"
-#include "ComponentListComponent.h"
-#include "TextComponent.h"
-#include "ScrollableContainer.h"
-#include "TextEditComponent.h"
-#include "NinePatchComponent.h"
+#include "../components/ComponentGrid.h"
+#include "../components/TextComponent.h"
+#include "../components/ScrollableContainer.h"
+#include "../components/TextEditComponent.h"
+#include "../components/NinePatchComponent.h"
+#include "../components/ImageComponent.h"
 #include "../Settings.h"
 #include "../HttpReq.h"
-#include "ImageComponent.h"
 
 #define MAX_SCRAPER_RESULTS 5
 
@@ -31,7 +31,7 @@ private:
 	void updateInfoPane();
 	void updateThumbnail();
 
-	ComponentListComponent mList;
+	ComponentGrid mList;
 	NinePatchComponent mBox;
 
 	TextComponent mHeader;

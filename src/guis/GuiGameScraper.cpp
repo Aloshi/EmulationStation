@@ -49,29 +49,29 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 
 	using namespace Eigen;
 	
-	mList.setEntry(Vector2i(0, 0), Vector2i(2, 1), &mHeader, false, ComponentListComponent::AlignCenter);
+	mList.setEntry(Vector2i(0, 0), Vector2i(2, 1), &mHeader, false, ComponentGrid::AlignCenter);
 
 	//y = 1 is a spacer row
 
 	mResultName.setText(params.game->getName());
 	mResultName.setColor(0x3B56CCFF);
-	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mResultName, false, ComponentListComponent::AlignLeft);
+	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mResultName, false, ComponentGrid::AlignLeft);
 
 	mResultDesc.setText(params.game->metadata.get("desc"));
 	mResultDesc.setSize(col1Width, 0);
 	mResultInfo.addChild(&mResultDesc);
 	mResultInfo.setSize(mResultDesc.getSize().x(), mResultDesc.getFont()->getHeight() * 3.0f);
-	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mResultInfo, false, ComponentListComponent::AlignLeft);
+	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mResultInfo, false, ComponentGrid::AlignLeft);
 	
 	mResultThumbnail.setMaxSize(col2Width, mResultInfo.getSize().y());
-	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mResultThumbnail, false, ComponentListComponent::AlignCenter);
+	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mResultThumbnail, false, ComponentGrid::AlignCenter);
 
 	//y = 3 is a spacer row
 
-	mList.setEntry(Vector2i(0, 4), Vector2i(1, 1), &mSearchLabel, false, ComponentListComponent::AlignLeft);
+	mList.setEntry(Vector2i(0, 4), Vector2i(1, 1), &mSearchLabel, false, ComponentGrid::AlignLeft);
 	mSearchText.setValue(!params.nameOverride.empty() ? params.nameOverride : getCleanFileName(params.game->getPath()));
 	mSearchText.setSize(listWidth - mSearchLabel.getSize().x() - 20, mSearchText.getSize().y());
-	mList.setEntry(Vector2i(1, 4), Vector2i(1, 1), &mSearchText, true, ComponentListComponent::AlignRight);
+	mList.setEntry(Vector2i(1, 4), Vector2i(1, 1), &mSearchText, true, ComponentGrid::AlignRight);
 
 	//y = 5 is a spacer row
 
@@ -112,12 +112,12 @@ void GuiGameScraper::onSearchDone(std::vector<MetaDataList> results)
 	if(end == 0)
 	{
 		mResultNames.at(0).setText("No games found!");
-		mList.setEntry(Eigen::Vector2i(0, 6), Eigen::Vector2i(1, 1), &mResultNames.at(0), false, ComponentListComponent::AlignLeft);
+		mList.setEntry(Eigen::Vector2i(0, 6), Eigen::Vector2i(1, 1), &mResultNames.at(0), false, ComponentGrid::AlignLeft);
 	}else{
 		for(int i = 0; i < end; i++)
 		{
 			mResultNames.at(i).setText(results.at(i).get("name"));
-			mList.setEntry(Eigen::Vector2i(0, 6 + i), Eigen::Vector2i(1, 1), &mResultNames.at(i), true, ComponentListComponent::AlignLeft);
+			mList.setEntry(Eigen::Vector2i(0, 6 + i), Eigen::Vector2i(1, 1), &mResultNames.at(i), true, ComponentGrid::AlignLeft);
 		}
 	}
 

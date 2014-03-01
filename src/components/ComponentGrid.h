@@ -2,11 +2,12 @@
 
 #include "../GuiComponent.h"
 
-class ComponentListComponent : public GuiComponent
+// Used to arrange a bunch of components in a spreadsheet-esque grid.
+class ComponentGrid : public GuiComponent
 {
 public:
-	ComponentListComponent(Window* window, Eigen::Vector2i gridDimensions);
-	virtual ~ComponentListComponent();
+	ComponentGrid(Window* window, Eigen::Vector2i gridDimensions);
+	virtual ~ComponentGrid();
 
 	enum UpdateBehavior
 	{
@@ -92,27 +93,3 @@ private:
 	void updateComponentOffsets();
 	void updateCellSize(ComponentEntry* e, bool updWidth = true, bool updHeight = true);
 };
-
-//ability to define a list of components in terms of a grid
-//these comments are kinda old
-
-//input
-//pass to selected component
-//  if returns true, stop
-//   else, process:
-//     if input == up/down
-//       scroll to prev/next selectable component in grid Y
-//     if input == left/right
-//       scroll to prev/next selectable component in grid X
-
-//entry struct/class
-//  GuiComponent* component - component to work with
-//  bool canFocus - can we pass input to this? (necessary for labels to not be selectable)
-//  UpdateBehavior update - how to handle updates (all the time or only when focused)
-
-//update
-//pass update to all entries with appropriate update behavior
-
-//render
-//clip rect to our size
-//render a "selected" effect behind component with focus somehow

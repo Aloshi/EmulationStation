@@ -161,12 +161,13 @@ set(ES_HEADERS
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentGrid.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/IList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageGridComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/MenuComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/OptionListComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/RatingComponent.h
@@ -176,17 +177,18 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextListComponent.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxOk.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxYesNo.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperStart.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperLog.h
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiFastSelect.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMetaDataEd.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxOk.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxYesNo.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiGameScraper.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiInputConfig.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMenu.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiSettingsMenu.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperStart.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperLog.h
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/Scraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.h
@@ -241,10 +243,11 @@ set(ES_SOURCES
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentListComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentGrid.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/MenuComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/RatingComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.cpp
@@ -252,17 +255,18 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiDetectDevice.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiFastSelect.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMetaDataEd.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxOk.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMsgBoxYesNo.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiGameScraper.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiInputConfig.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiMenu.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiSettingsMenu.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperStart.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/GuiScraperLog.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiFastSelect.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMetaDataEd.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxOk.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxYesNo.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiGameScraper.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiInputConfig.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMenu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiSettingsMenu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperStart.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperLog.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/Scraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.cpp

@@ -3,8 +3,8 @@
 #include "../GuiComponent.h"
 #include "../views/gamelist/IGameListView.h"
 
-#include "NinePatchComponent.h"
-#include "TextComponent.h"
+#include "../components/NinePatchComponent.h"
+#include "../components/TextComponent.h"
 
 class GuiFastSelect : public GuiComponent
 {

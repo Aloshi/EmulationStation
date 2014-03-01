@@ -3,7 +3,6 @@
 #include "../resources/Font.h"
 #include "../Window.h"
 #include "../Renderer.h"
-#include "ComponentListComponent.h"
 
 TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
 	mBox(window, ":/textbox.png"), mFocused(false), 

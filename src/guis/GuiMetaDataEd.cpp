@@ -1,11 +1,11 @@
 #include "GuiMetaDataEd.h"
 #include "../Renderer.h"
 #include "../Log.h"
-#include "AsyncReqComponent.h"
+#include "../components/AsyncReqComponent.h"
 #include "../Settings.h"
 #include "GuiGameScraper.h"
-#include <boost/filesystem.hpp>
 #include "GuiMsgBoxYesNo.h"
+#include <boost/filesystem.hpp>
 
 #define MDED_RESERVED_ROWS 3
 
@@ -84,10 +84,10 @@ void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
 	int y = 0;
 
 	//fetch button
-	mList.setEntry(Vector2i(0, y), Vector2i(1, 1), &mFetchButton, true, ComponentListComponent::AlignLeft);
+	mList.setEntry(Vector2i(0, y), Vector2i(1, 1), &mFetchButton, true, ComponentGrid::AlignLeft);
 
 	//delete button
-	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), &mDeleteButton, true, ComponentListComponent::AlignRight);
+	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), &mDeleteButton, true, ComponentGrid::AlignRight);
 
 	y++;
 
@@ -95,20 +95,20 @@ void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
 	{
 		TextComponent* label = new TextComponent(mWindow);
 		label->setText(iter->key);
-		mList.setEntry(Vector2i(0, y), Vector2i(1, 1), label, false, ComponentListComponent::AlignLeft);
+		mList.setEntry(Vector2i(0, y), Vector2i(1, 1), label, false, ComponentGrid::AlignLeft);
 		mLabels.push_back(label);
 
 		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
 		ed->setSize(Renderer::getScreenWidth() * 0.4f, ed->getSize().y());
 		ed->setValue(mMetaData->get(iter->key));
-		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentListComponent::AlignRight);
+		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentGrid::AlignRight);
 		mEditors.push_back(ed);
 
 		y++;
 	}
 
 	//save button
-	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), &mSaveButton, true, ComponentListComponent::AlignCenter);
+	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), &mSaveButton, true, ComponentGrid::AlignCenter);
 }
 
 void GuiMetaDataEd::save()

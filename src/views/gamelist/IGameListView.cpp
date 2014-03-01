@@ -1,8 +1,8 @@
 #include "IGameListView.h"
 #include "../../Window.h"
-#include "../../components/GuiMetaDataEd.h"
-#include "../../components/GuiMenu.h"
-#include "../../components/GuiFastSelect.h"
+#include "../../guis/GuiMetaDataEd.h"
+#include "../../guis/GuiMenu.h"
+#include "../../guis/GuiFastSelect.h"
 #include "../ViewController.h"
 #include "../../Settings.h"
 

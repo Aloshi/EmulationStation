@@ -1,5 +1,4 @@
-#ifndef _GUIINPUTCONFIG_H_
-#define _GUIINPUTCONFIG_H_
+#pragma once
 
 #include "../GuiComponent.h"
 #include <string>
@@ -19,5 +18,3 @@ private:
 	int mCurInputId;
 	bool mCanSkip;
 };
-
-#endif

@@ -5,7 +5,7 @@
 #include "gamelist/BasicGameListView.h"
 #include "gamelist/DetailedGameListView.h"
 #include "gamelist/GridGameListView.h"
-#include "../components/GuiMenu.h"
+#include "../guis/GuiMenu.h"
 #include "../animations/LaunchAnimation.h"
 #include "../animations/MoveCameraAnimation.h"
 #include "../animations/LambdaAnimation.h"

@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "ComponentListComponent.h"
+#include "../components/ComponentGrid.h"
 #include "../MetaData.h"
-#include "TextComponent.h"
-#include "NinePatchComponent.h"
-#include "ButtonComponent.h"
-#include <functional>
+#include "../components/TextComponent.h"
+#include "../components/NinePatchComponent.h"
+#include "../components/ButtonComponent.h"
 #include "../scrapers/Scraper.h"
+
+#include <functional>
 
 class GuiMetaDataEd : public GuiComponent
 {
@@ -31,7 +32,7 @@ private:
 
 	NinePatchComponent mBox;
 
-	ComponentListComponent mList;
+	ComponentGrid mList;
 
 	TextComponent mHeader;
 

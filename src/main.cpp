@@ -8,7 +8,7 @@
 #include "views/ViewController.h"
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
-#include "components/GuiDetectDevice.h"
+#include "guis/GuiDetectDevice.h"
 #include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"

@@ -1,11 +1,12 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "NinePatchComponent.h"
-#include <queue>
+#include "../components/NinePatchComponent.h"
 #include "../scrapers/Scraper.h"
+#include "../components/TextComponent.h"
+
+#include <queue>
 #include <boost/circular_buffer.hpp>
-#include "TextComponent.h"
 
 //A "terminal" of sorts for scraping.
 //Doesn't accept input, but renders log-style messages and handles the callback chain for multi-game scraping.

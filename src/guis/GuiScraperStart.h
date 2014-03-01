@@ -2,11 +2,11 @@
 
 #include "../GuiComponent.h"
 #include "../SystemData.h"
-#include "TextComponent.h"
-#include "ComponentListComponent.h"
-#include "OptionListComponent.h"
-#include "SwitchComponent.h"
-#include "ButtonComponent.h"
+#include "../components/TextComponent.h"
+#include "../components/ComponentGrid.h"
+#include "../components/OptionListComponent.h"
+#include "../components/SwitchComponent.h"
+#include "../components/ButtonComponent.h"
 #include "../scrapers/Scraper.h"
 #include <queue>
 
@@ -30,7 +30,7 @@ private:
 	std::queue<ScraperSearchParams> getSearches(std::vector<SystemData*> systems, GameFilterFunc selector);
 
 	NinePatchComponent mBox;
-	ComponentListComponent mList;
+	ComponentGrid mList;
 
 	TextComponent mFilterLabel;
 	TextComponent mSystemsLabel;
@@ -42,13 +42,3 @@ private:
 
 	ButtonComponent mStartButton;
 };
-
-/* 
-
-Filter: [MISSING IMAGES | ALL]
-Systems: [# selected]
-Manual Mode: [ON | OFF]
-GO GO GO
-
-*/
-

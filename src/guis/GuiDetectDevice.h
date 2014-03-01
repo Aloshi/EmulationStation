@@ -1,5 +1,4 @@
-#ifndef _GUIDETECTDEVICE_H_
-#define _GUIDETECTDEVICE_H_
+#pragma once
 
 #include "../GuiComponent.h"
 
@@ -19,5 +18,3 @@ private:
 	int mFinishTimer;
 	int mCurrentPlayer;
 };
-
-#endif

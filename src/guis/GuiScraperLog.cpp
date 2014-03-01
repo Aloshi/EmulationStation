@@ -1,6 +1,6 @@
 #include "GuiScraperLog.h"
-#include "../Settings.h"
 #include "GuiGameScraper.h"
+#include "../Settings.h"
 #include "../Renderer.h"
 #include "../Log.h"
 #include "../XMLReader.h"

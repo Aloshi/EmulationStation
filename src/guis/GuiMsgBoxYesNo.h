@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "TextComponent.h"
+#include "../components/TextComponent.h"
 #include <functional>
 
 //A simple "yes or no" popup box with callbacks for yes or no.
