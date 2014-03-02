@@ -71,7 +71,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			std::cout << "--draw-framerate		display the framerate\n";
 			std::cout << "--no-exit			don't show the exit option in the menu\n";
 			std::cout << "--debug				even more logging\n";
-			std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 30, use 0 for never)\n";
+			std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 120, use 0 for never)\n";
 			std::cout << "--scrape			scrape using command line interface\n";
 			std::cout << "--windowed			not fullscreen, should be used in conjunction with -w and -h\n";
 			std::cout << "--help				summon a sentient, angry tuba\n\n";

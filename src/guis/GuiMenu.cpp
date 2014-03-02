@@ -5,6 +5,8 @@
 #include "../Sound.h"
 #include "../Log.h"
 #include "GuiMsgBoxYesNo.h"
+#include <initializer_list>
+#include "../Settings.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "Main Menu")
 {
@@ -14,41 +16,57 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "Main Men
 		unsigned int color;
 		bool add_arrow;
 		std::function<void()> func;
+
+		MenuEntry(const char* n, unsigned int c, bool a, std::function<void()> f) : name(n), color(c), add_arrow(a), func(f) {};
 	};
 
-	MenuEntry entries[] = {
-		{ "GENERAL SETTINGS", 0x777777FF, true, 
+	std::vector<MenuEntry> entries;
+
+	entries.push_back(
+		MenuEntry("GENERAL SETTINGS", 0x777777FF, true, 
 			[this] { mWindow->pushGui(new GuiSettingsMenu(mWindow)); }
-		},
-		{ "SCRAPE NOW", 0x777777FF, true, 
+		)
+	);
+	entries.push_back(
+		MenuEntry("SCRAPE NOW", 0x777777FF, true, 
 			[this] { mWindow->pushGui(new GuiScraperStart(mWindow)); }
-		},
-		{ "RESTART SYSTEM", 0x990000FF, false, 
+		)
+	);
+
+	
+	entries.push_back(
+		MenuEntry("RESTART SYSTEM", 0x990000FF, false, 
 			[this] {
 				mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "Do you really want to restart the system?",
 					[] { 
 						if(system("sudo shutdown -r now") != 0)
 							LOG(LogWarning) << "Restart terminated with non-zero result!";
 					}));
-			}
-		}, 
-		{ "SHUTDOWN SYSTEM", 0x990000FF, false, 
+			})
+	);
+
+	entries.push_back(
+		MenuEntry("SHUTDOWN SYSTEM", 0x990000FF, false, 
 			[this] {
 				mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "Do you really want to shutdown the system?",
 					[] { 
 						if(system("sudo shutdown -h now") != 0)
 							LOG(LogWarning) << "Shutdown terminated with non-zero result!";
 					}));
-			}
-		},
-		{ "EXIT EMULATIONSTATION", 0x990000FF, false,
-			[] {
-				SDL_Event ev;
-				ev.type = SDL_QUIT;
-				SDL_PushEvent(&ev);
-			}
-		}
-	};
+			})
+	);
+
+	if(!Settings::getInstance()->getBool("DONTSHOWEXIT"))
+	{
+		entries.push_back(
+			MenuEntry("EXIT EMULATIONSTATION", 0x990000FF, false,
+				[] {
+					SDL_Event ev;
+					ev.type = SDL_QUIT;
+					SDL_PushEvent(&ev);
+				})
+		);
+	}
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, (mSize.y() - mMenu.getSize().y()) / 2);
@@ -58,7 +76,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "Main Men
 	// populate the list
 	ComponentListRow row;
 
-	for(int i = 0; i < (sizeof(entries) / sizeof(entries[0])); i++)
+	for(unsigned int i = 0; i < entries.size(); i++)
 	{
 		row.elements.clear();
 		row.addElement(std::make_shared<TextComponent>(mWindow, entries[i].name, font, entries[i].color), true);

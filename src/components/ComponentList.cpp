@@ -5,6 +5,7 @@
 ComponentList::ComponentList(Window* window) : IList<ComponentListRow, void*>(window, LIST_SCROLL_STYLE_SLOW, LIST_NEVER_LOOP)
 {
 	mSelectorBarOffset = 0;
+	mCameraOffset = 0;
 }
 
 void ComponentList::addRow(const ComponentListRow& row)
@@ -67,22 +68,30 @@ void ComponentList::onCursorChanged(const CursorState& state)
 	{
 		mSelectorBarOffset += getRowHeight(mEntries.at(i).data);
 	}
+
+	mCameraOffset = mSelectorBarOffset - (mSize.y() / 2);
+
+	if(mCameraOffset < 0)
+		mCameraOffset = 0;
+	else if(mCameraOffset + mSize.y() > getTotalRowHeight())
+		mCameraOffset = getTotalRowHeight() - mSize.y();
 }
 
 void ComponentList::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-
-	// clip our entries inside our bounds
+	
+	// clip everything to be inside our bounds
 	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
 	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), 
 		(int)trans.translation().y()), Eigen::Vector2i((int)dim.x(), (int)dim.y()));
 
+	// scroll the camera
+	trans.translate(Eigen::Vector3f(0, -mCameraOffset, 0));
+
 	// draw our entries
 	renderChildren(trans);
-
-	Renderer::popClipRect();
 
 	// draw selector bar
 	Renderer::setMatrix(trans);
@@ -105,9 +114,11 @@ void ComponentList::render(const Eigen::Affine3f& parentTrans)
 		y += getRowHeight(mEntries.at(i).data);
 	}
 	Renderer::drawRect(0, (int)y, (int)mSize.x(), 1, 0xC6C7C688);
+
+	Renderer::popClipRect();
 }
 
-float ComponentList::getRowHeight(const ComponentListRow& row)
+float ComponentList::getRowHeight(const ComponentListRow& row) const
 {
 	// returns the highest component height found in the row
 	float height = 0;
@@ -115,6 +126,17 @@ float ComponentList::getRowHeight(const ComponentListRow& row)
 	{
 		if(row.elements.at(i).component->getSize().y() > height)
 			height = row.elements.at(i).component->getSize().y();
+	}
+
+	return height;
+}
+
+float ComponentList::getTotalRowHeight() const
+{
+	float height = 0;
+	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+	{
+		height += getRowHeight(it->data);
 	}
 
 	return height;

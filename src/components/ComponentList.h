@@ -42,7 +42,9 @@ private:
 	void updateElementPosition(const ComponentListRow& row);
 	void updateElementSize(const ComponentListRow& row);
 
-	float getRowHeight(const ComponentListRow& row);
+	float getRowHeight(const ComponentListRow& row) const;
+	float getTotalRowHeight() const;
 
 	float mSelectorBarOffset;
+	float mCameraOffset;
 };

@@ -5,6 +5,7 @@ MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(w
 {
 	mBackground.setImagePath(":/frame.png");
 
+	mTitle.setFont(Font::get(FONT_SIZE_LARGE));
 	mTitle.setText(title);
 	mTitle.setCentered(true);
 
