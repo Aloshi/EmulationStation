@@ -31,6 +31,8 @@ void ComponentList::onSizeChanged()
 		updateElementSize(it->data);
 		updateElementPosition(it->data);
 	}
+
+	onCursorChanged(mScrollVelocity != 0 ? CURSOR_SCROLLING : CURSOR_STOPPED);
 }
 
 bool ComponentList::input(InputConfig* config, Input input)
@@ -39,8 +41,19 @@ bool ComponentList::input(InputConfig* config, Input input)
 		return false;
 
 	// give it to the current row's input handler
-	if(mEntries.at(mCursor).data.input_handler && mEntries.at(mCursor).data.input_handler(config, input))
-		return true;
+	if(mEntries.at(mCursor).data.input_handler)
+	{
+		if(mEntries.at(mCursor).data.input_handler(config, input))
+			return true;
+	}else{
+		// no input handler assigned, do the default, which is to give it to the rightmost element in the row
+		auto& row = mEntries.at(mCursor).data;
+		if(row.elements.size())
+		{
+			if(row.elements.back().component->input(config, input))
+				return true;
+		}
+	}
 
 	// input handler didn't consume the input - try to scroll
 	if(config->isMappedTo("up", input))
@@ -57,6 +70,13 @@ bool ComponentList::input(InputConfig* config, Input input)
 void ComponentList::update(int deltaTime)
 {
 	listUpdate(deltaTime);
+
+	if(size())
+	{
+		// update our currently selected row
+		for(auto it = mEntries.at(mCursor).data.elements.begin(); it != mEntries.at(mCursor).data.elements.end(); it++)
+			it->component->update(deltaTime);
+	}
 }
 
 void ComponentList::onCursorChanged(const CursorState& state)
@@ -69,12 +89,17 @@ void ComponentList::onCursorChanged(const CursorState& state)
 		mSelectorBarOffset += getRowHeight(mEntries.at(i).data);
 	}
 
-	mCameraOffset = mSelectorBarOffset - (mSize.y() / 2);
+	// move the camera to scroll
+	const float totalHeight = getTotalRowHeight();
+	if(totalHeight > mSize.y())
+	{
+		mCameraOffset = mSelectorBarOffset - (mSize.y() / 2);
 
-	if(mCameraOffset < 0)
-		mCameraOffset = 0;
-	else if(mCameraOffset + mSize.y() > getTotalRowHeight())
-		mCameraOffset = getTotalRowHeight() - mSize.y();
+		if(mCameraOffset < 0)
+			mCameraOffset = 0;
+		else if(mCameraOffset + mSize.y() > totalHeight)
+			mCameraOffset = totalHeight - mSize.y();
+	}
 }
 
 void ComponentList::render(const Eigen::Affine3f& parentTrans)
