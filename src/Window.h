@@ -8,6 +8,7 @@
 
 class ViewController;
 class HelpComponent;
+class ImageComponent;
 
 class Window
 {
@@ -42,6 +43,8 @@ private:
 	InputManager* mInputManager;
 	ViewController* mViewController;
 	HelpComponent* mHelp;
+	ImageComponent* mBackgroundOverlay;
+
 	std::vector<GuiComponent*> mGuiStack;
 
 	std::vector< std::shared_ptr<Font> > mDefaultFonts;

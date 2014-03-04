@@ -1,6 +1,6 @@
 #include "ComponentList.h"
 
-#define TOTAL_HORIZONTAL_PADDING_PX 12
+#define TOTAL_HORIZONTAL_PADDING_PX 20
 
 ComponentList::ComponentList(Window* window) : IList<ComponentListRow, void*>(window, LIST_SCROLL_STYLE_SLOW, LIST_NEVER_LOOP)
 {
@@ -126,19 +126,24 @@ void ComponentList::render(const Eigen::Affine3f& parentTrans)
 	// and 0xFFFFFF -> 0x777777
 	// (1 - dst) + 0x77
 	
-	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)getRowHeight(mEntries.at(mCursor).data), 0xFFFFFFFF,
+	const float selectedRowHeight = getRowHeight(mEntries.at(mCursor).data);
+	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)selectedRowHeight, 0xFFFFFFFF,
 		GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)getRowHeight(mEntries.at(mCursor).data), 0x777777FF,
+	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)selectedRowHeight, 0x777777FF,
 		GL_ONE, GL_ONE);
 	
+	// hack to draw 2px dark on left/right of the bar
+	Renderer::drawRect(0, (int)mSelectorBarOffset, 2, (int)selectedRowHeight, 0x878787FF);
+	Renderer::drawRect((int)mSize.x() - 2, (int)mSelectorBarOffset, 2, (int)selectedRowHeight, 0x878787FF);
+
 	// draw separators
 	float y = 0;
 	for(unsigned int i = 0; i < mEntries.size(); i++)
 	{
-		Renderer::drawRect(0, (int)y, (int)mSize.x(), 1, 0xC6C7C688);
+		Renderer::drawRect(0, (int)y, (int)mSize.x(), 1, 0xC6C7C6FF);
 		y += getRowHeight(mEntries.at(i).data);
 	}
-	Renderer::drawRect(0, (int)y, (int)mSize.x(), 1, 0xC6C7C688);
+	Renderer::drawRect(0, (int)y, (int)mSize.x(), 1, 0xC6C7C6FF);
 
 	Renderer::popClipRect();
 }

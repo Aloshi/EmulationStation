@@ -7,7 +7,7 @@
 #include "../scrapers/GamesDBScraper.h"
 
 GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
-	mMenu(mWindow, "Settings")
+	mMenu(mWindow, "SETTINGS")
 {
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 

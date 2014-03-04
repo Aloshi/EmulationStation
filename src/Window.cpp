@@ -8,6 +8,7 @@
 #include <iomanip>
 #include "views/ViewController.h"
 #include "components/HelpComponent.h"
+#include "components/ImageComponent.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true)
@@ -15,12 +16,17 @@ Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCoun
 	mInputManager = new InputManager(this);
 	mViewController = new ViewController(this);
 	mHelp = new HelpComponent(this);
+
+	mBackgroundOverlay = new ImageComponent(this);
+	mBackgroundOverlay->setImage(":/scroll_gradient.png");
+
 	pushGui(mViewController);
 }
 
 Window::~Window()
 {
 	delete mViewController; // this would get deleted down below, but just to be safe, delete it here
+	delete mBackgroundOverlay;
 
 	//delete all our GUIs
 	while(peekGui())
@@ -79,6 +85,8 @@ bool Window::init(unsigned int width, unsigned int height)
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_MEDIUM));
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_LARGE));
 	}
+
+	mBackgroundOverlay->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// update our help because font sizes probably changed
 	if(peekGui())
@@ -145,9 +153,14 @@ void Window::update(int deltaTime)
 void Window::render()
 {
 	Eigen::Affine3f transform = Eigen::Affine3f::Identity();
+
+	const unsigned int drawBGAfter = mGuiStack.size() > 1 ? mGuiStack.size() - 2 : mGuiStack.size();
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
 		mGuiStack.at(i)->render(transform);
+
+		if(i == drawBGAfter)
+			mBackgroundOverlay->render(transform);
 	}
 
 	mHelp->render(transform);

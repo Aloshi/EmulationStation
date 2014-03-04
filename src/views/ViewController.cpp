@@ -210,7 +210,7 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 	// fade out
 	if(mFadeOpacity)
 	{
-		Renderer::setMatrix(Eigen::Affine3f::Identity());
+		Renderer::setMatrix(parentTrans);
 		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | (unsigned char)(mFadeOpacity * 255));
 	}
 }

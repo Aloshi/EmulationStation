@@ -8,7 +8,7 @@
 #include <initializer_list>
 #include "../Settings.h"
 
-GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "Main Menu")
+GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU")
 {
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, (mSize.y() - mMenu.getSize().y()) / 2);
@@ -58,15 +58,22 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "Main Men
 
 void GuiMenu::addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func)
 {
-	std::shared_ptr<Font> font = Font::get(FONT_SIZE_LARGE);
+	std::shared_ptr<Font> font = Font::get(FONT_SIZE_MEDIUM);
 	
 	// populate the list
 	ComponentListRow row;
 	row.addElement(std::make_shared<TextComponent>(mWindow, name, font, color), true);
 
 	if(add_arrow)
-		row.addElement(std::make_shared<TextComponent>(mWindow, ">", font, color), false);
+	{
+		std::shared_ptr<ImageComponent> bracket = std::make_shared<ImageComponent>(mWindow);
+		bracket->setImage(":/sq_bracket.png");
+		if(bracket->getTextureSize().y() > font->getHeight())
+			bracket->setResize(0, (float)font->getHeight());
 
+		row.addElement(bracket, false);
+	}
+	
 	row.makeAcceptInputHandler(func);
 
 	mMenu.addRow(row);
