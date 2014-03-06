@@ -45,7 +45,7 @@ class ComponentList : public IList<ComponentListRow, void*>
 public:
 	ComponentList(Window* window);
 
-	void addRow(const ComponentListRow& row);
+	void addRow(const ComponentListRow& row, bool setCursorHere = false);
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;

@@ -5,8 +5,17 @@
 #include <string>
 #include <map>
 
+extern const size_t arrow_png_size;
+extern const unsigned char arrow_png_data[];
+
 extern const size_t button_png_size;
 extern const unsigned char button_png_data[];
+
+extern const size_t checkbox_checked_png_size;
+extern const unsigned char checkbox_checked_png_data[];
+
+extern const size_t checkbox_unchecked_png_size;
+extern const unsigned char checkbox_unchecked_png_data[];
 
 extern const size_t ES_logo_16_png_size;
 extern const unsigned char ES_logo_16_png_data[];

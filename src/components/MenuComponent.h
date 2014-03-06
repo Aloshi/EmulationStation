@@ -11,7 +11,7 @@ public:
 
 	void onSizeChanged() override;
 
-	inline void addRow(const ComponentListRow& row) { mList.addRow(row); }
+	inline void addRow(const ComponentListRow& row, bool setCursorHere = false) { mList.addRow(row, setCursorHere); }
 
 private:
 	NinePatchComponent mBackground;

@@ -308,6 +308,9 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_left_right_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/sq_bracket_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/arrow_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_checked_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_unchecked_png.cpp
 )
 
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)

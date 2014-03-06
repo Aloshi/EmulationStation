@@ -8,7 +8,7 @@ ComponentList::ComponentList(Window* window) : IList<ComponentListRow, void*>(wi
 	mCameraOffset = 0;
 }
 
-void ComponentList::addRow(const ComponentListRow& row)
+void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere)
 {
 	IList<ComponentListRow, void*>::Entry e;
 	e.name = "";
@@ -22,6 +22,12 @@ void ComponentList::addRow(const ComponentListRow& row)
 
 	updateElementSize(mEntries.back().data);
 	updateElementPosition(mEntries.back().data);
+
+	if(setCursorHere)
+	{
+		mCursor = mEntries.size() - 1;
+		onCursorChanged(CURSOR_STOPPED);
+	}
 }
 
 void ComponentList::onSizeChanged()
