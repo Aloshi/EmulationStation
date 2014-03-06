@@ -23,20 +23,18 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	using namespace Eigen;
 
 	//add filters (with first one selected)
-	mFiltersOpt.addEntry(mFiltersOpt.makeEntry("All Games", 
-		[](SystemData*, FileData*) -> bool { return true; }, true));
-	mFiltersOpt.addEntry(mFiltersOpt.makeEntry("Missing Image", 
-		[](SystemData*, FileData* g) -> bool { return g->metadata.get("image").empty(); }));
+	mFiltersOpt.add("All Games", 
+		[](SystemData*, FileData*) -> bool { return true; }, true);
+	mFiltersOpt.add("Missing Image", 
+		[](SystemData*, FileData* g) -> bool { return g->metadata.get("image").empty(); }, false);
 
 	mList.setEntry(Vector2i(0, 0), Vector2i(1, 1), &mFilterLabel, false, ComponentGrid::AlignRight);
 	mList.setEntry(Vector2i(1, 0), Vector2i(1, 1), &mFiltersOpt, true, ComponentGrid::AlignLeft);
 
 	//add systems (all with a platformid specified selected)
 	std::vector<SystemData*> sys = SystemData::sSystemVector;
-	mSystemsOpt.populate(sys, 
-		[&](SystemData* s) { 
-			return mSystemsOpt.makeEntry(s->getName(), s, s->getPlatformId() != PlatformIds::PLATFORM_UNKNOWN); 
-	});
+	for(auto it = sys.begin(); it != sys.end(); it++)
+		mSystemsOpt.add((*it)->getFullName(), *it, (*it)->getPlatformId() != PlatformIds::PLATFORM_UNKNOWN);
 
 	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mSystemsLabel, false, ComponentGrid::AlignRight);
 	mList.setEntry(Vector2i(1, 1), Vector2i(1, 1), &mSystemsOpt, true, ComponentGrid::AlignLeft);

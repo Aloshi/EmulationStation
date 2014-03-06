@@ -104,6 +104,9 @@ void ComponentList::onCursorChanged(const CursorState& state)
 
 void ComponentList::render(const Eigen::Affine3f& parentTrans)
 {
+	if(!size())
+		return;
+
 	Eigen::Affine3f trans = parentTrans * getTransform();
 	
 	// clip everything to be inside our bounds

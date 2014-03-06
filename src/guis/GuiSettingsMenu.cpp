@@ -41,13 +41,13 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	std::vector< std::shared_ptr<Scraper> > scrapers;
 	scrapers.push_back(std::make_shared<GamesDBScraper>());
 	scrapers.push_back(std::make_shared<TheArchiveScraper>());
-	scraper_list->populate(scrapers, [&] (const std::shared_ptr<Scraper>& sc) {
-		return scraper_list->makeEntry(sc->getName(), sc, sc->getName() == Settings::getInstance()->getScraper()->getName());
-	});
+
+	for(auto it = scrapers.begin(); it != scrapers.end(); it++)
+		scraper_list->add((*it)->getName(), *it, (*it)->getName() == Settings::getInstance()->getScraper()->getName());
+
 	addSetting("Scraper:", scraper_list,
 		[scraper_list] { 
-			if(scraper_list->getSelected().size() > 0) 
-				Settings::getInstance()->setScraper(scraper_list->getSelected()[0]->object);
+			Settings::getInstance()->setScraper(scraper_list->getSelected());
 	});
 
 	// scrape ratings
