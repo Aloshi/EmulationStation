@@ -81,7 +81,7 @@ It is recommended that if you are writing a theme you launch EmulationStation wi
 
 ### The `<include>` tag
 
-You can include theme files within theme files, similar to `#include` in C (though the mechanism is different, the effect is the same).  Example:
+You can include theme files within theme files, similar to `#include` in C (though the internal mechanism is different, the effect is the same).  Example:
 
 `~/.emulationstation/all_themes.xml`:
 ```xml
@@ -126,14 +126,14 @@ Notice that properties that were not specified got merged (`<fontPath>`) and the
 
 
 
-### The "common" view
+### Theming multiple views simultaneously
 
-Sometimes you want to apply the same values to the same element across many views.  The "common" view is one way to do this.
+Sometimes you want to apply the same properties to the same elements across multiple views.  The `name` attribute actually works as a list (delimited by any characters of `\t\r\n ,` - that is, whitespace and commas).  So, for example, to easily apply the same header to the basic, grid, and system views:
 
 ```xml
 <theme>
 	<version>3</version>
-	<view name="common">
+	<view name="basic, grid, system">
 		<image name="header">
 			<path>./snes_art/snes_header.png</path>
 		</image>
@@ -146,7 +146,7 @@ Sometimes you want to apply the same values to the same element across many view
 </theme>
 ```
 
-Is equivalent to:
+This is equivalent to:
 ```xml
 <theme>
 	<version>3</version>
@@ -174,15 +174,11 @@ Is equivalent to:
 </theme>
 ```
 
-Notice that you can still override the "common" view in a specific view definition (as shown in the "detailed" view).
-
-You probably should not use the "common" view for element positioning.  You also should not use it to create "extra" elements.
 
 
+### Theming multiple elements simultaneously
 
-### Theming more than one elements at once
-
-You can theme multiple elements *of the same type* simultaneously.  The `name` attribute actually works as a list (delimited by any characters of `\t\n ,` - that is, whitespace and commas).  This is useful if you want to, say, apply the same color to all the metadata labels:
+You can theme multiple elements *of the same type* simultaneously.  The `name` attribute actually works as a list (delimited by any characters of `\t\r\n ,` - that is, whitespace and commas), just like it does for views, as long as the elements have the same type.  This is useful if you want to, say, apply the same color to all the metadata labels:
 
 ```xml
 <theme>
@@ -197,7 +193,7 @@ You can theme multiple elements *of the same type* simultaneously.  The `name` a
 </theme>
 ```
 
-Is equivalent to:
+Which is equivalent to:
 ```xml
 <theme>
     <version>3</version>

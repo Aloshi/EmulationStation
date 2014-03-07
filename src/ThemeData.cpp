@@ -201,22 +201,26 @@ void ThemeData::parseViews(const pugi::xml_node& root)
 	ThemeException error;
 	error.setFiles(mPaths);
 
-	pugi::xml_node common = root.find_child_by_attribute("view", "name", "common");
-
 	// parse views
 	for(pugi::xml_node node = root.child("view"); node; node = node.next_sibling("view"))
 	{
 		if(!node.attribute("name"))
 			throw error << "View missing \"name\" attribute!";
 
-		const char* viewKey = node.attribute("name").as_string();
-		ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
-
-		// load common first
-		if(common && node != common)
-			parseView(common, view);
-
-		parseView(node, view);
+		const char* delim = " \t\r\n,";
+		const std::string nameAttr = node.attribute("name").as_string();
+		size_t prevOff = nameAttr.find_first_not_of(delim, 0);
+		size_t off = nameAttr.find_first_of(delim, prevOff);
+		std::string viewKey;
+		while(off != std::string::npos || prevOff != std::string::npos)
+		{
+			viewKey = nameAttr.substr(prevOff, off - prevOff);
+			prevOff = nameAttr.find_first_not_of(delim, off);
+			off = nameAttr.find_first_of(delim, prevOff);
+			
+			ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
+			parseView(node, view);
+		}
 	}
 }
 
@@ -234,7 +238,7 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 		if(elemTypeIt == sElementMap.end())
 			throw error << "Unknown element of type \"" << node.name() << "\"!";
 
-		const char* delim = " \t\n,";
+		const char* delim = " \t\r\n,";
 		const std::string nameAttr = node.attribute("name").as_string();
 		size_t prevOff = nameAttr.find_first_not_of(delim, 0);
 		size_t off =  nameAttr.find_first_of(delim, prevOff);
@@ -324,12 +328,7 @@ const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, co
 {
 	auto viewIt = mViews.find(view);
 	if(viewIt == mViews.end())
-	{
-		// also check common if the view never existed to begin with
-		viewIt = mViews.find("common");
-		if(viewIt == mViews.end())
-			return NULL;
-	}
+		return NULL; // not found
 
 	auto elemIt = viewIt->second.elements.find(element);
 	if(elemIt == viewIt->second.elements.end()) return NULL;
