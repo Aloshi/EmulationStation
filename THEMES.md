@@ -64,11 +64,11 @@ Or, you can create your own elements by adding `extra="true"` (as is done in the
 	</elementTypeHere>
 ```
 
-"Extra" elements will be drawn in the order they are defined.  When they get drawn relative to the pre-existing elements depends on the view.  Make sure "extra" element names do not clash with existing names.
+"Extra" elements will be drawn in the order they are defined (so define backgrounds first!).  When they get drawn relative to the pre-existing elements depends on the view.  Make sure "extra" element names do not clash with existing element names!  An easy way to protect against this is to just start all your extra element names with some prefix like "e_".
 
 
 
-*Properties* control how a particular *element* looks - for example, its position, size, image path, etc.  There different types of properties that determine what kinds of values you can use - you can read about them below in the "Reference" section.  Properties are defined like this:
+*Properties* control how a particular *element* looks - for example, its position, size, image path, etc.  The type of the property determines what kinds of values you can use.  You can read about the types below in the "Reference" section.  Properties are defined like this:
 
 ```xml
 		<propertyNameHere>ValueHere</propertyNameHere>
