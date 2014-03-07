@@ -3,6 +3,9 @@ Themes
 
 EmulationStation allows each system to have its own "theme." A theme is a collection **views** that define some **elements**, each with their own **properties**.
 
+Themes are loaded from two places.  If it is not in the first, it will try the next:
+* `[SYSTEM_PATH]/theme.xml`
+* `[HOME]/.emulationstation/[SYSTEM_NAME]/theme.xml` (where `[HOME]` is the `$HOME` environment variable on Linux and `%HOMEPATH%` on Windows)
 
 Simple Example
 ==============
@@ -333,7 +336,7 @@ Reference
 ## Types of properties:
 
 * NORMALIZED_PAIR - two decimals, in the range [0..1], delimited by a space.  For example, `0.25 0.5`.  Most commonly used for position (x and y coordinates) and size (width and height).
-* PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` or `%HOMEPATH%`, depending on platform).  If the first character is a `.`, it will be expanded to the theme file's directory.
+* PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` for Linux or `%HOMEPATH%` for Windows).  If the first character is a `.`, it will be expanded to the theme file's directory, allowing you to specify resources relative to the theme file, like so: `./../general_art/myfont.ttf`.
 * BOOLEAN - `true`/`1` or `false`/`0`.
 * COLOR - a hexidecimal RGB or RGBA color (6 or 8 digits).  If 6 digits, will assume the alpha channel is `FF` (not transparent).
 * FLOAT - a decimal.
