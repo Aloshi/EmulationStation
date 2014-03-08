@@ -32,11 +32,11 @@ void SystemView::populate()
 		e.object = *it;
 
 		// make logo
-		if(theme->getElement("system", "header", "image"))
+		if(theme->getElement("system", "logo", "image"))
 		{
 			ImageComponent* logo = new ImageComponent(mWindow);
 			logo->setMaxSize(logoSize());
-			logo->applyTheme((*it)->getTheme(), "system", "header", ThemeFlags::PATH);
+			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
 			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // vertically and horizontally center
 			e.data.logo = std::shared_ptr<GuiComponent>(logo);
 		}else{

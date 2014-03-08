@@ -7,7 +7,7 @@
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
 {
-	mHeaderText.setText("Header");
+	mHeaderText.setText("Logo Text");
 	mHeaderText.setSize(mSize.x(), 0);
 	mHeaderText.setPosition(0, 0);
 	mHeaderText.setCentered(true);
@@ -27,8 +27,8 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 {
 	using namespace ThemeFlags;
 	mBackground.applyTheme(theme, getName(), "background", ALL);
-	mHeaderImage.applyTheme(theme, getName(), "header", ALL);
-	mHeaderText.applyTheme(theme, getName(), "headerText", ALL);
+	mHeaderImage.applyTheme(theme, getName(), "logo", ALL);
+	mHeaderText.applyTheme(theme, getName(), "logoText", ALL);
 	mThemeExtras.setExtras(ThemeData::makeExtras(theme, getName(), mWindow));
 
 	if(mHeaderImage.hasImage())

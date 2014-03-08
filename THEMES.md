@@ -240,9 +240,9 @@ Reference
 #### basic
 * `image name="background"` - ALL
 	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
-* `text name="headerText"` - ALL
-	- A header text, which displays the name of the system.  Displayed at the top center of the screen.  Centered by default.
-* `image name="header"` - ALL
+* `text name="logoText"` - ALL
+	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
+* `image name="logo"` - ALL
 	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `textlist name="gamelist"` - ALL
 	- The gamelist.  `primaryColor` is for games, `secondaryColor` is for folders.  Centered by default.
@@ -252,9 +252,9 @@ Reference
 #### detailed
 * `image name="background"` - ALL
 	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
-* `text name="headerText"` - ALL
-	- A header text, which displays the name of the system.  Displayed at the top center of the screen.  Centered by default.
-* `image name="header"` - ALL
+* `text name="logoText"` - ALL
+	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
+* `image name="logo"` - ALL
 	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `textlist name="gamelist"` - ALL
 	- The gamelist.  `primaryColor` is for games, `secondaryColor` is for folders.  Left aligned by default.
@@ -299,16 +299,16 @@ Reference
 #### grid
 * `image name="background"` - ALL
 	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
-* `text name="headerText"` - ALL
-	- A header text, which displays the name of the system.  Displayed at the top center of the screen.  Centered by default.
-* `image name="header"` - ALL
+* `text name="logoText"` - ALL
+	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
+* `image name="logo"` - ALL
 	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
 
 ---
 
 #### system
-* `image name="header"` - PATH
-	- A header (logo) image, to be displayed in the system logo carousel.
+* `image name="logo"` - PATH
+	- A logo image, to be displayed in the system logo carousel.
 * You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.
 ---
 
