@@ -137,12 +137,12 @@ Sometimes you want to apply the same properties to the same elements across mult
 <theme>
 	<version>3</version>
 	<view name="basic, grid, system">
-		<image name="header">
+		<image name="logo">
 			<path>./snes_art/snes_header.png</path>
 		</image>
 	</view>
 	<view name="detailed">
-		<image name="header">
+		<image name="logo">
 			<path>./snes_art/snes_header_detailed.png</path>
 		</image>
 	</view>
@@ -154,26 +154,26 @@ This is equivalent to:
 <theme>
 	<version>3</version>
 	<view name="basic">
-		<image name="header">
+		<image name="logo">
 			<path>./snes_art/snes_header.png</path>
 		</image>
 	</view>
 	<view name="detailed">
-		<image name="header">
+		<image name="logo">
 			<path>./snes_art/snes_header_detailed.png</path>
 		</image>
 	</view>
 	<view name="grid">
-		<image name="header">
+		<image name="logo">
 			<path>./snes_art/snes_header.png</path>
 		</image>
 	</view>
 	<view name="system">
-		<image name="header">
+		<image name="logo">
 			<path>./snes_art/snes_header.png</path>
 		</image>
 	</view>
-	... and any other view that might try to look up "header" ...
+	... and any other view that might try to look up "logo" ...
 </theme>
 ```
 
