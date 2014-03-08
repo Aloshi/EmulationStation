@@ -29,7 +29,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mHeader.setText(header);
 
 	//initialize buttons
-	mDeleteButton.setText("DELETE", "delete file", mDeleteFunc ? 0xFF0000FF : 0x555555FF);
+	mDeleteButton.setText("DELETE", "delete file");
 	if(mDeleteFunc)
 	{
 		std::function<void()> deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
@@ -37,10 +37,10 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 		mDeleteButton.setPressedFunc(pressedFunc);
 	}
 
-	mFetchButton.setText("FETCH", "download metadata", 0x00FF00FF);
+	mFetchButton.setText("FETCH", "download metadata");
 	mFetchButton.setPressedFunc(std::bind(&GuiMetaDataEd::fetch, this));
 
-	mSaveButton.setText("SAVE", "save", 0x0000FFFF);
+	mSaveButton.setText("SAVE", "save");
 	mSaveButton.setPressedFunc([&] { save(); delete this; });
 
 	//initialize metadata list

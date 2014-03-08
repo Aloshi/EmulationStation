@@ -42,14 +42,13 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mManualLabel, false, ComponentGrid::AlignRight);
 	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mManualSwitch, true, ComponentGrid::AlignLeft);
 
-	mStartButton.setText("GO GO GO GO", "begin", 0x00FF00FF);
+	mStartButton.setText("GO GO GO GO", "begin");
 	mStartButton.setPressedFunc(std::bind(&GuiScraperStart::pressedStart, this));
 	mList.setEntry(Vector2i(0, 3), Vector2i(2, 1), &mStartButton, true, ComponentGrid::AlignCenter);
 
 	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
 
-	mBox.setEdgeColor(0x333333FF);
-	mBox.fitTo(mList.getSize(), mList.getPosition(), Eigen::Vector2f(8, 8));
+	mBox.fitTo(mList.getSize(), mList.getPosition(), Eigen::Vector2f(-32, -32));
 }
 
 void GuiScraperStart::pressedStart()

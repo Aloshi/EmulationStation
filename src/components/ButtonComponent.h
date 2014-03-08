@@ -15,7 +15,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
-	void setText(const std::string& text, const std::string& helpText, unsigned int focusedTextColor, unsigned int unfocusedTextColor = 0x555555FF);
+	void setText(const std::string& text, const std::string& helpText);
 
 	void onSizeChanged() override;
 	void onFocusGained() override;
@@ -30,8 +30,7 @@ private:
 	bool mFocused;
 	unsigned int mTextColorFocused;
 	unsigned int mTextColorUnfocused;
-	int mTextPulseTime;
-
+	
 	unsigned int getCurTextColor() const;
 
 	std::string mText;

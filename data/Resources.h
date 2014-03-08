@@ -11,6 +11,9 @@ extern const unsigned char arrow_png_data[];
 extern const size_t button_png_size;
 extern const unsigned char button_png_data[];
 
+extern const size_t button_filled_png_size;
+extern const unsigned char button_filled_png_data[];
+
 extern const size_t checkbox_checked_png_size;
 extern const unsigned char checkbox_checked_png_data[];
 

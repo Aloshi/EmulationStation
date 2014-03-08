@@ -6,6 +6,7 @@
 
 GuiMsgBoxOk::GuiMsgBoxOk(Window* window, const std::string& text, std::function<void()> callback) : GuiComponent(window),
 	mCallback(callback),
+	mBackground(window), 
 	mText(window),
 	mOkText(window)
 {

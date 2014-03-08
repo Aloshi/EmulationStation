@@ -5,14 +5,14 @@
 ButtonComponent::ButtonComponent(Window* window) : GuiComponent(window),
 	mBox(window, ":/button.png"),
 	mFocused(false), 
-	mTextColorFocused(0x000000FF), mTextColorUnfocused(0x333333FF), mTextPulseTime(0)
+	mTextColorFocused(0xFFFFFFFF), mTextColorUnfocused(0x777777FF)
 {
 	setSize(64, 48);
 }
 
 void ButtonComponent::onSizeChanged()
 {
-	mBox.setSize(mSize);
+	mBox.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
 }
 
 void ButtonComponent::setPressedFunc(std::function<void()> f)
@@ -32,13 +32,11 @@ bool ButtonComponent::input(InputConfig* config, Input input)
 	return GuiComponent::input(config, input);
 }
 
-void ButtonComponent::setText(const std::string& text, const std::string& helpText, unsigned int focusedColor, unsigned int unfocusedColor)
+void ButtonComponent::setText(const std::string& text, const std::string& helpText)
 {
 	mText = text;
 	mHelpText = helpText;
-	mTextColorFocused = focusedColor;
-	mTextColorUnfocused = unfocusedColor;
-
+	
 	std::shared_ptr<Font> f = getFont();
 	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(mText, 0, 0, getCurTextColor()));
 
@@ -50,11 +48,13 @@ void ButtonComponent::setText(const std::string& text, const std::string& helpTe
 void ButtonComponent::onFocusGained()
 {
 	mFocused = true;
+	mBox.setImagePath(":/button_filled.png");
 }
 
 void ButtonComponent::onFocusLost()
 {
 	mFocused = false;
+	mBox.setImagePath(":/button.png");
 }
 
 void ButtonComponent::render(const Eigen::Affine3f& parentTrans)

@@ -2,6 +2,7 @@
 
 #include "../GuiComponent.h"
 #include "../components/TextComponent.h"
+#include "../components/NinePatchComponent.h"
 #include <functional>
 
 //A simple popup message box with callbacks for when the user dismisses it.
@@ -16,6 +17,8 @@ public:
 
 private:
 	std::function<void()> mCallback;
+
+	NinePatchComponent mBackground;
 
 	TextComponent mText;
 	TextComponent mOkText;
