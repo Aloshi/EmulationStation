@@ -2,7 +2,7 @@
 
 #include "Resources.h"
 
-const size_t res2hNrOfFiles = 20;
+const size_t res2hNrOfFiles = 21;
 const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/arrow.png", arrow_png_size, arrow_png_data},
     {":/button.png", button_png_size, button_png_data},
@@ -13,6 +13,7 @@ const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/frame.png", frame_png_size, frame_png_data},
     {":/opensans_hebrew_condensed_regular.ttf", opensans_hebrew_condensed_regular_ttf_size, opensans_hebrew_condensed_regular_ttf_data},
     {":/scroll_gradient.png", scroll_gradient_png_size, scroll_gradient_png_data},
+    {":/slider_knob.png", slider_knob_png_size, slider_knob_png_data},
     {":/sq_bracket.png", sq_bracket_png_size, sq_bracket_png_data},
     {":/star_filled.png", star_filled_png_size, star_filled_png_data},
     {":/star_unfilled.png", star_unfilled_png_size, star_unfilled_png_data},
@@ -36,17 +37,18 @@ res2hMapType::value_type mapTemp[] = {
     std::make_pair(":/frame.png", res2hFiles[6]),
     std::make_pair(":/opensans_hebrew_condensed_regular.ttf", res2hFiles[7]),
     std::make_pair(":/scroll_gradient.png", res2hFiles[8]),
-    std::make_pair(":/sq_bracket.png", res2hFiles[9]),
-    std::make_pair(":/star_filled.png", res2hFiles[10]),
-    std::make_pair(":/star_unfilled.png", res2hFiles[11]),
-    std::make_pair(":/textbox.png", res2hFiles[12]),
-    std::make_pair(":/textbox_glow.png", res2hFiles[13]),
-    std::make_pair(":/help/a.png", res2hFiles[14]),
-    std::make_pair(":/help/b.png", res2hFiles[15]),
-    std::make_pair(":/help/dpad.png", res2hFiles[16]),
-    std::make_pair(":/help/left_right.png", res2hFiles[17]),
-    std::make_pair(":/help/menu.png", res2hFiles[18]),
-    std::make_pair(":/help/up_down.png", res2hFiles[19])
+    std::make_pair(":/slider_knob.png", res2hFiles[9]),
+    std::make_pair(":/sq_bracket.png", res2hFiles[10]),
+    std::make_pair(":/star_filled.png", res2hFiles[11]),
+    std::make_pair(":/star_unfilled.png", res2hFiles[12]),
+    std::make_pair(":/textbox.png", res2hFiles[13]),
+    std::make_pair(":/textbox_glow.png", res2hFiles[14]),
+    std::make_pair(":/help/a.png", res2hFiles[15]),
+    std::make_pair(":/help/b.png", res2hFiles[16]),
+    std::make_pair(":/help/dpad.png", res2hFiles[17]),
+    std::make_pair(":/help/left_right.png", res2hFiles[18]),
+    std::make_pair(":/help/menu.png", res2hFiles[19]),
+    std::make_pair(":/help/up_down.png", res2hFiles[20])
 };
 
 res2hMapType res2hMap(mapTemp, mapTemp + sizeof mapTemp / sizeof mapTemp[0]);

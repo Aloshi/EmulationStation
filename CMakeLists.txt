@@ -311,6 +311,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/arrow_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_checked_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_unchecked_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/slider_knob_png.cpp
 )
 
 SOURCE_GROUP(resources FILES ResourceUtil.cpp)

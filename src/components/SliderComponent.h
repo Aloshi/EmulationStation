@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../GuiComponent.h"
+#include "ImageComponent.h"
 
 class TextCache;
 class Font;
@@ -31,6 +32,8 @@ private:
 	float mIncrement;
 	float mMoveScale;
 	int mRepeatWaitTimer;
+
+	ImageComponent mKnob;
 
 	std::string mSuffix;
 	std::shared_ptr<Font> mFont;

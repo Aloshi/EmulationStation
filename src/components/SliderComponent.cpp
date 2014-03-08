@@ -5,7 +5,7 @@
 #include "../Log.h"
 
 SliderComponent::SliderComponent(Window* window, float min, float max, float increment, const std::string& suffix) : GuiComponent(window),
-	mMin(min), mMax(max), mIncrement(increment), mMoveRate(0), mRepeatWaitTimer(0), mSuffix(suffix)
+	mMin(min), mMax(max), mIncrement(increment), mMoveRate(0), mRepeatWaitTimer(0), mKnob(window), mSuffix(suffix)
 {
 	assert((min - max) != 0);
 
@@ -14,6 +14,9 @@ SliderComponent::SliderComponent(Window* window, float min, float max, float inc
 	//calculate move scale
 	mMoveScale = ((max - min) * 0.0007f) / increment;
 
+	mKnob.setOrigin(0.5f, 0.5f);
+	mKnob.setImage(":/slider_knob.png");
+	
 	setSize(196, 32);
 }
 
@@ -74,26 +77,18 @@ void SliderComponent::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Affine3f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
 
-	float width = mSize.x() - (mValueCache ? mValueCache->metrics.size.x() + 4 : 0);
+	// render suffix
+	if(mValueCache)
+		mFont->renderTextCache(mValueCache.get());
+
+	float width = mSize.x() - mKnob.getSize().x() - (mValueCache ? mValueCache->metrics.size.x() + 4 : 0);
 
 	//render line
 	const int lineWidth = 2;
-	Renderer::drawRect(0, (int)mSize.y() / 2 - lineWidth / 2, (int)width, lineWidth, 0x000000CC);
+	Renderer::drawRect((int)mKnob.getSize().x() / 2, (int)mSize.y() / 2 - lineWidth / 2, (int)width, lineWidth, 0x777777FF);
 
-	//render left end
-	const int capWidth = (int)(mSize.x() * 0.03f);
-	Renderer::drawRect(0, 0, capWidth, (int)mSize.y(), 0x000000CC);
-
-	//render right end
-	Renderer::drawRect((int)width - capWidth, 0, capWidth, (int)mSize.y(), 0x000000CC);
-
-	//render our value
-	const int lineLength = (int)width - capWidth;
-	Renderer::drawRect((int)(((mValue + mMin) / mMax) * lineLength), 0, capWidth, (int)mSize.y(), 0x0000FFFF);
-
-	// suffix
-	if(mValueCache)
-		mFont->renderTextCache(mValueCache.get());
+	//render knob
+	mKnob.render(trans);
 	
 	GuiComponent::renderChildren(trans);
 }
@@ -112,14 +107,14 @@ float SliderComponent::getValue()
 void SliderComponent::onSizeChanged()
 {
 	if(!mSuffix.empty())
-	{
 		mFont = Font::get((int)(mSize.y() * 0.7f));
-		onValueChanged();
-	}
+	
+	onValueChanged();
 }
 
 void SliderComponent::onValueChanged()
 {
+	// update suffix textcache
 	if(mFont)
 	{
 		std::stringstream ss;
@@ -138,9 +133,18 @@ void SliderComponent::onValueChanged()
 		const std::string max = ss.str();
 
 		float w = mFont->sizeText(max).x();
-		mValueCache = std::shared_ptr<TextCache>(mFont->buildTextCache(val, mSize.x() - w, 0, 0x000000FF));
+		mValueCache = std::shared_ptr<TextCache>(mFont->buildTextCache(val, mSize.x() - w, 0, 0x777777FF));
 		mValueCache->metrics.size[0] = w; // fudge the width
 	}
+
+	// update knob position/size
+	if(mKnob.getTextureSize().y() > mSize.y()) // only downscale
+		mKnob.setResize(0, mSize.y());
+	else
+		mKnob.setResize(0, 0);
+
+	float lineLength = mSize.x() - mKnob.getSize().x() - (mValueCache ? mValueCache->metrics.size.x() + 4 : 0);
+	mKnob.setPosition(((mValue + mMin) / mMax) * lineLength + mKnob.getSize().x()/2, mSize.y() / 2);
 }
 
 std::vector<HelpPrompt> SliderComponent::getHelpPrompts()
