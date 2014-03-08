@@ -25,7 +25,7 @@ void HelpComponent::clearPrompts()
 
 void HelpComponent::addPrompt(const char* icon, const char* text)
 {
-	if(Settings::getInstance()->getBool("DISABLEHELP"))
+	if(!Settings::getInstance()->getBool("ShowHelpPrompts"))
 		return;
 
 	Prompt p;

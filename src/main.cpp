@@ -36,27 +36,23 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			i++; //skip the argument value
 		}else if(strcmp(argv[i], "--gamelist-only") == 0)
 		{
-			Settings::getInstance()->setBool("PARSEGAMELISTONLY", true);
+			Settings::getInstance()->setBool("ParseGamelistOnly", true);
 		}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
 		{
-			Settings::getInstance()->setBool("IGNOREGAMELIST", true);
+			Settings::getInstance()->setBool("IgnoreGamelist", true);
 		}else if(strcmp(argv[i], "--draw-framerate") == 0)
 		{
-			Settings::getInstance()->setBool("DRAWFRAMERATE", true);
+			Settings::getInstance()->setBool("DrawFramerate", true);
 		}else if(strcmp(argv[i], "--no-exit") == 0)
 		{
-			Settings::getInstance()->setBool("DONTSHOWEXIT", true);
+			Settings::getInstance()->setBool("ShowExit", false);
 		}else if(strcmp(argv[i], "--debug") == 0)
 		{
-			Settings::getInstance()->setBool("DEBUG", true);
+			Settings::getInstance()->setBool("Debug", true);
 			Log::setReportingLevel(LogDebug);
-		}else if(strcmp(argv[i], "--dimtime") == 0)
-		{
-			Settings::getInstance()->setInt("DIMTIME", atoi(argv[i + 1]) * 1000);
-			i++; //skip the argument value
 		}else if(strcmp(argv[i], "--windowed") == 0)
 		{
-			Settings::getInstance()->setBool("WINDOWED", true);
+			Settings::getInstance()->setBool("Windowed", true);
 		}else if(strcmp(argv[i], "--scrape") == 0)
 		{
 			scrape_cmdline = true;
@@ -71,7 +67,6 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			std::cout << "--draw-framerate		display the framerate\n";
 			std::cout << "--no-exit			don't show the exit option in the menu\n";
 			std::cout << "--debug				even more logging\n";
-			std::cout << "--dimtime [seconds]		time to wait before dimming the screen (default 120, use 0 for never)\n";
 			std::cout << "--scrape			scrape using command line interface\n";
 			std::cout << "--windowed			not fullscreen, should be used in conjunction with -w and -h\n";
 			std::cout << "--help				summon a sentient, angry tuba\n\n";
@@ -233,7 +228,7 @@ int main(int argc, char* argv[])
 		//sleeping entails setting a flag to start skipping frames
 		//and initially drawing a black semi-transparent rect to dim the screen
 		timeSinceLastEvent += deltaTime;
-		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("DIMTIME") && Settings::getInstance()->getInt("DIMTIME") != 0 && window.getAllowSleep())
+		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("DimTime") && Settings::getInstance()->getInt("DimTime") != 0 && window.getAllowSleep())
 		{
 			sleeping = true;
 			timeSinceLastEvent = 0;

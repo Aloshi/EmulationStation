@@ -26,23 +26,20 @@ void Settings::setDefaults()
 	mBoolMap.clear();
 	mIntMap.clear();
 
-	mBoolMap["PARSEGAMELISTONLY"] = false;
-	mBoolMap["IGNOREGAMELIST"] = false;
-	mBoolMap["DRAWFRAMERATE"] = false;
-	mBoolMap["DONTSHOWEXIT"] = false;
-	mBoolMap["DEBUG"] = false;
-	mBoolMap["WINDOWED"] = false;
-	mBoolMap["DISABLESOUNDS"] = false;
-	mBoolMap["DISABLEHELP"] = false;
-	mBoolMap["DisableGamelistWrites"] = false;
+	mBoolMap["ParseGamelistOnly"] = false;
+	mBoolMap["DrawFramerate"] = false;
+	mBoolMap["ShowExit"] = true;
+	mBoolMap["Debug"] = false;
+	mBoolMap["Windowed"] = false;
+	mBoolMap["EnableSounds"] = true;
+	mBoolMap["ShowHelpPrompts"] = true;
 	mBoolMap["ScrapeRatings"] = true;
 
-	mIntMap["DIMTIME"] = 120*1000;
+	mIntMap["DimTime"] = 120*1000;
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
 
 	mIntMap["GameListSortIndex"] = 0;
-
 
 	mScraper = std::shared_ptr<Scraper>(new GamesDBScraper());
 }

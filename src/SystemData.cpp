@@ -38,10 +38,10 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mRootFolder = new FileData(FOLDER, mStartPath, this);
 	mRootFolder->metadata.set("name", mFullName);
 
-	if(!Settings::getInstance()->getBool("PARSEGAMELISTONLY"))
+	if(!Settings::getInstance()->getBool("ParseGamelistOnly"))
 		populateFolder(mRootFolder);
 
-	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
+	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
 		parseGamelist(this);
 
 	mRootFolder->sort(FileSorts::SortTypes.at(0));
@@ -52,7 +52,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 SystemData::~SystemData()
 {
 	//save changed game data back to xml
-	if(!Settings::getInstance()->getBool("IGNOREGAMELIST"))
+	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
 	{
 		updateGamelist(this);
 	}

@@ -29,7 +29,7 @@ bool IGameListView::input(InputConfig* config, Input input)
 		return true;
 
 	// Ctrl-R to reload a view when debugging
-	}else if(Settings::getInstance()->getBool("DEBUG") && config->getDeviceId() == DEVICE_KEYBOARD && 
+	}else if(Settings::getInstance()->getBool("Debug") && config->getDeviceId() == DEVICE_KEYBOARD && 
 		(SDL_GetModState() & (KMOD_LCTRL | KMOD_RCTRL)) && input.id == SDLK_r && input.value != 0)
 	{
 		LOG(LogDebug) << "reloading view";

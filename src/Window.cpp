@@ -134,7 +134,7 @@ void Window::update(int deltaTime)
 	{
 		mAverageDeltaTime = mFrameTimeElapsed / mFrameCountElapsed;
 		
-		if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
+		if(Settings::getInstance()->getBool("DrawFramerate"))
 		{
 			std::stringstream ss;
 			ss << std::fixed << std::setprecision(1) << (1000.0f * (float)mFrameCountElapsed / (float)mFrameTimeElapsed) << "fps, ";
@@ -165,7 +165,7 @@ void Window::render()
 
 	mHelp->render(transform);
 
-	if(Settings::getInstance()->getBool("DRAWFRAMERATE"))
+	if(Settings::getInstance()->getBool("DrawFramerate"))
 	{
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
 		mDefaultFonts.at(1)->drawText(mFrameDataString, Eigen::Vector2f(50, 50), 0xFF00FFFF);

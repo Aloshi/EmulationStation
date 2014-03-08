@@ -42,7 +42,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		}
 	);
 
-	if(!Settings::getInstance()->getBool("DONTSHOWEXIT"))
+	if(Settings::getInstance()->getBool("ShowExit"))
 	{
 		addEntry("EXIT EMULATIONSTATION", 0x990000FF, false,
 			[] {

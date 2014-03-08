@@ -20,9 +20,9 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 
 	// framerate
 	auto framerate = std::make_shared<SwitchComponent>(mWindow);
-	framerate->setState(s->getBool("DRAWFRAMERATE"));
+	framerate->setState(s->getBool("DrawFramerate"));
 	addSetting("Draw framerate:", framerate, 
-		[framerate] { Settings::getInstance()->setBool("DRAWFRAMERATE", framerate->getState()); });
+		[framerate] { Settings::getInstance()->setBool("DrawFramerate", framerate->getState()); });
 
 	// volume
 	auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
@@ -32,9 +32,9 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 
 	// disable sounds
 	auto sound_disable = std::make_shared<SwitchComponent>(mWindow);
-	sound_disable->setState(s->getBool("DISABLESOUNDS"));
-	addSetting("Disable sound:", sound_disable, 
-		[sound_disable] { Settings::getInstance()->setBool("DISABLESOUNDS", sound_disable->getState()); });
+	sound_disable->setState(s->getBool("EnableSounds"));
+	addSetting("Enable sounds:", sound_disable, 
+		[sound_disable] { Settings::getInstance()->setBool("EnableSounds", sound_disable->getState()); });
 
 	// scraper
 	auto scraper_list = std::make_shared< OptionListComponent< std::shared_ptr<Scraper> > >(mWindow, false);
@@ -53,20 +53,20 @@ GuiSettingsMenu::GuiSettingsMenu(Window* window) : GuiComponent(window),
 	// scrape ratings
 	auto scrape_ratings = std::make_shared<SwitchComponent>(mWindow);
 	scrape_ratings->setState(s->getBool("ScrapeRatings"));
-	addSetting("Scrape ratings?", scrape_ratings,
+	addSetting("Scrape ratings:", scrape_ratings,
 		[scrape_ratings] { Settings::getInstance()->setBool("ScrapeRatings", scrape_ratings->getState()); });
 
 	// dim time
 	auto dim_time = std::make_shared<SliderComponent>(mWindow, 0.f, 1200.f, 30.f, "s");
-	dim_time->setValue((float)(s->getInt("DIMTIME") / 1000));
+	dim_time->setValue((float)(s->getInt("DimTime") / 1000));
 	addSetting("Dim screen after:", dim_time,
-		[dim_time] { Settings::getInstance()->setInt("DIMTIME", (int)(dim_time->getValue() * 1000)); });
+		[dim_time] { Settings::getInstance()->setInt("DimTime", (int)(dim_time->getValue() * 1000)); });
 
 	// disable help
 	auto disable_help = std::make_shared<SwitchComponent>(mWindow);
-	disable_help->setState(s->getBool("DISABLEHELP"));
-	addSetting("Disable help:", disable_help,
-		[disable_help] { Settings::getInstance()->setBool("DISABLEHELP", disable_help->getState()); });
+	disable_help->setState(s->getBool("ShowHelpPrompts"));
+	addSetting("Show help:", disable_help,
+		[disable_help] { Settings::getInstance()->setBool("ShowHelpPrompts", disable_help->getState()); });
 
 	// save button
 	ComponentListRow row;
