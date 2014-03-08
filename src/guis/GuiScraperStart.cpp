@@ -2,58 +2,45 @@
 #include "GuiScraperLog.h"
 #include "GuiMsgBoxYesNo.h"
 
+#include "../components/TextComponent.h"
+#include "../components/OptionListComponent.h"
+#include "../components/SwitchComponent.h"
+
 GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
-	mBox(window, ":/frame.png"),
-	mList(window, Eigen::Vector2i(2, 4)),
-	mFilterLabel(mWindow),
-	mSystemsLabel(mWindow),
-	mManualLabel(mWindow),
-	mFiltersOpt(mWindow),
-	mSystemsOpt(mWindow, true),
-	mManualSwitch(mWindow),
-	mStartButton(mWindow)
+	mMenu(window, "SCRAPE NOW")
 {
-	mFilterLabel.setText("Filter: ");
-	mSystemsLabel.setText("Systems: ");
-	mManualLabel.setText("Manual mode: ");
+	addChild(&mMenu);
 
-	addChild(&mBox);
-	addChild(&mList);
-
-	using namespace Eigen;
-
-	//add filters (with first one selected)
-	mFiltersOpt.add("All Games", 
+	// add filters (with first one selected)
+	mFilters = std::make_shared< OptionListComponent<GameFilterFunc> >(mWindow, false);
+	mFilters->add("All Games", 
 		[](SystemData*, FileData*) -> bool { return true; }, true);
-	mFiltersOpt.add("Missing Image", 
+	mFilters->add("Only missing image", 
 		[](SystemData*, FileData* g) -> bool { return g->metadata.get("image").empty(); }, false);
-
-	mList.setEntry(Vector2i(0, 0), Vector2i(1, 1), &mFilterLabel, false, ComponentGrid::AlignRight);
-	mList.setEntry(Vector2i(1, 0), Vector2i(1, 1), &mFiltersOpt, true, ComponentGrid::AlignLeft);
+	mMenu.addWithLabel("Filter", mFilters);
 
 	//add systems (all with a platformid specified selected)
-	std::vector<SystemData*> sys = SystemData::sSystemVector;
-	for(auto it = sys.begin(); it != sys.end(); it++)
-		mSystemsOpt.add((*it)->getFullName(), *it, (*it)->getPlatformId() != PlatformIds::PLATFORM_UNKNOWN);
+	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, true);
+	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+		mSystems->add((*it)->getFullName(), *it, (*it)->getPlatformId() != PlatformIds::PLATFORM_UNKNOWN);
+	mMenu.addWithLabel("Systems", mSystems);
 
-	mList.setEntry(Vector2i(0, 1), Vector2i(1, 1), &mSystemsLabel, false, ComponentGrid::AlignRight);
-	mList.setEntry(Vector2i(1, 1), Vector2i(1, 1), &mSystemsOpt, true, ComponentGrid::AlignLeft);
+	mAutoStyle = std::make_shared< OptionListComponent<int> >(mWindow, false);
+	mAutoStyle->add("Never automatically accept result", 0, true);
+	mAutoStyle->add("Always accept first result", 1, false);
+	mMenu.addWithLabel("Auto style", mAutoStyle);
 
-	mList.setEntry(Vector2i(0, 2), Vector2i(1, 1), &mManualLabel, false, ComponentGrid::AlignRight);
-	mList.setEntry(Vector2i(1, 2), Vector2i(1, 1), &mManualSwitch, true, ComponentGrid::AlignLeft);
+	ComponentListRow row;
+	row.addElement(std::make_shared<TextComponent>(mWindow, "GO GO GO", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.makeAcceptInputHandler(std::bind(&GuiScraperStart::pressedStart, this));
+	mMenu.addRow(row);
 
-	mStartButton.setText("GO GO GO GO", "begin");
-	mStartButton.setPressedFunc(std::bind(&GuiScraperStart::pressedStart, this));
-	mList.setEntry(Vector2i(0, 3), Vector2i(2, 1), &mStartButton, true, ComponentGrid::AlignCenter);
-
-	mList.setPosition(Renderer::getScreenWidth() / 2 - mList.getSize().x() / 2, Renderer::getScreenHeight() / 2 - mList.getSize().y() / 2);
-
-	mBox.fitTo(mList.getSize(), mList.getPosition(), Eigen::Vector2f(-32, -32));
+	mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, (Renderer::getScreenHeight() - mMenu.getSize().y()) / 2);
 }
 
 void GuiScraperStart::pressedStart()
 {
-	std::vector<SystemData*> sys = mSystemsOpt.getSelectedObjects();
+	std::vector<SystemData*> sys = mSystems->getSelectedObjects();
 	for(auto it = sys.begin(); it != sys.end(); it++)
 	{
 		if((*it)->getPlatformId() == PlatformIds::PLATFORM_UNKNOWN)
@@ -69,9 +56,9 @@ void GuiScraperStart::pressedStart()
 
 void GuiScraperStart::start()
 {
-	std::queue<ScraperSearchParams> searches = getSearches(mSystemsOpt.getSelectedObjects(), mFiltersOpt.getSelectedObjects()[0]);
+	std::queue<ScraperSearchParams> searches = getSearches(mSystems->getSelectedObjects(), mFilters->getSelected());
 
-	GuiScraperLog* gsl = new GuiScraperLog(mWindow, searches, mManualSwitch.getState());
+	GuiScraperLog* gsl = new GuiScraperLog(mWindow, searches, mAutoStyle->getSelected() == 0);
 	mWindow->pushGui(gsl);
 	gsl->start();
 	delete this;
@@ -116,7 +103,7 @@ bool GuiScraperStart::input(InputConfig* config, Input input)
 
 std::vector<HelpPrompt> GuiScraperStart::getHelpPrompts()
 {
-	std::vector<HelpPrompt> prompts = mList.getHelpPrompts();
+	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
 	prompts.push_back(HelpPrompt("b", "cancel"));
 	return prompts;
 }

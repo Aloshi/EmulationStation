@@ -2,15 +2,16 @@
 
 #include "../GuiComponent.h"
 #include "../SystemData.h"
-#include "../components/TextComponent.h"
-#include "../components/ComponentGrid.h"
-#include "../components/OptionListComponent.h"
-#include "../components/SwitchComponent.h"
-#include "../components/ButtonComponent.h"
 #include "../scrapers/Scraper.h"
+#include "../components/MenuComponent.h"
 #include <queue>
 
 typedef std::function<bool(SystemData*, FileData*)> GameFilterFunc;
+
+template<typename T>
+class OptionListComponent;
+
+class SwitchComponent;
 
 //The starting point for a multi-game scrape.
 //Allows the user to set various parameters (to set filters, to set which systems to scrape, to enable manual mode).
@@ -29,16 +30,9 @@ private:
 	void start();
 	std::queue<ScraperSearchParams> getSearches(std::vector<SystemData*> systems, GameFilterFunc selector);
 
-	NinePatchComponent mBox;
-	ComponentGrid mList;
+	std::shared_ptr< OptionListComponent<GameFilterFunc> > mFilters;
+	std::shared_ptr< OptionListComponent<SystemData*> > mSystems;
+	std::shared_ptr< OptionListComponent<int> > mAutoStyle;
 
-	TextComponent mFilterLabel;
-	TextComponent mSystemsLabel;
-	TextComponent mManualLabel;
-
-	OptionListComponent<GameFilterFunc> mFiltersOpt;
-	OptionListComponent<SystemData*> mSystemsOpt;
-	SwitchComponent mManualSwitch;
-
-	ButtonComponent mStartButton;
+	MenuComponent mMenu;
 };
