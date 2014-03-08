@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../GuiComponent.h"
+#include "ImageComponent.h"
 
 // A very simple "on/off" switch.
 // Should hopefully be switched to use images instead of text in the future.
@@ -12,11 +13,14 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
-	bool getState();
+	bool getState() const;
 	void setState(bool state);
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
+	void onStateChanged();
+
+	ImageComponent mImage;
 	bool mState;
 };

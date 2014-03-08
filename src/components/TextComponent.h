@@ -15,9 +15,9 @@ class TextComponent : public GuiComponent
 {
 public:
 	TextComponent(Window* window);
-	TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, unsigned int color = 0x000000FF, Eigen::Vector3f pos = Eigen::Vector3f::Zero(), Eigen::Vector2f size = Eigen::Vector2f::Zero());
+	TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color = 0x000000FF, Eigen::Vector3f pos = Eigen::Vector3f::Zero(), Eigen::Vector2f size = Eigen::Vector2f::Zero());
 
-	void setFont(std::shared_ptr<Font> font);
+	void setFont(const std::shared_ptr<Font>& font);
 	void onSizeChanged() override;
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
@@ -31,7 +31,7 @@ public:
 	unsigned char getOpacity() const override;
 	void setOpacity(unsigned char opacity) override;
 	
-	std::shared_ptr<Font> getFont() const;
+	inline std::shared_ptr<Font> getFont() const { return mFont; }
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 

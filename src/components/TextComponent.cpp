@@ -5,16 +5,16 @@
 #include "../ThemeData.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
-	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
+	mFont(Font::get(FONT_SIZE_MEDIUM)), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
 {
 }
 
-TextComponent::TextComponent(Window* window, const std::string& text, std::shared_ptr<Font> font, unsigned int color, Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
+TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
 	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
 {
+	setFont(font);
 	setColor(color);
 	setText(text);
-	setFont(font);
 	setPosition(pos);
 	setSize(size);
 }
@@ -25,7 +25,7 @@ void TextComponent::onSizeChanged()
 	onTextChanged();
 }
 
-void TextComponent::setFont(std::shared_ptr<Font> font)
+void TextComponent::setFont(const std::shared_ptr<Font>& font)
 {
 	mFont = font;
 	onTextChanged();
@@ -65,21 +65,11 @@ void TextComponent::setCentered(bool center)
 	mCentered = center;
 }
 
-std::shared_ptr<Font> TextComponent::getFont() const
-{
-	if(mFont)
-		return mFont;
-	else
-		return Font::get(FONT_SIZE_MEDIUM);
-}
-
 void TextComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	std::shared_ptr<Font> font = getFont();
-
 	Eigen::Affine3f trans = parentTrans * getTransform();
 
-	if(font && !mText.empty())
+	if(mTextCache)
 	{
 		if(mCentered)
 		{
@@ -93,7 +83,7 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 			Renderer::setMatrix(trans);
 		}
 
-		font->renderTextCache(mTextCache.get());
+		mFont->renderTextCache(mTextCache.get());
 	}
 
 	GuiComponent::renderChildren(trans);
@@ -101,15 +91,13 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 
 void TextComponent::calculateExtent()
 {
-	std::shared_ptr<Font> font = getFont();
-
 	if(mAutoCalcExtent.x())
 	{
-		mSize = font->sizeText(mText);
+		mSize = mFont->sizeText(mText);
 	}else{
 		if(mAutoCalcExtent.y())
 		{
-			mSize[1] = font->sizeWrappedText(mText, getSize().x()).y();
+			mSize[1] = mFont->sizeWrappedText(mText, getSize().x()).y();
 		}
 	}
 }

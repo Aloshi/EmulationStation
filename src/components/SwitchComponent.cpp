@@ -3,12 +3,15 @@
 #include "../resources/Font.h"
 #include "../Window.h"
 
-SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(window), mState(state)
+SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(window), mImage(window), mState(state)
 {
-	//mSize = Vector2u((unsigned int)(Renderer::getScreenWidth() * 0.05), 
-	//	(unsigned int)(Renderer::getScreenHeight() * 0.05));
+	mImage.setImage(":/checkbox_unchecked.png");
 
-	mSize = Font::get(FONT_SIZE_MEDIUM)->sizeText("OFF");
+	float height = (float)FONT_SIZE_MEDIUM;
+	if(mImage.getTextureSize().y() > height)
+		mImage.setResize(0, height);
+
+	mSize = mImage.getSize();
 }
 
 bool SwitchComponent::input(InputConfig* config, Input input)
@@ -16,6 +19,7 @@ bool SwitchComponent::input(InputConfig* config, Input input)
 	if(config->isMappedTo("a", input) && input.value)
 	{
 		mState = !mState;
+		onStateChanged();
 		return true;
 	}
 
@@ -24,19 +28,14 @@ bool SwitchComponent::input(InputConfig* config, Input input)
 
 void SwitchComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	//Renderer::pushClipRect(getGlobalOffset(), getSize());
-
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::setMatrix(trans);
+	
+	mImage.render(trans);
 
-	Font::get(FONT_SIZE_MEDIUM)->drawText(mState ? "ON" : "OFF", Eigen::Vector2f(0, 0), mState ? 0x00FF00FF : 0xFF0000FF);
-
-	//Renderer::popClipRect();
-
-	GuiComponent::renderChildren(trans);
+	renderChildren(trans);
 }
 
-bool SwitchComponent::getState()
+bool SwitchComponent::getState() const
 {
 	return mState;
 }
@@ -44,6 +43,12 @@ bool SwitchComponent::getState()
 void SwitchComponent::setState(bool state)
 {
 	mState = state;
+	onStateChanged();
+}
+
+void SwitchComponent::onStateChanged()
+{
+	mImage.setImage(mState ? ":/checkbox_checked.png" : ":/checkbox_unchecked.png");
 }
 
 std::vector<HelpPrompt> SwitchComponent::getHelpPrompts()
