@@ -52,11 +52,17 @@ public:
 	void render(const Eigen::Affine3f& parentTrans) override;
 
 	void onSizeChanged() override;
+	void onFocusGained() override;
+	void onFocusLost() override;
+
+	inline int getCursorId() const { return mCursor; }
 
 protected:
 	void onCursorChanged(const CursorState& state) override;
 
 private:
+	bool mFocused;
+
 	void updateElementPosition(const ComponentListRow& row);
 	void updateElementSize(const ComponentListRow& row);
 

@@ -9,8 +9,9 @@ TextComponent::TextComponent(Window* window) : GuiComponent(window),
 {
 }
 
-TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
-	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
+TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, bool center,
+	Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
+	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(center)
 {
 	setFont(font);
 	setColor(color);
@@ -69,6 +70,10 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
 
+	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
+	dim = trans * dim - trans.translation();
+	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)dim.x(), (int)dim.y()));
+
 	if(mTextCache)
 	{
 		if(mCentered)
@@ -85,6 +90,8 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 
 		mFont->renderTextCache(mTextCache.get());
 	}
+
+	Renderer::popClipRect();
 
 	GuiComponent::renderChildren(trans);
 }

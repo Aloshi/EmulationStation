@@ -1,9 +1,10 @@
 #include "GamesDBScraper.h"
-#include "../guis/GuiGameScraper.h"
+#include "../components/ScraperSearchComponent.h"
 #include "../components/AsyncReqComponent.h"
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
 #include "../MetaData.h"
+#include "../Settings.h"
 #include <boost/assign.hpp>
 
 const char* GamesDBScraper::getName() { return "TheGamesDB"; }

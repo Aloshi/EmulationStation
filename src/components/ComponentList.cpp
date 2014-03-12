@@ -6,6 +6,7 @@ ComponentList::ComponentList(Window* window) : IList<ComponentListRow, void*>(wi
 {
 	mSelectorBarOffset = 0;
 	mCameraOffset = 0;
+	mFocused = false;
 }
 
 void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere)
@@ -39,6 +40,16 @@ void ComponentList::onSizeChanged()
 	}
 
 	onCursorChanged(mScrollVelocity != 0 ? CURSOR_SCROLLING : CURSOR_STOPPED);
+}
+
+void ComponentList::onFocusLost()
+{
+	mFocused = false;
+}
+
+void ComponentList::onFocusGained()
+{
+	mFocused = true;
 }
 
 bool ComponentList::input(InputConfig* config, Input input)
@@ -127,23 +138,27 @@ void ComponentList::render(const Eigen::Affine3f& parentTrans)
 	// draw our entries
 	renderChildren(trans);
 
-	// draw selector bar
+	// custom rendering
 	Renderer::setMatrix(trans);
 
-	// inversion: src * (1 - dst) + dst * 0 = where src = 1
-	// need a function that goes roughly 0x777777 -> 0xFFFFFF
-	// and 0xFFFFFF -> 0x777777
-	// (1 - dst) + 0x77
+	// draw selector bar
+	if(mFocused)
+	{
+		// inversion: src * (1 - dst) + dst * 0 = where src = 1
+		// need a function that goes roughly 0x777777 -> 0xFFFFFF
+		// and 0xFFFFFF -> 0x777777
+		// (1 - dst) + 0x77
 	
-	const float selectedRowHeight = getRowHeight(mEntries.at(mCursor).data);
-	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)selectedRowHeight, 0xFFFFFFFF,
-		GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-	Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)selectedRowHeight, 0x777777FF,
-		GL_ONE, GL_ONE);
+		const float selectedRowHeight = getRowHeight(mEntries.at(mCursor).data);
+		Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)selectedRowHeight, 0xFFFFFFFF,
+			GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+		Renderer::drawRect(0, (int)mSelectorBarOffset, (int)mSize.x(), (int)selectedRowHeight, 0x777777FF,
+			GL_ONE, GL_ONE);
 	
-	// hack to draw 2px dark on left/right of the bar
-	Renderer::drawRect(0, (int)mSelectorBarOffset, 2, (int)selectedRowHeight, 0x878787FF);
-	Renderer::drawRect((int)mSize.x() - 2, (int)mSelectorBarOffset, 2, (int)selectedRowHeight, 0x878787FF);
+		// hack to draw 2px dark on left/right of the bar
+		Renderer::drawRect(0, (int)mSelectorBarOffset, 2, (int)selectedRowHeight, 0x878787FF);
+		Renderer::drawRect((int)mSize.x() - 2, (int)mSelectorBarOffset, 2, (int)selectedRowHeight, 0x878787FF);
+	}
 
 	// draw separators
 	float y = 0;

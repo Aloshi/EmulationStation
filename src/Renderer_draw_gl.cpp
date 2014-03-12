@@ -39,13 +39,30 @@ namespace Renderer {
 		if(box[3] == 0)
 			box[3] = Renderer::getScreenHeight() - box.y();
 
-		//TODO - make sure the box fits within clipStack.top(), and clip further accordingly!
-
 		//glScissor starts at the bottom left of the window
 		//so (0, 0, 1, 1) is the bottom left pixel
 		//everything else uses y+ = down, so flip it to be consistent
 		//rect.pos.y = Renderer::getScreenHeight() - rect.pos.y - rect.size.y;
 		box[1] = Renderer::getScreenHeight() - box.y() - box[3];
+
+		//make sure the box fits within clipStack.top(), and clip further accordingly
+		if(clipStack.size())
+		{
+			Eigen::Vector4i& top = clipStack.top();
+			if(top[0] > box[0])
+				box[0] = top[0];
+			if(top[1] > box[1])
+				box[1] = top[1];
+			if(top[0] + top[2] < box[0] + box[2])
+				box[2] = (top[0] + top[2]) - box[0];
+			if(top[1] + top[3] < box[1] + box[3])
+				box[3] = (top[1] + top[3]) - box[1];
+		}
+
+		if(box[2] < 0)
+			box[2] = 0;
+		if(box[3] < 0)
+			box[3] = 0;
 
 		clipStack.push(box);
 		glScissor(box[0], box[1], box[2], box[3]);

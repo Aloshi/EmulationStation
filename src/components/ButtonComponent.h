@@ -8,9 +8,11 @@
 class ButtonComponent : public GuiComponent
 {
 public:
-	ButtonComponent(Window* window);
+	ButtonComponent(Window* window, const std::string& text = "", const std::string& helpText = "", const std::function<void()>& func = nullptr);
 
 	void setPressedFunc(std::function<void()> f);
+
+	void setEnabled(bool enable);
 
 	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
@@ -28,10 +30,12 @@ private:
 	std::function<void()> mPressedFunc;
 
 	bool mFocused;
+	bool mEnabled;
 	unsigned int mTextColorFocused;
 	unsigned int mTextColorUnfocused;
 	
 	unsigned int getCurTextColor() const;
+	void updateImage();
 
 	std::string mText;
 	std::string mHelpText;

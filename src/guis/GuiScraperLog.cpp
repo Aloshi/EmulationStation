@@ -61,7 +61,6 @@ void GuiScraperLog::next()
 			[this, search] { resultEmpty(search); });
 
 		mWindow->pushGui(ggs);
-		ggs->search();
 	}else{
 		std::shared_ptr<Scraper> scraper = Settings::getInstance()->getScraper();
 		scraper->getResultsAsync(search, mWindow, [this, search] (std::vector<MetaDataList> mdls) { 

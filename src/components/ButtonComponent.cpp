@@ -2,12 +2,14 @@
 #include "../Renderer.h"
 #include "../Window.h"
 
-ButtonComponent::ButtonComponent(Window* window) : GuiComponent(window),
+ButtonComponent::ButtonComponent(Window* window, const std::string& text, const std::string& helpText, const std::function<void()>& func) : GuiComponent(window),
 	mBox(window, ":/button.png"),
 	mFocused(false), 
+	mEnabled(true), 
 	mTextColorFocused(0xFFFFFFFF), mTextColorUnfocused(0x777777FF)
 {
-	setSize(64, 48);
+	setPressedFunc(func);
+	setText(text, helpText);
 }
 
 void ButtonComponent::onSizeChanged()
@@ -24,7 +26,7 @@ bool ButtonComponent::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
-		if(mPressedFunc)
+		if(mPressedFunc && mEnabled)
 			mPressedFunc();
 		return true;
 	}
@@ -48,13 +50,34 @@ void ButtonComponent::setText(const std::string& text, const std::string& helpTe
 void ButtonComponent::onFocusGained()
 {
 	mFocused = true;
-	mBox.setImagePath(":/button_filled.png");
+	updateImage();
 }
 
 void ButtonComponent::onFocusLost()
 {
 	mFocused = false;
-	mBox.setImagePath(":/button.png");
+	updateImage();
+}
+
+void ButtonComponent::setEnabled(bool enabled)
+{
+	mEnabled = enabled;
+	updateImage();
+}
+
+void ButtonComponent::updateImage()
+{
+	if(!mEnabled || !mPressedFunc)
+	{
+		mBox.setImagePath(":/button.png");
+		mBox.setCenterColor(0x770000FF);
+		mBox.setEdgeColor(0x770000FF);
+		return;
+	}
+
+	mBox.setCenterColor(0xFFFFFFFF);
+	mBox.setEdgeColor(0xFFFFFFFF);
+	mBox.setImagePath(mFocused ? ":/button_filled.png" : ":/button.png");
 }
 
 void ButtonComponent::render(const Eigen::Affine3f& parentTrans)

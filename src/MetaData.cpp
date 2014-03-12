@@ -133,51 +133,33 @@ boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
 	return string_to_ptime(get(key), "%Y%m%dT%H%M%S%F%q");
 }
 
-GuiComponent* MetaDataList::makeDisplay(Window* window, MetaDataType as)
+std::shared_ptr<GuiComponent> MetaDataList::makeEditor(Window* window, MetaDataType as)
 {
 	switch(as)
 	{
 	case MD_RATING:
 		{
-			RatingComponent* comp = new RatingComponent(window);
-			return comp;
-		}
-	default:
-		TextComponent* comp = new TextComponent(window);
-		return comp;
-	}
-}
-
-GuiComponent* MetaDataList::makeEditor(Window* window, MetaDataType as)
-{
-	switch(as)
-	{
-	case MD_RATING:
-		{
-			RatingComponent* comp = new RatingComponent(window);
-			return comp;
+			return std::make_shared<RatingComponent>(window);
 		}
 	case MD_MULTILINE_STRING:
 		{
-			TextEditComponent* comp = new TextEditComponent(window);
+			auto comp = std::make_shared<TextEditComponent>(window);
 			comp->setSize(comp->getSize().x(), comp->getSize().y() * 3);
 			return comp;
 		}
 	case MD_DATE:
 		{
-			DateTimeComponent* comp = new DateTimeComponent(window);
-			return comp;
+			return std::make_shared<DateTimeComponent>(window);
 		}
 	case MD_TIME:
 		{
-			DateTimeComponent* comp = new DateTimeComponent(window);
+			auto comp = std::make_shared<DateTimeComponent>(window);
 			comp->setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 			return comp;
 		}
 	default:
 		{
-			TextEditComponent* comp = new TextEditComponent(window);
-			return comp;
+			return std::make_shared<TextEditComponent>(window);
 		}
 	}
 }

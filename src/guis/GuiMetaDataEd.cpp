@@ -7,115 +7,50 @@
 #include "GuiMsgBoxYesNo.h"
 #include <boost/filesystem.hpp>
 
-#define MDED_RESERVED_ROWS 3
-
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
 	mScraperParams(scraperParams), 
-	mBox(mWindow, ":/frame.png", 0xAAAAAAFF, 0xCCCCCCFF),
-	mList(window, Eigen::Vector2i(2, mdd.size() + MDED_RESERVED_ROWS)),
-	mHeader(window),
+	mMenu(window, header.c_str()), 
 	mMetaDataDecl(mdd), 
 	mMetaData(md), 
-	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc), 
-	mDeleteButton(window), mFetchButton(window), mSaveButton(window)
+	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc)
 {
-	unsigned int sw = Renderer::getScreenWidth();
-	unsigned int sh = Renderer::getScreenHeight();
+	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	
-	addChild(&mBox);
-	
-	addChild(&mHeader);
-	mHeader.setText(header);
+	addChild(&mMenu);
 
-	//initialize buttons
-	mDeleteButton.setText("DELETE", "delete file");
-	if(mDeleteFunc)
-	{
-		std::function<void()> deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
-		std::function<void()> pressedFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "This will delete a file!\nAre you sure?", deleteFileAndSelf)); };
-		mDeleteButton.setPressedFunc(pressedFunc);
-	}
-
-	mFetchButton.setText("FETCH", "download metadata");
-	mFetchButton.setPressedFunc(std::bind(&GuiMetaDataEd::fetch, this));
-
-	mSaveButton.setText("SAVE", "save");
-	mSaveButton.setPressedFunc([&] { save(); delete this; });
-
-	//initialize metadata list
-	addChild(&mList);
-	populateList(mdd);
-	mList.setPosition((sw - mList.getSize().x()) / 2.0f, (sh - mList.getSize().y()) / 2.0f); //center it
-	mList.resetCursor();
-
-	mBox.fitTo(mList.getSize(), mList.getPosition(), Eigen::Vector2f(12, 12));
-
-	mHeader.setPosition(mList.getPosition());
-	mHeader.setSize(mList.getSize().x(), 0);
-	mHeader.setCentered(true);
-}
-
-GuiMetaDataEd::~GuiMetaDataEd()
-{
-	for(auto iter = mLabels.begin(); iter != mLabels.end(); iter++)
-	{
-		delete *iter;
-	}
-	for(auto iter = mEditors.begin(); iter != mEditors.end(); iter++)
-	{
-		delete *iter;
-	}
-}
-
-void GuiMetaDataEd::populateList(const std::vector<MetaDataDecl>& mdd)
-{
-	//      PATH		//(centered, not part of componentlist)
-
-	//---GAME NAME---   //(at 1,1; size 3,1) (TextEditComponent)
-	//DEL   SCRP  ---   //(buttons)
-	//Fav:  Y/N   ---	//metadata start
-	//Desc: ...   ---	//multiline texteditcomponent
-	//Img:  ...   ---
-	//---   SAVE  ---
-
-	using namespace Eigen;
-
-	int y = 0;
-
-	//fetch button
-	mList.setEntry(Vector2i(0, y), Vector2i(1, 1), &mFetchButton, true, ComponentGrid::AlignLeft);
-
-	//delete button
-	mList.setEntry(Vector2i(1, y), Vector2i(1, 1), &mDeleteButton, true, ComponentGrid::AlignRight);
-
-	y++;
-
+	// populate list
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
 	{
-		TextComponent* label = new TextComponent(mWindow);
-		label->setText(iter->key);
-		mList.setEntry(Vector2i(0, y), Vector2i(1, 1), label, false, ComponentGrid::AlignLeft);
-		mLabels.push_back(label);
-
-		GuiComponent* ed = MetaDataList::makeEditor(mWindow, iter->type);
-		ed->setSize(Renderer::getScreenWidth() * 0.4f, ed->getSize().y());
+		auto ed = MetaDataList::makeEditor(mWindow, iter->type);
 		ed->setValue(mMetaData->get(iter->key));
-		mList.setEntry(Vector2i(1, y), Vector2i(1, 1), ed, true, ComponentGrid::AlignRight);
 		mEditors.push_back(ed);
-
-		y++;
+		mMenu.addWithLabel(iter->key, ed);
 	}
 
-	//save button
-	mList.setEntry(Vector2i(0, y), Vector2i(2, 1), &mSaveButton, true, ComponentGrid::AlignCenter);
+	//add buttons	
+	mMenu.addButton("SCRAPE", "download metadata from the Internet", std::bind(&GuiMetaDataEd::fetch, this));
+	mMenu.addButton("SAVE", "save changes", [&] { save(); delete this; });
+	
+	if(mDeleteFunc)
+	{
+		auto deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
+		auto deleteBtnFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "This will delete a file!\nAre you sure?", deleteFileAndSelf)); };
+		mMenu.addButton("DELETE", "delete this game on disk", deleteBtnFunc);
+	}
+
+	// initially put cursor on "SCRAPE"
+	mMenu.setCursorToButtons();
+
+	// position menu
+	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, (mSize.y() - mMenu.getSize().y()) / 2); //center it
 }
 
 void GuiMetaDataEd::save()
 {
-	for(unsigned int i = 0; i < mLabels.size(); i++)
+	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
-		mMetaData->set(mLabels.at(i)->getValue(), mEditors.at(i)->getValue());
+		mMetaData->set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
 	}
 
 	if(mSavedCallback)
@@ -126,7 +61,6 @@ void GuiMetaDataEd::fetch()
 {
 	GuiGameScraper* scr = new GuiGameScraper(mWindow, mScraperParams, std::bind(&GuiMetaDataEd::fetchDone, this, std::placeholders::_1));
 	mWindow->pushGui(scr);
-	scr->search();
 }
 
 void GuiMetaDataEd::fetchDone(MetaDataList result)
@@ -187,7 +121,7 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 
 std::vector<HelpPrompt> GuiMetaDataEd::getHelpPrompts()
 {
-	std::vector<HelpPrompt> prompts = mList.getHelpPrompts();
+	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
 	prompts.push_back(HelpPrompt("b", "discard changes"));
 	return prompts;
 }

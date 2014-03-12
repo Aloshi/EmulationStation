@@ -55,8 +55,7 @@ public:
 	float getFloat(const std::string& key) const;
 	boost::posix_time::ptime getTime(const std::string& key) const;
 
-	static GuiComponent* makeDisplay(Window* window, MetaDataType as);
-	static GuiComponent* makeEditor(Window* window, MetaDataType as);
+	static std::shared_ptr<GuiComponent> makeEditor(Window* window, MetaDataType as);
 
 	inline MetaDataListType getType() const { return mType; }
 	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDByType(getType()); }

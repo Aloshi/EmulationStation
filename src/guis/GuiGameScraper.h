@@ -1,17 +1,8 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include "../scrapers/Scraper.h"
-#include "../components/ComponentGrid.h"
-#include "../components/TextComponent.h"
-#include "../components/ScrollableContainer.h"
-#include "../components/TextEditComponent.h"
+#include "../components/ScraperSearchComponent.h"
 #include "../components/NinePatchComponent.h"
-#include "../components/ImageComponent.h"
-#include "../Settings.h"
-#include "../HttpReq.h"
-
-#define MAX_SCRAPER_RESULTS 5
 
 class GuiGameScraper : public GuiComponent
 {
@@ -21,37 +12,18 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 
-	void search();
-
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
-	int getSelectedIndex();
-	void onSearchDone(std::vector<MetaDataList> results);
-	void updateInfoPane();
-	void updateThumbnail();
+	int mSearchCountdown; // haaack
 
-	ComponentGrid mList;
+	ComponentGrid mGrid;
 	NinePatchComponent mBox;
 
-	TextComponent mHeader;
-
-	TextComponent mResultName;
-	ScrollableContainer mResultInfo;
-	TextComponent mResultDesc;
-	ImageComponent mResultThumbnail;
-
-	TextComponent mSearchLabel;
-	TextEditComponent mSearchText;
-
-	std::vector<TextComponent> mResultNames;
+	std::shared_ptr<ScraperSearchComponent> mSearch;
 
 	ScraperSearchParams mSearchParams;
 
-	std::vector<MetaDataList> mScraperResults;
-
 	std::function<void(MetaDataList)> mDoneFunc;
 	std::function<void()> mSkipFunc;
-
-	std::unique_ptr<HttpReq> mThumbnailReq;
 };
