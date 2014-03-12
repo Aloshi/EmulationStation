@@ -57,6 +57,8 @@ public:
 
 	inline int getCursorId() const { return mCursor; }
 
+	float getTotalRowHeight() const;
+
 protected:
 	void onCursorChanged(const CursorState& state) override;
 
@@ -67,8 +69,7 @@ private:
 	void updateElementSize(const ComponentListRow& row);
 
 	float getRowHeight(const ComponentListRow& row) const;
-	float getTotalRowHeight() const;
-
+	
 	float mSelectorBarOffset;
 	float mCameraOffset;
 };

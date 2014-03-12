@@ -35,7 +35,7 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	row.makeAcceptInputHandler(std::bind(&GuiScraperStart::pressedStart, this));
 	mMenu.addRow(row);
 
-	mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, (Renderer::getScreenHeight() - mMenu.getSize().y()) / 2);
+	mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 }
 
 void GuiScraperStart::pressedStart()

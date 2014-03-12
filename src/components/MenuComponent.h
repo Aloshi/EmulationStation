@@ -4,6 +4,7 @@
 #include "ComponentList.h"
 #include "TextComponent.h"
 #include "ComponentGrid.h"
+#include "../Util.h"
 
 class ButtonComponent;
 
@@ -14,12 +15,12 @@ public:
 
 	void onSizeChanged() override;
 
-	inline void addRow(const ComponentListRow& row, bool setCursorHere = false) { mList->addRow(row, setCursorHere); }
+	inline void addRow(const ComponentListRow& row, bool setCursorHere = false) { mList->addRow(row, setCursorHere); updateSize(); }
 
 	inline void addWithLabel(const std::string& label, const std::shared_ptr<GuiComponent>& comp, bool setCursorHere = false)
 	{
 		ComponentListRow row;
-		row.addElement(std::make_shared<TextComponent>(mWindow, label, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(comp, false);
 		addRow(row, setCursorHere);
 	}
@@ -30,6 +31,7 @@ public:
 	inline void setCursorToButtons() { assert(mButtonGrid); mGrid.setCursorTo(mButtonGrid); }
 
 private:
+	void updateSize();
 	void updateGrid();
 
 	NinePatchComponent mBackground;

@@ -154,14 +154,29 @@ void Window::render()
 {
 	Eigen::Affine3f transform = Eigen::Affine3f::Identity();
 
-	const unsigned int drawBGAfter = mGuiStack.size() > 1 ? mGuiStack.size() - 2 : mGuiStack.size();
+	// draw only bottom and top of GuiStack (if they are different)
+	if(mGuiStack.size())
+	{
+		auto& bottom = mGuiStack.front();
+		auto& top = mGuiStack.back();
+
+		bottom->render(transform);
+		if(bottom != top)
+		{
+			mBackgroundOverlay->render(transform);
+			top->render(transform);
+		}
+	}
+
+	// draw everything
+	/*const unsigned int drawBGAfter = mGuiStack.size() > 1 ? mGuiStack.size() - 2 : mGuiStack.size();
 	for(unsigned int i = 0; i < mGuiStack.size(); i++)
 	{
 		mGuiStack.at(i)->render(transform);
-
+	
 		if(i == drawBGAfter)
 			mBackgroundOverlay->render(transform);
-	}
+	}*/
 
 	mHelp->render(transform);
 

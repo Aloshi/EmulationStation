@@ -155,6 +155,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ThemeData.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Util.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
@@ -188,7 +189,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiGameScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiInputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMenu.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiSettingsMenu.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiSettings.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperStart.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperLog.h
 
@@ -268,7 +269,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiGameScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiInputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMenu.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiSettingsMenu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiSettings.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperStart.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiScraperLog.cpp
 

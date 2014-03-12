@@ -1,6 +1,8 @@
 #include "MenuComponent.h"
 #include "ButtonComponent.h"
 
+#define BUTTON_GRID_HEIGHT ((float)Font::get(FONT_SIZE_MEDIUM)->getHeight() + 32)
+
 using namespace Eigen;
 
 MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(window), 
@@ -12,16 +14,26 @@ MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(w
 	mBackground.setImagePath(":/frame.png");
 
 	// set up title which will never change
-	mTitle = std::make_shared<TextComponent>(mWindow, title, Font::get(FONT_SIZE_LARGE), 0x555555FF, true);
+	mTitle = std::make_shared<TextComponent>(mWindow, strToUpper(title), Font::get(FONT_SIZE_LARGE), 0x555555FF, true);
 	mGrid.setEntry(mTitle, Vector2i(0, 0), false);
 
 	// set up list which will never change (externally, anyway)
 	mList = std::make_shared<ComponentList>(mWindow);
 	mGrid.setEntry(mList, Vector2i(0, 1), true);
 
-	setSize(Renderer::getScreenWidth() * 0.5f, Renderer::getScreenHeight() * 0.75f);
 	updateGrid();
+	updateSize();
+
 	mGrid.resetCursor();
+}
+
+void MenuComponent::updateSize()
+{
+	float height = mTitle->getSize().y() + mList->getTotalRowHeight() + BUTTON_GRID_HEIGHT + 2;
+	if(height > Renderer::getScreenHeight() * 0.7f)
+		height = Renderer::getScreenHeight() * 0.7f;
+
+	setSize(Renderer::getScreenWidth() * 0.4f, height);
 }
 
 void MenuComponent::onSizeChanged()
@@ -30,16 +42,16 @@ void MenuComponent::onSizeChanged()
 
 	// update grid row/col sizes
 	mGrid.setRowHeightPerc(0, mTitle->getSize().y() / mSize.y());
-	mGrid.setRowHeightPerc(2, mButtonGrid ? (mButtonGrid->getSize().y() + 32) / mSize.y() : 0.07f);
+	mGrid.setRowHeightPerc(2, (BUTTON_GRID_HEIGHT) / mSize.y());
 	
 	mGrid.setSize(mSize);
 }
 
 void MenuComponent::addButton(const std::string& name, const std::string& helpText, const std::function<void()>& callback)
 {
-	mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, name, helpText, callback));
+	mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, strToUpper(name), helpText, callback));
 	updateGrid();
-	onSizeChanged();
+	updateSize();
 }
 
 void MenuComponent::updateGrid()
