@@ -77,3 +77,8 @@ void MenuComponent::updateGrid()
 		mButtonGrid.reset();
 	}
 }
+
+std::vector<HelpPrompt> MenuComponent::getHelpPrompts()
+{
+	return mGrid.getHelpPrompts();
+}

@@ -117,6 +117,8 @@ void ComponentList::onCursorChanged(const CursorState& state)
 		else if(mCameraOffset + mSize.y() > totalHeight)
 			mCameraOffset = totalHeight - mSize.y();
 	}
+
+	updateHelpPrompts();
 }
 
 void ComponentList::render(const Eigen::Affine3f& parentTrans)
@@ -237,4 +239,12 @@ void ComponentList::updateElementSize(const ComponentListRow& row)
 	{
 		(*it)->setSize(width, (*it)->getSize().y());
 	}
+}
+
+std::vector<HelpPrompt> ComponentList::getHelpPrompts()
+{
+	if(!size())
+		return std::vector<HelpPrompt>();
+
+	return mEntries.at(mCursor).data.elements.back().component->getHelpPrompts();
 }

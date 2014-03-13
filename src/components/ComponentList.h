@@ -50,6 +50,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 	void onSizeChanged() override;
 	void onFocusGained() override;

@@ -44,7 +44,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto s = new GuiSettings(mWindow, "SCRAPER");
 
 			// scrape from
-			auto scraper_list = std::make_shared< OptionListComponent< std::shared_ptr<Scraper> > >(mWindow, false);
+			auto scraper_list = std::make_shared< OptionListComponent< std::shared_ptr<Scraper> > >(mWindow, "SCRAPE FROM", false);
 			std::vector< std::shared_ptr<Scraper> > scrapers;
 			scrapers.push_back(std::make_shared<GamesDBScraper>());
 			scrapers.push_back(std::make_shared<TheArchiveScraper>());
@@ -152,14 +152,14 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			{
 				row.elements.clear();
 				row.makeAcceptInputHandler([window] {
-					window->pushGui(new GuiMsgBoxYesNo(window, "REALLY EXIT?",
+					window->pushGui(new GuiMsgBoxYesNo(window, "REALLY QUIT?",
 					[] { 
 						SDL_Event ev;
 						ev.type = SDL_QUIT;
 						SDL_PushEvent(&ev);
 					}));
 				});
-				row.addElement(std::make_shared<TextComponent>(window, "EXIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x770000FF), true);
+				row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 				s->addRow(row);
 			}
 
@@ -198,4 +198,12 @@ bool GuiMenu::input(InputConfig* config, Input input)
 	}
 
 	return GuiComponent::input(config, input);
+}
+
+std::vector<HelpPrompt> GuiMenu::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+	prompts.push_back(HelpPrompt("up/down", "move cursor"));
+	prompts.push_back(HelpPrompt("a", "accept"));
+	return prompts;
 }

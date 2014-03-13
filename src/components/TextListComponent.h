@@ -60,8 +60,7 @@ public:
 	inline void setFont(const std::shared_ptr<Font>& font)
 	{
 		mFont = font;
-		this->mTitleOverlayFont = Font::get(FONT_SIZE_LARGE, mFont->getPath());
-
+		
 		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
 			it->data.textCache.reset();
 	}

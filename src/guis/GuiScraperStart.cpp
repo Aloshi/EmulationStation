@@ -12,7 +12,7 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	addChild(&mMenu);
 
 	// add filters (with first one selected)
-	mFilters = std::make_shared< OptionListComponent<GameFilterFunc> >(mWindow, false);
+	mFilters = std::make_shared< OptionListComponent<GameFilterFunc> >(mWindow, "SCRAPE THESE GAMES", false);
 	mFilters->add("All Games", 
 		[](SystemData*, FileData*) -> bool { return true; }, true);
 	mFilters->add("Only missing image", 
@@ -20,20 +20,16 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mMenu.addWithLabel("Filter", mFilters);
 
 	//add systems (all with a platformid specified selected)
-	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, true);
+	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, "SCRAPE THESE SYSTEMS", true);
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 		mSystems->add((*it)->getFullName(), *it, (*it)->getPlatformId() != PlatformIds::PLATFORM_UNKNOWN);
 	mMenu.addWithLabel("Systems", mSystems);
 
-	mAutoStyle = std::make_shared< OptionListComponent<int> >(mWindow, false);
-	mAutoStyle->add("Never automatically accept result", 0, true);
-	mAutoStyle->add("Always accept first result", 1, false);
-	mMenu.addWithLabel("Auto style", mAutoStyle);
+	mApproveResults = std::make_shared<SwitchComponent>(mWindow);
+	mApproveResults->setState(true);
+	mMenu.addWithLabel("User decides on conflicts", mApproveResults);
 
-	ComponentListRow row;
-	row.addElement(std::make_shared<TextComponent>(mWindow, "GO GO GO", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-	row.makeAcceptInputHandler(std::bind(&GuiScraperStart::pressedStart, this));
-	mMenu.addRow(row);
+	mMenu.addButton("START", "start scraping", std::bind(&GuiScraperStart::pressedStart, this));
 
 	mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 }
@@ -58,7 +54,7 @@ void GuiScraperStart::start()
 {
 	std::queue<ScraperSearchParams> searches = getSearches(mSystems->getSelectedObjects(), mFilters->getSelected());
 
-	GuiScraperLog* gsl = new GuiScraperLog(mWindow, searches, mAutoStyle->getSelected() == 0);
+	GuiScraperLog* gsl = new GuiScraperLog(mWindow, searches, mApproveResults->getState());
 	mWindow->pushGui(gsl);
 	gsl->start();
 	delete this;

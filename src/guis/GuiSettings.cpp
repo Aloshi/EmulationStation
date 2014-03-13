@@ -5,6 +5,8 @@ GuiSettings::GuiSettings(Window* window, const char* title) : GuiComponent(windo
 {
 	addChild(&mMenu);
 
+	mMenu.addButton("BACK", "go back", [this] { delete this; });
+
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 }
@@ -38,5 +40,9 @@ bool GuiSettings::input(InputConfig* config, Input input)
 
 std::vector<HelpPrompt> GuiSettings::getHelpPrompts()
 {
-	return mMenu.getHelpPrompts();
+	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
+
+	prompts.push_back(HelpPrompt("b", "go back"));
+
+	return prompts;
 }

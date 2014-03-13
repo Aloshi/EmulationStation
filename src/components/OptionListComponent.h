@@ -37,8 +37,8 @@ private:
 		OptionListComponent<T>* mParent;
 
 	public:
-		OptionListPopup(Window* window, OptionListComponent<T>* parent) : GuiComponent(window),
-			mMenu(window, ""), mParent(parent)
+		OptionListPopup(Window* window, OptionListComponent<T>* parent, const std::string& title) : GuiComponent(window),
+			mMenu(window, title.c_str()), mParent(parent)
 		{
 			auto font = Font::get(FONT_SIZE_MEDIUM);
 			ComponentListRow row;
@@ -85,7 +85,10 @@ private:
 				mMenu.addRow(row, (!mParent->mMultiSelect && it->selected));
 			}
 
-			mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, (Renderer::getScreenHeight() - mMenu.getSize().y()) / 2);
+			if(mParent->mMultiSelect)
+				mMenu.addButton("BACK", "accept", [this] { delete this; });
+
+			mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 			addChild(&mMenu);
 		}
 
@@ -102,7 +105,7 @@ private:
 	};
 
 public:
-	OptionListComponent(Window* window, bool multiSelect = false) : GuiComponent(window), mMultiSelect(multiSelect),
+	OptionListComponent(Window* window, const std::string& name, bool multiSelect = false) : GuiComponent(window), mMultiSelect(multiSelect), mName(name), 
 		 mText(window), mLeftArrow(window), mRightArrow(window)
 	{
 		auto font = Font::get(FONT_SIZE_MEDIUM);
@@ -124,10 +127,10 @@ public:
 			addChild(&mRightArrow);
 		}
 
-		// handles positioning/resizing of text and arrows
-		setSize(Renderer::getScreenWidth() * 0.2f, (float)font->getHeight());
+		setSize(mLeftArrow.getSize().x() + mRightArrow.getSize().x(), (float)font->getHeight());
 	}
 
+	// handles positioning/resizing of text and arrows
 	void onSizeChanged() override
 	{
 		// size
@@ -239,7 +242,7 @@ private:
 
 	void open()
 	{
-		mWindow->pushGui(new OptionListPopup(mWindow, this));
+		mWindow->pushGui(new OptionListPopup(mWindow, this, mName));
 	}
 
 	void onSelectedChanged()
@@ -250,6 +253,10 @@ private:
 			std::stringstream ss;
 			ss << getSelectedObjects().size() << " selected";
 			mText.setText(ss.str());
+			mText.setSize(0, mText.getSize().y());
+			setSize(mText.getSize().x() + mRightArrow.getSize().x() + 16, mText.getSize().y());
+			if(mParent) // hack since theres no "on child size changed" callback atm...
+				mParent->onSizeChanged();
 		}else{
 			// display currently selected + l/r cursors
 			for(auto it = mEntries.begin(); it != mEntries.end(); it++)
@@ -257,14 +264,29 @@ private:
 				if(it->selected)
 				{
 					mText.setText(it->name);
+					mText.setSize(0, mText.getSize().y());
+					setSize(mText.getSize().x() + mLeftArrow.getSize().x() + mRightArrow.getSize().x() + 16, mText.getSize().y());
+					if(mParent) // hack since theres no "on child size changed" callback atm...
+						mParent->onSizeChanged();
 					break;
 				}
 			}
 		}
 	}
 
+	std::vector<HelpPrompt> getHelpPrompts() override
+	{
+		std::vector<HelpPrompt> prompts;
+		if(!mMultiSelect)
+			prompts.push_back(HelpPrompt("left/right", "change"));
+		
+		prompts.push_back(HelpPrompt("a", "change"));
+		return prompts;
+	}
+
 	bool mMultiSelect;
 
+	std::string mName;
 	TextComponent mText;
 	ImageComponent mLeftArrow;
 	ImageComponent mRightArrow;
