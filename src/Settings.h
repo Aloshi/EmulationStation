@@ -25,6 +25,7 @@ public:
 
 	std::shared_ptr<Scraper> getScraper();
 	void setScraper(std::shared_ptr<Scraper> scraper);
+
 private:
 	static Settings* sInstance;
 
@@ -36,7 +37,9 @@ private:
 	std::map<std::string, bool> mBoolMap;
 	std::map<std::string, int> mIntMap;
 	std::map<std::string, float> mFloatMap;
+
 	std::shared_ptr<Scraper> mScraper;
+	std::string mHomePathOverride;
 };
 
 #endif

@@ -91,23 +91,22 @@ When you first start EmulationStation, you will be prompted to configure any inp
 As long as ES hasn't frozen, you can always press F4 to close the application.
 
 
-**Keep in mind you'll have to set up your emulator separately from EmulationStation.**
-I am currently also working on a stand-alone tool, [ES-config](https://github.com/Aloshi/ES-config), that should help make configuring emulators easier.
+**Keep in mind you'll have to set up your emulator separately from EmulationStation!**
 
 After you launch a game, EmulationStation will return once your system's command terminates (i.e. your emulator closes).
 
 
-You can use `--help` to view a list of command-line options. Briefly outlined here:
+You can use `--help` or `-h` to view a list of command-line options. Briefly outlined here:
 ```
--w [width]		- specify resolution width.
--h [height]		- specify resolution height.
+--resolution [width] [height]	- try and force a particular resolution
 --gamelist-only		- only display games defined in a gamelist.xml file.
 --ignore-gamelist	- do not parse any gamelist.xml files.
 --draw-framerate	- draw the framerate.
 --no-exit		- do not display 'exit' in the ES menu.
 --debug			- print additional output to the console, primarily about input.
---windowed      - run ES in a window.
+--windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
 --scrape	- run the interactive command-line metadata scraper.
+--home-path [path]	- use [path] instead of the "home" environment variable (useful for portable installations).
 ```
 
 Writing an es_systems.cfg

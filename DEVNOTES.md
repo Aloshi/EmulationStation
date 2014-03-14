@@ -8,7 +8,7 @@ Development Environment
 
 I personally launch ES in windowed mode with a smaller resolution than my monitor and with debug text enabled.
 
-`emulationstation --windowed --debug -w 1280 -h 720`
+`emulationstation --windowed --debug --resolution 1280 720`
 
 
 Creating a new GuiComponent

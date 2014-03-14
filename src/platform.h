@@ -18,3 +18,4 @@
 #include <string>
 
 std::string getHomePath();
+void setHomePathOverride(const std::string& path);

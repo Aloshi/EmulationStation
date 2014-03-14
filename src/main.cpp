@@ -26,14 +26,17 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 {
 	for(int i = 1; i < argc; i++)
 	{
-		if(strcmp(argv[i], "-w") == 0)
+		if(strcmp(argv[i], "--resolution") == 0)
 		{
+			if(i >= argc - 2)
+			{
+				std::cerr << "Invalid resolution supplied.";
+				return false;
+			}
+
 			*width = atoi(argv[i + 1]);
-			i++; //skip the argument value
-		}else if(strcmp(argv[i], "-h") == 0)
-		{
-			*height = atoi(argv[i + 1]);
-			i++; //skip the argument value
+			*height = atoi(argv[i + 2]);
+			i += 2; // skip the argument value
 		}else if(strcmp(argv[i], "--gamelist-only") == 0)
 		{
 			Settings::getInstance()->setBool("ParseGamelistOnly", true);
@@ -56,20 +59,30 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--scrape") == 0)
 		{
 			scrape_cmdline = true;
-		}else if(strcmp(argv[i], "--help") == 0)
+		}else if(strcmp(argv[i], "--home-path") == 0)
+		{
+			if(i >= argc - 1)
+			{
+				std::cerr << "No home path specified!\n";
+				return false;
+			}
+
+			setHomePathOverride(argv[i + 1]);
+		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 			std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
+			std::cout << "Written by Alec \"Aloshi\" Lofquist.\n";
 			std::cout << "Command line arguments:\n";
-			std::cout << "-w [width in pixels]		set screen width\n";
-			std::cout << "-h [height in pixels]		set screen height\n";
+			std::cout << "--resolution [width] [height]	try and force a particular resolution\n";
 			std::cout << "--gamelist-only			skip automatic game detection, only read from gamelist.xml\n";
 			std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
 			std::cout << "--draw-framerate		display the framerate\n";
 			std::cout << "--no-exit			don't show the exit option in the menu\n";
 			std::cout << "--debug				even more logging\n";
 			std::cout << "--scrape			scrape using command line interface\n";
-			std::cout << "--windowed			not fullscreen, should be used in conjunction with -w and -h\n";
-			std::cout << "--help				summon a sentient, angry tuba\n\n";
+			std::cout << "--windowed			not fullscreen, should be used in conjunction with --resolution\n";
+			std::cout << "--home-path [path]		use [path] instead of the \"home\" environment variable (for portable installations)\n";
+			std::cout << "--help, -h			summon a sentient, angry tuba\n\n";
 			std::cout << "More information available in README.md.\n";
 			return false; //exit after printing help
 		}
