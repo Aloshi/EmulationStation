@@ -26,7 +26,7 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
-	std::shared_ptr<Font> getFont();
+	std::shared_ptr<Font> mFont;
 	std::function<void()> mPressedFunc;
 
 	bool mFocused;

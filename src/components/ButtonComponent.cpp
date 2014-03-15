@@ -2,9 +2,11 @@
 #include "../Renderer.h"
 #include "../Window.h"
 #include "../Util.h"
+#include "../Log.h"
 
 ButtonComponent::ButtonComponent(Window* window, const std::string& text, const std::string& helpText, const std::function<void()>& func) : GuiComponent(window),
 	mBox(window, ":/button.png"),
+	mFont(Font::get(FONT_SIZE_MEDIUM)), 
 	mFocused(false), 
 	mEnabled(true), 
 	mTextColorFocused(0xFFFFFFFF), mTextColorUnfocused(0x777777FF)
@@ -40,10 +42,9 @@ void ButtonComponent::setText(const std::string& text, const std::string& helpTe
 	mText = strToUpper(text);
 	mHelpText = helpText;
 	
-	std::shared_ptr<Font> f = getFont();
-	mTextCache = std::unique_ptr<TextCache>(f->buildTextCache(mText, 0, 0, getCurTextColor()));
-
-	setSize(mTextCache->metrics.size + Eigen::Vector2f(12, 12));
+	mTextCache = std::unique_ptr<TextCache>(mFont->buildTextCache(mText, 0, 0, getCurTextColor()));
+	
+	setSize(mTextCache->metrics.size + Eigen::Vector2f(12, 0));
 
 	updateHelpPrompts();
 }
@@ -94,16 +95,11 @@ void ButtonComponent::render(const Eigen::Affine3f& parentTrans)
 
 		Renderer::setMatrix(trans);
 		mTextCache->setColor(getCurTextColor());
-		getFont()->renderTextCache(mTextCache.get());
+		mFont->renderTextCache(mTextCache.get());
 		trans = trans.translate(-centerOffset);
 	}
 
 	renderChildren(trans);
-}
-
-std::shared_ptr<Font> ButtonComponent::getFont()
-{
-	return Font::get(FONT_SIZE_SMALL);
 }
 
 unsigned int ButtonComponent::getCurTextColor() const

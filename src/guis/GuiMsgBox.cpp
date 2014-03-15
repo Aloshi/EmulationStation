@@ -4,7 +4,7 @@
 #include "../components/ButtonComponent.h"
 #include "../components/MenuComponent.h" // for makeButtonGrid
 
-#define BUTTON_VERT_PADDING 16.0f
+#define BUTTON_VERT_PADDING 32.0f
 
 GuiMsgBox::GuiMsgBox(Window* window, const std::string& text, 
 	const std::string& name1, const std::function<void()>& func1,
@@ -28,7 +28,7 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 	mButtonGrid = makeButtonGrid(mWindow, mButtons);
 	
 	mGrid.setEntry(mMsg, Eigen::Vector2i(0, 0), false, true);
-	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 1), true, false);
+	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 1), true, false, Eigen::Vector2i(1, 1), GridFlags::BORDER_TOP);
 
 	if(mMsg->getSize().x() > width)
 	{
@@ -55,7 +55,7 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 void GuiMsgBox::onSizeChanged()
 {
 	mGrid.setSize(mSize);
-	mBackground.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-16, -32));
+	mBackground.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
 
 	mGrid.setRowHeightPerc(1, (mButtonGrid->getSize().y() + BUTTON_VERT_PADDING) / mSize.y());
 }
