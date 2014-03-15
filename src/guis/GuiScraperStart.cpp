@@ -1,6 +1,6 @@
 #include "GuiScraperStart.h"
 #include "GuiScraperLog.h"
-#include "GuiMsgBoxYesNo.h"
+#include "GuiMsgBox.h"
 
 #include "../components/TextComponent.h"
 #include "../components/OptionListComponent.h"
@@ -41,8 +41,10 @@ void GuiScraperStart::pressedStart()
 	{
 		if((*it)->getPlatformId() == PlatformIds::PLATFORM_UNKNOWN)
 		{
-			mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "Warning: some of your selected systems do not have a platform ID set. Results may be even more inaccurate than usual!\nContinue anyway?", 
-				std::bind(&GuiScraperStart::start, this)));
+			mWindow->pushGui(new GuiMsgBox(mWindow, 
+				"Warning: some of your selected systems do not have a platform ID set. Results may be even more inaccurate than usual!\nContinue anyway?", 
+				"YES", std::bind(&GuiScraperStart::start, this), 
+				"NO", nullptr));
 			return;
 		}
 	}

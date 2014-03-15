@@ -4,7 +4,7 @@
 #include "../components/AsyncReqComponent.h"
 #include "../Settings.h"
 #include "GuiGameScraper.h"
-#include "GuiMsgBoxYesNo.h"
+#include "GuiMsgBox.h"
 #include <boost/filesystem.hpp>
 
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
@@ -35,7 +35,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	if(mDeleteFunc)
 	{
 		auto deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
-		auto deleteBtnFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBoxYesNo(mWindow, "This will delete a file!\nAre you sure?", deleteFileAndSelf)); };
+		auto deleteBtnFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBox(mWindow, "This will delete a file!\nAre you sure?", "YES", deleteFileAndSelf, "NO", nullptr)); };
 		mMenu.addButton("DELETE", "delete this game on disk", deleteBtnFunc);
 	}
 

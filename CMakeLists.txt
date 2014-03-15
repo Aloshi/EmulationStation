@@ -184,8 +184,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiFastSelect.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMetaDataEd.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxOk.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxYesNo.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBox.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiGameScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiInputConfig.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMenu.h
@@ -264,8 +263,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiFastSelect.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMetaDataEd.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxOk.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBoxYesNo.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBox.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiGameScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiInputConfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMenu.cpp

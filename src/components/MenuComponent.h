@@ -8,6 +8,8 @@
 
 class ButtonComponent;
 
+std::shared_ptr<ComponentGrid> makeButtonGrid(Window* window, const std::vector< std::shared_ptr<ButtonComponent> >& buttons);
+
 class MenuComponent : public GuiComponent
 {
 public:

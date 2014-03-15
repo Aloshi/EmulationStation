@@ -61,17 +61,8 @@ void MenuComponent::updateGrid()
 
 	if(mButtons.size())
 	{
-		mButtonGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(mButtons.size(), 1));
+		mButtonGrid = makeButtonGrid(mWindow, mButtons);
 		
-		float buttonGridWidth = 16.0f * mButtons.size(); // initialize to padding
-		for(int i = 0; i < (int)mButtons.size(); i++)
-		{
-			mButtonGrid->setEntry(mButtons.at(i), Vector2i(i, 0), true, false);
-			buttonGridWidth += mButtons.at(i)->getSize().x();
-		}
-		
-		mButtonGrid->setSize(buttonGridWidth, mButtons.at(0)->getSize().y());
-
 		mGrid.setEntry(mButtonGrid, Vector2i(0, 2), true, false);
 	}else{
 		mButtonGrid.reset();
@@ -81,4 +72,24 @@ void MenuComponent::updateGrid()
 std::vector<HelpPrompt> MenuComponent::getHelpPrompts()
 {
 	return mGrid.getHelpPrompts();
+}
+
+std::shared_ptr<ComponentGrid> makeButtonGrid(Window* window, const std::vector< std::shared_ptr<ButtonComponent> >& buttons)
+{
+	std::shared_ptr<ComponentGrid> buttonGrid = std::make_shared<ComponentGrid>(window, Vector2i(buttons.size(), 1));
+
+	float buttonGridWidth = 16.0f * buttons.size(); // initialize to padding
+	for(int i = 0; i < (int)buttons.size(); i++)
+	{
+		buttonGrid->setEntry(buttons.at(i), Vector2i(i, 0), true, false);
+		buttonGridWidth += buttons.at(i)->getSize().x();
+	}
+	for(unsigned int i = 0; i < buttons.size(); i++)
+	{
+		buttonGrid->setColWidthPerc(i, (buttons.at(i)->getSize().x() + 16) / buttonGridWidth);
+	}
+		
+	buttonGrid->setSize(buttonGridWidth, buttons.at(0)->getSize().y());
+
+	return buttonGrid;
 }

@@ -88,7 +88,11 @@ void ComponentGrid::setEntry(const std::shared_ptr<GuiComponent>& comp, const Ei
 	addChild(comp.get());
 
 	if(!cursorValid() && canFocus)
+	{
+		auto origCursor = mCursor;
 		mCursor = pos;
+		onCursorMoved(origCursor, mCursor);
+	}
 
 	updateCellComponent(mCells.back());
 	updateSeparators();
@@ -327,7 +331,8 @@ void ComponentGrid::onFocusGained()
 
 bool ComponentGrid::cursorValid()
 {
-	return getCellAt(mCursor) != NULL;
+	GridEntry* e = getCellAt(mCursor);
+	return (e != NULL && e->canFocus);
 }
 
 void ComponentGrid::update(int deltaTime)
