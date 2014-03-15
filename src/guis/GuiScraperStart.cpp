@@ -30,6 +30,7 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mMenu.addWithLabel("User decides on conflicts", mApproveResults);
 
 	mMenu.addButton("START", "start scraping", std::bind(&GuiScraperStart::pressedStart, this));
+	mMenu.addButton("BACK", "cancel", [&] { delete this; });
 
 	mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 }

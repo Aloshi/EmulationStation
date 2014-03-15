@@ -33,7 +33,7 @@ void MenuComponent::updateSize()
 	if(height > Renderer::getScreenHeight() * 0.7f)
 		height = Renderer::getScreenHeight() * 0.7f;
 
-	setSize(Renderer::getScreenWidth() * 0.4f, height);
+	setSize(Renderer::getScreenWidth() * 0.5f, height);
 }
 
 void MenuComponent::onSizeChanged()

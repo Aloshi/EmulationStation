@@ -15,6 +15,7 @@ public:
 		const std::string& name2 = "", const std::function<void()>& func2 = nullptr, 
 		const std::string& name3 = "", const std::function<void()>& func3 = nullptr);
 
+	bool input(InputConfig* config, Input input);
 	void onSizeChanged() override;
 
 private:
@@ -27,5 +28,5 @@ private:
 	std::shared_ptr<TextComponent> mMsg;
 	std::vector< std::shared_ptr<ButtonComponent> > mButtons;
 	std::shared_ptr<ComponentGrid> mButtonGrid;
-
+	std::function<void()> mAcceleratorFunc;
 };

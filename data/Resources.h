@@ -59,17 +59,44 @@ extern const unsigned char help_a_png_data[];
 extern const size_t help_b_png_size;
 extern const unsigned char help_b_png_data[];
 
-extern const size_t help_dpad_png_size;
-extern const unsigned char help_dpad_png_data[];
+extern const size_t help_dpad_all_png_size;
+extern const unsigned char help_dpad_all_png_data[];
 
-extern const size_t help_left_right_png_size;
-extern const unsigned char help_left_right_png_data[];
+extern const size_t help_dpad_down_png_size;
+extern const unsigned char help_dpad_down_png_data[];
 
-extern const size_t help_menu_png_size;
-extern const unsigned char help_menu_png_data[];
+extern const size_t help_dpad_left_png_size;
+extern const unsigned char help_dpad_left_png_data[];
 
-extern const size_t help_up_down_png_size;
-extern const unsigned char help_up_down_png_data[];
+extern const size_t help_dpad_left_right_png_size;
+extern const unsigned char help_dpad_left_right_png_data[];
+
+extern const size_t help_dpad_right_png_size;
+extern const unsigned char help_dpad_right_png_data[];
+
+extern const size_t help_dpad_up_png_size;
+extern const unsigned char help_dpad_up_png_data[];
+
+extern const size_t help_dpad_up_down_png_size;
+extern const unsigned char help_dpad_up_down_png_data[];
+
+extern const size_t help_l_png_size;
+extern const unsigned char help_l_png_data[];
+
+extern const size_t help_r_png_size;
+extern const unsigned char help_r_png_data[];
+
+extern const size_t help_select_png_size;
+extern const unsigned char help_select_png_data[];
+
+extern const size_t help_start_png_size;
+extern const unsigned char help_start_png_data[];
+
+extern const size_t help_x_png_size;
+extern const unsigned char help_x_png_data[];
+
+extern const size_t help_y_png_size;
+extern const unsigned char help_y_png_data[];
 
 struct Res2hEntry {
     const std::string relativeFileName;

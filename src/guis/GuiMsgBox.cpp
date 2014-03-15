@@ -3,6 +3,7 @@
 #include "../components/TextComponent.h"
 #include "../components/ButtonComponent.h"
 #include "../components/MenuComponent.h" // for makeButtonGrid
+#include "../Util.h"
 
 #define BUTTON_VERT_PADDING 32.0f
 
@@ -23,6 +24,21 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 		mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, name2, name3, std::bind(&GuiMsgBox::deleteMeAndCall, this, func2)));
 	if(!name3.empty())
 		mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, name3, name3, std::bind(&GuiMsgBox::deleteMeAndCall, this, func3)));
+
+	// set accelerator automatically (button to press when "b" is pressed)
+	if(mButtons.size() == 1)
+	{
+		mAcceleratorFunc = mButtons.front()->getPressedFunc();
+	}else{
+		for(auto it = mButtons.begin(); it != mButtons.end(); it++)
+		{
+			if(strToUpper((*it)->getText()) == "OK" || strToUpper((*it)->getText()) == "NO")
+			{
+				mAcceleratorFunc = (*it)->getPressedFunc();
+				break;
+			}
+		}
+	}
 
 	// put the buttons into a ComponentGrid
 	mButtonGrid = makeButtonGrid(mWindow, mButtons);
@@ -50,6 +66,17 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 
 	addChild(&mBackground);
 	addChild(&mGrid);
+}
+
+bool GuiMsgBox::input(InputConfig* config, Input input)
+{
+	if(mAcceleratorFunc && config->isMappedTo("b", input) && input.value != 0)
+	{
+		mAcceleratorFunc();
+		return true;
+	}
+
+	return GuiComponent::input(config, input);
 }
 
 void GuiMsgBox::onSizeChanged()

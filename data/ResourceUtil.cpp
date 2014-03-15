@@ -2,7 +2,7 @@
 
 #include "Resources.h"
 
-const size_t res2hNrOfFiles = 22;
+const size_t res2hNrOfFiles = 31;
 const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/arrow.png", arrow_png_size, arrow_png_data},
     {":/button.png", button_png_size, button_png_data},
@@ -22,10 +22,19 @@ const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/textbox_glow.png", textbox_glow_png_size, textbox_glow_png_data},
     {":/help/a.png", help_a_png_size, help_a_png_data},
     {":/help/b.png", help_b_png_size, help_b_png_data},
-    {":/help/dpad.png", help_dpad_png_size, help_dpad_png_data},
-    {":/help/left_right.png", help_left_right_png_size, help_left_right_png_data},
-    {":/help/menu.png", help_menu_png_size, help_menu_png_data},
-    {":/help/up_down.png", help_up_down_png_size, help_up_down_png_data}
+    {":/help/dpad_all.png", help_dpad_all_png_size, help_dpad_all_png_data},
+    {":/help/dpad_down.png", help_dpad_down_png_size, help_dpad_down_png_data},
+    {":/help/dpad_left.png", help_dpad_left_png_size, help_dpad_left_png_data},
+    {":/help/dpad_left_right.png", help_dpad_left_right_png_size, help_dpad_left_right_png_data},
+    {":/help/dpad_right.png", help_dpad_right_png_size, help_dpad_right_png_data},
+    {":/help/dpad_up.png", help_dpad_up_png_size, help_dpad_up_png_data},
+    {":/help/dpad_up_down.png", help_dpad_up_down_png_size, help_dpad_up_down_png_data},
+    {":/help/l.png", help_l_png_size, help_l_png_data},
+    {":/help/r.png", help_r_png_size, help_r_png_data},
+    {":/help/select.png", help_select_png_size, help_select_png_data},
+    {":/help/start.png", help_start_png_size, help_start_png_data},
+    {":/help/x.png", help_x_png_size, help_x_png_data},
+    {":/help/y.png", help_y_png_size, help_y_png_data}
 };
 
 res2hMapType::value_type mapTemp[] = {
@@ -47,10 +56,19 @@ res2hMapType::value_type mapTemp[] = {
     std::make_pair(":/textbox_glow.png", res2hFiles[15]),
     std::make_pair(":/help/a.png", res2hFiles[16]),
     std::make_pair(":/help/b.png", res2hFiles[17]),
-    std::make_pair(":/help/dpad.png", res2hFiles[18]),
-    std::make_pair(":/help/left_right.png", res2hFiles[19]),
-    std::make_pair(":/help/menu.png", res2hFiles[20]),
-    std::make_pair(":/help/up_down.png", res2hFiles[21])
+    std::make_pair(":/help/dpad_all.png", res2hFiles[18]),
+    std::make_pair(":/help/dpad_down.png", res2hFiles[19]),
+    std::make_pair(":/help/dpad_left.png", res2hFiles[20]),
+    std::make_pair(":/help/dpad_left_right.png", res2hFiles[21]),
+    std::make_pair(":/help/dpad_right.png", res2hFiles[22]),
+    std::make_pair(":/help/dpad_up.png", res2hFiles[23]),
+    std::make_pair(":/help/dpad_up_down.png", res2hFiles[24]),
+    std::make_pair(":/help/l.png", res2hFiles[25]),
+    std::make_pair(":/help/r.png", res2hFiles[26]),
+    std::make_pair(":/help/select.png", res2hFiles[27]),
+    std::make_pair(":/help/start.png", res2hFiles[28]),
+    std::make_pair(":/help/x.png", res2hFiles[29]),
+    std::make_pair(":/help/y.png", res2hFiles[30])
 };
 
 res2hMapType res2hMap(mapTemp, mapTemp + sizeof mapTemp / sizeof mapTemp[0]);

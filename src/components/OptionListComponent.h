@@ -46,7 +46,7 @@ private:
 			for(auto it = mParent->mEntries.begin(); it != mParent->mEntries.end(); it++)
 			{
 				row.elements.clear();
-				row.addElement(std::make_shared<TextComponent>(mWindow, it->name, font, 0x777777FF), true);
+				row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(it->name), font, 0x777777FF), true);
 
 				OptionListData& e = *it;
 
@@ -101,6 +101,11 @@ private:
 			}
 
 			return GuiComponent::input(config, input);
+		}
+
+		std::vector<HelpPrompt> getHelpPrompts() override
+		{
+			return mMenu.getHelpPrompts();
 		}
 	};
 
@@ -251,7 +256,7 @@ private:
 		{
 			// display # selected
 			std::stringstream ss;
-			ss << getSelectedObjects().size() << " selected";
+			ss << getSelectedObjects().size() << " SELECTED";
 			mText.setText(ss.str());
 			mText.setSize(0, mText.getSize().y());
 			setSize(mText.getSize().x() + mRightArrow.getSize().x() + 16, mText.getSize().y());
@@ -263,7 +268,7 @@ private:
 			{
 				if(it->selected)
 				{
-					mText.setText(it->name);
+					mText.setText(strToUpper(it->name));
 					mText.setSize(0, mText.getSize().y());
 					setSize(mText.getSize().x() + mLeftArrow.getSize().x() + mRightArrow.getSize().x() + 16, mText.getSize().y());
 					if(mParent) // hack since theres no "on child size changed" callback atm...
@@ -293,4 +298,3 @@ private:
 
 	std::vector<OptionListData> mEntries;
 };
-

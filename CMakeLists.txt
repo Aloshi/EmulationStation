@@ -239,6 +239,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/SystemData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ThemeData.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Util.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/VolumeControl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
@@ -302,12 +303,23 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_filled_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_unfilled_png.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_a_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_b_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_menu_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_up_down_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_left_right_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_x_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_y_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_l_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_r_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_start_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_select_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_all_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_up_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_down_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_left_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_right_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_up_down_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_left_right_png.cpp
+
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/sq_bracket_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/arrow_png.cpp
@@ -316,7 +328,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/slider_knob_png.cpp
 )
 
-SOURCE_GROUP(resources FILES ResourceUtil.cpp)
+#SOURCE_GROUP(resources FILES ResourceUtil.cpp)
 
 #add open gl specific sources
 #if(${GLSystem} MATCHES "Desktop OpenGL")
