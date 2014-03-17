@@ -16,6 +16,9 @@ class TextCache;
 #define FONT_SIZE_MEDIUM ((unsigned int)(0.045f * Renderer::getScreenHeight()))
 #define FONT_SIZE_LARGE ((unsigned int)(0.1f * Renderer::getScreenHeight()))
 
+#define FONT_PATH_LIGHT ":/opensans_hebrew_condensed_light.ttf"
+#define FONT_PATH_REGULAR ":/opensans_hebrew_condensed_regular.ttf"
+
 //A TrueType Font renderer that uses FreeType and OpenGL.
 //The library is automatically initialized when it's needed.
 class Font : public IReloadable
@@ -70,7 +73,7 @@ public:
 	int getSize() const;
 	inline const std::string& getPath() const { return mPath; }
 
-	inline static const char* getDefaultPath() { return ":/opensans_hebrew_condensed_regular.ttf"; }
+	inline static const char* getDefaultPath() { return FONT_PATH_REGULAR; }
 
 	static std::shared_ptr<Font> getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig);
 

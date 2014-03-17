@@ -107,7 +107,7 @@ float SliderComponent::getValue()
 void SliderComponent::onSizeChanged()
 {
 	if(!mSuffix.empty())
-		mFont = Font::get((int)(mSize.y() * 0.7f));
+		mFont = Font::get((int)(mSize.y() * 0.8f), FONT_PATH_LIGHT);
 	
 	onValueChanged();
 }
@@ -132,9 +132,9 @@ void SliderComponent::onValueChanged()
 		ss << mSuffix;
 		const std::string max = ss.str();
 
-		float w = mFont->sizeText(max).x();
-		mValueCache = std::shared_ptr<TextCache>(mFont->buildTextCache(val, mSize.x() - w, 0, 0x777777FF));
-		mValueCache->metrics.size[0] = w; // fudge the width
+		Eigen::Vector2f textSize = mFont->sizeText(max);
+		mValueCache = std::shared_ptr<TextCache>(mFont->buildTextCache(val, mSize.x() - textSize.x(), (mSize.y() - textSize.y()) / 2, 0x777777FF));
+		mValueCache->metrics.size[0] = textSize.x(); // fudge the width
 	}
 
 	// update knob position/size
