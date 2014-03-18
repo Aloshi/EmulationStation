@@ -20,7 +20,7 @@ public:
 private:
 	void save();
 	void fetch();
-	void fetchDone(MetaDataList result);
+	void fetchDone(const ScraperSearchResult& result);
 
 	MenuComponent mMenu;
 

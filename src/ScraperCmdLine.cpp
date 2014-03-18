@@ -138,6 +138,7 @@ int run_scraper_cmdline()
 	out << "Alright, let's do this thing!\n";
 	out << "=============================\n";
 
+	/*
 	std::shared_ptr<Scraper> scraper = Settings::getInstance()->getScraper();
 	for(auto sysIt = systems.begin(); sysIt != systems.end(); sysIt++)
 	{
@@ -275,6 +276,10 @@ int run_scraper_cmdline()
 	out << "==============================\n";
 	out << "SCRAPE COMPLETE!\n";
 	out << "==============================\n";
+	*/
+
+	out << "\n\n";
+	out << "ACTUALLY THIS IS STILL TODO\n";
 
 	return 0;
 }

@@ -59,13 +59,12 @@ void MenuComponent::updateGrid()
 	if(mButtonGrid)
 		mGrid.removeEntry(mButtonGrid);
 
+	mButtonGrid.reset();
+
 	if(mButtons.size())
 	{
 		mButtonGrid = makeButtonGrid(mWindow, mButtons);
-		
 		mGrid.setEntry(mButtonGrid, Vector2i(0, 2), true, false);
-	}else{
-		mButtonGrid.reset();
 	}
 }
 

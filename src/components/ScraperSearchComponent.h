@@ -25,8 +25,12 @@ public:
 
 	ScraperSearchComponent(Window* window, SearchType searchType = NEVER_AUTO_ACCEPT);
 
-	void setSearchParams(const ScraperSearchParams& params);
-	inline void setAcceptCallback(const std::function<void(MetaDataList*)>& acceptCallback) { mAcceptCallback = acceptCallback; }
+	void search(const ScraperSearchParams& params);
+
+	// Metadata assets will be resolved before calling the accept callback (e.g. result.mdl's "image" is automatically downloaded and properly set).
+	inline void setAcceptCallback(const std::function<void(const ScraperSearchResult&)>& acceptCallback) { mAcceptCallback = acceptCallback; }
+	inline void setSkipCallback(const std::function<void()>& skipCallback) { mSkipCallback = skipCallback; };
+	inline void setCancelCallback(const std::function<void()>& cancelCallback) { mCancelCallback = cancelCallback; }
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
@@ -40,12 +44,13 @@ private:
 	void updateThumbnail();
 	void updateInfoPane();
 
-	void search();
-	void onSearchReceived(std::vector<MetaDataList> results);
+	void onSearchError(const std::string& error);
+	void onSearchDone(const std::vector<ScraperSearchResult>& results);
 
 	int getSelectedIndex();
 
-	void returnResult(MetaDataList* result);
+	// resolve any metadata assets that need to be downloaded and return
+	void returnResult(ScraperSearchResult result);
 
 	ComponentGrid mGrid;
 
@@ -56,9 +61,12 @@ private:
 	std::shared_ptr<ComponentList> mResultList;
 
 	SearchType mSearchType;
-	ScraperSearchParams mSearchParams;
-	std::function<void(MetaDataList*)> mAcceptCallback;
+	ScraperSearchParams mLastSearch;
+	std::function<void(const ScraperSearchResult&)> mAcceptCallback;
+	std::function<void()> mSkipCallback;
+	std::function<void()> mCancelCallback;
 
-	std::vector<MetaDataList> mScraperResults;
+	std::unique_ptr<ScraperSearchHandle> mSearchHandle;
+	std::vector<ScraperSearchResult> mScraperResults;
 	std::unique_ptr<HttpReq> mThumbnailReq;
 };

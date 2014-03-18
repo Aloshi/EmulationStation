@@ -3,12 +3,22 @@
 #include "Scraper.h"
 #include "../HttpReq.h"
 
+class TheArchiveHandle : public ScraperSearchHandle
+{
+public:
+	TheArchiveHandle(const ScraperSearchParams& params, const std::string& url);
+
+	void update() override;
+
+private:
+	std::unique_ptr<HttpReq> mReq;
+	ScraperSearchParams mParams;
+};
+
 class TheArchiveScraper : public Scraper
 {
 public:
-	const char* getName();
-private:
-	std::shared_ptr<HttpReq> makeHttpReq(ScraperSearchParams params) override;
-	std::vector<MetaDataList> parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq>) override;
-};
+	std::unique_ptr<ScraperSearchHandle> getResultsAsync(const ScraperSearchParams& params) override;
 
+	const char* getName();
+};

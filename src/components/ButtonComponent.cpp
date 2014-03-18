@@ -13,6 +13,7 @@ ButtonComponent::ButtonComponent(Window* window, const std::string& text, const 
 {
 	setPressedFunc(func);
 	setText(text, helpText);
+	updateImage();
 }
 
 void ButtonComponent::onSizeChanged()
@@ -71,7 +72,7 @@ void ButtonComponent::updateImage()
 {
 	if(!mEnabled || !mPressedFunc)
 	{
-		mBox.setImagePath(":/button.png");
+		mBox.setImagePath(":/button_filled.png");
 		mBox.setCenterColor(0x770000FF);
 		mBox.setEdgeColor(0x770000FF);
 		return;

@@ -6,7 +6,7 @@
 
 const char* TheArchiveScraper::getName() { return "TheArchive"; }
 
-std::shared_ptr<HttpReq> TheArchiveScraper::makeHttpReq(ScraperSearchParams params)
+std::unique_ptr<ScraperSearchHandle> TheArchiveScraper::getResultsAsync(const ScraperSearchParams& params)
 {
 	std::string path = "/2.0/Archive.search/xml/7TTRM4MNTIKR2NNAGASURHJOZJ3QXQC5/";
 
@@ -17,25 +17,44 @@ std::shared_ptr<HttpReq> TheArchiveScraper::makeHttpReq(ScraperSearchParams para
 	path += HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method
 
-	return std::make_shared<HttpReq>("api.archive.vg" + path);
+	path = "api.archive.vg" + path;
+
+	return std::unique_ptr<ScraperSearchHandle>(new TheArchiveHandle(params, path));
 }
 
-std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq> req)
+TheArchiveHandle::TheArchiveHandle(const ScraperSearchParams& params, const std::string& url) : 
+	mReq(std::unique_ptr<HttpReq>(new HttpReq(url)))
 {
-	std::vector<MetaDataList> mdl;
+	setStatus(SEARCH_IN_PROGRESS);
+}
 
-	if(req->status() != HttpReq::REQ_SUCCESS)
+void TheArchiveHandle::update()
+{
+	if(status() == SEARCH_DONE)
+		return;
+
+	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
+		return;
+
+	if(mReq->status() != HttpReq::REQ_SUCCESS)
 	{
-		LOG(LogError) << "HttpReq error";
-		return mdl;
+		std::stringstream ss;
+		ss << "Network error: " << mReq->getErrorMsg();
+		setError(ss.str());
+		return;
 	}
 
+	// if we're here, our HTTP request finished successfully
+	
+	// so, let's try building our result list
+	std::vector<ScraperSearchResult> results;
+
 	pugi::xml_document doc;
-	pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
+	pugi::xml_parse_result parseResult = doc.load(mReq->getContent().c_str());
 	if(!parseResult)
 	{
-		LOG(LogError) << "Error parsing XML";
-		return mdl;
+		setError("Error parsing XML");
+		return;
 	}
 
 	pugi::xml_node data = doc.child("OpenSearchDescription").child("games");
@@ -44,30 +63,34 @@ std::vector<MetaDataList> TheArchiveScraper::parseReq(ScraperSearchParams params
 	pugi::xml_node game = data.child("game");
 	while(game && resultNum < MAX_SCRAPER_RESULTS)
 	{
-		mdl.push_back(MetaDataList(GAME_METADATA));
-		mdl.back().set("name", game.child("title").text().get());
-		mdl.back().set("desc", game.child("description").text().get());
+		ScraperSearchResult result;
+
+		result.mdl.set("name", game.child("title").text().get());
+		result.mdl.set("desc", game.child("description").text().get());
 
 		//Archive.search does not return ratings
 
-		mdl.back().set("developer", game.child("developer").text().get());
+		result.mdl.set("developer", game.child("developer").text().get());
 
 		std::string genre = game.child("genre").text().get();
 		size_t search = genre.find_last_of(" &gt; ");
 		genre = genre.substr(search == std::string::npos ? 0 : search, std::string::npos);
-		mdl.back().set("genre", genre);
+		result.mdl.set("genre", genre);
 
 		pugi::xml_node image = game.child("box_front");
 		pugi::xml_node thumbnail = game.child("box_front_small");
 
-		if (image)
-			mdl.back().set("image",image.text().get());
-		if (thumbnail)
-			mdl.back().set("thumbnail", thumbnail.text().get());
+		if(image)
+			result.imageUrl = image.text().get();
+		if(thumbnail)
+			result.thumbnailUrl = thumbnail.text().get();
+
+		results.push_back(result);
 
 		resultNum++;
 		game = game.next_sibling("game");
 	}
 
-	return mdl;
+	setStatus(SEARCH_DONE);
+	setResults(results);
 }

@@ -63,36 +63,8 @@ void GuiMetaDataEd::fetch()
 	mWindow->pushGui(scr);
 }
 
-void GuiMetaDataEd::fetchDone(MetaDataList result)
+void GuiMetaDataEd::fetchDone(const ScraperSearchResult& result)
 {
-	//TODO - replace this with resolveMetaDataAssetsAsync!
-
-	//this is a little tricky:
-	//go through the list of returned results, if anything is an image and the path looks like a URL:
-	//  (1) start an async download + resize (will create an AsyncReq that blocks further user input)
-	//      (when this is finished, call result.set(key, newly_downloaded_file_path) and call fetchDone() again)
-	//  (2) return from this function immediately
-	for(auto it = mMetaDataDecl.begin(); it != mMetaDataDecl.end(); it++)
-	{
-		std::string key = it->key;
-		std::string val = result.get(it->key);
-
-		//val is /probably/ a URL
-		if(it->type == MD_IMAGE_PATH && HttpReq::isUrl(val))
-		{
-			downloadImageAsync(mWindow, val, getSaveAsPath(mScraperParams, key, val), 
-				[this, result, key] (std::string filePath) mutable -> void {
-					//skip it
-					if(filePath.empty())
-						LOG(LogError) << "Error resolving boxart";
-
-					result.set(key, filePath);
-					this->fetchDone(result);
-			});
-			return;
-		}
-	}
-
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
 		//don't overwrite statistics
@@ -100,7 +72,7 @@ void GuiMetaDataEd::fetchDone(MetaDataList result)
 			continue;
 
 		const std::string& key = mMetaDataDecl.at(i).key;
-		mEditors.at(i)->setValue(result.get(key));
+		mEditors.at(i)->setValue(result.mdl.get(key));
 	}
 }
 

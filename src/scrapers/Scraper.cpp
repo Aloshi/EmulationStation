@@ -9,30 +9,20 @@
 #include "GamesDBScraper.h"
 #include "TheArchiveScraper.h"
 
-std::vector<MetaDataList> Scraper::getResults(ScraperSearchParams params)
+std::string ScraperSearchHandle::getStatusString()
 {
-	std::shared_ptr<HttpReq> req = makeHttpReq(params);
-	while(req->status() == HttpReq::REQ_IN_PROGRESS);
-
-	return parseReq(params, req);
-}
-
-void Scraper::getResultsAsync(ScraperSearchParams params, Window* window, std::function<void(std::vector<MetaDataList>)> returnFunc)
-{
-	std::shared_ptr<HttpReq> httpreq = makeHttpReq(params);
-	AsyncReqComponent* req = new AsyncReqComponent(window, httpreq,
-		[this, params, returnFunc] (std::shared_ptr<HttpReq> r)
+	switch(mStatus)
 	{
-		returnFunc(parseReq(params, r));
-	}, [returnFunc] ()
-	{
-		returnFunc(std::vector<MetaDataList>());
-	});
-
-	window->pushGui(req);
+	case SEARCH_IN_PROGRESS:
+		return "search in progress";
+	case SEARCH_ERROR:
+		return mError;
+	case SEARCH_DONE:
+		return "search done";
+	default:
+		return "something impossible has occured";
+	}
 }
-
-
 
 std::string processFileDownload(std::shared_ptr<HttpReq> r, std::string saveAs)
 {

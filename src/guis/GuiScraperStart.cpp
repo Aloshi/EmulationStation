@@ -1,5 +1,5 @@
 #include "GuiScraperStart.h"
-#include "GuiScraperLog.h"
+#include "GuiScraperMulti.h"
 #include "GuiMsgBox.h"
 
 #include "../components/TextComponent.h"
@@ -14,9 +14,9 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	// add filters (with first one selected)
 	mFilters = std::make_shared< OptionListComponent<GameFilterFunc> >(mWindow, "SCRAPE THESE GAMES", false);
 	mFilters->add("All Games", 
-		[](SystemData*, FileData*) -> bool { return true; }, true);
+		[](SystemData*, FileData*) -> bool { return true; }, false);
 	mFilters->add("Only missing image", 
-		[](SystemData*, FileData* g) -> bool { return g->metadata.get("image").empty(); }, false);
+		[](SystemData*, FileData* g) -> bool { return g->metadata.get("image").empty(); }, true);
 	mMenu.addWithLabel("Filter", mFilters);
 
 	//add systems (all with a platformid specified selected)
@@ -57,9 +57,8 @@ void GuiScraperStart::start()
 {
 	std::queue<ScraperSearchParams> searches = getSearches(mSystems->getSelectedObjects(), mFilters->getSelected());
 
-	GuiScraperLog* gsl = new GuiScraperLog(mWindow, searches, mApproveResults->getState());
-	mWindow->pushGui(gsl);
-	gsl->start();
+	GuiScraperMulti* gsm = new GuiScraperMulti(mWindow, searches, mApproveResults->getState());
+	mWindow->pushGui(gsm);
 	delete this;
 }
 

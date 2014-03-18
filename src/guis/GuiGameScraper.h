@@ -7,16 +7,13 @@
 class GuiGameScraper : public GuiComponent
 {
 public:
-	GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(MetaDataList)> doneFunc, std::function<void()> skipFunc = nullptr);
+	GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc);
 
 	bool input(InputConfig* config, Input input) override;
-	void update(int deltaTime) override;
-
+	
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
-	int mSearchCountdown; // haaack
-
 	ComponentGrid mGrid;
 	NinePatchComponent mBox;
 
@@ -24,6 +21,5 @@ private:
 
 	ScraperSearchParams mSearchParams;
 
-	std::function<void(MetaDataList)> mDoneFunc;
-	std::function<void()> mSkipFunc;
+	std::function<void()> mCancelFunc;
 };

@@ -55,7 +55,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(TURBOGRAFX_16, "TurboGrafx 16");
 
 
-std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
+std::unique_ptr<ScraperSearchHandle> GamesDBScraper::getResultsAsync(const ScraperSearchParams& params)
 {
 	std::string path = "/api/GetGame.php?";
 
@@ -71,25 +71,41 @@ std::shared_ptr<HttpReq> GamesDBScraper::makeHttpReq(ScraperSearchParams params)
 		path += HttpReq::urlEncode(gamesdb_platformid_map.at(params.system->getPlatformId()));
 	}
 
-	return std::make_shared<HttpReq>("thegamesdb.net" + path);
+	path = "thegamesdb.net" + path;
+
+	return std::unique_ptr<ScraperSearchHandle>(new GamesDBHandle(params, path));
 }
 
-std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq> req)
+GamesDBHandle::GamesDBHandle(const ScraperSearchParams& params, const std::string& url) : 
+	mReq(std::unique_ptr<HttpReq>(new HttpReq(url)))
 {
-	std::vector<MetaDataList> mdl;
+	setStatus(SEARCH_IN_PROGRESS);
+}
 
-	if(req->status() != HttpReq::REQ_SUCCESS)
+void GamesDBHandle::update()
+{
+	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
+		return;
+
+	if(mReq->status() != HttpReq::REQ_SUCCESS)
 	{
-		LOG(LogError) << "HttpReq error";
-		return mdl;
+		std::stringstream ss;
+		ss << "Network error - " << mReq->getErrorMsg();
+		setError(ss.str());
+		return;
 	}
 
+	// our HTTP request was successful
+	// try to build our result list
+
+	std::vector<ScraperSearchResult> results;
+
 	pugi::xml_document doc;
-	pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
+	pugi::xml_parse_result parseResult = doc.load(mReq->getContent().c_str());
 	if(!parseResult)
 	{
-		LOG(LogError) << "Error parsing XML";
-		return mdl;
+		setError("Error parsing XML");
+		return;
 	}
 
 	pugi::xml_node data = doc.child("Data");
@@ -100,24 +116,25 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 	pugi::xml_node game = data.child("Game");
 	while(game && resultNum < MAX_SCRAPER_RESULTS)
 	{
-		mdl.push_back(MetaDataList(GAME_METADATA));
-		mdl.back().set("name", game.child("GameTitle").text().get());
-		mdl.back().set("desc", game.child("Overview").text().get());
+		ScraperSearchResult result;
+
+		result.mdl.set("name", game.child("GameTitle").text().get());
+		result.mdl.set("desc", game.child("Overview").text().get());
 
 		boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
-		mdl.back().setTime("releasedate", rd);
+		result.mdl.setTime("releasedate", rd);
 
-		mdl.back().set("developer", game.child("Developer").text().get());
-		mdl.back().set("publisher", game.child("Publisher").text().get());
-		mdl.back().set("genre", game.child("Genres").first_child().text().get());
-		mdl.back().set("players", game.child("Players").text().get());
+		result.mdl.set("developer", game.child("Developer").text().get());
+		result.mdl.set("publisher", game.child("Publisher").text().get());
+		result.mdl.set("genre", game.child("Genres").first_child().text().get());
+		result.mdl.set("players", game.child("Players").text().get());
 
 		if(Settings::getInstance()->getBool("ScrapeRatings") && game.child("Rating"))
 		{
 			float ratingVal = (game.child("Rating").text().as_int() / 10.0f);
 			std::stringstream ss;
 			ss << ratingVal;
-			mdl.back().set("rating", ss.str());
+			result.mdl.set("rating", ss.str());
 		}
 
 		pugi::xml_node images = game.child("Images");
@@ -128,14 +145,18 @@ std::vector<MetaDataList> GamesDBScraper::parseReq(ScraperSearchParams params, s
 
 			if(art)
 			{
-				mdl.back().set("thumbnail", baseImageUrl + art.attribute("thumb").as_string());
-				mdl.back().set("image", baseImageUrl + art.text().get());
+				result.thumbnailUrl = baseImageUrl + art.attribute("thumb").as_string();
+				result.imageUrl = baseImageUrl + art.text().get();
 			}
 		}
+
+		results.push_back(result);
 
 		resultNum++;
 		game = game.next_sibling("Game");
 	}
 
-	return mdl;
+	setStatus(SEARCH_DONE);
+	setResults(results);
+	return;
 }

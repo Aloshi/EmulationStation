@@ -16,17 +16,53 @@ struct ScraperSearchParams
 	std::string nameOverride;
 };
 
+struct ScraperSearchResult
+{
+	ScraperSearchResult() : mdl(GAME_METADATA) {};
+
+	MetaDataList mdl;
+	std::string imageUrl;
+	std::string thumbnailUrl;
+};
+
+enum ScraperSearchStatus
+{
+	SEARCH_IN_PROGRESS,
+	SEARCH_ERROR,
+	SEARCH_DONE
+};
+
+class ScraperSearchHandle
+{
+public:
+	virtual void update() = 0;
+
+	// Update and return the latest status.
+	inline ScraperSearchStatus status() { update(); return mStatus; }
+
+	// User-friendly string of our current status.  Will return error message if status() == SEARCH_ERROR.
+	std::string getStatusString();
+
+	inline const std::vector<ScraperSearchResult>& getResults() const { assert(mStatus != SEARCH_IN_PROGRESS); return mResults; }
+
+protected:
+	inline void setError(const std::string& error) { setStatus(SEARCH_ERROR); mError = error; }
+	inline void setStatus(ScraperSearchStatus status) { mStatus = status; }
+	inline void setResults(const std::vector<ScraperSearchResult>& results) { mResults = results; }
+
+private:
+	std::string mError;
+	ScraperSearchStatus mStatus;
+	std::vector<ScraperSearchResult> mResults;
+};
+
 class Scraper
 {
 public:
 	//Get a list of potential results.
-	virtual std::vector<MetaDataList> getResults(ScraperSearchParams params);
-	virtual void getResultsAsync(ScraperSearchParams params, Window* window, std::function<void(std::vector<MetaDataList>)> returnFunc);
+	virtual std::unique_ptr<ScraperSearchHandle> getResultsAsync(const ScraperSearchParams& params) = 0;
 
 	virtual const char* getName() = 0;
-private:
-	virtual std::shared_ptr<HttpReq> makeHttpReq(ScraperSearchParams params) = 0;
-	virtual std::vector<MetaDataList> parseReq(ScraperSearchParams params, std::shared_ptr<HttpReq>) = 0;
 };
 
 std::shared_ptr<Scraper> createScraperByName(const std::string& name);

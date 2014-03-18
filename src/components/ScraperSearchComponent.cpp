@@ -1,9 +1,10 @@
 #include "ScraperSearchComponent.h"
 
-#include "../components/TextComponent.h"
-#include "../components/ScrollableContainer.h"
-#include "../components/ImageComponent.h"
-#include "../components/ComponentList.h"
+#include "../guis/GuiMsgBox.h"
+#include "TextComponent.h"
+#include "ScrollableContainer.h"
+#include "ImageComponent.h"
+#include "ComponentList.h"
 #include "../HttpReq.h"
 #include "../Settings.h"
 #include "../Log.h"
@@ -12,9 +13,6 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mGrid(window, Eigen::Vector2i(4, 3)),
 	mSearchType(type)
 {
-	mSearchParams.system = NULL;
-	mSearchParams.game = NULL;
-
 	addChild(&mGrid);
 
 	using namespace Eigen;
@@ -85,18 +83,17 @@ void ScraperSearchComponent::updateViewStyle()
 	}
 }
 
-void ScraperSearchComponent::setSearchParams(const ScraperSearchParams& params)
+void ScraperSearchComponent::search(const ScraperSearchParams& params)
 {
-	mSearchParams = params;
-	search();
+	mResultList->clear();
+	mScraperResults.clear();
+	updateInfoPane();
+
+	mLastSearch = params;
+	mSearchHandle = Settings::getInstance()->getScraper()->getResultsAsync(params);
 }
 
-void ScraperSearchComponent::search()
-{
-	Settings::getInstance()->getScraper()->getResultsAsync(mSearchParams, mWindow, std::bind(&ScraperSearchComponent::onSearchReceived, this, std::placeholders::_1));
-}
-
-void ScraperSearchComponent::onSearchReceived(std::vector<MetaDataList> results)
+void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>& results)
 {
 	mResultList->clear();
 
@@ -117,7 +114,7 @@ void ScraperSearchComponent::onSearchReceived(std::vector<MetaDataList> results)
 		for(int i = 0; i < end; i++)
 		{
 			row.elements.clear();
-			row.addElement(std::make_shared<TextComponent>(mWindow, results.at(i).get("name"), font, color), true);
+			row.addElement(std::make_shared<TextComponent>(mWindow, results.at(i).mdl.get("name"), font, color), true);
 			mResultList->addRow(row);
 		}
 		mGrid.resetCursor();
@@ -128,14 +125,21 @@ void ScraperSearchComponent::onSearchReceived(std::vector<MetaDataList> results)
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
 	{
 		if(mScraperResults.size() == 0)
-			returnResult(NULL);
+			mSkipCallback();
 		else
-			returnResult(&mScraperResults.front());
+			returnResult(mScraperResults.front());
 	}else if(mSearchType == ALWAYS_ACCEPT_MATCHING_CRC)
 	{
 		// TODO
-		assert(false);
 	}
+}
+
+void ScraperSearchComponent::onSearchError(const std::string& error)
+{
+	mWindow->pushGui(new GuiMsgBox(mWindow, error,
+		"RETRY", std::bind(&ScraperSearchComponent::search, this, mLastSearch),
+		"SKIP", mSkipCallback,
+		"CANCEL", mCancelCallback));
 }
 
 int ScraperSearchComponent::getSelectedIndex()
@@ -151,17 +155,21 @@ void ScraperSearchComponent::updateInfoPane()
 	int i = getSelectedIndex();
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
-		mResultName->setText(mScraperResults.at(i).get("name"));
-		mResultDesc->setText(mScraperResults.at(i).get("desc"));
+		mResultName->setText(mScraperResults.at(i).mdl.get("name"));
+		mResultDesc->setText(mScraperResults.at(i).mdl.get("desc"));
 		mDescContainer->setScrollPos(Eigen::Vector2d(0, 0));
 		mDescContainer->resetAutoScrollTimer();
 
-		std::string thumb = mScraperResults.at(i).get("thumbnail");
 		mResultThumbnail->setImage("");
+		const std::string& thumb = mScraperResults.at(i).thumbnailUrl;
 		if(!thumb.empty())
 			mThumbnailReq = std::unique_ptr<HttpReq>(new HttpReq(thumb));
 		else
 			mThumbnailReq.reset();
+	}else{
+		mResultName->setText(" ");
+		mResultDesc->setText(" ");
+		mResultThumbnail->setImage("");
 	}
 }
 
@@ -172,7 +180,7 @@ bool ScraperSearchComponent::input(InputConfig* config, Input input)
 		//if you're on a result
 		if(getSelectedIndex() != -1)
 		{
-			returnResult(&mScraperResults.at(getSelectedIndex()));
+			returnResult(mScraperResults.at(getSelectedIndex()));
 			return true;
 		}
 	}
@@ -187,9 +195,27 @@ bool ScraperSearchComponent::input(InputConfig* config, Input input)
 	return ret;
 }
 
-void ScraperSearchComponent::returnResult(MetaDataList* result)
+void ScraperSearchComponent::returnResult(ScraperSearchResult result)
 {
-	assert(mAcceptCallback);
+	// resolve metadata image before returning
+	if(!result.imageUrl.empty())
+	{
+		downloadImageAsync(mWindow, result.imageUrl, getSaveAsPath(mLastSearch, "image", result.imageUrl), 
+			[this, result] (std::string filePath) mutable -> void
+			{
+					if(filePath.empty())
+					{
+						onSearchError("Error downloading boxart.");
+						return;
+					}
+					
+					result.mdl.set("image", filePath);
+					result.imageUrl = "";
+					this->returnResult(result); // re-enter this function
+			});
+		return;
+	}
+
 	mAcceptCallback(result);
 }
 
@@ -198,6 +224,19 @@ void ScraperSearchComponent::update(int deltaTime)
 	if(mThumbnailReq && mThumbnailReq->status() != HttpReq::REQ_IN_PROGRESS)
 	{
 		updateThumbnail();
+	}
+
+	if(mSearchHandle && mSearchHandle->status() != SEARCH_IN_PROGRESS)
+	{
+		if(mSearchHandle->status() == SEARCH_DONE)
+		{
+			onSearchDone(mSearchHandle->getResults());
+		}else if(mSearchHandle->status() == SEARCH_ERROR)
+		{
+			onSearchError(mSearchHandle->getStatusString());
+		}
+
+		mSearchHandle.reset();
 	}
 
 	GuiComponent::update(deltaTime);
