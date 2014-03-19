@@ -5,6 +5,7 @@
 #include "../Log.h"
 #include "../Renderer.h"
 #include "../ThemeData.h"
+#include "../Util.h"
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
@@ -136,7 +137,7 @@ void ImageComponent::setColorShift(unsigned int color)
 
 void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
 	Renderer::setMatrix(trans);
 	
 	if(mTexture && getOpacity() > 0)
@@ -172,6 +173,9 @@ void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloa
 	points[8] = posX - (mSize.x() * mOrigin.x());		points[9] = posY + (mSize.y() * (1 - mOrigin.y()));
 	points[10] = posX + (mSize.x() * (1 -mOrigin.x()));		points[11] = posY + (mSize.y() * (1 - mOrigin.y()));
 
+	// round vertices
+	for(int i = 0; i < 12; i++)
+		points[i] = round(points[i]);
 
 
 	texs[0] = 0;		texs[1] = py;

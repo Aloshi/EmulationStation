@@ -85,13 +85,14 @@ void ButtonComponent::updateImage()
 
 void ButtonComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
-
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	
 	mBox.render(trans);
 
 	if(mTextCache)
 	{
 		Eigen::Vector3f centerOffset((mSize.x() - mTextCache->metrics.size.x()) / 2, (mSize.y() - mTextCache->metrics.size.y()) / 2, 0);
+		centerOffset = roundVector(centerOffset);
 		trans = trans.translate(centerOffset);
 
 		Renderer::setMatrix(trans);

@@ -43,6 +43,10 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+		// multisample anti-aliasing
+		//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+		//SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
+
 #ifdef USE_OPENGL_ES
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
 #endif
@@ -90,12 +94,6 @@ namespace Renderer
 		}
 
 		sdlContext = SDL_GL_CreateContext(sdlWindow);
-
-		//usually display width/height are not specified, i.e. zero, which SDL automatically takes as "native resolution"
-		//so, since other things rely on the size of the screen (damn currently unnormalized coordinate system), we set it here
-		//even though the system was already initialized - this makes sure it gets reinitialized to the original resolution when we return from a game
-		//display_width = sdlWindow->w;
-		//display_height = sdlWindow->h;
 
 		//hide mouse cursor
 		initialCursorState = SDL_ShowCursor(0) == 1;

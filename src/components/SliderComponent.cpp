@@ -3,6 +3,7 @@
 #include "../Renderer.h"
 #include "../resources/Font.h"
 #include "../Log.h"
+#include "../Util.h"
 
 SliderComponent::SliderComponent(Window* window, float min, float max, float increment, const std::string& suffix) : GuiComponent(window),
 	mMin(min), mMax(max), mIncrement(increment), mMoveRate(0), mRepeatWaitTimer(0), mKnob(window), mSuffix(suffix)
@@ -74,7 +75,7 @@ void SliderComponent::update(int deltaTime)
 
 void SliderComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
 	Renderer::setMatrix(trans);
 
 	// render suffix
@@ -84,8 +85,8 @@ void SliderComponent::render(const Eigen::Affine3f& parentTrans)
 	float width = mSize.x() - mKnob.getSize().x() - (mValueCache ? mValueCache->metrics.size.x() + 4 : 0);
 
 	//render line
-	const int lineWidth = 2;
-	Renderer::drawRect((int)mKnob.getSize().x() / 2, (int)mSize.y() / 2 - lineWidth / 2, (int)width, lineWidth, 0x777777FF);
+	const float lineWidth = 2;
+	Renderer::drawRect(mKnob.getSize().x() / 2, mSize.y() / 2 - lineWidth / 2, width, lineWidth, 0x777777FF);
 
 	//render knob
 	mKnob.render(trans);

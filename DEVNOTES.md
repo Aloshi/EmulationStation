@@ -33,3 +33,13 @@ Creating a new GameListView Class
 =================================
 
 1. Don't allow the user to navigate to the root node's parent. If you use a stack of some sort to keep track of past cursor states this will be a natural side effect.
+
+
+
+Creating a new Component
+========================
+
+If your component is not made up of other components, and you draw something to the screen with OpenGL, make sure:
+
+* Your vertex positions are rounded before you render (you can use round(float) in Util.h to do this).
+* Your transform matrix's translation is rounded (you can use roundMatrix(affine3f) in Util.h to do this).

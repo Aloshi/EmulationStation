@@ -6,6 +6,7 @@
 #include <boost/filesystem.hpp>
 #include "Log.h"
 #include <stack>
+#include "Util.h"
 
 namespace Renderer {
 	std::stack<Eigen::Vector4i> clipStack;
@@ -85,6 +86,11 @@ namespace Renderer {
 			Eigen::Vector4i top = clipStack.top();
 			glScissor(top[0], top[1], top[2], top[3]);
 		}
+	}
+
+	void drawRect(float x, float y, float w, float h, unsigned int color, GLenum blend_sfactor, GLenum blend_dfactor)
+	{
+		drawRect((int)round(x), (int)round(y), (int)round(w), (int)round(h), color, blend_sfactor, blend_dfactor);
 	}
 
 	void drawRect(int x, int y, int w, int h, unsigned int color, GLenum blend_sfactor, GLenum blend_dfactor)

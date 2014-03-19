@@ -1,6 +1,7 @@
 #include "RatingComponent.h"
 #include "../Renderer.h"
 #include "../Window.h"
+#include "../Util.h"
 
 RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 {
@@ -71,11 +72,14 @@ void RatingComponent::updateVertices()
 	mVertices[10].pos << fw, 0.0f;
 		mVertices[10].tex << numStars, 1.0f;
 	mVertices[11] = mVertices[7];
+
+	for(int i = 0; i < 12; i++)
+		mVertices[i].pos = roundVector(mVertices[i].pos);
 }
 
 void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
 	Renderer::setMatrix(trans);
 
 	glEnable(GL_TEXTURE_2D);

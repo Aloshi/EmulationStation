@@ -20,3 +20,39 @@ std::string strToUpper(const std::string& str)
 {
 	return strToUpper(str.c_str());
 }
+
+float round(float num)
+{
+	return (float)((int)(num + 0.5f));
+}
+
+Eigen::Affine3f& roundMatrix(Eigen::Affine3f& mat)
+{
+	mat.translation()[0] = round(mat.translation()[0]);
+	mat.translation()[1] = round(mat.translation()[1]);
+	return mat;
+}
+
+Eigen::Affine3f roundMatrix(const Eigen::Affine3f& mat)
+{
+	Eigen::Affine3f ret = mat;
+	roundMatrix(ret);
+	return ret;
+}
+
+Eigen::Vector3f roundVector(const Eigen::Vector3f& vec)
+{
+	Eigen::Vector3f ret = vec;
+	ret[0] = round(ret[0]);
+	ret[1] = round(ret[1]);
+	ret[2] = round(ret[2]);
+	return ret;
+}
+
+Eigen::Vector2f roundVector(const Eigen::Vector2f& vec)
+{
+	Eigen::Vector2f ret = vec;
+	ret[0] = round(ret[0]);
+	ret[1] = round(ret[1]);
+	return ret;
+}

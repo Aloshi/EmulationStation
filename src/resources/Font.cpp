@@ -5,6 +5,7 @@
 #include "../Renderer.h"
 #include <boost/filesystem.hpp>
 #include "../Log.h"
+#include "../Util.h"
 
 FT_Library Font::sLibrary;
 bool Font::libraryInitialized = false;
@@ -474,6 +475,12 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 		vert[i + 4].tex = vert[i + 1].tex;
 		vert[i + 5].tex[0] = vert[i + 1].tex.x();
 		vert[i + 5].tex[1] = vert[i + 0].tex.y();
+
+		// round
+		for(int j = 0; j < 6; j++)
+		{
+			vert[i + j].pos = roundVector(vert[i + j].pos);
+		}
 
 		x += charData[letter].advX * fontScale;
 	}

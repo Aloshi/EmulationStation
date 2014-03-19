@@ -3,6 +3,7 @@
 #include "../Log.h"
 #include "../Window.h"
 #include "../ThemeData.h"
+#include "../Util.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
 	mFont(Font::get(FONT_SIZE_MEDIUM)), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
@@ -68,11 +69,12 @@ void TextComponent::setCentered(bool center)
 
 void TextComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
 
 	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
-	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)dim.x(), (int)dim.y()));
+	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), 
+		Eigen::Vector2i((int)(dim.x() + 0.5f), (int)(dim.y() + 0.5f)));
 
 	if(mTextCache)
 	{
@@ -80,6 +82,7 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 		{
 			const Eigen::Vector2f& textSize = mTextCache->metrics.size;
 			Eigen::Vector3f off((getSize().x() - textSize.x()) / 2, (getSize().y() - textSize.y()) / 2, 0);
+			off = roundVector(off);
 
 			trans.translate(off);
 			Renderer::setMatrix(trans);

@@ -3,6 +3,7 @@
 #include "../Log.h"
 #include "../Renderer.h"
 #include "../ThemeData.h"
+#include "../Util.h"
 
 NinePatchComponent::NinePatchComponent(Window* window, const std::string& path, unsigned int edgeColor, unsigned int centerColor) : GuiComponent(window),
 	mEdgeColor(edgeColor), mCenterColor(centerColor), 
@@ -121,11 +122,18 @@ void NinePatchComponent::buildVertices()
 
 		v += 6;
 	}
+
+	// round vertices
+	for(int i = 0; i < 6*9; i++)
+	{
+		mVertices[i].pos = roundVector(mVertices[i].pos);
+	}
 }
 
 void NinePatchComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	
 	if(mTexture && mVertices != NULL)
 	{
 		Renderer::setMatrix(trans);

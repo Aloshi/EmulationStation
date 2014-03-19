@@ -3,6 +3,7 @@
 #include "../Renderer.h"
 #include "../Window.h"
 #include "../Log.h"
+#include "../Util.h"
 
 DateTimeComponent::DateTimeComponent(Window* window) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(DISP_DATE), mRelativeUpdateAccumulator(0), 
@@ -136,7 +137,7 @@ void DateTimeComponent::update(int deltaTime)
 
 void DateTimeComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
 	Renderer::setMatrix(trans);
 
 	if(mTextCache)
