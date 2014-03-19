@@ -42,7 +42,7 @@ public:
 
 	std::string getErrorMsg();
 
-	std::string getContent();
+	std::string getContent() const; // mStatus must be REQ_SUCCESS
 
 	static std::string urlEncode(const std::string &s);
 	static bool isUrl(const std::string& s);

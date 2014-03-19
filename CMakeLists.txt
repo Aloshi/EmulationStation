@@ -135,6 +135,7 @@ endif()
 #-------------------------------------------------------------------------------
 #define basic sources and headers
 set(ES_HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/AsyncHandle.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/AudioManager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/EmulationStation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.h

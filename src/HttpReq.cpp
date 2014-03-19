@@ -144,14 +144,9 @@ HttpReq::Status HttpReq::status()
 	return mStatus;
 }
 
-std::string HttpReq::getContent()
+std::string HttpReq::getContent() const
 {
-	if(mStatus != REQ_SUCCESS)
-	{
-		LOG(LogError) << "Called getContent() on an incomplete HttpReq!";
-		return "";
-	}
-
+	assert(mStatus == REQ_SUCCESS);
 	return mContent.str();
 }
 

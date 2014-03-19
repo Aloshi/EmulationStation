@@ -34,6 +34,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
+	void render(const Eigen::Affine3f& parentTrans) override;
 	std::vector<HelpPrompt> getHelpPrompts() override;
 	void onSizeChanged() override;	
 	void onFocusGained() override;
@@ -65,8 +66,10 @@ private:
 	std::function<void(const ScraperSearchResult&)> mAcceptCallback;
 	std::function<void()> mSkipCallback;
 	std::function<void()> mCancelCallback;
+	bool mBlockAccept;
 
 	std::unique_ptr<ScraperSearchHandle> mSearchHandle;
+	std::unique_ptr<MDResolveHandle> mMDResolveHandle;
 	std::vector<ScraperSearchResult> mScraperResults;
 	std::unique_ptr<HttpReq> mThumbnailReq;
 };

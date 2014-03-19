@@ -9,48 +9,116 @@
 #include "GamesDBScraper.h"
 #include "TheArchiveScraper.h"
 
-std::string ScraperSearchHandle::getStatusString()
+std::shared_ptr<Scraper> createScraperByName(const std::string& name)
 {
-	switch(mStatus)
+	if(name == "TheGamesDB")
+		return std::shared_ptr<Scraper>(new GamesDBScraper());
+	else if(name == "TheArchive")
+		return std::shared_ptr<Scraper>(new TheArchiveScraper());
+
+	return nullptr;
+}
+
+std::unique_ptr<MDResolveHandle> resolveMetaDataAssets(const ScraperSearchResult& result, const ScraperSearchParams& search)
+{
+	return std::unique_ptr<MDResolveHandle>(new MDResolveHandle(result, search));
+}
+
+MDResolveHandle::MDResolveHandle(const ScraperSearchResult& result, const ScraperSearchParams& search) : mResult(result)
+{
+	if(!result.imageUrl.empty())
 	{
-	case SEARCH_IN_PROGRESS:
-		return "search in progress";
-	case SEARCH_ERROR:
-		return mError;
-	case SEARCH_DONE:
-		return "search done";
-	default:
-		return "something impossible has occured";
+		std::string imgPath = getSaveAsPath(search, "image", result.imageUrl);
+		mFuncs.push_back(ResolvePair(downloadImageAsync(result.imageUrl, imgPath), [this, imgPath]
+		{
+			mResult.mdl.set("image", imgPath);
+			mResult.imageUrl = "";
+		}));
 	}
 }
 
-std::string processFileDownload(std::shared_ptr<HttpReq> r, std::string saveAs)
+void MDResolveHandle::update()
 {
-	if(r->status() != HttpReq::REQ_SUCCESS)
+	if(mStatus == ASYNC_DONE || mStatus == ASYNC_ERROR)
+		return;
+	
+	auto it = mFuncs.begin();
+	while(it != mFuncs.end())
 	{
-		LOG(LogError) << "Failed to download file - HttpReq error: " << r->getErrorMsg();
-		return "";
+		if(it->first->status() == ASYNC_ERROR)
+		{
+			setError(it->first->getStatusString());
+			return;
+		}else if(it->first->status() == ASYNC_DONE)
+		{
+			it->second();
+			it = mFuncs.erase(it);
+			continue;
+		}
+		it++;
 	}
 
-	std::ofstream stream(saveAs, std::ios_base::out | std::ios_base::binary);
-	if(stream.fail())
+	if(mFuncs.empty())
+		setStatus(ASYNC_DONE);
+}
+
+std::unique_ptr<AsyncHandle> downloadImageAsync(const std::string& url, const std::string& saveAs)
+{
+	return std::unique_ptr<ImageDownloadHandle>(new ImageDownloadHandle(url, saveAs, 
+		Settings::getInstance()->getInt("ScraperResizeWidth"), Settings::getInstance()->getInt("ScraperResizeHeight")));
+}
+
+ImageDownloadHandle::ImageDownloadHandle(const std::string& url, const std::string& path, int maxWidth, int maxHeight) : 
+	mSavePath(path), mMaxWidth(maxWidth), mMaxHeight(maxHeight), mReq(new HttpReq(url))
+{
+}
+
+void ImageDownloadHandle::update()
+{
+	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
+		return;
+
+	if(mReq->status() != HttpReq::REQ_SUCCESS)
 	{
-		LOG(LogError) << "Failed to open \"" << saveAs << "\" for writing downloaded file.";
-		return "";
+		std::stringstream ss;
+		ss << "Network error: " << mReq->getErrorMsg();
+		setError(ss.str());
+		return;
 	}
 
-	std::string content = r->getContent();
+	// download is done, save it to disk
+	std::ofstream stream(mSavePath, std::ios_base::out | std::ios_base::binary);
+	if(stream.bad())
+	{
+		setError("Failed to open image path to write. Permission error? Disk full?");
+		return;
+	}
+
+	const std::string& content = mReq->getContent();
 	stream.write(content.data(), content.length());
 	stream.close();
+	if(stream.bad())
+	{
+		setError("Failed to save image. Disk full?");
+		return;
+	}
 
-	return saveAs;
+	// resize it
+	if(!resizeImage(mSavePath, mMaxWidth, mMaxHeight))
+	{
+		setError("Error saving resized image. Out of memory? Disk full?");
+		return;
+	}
+
+	setStatus(ASYNC_DONE);
 }
 
 //you can pass 0 for width or height to keep aspect ratio
-void resizeImage(const std::string& path, int maxWidth, int maxHeight)
+bool resizeImage(const std::string& path, int maxWidth, int maxHeight)
 {
+	// nothing to do
 	if(maxWidth == 0 && maxHeight == 0)
-		return;
+		return true;
 
 	FREE_IMAGE_FORMAT format = FIF_UNKNOWN;
 	FIBITMAP* image = NULL;
@@ -62,7 +130,7 @@ void resizeImage(const std::string& path, int maxWidth, int maxHeight)
 	if(format == FIF_UNKNOWN)
 	{
 		LOG(LogError) << "Error - could not detect filetype for image \"" << path << "\"!";
-		return;
+		return false;
 	}
 
 	//make sure we can read this filetype first, then load it
@@ -71,7 +139,7 @@ void resizeImage(const std::string& path, int maxWidth, int maxHeight)
 		image = FreeImage_Load(format, path.c_str());
 	}else{
 		LOG(LogError) << "Error - file format reading not supported for image \"" << path << "\"!";
-		return;
+		return false;
 	}
 
 	float width = (float)FreeImage_GetWidth(image);
@@ -91,43 +159,16 @@ void resizeImage(const std::string& path, int maxWidth, int maxHeight)
 	if(imageRescaled == NULL)
 	{
 		LOG(LogError) << "Could not resize image! (not enough memory? invalid bitdepth?)";
-		return;
+		return false;
 	}
 
-	if(!FreeImage_Save(format, imageRescaled, path.c_str()))
-	{
-		LOG(LogError) << "Failed to save resized image!";
-	}
-
+	bool saved = FreeImage_Save(format, imageRescaled, path.c_str());
 	FreeImage_Unload(imageRescaled);
-}
 
-void downloadImageAsync(Window* window, const std::string& url, const std::string& saveAs, std::function<void(std::string)> returnFunc)
-{
-	std::shared_ptr<HttpReq> httpreq = std::make_shared<HttpReq>(url);
-	AsyncReqComponent* req = new AsyncReqComponent(window, httpreq, 
-		[returnFunc, saveAs] (std::shared_ptr<HttpReq> r)
-	{
-		std::string file = processFileDownload(r, saveAs);
-		if(!file.empty())
-			resizeImage(file, Settings::getInstance()->getInt("ScraperResizeWidth"), Settings::getInstance()->getInt("ScraperResizeHeight"));
-		returnFunc(file);
-	}, NULL);
+	if(!saved)
+		LOG(LogError) << "Failed to save resized image!";
 
-	window->pushGui(req);
-}
-
-std::string downloadImage(const std::string& url, const std::string& saveAs)
-{
-	std::shared_ptr<HttpReq> httpreq = std::make_shared<HttpReq>(url);
-	while(httpreq->status() == HttpReq::REQ_IN_PROGRESS);
-
-	std::string file = processFileDownload(httpreq, saveAs);
-
-	if(!file.empty())
-		resizeImage(file, Settings::getInstance()->getInt("ScraperResizeWidth"), Settings::getInstance()->getInt("ScraperResizeHeight"));
-
-	return file;
+	return saved;
 }
 
 std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& url)
@@ -152,43 +193,4 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 
 	path += name + ext;
 	return path;
-}
-
-
-std::shared_ptr<Scraper> createScraperByName(const std::string& name)
-{
-	if(name == "TheGamesDB")
-		return std::shared_ptr<Scraper>(new GamesDBScraper());
-	else if(name == "TheArchive")
-		return std::shared_ptr<Scraper>(new TheArchiveScraper());
-
-	return nullptr;
-}
-
-void resolveMetaDataAssetsAsync(Window* window, const ScraperSearchParams& params, MetaDataList mdl, std::function<void(MetaDataList)> returnFunc)
-{
-	const std::vector<MetaDataDecl>& mdd = params.game->metadata.getMDD();
-	for(auto it = mdd.begin(); it != mdd.end(); it++)
-	{
-		std::string key = it->key;
-		std::string val = mdl.get(key);
-		if(it->type == MD_IMAGE_PATH && HttpReq::isUrl(val))
-		{
-			downloadImageAsync(window, val, getSaveAsPath(params, key, val), [window, params, mdl, key, returnFunc] (std::string savedAs) mutable -> 
-				void 
-			{
-				if(savedAs.empty())
-				{
-					//error
-					LOG(LogError) << "Could not resolve image for [" << getCleanFileName(params.game->getPath()) << "]! Skipping.";
-				}
-
-				mdl.set(key, savedAs);
-				resolveMetaDataAssetsAsync(window, params, mdl, returnFunc);
-			});
-			return;
-		}
-	}
-
-	returnFunc(mdl);
 }

@@ -15,6 +15,8 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 {
 	addChild(&mGrid);
 
+	mBlockAccept = false;
+
 	using namespace Eigen;
 
 	// left spacer (empty component, needed for borders)
@@ -87,6 +89,8 @@ void ScraperSearchComponent::search(const ScraperSearchParams& params)
 {
 	mResultList->clear();
 	mScraperResults.clear();
+	mThumbnailReq.reset();
+	mMDResolveHandle.reset();
 	updateInfoPane();
 
 	mLastSearch = params;
@@ -120,6 +124,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 		mGrid.resetCursor();
 	}
 
+	mBlockAccept = false;
 	updateInfoPane();
 
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
@@ -177,6 +182,9 @@ bool ScraperSearchComponent::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
+		if(mBlockAccept)
+			return true;
+
 		//if you're on a result
 		if(getSelectedIndex() != -1)
 		{
@@ -195,24 +203,28 @@ bool ScraperSearchComponent::input(InputConfig* config, Input input)
 	return ret;
 }
 
+void ScraperSearchComponent::render(const Eigen::Affine3f& parentTrans)
+{
+	Eigen::Affine3f trans = parentTrans * getTransform();
+
+	if(mBlockAccept)
+	{
+		Renderer::setMatrix(trans);
+		Renderer::drawRect((int)mResultList->getPosition().x(), (int)mResultList->getPosition().y(),
+			(int)mResultList->getSize().x(), (int)mResultList->getSize().y(), 0x00000011);
+	}
+
+	renderChildren(trans);
+}
+
 void ScraperSearchComponent::returnResult(ScraperSearchResult result)
 {
+	mBlockAccept = true;
+
 	// resolve metadata image before returning
 	if(!result.imageUrl.empty())
 	{
-		downloadImageAsync(mWindow, result.imageUrl, getSaveAsPath(mLastSearch, "image", result.imageUrl), 
-			[this, result] (std::string filePath) mutable -> void
-			{
-					if(filePath.empty())
-					{
-						onSearchError("Error downloading boxart.");
-						return;
-					}
-					
-					result.mdl.set("image", filePath);
-					result.imageUrl = "";
-					this->returnResult(result); // re-enter this function
-			});
+		mMDResolveHandle = resolveMetaDataAssets(result, mLastSearch);
 		return;
 	}
 
@@ -226,17 +238,28 @@ void ScraperSearchComponent::update(int deltaTime)
 		updateThumbnail();
 	}
 
-	if(mSearchHandle && mSearchHandle->status() != SEARCH_IN_PROGRESS)
+	if(mSearchHandle && mSearchHandle->status() != ASYNC_IN_PROGRESS)
 	{
-		if(mSearchHandle->status() == SEARCH_DONE)
+		if(mSearchHandle->status() == ASYNC_DONE)
 		{
 			onSearchDone(mSearchHandle->getResults());
-		}else if(mSearchHandle->status() == SEARCH_ERROR)
+		}else if(mSearchHandle->status() == ASYNC_ERROR)
 		{
 			onSearchError(mSearchHandle->getStatusString());
 		}
-
 		mSearchHandle.reset();
+	}
+
+	if(mMDResolveHandle && mMDResolveHandle->status() != ASYNC_IN_PROGRESS)
+	{
+		if(mMDResolveHandle->status() == ASYNC_DONE)
+		{
+			returnResult(mMDResolveHandle->getResult());
+		}else if(mMDResolveHandle->status() == ASYNC_ERROR)
+		{
+			onSearchError(mMDResolveHandle->getStatusString());
+		}
+		mMDResolveHandle.reset();
 	}
 
 	GuiComponent::update(deltaTime);

@@ -116,6 +116,8 @@ void ComponentList::onCursorChanged(const CursorState& state)
 			mCameraOffset = 0;
 		else if(mCameraOffset + mSize.y() > totalHeight)
 			mCameraOffset = totalHeight - mSize.y();
+	}else{
+		mCameraOffset = 0;
 	}
 
 	updateHelpPrompts();

@@ -25,12 +25,12 @@ std::unique_ptr<ScraperSearchHandle> TheArchiveScraper::getResultsAsync(const Sc
 TheArchiveHandle::TheArchiveHandle(const ScraperSearchParams& params, const std::string& url) : 
 	mReq(std::unique_ptr<HttpReq>(new HttpReq(url)))
 {
-	setStatus(SEARCH_IN_PROGRESS);
+	setStatus(ASYNC_IN_PROGRESS);
 }
 
 void TheArchiveHandle::update()
 {
-	if(status() == SEARCH_DONE)
+	if(mStatus == ASYNC_DONE)
 		return;
 
 	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
@@ -91,6 +91,6 @@ void TheArchiveHandle::update()
 		game = game.next_sibling("game");
 	}
 
-	setStatus(SEARCH_DONE);
+	setStatus(ASYNC_DONE);
 	setResults(results);
 }

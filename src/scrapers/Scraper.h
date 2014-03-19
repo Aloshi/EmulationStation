@@ -3,10 +3,9 @@
 #include "../MetaData.h"
 #include "../SystemData.h"
 #include "../HttpReq.h"
+#include "../AsyncHandle.h"
 #include <vector>
 #include <functional>
-
-class Window;
 
 struct ScraperSearchParams
 {
@@ -25,34 +24,16 @@ struct ScraperSearchResult
 	std::string thumbnailUrl;
 };
 
-enum ScraperSearchStatus
-{
-	SEARCH_IN_PROGRESS,
-	SEARCH_ERROR,
-	SEARCH_DONE
-};
-
-class ScraperSearchHandle
+class ScraperSearchHandle : public AsyncHandle
 {
 public:
 	virtual void update() = 0;
-
-	// Update and return the latest status.
-	inline ScraperSearchStatus status() { update(); return mStatus; }
-
-	// User-friendly string of our current status.  Will return error message if status() == SEARCH_ERROR.
-	std::string getStatusString();
-
-	inline const std::vector<ScraperSearchResult>& getResults() const { assert(mStatus != SEARCH_IN_PROGRESS); return mResults; }
+	inline const std::vector<ScraperSearchResult>& getResults() const { assert(mStatus != ASYNC_IN_PROGRESS); return mResults; }
 
 protected:
-	inline void setError(const std::string& error) { setStatus(SEARCH_ERROR); mError = error; }
-	inline void setStatus(ScraperSearchStatus status) { mStatus = status; }
 	inline void setResults(const std::vector<ScraperSearchResult>& results) { mResults = results; }
 
 private:
-	std::string mError;
-	ScraperSearchStatus mStatus;
 	std::vector<ScraperSearchResult> mResults;
 };
 
@@ -67,23 +48,48 @@ public:
 
 std::shared_ptr<Scraper> createScraperByName(const std::string& name);
 
+
+// Meta data asset downloading stuff.
+class MDResolveHandle : public AsyncHandle
+{
+public:
+	MDResolveHandle(const ScraperSearchResult& result, const ScraperSearchParams& search);
+
+	void update() override;
+	inline const ScraperSearchResult& getResult() const { assert(mStatus == ASYNC_DONE); return mResult; }
+
+private:
+	ScraperSearchResult mResult;
+
+	typedef std::pair< std::unique_ptr<AsyncHandle>, std::function<void()> > ResolvePair;
+	std::vector<ResolvePair> mFuncs;
+};
+
+class ImageDownloadHandle : public AsyncHandle
+{
+public:
+	ImageDownloadHandle(const std::string& url, const std::string& path, int maxWidth, int maxHeight);
+
+	void update() override;
+
+private:
+	std::unique_ptr<HttpReq> mReq;
+	std::string mSavePath;
+	int mMaxWidth;
+	int mMaxHeight;
+};
+
 //About the same as "~/.emulationstation/downloaded_images/[system_name]/[game_name].[url's extension]".
 //Will create the "downloaded_images" and "subdirectory" directories if they do not exist.
 std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& url);
 
-//Returns the path to the downloaded file (saveAs) on completion.
-//Returns empty string if an error occured.
 //Will resize according to Settings::getInt("ScraperResizeWidth") and Settings::getInt("ScraperResizeHeight").
-std::string downloadImage(const std::string& url, const std::string& saveAs);
+std::unique_ptr<AsyncHandle> downloadImageAsync(const std::string& url, const std::string& saveAs);
 
-//Returns (via returnFunc) the path to the downloaded file (saveAs) on completion.
-//Returns empty string if an error occured.
-//Will resize according to Settings::getInt("ScraperResizeWidth") and Settings::getInt("ScraperResizeHeight").
-//Same as downloadImage, just async.
-void downloadImageAsync(Window* window, const std::string& url, const std::string& saveAs, std::function<void(std::string)> returnFunc);
-
-void resolveMetaDataAssetsAsync(Window* window, const ScraperSearchParams& params, MetaDataList mdl, std::function<void(MetaDataList)> returnFunc);
+// Resolves all metadata assets that need to be downloaded.
+std::unique_ptr<MDResolveHandle> resolveMetaDataAssets(const ScraperSearchResult& result, const ScraperSearchParams& search);
 
 //You can pass 0 for maxWidth or maxHeight to automatically keep the aspect ratio.
 //Will overwrite the image at [path] with the new resized one.
-void resizeImage(const std::string& path, int maxWidth, int maxHeight);
+//Returns true if successful, false otherwise.
+bool resizeImage(const std::string& path, int maxWidth, int maxHeight);
