@@ -65,7 +65,7 @@ public:
 
 	void drawCenteredText(std::string text, float xOffset, float y, unsigned int color);
 
-	int getHeight() const;
+	float getHeight() const;
 
 	void unload(std::shared_ptr<ResourceManager>& rm) override;
 	void reload(std::shared_ptr<ResourceManager>& rm) override;

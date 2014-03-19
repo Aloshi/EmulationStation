@@ -85,11 +85,11 @@ void GuiInputConfig::render(const Eigen::Affine3f& parentTrans)
 	stream << "PLAYER " << mTargetConfig->getPlayerNum() + 1 << ", press...";
 	font->drawText(stream.str(), Eigen::Vector2f(10, 10), 0x000000FF);
 
-	int y = 14 + font->getHeight();
+	int y = 14 + (int)font->getHeight();
 	for(int i = 0; i < mCurInputId; i++)
 	{
 		font->drawText(inputDispName[i], Eigen::Vector2f(10, y), 0x00CC00FF);
-		y += font->getHeight() + 5;
+		y += (int)font->getHeight() + 5;
 	}
 
 	if(mCurInputId >= inputCount)

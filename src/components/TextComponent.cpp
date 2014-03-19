@@ -79,7 +79,7 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 		if(mCentered)
 		{
 			const Eigen::Vector2f& textSize = mTextCache->metrics.size;
-			Eigen::Vector3f off((getSize().x() - textSize.x()) / 2, 0, 0);
+			Eigen::Vector3f off((getSize().x() - textSize.x()) / 2, (getSize().y() - textSize.y()) / 2, 0);
 
 			trans.translate(off);
 			Renderer::setMatrix(trans);

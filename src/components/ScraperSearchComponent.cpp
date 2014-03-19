@@ -334,8 +334,11 @@ void ScraperSearchComponent::update(int deltaTime)
 	{
 		if(mMDResolveHandle->status() == ASYNC_DONE)
 		{
+			ScraperSearchResult result = mMDResolveHandle->getResult();
+			mMDResolveHandle.reset();
+
 			// this might end in us being deleted, depending on mAcceptCallback - so make sure this is the last thing we do in update()
-			returnResult(mMDResolveHandle->getResult());
+			returnResult(result);
 		}else if(mMDResolveHandle->status() == ASYNC_ERROR)
 		{
 			onSearchError(mMDResolveHandle->getStatusString());

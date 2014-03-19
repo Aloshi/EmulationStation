@@ -59,7 +59,8 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 		}
 	}
 
-	setSize(width, mMsg->getSize().y() + mButtonGrid->getSize().y() + BUTTON_VERT_PADDING);
+	const float msgHeight = std::max(Font::get(FONT_SIZE_LARGE)->getHeight(), mMsg->getSize().y());
+	setSize(width, msgHeight + mButtonGrid->getSize().y() + BUTTON_VERT_PADDING);
 
 	// center for good measure
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2.0f, (Renderer::getScreenHeight() - mSize.y()) / 2.0f);

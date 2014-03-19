@@ -276,9 +276,9 @@ Eigen::Vector2f Font::sizeText(std::string text) const
 	return Eigen::Vector2f(highestWidth, y);
 }
 
-int Font::getHeight() const
+float Font::getHeight() const
 {
-	return (int)(mMaxGlyphHeight * 1.5f * fontScale);
+	return mMaxGlyphHeight * 1.5f * fontScale;
 }
 
 

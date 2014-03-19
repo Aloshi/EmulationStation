@@ -206,7 +206,7 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 			cursorPos[1] = 0;
 		}
 
-		Renderer::drawRect((int)cursorPos.x(), (int)cursorPos.y(), 3, f->getHeight(), 0x000000FF);
+		Renderer::drawRect((int)cursorPos.x(), (int)cursorPos.y(), 3, (int)f->getHeight(), 0x000000FF);
 	}
 
 	Renderer::popClipRect();

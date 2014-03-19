@@ -129,7 +129,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	}
 
 	const int cutoff = 0;
-	const int entrySize = font->getHeight() + 5;
+	const int entrySize = (int)font->getHeight() + 5;
 
 	int startEntry = 0;
 
@@ -161,7 +161,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		if(mCursor == i)
 		{
 			Renderer::setMatrix(trans);
-			Renderer::drawRect(0, (int)y, (int)mSize.x(), font->getHeight(), mSelectorColor);
+			Renderer::drawRect(0, (int)y, (int)mSize.x(), (int)font->getHeight(), mSelectorColor);
 		}
 
 		typename IList<TextListData, T>::Entry& entry = mEntries.at((unsigned int)i);
