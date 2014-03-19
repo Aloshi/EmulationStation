@@ -8,10 +8,13 @@
 #define MAX_SCRAPER_RESULTS 5
 
 class ComponentList;
-class TextEditComponent;
 class ImageComponent;
+class RatingComponent;
+class TextComponent;
+class DateTimeComponent;
 class ScrollableContainer;
 class HttpReq;
+
 
 class ScraperSearchComponent : public GuiComponent
 {
@@ -60,6 +63,18 @@ private:
 	std::shared_ptr<TextComponent> mResultDesc;
 	std::shared_ptr<ImageComponent> mResultThumbnail;
 	std::shared_ptr<ComponentList> mResultList;
+
+	std::shared_ptr<ComponentGrid> mMD_Grid;
+	std::shared_ptr<RatingComponent> mMD_Rating;
+	std::shared_ptr<DateTimeComponent> mMD_ReleaseDate;
+	std::shared_ptr<TextComponent> mMD_Developer;
+	std::shared_ptr<TextComponent> mMD_Publisher;
+	std::shared_ptr<TextComponent> mMD_Genre;
+	std::shared_ptr<TextComponent> mMD_Players;
+
+	// label-component pair
+	typedef std::pair< std::shared_ptr<TextComponent>, std::shared_ptr<GuiComponent> > MetaDataPair;
+	std::vector<MetaDataPair> mMD_Pairs;
 
 	SearchType mSearchType;
 	ScraperSearchParams mLastSearch;

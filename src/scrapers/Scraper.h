@@ -84,7 +84,7 @@ private:
 std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& url);
 
 //Will resize according to Settings::getInt("ScraperResizeWidth") and Settings::getInt("ScraperResizeHeight").
-std::unique_ptr<AsyncHandle> downloadImageAsync(const std::string& url, const std::string& saveAs);
+std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, const std::string& saveAs);
 
 // Resolves all metadata assets that need to be downloaded.
 std::unique_ptr<MDResolveHandle> resolveMetaDataAssets(const ScraperSearchResult& result, const ScraperSearchParams& search);

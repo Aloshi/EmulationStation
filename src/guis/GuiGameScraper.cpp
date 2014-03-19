@@ -11,7 +11,8 @@
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc) : GuiComponent(window), 
 	mGrid(window, Eigen::Vector2i(1, 3)), 
 	mBox(window, ":/frame.png"),
-	mSearchParams(params)
+	mSearchParams(params),
+	mClose(false)
 {
 	addChild(&mBox);
 	addChild(&mGrid);
@@ -45,7 +46,29 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mGrid.setPosition((mSize.x() - mGrid.getSize().x()) / 2, (mSize.y() - mGrid.getSize().y()) / 2);
 	mBox.fitTo(mGrid.getSize(), mGrid.getPosition(), Eigen::Vector2f(-32, -32));
 
-	mSearch->setAcceptCallback([this, doneFunc](const ScraperSearchResult& result) { doneFunc(result); delete this; });
+	// we call this->close() instead of just delete this; in the accept callback:
+	// this is because of how GuiComponent::update works.  if it was just delete this, this would happen when the metadata resolver is done:
+	//     GuiGameScraper::update()
+	//       GuiComponent::update()
+	//         it = mChildren.begin();
+	//         mBox::update()
+	//         it++;
+	//         mSearchComponent::update()
+	//           acceptCallback -> delete this
+	//         it++; // error, mChildren has been deleted because it was part of this
+
+	// so instead we do this:
+	//     GuiGameScraper::update()
+	//       GuiComponent::update()
+	//         it = mChildren.begin();
+	//         mBox::update()
+	//         it++;
+	//         mSearchComponent::update()
+	//           acceptCallback -> close() -> mClose = true
+	//         it++; // ok
+	//       if(mClose)
+	//         delete this;
+	mSearch->setAcceptCallback([this, doneFunc](const ScraperSearchResult& result) { doneFunc(result); close(); });
 	mSearch->setCancelCallback([&] { delete this; });
 
 	mGrid.resetCursor();
@@ -63,7 +86,20 @@ bool GuiGameScraper::input(InputConfig* config, Input input)
 	return GuiComponent::input(config, input);
 }
 
+void GuiGameScraper::update(int deltaTime)
+{
+	GuiComponent::update(deltaTime);
+
+	if(mClose)
+		delete this;
+}
+
 std::vector<HelpPrompt> GuiGameScraper::getHelpPrompts()
 {
 	return mGrid.getHelpPrompts();
+}
+
+void GuiGameScraper::close()
+{
+	mClose = true;
 }

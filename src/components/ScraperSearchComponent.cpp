@@ -4,10 +4,13 @@
 #include "TextComponent.h"
 #include "ScrollableContainer.h"
 #include "ImageComponent.h"
+#include "RatingComponent.h"
+#include "DateTimeComponent.h"
 #include "ComponentList.h"
 #include "../HttpReq.h"
 #include "../Settings.h"
 #include "../Log.h"
+#include "../Util.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
 	mGrid(window, Eigen::Vector2i(4, 3)),
@@ -36,6 +39,36 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mDescContainer->addChild(mResultDesc.get());
 	mDescContainer->setAutoScroll(2200, 0.015f);
 	
+	// metadata
+	auto font = Font::get(FONT_SIZE_SMALL); // this gets replaced in onSizeChanged() so its just a placeholder
+	const unsigned int mdColor = 0x777777FF;
+	const unsigned int mdLblColor = 0x666666FF;
+	mMD_Rating = std::make_shared<RatingComponent>(mWindow);
+	mMD_ReleaseDate = std::make_shared<DateTimeComponent>(mWindow);
+	mMD_ReleaseDate->setColor(mdColor);
+	mMD_Developer = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
+	mMD_Publisher = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
+	mMD_Genre = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
+	mMD_Players = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
+
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RATING:", font, mdLblColor), mMD_Rating));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RELEASED:", font, mdLblColor), mMD_ReleaseDate));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "DEVELOPER:", font, mdLblColor), mMD_Developer));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PUBLISHER:", font, mdLblColor), mMD_Publisher));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "GENRE:", font, mdLblColor), mMD_Genre));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PLAYERS:", font, mdLblColor), mMD_Players));
+
+	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, mMD_Pairs.size()));
+	unsigned int i = 0;
+	for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
+	{
+		mMD_Grid->setEntry(it->first, Vector2i(0, i), false, true);
+		mMD_Grid->setEntry(it->second, Vector2i(1, i), false, true);
+		i++;
+	}
+
+	mGrid.setEntry(mMD_Grid, Vector2i(2, 1), false, true);
+
 	// result list
 	mResultList = std::make_shared<ComponentList>(mWindow);
 	
@@ -57,8 +90,36 @@ void ScraperSearchComponent::onSizeChanged()
 	mGrid.setRowHeightPerc(0, fontHeightPerc); // result name
 	mGrid.setRowHeightPerc(2, 0.375f); // description
 
-	mResultThumbnail->setMaxSize(mGrid.getColWidth(1), mGrid.getRowHeight(1));
+	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
+	// we also pad a little so it doesn't rub up against the metadata labels
+	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) - 16, mGrid.getRowHeight(1));
 	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
+
+	// metadata
+	// (mMD_Grid has already been resized by mGrid)
+
+	const int fontHeight = (int)(mMD_Grid->getSize().y() / mMD_Pairs.size() * 0.8f);
+	auto fontLbl = Font::get(fontHeight, FONT_PATH_REGULAR);
+	auto fontComp = Font::get(fontHeight, FONT_PATH_LIGHT);
+
+	// update label fonts
+	float maxLblWidth = 0;
+	for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
+	{
+		it->first->setFont(fontLbl);
+		it->first->setSize(0, 0);
+		if(it->first->getSize().x() > maxLblWidth)
+			maxLblWidth = it->first->getSize().x() + 6;
+	}
+
+	// update component fonts
+	mMD_ReleaseDate->setFont(fontComp);
+	mMD_Developer->setFont(fontComp);
+	mMD_Publisher->setFont(fontComp);
+	mMD_Genre->setFont(fontComp);
+	mMD_Players->setFont(fontComp);
+
+	mMD_Grid->setColWidthPerc(0, maxLblWidth / mMD_Grid->getSize().x());
 }
 
 void ScraperSearchComponent::updateViewStyle()
@@ -171,10 +232,27 @@ void ScraperSearchComponent::updateInfoPane()
 			mThumbnailReq = std::unique_ptr<HttpReq>(new HttpReq(thumb));
 		else
 			mThumbnailReq.reset();
+
+		// metadata
+		mMD_Rating->setValue(strToUpper(mScraperResults.at(i).mdl.get("rating")));
+		mMD_ReleaseDate->setValue(strToUpper(mScraperResults.at(i).mdl.get("releasedate")));
+		mMD_Developer->setText(strToUpper(mScraperResults.at(i).mdl.get("developer")));
+		mMD_Publisher->setText(strToUpper(mScraperResults.at(i).mdl.get("publisher")));
+		mMD_Genre->setText(strToUpper(mScraperResults.at(i).mdl.get("genre")));
+		mMD_Players->setText(strToUpper(mScraperResults.at(i).mdl.get("players")));
+
 	}else{
-		mResultName->setText(" ");
-		mResultDesc->setText(" ");
+		mResultName->setText("");
+		mResultDesc->setText("");
 		mResultThumbnail->setImage("");
+
+		// metadata
+		mMD_Rating->setValue("");
+		mMD_ReleaseDate->setValue("");
+		mMD_Developer->setText("");
+		mMD_Publisher->setText("");
+		mMD_Genre->setText("");
+		mMD_Players->setText("");
 	}
 }
 
@@ -207,14 +285,14 @@ void ScraperSearchComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
 
+	renderChildren(trans);
+
 	if(mBlockAccept)
 	{
 		Renderer::setMatrix(trans);
 		Renderer::drawRect((int)mResultList->getPosition().x(), (int)mResultList->getPosition().y(),
 			(int)mResultList->getSize().x(), (int)mResultList->getSize().y(), 0x00000011);
 	}
-
-	renderChildren(trans);
 }
 
 void ScraperSearchComponent::returnResult(ScraperSearchResult result)
@@ -233,6 +311,8 @@ void ScraperSearchComponent::returnResult(ScraperSearchResult result)
 
 void ScraperSearchComponent::update(int deltaTime)
 {
+	GuiComponent::update(deltaTime);
+
 	if(mThumbnailReq && mThumbnailReq->status() != HttpReq::REQ_IN_PROGRESS)
 	{
 		updateThumbnail();
@@ -254,15 +334,14 @@ void ScraperSearchComponent::update(int deltaTime)
 	{
 		if(mMDResolveHandle->status() == ASYNC_DONE)
 		{
+			// this might end in us being deleted, depending on mAcceptCallback - so make sure this is the last thing we do in update()
 			returnResult(mMDResolveHandle->getResult());
 		}else if(mMDResolveHandle->status() == ASYNC_ERROR)
 		{
 			onSearchError(mMDResolveHandle->getStatusString());
+			mMDResolveHandle.reset();
 		}
-		mMDResolveHandle.reset();
 	}
-
-	GuiComponent::update(deltaTime);
 }
 
 void ScraperSearchComponent::updateThumbnail()

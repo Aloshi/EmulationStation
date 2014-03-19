@@ -10,10 +10,13 @@ public:
 	GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc);
 
 	bool input(InputConfig* config, Input input) override;
-	
+	void update(int deltaTime);
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
+	bool mClose;
+	void close();
+
 	ComponentGrid mGrid;
 	NinePatchComponent mBox;
 
