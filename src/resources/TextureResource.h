@@ -16,28 +16,29 @@ public:
 
 	virtual ~TextureResource();
 
-	void unload(std::shared_ptr<ResourceManager>& rm) override;
-	void reload(std::shared_ptr<ResourceManager>& rm) override;
+	virtual void unload(std::shared_ptr<ResourceManager>& rm) override;
+	virtual void reload(std::shared_ptr<ResourceManager>& rm) override;
 	
 	bool isTiled() const;
-	Eigen::Vector2i getSize() const;
+	const Eigen::Vector2i& getSize() const;
 	void bind() const;
 	
 	// Warning: will NOT correctly reinitialize when this texture is reloaded (e.g. ES starts/stops playing a game).
-	void initFromMemory(const char* image, size_t length);
+	virtual void initFromMemory(const char* file, size_t length);
 
-private:
+	// Warning: will NOT correctly reinitialize when this texture is reloaded (e.g. ES starts/stops playing a game).
+	void initFromPixels(const unsigned char* dataRGBA, size_t width, size_t height);
+
+protected:
 	TextureResource(const std::string& path, bool tile);
-
-	void initFromPath();
-	void initFromResource(const ResourceData data);
 	void deinit();
 
 	Eigen::Vector2i mTextureSize;
-	GLuint mTextureID;
 	const std::string mPath;
 	const bool mTile;
 
+private:
+	GLuint mTextureID;
 	typedef std::pair<std::string, bool> TextureKeyType;
 	static std::map< TextureKeyType, std::weak_ptr<TextureResource> > sTextureMap;
 };

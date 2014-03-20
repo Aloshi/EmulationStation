@@ -6,6 +6,7 @@
 #include "../Renderer.h"
 #include "../ThemeData.h"
 #include "../Util.h"
+#include "../resources/SVGResource.h"
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
@@ -72,6 +73,12 @@ void ImageComponent::resize()
 				mSize[1] = (mTargetSize.x() / textureSize.x()) * textureSize.y();
 			}
 		}
+	}
+
+	SVGResource* svg = dynamic_cast<SVGResource*>(mTexture.get());
+	if(svg)
+	{
+		svg->rasterizeAt((int)mSize.x(), (int)mSize.y());
 	}
 }
 
