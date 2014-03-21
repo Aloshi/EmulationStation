@@ -5,8 +5,6 @@
 #include "../components/MenuComponent.h" // for makeButtonGrid
 #include "../Util.h"
 
-#define BUTTON_VERT_PADDING 32.0f
-
 GuiMsgBox::GuiMsgBox(Window* window, const std::string& text, 
 	const std::string& name1, const std::function<void()>& func1,
 	const std::string& name2, const std::function<void()>& func2, 
@@ -60,7 +58,7 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 	}
 
 	const float msgHeight = std::max(Font::get(FONT_SIZE_LARGE)->getHeight(), mMsg->getSize().y());
-	setSize(width, msgHeight + mButtonGrid->getSize().y() + BUTTON_VERT_PADDING);
+	setSize(width, msgHeight + mButtonGrid->getSize().y());
 
 	// center for good measure
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2.0f, (Renderer::getScreenHeight() - mSize.y()) / 2.0f);
@@ -85,7 +83,7 @@ void GuiMsgBox::onSizeChanged()
 	mGrid.setSize(mSize);
 	mBackground.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
 
-	mGrid.setRowHeightPerc(1, (mButtonGrid->getSize().y() + BUTTON_VERT_PADDING) / mSize.y());
+	mGrid.setRowHeightPerc(1, mButtonGrid->getSize().y() / mSize.y());
 }
 
 void GuiMsgBox::deleteMeAndCall(const std::function<void()>& func)

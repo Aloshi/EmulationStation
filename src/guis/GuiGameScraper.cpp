@@ -17,18 +17,9 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	addChild(&mBox);
 	addChild(&mGrid);
 
-	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-
-	mGrid.setSize(mSize.x() * 0.7f, mSize.y() * 0.65f);
-	
-	auto headerFont = Font::get(FONT_SIZE_LARGE);
-
-	mGrid.setRowHeightPerc(0, headerFont->getHeight() / mGrid.getSize().y()); // header
-	mGrid.setRowHeightPerc(2, 0.19f); // buttons
-
 	// header
-	mGrid.setEntry(std::make_shared<TextComponent>(mWindow, getCleanFileName(mSearchParams.game->getName()), 
-		headerFont, 0x777777FF, true), Eigen::Vector2i(0, 0), false, true);
+	mHeader = std::make_shared<TextComponent>(mWindow, getCleanFileName(mSearchParams.game->getName()), Font::get(FONT_SIZE_LARGE), 0x777777FF, true);
+	mGrid.setEntry(mHeader, Eigen::Vector2i(0, 0), false, true);
 
 	// ScraperSearchComponent
 	mSearch = std::make_shared<ScraperSearchComponent>(window, ScraperSearchComponent::NEVER_AUTO_ACCEPT);
@@ -38,13 +29,9 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "manually search"));
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCEL", "cancel", [&] { delete this; }));
-	auto buttonGrid = makeButtonGrid(mWindow, buttons);
+	mButtonGrid = makeButtonGrid(mWindow, buttons);
 
-	mGrid.setEntry(buttonGrid, Eigen::Vector2i(0, 2), true, false);
-
-	// center everything
-	mGrid.setPosition((mSize.x() - mGrid.getSize().x()) / 2, (mSize.y() - mGrid.getSize().y()) / 2);
-	mBox.fitTo(mGrid.getSize(), mGrid.getPosition(), Eigen::Vector2f(-32, -32));
+	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 2), true, false);
 
 	// we call this->close() instead of just delete this; in the accept callback:
 	// this is because of how GuiComponent::update works.  if it was just delete this, this would happen when the metadata resolver is done:
@@ -71,8 +58,20 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mSearch->setAcceptCallback([this, doneFunc](const ScraperSearchResult& result) { doneFunc(result); close(); });
 	mSearch->setCancelCallback([&] { delete this; });
 
+	setSize(Renderer::getScreenWidth() * 0.7f, Renderer::getScreenHeight() * 0.65f);
+	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
+
 	mGrid.resetCursor();
 	mSearch->search(params); // start the search
+}
+
+void GuiGameScraper::onSizeChanged()
+{
+	mBox.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
+
+	mGrid.setSize(mSize);
+	mGrid.setRowHeightPerc(0, mHeader->getFont()->getHeight() / mSize.y()); // header
+	mGrid.setRowHeightPerc(2, mButtonGrid->getSize().y() / mSize.y()); // buttons
 }
 
 bool GuiGameScraper::input(InputConfig* config, Input input)

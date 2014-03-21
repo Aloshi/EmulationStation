@@ -98,28 +98,31 @@ void ScraperSearchComponent::onSizeChanged()
 	// metadata
 	// (mMD_Grid has already been resized by mGrid)
 
-	const int fontHeight = (int)(mMD_Grid->getSize().y() / mMD_Pairs.size() * 0.8f);
-	auto fontLbl = Font::get(fontHeight, FONT_PATH_REGULAR);
-	auto fontComp = Font::get(fontHeight, FONT_PATH_LIGHT);
-
-	// update label fonts
-	float maxLblWidth = 0;
-	for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
+	if(mMD_Grid->getSize().y() > mMD_Pairs.size())
 	{
-		it->first->setFont(fontLbl);
-		it->first->setSize(0, 0);
-		if(it->first->getSize().x() > maxLblWidth)
-			maxLblWidth = it->first->getSize().x() + 6;
+		const int fontHeight = (int)(mMD_Grid->getSize().y() / mMD_Pairs.size() * 0.8f);
+		auto fontLbl = Font::get(fontHeight, FONT_PATH_REGULAR);
+		auto fontComp = Font::get(fontHeight, FONT_PATH_LIGHT);
+
+		// update label fonts
+		float maxLblWidth = 0;
+		for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
+		{
+			it->first->setFont(fontLbl);
+			it->first->setSize(0, 0);
+			if(it->first->getSize().x() > maxLblWidth)
+				maxLblWidth = it->first->getSize().x() + 6;
+		}
+
+		// update component fonts
+		mMD_ReleaseDate->setFont(fontComp);
+		mMD_Developer->setFont(fontComp);
+		mMD_Publisher->setFont(fontComp);
+		mMD_Genre->setFont(fontComp);
+		mMD_Players->setFont(fontComp);
+
+		mMD_Grid->setColWidthPerc(0, maxLblWidth / mMD_Grid->getSize().x());
 	}
-
-	// update component fonts
-	mMD_ReleaseDate->setFont(fontComp);
-	mMD_Developer->setFont(fontComp);
-	mMD_Publisher->setFont(fontComp);
-	mMD_Genre->setFont(fontComp);
-	mMD_Players->setFont(fontComp);
-
-	mMD_Grid->setColWidthPerc(0, maxLblWidth / mMD_Grid->getSize().x());
 }
 
 void ScraperSearchComponent::updateViewStyle()

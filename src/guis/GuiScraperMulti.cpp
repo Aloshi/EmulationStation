@@ -37,7 +37,6 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SKIP", "skip this game", std::bind(&GuiScraperMulti::skip, this)));
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "STOP", "cancel scraping", std::bind(&GuiScraperMulti::finish, this)));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
-	mButtonGrid->setSize(mButtonGrid->getSize().x(), mButtonGrid->getSize().y() + 32);
 	mGrid.setEntry(mButtonGrid, Vector2i(0, 3), true, false);
 
 	setSize(Renderer::getScreenWidth() * 0.7f, Renderer::getScreenHeight() * 0.65f);

@@ -1,7 +1,8 @@
 #include "MenuComponent.h"
 #include "ButtonComponent.h"
 
-#define BUTTON_GRID_HEIGHT ((float)Font::get(FONT_SIZE_MEDIUM)->getHeight() + 32)
+#define BUTTON_GRID_VERT_PADDING 20
+#define BUTTON_GRID_HORIZ_PADDING 16
 
 using namespace Eigen;
 
@@ -27,9 +28,14 @@ MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(w
 	mGrid.resetCursor();
 }
 
+float MenuComponent::getButtonGridHeight() const
+{
+	return (mButtonGrid ? mButtonGrid->getSize().y() : Font::get(FONT_SIZE_MEDIUM)->getHeight() + BUTTON_GRID_VERT_PADDING);
+}
+
 void MenuComponent::updateSize()
 {
-	float height = mTitle->getSize().y() + mList->getTotalRowHeight() + BUTTON_GRID_HEIGHT + 2;
+	float height = mTitle->getSize().y() + mList->getTotalRowHeight() + getButtonGridHeight() + 2;
 	if(height > Renderer::getScreenHeight() * 0.7f)
 		height = Renderer::getScreenHeight() * 0.7f;
 
@@ -42,7 +48,7 @@ void MenuComponent::onSizeChanged()
 
 	// update grid row/col sizes
 	mGrid.setRowHeightPerc(0, mTitle->getSize().y() / mSize.y());
-	mGrid.setRowHeightPerc(2, (BUTTON_GRID_HEIGHT) / mSize.y());
+	mGrid.setRowHeightPerc(2, getButtonGridHeight() / mSize.y());
 	
 	mGrid.setSize(mSize);
 }
@@ -77,7 +83,7 @@ std::shared_ptr<ComponentGrid> makeButtonGrid(Window* window, const std::vector<
 {
 	std::shared_ptr<ComponentGrid> buttonGrid = std::make_shared<ComponentGrid>(window, Vector2i(buttons.size(), 1));
 
-	float buttonGridWidth = 16.0f * buttons.size(); // initialize to padding
+	float buttonGridWidth = (float)BUTTON_GRID_HORIZ_PADDING * buttons.size(); // initialize to padding
 	for(int i = 0; i < (int)buttons.size(); i++)
 	{
 		buttonGrid->setEntry(buttons.at(i), Vector2i(i, 0), true, false);
@@ -85,10 +91,10 @@ std::shared_ptr<ComponentGrid> makeButtonGrid(Window* window, const std::vector<
 	}
 	for(unsigned int i = 0; i < buttons.size(); i++)
 	{
-		buttonGrid->setColWidthPerc(i, (buttons.at(i)->getSize().x() + 16) / buttonGridWidth);
+		buttonGrid->setColWidthPerc(i, (buttons.at(i)->getSize().x() + BUTTON_GRID_HORIZ_PADDING) / buttonGridWidth);
 	}
 		
-	buttonGrid->setSize(buttonGridWidth, buttons.at(0)->getSize().y());
+	buttonGrid->setSize(buttonGridWidth, buttons.at(0)->getSize().y() + BUTTON_GRID_VERT_PADDING);
 
 	return buttonGrid;
 }

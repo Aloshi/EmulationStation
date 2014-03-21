@@ -9,6 +9,8 @@ class GuiGameScraper : public GuiComponent
 public:
 	GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc);
 
+	void onSizeChanged() override;
+
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime);
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
@@ -20,7 +22,9 @@ private:
 	ComponentGrid mGrid;
 	NinePatchComponent mBox;
 
+	std::shared_ptr<TextComponent> mHeader;
 	std::shared_ptr<ScraperSearchComponent> mSearch;
+	std::shared_ptr<ComponentGrid> mButtonGrid;
 
 	ScraperSearchParams mSearchParams;
 
