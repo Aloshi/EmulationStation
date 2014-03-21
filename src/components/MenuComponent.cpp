@@ -15,7 +15,7 @@ MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(w
 	mBackground.setImagePath(":/frame.png");
 
 	// set up title which will never change
-	mTitle = std::make_shared<TextComponent>(mWindow, strToUpper(title), Font::get(FONT_SIZE_LARGE), 0x555555FF, true);
+	mTitle = std::make_shared<TextComponent>(mWindow, strToUpper(title), Font::get(FONT_SIZE_LARGE), 0x555555FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mTitle, Vector2i(0, 0), false);
 
 	// set up list which will never change (externally, anyway)

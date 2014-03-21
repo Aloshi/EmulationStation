@@ -31,35 +31,39 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 		// create ed and add it (and any related components) to mMenu
 		// ed's value will be set below
+		ComponentListRow row;
+		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(iter->key), Font::get(FONT_SIZE_SMALL), 0x777777FF);
+		row.addElement(lbl, true); // label
+
 		switch(iter->type)
 		{
 		case MD_RATING:
 			{
 				ed = std::make_shared<RatingComponent>(window);
-				mMenu.addWithLabel(iter->key, ed);
+				ed->setSize(0, lbl->getSize().y());
+				row.addElement(ed, false, false);
+				mMenu.addRow(row);
 				break;
 			}
 		case MD_DATE:
 			{
 				ed = std::make_shared<DateTimeComponent>(window);
-				mMenu.addWithLabel(iter->key, ed);
+				row.addElement(ed, false);
+				mMenu.addRow(row);
 				break;
 			}
 		case MD_TIME:
 			{
 				ed = std::make_shared<DateTimeComponent>(window, DateTimeComponent::DISP_RELATIVE_TO_NOW);
-				mMenu.addWithLabel(iter->key, ed);
+				row.addElement(ed, false);
+				mMenu.addRow(row);
 				break;
 			}
 		case MD_MULTILINE_STRING:
 		default:
 			{
 				// MD_STRING
-				ComponentListRow row;
-				auto lbl = std::make_shared<TextComponent>(mWindow, iter->key, Font::get(FONT_SIZE_SMALL), 0x777777FF);
-				row.addElement(lbl, true); // label
-
-				ed = std::make_shared<TextComponent>(window, "", Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF);
+				ed = std::make_shared<TextComponent>(window, "", Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF, TextComponent::ALIGN_RIGHT);
 				row.addElement(ed, true);
 				
 				auto bracket = std::make_shared<ImageComponent>(mWindow);

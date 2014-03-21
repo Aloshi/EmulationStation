@@ -6,13 +6,13 @@
 #include "../Util.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
-	mFont(Font::get(FONT_SIZE_MEDIUM)), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(false)
+	mFont(Font::get(FONT_SIZE_MEDIUM)), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT)
 {
 }
 
-TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, bool center,
+TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
 	Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
-	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mCentered(center)
+	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align)
 {
 	setFont(font);
 	setColor(color);
@@ -62,11 +62,6 @@ void TextComponent::setText(const std::string& text)
 	onTextChanged();
 }
 
-void TextComponent::setCentered(bool center)
-{
-	mCentered = center;
-}
-
 void TextComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
@@ -78,18 +73,27 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 
 	if(mTextCache)
 	{
-		if(mCentered)
-		{
-			const Eigen::Vector2f& textSize = mTextCache->metrics.size;
-			Eigen::Vector3f off((getSize().x() - textSize.x()) / 2, (getSize().y() - textSize.y()) / 2, 0);
-			off = roundVector(off);
+		const Eigen::Vector2f& textSize = mTextCache->metrics.size;
+		Eigen::Vector3f off(0, 0, 0);
 
-			trans.translate(off);
-			Renderer::setMatrix(trans);
-			trans.translate(-off);
-		}else{
-			Renderer::setMatrix(trans);
+		switch(mAlignment)
+		{
+		case ALIGN_LEFT:
+			break;
+
+		case ALIGN_CENTER:
+			off << (getSize().x() - textSize.x()) / 2, (getSize().y() - textSize.y()) / 2, 0;
+			break;
+
+		case ALIGN_RIGHT:
+			off << (getSize().x() - textSize.x()), 0, 0;
+			break;
 		}
+
+		off = roundVector(off);
+		trans.translate(off);
+		Renderer::setMatrix(trans);
+		trans.translate(-off);
 
 		mFont->renderTextCache(mTextCache.get());
 	}
@@ -171,8 +175,18 @@ void TextComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const st
 	if(properties & COLOR && elem->has("color"))
 		setColor(elem->get<unsigned int>("color"));
 
-	if(properties & ALIGNMENT && elem->has("center"))
-		setCentered(elem->get<bool>("center"));
+	if(properties & ALIGNMENT && elem->has("alignment"))
+	{
+		std::string str = elem->get<std::string>("alignment");
+		if(str == "left")
+			setAlignment(ALIGN_LEFT);
+		else if(str == "center")
+			setAlignment(ALIGN_CENTER);
+		else if(str == "ALIGN_RIGHT")
+			setAlignment(ALIGN_RIGHT);
+		else
+			LOG(LogError) << "Unknown text alignment string: " << str;
+	}
 
 	if(properties & TEXT && elem->has("text"))
 		setText(elem->get<std::string>("text"));

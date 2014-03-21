@@ -38,7 +38,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("color", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)
-		("center", BOOLEAN)))
+		("alignment", STRING)))
 	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)

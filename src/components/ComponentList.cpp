@@ -150,7 +150,22 @@ void ComponentList::render(const Eigen::Affine3f& parentTrans)
 	trans.translate(Eigen::Vector3f(0, -round(mCameraOffset), 0));
 
 	// draw our entries
-	renderChildren(trans);
+	std::vector<GuiComponent*> drawAfterCursor;
+	bool drawAll;
+	for(unsigned int i = 0; i < mEntries.size(); i++)
+	{
+		auto& entry = mEntries.at(i);
+		drawAll = !mFocused || i != mCursor;
+		for(auto it = entry.data.elements.begin(); it != entry.data.elements.end(); it++)
+		{
+			if(drawAll || it->invert_when_selected)
+			{
+				it->component->render(trans);
+			}else{
+				drawAfterCursor.push_back(it->component.get());
+			}
+		}
+	}
 
 	// custom rendering
 	Renderer::setMatrix(trans);
@@ -172,6 +187,13 @@ void ComponentList::render(const Eigen::Affine3f& parentTrans)
 		// hack to draw 2px dark on left/right of the bar
 		Renderer::drawRect(0.0f, mSelectorBarOffset, 2.0f, selectedRowHeight, 0x878787FF);
 		Renderer::drawRect(mSize.x() - 2.0f, mSelectorBarOffset, 2.0f, selectedRowHeight, 0x878787FF);
+
+		for(auto it = drawAfterCursor.begin(); it != drawAfterCursor.end(); it++)
+			(*it)->render(trans);
+		
+		// reset matrix if one of these components changed it
+		if(drawAfterCursor.size())
+			Renderer::setMatrix(trans);
 	}
 
 	// draw separators

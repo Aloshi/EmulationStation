@@ -5,10 +5,12 @@
 
 struct ComponentListElement
 {
-	ComponentListElement(const std::shared_ptr<GuiComponent>& cmp = nullptr, bool resize_w = true) : component(cmp), resize_width(resize_w) { };
+	ComponentListElement(const std::shared_ptr<GuiComponent>& cmp = nullptr, bool resize_w = true, bool inv = true)
+		: component(cmp), resize_width(resize_w), invert_when_selected(inv) { };
 
 	std::shared_ptr<GuiComponent> component;
 	bool resize_width;
+	bool invert_when_selected;
 };
 
 struct ComponentListRow
@@ -21,9 +23,9 @@ struct ComponentListRow
 	// the rightmost element in the currently selected row.
 	std::function<bool(InputConfig*, Input)> input_handler;
 	
-	inline void addElement(const std::shared_ptr<GuiComponent>& component, bool resize_width)
+	inline void addElement(const std::shared_ptr<GuiComponent>& component, bool resize_width, bool invert_when_selected = true)
 	{
-		elements.push_back(ComponentListElement(component, resize_width));
+		elements.push_back(ComponentListElement(component, resize_width, invert_when_selected));
 	}
 
 	// Utility method for making an input handler for "when the users presses A on this, do func."

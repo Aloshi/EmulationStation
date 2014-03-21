@@ -19,7 +19,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	addChild(&mGrid);
 
 	// header
-	mHeader = std::make_shared<TextComponent>(mWindow, getCleanFileName(mSearchParams.game->getName()), Font::get(FONT_SIZE_LARGE), 0x777777FF, true);
+	mHeader = std::make_shared<TextComponent>(mWindow, getCleanFileName(mSearchParams.game->getName()), Font::get(FONT_SIZE_LARGE), 0x777777FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mHeader, Eigen::Vector2i(0, 0), false, true);
 
 	// ScraperSearchComponent

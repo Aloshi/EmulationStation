@@ -14,7 +14,7 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 	float width = Renderer::getScreenWidth() * 0.6f; // max width
 	float minWidth = Renderer::getScreenWidth() * 0.3f; // minimum width
 
-	mMsg = std::make_shared<TextComponent>(mWindow, text, Font::get(FONT_SIZE_MEDIUM), 0x777777FF, true);
+	mMsg = std::make_shared<TextComponent>(mWindow, text, Font::get(FONT_SIZE_MEDIUM), 0x777777FF, TextComponent::ALIGN_CENTER);
 	
 	// create the buttons
 	mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, name1, name1, std::bind(&GuiMsgBox::deleteMeAndCall, this, func1)));

@@ -46,7 +46,7 @@ void SystemView::populate()
 			text->setText((*it)->getName());
 			text->setSize(logoSize().x(), 0);
 			text->setPosition(0, (logoSize().y() - text->getSize().y()) / 2); // vertically center
-			text->setCentered(true); // horizontally center
+			text->setAlignment(TextComponent::ALIGN_CENTER);
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 		}
 

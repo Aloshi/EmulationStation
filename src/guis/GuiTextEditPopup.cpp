@@ -10,7 +10,7 @@ GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, con
 	addChild(&mBackground);
 	addChild(&mGrid);
 
-	mTitle = std::make_shared<TextComponent>(mWindow, strToUpper(title), Font::get(FONT_SIZE_MEDIUM), 0x777777FF, true);
+	mTitle = std::make_shared<TextComponent>(mWindow, strToUpper(title), Font::get(FONT_SIZE_MEDIUM), 0x777777FF, TextComponent::ALIGN_CENTER);
 
 	mText = std::make_shared<TextEditComponent>(mWindow);
 	mText->setValue(initValue);

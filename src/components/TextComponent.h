@@ -14,15 +14,22 @@ class ThemeData;
 class TextComponent : public GuiComponent
 {
 public:
+	enum Alignment
+	{
+		ALIGN_LEFT,
+		ALIGN_CENTER, // centers both horizontally and vertically
+		ALIGN_RIGHT
+	};
+
 	TextComponent(Window* window);
-	TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color = 0x000000FF, bool center = false,
+	TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color = 0x000000FF, Alignment align = ALIGN_LEFT,
 		Eigen::Vector3f pos = Eigen::Vector3f::Zero(), Eigen::Vector2f size = Eigen::Vector2f::Zero());
 
 	void setFont(const std::shared_ptr<Font>& font);
 	void onSizeChanged() override;
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
-	void setCentered(bool center); // Will horizontally center text.  Default is false.
+	inline void setAlignment(Alignment align) { mAlignment = align; }
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 
@@ -47,7 +54,7 @@ private:
 	Eigen::Matrix<bool, 1, 2> mAutoCalcExtent;
 	std::string mText;
 	std::shared_ptr<TextCache> mTextCache;
-	bool mCentered;
+	Alignment mAlignment;
 };
 
 #endif

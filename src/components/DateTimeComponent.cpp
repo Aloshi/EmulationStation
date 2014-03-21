@@ -7,9 +7,9 @@
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
-	mColor(0x000000FF)
+	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT))
 {
-	mSize << 64, (float)getFont()->getHeight();
+	mSize << 64, getFont()->getHeight();
 	updateTextCache();
 }
 

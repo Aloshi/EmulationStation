@@ -19,14 +19,14 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	addChild(&mBackground);
 
 	mLetterText.setSize(mSize.x(), mSize.y() * 0.75f);
-	mLetterText.setCentered(true);
+	mLetterText.setAlignment(TextComponent::ALIGN_CENTER);
 	mLetterText.applyTheme(theme, "fastSelect", "letter", FONT_PATH | COLOR);
 	// TODO - set font size
 	addChild(&mLetterText);
 
 	mSortText.setPosition(0, mSize.y() * 0.75f);
 	mSortText.setSize(mSize.x(), mSize.y() * 0.25f);
-	mSortText.setCentered(true);
+	mSortText.setAlignment(TextComponent::ALIGN_CENTER);
 	mSortText.applyTheme(theme, "fastSelect", "subtext", FONT_PATH | COLOR);
 	// TODO - set font size
 	addChild(&mSortText);
