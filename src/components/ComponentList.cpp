@@ -121,6 +121,15 @@ void ComponentList::onCursorChanged(const CursorState& state)
 		mCameraOffset = 0;
 	}
 
+	// this is terribly inefficient but we don't know what we came from so...
+	if(size())
+	{
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+			it->data.elements.back().component->onFocusLost();
+		
+		mEntries.at(mCursor).data.elements.back().component->onFocusGained();
+	}
+
 	updateHelpPrompts();
 }
 
@@ -242,6 +251,14 @@ void ComponentList::updateElementSize(const ComponentListRow& row)
 	{
 		(*it)->setSize(width, (*it)->getSize().y());
 	}
+}
+
+void ComponentList::textInput(const char* text)
+{
+	if(!size())
+		return;
+
+	mEntries.at(mCursor).data.elements.back().component->textInput(text);
 }
 
 std::vector<HelpPrompt> ComponentList::getHelpPrompts()

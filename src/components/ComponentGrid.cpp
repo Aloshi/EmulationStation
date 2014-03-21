@@ -376,7 +376,7 @@ void ComponentGrid::render(const Eigen::Affine3f& parentTrans)
 void ComponentGrid::textInput(const char* text)
 {
 	GridEntry* selectedEntry = getCellAt(mCursor);
-	if(selectedEntry != NULL)
+	if(selectedEntry != NULL && selectedEntry->canFocus)
 		selectedEntry->component->textInput(text);
 }
 

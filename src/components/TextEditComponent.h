@@ -14,6 +14,7 @@ public:
 	
 	void textInput(const char* text) override;
 	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
 
 	void onFocusGained() override;
@@ -24,26 +25,36 @@ public:
 	void setValue(const std::string& val) override;
 	std::string getValue() const override;
 
-	bool isEditing() const;
+	inline bool isEditing() const { return mEditing; };
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
+	void startEditing();
+	void stopEditing();
+
 	void onTextChanged();
 	void onCursorChanged();
 
+	void updateCursorRepeat(int deltaTime);
+	void moveCursor(int amt);
+
 	bool isMultiline();
+	Eigen::Vector2f getTextAreaPos() const;
+	Eigen::Vector2f getTextAreaSize() const;
 
 	std::string mText;
 	bool mFocused;
-
 	bool mEditing;
-	Eigen::Vector2f mScrollOffset;
-	int mCursor;
+	int mCursor; // cursor position in characters
 
-	std::shared_ptr<Font> getFont();
+	int mCursorRepeatTimer;
+	int mCursorRepeatDir;
+
+	Eigen::Vector2f mScrollOffset;
 
 	NinePatchComponent mBox;
 
+	std::shared_ptr<Font> mFont;
 	std::unique_ptr<TextCache> mTextCache;
 };
