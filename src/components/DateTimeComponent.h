@@ -8,8 +8,14 @@
 class DateTimeComponent : public GuiComponent
 {
 public:
-	// Display mode will initialize to DISP_DATE.
-	DateTimeComponent(Window* window);
+	enum DisplayMode
+	{
+		DISP_DATE,
+		DISP_DATE_TIME,
+		DISP_RELATIVE_TO_NOW
+	};
+
+	DateTimeComponent(Window* window, DisplayMode dispMode = DISP_DATE);
 
 	void setValue(const std::string& val) override;
 	std::string getValue() const override;
@@ -17,13 +23,6 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
-
-	enum DisplayMode
-	{
-		DISP_DATE,
-		DISP_DATE_TIME,
-		DISP_RELATIVE_TO_NOW
-	};
 
 	// Set how the point in time will be displayed:
 	//  * DISP_DATE - only display the date.

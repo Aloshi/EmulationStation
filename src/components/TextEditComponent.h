@@ -26,6 +26,7 @@ public:
 	std::string getValue() const override;
 
 	inline bool isEditing() const { return mEditing; };
+	inline const std::shared_ptr<Font>& getFont() const { return mFont; }
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 

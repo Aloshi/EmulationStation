@@ -55,8 +55,6 @@ public:
 	float getFloat(const std::string& key) const;
 	boost::posix_time::ptime getTime(const std::string& key) const;
 
-	static std::shared_ptr<GuiComponent> makeEditor(Window* window, MetaDataType as);
-
 	inline MetaDataListType getType() const { return mType; }
 	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDByType(getType()); }
 
@@ -64,20 +62,3 @@ private:
 	MetaDataListType mType;
 	std::map<std::string, std::string> mMap;
 };
-
-
-
-//options for storing metadata...
-//store internally everything as a string - this is all going to be read to/from XML anyway, after all
-//	- problem: this does not play nice with lists of values
-//store using individual get/set functions ala Settings - this is a fair amount of work but the most explicit and type-safe, for better or worse
-
-//let's think about some of the special types we would like to support...
-//image paths, sound paths, ratings, play counts
-//these get represented behind-the-scenes as strings, floats, and integers, and are eventually saved as strings
-//the only specialty is how they're edited and viewed, really
-
-//so we need...
-//to be able to iterate through the available metadata
-//create components designed to either DISPLAY or EDIT a given piece of metadata
-//save and load metadata

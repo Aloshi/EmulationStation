@@ -5,8 +5,8 @@
 #include "../Log.h"
 #include "../Util.h"
 
-DateTimeComponent::DateTimeComponent(Window* window) : GuiComponent(window), 
-	mEditing(false), mEditIndex(0), mDisplayMode(DISP_DATE), mRelativeUpdateAccumulator(0), 
+DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
+	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
 	mColor(0x000000FF)
 {
 	mSize << 64, (float)getFont()->getHeight();

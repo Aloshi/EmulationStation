@@ -7,6 +7,11 @@
 #include "GuiMsgBox.h"
 #include <boost/filesystem.hpp>
 
+#include "../components/TextEditComponent.h"
+#include "../components/DateTimeComponent.h"
+#include "../components/RatingComponent.h"
+#include "GuiTextEditPopup.h"
+
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
 	mScraperParams(scraperParams), 
@@ -22,10 +27,61 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	// populate list
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
 	{
-		auto ed = MetaDataList::makeEditor(mWindow, iter->type);
+		std::shared_ptr<GuiComponent> ed;
+
+		// create ed and add it (and any related components) to mMenu
+		// ed's value will be set below
+		switch(iter->type)
+		{
+		case MD_RATING:
+			{
+				ed = std::make_shared<RatingComponent>(window);
+				mMenu.addWithLabel(iter->key, ed);
+				break;
+			}
+		case MD_DATE:
+			{
+				ed = std::make_shared<DateTimeComponent>(window);
+				mMenu.addWithLabel(iter->key, ed);
+				break;
+			}
+		case MD_TIME:
+			{
+				ed = std::make_shared<DateTimeComponent>(window, DateTimeComponent::DISP_RELATIVE_TO_NOW);
+				mMenu.addWithLabel(iter->key, ed);
+				break;
+			}
+		case MD_MULTILINE_STRING:
+		default:
+			{
+				// MD_STRING
+				ComponentListRow row;
+				auto lbl = std::make_shared<TextComponent>(mWindow, iter->key, Font::get(FONT_SIZE_SMALL), 0x777777FF);
+				row.addElement(lbl, true); // label
+
+				ed = std::make_shared<TextComponent>(window, "", Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF);
+				row.addElement(ed, true);
+				
+				auto bracket = std::make_shared<ImageComponent>(mWindow);
+				bracket->setImage(":/sq_bracket.png");
+				bracket->setResize(Eigen::Vector2f(0, lbl->getSize().y() * 0.8f));
+				row.addElement(bracket, false);
+
+				bool multiLine = iter->type == MD_MULTILINE_STRING;
+				const std::string& title = iter->key;
+				auto updateVal = [ed](const std::string& newVal) { ed->setValue(newVal); }; // ok callback (apply new value to ed)
+				row.makeAcceptInputHandler([this, title, ed, updateVal, multiLine] {
+					mWindow->pushGui(new GuiTextEditPopup(mWindow, title, ed->getValue(), updateVal, multiLine));
+				});
+
+				mMenu.addRow(row);
+				break;
+			}
+		}
+
+		assert(ed);
 		ed->setValue(mMetaData->get(iter->key));
 		mEditors.push_back(ed);
-		mMenu.addWithLabel(iter->key, ed);
 	}
 
 	//add buttons	

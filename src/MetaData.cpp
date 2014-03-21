@@ -2,11 +2,6 @@
 #include "components/TextComponent.h"
 #include "Log.h"
 
-#include "components/TextEditComponent.h"
-#include "components/RatingComponent.h"
-#include "components/DateTimeComponent.h"
-
-
 MetaDataDecl gameDecls[] = { 
 	{"name",		MD_STRING,				"", 		false}, 
 	{"desc",		MD_MULTILINE_STRING,	"", 		false},
@@ -131,37 +126,6 @@ float MetaDataList::getFloat(const std::string& key) const
 boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
 {
 	return string_to_ptime(get(key), "%Y%m%dT%H%M%S%F%q");
-}
-
-std::shared_ptr<GuiComponent> MetaDataList::makeEditor(Window* window, MetaDataType as)
-{
-	switch(as)
-	{
-	case MD_RATING:
-		{
-			return std::make_shared<RatingComponent>(window);
-		}
-	case MD_MULTILINE_STRING:
-		{
-			auto comp = std::make_shared<TextEditComponent>(window);
-			comp->setSize(comp->getSize().x(), comp->getSize().y() * 3);
-			return comp;
-		}
-	case MD_DATE:
-		{
-			return std::make_shared<DateTimeComponent>(window);
-		}
-	case MD_TIME:
-		{
-			auto comp = std::make_shared<DateTimeComponent>(window);
-			comp->setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
-			return comp;
-		}
-	default:
-		{
-			return std::make_shared<TextEditComponent>(window);
-		}
-	}
 }
 
 //util function
