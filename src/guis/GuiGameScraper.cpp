@@ -7,6 +7,7 @@
 #include "../components/TextComponent.h"
 #include "../components/ButtonComponent.h"
 #include "../components/MenuComponent.h"
+#include "GuiTextEditPopup.h"
 
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc) : GuiComponent(window), 
 	mGrid(window, Eigen::Vector2i(1, 3)), 
@@ -27,7 +28,11 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 
 	// buttons
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "manually search"));
+
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "manually search by name", [&] { 
+		mSearch->openInputScreen(mSearchParams); 
+		mGrid.resetCursor(); 
+	}));
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCEL", "cancel", [&] { delete this; }));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 

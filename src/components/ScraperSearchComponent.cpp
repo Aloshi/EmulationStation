@@ -11,6 +11,7 @@
 #include "../Settings.h"
 #include "../Log.h"
 #include "../Util.h"
+#include "../guis/GuiTextEditPopup.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
 	mGrid(window, Eigen::Vector2i(4, 3)),
@@ -159,6 +160,14 @@ void ScraperSearchComponent::search(const ScraperSearchParams& params)
 
 	mLastSearch = params;
 	mSearchHandle = Settings::getInstance()->getScraper()->getResultsAsync(params);
+}
+
+void ScraperSearchComponent::stop()
+{
+	mThumbnailReq.reset();
+	mSearchHandle.reset();
+	mMDResolveHandle.reset();
+	mBlockAccept = false;
 }
 
 void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>& results)
@@ -363,6 +372,21 @@ void ScraperSearchComponent::updateThumbnail()
 
 	mThumbnailReq.reset();
 	mGrid.onSizeChanged(); // a hack to fix the thumbnail position since its size changed
+}
+
+void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
+{
+	auto searchForFunc = [&](const std::string& name)
+	{
+		params.nameOverride = name;
+		search(params);
+	};
+
+	stop();
+	mWindow->pushGui(new GuiTextEditPopup(mWindow, "SEARCH FOR", 
+		// initial value is last search if there was one, otherwise the clean path name
+		params.nameOverride.empty() ? getCleanFileName(params.game->getPath()) : params.nameOverride, 
+		searchForFunc, false, "SEARCH"));
 }
 
 std::vector<HelpPrompt> ScraperSearchComponent::getHelpPrompts()
