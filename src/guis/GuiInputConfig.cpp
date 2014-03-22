@@ -54,11 +54,18 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		icon->setResize(0, Font::get(FONT_SIZE_MEDIUM)->getHeight() * 0.8f);
 		row.addElement(icon, false);
 
+		// spacer between icon and text
+		auto spacer = std::make_shared<GuiComponent>(mWindow);
+		spacer->setSize(16, 0);
+		row.addElement(spacer, false);
+
 		auto text = std::make_shared<TextComponent>(mWindow, inputDispName[i], Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 		row.addElement(text, true);
 
-		auto mapping = std::make_shared<TextComponent>(mWindow, "-NOT DEFINED-", Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT), 0x999999FF);
+		auto mapping = std::make_shared<TextComponent>(mWindow, "-NOT DEFINED-", Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT), 0x999999FF, TextComponent::ALIGN_RIGHT);
+		setNotDefined(mapping); // overrides text and color set above
 		row.addElement(mapping, true);
+		mMappings.push_back(mapping);
 
 		row.input_handler = [this, i, mapping](InputConfig* config, Input input) -> bool
 		{
@@ -77,6 +84,9 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 						mConfiguringAll = false;
 						mConfiguringRow = false;
 						mGrid.moveCursor(Vector2i(0, 1));
+					}else{
+						// on another one
+						setPress(mMappings.at(mList->getCursorId()));
 					}
 				}else{
 					mConfiguringRow = false; // we only wanted to configure one row
@@ -87,6 +97,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 				if(config->isMappedTo("a", input) && input.value)
 				{
 					mConfiguringRow = true;
+					setPress(mapping);
 					return true;
 				}
 				return false;
@@ -96,6 +107,10 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		};
 		mList->addRow(row);
 	}
+
+	// make the first one say "NOT DEFINED" if we're re-configuring everything
+	if(mConfiguringAll)
+		setPress(mMappings.front());
 
 	// buttons
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
@@ -125,10 +140,22 @@ void GuiInputConfig::onSizeChanged()
 	mGrid.setRowHeightPerc(4, mButtonGrid->getSize().y() / mSize.y());
 }
 
-void GuiInputConfig::error(const std::string& msg)
+void GuiInputConfig::setPress(const std::shared_ptr<TextComponent>& text)
 {
-	// TODO
-	LOG(LogWarning) << msg;
+	text->setText("PRESS ANYTHING");
+	text->setColor(0x656565FF);
+}
+
+void GuiInputConfig::setNotDefined(const std::shared_ptr<TextComponent>& text)
+{
+	text->setText("-NOT DEFINED-");
+	text->setColor(0x999999FF);
+}
+
+void GuiInputConfig::error(const std::shared_ptr<TextComponent>& text, const std::string& msg)
+{
+	text->setText("ALREADY TAKEN");
+	text->setColor(0x656565FF);
 }
 
 bool GuiInputConfig::process(InputConfig* config, Input input, int inputId, const std::shared_ptr<TextComponent>& text)
@@ -141,7 +168,7 @@ bool GuiInputConfig::process(InputConfig* config, Input input, int inputId, cons
 	// (if it's the same as what it was before, allow it)
 	if(config->getMappedTo(input).size() > 0 && !config->isMappedTo(inputName[inputId], input))
 	{
-		error("Already mapped!");
+		error(text, "Already mapped!");
 		return false;
 	}
 

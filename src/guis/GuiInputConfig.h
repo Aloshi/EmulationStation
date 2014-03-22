@@ -15,7 +15,9 @@ public:
 	void onSizeChanged() override;
 
 private:
-	void error(const std::string& msg);
+	void error(const std::shared_ptr<TextComponent>& text, const std::string& msg);
+	void setPress(const std::shared_ptr<TextComponent>& text);
+	void setNotDefined(const std::shared_ptr<TextComponent>& text);
 	bool process(InputConfig* config, Input input, int inputId, const std::shared_ptr<TextComponent>& text);
 
 	NinePatchComponent mBackground;
@@ -25,6 +27,7 @@ private:
 	std::shared_ptr<TextComponent> mSubtitle1;
 	std::shared_ptr<TextComponent> mSubtitle2;
 	std::shared_ptr<ComponentList> mList;
+	std::vector< std::shared_ptr<TextComponent> > mMappings;
 	std::shared_ptr<ComponentGrid> mButtonGrid;
 
 	InputConfig* mTargetConfig;

@@ -61,7 +61,7 @@ public:
 
 	bool moveCursor(int amt);
 	inline int getCursorId() const { return mCursor; }
-
+	
 	float getTotalRowHeight() const;
 
 protected:
