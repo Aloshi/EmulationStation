@@ -10,8 +10,9 @@
 static const int inputCount = 10;
 static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown"};
 static const char* inputDispName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "Page Up", "Page Down"};
-static const char* inputIcon[inputCount] = { ":/help/dpad_up.png", ":/help/dpad_down.png", ":/help/dpad_left.png", ":/help/dpad_right.png", 
-											":/help/a.png", ":/help/b.png", ":/help/start.png", ":/help/select.png", ":/help/l.png", ":/help/r.png" };
+static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
+											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
+											":/help/button_l.svg", ":/help/button_r.svg" };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.

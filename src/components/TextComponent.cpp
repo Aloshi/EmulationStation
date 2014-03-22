@@ -64,12 +64,12 @@ void TextComponent::setText(const std::string& text)
 
 void TextComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Eigen::Affine3f trans = parentTrans * getTransform();
 
 	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
-	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), 
-		Eigen::Vector2i((int)(dim.x() + 0.5f), (int)(dim.y() + 0.5f)));
+	//Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), 
+	//	Eigen::Vector2i((int)(dim.x() + 0.5f), (int)(dim.y() + 0.5f)));
 
 	if(mTextCache)
 	{
@@ -79,6 +79,7 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 		switch(mAlignment)
 		{
 		case ALIGN_LEFT:
+			off << 0, (getSize().y() - textSize.y()) / 2, 0;
 			break;
 
 		case ALIGN_CENTER:
@@ -86,21 +87,17 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 			break;
 
 		case ALIGN_RIGHT:
-			off << (getSize().x() - textSize.x()), 0, 0;
+			off << (getSize().x() - textSize.x()), (getSize().y() - textSize.y()) / 2, 0;
 			break;
 		}
 
-		off = roundVector(off);
 		trans.translate(off);
+		trans = roundMatrix(trans);
 		Renderer::setMatrix(trans);
-		trans.translate(-off);
-
 		mFont->renderTextCache(mTextCache.get());
 	}
 
-	Renderer::popClipRect();
-
-	GuiComponent::renderChildren(trans);
+	//Renderer::popClipRect();
 }
 
 void TextComponent::calculateExtent()

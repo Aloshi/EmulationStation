@@ -67,7 +67,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				row.addElement(ed, true);
 				
 				auto bracket = std::make_shared<ImageComponent>(mWindow);
-				bracket->setImage(":/sq_bracket.png");
+				bracket->setImage(":/arrow.svg");
 				bracket->setResize(Eigen::Vector2f(0, lbl->getSize().y() * 0.8f));
 				row.addElement(bracket, false);
 

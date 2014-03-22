@@ -123,7 +123,11 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 	if(path.substr(path.size() - 4, std::string::npos) == ".svg")
 	{
 		// probably
+		// don't add it to our map because 2 svgs might be rasterized at different sizes
 		tex = std::shared_ptr<SVGResource>(new SVGResource(path, tile));
+		rm->addReloadable(tex);
+		tex->reload(rm);
+		return tex;
 	}else{
 		tex = std::shared_ptr<TextureResource>(new TextureResource(path, tile));
 	}

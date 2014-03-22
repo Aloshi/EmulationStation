@@ -7,13 +7,17 @@
 #include <boost/assign.hpp>
 
 static const std::map<std::string, const char*> ICON_PATH_MAP = boost::assign::map_list_of
-	("up/down", ":/help/dpad_up_down.png")
-	("left/right", ":/help/dpad_left_right.png")
-	("up/down/left/right", ":/help/dpad_all.png")
-	("a", ":/help/a.png")
-	("b", ":/help/b.png")
-	("start", ":/help/start.png")
-	("select", ":/help/select.png");
+	("up/down", ":/help/dpad_updown.svg")
+	("left/right", ":/help/dpad_leftright.svg")
+	("up/down/left/right", ":/help/dpad_all.svg")
+	("a", ":/help/button_a.svg")
+	("b", ":/help/button_b.svg")
+	("x", ":/help/button_x.svg")
+	("y", ":/help/button_y.svg")
+	("l", ":/help/button_l.svg")
+	("r", ":/help/button_r.svg")
+	("start", ":/help/button_start.svg")
+	("select", ":/help/button_select.svg");
 
 HelpComponent::HelpComponent(Window* window) : GuiComponent(window)
 {

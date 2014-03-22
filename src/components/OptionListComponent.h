@@ -54,10 +54,7 @@ private:
 				{
 					// add checkbox
 					auto checkbox = std::make_shared<ImageComponent>(mWindow);
-					checkbox->setImage(it->selected ? ":/checkbox_checked.png" : ":/checkbox_unchecked.png");
-
-					if(checkbox->getTextureSize().y() > (int)FONT_SIZE_MEDIUM) // downscale if necessary to match text
-						checkbox->setResize(0, (float)FONT_SIZE_MEDIUM);
+					checkbox->setImage(it->selected ? ":/checkbox_checked.svg" : ":/checkbox_unchecked.svg");
 
 					row.addElement(checkbox, false);
 
@@ -66,7 +63,7 @@ private:
 					row.makeAcceptInputHandler([this, &e, checkbox]
 					{
 						e.selected = !e.selected;
-						checkbox->setImage(e.selected ? ":/checkbox_checked.png" : ":/checkbox_unchecked.png");
+						checkbox->setImage(e.selected ? ":/checkbox_checked.svg" : ":/checkbox_unchecked.svg");
 						mParent->onSelectedChanged();
 					});
 				}else{
@@ -121,38 +118,30 @@ public:
 
 		if(mMultiSelect)
 		{
-			mRightArrow.setImage(":/sq_bracket.png");
+			mRightArrow.setImage(":/arrow.svg");
 			addChild(&mRightArrow);
 		}else{
-			mLeftArrow.setImage(":/arrow.png");
+			mLeftArrow.setImage(":/option_arrow.svg");
 			mLeftArrow.setFlipX(true);
 			addChild(&mLeftArrow);
 
-			mRightArrow.setImage(":/arrow.png");
+			mRightArrow.setImage(":/option_arrow.svg");
 			addChild(&mRightArrow);
 		}
 
-		setSize(mLeftArrow.getSize().x() + mRightArrow.getSize().x(), (float)font->getHeight());
+		setSize(mLeftArrow.getSize().x() + mRightArrow.getSize().x(), font->getHeight());
 	}
 
 	// handles positioning/resizing of text and arrows
 	void onSizeChanged() override
 	{
-		// size
-		if(mLeftArrow.getTextureSize().y() > mSize.y())
-			mLeftArrow.setResize(0, mSize.y());
-		else
-			mLeftArrow.setResize(0, 0);
-
-		if(mRightArrow.getTextureSize().y() > mSize.y())
-			mRightArrow.setResize(0, mSize.y());
-		else
-			mRightArrow.setResize(0, 0);
+		mLeftArrow.setResize(0, mSize.y() * 0.5f);
+		mRightArrow.setResize(0, mSize.y() * 0.5f);
 
 		if(mSize.x() < (mLeftArrow.getSize().x() + mRightArrow.getSize().x()))
 			LOG(LogWarning) << "OptionListComponent too narrow!";
 
-		mText.setSize(mSize.x() - mLeftArrow.getSize().x() - mRightArrow.getSize().x(), (float)mText.getFont()->getHeight());
+		mText.setSize(mSize.x() - mLeftArrow.getSize().x() - mRightArrow.getSize().x(), mText.getFont()->getHeight());
 
 		// position
 		mLeftArrow.setPosition(0, (mSize.y() - mLeftArrow.getSize().y()) / 2);

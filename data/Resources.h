@@ -5,8 +5,8 @@
 #include <string>
 #include <map>
 
-extern const size_t arrow_png_size;
-extern const unsigned char arrow_png_data[];
+extern const size_t arrow_svg_size;
+extern const unsigned char arrow_svg_data[];
 
 extern const size_t button_png_size;
 extern const unsigned char button_png_data[];
@@ -14,11 +14,11 @@ extern const unsigned char button_png_data[];
 extern const size_t button_filled_png_size;
 extern const unsigned char button_filled_png_data[];
 
-extern const size_t checkbox_checked_png_size;
-extern const unsigned char checkbox_checked_png_data[];
+extern const size_t checkbox_checked_svg_size;
+extern const unsigned char checkbox_checked_svg_data[];
 
-extern const size_t checkbox_unchecked_png_size;
-extern const unsigned char checkbox_unchecked_png_data[];
+extern const size_t checkbox_unchecked_svg_size;
+extern const unsigned char checkbox_unchecked_svg_data[];
 
 extern const size_t ES_logo_16_png_size;
 extern const unsigned char ES_logo_16_png_data[];
@@ -26,8 +26,20 @@ extern const unsigned char ES_logo_16_png_data[];
 extern const size_t ES_logo_32_png_size;
 extern const unsigned char ES_logo_32_png_data[];
 
+extern const size_t fav_add_svg_size;
+extern const unsigned char fav_add_svg_data[];
+
+extern const size_t fav_remove_svg_size;
+extern const unsigned char fav_remove_svg_data[];
+
 extern const size_t frame_png_size;
 extern const unsigned char frame_png_data[];
+
+extern const size_t off_svg_size;
+extern const unsigned char off_svg_data[];
+
+extern const size_t on_svg_size;
+extern const unsigned char on_svg_data[];
 
 extern const size_t opensans_hebrew_condensed_light_ttf_size;
 extern const unsigned char opensans_hebrew_condensed_light_ttf_data[];
@@ -35,71 +47,65 @@ extern const unsigned char opensans_hebrew_condensed_light_ttf_data[];
 extern const size_t opensans_hebrew_condensed_regular_ttf_size;
 extern const unsigned char opensans_hebrew_condensed_regular_ttf_data[];
 
+extern const size_t option_arrow_svg_size;
+extern const unsigned char option_arrow_svg_data[];
+
 extern const size_t scroll_gradient_png_size;
 extern const unsigned char scroll_gradient_png_data[];
 
 extern const size_t slider_knob_png_size;
 extern const unsigned char slider_knob_png_data[];
 
-extern const size_t sq_bracket_png_size;
-extern const unsigned char sq_bracket_png_data[];
+extern const size_t star_filled_svg_size;
+extern const unsigned char star_filled_svg_data[];
 
-extern const size_t star_filled_png_size;
-extern const unsigned char star_filled_png_data[];
+extern const size_t star_unfilled_svg_size;
+extern const unsigned char star_unfilled_svg_data[];
 
-extern const size_t star_unfilled_png_size;
-extern const unsigned char star_unfilled_png_data[];
+extern const size_t help_button_a_svg_size;
+extern const unsigned char help_button_a_svg_data[];
 
-extern const size_t textbox_png_size;
-extern const unsigned char textbox_png_data[];
+extern const size_t help_button_b_svg_size;
+extern const unsigned char help_button_b_svg_data[];
 
-extern const size_t textbox_glow_png_size;
-extern const unsigned char textbox_glow_png_data[];
+extern const size_t help_button_l_svg_size;
+extern const unsigned char help_button_l_svg_data[];
 
-extern const size_t help_a_png_size;
-extern const unsigned char help_a_png_data[];
+extern const size_t help_button_r_svg_size;
+extern const unsigned char help_button_r_svg_data[];
 
-extern const size_t help_b_png_size;
-extern const unsigned char help_b_png_data[];
+extern const size_t help_button_select_svg_size;
+extern const unsigned char help_button_select_svg_data[];
 
-extern const size_t help_dpad_all_png_size;
-extern const unsigned char help_dpad_all_png_data[];
+extern const size_t help_button_start_svg_size;
+extern const unsigned char help_button_start_svg_data[];
 
-extern const size_t help_dpad_down_png_size;
-extern const unsigned char help_dpad_down_png_data[];
+extern const size_t help_button_x_svg_size;
+extern const unsigned char help_button_x_svg_data[];
 
-extern const size_t help_dpad_left_png_size;
-extern const unsigned char help_dpad_left_png_data[];
+extern const size_t help_button_y_svg_size;
+extern const unsigned char help_button_y_svg_data[];
 
-extern const size_t help_dpad_left_right_png_size;
-extern const unsigned char help_dpad_left_right_png_data[];
+extern const size_t help_dpad_all_svg_size;
+extern const unsigned char help_dpad_all_svg_data[];
 
-extern const size_t help_dpad_right_png_size;
-extern const unsigned char help_dpad_right_png_data[];
+extern const size_t help_dpad_down_svg_size;
+extern const unsigned char help_dpad_down_svg_data[];
 
-extern const size_t help_dpad_up_png_size;
-extern const unsigned char help_dpad_up_png_data[];
+extern const size_t help_dpad_left_svg_size;
+extern const unsigned char help_dpad_left_svg_data[];
 
-extern const size_t help_dpad_up_down_png_size;
-extern const unsigned char help_dpad_up_down_png_data[];
+extern const size_t help_dpad_leftright_svg_size;
+extern const unsigned char help_dpad_leftright_svg_data[];
 
-extern const size_t help_l_png_size;
-extern const unsigned char help_l_png_data[];
+extern const size_t help_dpad_right_svg_size;
+extern const unsigned char help_dpad_right_svg_data[];
 
-extern const size_t help_r_png_size;
-extern const unsigned char help_r_png_data[];
+extern const size_t help_dpad_up_svg_size;
+extern const unsigned char help_dpad_up_svg_data[];
 
-extern const size_t help_select_png_size;
-extern const unsigned char help_select_png_data[];
-
-extern const size_t help_start_png_size;
-extern const unsigned char help_start_png_data[];
-
-extern const size_t help_x_png_size;
-extern const unsigned char help_x_png_data[];
-
-extern const size_t help_y_png_size;
-extern const unsigned char help_y_png_data[];
+extern const size_t help_dpad_updown_svg_size;
+extern const unsigned char help_dpad_updown_svg_data[];
 
 struct Res2hEntry {
     const std::string relativeFileName;

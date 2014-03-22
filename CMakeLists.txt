@@ -308,34 +308,36 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_filled_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/frame_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textbox_glow_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_filled_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_unfilled_png.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_a_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_b_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_x_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_y_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_l_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_r_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_start_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_select_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_all_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_up_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_down_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_left_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_right_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_up_down_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_left_right_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_x_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_y_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_l_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_right_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_updown_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_leftright_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/help_dpad_all_svg.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/sq_bracket_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/arrow_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_checked_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_unchecked_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/arrow_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/option_arrow_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_checked_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/checkbox_unchecked_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_filled_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/star_unfilled_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/on_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/off_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/fav_add_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/fav_remove_svg.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/slider_knob_png.cpp
 )
 

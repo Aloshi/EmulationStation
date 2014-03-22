@@ -20,12 +20,11 @@
 std::shared_ptr<ImageComponent> makeBracket(Window* window)
 {
 	auto bracket = std::make_shared<ImageComponent>(window);
-	bracket->setImage(":/sq_bracket.png");
+	bracket->setImage(":/arrow.svg");
 
 	// resize
-	const float fontHeight = (float)Font::get(FONT_SIZE_MEDIUM)->getHeight();
-	if(bracket->getTextureSize().y() > fontHeight)
-		bracket->setResize(0, fontHeight);
+	const float fontHeight = Font::get(FONT_SIZE_MEDIUM)->getHeight();
+	bracket->setResize(0, round(fontHeight * 0.5f));
 
 	return bracket;
 }
