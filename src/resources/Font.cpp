@@ -250,7 +250,7 @@ Eigen::Vector2f Font::sizeText(std::string text) const
 	float lineWidth = 0.0f;
 	float highestWidth = 0.0f;
 
-	float y = (float)getHeight();
+	float y = getHeight();
 
 	for(unsigned int i = 0; i < text.length(); i++)
 	{
@@ -433,7 +433,10 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 	float th = (float)textureHeight;
 
 	float x = offsetX;
-	float y = offsetY + mMaxGlyphHeight * 1.1f * fontScale; //padding (another 0.5% is added to the bottom through the sizeText function)
+
+	float yTop = (charData['S'].bearingY);
+	float yBot = getHeight();
+	float y = offsetY + (yBot + yTop)/2.0f;
 
 	int charNum = 0;
 	for(int i = 0; i < vertCount; i += 6, charNum++)
