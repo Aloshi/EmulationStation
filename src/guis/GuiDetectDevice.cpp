@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include "../views/ViewController.h"
+#include "../Util.h"
 
 #define HOLD_TIME 1000
 
@@ -30,12 +31,12 @@ GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun) : GuiComponent(w
 	}
 
 	mTitle = std::make_shared<TextComponent>(mWindow, firstRun ? "WELCOME TO EMULATIONSTATION" : "SELECT A DEVICE", 
-		Font::get(FONT_SIZE_MEDIUM), 0x666666FF, TextComponent::ALIGN_CENTER);
+		Font::get(FONT_SIZE_LARGE), 0x555555FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mTitle, Vector2i(0, 0), false, true);
 
-	std::string msg = (firstRun ? "First, we need to configure your input device!\n" : "");
-	msg += "Hold a button on your input device to configure it.\n"
-		"Press F4 to quit at any time.";
+	std::string msg = (firstRun ? "FIRST, WE NEED TO CONFIGURE YOUR INPUT DEVICE!\n" : "");
+	msg += "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT.\n"
+		"PRESS F4 TO QUIT AT ANY TIME.";
 	mMsg = std::make_shared<TextComponent>(mWindow, msg, Font::get(FONT_SIZE_SMALL), 0x777777FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mMsg, Vector2i(0, 1), false, true);
 
@@ -43,13 +44,13 @@ GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun) : GuiComponent(w
 	int numDevices = mWindow->getInputManager()->getNumJoysticks();
 	
 	if(numDevices > 0)
-		deviceInfo << numDevices << " joystick" << (numDevices > 1 ? "s" : "") << " detected.";
+		deviceInfo << "(" << numDevices << " JOYSTICK" << (numDevices > 1 ? "S" : "") << " DETECTED)";
 	else
-		deviceInfo << "No joysticks detected!";
-	mDeviceInfo = std::make_shared<TextComponent>(mWindow, deviceInfo.str(), Font::get(FONT_SIZE_SMALL), 0x888888FF, TextComponent::ALIGN_CENTER);
+		deviceInfo << "(NO JOYSTICKS DETECTED)";
+	mDeviceInfo = std::make_shared<TextComponent>(mWindow, deviceInfo.str(), Font::get(FONT_SIZE_SMALL), 0x999999FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mDeviceInfo, Vector2i(0, 2), false, true);
 
-	mDeviceHeld = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_MEDIUM), 0x777777FF, TextComponent::ALIGN_CENTER);
+	mDeviceHeld = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_MEDIUM), 0xFFFFFFFF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mDeviceHeld, Vector2i(0, 3), false, true);
 
 	setSize(Renderer::getScreenWidth() * 0.6f, Renderer::getScreenHeight() * 0.5f);
@@ -76,7 +77,7 @@ bool GuiDetectDevice::input(InputConfig* config, Input input)
 			// started holding
 			mHoldingConfig = config;
 			mHoldTime = HOLD_TIME;
-			mDeviceHeld->setText(config->getDeviceName());
+			mDeviceHeld->setText(strToUpper(config->getDeviceName()));
 		}else if(!input.value && mHoldingConfig == config)
 		{
 			// cancel
@@ -93,6 +94,9 @@ void GuiDetectDevice::update(int deltaTime)
 	if(mHoldingConfig)
 	{
 		mHoldTime -= deltaTime;
+		const float t = (float)mHoldTime / HOLD_TIME;
+		unsigned int c = (unsigned char)(t * 255);
+		mDeviceHeld->setColor((c << 24) | (c << 16) | (c << 8) | 0xFF);
 		if(mHoldTime <= 0)
 		{
 			// picked one!

@@ -9,7 +9,7 @@
 
 static const int inputCount = 10;
 static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown"};
-static const char* inputDispName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "Page Up", "Page Down"};
+static const char* inputDispName[inputCount] = { "UP", "DOWN", "LEFT", "RIGHT", "A", "B", "START", "SELECT", "PAGE UP", "PAGE DOWN"};
 static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
 											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
 											":/help/button_l.svg", ":/help/button_r.svg" };
@@ -23,7 +23,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)), 
 	mTargetConfig(target)
 {
-	LOG(LogInfo) << "Configuring device " << target->getDeviceId();
+	LOG(LogInfo) << "Configuring device " << target->getDeviceId() << " (" << target->getDeviceName() << ").";
 
 	if(reconfigureAll)
 		target->clear();
@@ -37,10 +37,10 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	mTitle = std::make_shared<TextComponent>(mWindow, "PLEASE CONFIGURE INPUT FOR", Font::get(FONT_SIZE_SMALL), 0x555555FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mTitle, Vector2i(0, 0), false, true);
 	
-	mSubtitle1 = std::make_shared<TextComponent>(mWindow, target->getDeviceName(), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, TextComponent::ALIGN_CENTER);
+	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(target->getDeviceName()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle1, Vector2i(0, 1), false, true);
 
-	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "(HOLD ANY BUTTON TO SKIP BUT NOT YET)", Font::get(FONT_SIZE_SMALL), 0x999999FF, TextComponent::ALIGN_CENTER);
+	mSubtitle2 = std::make_shared<TextComponent>(mWindow, /*"(HOLD ANY BUTTON TO SKIP)"*/ "", Font::get(FONT_SIZE_SMALL), 0x999999FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle2, Vector2i(0, 2), false, true);
 
 	mList = std::make_shared<ComponentList>(mWindow);
