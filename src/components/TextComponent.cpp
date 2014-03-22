@@ -68,8 +68,8 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 
 	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
-	//Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), 
-	//	Eigen::Vector2i((int)(dim.x() + 0.5f), (int)(dim.y() + 0.5f)));
+	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), 
+		Eigen::Vector2i((int)(dim.x() + 0.5f), (int)(dim.y() + 0.5f)));
 
 	if(mTextCache)
 	{
@@ -97,7 +97,7 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 		mFont->renderTextCache(mTextCache.get());
 	}
 
-	//Renderer::popClipRect();
+	Renderer::popClipRect();
 }
 
 void TextComponent::calculateExtent()

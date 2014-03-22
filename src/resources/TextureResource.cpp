@@ -62,7 +62,7 @@ void TextureResource::initFromMemory(const char* data, size_t length)
 
 	if(imageRGBA.size() == 0)
 	{
-		LOG(LogError) << "Could not initialize texture from memory (invalid data)!";
+		LOG(LogError) << "Could not initialize texture from memory, invalid data!  (" << mPath << ")";
 		return;
 	}
 

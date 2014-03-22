@@ -2,11 +2,12 @@
 #include "../Renderer.h"
 #include "../Window.h"
 #include "../Util.h"
+#include "../resources/SVGResource.h"
 
 RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 {
-	mFilledTexture = TextureResource::get(":/star_filled.png", true);
-	mUnfilledTexture = TextureResource::get(":/star_unfilled.png", true);
+	mFilledTexture = TextureResource::get(":/star_filled.svg", true);
+	mUnfilledTexture = TextureResource::get(":/star_unfilled.svg", true);
 	mValue = 0.5f;
 	mSize << 64 * 5.0f, 64;
 	updateVertices();
@@ -39,6 +40,15 @@ void RatingComponent::onSizeChanged()
 		mSize[1] = mSize.x() / 5.0f;
 	else if(mSize.x() == 0)
 		mSize[0] = mSize.y() * 5.0f;
+
+	auto filledSVG = dynamic_cast<SVGResource*>(mFilledTexture.get());
+	auto unfilledSVG = dynamic_cast<SVGResource*>(mUnfilledTexture.get());
+
+	size_t sz = (size_t)round(mSize.y());
+	if(filledSVG)
+		filledSVG->rasterizeAt(sz, sz);
+	if(unfilledSVG)
+		unfilledSVG->rasterizeAt(sz, sz);
 
 	updateVertices();
 }

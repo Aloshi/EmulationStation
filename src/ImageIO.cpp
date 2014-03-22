@@ -69,7 +69,7 @@ std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * d
 		}
 		else
 		{
-			LOG(LogError) << "Error - File type unknown/unsupported!";
+			LOG(LogError) << "Error - File type " << (format == FIF_UNKNOWN ? "unknown" : "unsupported") << "!";
 		}
 		//free FIMEMORY again
 		FreeImage_CloseMemory(fiMemory);
