@@ -85,10 +85,10 @@ void SliderComponent::render(const Eigen::Affine3f& parentTrans)
 void SliderComponent::setValue(float value)
 {
 	mValue = value;
-	if(value < mMin)
-		value = mMin;
-	else if(value > mMax)
-		value = mMax;
+	if(mValue < mMin)
+		mValue = mMin;
+	else if(mValue > mMax)
+		mValue = mMax;
 
 	onValueChanged();
 }

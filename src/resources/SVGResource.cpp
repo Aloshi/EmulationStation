@@ -2,12 +2,14 @@
 #include "../nanosvg/nanosvg.h"
 #include "../nanosvg/nanosvgrast.h"
 #include "../Log.h"
+#include "../Util.h"
 
 #define DPI 96
 
 SVGResource::SVGResource(const std::string& path, bool tile) : TextureResource(path, tile), mSVGImage(NULL)
 {
-	assert(tile == false);
+	mLastWidth = 0;
+	mLastHeight = 0;
 }
 
 SVGResource::~SVGResource()
@@ -40,11 +42,20 @@ void SVGResource::initFromMemory(const char* file, size_t length)
 		return;
 	}
 
-	rasterizeAt((int)mSVGImage->width, (int)mSVGImage->height);
+	if(mLastWidth && mLastHeight)
+		rasterizeAt(mLastWidth, mLastHeight);
+	else
+		rasterizeAt((int)round(mSVGImage->width), (int)round(mSVGImage->height));
 }
 
 void SVGResource::rasterizeAt(size_t width, size_t height)
 {
+	if(width != (int)round(mSVGImage->width) && height != (int)round(mSVGImage->height))
+	{
+		mLastWidth = width;
+		mLastHeight = height;
+	}
+
 	if(!mSVGImage)
 		return;
 

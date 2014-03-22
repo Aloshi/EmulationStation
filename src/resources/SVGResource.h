@@ -22,4 +22,6 @@ protected:
 	void deinitSVG();
 
 	NSVGimage* mSVGImage;
+	size_t mLastWidth;
+	size_t mLastHeight;
 };
