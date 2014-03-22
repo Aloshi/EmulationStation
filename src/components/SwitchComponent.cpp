@@ -5,9 +5,14 @@
 
 SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(window), mImage(window), mState(state)
 {
-	mImage.setImage(":/checkbox_unchecked.svg");
+	mImage.setImage(":/off.svg");
 	mImage.setResize(0, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight());
 	mSize = mImage.getSize();
+}
+
+void SwitchComponent::onSizeChanged()
+{
+	mImage.setSize(mSize);
 }
 
 bool SwitchComponent::input(InputConfig* config, Input input)
@@ -44,7 +49,7 @@ void SwitchComponent::setState(bool state)
 
 void SwitchComponent::onStateChanged()
 {
-	mImage.setImage(mState ? ":/checkbox_checked.svg" : ":/checkbox_unchecked.svg");
+	mImage.setImage(mState ? ":/on.svg" : ":/off.svg");
 }
 
 std::vector<HelpPrompt> SwitchComponent::getHelpPrompts()

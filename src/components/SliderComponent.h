@@ -29,15 +29,13 @@ private:
 
 	float mMin, mMax;
 	float mValue;
-	float mIncrement;
-	float mMoveScale;
-	int mRepeatWaitTimer;
+	float mSingleIncrement;
+	float mMoveRate;
+	int mMoveAccumulator;
 
 	ImageComponent mKnob;
 
 	std::string mSuffix;
 	std::shared_ptr<Font> mFont;
 	std::shared_ptr<TextCache> mValueCache;
-
-	float mMoveRate;
 };

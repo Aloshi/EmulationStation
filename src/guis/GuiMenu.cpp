@@ -89,10 +89,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto s = new GuiSettings(mWindow, "UI SETTINGS");
 
 			// dim time
-			auto dim_time = std::make_shared<SliderComponent>(mWindow, 0.f, 1200.f, 30.f, "s");
-			dim_time->setValue((float)(Settings::getInstance()->getInt("DimTime") / 1000));
+			auto dim_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
+			dim_time->setValue((float)(Settings::getInstance()->getInt("DimTime") / (1000 * 60)));
 			s->addWithLabel("DIM SCREEN AFTER", dim_time);
-			s->addSaveFunc([dim_time] { Settings::getInstance()->setInt("DimTime", (int)(dim_time->getValue() * 1000)); });
+			s->addSaveFunc([dim_time] { Settings::getInstance()->setInt("DimTime", (int)round(dim_time->getValue()) * (1000 * 60)); });
 
 			// framerate
 			auto framerate = std::make_shared<SwitchComponent>(mWindow);

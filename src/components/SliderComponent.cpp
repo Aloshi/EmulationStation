@@ -5,15 +5,16 @@
 #include "../Log.h"
 #include "../Util.h"
 
+#define MOVE_REPEAT_DELAY 500
+#define MOVE_REPEAT_RATE 40
+
 SliderComponent::SliderComponent(Window* window, float min, float max, float increment, const std::string& suffix) : GuiComponent(window),
-	mMin(min), mMax(max), mIncrement(increment), mMoveRate(0), mRepeatWaitTimer(0), mKnob(window), mSuffix(suffix)
+	mMin(min), mMax(max), mSingleIncrement(increment), mMoveRate(0), mKnob(window), mSuffix(suffix)
 {
 	assert((min - max) != 0);
 
+	// some sane default value
 	mValue = (max + min) / 2;
-
-	//calculate move scale
-	mMoveScale = ((max - min) * 0.0007f) / increment;
 
 	mKnob.setOrigin(0.5f, 0.5f);
 	mKnob.setImage(":/slider_knob.svg");
@@ -26,24 +27,19 @@ bool SliderComponent::input(InputConfig* config, Input input)
 	if(config->isMappedTo("left", input))
 	{
 		if(input.value)
-			mMoveRate = -mIncrement;
-		else
-			mMoveRate = 0;
+			setValue(mValue - mSingleIncrement);
 
-		//setting mRepeatWaitTimer to 0 will trigger an initial move in our update method
-		mRepeatWaitTimer = 0;
-
+		mMoveRate = input.value ? -mSingleIncrement : 0;
+		mMoveAccumulator = -MOVE_REPEAT_DELAY;
 		return true;
 	}
 	if(config->isMappedTo("right", input))
 	{
 		if(input.value)
-			mMoveRate = mIncrement;
-		else
-			mMoveRate = 0;
+			setValue(mValue + mSingleIncrement);
 
-		mRepeatWaitTimer = 0;
-
+		mMoveRate = input.value ? mSingleIncrement : 0;
+		mMoveAccumulator = -MOVE_REPEAT_DELAY;
 		return true;
 	}
 
@@ -54,20 +50,12 @@ void SliderComponent::update(int deltaTime)
 {
 	if(mMoveRate != 0)
 	{
-		if(mRepeatWaitTimer == 0)
-			mValue += mMoveRate;
-		else if(mRepeatWaitTimer >= 450)
-			mValue += mMoveRate * deltaTime * mMoveScale;
-
-		if(mValue < mMin)
-			mValue = mMin;
-		if(mValue > mMax)
-			mValue = mMax;
-
-		onValueChanged();
-
-		if(mRepeatWaitTimer < 450)
-			mRepeatWaitTimer += deltaTime;
+		mMoveAccumulator += deltaTime;
+		while(mMoveAccumulator >= MOVE_REPEAT_RATE)
+		{
+			setValue(mValue + mMoveRate);
+			mMoveAccumulator -= MOVE_REPEAT_RATE;
+		}
 	}
 	
 	GuiComponent::update(deltaTime);
@@ -97,6 +85,11 @@ void SliderComponent::render(const Eigen::Affine3f& parentTrans)
 void SliderComponent::setValue(float value)
 {
 	mValue = value;
+	if(value < mMin)
+		value = mMin;
+	else if(value > mMax)
+		value = mMax;
+
 	onValueChanged();
 }
 

@@ -51,7 +51,7 @@ void SVGResource::rasterizeAt(size_t width, size_t height)
 	unsigned char* imagePx = (unsigned char*)malloc(width * height * 4);
 
 	NSVGrasterizer* rast = nsvgCreateRasterizer();
-	nsvgRasterize(rast, mSVGImage, 0, 0, width / mSVGImage->width, imagePx, width, height, width * 4);
+	nsvgRasterize(rast, mSVGImage, 0, 0, height / mSVGImage->height, imagePx, width, height, width * 4);
 	nsvgDeleteRasterizer(rast);
 
 	// flip the pixels

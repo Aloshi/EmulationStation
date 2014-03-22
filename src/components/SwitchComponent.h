@@ -12,6 +12,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+	void onSizeChanged() override;
 
 	bool getState() const;
 	void setState(bool state);
