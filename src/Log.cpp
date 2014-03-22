@@ -58,7 +58,9 @@ Log::~Log()
 
 	if(getOutput() == NULL)
 	{
-		std::cerr << "ERROR - tried to write to log file before it was open!\n";
+		// not open yet, print to stdout
+		std::cerr << "ERROR - tried to write to log file before it was open! The following won't be logged:\n";
+		std::cerr << os.str();
 		return;
 	}
 

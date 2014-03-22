@@ -118,6 +118,16 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("ON-SCREEN HELP", show_help);
 			s->addSaveFunc([show_help] { Settings::getInstance()->setBool("ShowHelpPrompts", show_help->getState()); });
 
+			// transition style
+			auto transition_style = std::make_shared< OptionListComponent<std::string> >(mWindow, "TRANSITION STYLE", false);
+			std::vector<std::string> transitions;
+			transitions.push_back("fade");
+			transitions.push_back("slide");
+			for(auto it = transitions.begin(); it != transitions.end(); it++)
+				transition_style->add(*it, *it, Settings::getInstance()->getString("TransitionStyle") == *it);
+			s->addWithLabel("TRANSITION STYLE", transition_style);
+			s->addSaveFunc([transition_style] { Settings::getInstance()->setString("TransitionStyle", transition_style->getSelected()); });
+
 			mWindow->pushGui(s);
 	});
 

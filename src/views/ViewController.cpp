@@ -1,6 +1,7 @@
 #include "ViewController.h"
 #include "../Log.h"
 #include "../SystemData.h"
+#include "../Settings.h"
 
 #include "gamelist/BasicGameListView.h"
 #include "gamelist/DetailedGameListView.h"
@@ -13,8 +14,6 @@
 ViewController::ViewController(Window* window)
 	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
-	// slot 1 so the fade carries over
-	setAnimation(new LambdaAnimation([&] (float t) { mFadeOpacity = lerp<float>(1.0f, 0.0f, t); }, 900), nullptr, false, 1);
 	mState.viewing = NOTHING;
 }
 
@@ -69,7 +68,27 @@ void ViewController::playViewTransition()
 	Eigen::Vector3f target(Eigen::Vector3f::Identity());
 	if(mCurrentView) 
 		target = mCurrentView->getPosition();
-	setAnimation(new MoveCameraAnimation(mCamera, target));
+
+	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
+	{
+		// fade animation
+		auto fadeAnim = [this, target](float t) {
+			float fadeStart = lerp<float>(0, 1, t / 0.3f);
+			float fadeEnd = lerp<float>(1, 0, (t - 0.7f) / 0.3f);
+
+			if(t <= 0.3f)
+			{
+				mFadeOpacity = fadeStart;
+			}else{
+				this->mCamera.translation() = -target;
+				mFadeOpacity = fadeEnd;
+			}
+		};
+		setAnimation(new LambdaAnimation(fadeAnim, 800));
+	}else{
+		// slide
+		setAnimation(new MoveCameraAnimation(mCamera, target));
+	}
 }
 
 void ViewController::onFileChanged(FileData* file, FileChangeType change)

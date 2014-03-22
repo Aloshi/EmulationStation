@@ -41,6 +41,8 @@ void Settings::setDefaults()
 
 	mIntMap["GameListSortIndex"] = 0;
 
+	mStringMap["TransitionStyle"] = "fade";
+
 	mScraper = std::shared_ptr<Scraper>(new GamesDBScraper());
 }
 
@@ -64,6 +66,14 @@ void Settings::saveFile()
 	saveMap<std::string, bool>(doc, mBoolMap, "bool");
 	saveMap<std::string, int>(doc, mIntMap, "int");
 	saveMap<std::string, float>(doc, mFloatMap, "float");
+
+	//saveMap<std::string, std::string>(doc, mStringMap, "string");
+	for(auto iter = mStringMap.begin(); iter != mStringMap.end(); iter++)
+	{
+		pugi::xml_node node = doc.append_child("string");
+		node.append_attribute("name").set_value(iter->first.c_str());
+		node.append_attribute("value").set_value(iter->second.c_str());
+	}
 
 	pugi::xml_node scraperNode = doc.append_child("scraper");
 	scraperNode.append_attribute("value").set_value(mScraper->getName());
@@ -92,6 +102,8 @@ void Settings::loadFile()
 		setInt(node.attribute("name").as_string(), node.attribute("value").as_int());
 	for(pugi::xml_node node = doc.child("float"); node; node = node.next_sibling("float"))
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
+	for(pugi::xml_node node = doc.child("string"); node; node = node.next_sibling("string"))
+		setString(node.attribute("name").as_string(), node.attribute("value").as_string());
 
 	if(doc.child("scraper"))
 	{
@@ -128,3 +140,4 @@ void Settings::setMethodName(const std::string& name, type value) \
 SETTINGS_GETSET(bool, mBoolMap, getBool, setBool);
 SETTINGS_GETSET(int, mIntMap, getInt, setInt);
 SETTINGS_GETSET(float, mFloatMap, getFloat, setFloat);
+SETTINGS_GETSET(const std::string&, mStringMap, getString, setString);

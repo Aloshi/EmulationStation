@@ -18,10 +18,12 @@ public:
 	bool getBool(const std::string& name);
 	int getInt(const std::string& name);
 	float getFloat(const std::string& name);
+	const std::string& getString(const std::string& name);
 
 	void setBool(const std::string& name, bool value);
 	void setInt(const std::string& name, int value);
 	void setFloat(const std::string& name, float value);
+	void setString(const std::string& name, const std::string& value);
 
 	std::shared_ptr<Scraper> getScraper();
 	void setScraper(std::shared_ptr<Scraper> scraper);
@@ -37,6 +39,7 @@ private:
 	std::map<std::string, bool> mBoolMap;
 	std::map<std::string, int> mIntMap;
 	std::map<std::string, float> mFloatMap;
+	std::map<std::string, std::string> mStringMap;
 
 	std::shared_ptr<Scraper> mScraper;
 	std::string mHomePathOverride;
