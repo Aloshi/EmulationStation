@@ -6,6 +6,7 @@
 #include "GuiMsgBox.h"
 #include "GuiSettings.h"
 #include "GuiScraperStart.h"
+#include "GuiDetectDevice.h"
 
 #include "../components/ButtonComponent.h"
 #include "../components/SwitchComponent.h"
@@ -120,6 +121,11 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(s);
 	});
 
+	addEntry("CONFIGURE INPUT", 0x777777FF, true, 
+		[this] { 
+			mWindow->pushGui(new GuiDetectDevice(mWindow, false));
+	});
+
 	addEntry("QUIT", 0x777777FF, true, 
 		[this] {
 			auto s = new GuiSettings(mWindow, "QUIT");
@@ -191,7 +197,7 @@ void GuiMenu::addEntry(const char* name, unsigned int color, bool add_arrow, con
 
 bool GuiMenu::input(InputConfig* config, Input input)
 {
-	if((config->isMappedTo("b", input) || config->isMappedTo("menu", input)) && input.value != 0)
+	if((config->isMappedTo("b", input) || config->isMappedTo("start", input)) && input.value != 0)
 	{
 		delete this;
 		return true;

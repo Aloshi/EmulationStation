@@ -12,7 +12,7 @@ static const std::map<std::string, const char*> ICON_PATH_MAP = boost::assign::m
 	("up/down/left/right", ":/help/dpad_all.png")
 	("a", ":/help/a.png")
 	("b", ":/help/b.png")
-	("menu", ":/help/start.png")
+	("start", ":/help/start.png")
 	("select", ":/help/select.png");
 
 HelpComponent::HelpComponent(Window* window) : GuiComponent(window)

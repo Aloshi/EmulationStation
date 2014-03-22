@@ -175,11 +175,11 @@ int main(int argc, char* argv[])
 	window.getViewController()->preload();
 
 	//choose which GUI to open depending on if an input configuration already exists
-	if(fs::exists(InputManager::getConfigPath()))
+	if(fs::exists(InputManager::getConfigPath()) && window.getInputManager()->getNumConfiguredDevices() > 0)
 	{
 		window.getViewController()->goToStart();
 	}else{
-		window.pushGui(new GuiDetectDevice(&window));
+		window.pushGui(new GuiDetectDevice(&window, true));
 	}
 
 	//generate joystick events since we're done loading

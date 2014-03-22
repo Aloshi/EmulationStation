@@ -49,14 +49,18 @@ std::string toLower(std::string str)
 }
 //end util functions
 
-InputConfig::InputConfig(int deviceId, const std::string& deviceName) : mDeviceId(deviceId), mDeviceName(deviceName)
+InputConfig::InputConfig(int deviceId, const std::string& deviceName, const std::string& deviceGUID) : mDeviceId(deviceId), mDeviceName(deviceName), mDeviceGUID(deviceGUID)
 {
-	mPlayerNum = -1;
 }
 
 void InputConfig::clear()
 {
 	mNameMap.clear();
+}
+
+bool InputConfig::isConfigured()
+{
+	return mNameMap.size() > 0;
 }
 
 void InputConfig::mapInput(const std::string& name, Input input)
@@ -126,11 +130,9 @@ std::vector<std::string> InputConfig::getMappedTo(Input input)
 	return maps;
 }
 
-void InputConfig::loadFromXML(pugi::xml_node node, int playerNum)
+void InputConfig::loadFromXML(pugi::xml_node node)
 {
-	this->clear();
-
-	setPlayerNum(playerNum);
+	clear();
 
 	for(pugi::xml_node input = node.child("input"); input; input = input.next_sibling("input"))
 	{
@@ -161,10 +163,13 @@ void InputConfig::writeToXML(pugi::xml_node parent)
 	if(mDeviceId == DEVICE_KEYBOARD)
 	{
 		cfg.append_attribute("type") = "keyboard";
+		cfg.append_attribute("deviceName") = "Keyboard";
 	}else{
 		cfg.append_attribute("type") = "joystick";
 		cfg.append_attribute("deviceName") = mDeviceName.c_str();
 	}
+
+	cfg.append_attribute("deviceGUID") = mDeviceGUID.c_str();
 
 	typedef std::map<std::string, Input>::iterator it_type;
 	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)
@@ -179,7 +184,3 @@ void InputConfig::writeToXML(pugi::xml_node parent)
 		input.append_attribute("value").set_value(iterator->second.value);
 	}
 }
-
-void InputConfig::setPlayerNum(int num) { mPlayerNum = num; }
-int InputConfig::getPlayerNum() { return mPlayerNum; }
-int InputConfig::getDeviceId() { return mDeviceId; }

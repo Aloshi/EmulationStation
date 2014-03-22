@@ -1,20 +1,31 @@
 #pragma once
 
 #include "../GuiComponent.h"
+#include "../components/NinePatchComponent.h"
+#include "../components/ComponentGrid.h"
+
+class TextComponent;
 
 class GuiDetectDevice : public GuiComponent
 {
 public:
-	GuiDetectDevice(Window* window);
+	GuiDetectDevice(Window* window, bool firstRun);
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
-	void render(const Eigen::Affine3f& parentTrans) override;
+	bool input(InputConfig* config, Input input) override;
+	void update(int deltaTime) override;
+	void onSizeChanged() override;
 
 private:
-	void done();
+	InputConfig* mHoldingConfig;
+	int mHoldTime;
 
-	bool mHoldingFinish;
-	int mFinishTimer;
-	int mCurrentPlayer;
+	NinePatchComponent mBackground;
+	ComponentGrid mGrid;
+
+	std::shared_ptr<TextComponent> mTitle;
+	std::shared_ptr<TextComponent> mMsg;
+	std::shared_ptr<TextComponent> mDeviceInfo;
+	std::shared_ptr<TextComponent> mDeviceHeld;
+
+	std::function<void()> mDoneCallback;
 };

@@ -161,7 +161,7 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 
 	// open menu
-	if(config->isMappedTo("menu", input) && input.value != 0)
+	if(config->isMappedTo("start", input) && input.value != 0)
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));
@@ -255,7 +255,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 		return prompts;
 	
 	prompts = mCurrentView->getHelpPrompts();
-	prompts.push_back(HelpPrompt("menu", "open menu"));
+	prompts.push_back(HelpPrompt("start", "open menu"));
 
 	return prompts;
 }

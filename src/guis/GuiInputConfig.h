@@ -1,20 +1,33 @@
 #pragma once
 
 #include "../GuiComponent.h"
-#include <string>
+#include "../components/NinePatchComponent.h"
+#include "../components/ComponentGrid.h"
+#include "../components/ComponentList.h"
+
+class TextComponent;
 
 class GuiInputConfig : public GuiComponent
 {
 public:
-	GuiInputConfig(Window* window, InputConfig* target);
+	GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback);
 
-	bool input(InputConfig* config, Input input);
-	void update(int deltaTime);
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void onSizeChanged() override;
 
 private:
-	std::string mErrorMsg;
+	void error(const std::string& msg);
+	bool process(InputConfig* config, Input input, int inputId, const std::shared_ptr<TextComponent>& text);
+
+	NinePatchComponent mBackground;
+	ComponentGrid mGrid;
+
+	std::shared_ptr<TextComponent> mTitle;
+	std::shared_ptr<TextComponent> mSubtitle1;
+	std::shared_ptr<TextComponent> mSubtitle2;
+	std::shared_ptr<ComponentList> mList;
+	std::shared_ptr<ComponentGrid> mButtonGrid;
+
 	InputConfig* mTargetConfig;
-	int mCurInputId;
-	bool mCanSkip;
+	bool mConfiguringRow; // next input captured by mList will be interpretted as a remap
+	bool mConfiguringAll; // move the cursor down after configuring a row and start configuring the next row until we reach the bottom
 };

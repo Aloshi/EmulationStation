@@ -290,3 +290,10 @@ std::vector<HelpPrompt> ComponentList::getHelpPrompts()
 
 	return mEntries.at(mCursor).data.elements.back().component->getHelpPrompts();
 }
+
+bool ComponentList::moveCursor(int amt)
+{
+	bool ret = listInput(amt); 
+	listInput(0); 
+	return ret;
+}

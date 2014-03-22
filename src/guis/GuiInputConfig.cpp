@@ -1,115 +1,157 @@
 #include "GuiInputConfig.h"
 #include "../Window.h"
-#include "../Renderer.h"
-#include "../resources/Font.h"
 #include "../Log.h"
-#include "../views/ViewController.h"
+#include "../components/TextComponent.h"
+#include "../components/ImageComponent.h"
+#include "../components/MenuComponent.h"
+#include "../components/ButtonComponent.h"
+#include "../Util.h"
 
 static const int inputCount = 10;
-static std::string inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Menu", "Select", "PageUp", "PageDown"};
-static std::string inputDispName[inputCount] = { "Up", "Down", "Left", "Right", "Accept", "Back", "Menu", "Jump to Letter", "Page Up", "Page Down"};
+static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown"};
+static const char* inputDispName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "Page Up", "Page Down"};
+static const char* inputIcon[inputCount] = { ":/help/dpad_up.png", ":/help/dpad_down.png", ":/help/dpad_left.png", ":/help/dpad_right.png", 
+											":/help/a.png", ":/help/b.png", ":/help/start.png", ":/help/select.png", ":/help/l.png", ":/help/r.png" };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.
 
-GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target) : GuiComponent(window), mTargetConfig(target), mCanSkip(false)
+using namespace Eigen;
+
+GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback) : GuiComponent(window), 
+	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)), 
+	mTargetConfig(target)
 {
-	mCurInputId = 0;
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId();
+
+	if(reconfigureAll)
+		target->clear();
+
+	mConfiguringAll = reconfigureAll;
+	mConfiguringRow = mConfiguringAll;
+
+	addChild(&mBackground);
+	addChild(&mGrid);
+
+	mTitle = std::make_shared<TextComponent>(mWindow, "PLEASE CONFIGURE INPUT FOR", Font::get(FONT_SIZE_SMALL), 0x555555FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mTitle, Vector2i(0, 0), false, true);
+	
+	mSubtitle1 = std::make_shared<TextComponent>(mWindow, target->getDeviceName(), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mSubtitle1, Vector2i(0, 1), false, true);
+
+	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "(HOLD ANY BUTTON TO SKIP BUT NOT YET)", Font::get(FONT_SIZE_SMALL), 0x999999FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mSubtitle2, Vector2i(0, 2), false, true);
+
+	mList = std::make_shared<ComponentList>(mWindow);
+	mGrid.setEntry(mList, Vector2i(0, 3), true, true);
+	for(int i = 0; i < inputCount; i++)
+	{
+		ComponentListRow row;
+		
+		// icon
+		auto icon = std::make_shared<ImageComponent>(mWindow);
+		icon->setImage(inputIcon[i]);
+		icon->setResize(0, Font::get(FONT_SIZE_MEDIUM)->getHeight() * 0.8f);
+		row.addElement(icon, false);
+
+		auto text = std::make_shared<TextComponent>(mWindow, inputDispName[i], Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+		row.addElement(text, true);
+
+		auto mapping = std::make_shared<TextComponent>(mWindow, "-NOT DEFINED-", Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT), 0x999999FF);
+		row.addElement(mapping, true);
+
+		row.input_handler = [this, i, mapping](InputConfig* config, Input input) -> bool
+		{
+			if(!input.value)
+				return false;
+
+			if(mConfiguringRow)
+			{
+				if(!process(config, input, i, mapping)) // button press invalid; try again
+					return true;
+				if(mConfiguringAll)
+				{
+					if(!mList->moveCursor(1)) // try to move to the next one
+					{
+						// at bottom of list
+						mConfiguringAll = false;
+						mConfiguringRow = false;
+						mGrid.moveCursor(Vector2i(0, 1));
+					}
+				}else{
+					mConfiguringRow = false; // we only wanted to configure one row
+				}
+				return true;
+			}else{
+				// not configuring, start configuring when A is pressed
+				if(config->isMappedTo("a", input) && input.value)
+				{
+					mConfiguringRow = true;
+					return true;
+				}
+				return false;
+			}
+			
+			return false;
+		};
+		mList->addRow(row);
+	}
+
+	// buttons
+	std::vector< std::shared_ptr<ButtonComponent> > buttons;
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "OK", "ok", [this, okCallback] { 
+		mWindow->getInputManager()->writeDeviceConfig(mTargetConfig); // save
+		if(okCallback)
+			okCallback();
+		delete this; 
+	}));
+	mButtonGrid = makeButtonGrid(mWindow, buttons);
+	mGrid.setEntry(mButtonGrid, Vector2i(0, 4), true, false);
+
+	setSize(Renderer::getScreenWidth() * 0.6f, Renderer::getScreenHeight() * 0.7f);
+	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 }
 
-void GuiInputConfig::update(int deltaTime)
+void GuiInputConfig::onSizeChanged()
 {
+	mBackground.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 
+	// update grid
+	mGrid.setSize(mSize);
+
+	mGrid.setRowHeightPerc(0, mTitle->getFont()->getHeight() / mSize.y());
+	mGrid.setRowHeightPerc(1, mSubtitle1->getFont()->getHeight() / mSize.y());
+	mGrid.setRowHeightPerc(2, mSubtitle2->getFont()->getHeight() / mSize.y());
+	mGrid.setRowHeightPerc(4, mButtonGrid->getSize().y() / mSize.y());
 }
 
-bool GuiInputConfig::input(InputConfig* config, Input input)
+void GuiInputConfig::error(const std::string& msg)
 {
-	if(config != mTargetConfig || input.value == 0)
+	// TODO
+	LOG(LogWarning) << msg;
+}
+
+bool GuiInputConfig::process(InputConfig* config, Input input, int inputId, const std::shared_ptr<TextComponent>& text)
+{
+	// from some other input source
+	if(config != mTargetConfig)
 		return false;
 
-	if(mCurInputId >= inputCount)
+	// if this input is mapped to something other than "nothing" or the current row, error
+	// (if it's the same as what it was before, allow it)
+	if(config->getMappedTo(input).size() > 0 && !config->isMappedTo(inputName[inputId], input))
 	{
-		//done
-		if(input.type == TYPE_BUTTON || input.type == TYPE_KEY)
-		{
-			if(mTargetConfig->getPlayerNum() < mWindow->getInputManager()->getNumPlayers() - 1)
-			{
-				mWindow->pushGui(new GuiInputConfig(mWindow, mWindow->getInputManager()->getInputConfigByPlayer(mTargetConfig->getPlayerNum() + 1)));
-			}else{
-				mWindow->getInputManager()->writeConfig();
-				mWindow->getViewController()->goToStart();
-			}
-			delete this;
-			return true;
-		}
-	}else{
-		if(mCanSkip && config->isMappedTo("a", input))
-		{
-			mCurInputId++;
-			return true;
-		}
-
-		if(config->getMappedTo(input).size() > 0)
-		{
-			mErrorMsg = "Already mapped!";
-			return true;
-		}
-
-		input.configured = true;
-		LOG(LogInfo) << "  [" << input.string() << "] -> " << inputName[mCurInputId];
-
-		config->mapInput(inputName[mCurInputId], input);
-		mCurInputId++;
-		mErrorMsg = "";
-
-		//for buttons with not enough buttons, press A to skip
-		if(mCurInputId >= 7)
-		{
-			mCanSkip = true;
-		}
-		return true;
+		error("Already mapped!");
+		return false;
 	}
 
-	return false;
-}
+	text->setText(strToUpper(input.string()));
+	text->setColor(0x777777FF);
 
-void GuiInputConfig::render(const Eigen::Affine3f& parentTrans)
-{
-	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::setMatrix(trans);
+	input.configured = true;
+	config->mapInput(inputName[inputId], input);
 
-	std::shared_ptr<Font> font = Font::get(FONT_SIZE_MEDIUM);
+	LOG(LogInfo) << "  Mapping [" << input.string() << "] -> " << inputName[inputId];
 
-	std::stringstream stream;
-	stream << "PLAYER " << mTargetConfig->getPlayerNum() + 1 << ", press...";
-	font->drawText(stream.str(), Eigen::Vector2f(10, 10), 0x000000FF);
-
-	int y = 14 + (int)font->getHeight();
-	for(int i = 0; i < mCurInputId; i++)
-	{
-		font->drawText(inputDispName[i], Eigen::Vector2f(10, y), 0x00CC00FF);
-		y += (int)font->getHeight() + 5;
-	}
-
-	if(mCurInputId >= inputCount)
-	{
-		font->drawCenteredText("Basic config done!", 0, Renderer::getScreenHeight() * 0.4f, 0x00CC00FF);
-		font->drawCenteredText("Press any button to continue.", 0, Renderer::getScreenHeight() * 0.4f + font->getHeight() + 4, 0x000000FF);
-	}else{
-		font->drawText(inputDispName[mCurInputId], Eigen::Vector2f(10, y), 0x000000FF);
-		if(mCanSkip)
-		{
-			Eigen::Vector2f textSize = font->sizeText(inputDispName[mCurInputId]);
-			textSize[0] += 14;
-
-			if(Renderer::getScreenWidth() / 2.5f > textSize.x())
-				textSize[0] = Renderer::getScreenWidth() / 2.5f;
-
-			font->drawText("press Accept to skip", Eigen::Vector2f(textSize.x(), y), 0x0000AAFF);
-		}
-	}
-
-	if(!mErrorMsg.empty())
-		font->drawCenteredText(mErrorMsg, 0, (float)Renderer::getScreenHeight() - font->getHeight() - 10, 0xFF0000FF);
+	return true;
 }

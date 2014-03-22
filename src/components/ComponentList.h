@@ -59,6 +59,7 @@ public:
 	void onFocusGained() override;
 	void onFocusLost() override;
 
+	bool moveCursor(int amt);
 	inline int getCursorId() const { return mCursor; }
 
 	float getTotalRowHeight() const;

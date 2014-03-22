@@ -56,9 +56,6 @@ public:
 
 	std::string string()
 	{
-		if(!configured)
-			return "";
-
 		std::stringstream stream;
 		switch(type)
 		{
@@ -86,14 +83,14 @@ public:
 class InputConfig
 {
 public:
-	InputConfig(int deviceId, const std::string& deviceName);
+	InputConfig(int deviceId, const std::string& deviceName, const std::string& deviceGUID);
 
 	void clear();
 	void mapInput(const std::string& name, Input input);
-	void setPlayerNum(int num);
 
-	int getPlayerNum();
-	int getDeviceId();
+	inline int getDeviceId() const { return mDeviceId; };
+	inline const std::string& getDeviceName() { return mDeviceName; }
+	inline const std::string& getDeviceGUIDString() { return mDeviceGUID; }
 
 	//Returns the input mapped to this name.
 	Input getInputByName(const std::string& name);
@@ -104,13 +101,16 @@ public:
 	//Returns a list of names this input is mapped to.
 	std::vector<std::string> getMappedTo(Input input);
 
-	void loadFromXML(pugi::xml_node root, int playerNum);
+	void loadFromXML(pugi::xml_node root);
 	void writeToXML(pugi::xml_node parent);
+
+	bool isConfigured();
+
 private:
 	std::map<std::string, Input> mNameMap;
 	const int mDeviceId;
 	const std::string mDeviceName;
-	int mPlayerNum;
+	const std::string mDeviceGUID;
 };
 
 #endif
