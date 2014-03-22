@@ -1,8 +1,8 @@
 #include "MenuComponent.h"
 #include "ButtonComponent.h"
 
-#define BUTTON_GRID_VERT_PADDING 20
-#define BUTTON_GRID_HORIZ_PADDING 16
+#define BUTTON_GRID_VERT_PADDING 32
+#define BUTTON_GRID_HORIZ_PADDING 10
 
 using namespace Eigen;
 
@@ -97,4 +97,12 @@ std::shared_ptr<ComponentGrid> makeButtonGrid(Window* window, const std::vector<
 	buttonGrid->setSize(buttonGridWidth, buttons.at(0)->getSize().y() + BUTTON_GRID_VERT_PADDING);
 
 	return buttonGrid;
+}
+
+std::shared_ptr<ImageComponent> makeArrow(Window* window)
+{
+	auto bracket = std::make_shared<ImageComponent>(window);
+	bracket->setImage(":/arrow.svg");
+	bracket->setResize(0, round(Font::get(FONT_SIZE_MEDIUM)->getLetterHeight()));
+	return bracket;
 }

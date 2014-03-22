@@ -53,8 +53,8 @@ extern const unsigned char option_arrow_svg_data[];
 extern const size_t scroll_gradient_png_size;
 extern const unsigned char scroll_gradient_png_data[];
 
-extern const size_t slider_knob_png_size;
-extern const unsigned char slider_knob_png_data[];
+extern const size_t slider_knob_svg_size;
+extern const unsigned char slider_knob_svg_data[];
 
 extern const size_t star_filled_svg_size;
 extern const unsigned char star_filled_svg_data[];

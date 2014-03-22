@@ -13,21 +13,10 @@
 #include "../components/SliderComponent.h"
 #include "../components/TextComponent.h"
 #include "../components/OptionListComponent.h"
+#include "../components/MenuComponent.h"
 #include "../VolumeControl.h"
 #include "../scrapers/GamesDBScraper.h"
 #include "../scrapers/TheArchiveScraper.h"
-
-std::shared_ptr<ImageComponent> makeBracket(Window* window)
-{
-	auto bracket = std::make_shared<ImageComponent>(window);
-	bracket->setImage(":/arrow.svg");
-
-	// resize
-	const float fontHeight = Font::get(FONT_SIZE_MEDIUM)->getHeight();
-	bracket->setResize(0, round(fontHeight * 0.5f));
-
-	return bracket;
-}
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU")
 {
@@ -68,7 +57,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			row.makeAcceptInputHandler(openAndSave);
 
 			auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPE NOW", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-			auto bracket = makeBracket(mWindow);
+			auto bracket = makeArrow(mWindow);
 			row.addElement(scrape_now, true);
 			row.addElement(bracket, false);
 			s->addRow(row);
@@ -195,7 +184,7 @@ void GuiMenu::addEntry(const char* name, unsigned int color, bool add_arrow, con
 
 	if(add_arrow)
 	{
-		std::shared_ptr<ImageComponent> bracket = makeBracket(mWindow);
+		std::shared_ptr<ImageComponent> bracket = makeArrow(mWindow);
 		row.addElement(bracket, false);
 	}
 	

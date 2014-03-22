@@ -7,8 +7,10 @@
 #include "../Util.h"
 
 class ButtonComponent;
+class ImageComponent;
 
 std::shared_ptr<ComponentGrid> makeButtonGrid(Window* window, const std::vector< std::shared_ptr<ButtonComponent> >& buttons);
+std::shared_ptr<ImageComponent> makeArrow(Window* window);
 
 class MenuComponent : public GuiComponent
 {

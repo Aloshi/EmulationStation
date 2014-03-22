@@ -68,7 +68,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				
 				auto bracket = std::make_shared<ImageComponent>(mWindow);
 				bracket->setImage(":/arrow.svg");
-				bracket->setResize(Eigen::Vector2f(0, lbl->getSize().y() * 0.8f));
+				bracket->setResize(Eigen::Vector2f(0, lbl->getFont()->getLetterHeight()));
 				row.addElement(bracket, false);
 
 				bool multiLine = iter->type == MD_MULTILINE_STRING;

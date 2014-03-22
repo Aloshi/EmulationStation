@@ -338,7 +338,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/off_svg.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/fav_add_svg.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/fav_remove_svg.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/slider_knob_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/slider_knob_svg.cpp
 )
 
 #SOURCE_GROUP(resources FILES ResourceUtil.cpp)

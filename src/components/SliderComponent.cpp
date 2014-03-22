@@ -16,9 +16,9 @@ SliderComponent::SliderComponent(Window* window, float min, float max, float inc
 	mMoveScale = ((max - min) * 0.0007f) / increment;
 
 	mKnob.setOrigin(0.5f, 0.5f);
-	mKnob.setImage(":/slider_knob.png");
+	mKnob.setImage(":/slider_knob.svg");
 	
-	setSize(196, 32);
+	setSize(Renderer::getScreenWidth() * 0.15f, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight());
 }
 
 bool SliderComponent::input(InputConfig* config, Input input)
@@ -108,7 +108,7 @@ float SliderComponent::getValue()
 void SliderComponent::onSizeChanged()
 {
 	if(!mSuffix.empty())
-		mFont = Font::get((int)(mSize.y() * 0.8f), FONT_PATH_LIGHT);
+		mFont = Font::get((int)(mSize.y()), FONT_PATH_LIGHT);
 	
 	onValueChanged();
 }
@@ -139,11 +139,7 @@ void SliderComponent::onValueChanged()
 	}
 
 	// update knob position/size
-	if(mKnob.getTextureSize().y() > mSize.y()) // only downscale
-		mKnob.setResize(0, mSize.y());
-	else
-		mKnob.setResize(0, 0);
-
+	mKnob.setResize(0, mSize.y() * 0.7f);
 	float lineLength = mSize.x() - mKnob.getSize().x() - (mValueCache ? mValueCache->metrics.size.x() + 4 : 0);
 	mKnob.setPosition(((mValue + mMin) / mMax) * lineLength + mKnob.getSize().x()/2, mSize.y() / 2);
 }

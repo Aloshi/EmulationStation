@@ -55,7 +55,7 @@ private:
 					// add checkbox
 					auto checkbox = std::make_shared<ImageComponent>(mWindow);
 					checkbox->setImage(it->selected ? ":/checkbox_checked.svg" : ":/checkbox_unchecked.svg");
-
+					checkbox->setResize(0, font->getLetterHeight());
 					row.addElement(checkbox, false);
 
 					// input handler
@@ -135,8 +135,8 @@ public:
 	// handles positioning/resizing of text and arrows
 	void onSizeChanged() override
 	{
-		mLeftArrow.setResize(0, mSize.y() * 0.5f);
-		mRightArrow.setResize(0, mSize.y() * 0.5f);
+		mLeftArrow.setResize(0, mText.getFont()->getLetterHeight());
+		mRightArrow.setResize(0, mText.getFont()->getLetterHeight());
 
 		if(mSize.x() < (mLeftArrow.getSize().x() + mRightArrow.getSize().x()))
 			LOG(LogWarning) << "OptionListComponent too narrow!";

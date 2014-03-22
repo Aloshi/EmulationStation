@@ -6,9 +6,7 @@
 SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(window), mImage(window), mState(state)
 {
 	mImage.setImage(":/checkbox_unchecked.svg");
-
-	float height = (float)FONT_SIZE_MEDIUM;
-	mImage.setResize(0, height);
+	mImage.setResize(0, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight());
 	mSize = mImage.getSize();
 }
 

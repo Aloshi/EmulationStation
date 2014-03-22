@@ -78,7 +78,7 @@ void ImageComponent::resize()
 	SVGResource* svg = dynamic_cast<SVGResource*>(mTexture.get());
 	if(svg)
 	{
-		svg->rasterizeAt((int)mSize.x(), (int)mSize.y());
+		svg->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
 	}
 }
 

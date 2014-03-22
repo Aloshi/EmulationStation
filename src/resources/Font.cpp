@@ -282,6 +282,10 @@ float Font::getHeight() const
 	return mMaxGlyphHeight * 1.5f * fontScale;
 }
 
+float Font::getLetterHeight() const
+{
+	return charData['S'].texH * fontScale;
+}
 
 void Font::drawCenteredText(std::string text, float xOffset, float y, unsigned int color)
 {
@@ -434,7 +438,7 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 
 	float x = offsetX;
 
-	float yTop = (charData['S'].bearingY);
+	float yTop = charData['S'].bearingY * fontScale;
 	float yBot = getHeight();
 	float y = offsetY + (yBot + yTop)/2.0f;
 
