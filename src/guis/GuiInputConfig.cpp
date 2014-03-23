@@ -20,7 +20,7 @@ static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_
 using namespace Eigen;
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback) : GuiComponent(window), 
-	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)), 
+	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 7)), 
 	mTargetConfig(target)
 {
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId() << " (" << target->getDeviceName() << ").";
@@ -34,17 +34,28 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	addChild(&mBackground);
 	addChild(&mGrid);
 
-	mTitle = std::make_shared<TextComponent>(mWindow, "PLEASE CONFIGURE INPUT FOR", Font::get(FONT_SIZE_SMALL), 0x555555FF, TextComponent::ALIGN_CENTER);
-	mGrid.setEntry(mTitle, Vector2i(0, 0), false, true);
-	
-	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(target->getDeviceName()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, TextComponent::ALIGN_CENTER);
-	mGrid.setEntry(mSubtitle1, Vector2i(0, 1), false, true);
+	// 0 is a spacer row
+	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 0), false);
 
-	mSubtitle2 = std::make_shared<TextComponent>(mWindow, /*"(HOLD ANY BUTTON TO SKIP)"*/ "", Font::get(FONT_SIZE_SMALL), 0x999999FF, TextComponent::ALIGN_CENTER);
-	mGrid.setEntry(mSubtitle2, Vector2i(0, 2), false, true);
+	mTitle = std::make_shared<TextComponent>(mWindow, "CONFIGURING", Font::get(FONT_SIZE_LARGE), 0x555555FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mTitle, Vector2i(0, 1), false, true);
+	
+	std::stringstream ss;
+	if(target->getDeviceId() == DEVICE_KEYBOARD)
+		ss << "KEYBOARD";
+	else
+		ss << "GAMEPAD " << (target->getDeviceId() + 1);
+	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(ss.str()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mSubtitle1, Vector2i(0, 2), false, true);
+
+	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "HOLD ANY BUTTON TO SKIP", Font::get(FONT_SIZE_SMALL), 0x999999FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mSubtitle2, Vector2i(0, 3), false, true);
+
+	// 4 is a spacer row
+	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(4, 0), false);
 
 	mList = std::make_shared<ComponentList>(mWindow);
-	mGrid.setEntry(mList, Vector2i(0, 3), true, true);
+	mGrid.setEntry(mList, Vector2i(0, 5), true, true);
 	for(int i = 0; i < inputCount; i++)
 	{
 		ComponentListRow row;
@@ -52,7 +63,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		// icon
 		auto icon = std::make_shared<ImageComponent>(mWindow);
 		icon->setImage(inputIcon[i]);
-		icon->setResize(0, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight() * ((i < 4) ? 1.2f : 1.0f)); // hack to enlarge dpad
+		icon->setResize(0, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight() * ((i < 4) ? 1.25f : 1.0f)); // hack to enlarge dpad
 		row.addElement(icon, false);
 
 		// spacer between icon and text
@@ -122,9 +133,9 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		delete this; 
 	}));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
-	mGrid.setEntry(mButtonGrid, Vector2i(0, 4), true, false);
+	mGrid.setEntry(mButtonGrid, Vector2i(0, 6), true, false);
 
-	setSize(Renderer::getScreenWidth() * 0.6f, Renderer::getScreenHeight() * 0.7f);
+	setSize(Renderer::getScreenWidth() * 0.6f, Renderer::getScreenHeight() * 0.75f);
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 }
 
@@ -135,10 +146,13 @@ void GuiInputConfig::onSizeChanged()
 	// update grid
 	mGrid.setSize(mSize);
 
-	mGrid.setRowHeightPerc(0, mTitle->getFont()->getHeight() / mSize.y());
-	mGrid.setRowHeightPerc(1, mSubtitle1->getFont()->getHeight() / mSize.y());
-	mGrid.setRowHeightPerc(2, mSubtitle2->getFont()->getHeight() / mSize.y());
-	mGrid.setRowHeightPerc(4, mButtonGrid->getSize().y() / mSize.y());
+	//mGrid.setRowHeightPerc(0, 0.025f);
+	mGrid.setRowHeightPerc(1, mTitle->getFont()->getHeight()*0.75f / mSize.y());
+	mGrid.setRowHeightPerc(2, mSubtitle1->getFont()->getHeight() / mSize.y());
+	mGrid.setRowHeightPerc(3, mSubtitle2->getFont()->getHeight() / mSize.y());
+	//mGrid.setRowHeightPerc(4, 0.03f);
+	mGrid.setRowHeightPerc(5, (mList->getRowHeight(0) * 5 + 2) / mSize.y());
+	mGrid.setRowHeightPerc(6, mButtonGrid->getSize().y() / mSize.y());
 }
 
 void GuiInputConfig::setPress(const std::shared_ptr<TextComponent>& text)

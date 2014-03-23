@@ -50,14 +50,14 @@ void SVGResource::initFromMemory(const char* file, size_t length)
 
 void SVGResource::rasterizeAt(size_t width, size_t height)
 {
+	if(!mSVGImage)
+		return;
+
 	if(width != (int)round(mSVGImage->width) && height != (int)round(mSVGImage->height))
 	{
 		mLastWidth = width;
 		mLastHeight = height;
 	}
-
-	if(!mSVGImage)
-		return;
 
 	unsigned char* imagePx = (unsigned char*)malloc(width * height * 4);
 
