@@ -111,7 +111,16 @@ void ComponentList::onCursorChanged(const CursorState& state)
 	const float totalHeight = getTotalRowHeight();
 	if(totalHeight > mSize.y())
 	{
-		mCameraOffset = mSelectorBarOffset - (mSize.y() / 2);
+		float target = mSelectorBarOffset + getRowHeight(mEntries.at(mCursor).data)/2 - (mSize.y() / 2);
+
+		// clamp it
+		mCameraOffset = 0;
+		unsigned int i = 0;
+		while(mCameraOffset < target && i < mEntries.size())
+		{
+			mCameraOffset += getRowHeight(mEntries.at(i).data);
+			i++;
+		}
 
 		if(mCameraOffset < 0)
 			mCameraOffset = 0;
