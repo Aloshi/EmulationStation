@@ -44,11 +44,14 @@ void RatingComponent::onSizeChanged()
 	auto filledSVG = dynamic_cast<SVGResource*>(mFilledTexture.get());
 	auto unfilledSVG = dynamic_cast<SVGResource*>(mUnfilledTexture.get());
 
-	size_t sz = (size_t)round(mSize.y());
-	if(filledSVG)
-		filledSVG->rasterizeAt(sz, sz);
-	if(unfilledSVG)
-		unfilledSVG->rasterizeAt(sz, sz);
+	if(mSize.y() > 0)
+	{
+		size_t sz = (size_t)round(mSize.y());
+		if(filledSVG)
+			filledSVG->rasterizeAt(sz, sz);
+		if(unfilledSVG)
+			unfilledSVG->rasterizeAt(sz, sz);
+	}
 
 	updateVertices();
 }

@@ -50,7 +50,7 @@ void SVGResource::initFromMemory(const char* file, size_t length)
 
 void SVGResource::rasterizeAt(size_t width, size_t height)
 {
-	if(!mSVGImage)
+	if(!mSVGImage || width == 0 || height == 0)
 		return;
 
 	if(width != (int)round(mSVGImage->width) && height != (int)round(mSVGImage->height))
