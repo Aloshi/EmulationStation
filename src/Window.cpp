@@ -214,11 +214,15 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts)
 {
 	mHelp->clearPrompts();
 
+	std::vector<HelpPrompt> addPrompts;
+
 	std::map<std::string, bool> seenMap;
 	for(auto it = prompts.begin(); it != prompts.end(); it++)
 	{
 		// only add it if the same icon hasn't already been added
 		if(seenMap.insert(std::make_pair<std::string, bool>(it->first, true)).second)
-			mHelp->addPrompt(it->first, it->second);
+			addPrompts.push_back(*it);
 	}
+
+	mHelp->setPrompts(addPrompts);
 }

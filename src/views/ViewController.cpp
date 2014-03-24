@@ -274,7 +274,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 		return prompts;
 	
 	prompts = mCurrentView->getHelpPrompts();
-	prompts.push_back(HelpPrompt("start", "open menu"));
+	prompts.push_back(HelpPrompt("start", "menu"));
 
 	return prompts;
 }

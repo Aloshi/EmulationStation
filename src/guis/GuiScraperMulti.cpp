@@ -33,12 +33,12 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mGrid.setEntry(mSearchComp, Vector2i(0, 2), approveResults, true);
 
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "manually search by name", [&] { 
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "search", [&] { 
 		mSearchComp->openInputScreen(mSearchQueue.front()); 
 		mGrid.resetCursor(); 
 	}));
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SKIP", "skip this game", std::bind(&GuiScraperMulti::skip, this)));
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "STOP", "cancel scraping", std::bind(&GuiScraperMulti::finish, this)));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SKIP", "skip", std::bind(&GuiScraperMulti::skip, this)));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "STOP", "stop (progress saved)", std::bind(&GuiScraperMulti::finish, this)));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 	mGrid.setEntry(mButtonGrid, Vector2i(0, 3), true, false);
 

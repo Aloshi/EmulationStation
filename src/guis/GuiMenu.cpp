@@ -207,7 +207,7 @@ bool GuiMenu::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiMenu::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("up/down", "move cursor"));
-	prompts.push_back(HelpPrompt("a", "accept"));
+	prompts.push_back(HelpPrompt("up/down", "move"));
+	prompts.push_back(HelpPrompt("a", "go"));
 	return prompts;
 }

@@ -14,6 +14,7 @@ public:
 
 	bool input(InputConfig* config, Input input);
 	void onSizeChanged();
+	std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
 	NinePatchComponent mBackground;

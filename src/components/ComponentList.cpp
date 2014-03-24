@@ -288,7 +288,25 @@ std::vector<HelpPrompt> ComponentList::getHelpPrompts()
 	if(!size())
 		return std::vector<HelpPrompt>();
 
-	return mEntries.at(mCursor).data.elements.back().component->getHelpPrompts();
+	std::vector<HelpPrompt> prompts = mEntries.at(mCursor).data.elements.back().component->getHelpPrompts();
+
+	if(size() > 1)
+	{
+		bool addMovePrompt = true;
+		for(auto it = prompts.begin(); it != prompts.end(); it++)
+		{
+			if(it->first == "up/down" || it->first == "up/down/left/right")
+			{
+				addMovePrompt = false;
+				break;
+			}
+		}
+
+		if(addMovePrompt)
+			prompts.push_back(HelpPrompt("up/down", "move"));
+	}
+
+	return prompts;
 }
 
 bool ComponentList::moveCursor(int amt)

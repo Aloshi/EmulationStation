@@ -89,14 +89,14 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	}
 
 	//add buttons	
-	mMenu.addButton("SCRAPE", "download metadata from the Internet", std::bind(&GuiMetaDataEd::fetch, this));
-	mMenu.addButton("SAVE", "save changes", [&] { save(); delete this; });
+	mMenu.addButton("SCRAPE", "scrape", std::bind(&GuiMetaDataEd::fetch, this));
+	mMenu.addButton("SAVE", "save", [&] { save(); delete this; });
 	
 	if(mDeleteFunc)
 	{
 		auto deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
 		auto deleteBtnFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBox(mWindow, "This will delete a file!\nAre you sure?", "YES", deleteFileAndSelf, "NO", nullptr)); };
-		mMenu.addButton("DELETE", "delete this game on disk", deleteBtnFunc);
+		mMenu.addButton("DELETE", "delete", deleteBtnFunc);
 	}
 
 	// initially put cursor on "SCRAPE"
@@ -154,6 +154,6 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiMetaDataEd::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "discard changes"));
+	prompts.push_back(HelpPrompt("b", "discard"));
 	return prompts;
 }

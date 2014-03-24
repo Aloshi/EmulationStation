@@ -140,6 +140,6 @@ void SliderComponent::onValueChanged()
 std::vector<HelpPrompt> SliderComponent::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("left/right", "adjust"));
+	prompts.push_back(HelpPrompt("left/right", "change"));
 	return prompts;
 }

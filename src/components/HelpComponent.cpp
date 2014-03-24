@@ -1,10 +1,21 @@
 #include "HelpComponent.h"
 #include "../Renderer.h"
-#include "ImageComponent.h"
-#include "../resources/Font.h"
 #include "../Settings.h"
 #include "../Log.h"
+#include "../Util.h"
+#include "ImageComponent.h"
+#include "TextComponent.h"
+#include "ComponentGrid.h"
+
 #include <boost/assign.hpp>
+
+#define OFFSET_X 6 // move the entire thing right by this amount (px)
+#define OFFSET_Y 6 // move the entire thing up by this amount (px)
+
+#define ICON_TEXT_SPACING 8 // space between [icon] and [text] (px)
+#define ENTRY_SPACING 16 // space between [text] and next [icon] (px)
+
+using namespace Eigen;
 
 static const std::map<std::string, const char*> ICON_PATH_MAP = boost::assign::map_list_of
 	("up/down", ":/help/dpad_updown.svg")
@@ -26,37 +37,59 @@ HelpComponent::HelpComponent(Window* window) : GuiComponent(window)
 void HelpComponent::clearPrompts()
 {
 	mPrompts.clear();
+	updateGrid();
 }
 
-void HelpComponent::addPrompt(const char* icon, const char* text)
+void HelpComponent::setPrompts(const std::vector<HelpPrompt>& prompts)
 {
-	if(!Settings::getInstance()->getBool("ShowHelpPrompts"))
+	mPrompts = prompts;
+	updateGrid();
+}
+
+void HelpComponent::updateGrid()
+{
+	if(!Settings::getInstance()->getBool("ShowHelpPrompts") || mPrompts.empty())
+	{
+		mGrid.reset();
 		return;
+	}
 
-	Prompt p;
+	mGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(mPrompts.size() * 4, 1));
+	// [icon] [spacer1] [text] [spacer2]
 
-	std::shared_ptr<Font> font = getFont();
-
-	// make the icon
-	p.icon = std::shared_ptr<ImageComponent>(new ImageComponent(mWindow));
-	p.icon->setResize(0, (float)FONT_SIZE_SMALL);
-	p.icon->setImage(getIconTexture(icon));
-	p.icon->setPosition(0.0f, mPrompts.size() ? mPrompts.back().icon->getPosition().y() + mPrompts.back().icon->getSize().y() + 10 : 0);
-	p.icon->setOpacity(0xEE);
+	std::shared_ptr<Font> font = Font::get(FONT_SIZE_SMALL);
 	
-	// make the text
-	const float textY = (p.icon->getSize().y() - (float)font->getHeight())/2;
-	p.textCache = std::shared_ptr<TextCache>(font->buildTextCache(text, p.icon->getSize().x() + 6, textY, 0x888888EE));
+	std::vector< std::shared_ptr<ImageComponent> > icons;
+	std::vector< std::shared_ptr<TextComponent> > labels;
 
-	mPrompts.push_back(p);
+	float width = 0;
+	const float height = font->getHeight();
+	for(auto it = mPrompts.begin(); it != mPrompts.end(); it++)
+	{
+		auto icon = std::make_shared<ImageComponent>(mWindow);
+		icon->setImage(getIconTexture(it->first));
+		icon->setResize(0, height * 0.8f);
+		icons.push_back(icon);
 
-	setPosition(0, (float)Renderer::getScreenHeight() - (p.icon->getPosition().y() + p.icon->getSize().y() + 6));
-}
+		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(it->second), font, 0x777777FF);
+		labels.push_back(lbl);
 
-std::shared_ptr<Font> HelpComponent::getFont() const
-{
-	// font size controls icon height
-	return Font::get(FONT_SIZE_SMALL);
+		width += icon->getSize().x() + lbl->getSize().x() + ICON_TEXT_SPACING + ENTRY_SPACING;
+	}
+
+	mGrid->setSize(width, height);
+	for(unsigned int i = 0; i < icons.size(); i++)
+	{
+		const int col = i*4;
+		mGrid->setColWidthPerc(col, icons.at(i)->getSize().x() / width);
+		mGrid->setColWidthPerc(col + 1, ICON_TEXT_SPACING / width);
+		mGrid->setColWidthPerc(col + 2, labels.at(i)->getSize().x() / width);
+
+		mGrid->setEntry(icons.at(i), Vector2i(col, 0), false, false);
+		mGrid->setEntry(labels.at(i), Vector2i(col + 2, 0), false, false);
+	}
+
+	mGrid->setPosition(OFFSET_X, Renderer::getScreenHeight() - mGrid->getSize().y() - OFFSET_Y);
 }
 
 std::shared_ptr<TextureResource> HelpComponent::getIconTexture(const char* name)
@@ -86,12 +119,6 @@ void HelpComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
 	
-	std::shared_ptr<Font> font = getFont();
-	for(auto it = mPrompts.begin(); it != mPrompts.end(); it++)
-	{
-		it->icon->render(trans);
-		// we actually depend on it->icon->render to call Renderer::setMatrix to draw at the right Y offset (efficiency!)
-		// if for some reason this breaks in the future, it should be equivalent to translating parentTrans by it->icon->getPosition()
-		font->renderTextCache(it->textCache.get());
-	}
+	if(mGrid)
+		mGrid->render(trans);
 }
