@@ -65,12 +65,16 @@ public:
 	float getTotalRowHeight() const;
 	inline float getRowHeight(int row) const { return getRowHeight(mEntries.at(row).data); }
 
+	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& callback) { mCursorChangedCallback = callback; };
+	inline const std::function<void(CursorState state)>& getCursorChangedCallback() const { return mCursorChangedCallback; };
+
 protected:
 	void onCursorChanged(const CursorState& state) override;
 
 private:
 	bool mFocused;
 
+	void updateCameraOffset();
 	void updateElementPosition(const ComponentListRow& row);
 	void updateElementSize(const ComponentListRow& row);
 	
@@ -78,4 +82,6 @@ private:
 
 	float mSelectorBarOffset;
 	float mCameraOffset;
+
+	std::function<void(CursorState state)> mCursorChangedCallback;
 };

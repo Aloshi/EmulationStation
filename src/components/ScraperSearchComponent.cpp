@@ -72,7 +72,8 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 
 	// result list
 	mResultList = std::make_shared<ComponentList>(mWindow);
-	
+	mResultList->setCursorChangedCallback([this](CursorState state) { if(state == CURSOR_STOPPED) updateInfoPane(); });
+
 	updateViewStyle();
 }
 
@@ -183,7 +184,11 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 	if(end == 0)
 	{
 		ComponentListRow row;
-		row.addElement(std::make_shared<TextComponent>(mWindow, "No games found!", font, color), true);
+		row.addElement(std::make_shared<TextComponent>(mWindow, "NO GAMES FOUND - SKIP", font, color), true);
+
+		if(mSkipCallback)
+			row.makeAcceptInputHandler(mSkipCallback);
+
 		mResultList->addRow(row);
 		mGrid.resetCursor();
 	}else{
@@ -191,7 +196,8 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 		for(int i = 0; i < end; i++)
 		{
 			row.elements.clear();
-			row.addElement(std::make_shared<TextComponent>(mWindow, results.at(i).mdl.get("name"), font, color), true);
+			row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(results.at(i).mdl.get("name")), font, color), true);
+			row.makeAcceptInputHandler([this, i] { returnResult(mScraperResults.at(i)); });
 			mResultList->addRow(row);
 		}
 		mGrid.resetCursor();
@@ -222,7 +228,7 @@ void ScraperSearchComponent::onSearchError(const std::string& error)
 
 int ScraperSearchComponent::getSelectedIndex()
 {
-	if(mScraperResults.size() && mGrid.getSelectedComponent() != mResultList)
+	if(!mScraperResults.size() || mGrid.getSelectedComponent() != mResultList)
 		return -1;
 
 	return mResultList->getCursorId();
@@ -242,9 +248,11 @@ void ScraperSearchComponent::updateInfoPane()
 		mResultThumbnail->setImage("");
 		const std::string& thumb = res.thumbnailUrl.empty() ? res.imageUrl : res.thumbnailUrl;
 		if(!thumb.empty())
+		{
 			mThumbnailReq = std::unique_ptr<HttpReq>(new HttpReq(thumb));
-		else
+		}else{
 			mThumbnailReq.reset();
+		}
 
 		// metadata
 		mMD_Rating->setValue(strToUpper(res.mdl.get("rating")));
@@ -275,23 +283,9 @@ bool ScraperSearchComponent::input(InputConfig* config, Input input)
 	{
 		if(mBlockAccept)
 			return true;
-
-		//if you're on a result
-		if(getSelectedIndex() != -1)
-		{
-			returnResult(mScraperResults.at(getSelectedIndex()));
-			return true;
-		}
 	}
 
-	bool ret = GuiComponent::input(config, input);
-
-	if(config->isMappedTo("up", input) || config->isMappedTo("down", input) && input.value != 0)
-	{
-		updateInfoPane();
-	}
-
-	return ret;
+	return GuiComponent::input(config, input);
 }
 
 void ScraperSearchComponent::render(const Eigen::Affine3f& parentTrans)
@@ -366,13 +360,13 @@ void ScraperSearchComponent::updateThumbnail()
 	{
 		std::string content = mThumbnailReq->getContent();
 		mResultThumbnail->setImage(content.data(), content.length());
+		mGrid.onSizeChanged(); // a hack to fix the thumbnail position since its size changed
 	}else{
 		LOG(LogWarning) << "thumbnail req failed: " << mThumbnailReq->getErrorMsg();
 		mResultThumbnail->setImage("");
 	}
 
 	mThumbnailReq.reset();
-	mGrid.onSizeChanged(); // a hack to fix the thumbnail position since its size changed
 }
 
 void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)

@@ -1,5 +1,6 @@
 #include "ComponentList.h"
 #include "../Util.h"
+#include "../Log.h"
 
 #define TOTAL_HORIZONTAL_PADDING_PX 20
 
@@ -40,7 +41,7 @@ void ComponentList::onSizeChanged()
 		updateElementPosition(it->data);
 	}
 
-	onCursorChanged(mScrollVelocity != 0 ? CURSOR_SCROLLING : CURSOR_STOPPED);
+	updateCameraOffset();
 }
 
 void ComponentList::onFocusLost()
@@ -107,6 +108,25 @@ void ComponentList::onCursorChanged(const CursorState& state)
 		mSelectorBarOffset += getRowHeight(mEntries.at(i).data);
 	}
 
+	updateCameraOffset();
+
+	// this is terribly inefficient but we don't know what we came from so...
+	if(size())
+	{
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+			it->data.elements.back().component->onFocusLost();
+		
+		mEntries.at(mCursor).data.elements.back().component->onFocusGained();
+	}
+
+	if(mCursorChangedCallback)
+		mCursorChangedCallback(state);
+
+	updateHelpPrompts();
+}
+
+void ComponentList::updateCameraOffset()
+{
 	// move the camera to scroll
 	const float totalHeight = getTotalRowHeight();
 	if(totalHeight > mSize.y())
@@ -129,17 +149,6 @@ void ComponentList::onCursorChanged(const CursorState& state)
 	}else{
 		mCameraOffset = 0;
 	}
-
-	// this is terribly inefficient but we don't know what we came from so...
-	if(size())
-	{
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
-			it->data.elements.back().component->onFocusLost();
-		
-		mEntries.at(mCursor).data.elements.back().component->onFocusGained();
-	}
-
-	updateHelpPrompts();
 }
 
 void ComponentList::render(const Eigen::Affine3f& parentTrans)

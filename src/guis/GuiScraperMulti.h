@@ -33,6 +33,7 @@ private:
 	ComponentGrid mGrid;
 
 	std::shared_ptr<TextComponent> mTitle;
+	std::shared_ptr<TextComponent> mSystem;
 	std::shared_ptr<TextComponent> mSubtitle;
 	std::shared_ptr<ScraperSearchComponent> mSearchComp;
 	std::shared_ptr<ComponentGrid> mButtonGrid;

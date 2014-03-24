@@ -185,6 +185,10 @@ protected:
 
 	bool listInput(int velocity) // a velocity of 0 = stop scrolling
 	{
+		// generate an onCursorChanged event in the stopped state when the user lets go of the key
+		if(velocity == 0 && mScrollVelocity != 0)
+			onCursorChanged(CURSOR_STOPPED);
+
 		mScrollVelocity = velocity;
 		mScrollTier = 0;
 		mScrollTierAccumulator = 0;
@@ -268,9 +272,16 @@ protected:
 			mLoopType == LIST_NEVER_LOOP)
 		{
 			if(cursor < 0)
+			{
 				cursor = 0;
-			else if(cursor >= size())
+				mScrollVelocity = 0;
+				mScrollTier = 0;
+			}else if(cursor >= size())
+			{
 				cursor = size() - 1;
+				mScrollVelocity = 0;
+				mScrollTier = 0;
+			}
 		}else{
 			while(cursor < 0)
 				cursor += size();
