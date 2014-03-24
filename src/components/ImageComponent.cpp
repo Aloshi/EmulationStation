@@ -149,22 +149,28 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 	
 	if(mTexture && getOpacity() > 0)
 	{
-		GLfloat points[12], texs[12];
-		GLubyte colors[6*4];
-
-		if(mTexture->isTiled())
+		if(mTexture->isInitialized())
 		{
-			float xCount = mSize.x() / getTextureSize().x();
-			float yCount = mSize.y() / getTextureSize().y();
-			
-			Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8)| (getOpacity()), 6);
-			buildImageArray(0, 0, points, texs, xCount, yCount);
-		}else{
-			Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8) | (getOpacity()), 6);
-			buildImageArray(0, 0, points, texs);
-		}
+			GLfloat points[12], texs[12];
+			GLubyte colors[6*4];
 
-		drawImageArray(points, texs, colors, 6);
+			if(mTexture->isTiled())
+			{
+				float xCount = mSize.x() / getTextureSize().x();
+				float yCount = mSize.y() / getTextureSize().y();
+			
+				Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8)| (getOpacity()), 6);
+				buildImageArray(0, 0, points, texs, xCount, yCount);
+			}else{
+				Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8) | (getOpacity()), 6);
+				buildImageArray(0, 0, points, texs);
+			}
+
+			drawImageArray(points, texs, colors, 6);
+		}else{
+			LOG(LogError) << "Image texture is not initialized!";
+			mTexture.reset();
+		}
 	}
 
 	GuiComponent::renderChildren(trans);

@@ -62,7 +62,7 @@ void TextureResource::initFromMemory(const char* data, size_t length)
 
 	if(imageRGBA.size() == 0)
 	{
-		LOG(LogError) << "Could not initialize texture from memory, invalid data!  (" << mPath << ")";
+		LOG(LogError) << "Could not initialize texture from memory, invalid data!  (file path: " << mPath << ", data ptr: " << (size_t)data << ", reported size: " << length << ")";
 		return;
 	}
 
@@ -136,4 +136,9 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 	rm->addReloadable(tex);
 	tex->reload(ResourceManager::getInstance());
 	return tex;
+}
+
+bool TextureResource::isInitialized() const
+{
+	return mTextureID != 0;
 }

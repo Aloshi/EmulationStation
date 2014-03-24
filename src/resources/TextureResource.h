@@ -19,6 +19,7 @@ public:
 	virtual void unload(std::shared_ptr<ResourceManager>& rm) override;
 	virtual void reload(std::shared_ptr<ResourceManager>& rm) override;
 	
+	bool isInitialized() const;
 	bool isTiled() const;
 	const Eigen::Vector2i& getSize() const;
 	void bind() const;

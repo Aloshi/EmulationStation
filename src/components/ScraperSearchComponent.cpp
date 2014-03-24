@@ -233,25 +233,26 @@ void ScraperSearchComponent::updateInfoPane()
 	int i = getSelectedIndex();
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
-		mResultName->setText(mScraperResults.at(i).mdl.get("name"));
-		mResultDesc->setText(mScraperResults.at(i).mdl.get("desc"));
+		ScraperSearchResult& res = mScraperResults.at(i);
+		mResultName->setText(res.mdl.get("name"));
+		mResultDesc->setText(res.mdl.get("desc"));
 		mDescContainer->setScrollPos(Eigen::Vector2d(0, 0));
 		mDescContainer->resetAutoScrollTimer();
 
 		mResultThumbnail->setImage("");
-		const std::string& thumb = mScraperResults.at(i).thumbnailUrl;
+		const std::string& thumb = res.thumbnailUrl.empty() ? res.imageUrl : res.thumbnailUrl;
 		if(!thumb.empty())
 			mThumbnailReq = std::unique_ptr<HttpReq>(new HttpReq(thumb));
 		else
 			mThumbnailReq.reset();
 
 		// metadata
-		mMD_Rating->setValue(strToUpper(mScraperResults.at(i).mdl.get("rating")));
-		mMD_ReleaseDate->setValue(strToUpper(mScraperResults.at(i).mdl.get("releasedate")));
-		mMD_Developer->setText(strToUpper(mScraperResults.at(i).mdl.get("developer")));
-		mMD_Publisher->setText(strToUpper(mScraperResults.at(i).mdl.get("publisher")));
-		mMD_Genre->setText(strToUpper(mScraperResults.at(i).mdl.get("genre")));
-		mMD_Players->setText(strToUpper(mScraperResults.at(i).mdl.get("players")));
+		mMD_Rating->setValue(strToUpper(res.mdl.get("rating")));
+		mMD_ReleaseDate->setValue(strToUpper(res.mdl.get("releasedate")));
+		mMD_Developer->setText(strToUpper(res.mdl.get("developer")));
+		mMD_Publisher->setText(strToUpper(res.mdl.get("publisher")));
+		mMD_Genre->setText(strToUpper(res.mdl.get("genre")));
+		mMD_Players->setText(strToUpper(res.mdl.get("players")));
 
 	}else{
 		mResultName->setText("");
