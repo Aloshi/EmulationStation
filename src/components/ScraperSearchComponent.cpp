@@ -58,13 +58,13 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "GENRE:", font, mdLblColor), mMD_Genre));
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PLAYERS:", font, mdLblColor), mMD_Players));
 
-	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, mMD_Pairs.size()));
+	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, mMD_Pairs.size()*2 - 1));
 	unsigned int i = 0;
 	for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
 	{
 		mMD_Grid->setEntry(it->first, Vector2i(0, i), false, true);
 		mMD_Grid->setEntry(it->second, Vector2i(1, i), false, it->resize);
-		i++;
+		i += 2;
 	}
 
 	mGrid.setEntry(mMD_Grid, Vector2i(2, 1), false, false);
@@ -90,16 +90,18 @@ void ScraperSearchComponent::onSizeChanged()
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT) // show name
 		mGrid.setRowHeightPerc(0, (mResultName->getFont()->getHeight()) / mGrid.getSize().y()); // result name
 	else
-		mGrid.setRowHeightPerc(0, 0.05f); // hide name but do padding
+		mGrid.setRowHeightPerc(0, 0.0825f); // hide name but do padding
 
-	mGrid.setRowHeightPerc(2, 0.375f); // description
+	mGrid.setRowHeightPerc(1, 0.505f);
+
+	const float boxartCellScale = 0.85f;
 
 	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
 	// we also pad a little so it doesn't rub up against the metadata labels
-	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) * 0.85f, mGrid.getRowHeight(1) * 0.85f);
+	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) * boxartCellScale, mGrid.getRowHeight(1));
 
 	// metadata
-	mMD_Grid->setSize(mGrid.getColWidth(2), mGrid.getRowHeight(1) * 0.9f);
+	mMD_Grid->setSize(mGrid.getColWidth(2), mGrid.getRowHeight(1));
 	if(mMD_Grid->getSize().y() > mMD_Pairs.size())
 	{
 		const int fontHeight = (int)(mMD_Grid->getSize().y() / mMD_Pairs.size() * 0.8f);
@@ -114,6 +116,11 @@ void ScraperSearchComponent::onSizeChanged()
 			it->first->setSize(0, 0);
 			if(it->first->getSize().x() > maxLblWidth)
 				maxLblWidth = it->first->getSize().x() + 6;
+		}
+
+		for(unsigned int i = 0; i < mMD_Pairs.size(); i++)
+		{
+			mMD_Grid->setRowHeightPerc(i*2, (fontLbl->getLetterHeight() + 2) / mMD_Grid->getSize().y());
 		}
 
 		// update component fonts
@@ -132,9 +139,11 @@ void ScraperSearchComponent::onSizeChanged()
 		// make result font follow label font
 		mResultDesc->setFont(Font::get(fontHeight, FONT_PATH_REGULAR));
 	}
-	mGrid.onSizeChanged();
-
+	
+	mDescContainer->setSize(mGrid.getColWidth(1)*boxartCellScale + mGrid.getColWidth(2), mResultDesc->getFont()->getHeight() * 3);
 	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
+
+	mGrid.onSizeChanged();
 }
 
 void ScraperSearchComponent::updateViewStyle()
@@ -153,7 +162,7 @@ void ScraperSearchComponent::updateViewStyle()
 		mGrid.setEntry(mResultName, Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
 
 		// show description on the right
-		mGrid.setEntry(mDescContainer, Vector2i(3, 0), false, true, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
+		mGrid.setEntry(mDescContainer, Vector2i(3, 0), false, false, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 	}else{
 		// fake row where name would be
@@ -163,7 +172,7 @@ void ScraperSearchComponent::updateViewStyle()
 		mGrid.setEntry(mResultList, Vector2i(3, 0), true, true, Vector2i(1, 3), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 
 		// show description under image/info
-		mGrid.setEntry(mDescContainer, Vector2i(1, 2), false, true, Vector2i(2, 1), GridFlags::BORDER_BOTTOM);
+		mGrid.setEntry(mDescContainer, Vector2i(1, 2), false, false, Vector2i(2, 1), GridFlags::BORDER_BOTTOM);
 		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 	}
 }
