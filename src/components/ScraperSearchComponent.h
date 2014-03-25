@@ -5,7 +5,7 @@
 #include "../components/ComponentGrid.h"
 #include <functional>
 
-#define MAX_SCRAPER_RESULTS 5
+#define MAX_SCRAPER_RESULTS 7
 
 class ComponentList;
 class ImageComponent;

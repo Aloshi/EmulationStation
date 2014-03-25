@@ -21,7 +21,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mCurrentGame = 0;
 
 	// set up grid
-	mTitle = std::make_shared<TextComponent>(mWindow, "SCRAPING IN PROGRESS", Font::get(FONT_SIZE_LARGE), 0x777777FF, TextComponent::ALIGN_CENTER);
+	mTitle = std::make_shared<TextComponent>(mWindow, "SCRAPING IN PROGRESS", Font::get(FONT_SIZE_LARGE), 0x555555FF, TextComponent::ALIGN_CENTER);
 	mGrid.setEntry(mTitle, Vector2i(0, 0), false, true);
 
 	mSystem = std::make_shared<TextComponent>(mWindow, "SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF, TextComponent::ALIGN_CENTER);
@@ -47,7 +47,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 	mGrid.setEntry(mButtonGrid, Vector2i(0, 4), true, false);
 
-	setSize(Renderer::getScreenWidth() * 0.7f, Renderer::getScreenHeight() * 0.65f);
+	setSize(Renderer::getScreenWidth() * 0.7f, Renderer::getScreenHeight() * 0.7802f);
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 
 	doNextSearch();
@@ -58,9 +58,9 @@ void GuiScraperMulti::onSizeChanged()
 	mBackground.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 	mGrid.setSize(mSize);
 
-	mGrid.setRowHeightPerc(0, mTitle->getFont()->getHeight() / mGrid.getSize().y());
-	mGrid.setRowHeightPerc(1, mSystem->getFont()->getHeight() / mGrid.getSize().y());
-	mGrid.setRowHeightPerc(2, mSubtitle->getFont()->getHeight() / mGrid.getSize().y());
+	mGrid.setRowHeightPerc(0, mTitle->getFont()->getLetterHeight() * 1.9725f / mGrid.getSize().y());
+	mGrid.setRowHeightPerc(1, (mSystem->getFont()->getLetterHeight() + 2) / mGrid.getSize().y());
+	mGrid.setRowHeightPerc(2, mSubtitle->getFont()->getHeight() * 1.75f / mGrid.getSize().y());
 	mGrid.setRowHeightPerc(4, mButtonGrid->getSize().y() / mGrid.getSize().y());
 }
 
@@ -74,7 +74,7 @@ void GuiScraperMulti::doNextSearch()
 
 	// update title
 	std::stringstream ss;
-	mSystem->setText(strToUpper(mSearchQueue.front().system->getName()));
+	mSystem->setText(strToUpper(mSearchQueue.front().system->getFullName()));
 
 	// update subtitle
 	ss.str(""); // clear

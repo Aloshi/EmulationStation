@@ -95,7 +95,6 @@ void ScraperSearchComponent::onSizeChanged()
 	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
 	// we also pad a little so it doesn't rub up against the metadata labels
 	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) - 16, mGrid.getRowHeight(1));
-	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 
 	// metadata
 	// (mMD_Grid has already been resized by mGrid)
@@ -124,7 +123,12 @@ void ScraperSearchComponent::onSizeChanged()
 		mMD_Players->setFont(fontComp);
 
 		mMD_Grid->setColWidthPerc(0, maxLblWidth / mMD_Grid->getSize().x());
+
+		// make result font follow label font
+		mResultDesc->setFont(Font::get(fontHeight, FONT_PATH_REGULAR));
 	}
+
+	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 }
 
 void ScraperSearchComponent::updateViewStyle()
@@ -177,7 +181,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 
 	mScraperResults = results;
 
-	const int end = results.size() > 5 ? 5 : results.size(); // at max display 5
+	const int end = results.size() > MAX_SCRAPER_RESULTS ? MAX_SCRAPER_RESULTS : results.size(); // at max display 5
 
 	auto font = Font::get(FONT_SIZE_MEDIUM);
 	unsigned int color = 0x777777FF;
@@ -240,8 +244,8 @@ void ScraperSearchComponent::updateInfoPane()
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
 		ScraperSearchResult& res = mScraperResults.at(i);
-		mResultName->setText(res.mdl.get("name"));
-		mResultDesc->setText(res.mdl.get("desc"));
+		mResultName->setText(strToUpper(res.mdl.get("name")));
+		mResultDesc->setText(strToUpper(res.mdl.get("desc")));
 		mDescContainer->setScrollPos(Eigen::Vector2d(0, 0));
 		mDescContainer->resetAutoScrollTimer();
 
