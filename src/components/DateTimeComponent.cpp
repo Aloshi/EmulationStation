@@ -137,11 +137,17 @@ void DateTimeComponent::update(int deltaTime)
 
 void DateTimeComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
-	Renderer::setMatrix(trans);
+	Eigen::Affine3f trans = parentTrans * getTransform();
 
 	if(mTextCache)
 	{
+		// vertically center
+		Eigen::Vector3f off(0, (mSize.y() - mTextCache->metrics.size.y()) / 2, 0);
+		trans.translate(off);
+		trans = roundMatrix(trans);
+
+		Renderer::setMatrix(trans);
+
 		std::shared_ptr<Font> font = getFont();
 
 		mTextCache->setColor((mColor & 0xFFFFFF00) | getOpacity());
@@ -156,8 +162,6 @@ void DateTimeComponent::render(const Eigen::Affine3f& parentTrans)
 			}
 		}
 	}
-
-	renderChildren(trans);
 }
 
 void DateTimeComponent::setValue(const std::string& val)

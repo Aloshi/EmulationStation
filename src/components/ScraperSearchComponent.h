@@ -75,7 +75,15 @@ private:
 	std::shared_ptr<TextComponent> mMD_Players;
 
 	// label-component pair
-	typedef std::pair< std::shared_ptr<TextComponent>, std::shared_ptr<GuiComponent> > MetaDataPair;
+	struct MetaDataPair
+	{
+		std::shared_ptr<TextComponent> first;
+		std::shared_ptr<GuiComponent> second;
+		bool resize;
+
+		MetaDataPair(const std::shared_ptr<TextComponent>& f, const std::shared_ptr<GuiComponent>& s, bool r = true) : first(f), second(s), resize(r) {};
+	};
+	
 	std::vector<MetaDataPair> mMD_Pairs;
 
 	SearchType mSearchType;

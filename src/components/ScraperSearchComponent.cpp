@@ -28,7 +28,6 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 
 	// selected result name
 	mResultName = std::make_shared<TextComponent>(mWindow, "Result name", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-	mGrid.setEntry(mResultName, Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
 
 	// selected result thumbnail
 	mResultThumbnail = std::make_shared<ImageComponent>(mWindow);
@@ -52,7 +51,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mMD_Genre = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
 	mMD_Players = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
 
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RATING:", font, mdLblColor), mMD_Rating));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RATING:", font, mdLblColor), mMD_Rating, false));
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RELEASED:", font, mdLblColor), mMD_ReleaseDate));
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "DEVELOPER:", font, mdLblColor), mMD_Developer));
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PUBLISHER:", font, mdLblColor), mMD_Publisher));
@@ -64,7 +63,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
 	{
 		mMD_Grid->setEntry(it->first, Vector2i(0, i), false, true);
-		mMD_Grid->setEntry(it->second, Vector2i(1, i), false, true);
+		mMD_Grid->setEntry(it->second, Vector2i(1, i), false, it->resize);
 		i++;
 	}
 
@@ -89,7 +88,12 @@ void ScraperSearchComponent::onSizeChanged()
 
 	// row heights
 	const float fontHeightPerc = (mResultName->getFont()->getHeight()) / mGrid.getSize().y();
-	mGrid.setRowHeightPerc(0, fontHeightPerc); // result name
+
+	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT) // show name
+		mGrid.setRowHeightPerc(0, fontHeightPerc); // result name
+	else
+		mGrid.setRowHeightPerc(0, 0.05f); // hide name but do padding
+
 	mGrid.setRowHeightPerc(2, 0.375f); // description
 
 	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
@@ -124,6 +128,9 @@ void ScraperSearchComponent::onSizeChanged()
 
 		mMD_Grid->setColWidthPerc(0, maxLblWidth / mMD_Grid->getSize().x());
 
+		// rating is manually sized
+		mMD_Rating->setSize(mMD_Grid->getColWidth(1), fontLbl->getLetterHeight());
+
 		// make result font follow label font
 		mResultDesc->setFont(Font::get(fontHeight, FONT_PATH_REGULAR));
 	}
@@ -135,17 +142,24 @@ void ScraperSearchComponent::updateViewStyle()
 {
 	using namespace Eigen;
 
-	// unlink description and result list
+	// unlink description and result list and result name
+	mGrid.removeEntry(mResultName);
 	mGrid.removeEntry(mResultDesc);
 	mGrid.removeEntry(mResultList);
 
 	// add them back depending on search type
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
 	{
+		// show name
+		mGrid.setEntry(mResultName, Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
+
 		// show description on the right
 		mGrid.setEntry(mDescContainer, Vector2i(3, 0), false, true, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 	}else{
+		// fake row where name would be
+		mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
+
 		// show result list on the right
 		mGrid.setEntry(mResultList, Vector2i(3, 0), true, true, Vector2i(1, 3), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 
@@ -241,6 +255,11 @@ int ScraperSearchComponent::getSelectedIndex()
 void ScraperSearchComponent::updateInfoPane()
 {
 	int i = getSelectedIndex();
+	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT && mScraperResults.size())
+	{
+		i = 0;
+	}
+	
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
 		ScraperSearchResult& res = mScraperResults.at(i);
@@ -265,7 +284,7 @@ void ScraperSearchComponent::updateInfoPane()
 		mMD_Publisher->setText(strToUpper(res.mdl.get("publisher")));
 		mMD_Genre->setText(strToUpper(res.mdl.get("genre")));
 		mMD_Players->setText(strToUpper(res.mdl.get("players")));
-
+		mGrid.onSizeChanged();
 	}else{
 		mResultName->setText("");
 		mResultDesc->setText("");
