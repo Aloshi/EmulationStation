@@ -23,6 +23,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+	void onSizeChanged() override;
 
 	// Set how the point in time will be displayed:
 	//  * DISP_DATE - only display the date.
@@ -58,4 +59,6 @@ private:
 
 	unsigned int mColor;
 	std::shared_ptr<Font> mFont;
+
+	bool mSizeSet;
 };

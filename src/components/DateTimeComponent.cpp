@@ -7,9 +7,8 @@
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
-	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT))
+	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT)), mSizeSet(false)
 {
-	mSize << 64, getFont()->getHeight();
 	updateTextCache();
 }
 
@@ -253,7 +252,9 @@ void DateTimeComponent::updateTextCache()
 	const std::string dispString = getDisplayString(mode);
 	std::shared_ptr<Font> font = getFont();
 	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
-	setSize(mTextCache->metrics.size);
+
+	if(!mSizeSet)
+		mSize = mTextCache->metrics.size;
 
 	//set up cursor positions
 	mCursorBoxes.clear();
@@ -292,10 +293,12 @@ void DateTimeComponent::setColor(unsigned int color)
 void DateTimeComponent::setFont(std::shared_ptr<Font> font)
 {
 	mFont = font;
+	updateTextCache();
+}
 
-	if(getSize().y() < mFont->getHeight())
-		setSize(getSize().x(), (float)mFont->getHeight());
-
+void DateTimeComponent::onSizeChanged()
+{
+	mSizeSet = true;
 	updateTextCache();
 }
 

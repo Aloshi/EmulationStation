@@ -67,7 +67,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 		i++;
 	}
 
-	mGrid.setEntry(mMD_Grid, Vector2i(2, 1), false, true);
+	mGrid.setEntry(mMD_Grid, Vector2i(2, 1), false, false);
 
 	// result list
 	mResultList = std::make_shared<ComponentList>(mWindow);
@@ -87,10 +87,8 @@ void ScraperSearchComponent::onSizeChanged()
 	mGrid.setColWidthPerc(3, 0.49f);
 
 	// row heights
-	const float fontHeightPerc = (mResultName->getFont()->getHeight()) / mGrid.getSize().y();
-
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT) // show name
-		mGrid.setRowHeightPerc(0, fontHeightPerc); // result name
+		mGrid.setRowHeightPerc(0, (mResultName->getFont()->getHeight()) / mGrid.getSize().y()); // result name
 	else
 		mGrid.setRowHeightPerc(0, 0.05f); // hide name but do padding
 
@@ -98,11 +96,10 @@ void ScraperSearchComponent::onSizeChanged()
 
 	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
 	// we also pad a little so it doesn't rub up against the metadata labels
-	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) - 16, mGrid.getRowHeight(1));
+	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) * 0.85f, mGrid.getRowHeight(1) * 0.85f);
 
 	// metadata
-	// (mMD_Grid has already been resized by mGrid)
-
+	mMD_Grid->setSize(mGrid.getColWidth(2), mGrid.getRowHeight(1) * 0.9f);
 	if(mMD_Grid->getSize().y() > mMD_Pairs.size())
 	{
 		const int fontHeight = (int)(mMD_Grid->getSize().y() / mMD_Pairs.size() * 0.8f);
@@ -130,10 +127,12 @@ void ScraperSearchComponent::onSizeChanged()
 
 		// rating is manually sized
 		mMD_Rating->setSize(mMD_Grid->getColWidth(1), fontLbl->getLetterHeight());
+		mMD_Grid->onSizeChanged();
 
 		// make result font follow label font
 		mResultDesc->setFont(Font::get(fontHeight, FONT_PATH_REGULAR));
 	}
+	mGrid.onSizeChanged();
 
 	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 }
