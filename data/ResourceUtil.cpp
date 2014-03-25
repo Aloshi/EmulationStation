@@ -2,7 +2,7 @@
 
 #include "Resources.h"
 
-const size_t res2hNrOfFiles = 34;
+const size_t res2hNrOfFiles = 35;
 const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/arrow.svg", arrow_svg_size, arrow_svg_data},
     {":/button.png", button_png_size, button_png_data},
@@ -23,6 +23,7 @@ const Res2hEntry res2hFiles[res2hNrOfFiles] = {
     {":/slider_knob.svg", slider_knob_svg_size, slider_knob_svg_data},
     {":/star_filled.svg", star_filled_svg_size, star_filled_svg_data},
     {":/star_unfilled.svg", star_unfilled_svg_size, star_unfilled_svg_data},
+    {":/textinput_ninepatch.png", textinput_ninepatch_png_size, textinput_ninepatch_png_data},
     {":/help/button_a.svg", help_button_a_svg_size, help_button_a_svg_data},
     {":/help/button_b.svg", help_button_b_svg_size, help_button_b_svg_data},
     {":/help/button_l.svg", help_button_l_svg_size, help_button_l_svg_data},
@@ -60,21 +61,22 @@ res2hMapType::value_type mapTemp[] = {
     std::make_pair(":/slider_knob.svg", res2hFiles[16]),
     std::make_pair(":/star_filled.svg", res2hFiles[17]),
     std::make_pair(":/star_unfilled.svg", res2hFiles[18]),
-    std::make_pair(":/help/button_a.svg", res2hFiles[19]),
-    std::make_pair(":/help/button_b.svg", res2hFiles[20]),
-    std::make_pair(":/help/button_l.svg", res2hFiles[21]),
-    std::make_pair(":/help/button_r.svg", res2hFiles[22]),
-    std::make_pair(":/help/button_select.svg", res2hFiles[23]),
-    std::make_pair(":/help/button_start.svg", res2hFiles[24]),
-    std::make_pair(":/help/button_x.svg", res2hFiles[25]),
-    std::make_pair(":/help/button_y.svg", res2hFiles[26]),
-    std::make_pair(":/help/dpad_all.svg", res2hFiles[27]),
-    std::make_pair(":/help/dpad_down.svg", res2hFiles[28]),
-    std::make_pair(":/help/dpad_left.svg", res2hFiles[29]),
-    std::make_pair(":/help/dpad_leftright.svg", res2hFiles[30]),
-    std::make_pair(":/help/dpad_right.svg", res2hFiles[31]),
-    std::make_pair(":/help/dpad_up.svg", res2hFiles[32]),
-    std::make_pair(":/help/dpad_updown.svg", res2hFiles[33])
+    std::make_pair(":/textinput_ninepatch.png", res2hFiles[19]),
+    std::make_pair(":/help/button_a.svg", res2hFiles[20]),
+    std::make_pair(":/help/button_b.svg", res2hFiles[21]),
+    std::make_pair(":/help/button_l.svg", res2hFiles[22]),
+    std::make_pair(":/help/button_r.svg", res2hFiles[23]),
+    std::make_pair(":/help/button_select.svg", res2hFiles[24]),
+    std::make_pair(":/help/button_start.svg", res2hFiles[25]),
+    std::make_pair(":/help/button_x.svg", res2hFiles[26]),
+    std::make_pair(":/help/button_y.svg", res2hFiles[27]),
+    std::make_pair(":/help/dpad_all.svg", res2hFiles[28]),
+    std::make_pair(":/help/dpad_down.svg", res2hFiles[29]),
+    std::make_pair(":/help/dpad_left.svg", res2hFiles[30]),
+    std::make_pair(":/help/dpad_leftright.svg", res2hFiles[31]),
+    std::make_pair(":/help/dpad_right.svg", res2hFiles[32]),
+    std::make_pair(":/help/dpad_up.svg", res2hFiles[33]),
+    std::make_pair(":/help/dpad_updown.svg", res2hFiles[34])
 };
 
 res2hMapType res2hMap(mapTemp, mapTemp + sizeof mapTemp / sizeof mapTemp[0]);
