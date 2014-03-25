@@ -29,11 +29,13 @@ void Settings::setDefaults()
 	mBoolMap["ParseGamelistOnly"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
-	mBoolMap["Debug"] = false;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["EnableSounds"] = true;
 	mBoolMap["ShowHelpPrompts"] = true;
 	mBoolMap["ScrapeRatings"] = true;
+
+	mBoolMap["Debug"] = false;
+	mBoolMap["DebugGrid"] = false;
 
 	mIntMap["DimTime"] = 120*1000;
 	mIntMap["ScraperResizeWidth"] = 400;

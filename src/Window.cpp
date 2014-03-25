@@ -104,7 +104,11 @@ void Window::deinit()
 
 void Window::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("mastervolup", input))
+	if(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_g && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
+	{
+		// toggle debug grid
+		Settings::getInstance()->setBool("DebugGrid", !Settings::getInstance()->getBool("DebugGrid"));
+	}else if(config->isMappedTo("mastervolup", input))
 	{
 		VolumeControl::getInstance()->setVolume(VolumeControl::getInstance()->getVolume() + 5);
 	}
