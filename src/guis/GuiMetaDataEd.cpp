@@ -29,6 +29,10 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	{
 		std::shared_ptr<GuiComponent> ed;
 
+		// don't add statistics
+		if(iter->isStatistic)
+			continue;
+
 		// create ed and add it (and any related components) to mMenu
 		// ed's value will be set below
 		ComponentListRow row;
@@ -72,7 +76,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				row.addElement(bracket, false);
 
 				bool multiLine = iter->type == MD_MULTILINE_STRING;
-				const std::string& title = iter->key;
+				const std::string title = "INPUT GAME " + iter->key;
 				auto updateVal = [ed](const std::string& newVal) { ed->setValue(newVal); }; // ok callback (apply new value to ed)
 				row.makeAcceptInputHandler([this, title, ed, updateVal, multiLine] {
 					mWindow->pushGui(new GuiTextEditPopup(mWindow, title, ed->getValue(), updateVal, multiLine));
@@ -110,6 +114,9 @@ void GuiMetaDataEd::save()
 {
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
+		if(mMetaDataDecl.at(i).isStatistic)
+			continue;
+
 		mMetaData->set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
 	}
 
@@ -127,7 +134,6 @@ void GuiMetaDataEd::fetchDone(const ScraperSearchResult& result)
 {
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
-		//don't overwrite statistics
 		if(mMetaDataDecl.at(i).isStatistic)
 			continue;
 

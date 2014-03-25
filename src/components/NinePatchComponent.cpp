@@ -61,12 +61,12 @@ void NinePatchComponent::buildVertices()
 
 	//corners never stretch, so we calculate a width and height for slices 1, 3, 5, and 7
 	float borderWidth = mSize.x() - (pieceSizes.x() * 2); //should be pieceSizes[0] and pieceSizes[2]
-	if(borderWidth < pieceSizes.x())
-		borderWidth = pieceSizes.x();
+	//if(borderWidth < pieceSizes.x())
+	//	borderWidth = pieceSizes.x();
 
 	float borderHeight = mSize.y() - (pieceSizes.y() * 2); //should be pieceSizes[0] and pieceSizes[6]
-	if(borderHeight < pieceSizes.y())
-		borderHeight = pieceSizes.y();
+	//if(borderHeight < pieceSizes.y())
+	//	borderHeight = pieceSizes.y();
 
 	mVertices[0 * 6].pos = pieceCoords[0]; //top left
 	mVertices[1 * 6].pos = pieceCoords[1]; //top middle

@@ -63,7 +63,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		// icon
 		auto icon = std::make_shared<ImageComponent>(mWindow);
 		icon->setImage(inputIcon[i]);
-		icon->setResize(0, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight() * ((i < 4) ? 1.25f : 1.0f)); // hack to enlarge dpad
+		icon->setResize(0, Font::get(FONT_SIZE_MEDIUM)->getLetterHeight() * 1.25f);
 		row.addElement(icon, false);
 
 		// spacer between icon and text
