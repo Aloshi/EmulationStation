@@ -141,8 +141,15 @@ void Window::update(int deltaTime)
 		if(Settings::getInstance()->getBool("DrawFramerate"))
 		{
 			std::stringstream ss;
+			
+			// fps
 			ss << std::fixed << std::setprecision(1) << (1000.0f * (float)mFrameCountElapsed / (float)mFrameTimeElapsed) << "fps, ";
 			ss << std::fixed << std::setprecision(2) << ((float)mFrameTimeElapsed / (float)mFrameCountElapsed) << "ms";
+
+			// vram
+			float vramUsageMb = (TextureResource::getTotalMemUsage() + Font::getTotalMemUsage()) / 1000.0f / 1000.0f;
+			ss << "\nVRAM: " << vramUsageMb << "mb";
+
 			mFrameDataString = ss.str();
 		}
 

@@ -27,6 +27,34 @@ void Font::initLibrary()
 	}
 }
 
+size_t Font::getMemUsage() const
+{
+	if(!textureID)
+		return 0;
+
+	return textureWidth * textureHeight * 4;
+}
+
+size_t Font::getTotalMemUsage()
+{
+	size_t total = 0;
+
+	auto it = sFontMap.begin();
+	while(it != sFontMap.end())
+	{
+		if(it->second.expired())
+		{
+			it = sFontMap.erase(it);
+			continue;
+		}
+
+		total += it->second.lock()->getMemUsage();
+		it++;
+	}
+
+	return total;
+}
+
 Font::Font(int size, const std::string& path) : fontScale(1.0f), mSize(size), mPath(path)
 {
 	reload(ResourceManager::getInstance());

@@ -8,6 +8,7 @@
 #include "SVGResource.h"
 
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
+std::list< std::weak_ptr<TextureResource> > TextureResource::sTextureList;
 
 TextureResource::TextureResource(const std::string& path, bool tile) : 
 	mTextureID(0), mPath(path), mTextureSize(Eigen::Vector2i::Zero()), mTile(tile)
@@ -125,20 +126,51 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 		// probably
 		// don't add it to our map because 2 svgs might be rasterized at different sizes
 		tex = std::shared_ptr<SVGResource>(new SVGResource(path, tile));
+		sTextureList.push_back(tex); // add it to our list though
 		rm->addReloadable(tex);
 		tex->reload(rm);
 		return tex;
 	}else{
+		// normal texture
 		tex = std::shared_ptr<TextureResource>(new TextureResource(path, tile));
+		sTextureMap[key] = std::weak_ptr<TextureResource>(tex);
+		sTextureList.push_back(tex);
+		rm->addReloadable(tex);
+		tex->reload(ResourceManager::getInstance());
+		return tex;
 	}
-	
-	sTextureMap[key] = std::weak_ptr<TextureResource>(tex);
-	rm->addReloadable(tex);
-	tex->reload(ResourceManager::getInstance());
-	return tex;
 }
 
 bool TextureResource::isInitialized() const
 {
 	return mTextureID != 0;
+}
+
+size_t TextureResource::getMemUsage() const
+{
+	if(!mTextureID || mTextureSize.x() == 0 || mTextureSize.y() == 0)
+		return 0;
+
+	return mTextureSize.x() * mTextureSize.y() * 4;
+}
+
+size_t TextureResource::getTotalMemUsage()
+{
+	size_t total = 0;
+
+	auto it = sTextureList.begin();
+	while(it != sTextureList.end())
+	{
+		if((*it).expired())
+		{
+			// remove expired textures from the list
+			it = sTextureList.erase(it);
+			continue;
+		}
+
+		total += (*it).lock()->getMemUsage();
+		it++;
+	}
+
+	return total;
 }

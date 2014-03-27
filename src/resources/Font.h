@@ -78,6 +78,9 @@ public:
 
 	static std::shared_ptr<Font> getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig);
 
+	size_t getMemUsage() const; // returns an approximation of VRAM used by this font's texture (in bytes)
+	static size_t getTotalMemUsage(); // returns an approximation of total VRAM used by font textures (in bytes)
+
 private:
 	static int getDpiX();
 	static int getDpiY();
