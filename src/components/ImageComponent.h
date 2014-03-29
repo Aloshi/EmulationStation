@@ -68,7 +68,7 @@ private:
 	void resize();
 
 	// Writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position.
-	void buildImageArray(int x, int y, GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1);
+	void buildImageArray(GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1);
 	// Draws the given set of points and texture coordinates, number of coordinate pairs may be specified.
 	void drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int count = 6);
 

@@ -160,10 +160,10 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 				float yCount = mSize.y() / getTextureSize().y();
 			
 				Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8)| (getOpacity()), 6);
-				buildImageArray(0, 0, points, texs, xCount, yCount);
+				buildImageArray(points, texs, xCount, yCount);
 			}else{
 				Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8) | (getOpacity()), 6);
-				buildImageArray(0, 0, points, texs);
+				buildImageArray(points, texs);
 			}
 
 			drawImageArray(points, texs, colors, 6);
@@ -176,20 +176,28 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 	GuiComponent::renderChildren(trans);
 }
 
-void ImageComponent::buildImageArray(int posX, int posY, GLfloat* points, GLfloat* texs, float px, float py)
+void ImageComponent::buildImageArray(GLfloat* points, GLfloat* texs, float px, float py)
 {
-	points[0] = posX - (mSize.x() * mOrigin.x());		points[1] = posY - (mSize.y() * mOrigin.y());
-	points[2] = posX - (mSize.x() * mOrigin.x());		points[3] = posY + (mSize.y() * (1 - mOrigin.y()));
-	points[4] = posX + (mSize.x() * (1 - mOrigin.x()));		points[5] = posY - (mSize.y() * mOrigin.y());
+	// we go through this mess to make sure everything is properly rounded
+	// if we just round vertices at the end, edge cases occur near sizes of 0.5
+	Eigen::Vector2f topLeft(-mSize.x() * mOrigin.x(), -mSize.y() * mOrigin.y());
+	Eigen::Vector2f bottomRight(mSize.x() * (1 -mOrigin.x()), mSize.y() * (1 - mOrigin.y()));
 
-	points[6] = posX + (mSize.x() * (1 - mOrigin.x()));		points[7] = posY - (mSize.y() * mOrigin.y());
-	points[8] = posX - (mSize.x() * mOrigin.x());		points[9] = posY + (mSize.y() * (1 - mOrigin.y()));
-	points[10] = posX + (mSize.x() * (1 -mOrigin.x()));		points[11] = posY + (mSize.y() * (1 - mOrigin.y()));
+	const float width = round(bottomRight.x() - topLeft.x());
+	const float height = round(bottomRight.y() - topLeft.y());
 
-	// round vertices
-	for(int i = 0; i < 12; i++)
-		points[i] = round(points[i]);
+	topLeft[0] = round(topLeft[0]);
+	topLeft[1] = round(topLeft[1]);
+	bottomRight[0] = topLeft[0] + width;
+	bottomRight[1] = topLeft[1] + height;
 
+	points[0] = topLeft.x();      points[1] = topLeft.y();
+	points[2] = topLeft.x();      points[3] = bottomRight.y();
+	points[4] = bottomRight.x();  points[5] = topLeft.y();
+
+	points[6] = bottomRight.x();  points[7] = topLeft.y();
+	points[8] = topLeft.x();      points[9] = bottomRight.y();
+	points[10] = bottomRight.x(); points[11] = bottomRight.y();
 
 	texs[0] = 0;		texs[1] = py;
 	texs[2] = 0;		texs[3] = 0;

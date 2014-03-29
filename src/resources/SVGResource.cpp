@@ -85,7 +85,7 @@ void SVGResource::rasterizeAt(size_t width, size_t height)
 Eigen::Vector2i SVGResource::getImageSize() const
 {
 	if(mSVGImage)
-		return Eigen::Vector2i((int)mSVGImage->width, (int)mSVGImage->height);
+		return Eigen::Vector2i((int)round(mSVGImage->width), (int)round(mSVGImage->height));
 
 	return Eigen::Vector2i::Zero();
 }
