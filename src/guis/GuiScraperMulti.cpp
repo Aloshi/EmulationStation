@@ -21,6 +21,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 
 	mTotalGames = mSearchQueue.size();
 	mCurrentGame = 0;
+	mTotalSuccessful = 0;
 
 	// set up grid
 	mTitle = std::make_shared<TextComponent>(mWindow, "SCRAPING IN PROGRESS", Font::get(FONT_SIZE_LARGE), 0x555555FF, TextComponent::ALIGN_CENTER);
@@ -94,6 +95,7 @@ void GuiScraperMulti::acceptResult(const ScraperSearchResult& result)
 
 	mSearchQueue.pop();
 	mCurrentGame++;
+	mTotalSuccessful++;
 	doNextSearch();
 }
 
@@ -106,7 +108,13 @@ void GuiScraperMulti::skip()
 
 void GuiScraperMulti::finish()
 {
-	mWindow->pushGui(new GuiMsgBox(mWindow, "SCRAPING COMPLETE!", 
+	std::stringstream ss;
+	if(mTotalSuccessful == 0)
+		ss << "NO GAMES SUCCESSFULLY SCRAPED.";
+	else
+		ss << mTotalSuccessful << " GAME" << ((mTotalSuccessful > 1) ? "S" : "") << "SUCCESSFULLY SCRAPED!";
+
+	mWindow->pushGui(new GuiMsgBox(mWindow, ss.str(), 
 		"OK", [&] { delete this; }));
 }
 
