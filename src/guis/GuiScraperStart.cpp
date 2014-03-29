@@ -57,9 +57,15 @@ void GuiScraperStart::start()
 {
 	std::queue<ScraperSearchParams> searches = getSearches(mSystems->getSelectedObjects(), mFilters->getSelected());
 
-	GuiScraperMulti* gsm = new GuiScraperMulti(mWindow, searches, mApproveResults->getState());
-	mWindow->pushGui(gsm);
-	delete this;
+	if(searches.empty())
+	{
+		mWindow->pushGui(new GuiMsgBox(mWindow,
+			"NO GAMES FIT THAT CRITERIA."));
+	}else{
+		GuiScraperMulti* gsm = new GuiScraperMulti(mWindow, searches, mApproveResults->getState());
+		mWindow->pushGui(gsm);
+		delete this;
+	}
 }
 
 std::queue<ScraperSearchParams> GuiScraperStart::getSearches(std::vector<SystemData*> systems, GameFilterFunc selector)

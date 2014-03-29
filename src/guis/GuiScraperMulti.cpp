@@ -14,6 +14,8 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)), 
 	mSearchQueue(searches)
 {
+	assert(mSearchQueue.size());
+
 	addChild(&mBackground);
 	addChild(&mGrid);
 
