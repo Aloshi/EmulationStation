@@ -37,17 +37,32 @@ void SystemView::populate()
 			ImageComponent* logo = new ImageComponent(mWindow);
 			logo->setMaxSize(logoSize());
 			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // vertically and horizontally center
+			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // center
 			e.data.logo = std::shared_ptr<GuiComponent>(logo);
+
+			ImageComponent* logoSelected = new ImageComponent(mWindow);
+			logoSelected->setMaxSize(logoSize() * SELECTED_SCALE);
+			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+			logoSelected->setPosition((logoSize().x() - logoSelected->getSize().x()) / 2, 
+				(logoSize().y() - logoSelected->getSize().y()) / 2); // center
+			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
 		}else{
 			// no logo in theme; use text
-			TextComponent* text = new TextComponent(mWindow);
-			text->setFont(Font::get(FONT_SIZE_LARGE));
-			text->setText((*it)->getName());
-			text->setSize(logoSize().x(), 0);
-			text->setPosition(0, (logoSize().y() - text->getSize().y()) / 2); // vertically center
-			text->setAlignment(TextComponent::ALIGN_CENTER);
+			TextComponent* text = new TextComponent(mWindow, 
+				(*it)->getName(), 
+				Font::get(FONT_SIZE_LARGE), 
+				0x000000FF, 
+				TextComponent::ALIGN_CENTER);
+			text->setSize(logoSize());
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
+
+			TextComponent* textSelected = new TextComponent(mWindow, 
+				(*it)->getName(), 
+				Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)), 
+				0x000000FF, 
+				TextComponent::ALIGN_CENTER);
+			textSelected->setSize(logoSize());
+			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
 		}
 
 		// make background extras
@@ -178,25 +193,17 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 
 		logoTrans.translation() = trans.translation() + Eigen::Vector3f(i * logoSizeX + xOff, yOff, 0);
 
-		std::shared_ptr<GuiComponent> comp = mEntries.at(index).data.logo;
-		if(comp)
+		if(index == mCursor) //scale our selection up
 		{
-			if(index == mCursor) //scale our selection up
-			{
-				comp->setOpacity(0xFF);
-
-				// fix the centering because we go by left corner and not center (bleh)
-				// CAN SOMEONE WHO ACTUALLY UNDERSTANDS MATRICES GIVE AN ACTUAL IMPLEMENTATION OF THIS THAT ACTUALLY WORKS?
-				logoTrans.translation() -= Eigen::Vector3f(((comp->getSize().x() + comp->getPosition().x()) * (1/SELECTED_SCALE)) / 2, 
-					((comp->getSize().y() + comp->getPosition().y()) * (1/SELECTED_SCALE)) / 2, 0);
-				
-				logoTrans.scale(Eigen::Vector3f(SELECTED_SCALE, SELECTED_SCALE, 1.0f));
-				mEntries.at(index).data.logo->render(logoTrans);
-				logoTrans.scale(Eigen::Vector3f(1/SELECTED_SCALE, 1/SELECTED_SCALE, 1.0f));
-			}else{
-				comp->setOpacity(0x80);
-				mEntries.at(index).data.logo->render(logoTrans);
-			}
+			// selected
+			const std::shared_ptr<GuiComponent>& comp = mEntries.at(index).data.logoSelected;
+			comp->setOpacity(0xFF);
+			comp->render(logoTrans);
+		}else{
+			// not selected
+			const std::shared_ptr<GuiComponent>& comp = mEntries.at(index).data.logo;
+			comp->setOpacity(0x80);
+			comp->render(logoTrans);
 		}
 	}
 }

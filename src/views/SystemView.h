@@ -12,6 +12,7 @@ class SystemData;
 struct SystemViewData
 {
 	std::shared_ptr<GuiComponent> logo;
+	std::shared_ptr<GuiComponent> logoSelected;
 	std::shared_ptr<ThemeExtras> backgroundExtras;
 };
 
