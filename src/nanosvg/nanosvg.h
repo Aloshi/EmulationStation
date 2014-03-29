@@ -663,6 +663,7 @@ static struct NSVGgradientData* nsvg__findGradientData(struct NSVGparser* p, con
 	while (grad) {
 		if (strcmp(grad->id, id) == 0)
 			return grad;
+		grad = grad->next;
 	}
 	return NULL;
 }
@@ -1311,10 +1312,10 @@ static int nsvg__parseRotate(float* xform, const char* str)
 	}
 	
 	nsvg__xformSetRotation(t, args[0]/180.0f*NSVG_PI);
-	nsvg__xformPremultiply(0, t);
+	nsvg__xformPremultiply(m, t);
 
 	if (na > 1) {
-		nsvg__xformSetTranslation(xform, args[1], args[2]);
+		nsvg__xformSetTranslation(t, args[1], args[2]);
 		nsvg__xformPremultiply(m, t);
 	}
 
@@ -1325,22 +1326,28 @@ static int nsvg__parseRotate(float* xform, const char* str)
 
 static void nsvg__parseTransform(float* xform, const char* str)
 {
+	float t[6];
+	nsvg__xformIdentity(xform);
 	while (*str)
 	{
 		if (strncmp(str, "matrix", 6) == 0)
-			str += nsvg__parseMatrix(xform, str);
+			str += nsvg__parseMatrix(t, str);
 		else if (strncmp(str, "translate", 9) == 0)
-			str += nsvg__parseTranslate(xform, str);
+			str += nsvg__parseTranslate(t, str);
 		else if (strncmp(str, "scale", 5) == 0)
-			str += nsvg__parseScale(xform, str);
+			str += nsvg__parseScale(t, str);
 		else if (strncmp(str, "rotate", 6) == 0)
-			str += nsvg__parseRotate(xform, str);
+			str += nsvg__parseRotate(t, str);
 		else if (strncmp(str, "skewX", 5) == 0)
-			str += nsvg__parseSkewX(xform, str);
+			str += nsvg__parseSkewX(t, str);
 		else if (strncmp(str, "skewY", 5) == 0)
-			str += nsvg__parseSkewY(xform, str);
-		else
+			str += nsvg__parseSkewY(t, str);
+		else{
 			++str;
+			continue;
+		}
+		
+		nsvg__xformPremultiply(xform, t);
 	}
 }
 
