@@ -33,6 +33,8 @@ void Settings::setDefaults()
 	mBoolMap["EnableSounds"] = true;
 	mBoolMap["ShowHelpPrompts"] = true;
 	mBoolMap["ScrapeRatings"] = true;
+	mBoolMap["IgnoreGamelist"] = false;
+	mBoolMap["ParseGamelistOnly"] = false;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
