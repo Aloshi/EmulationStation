@@ -394,6 +394,16 @@ static unsigned int nsvg__lerpRGBA(unsigned int c0, unsigned int c1, float u)
 	return nsvg__RGBA(r,g,b,a);
 }
 
+static unsigned int nsvg__applyOpacity(unsigned int c, float u)
+{
+	int iu = (float)(nsvg__clampf(u, 0.0f, 1.0f) * 256.0f);
+	int r = (c) & 0xff;
+	int g = (c>>8) & 0xff;
+	int b = (c>>16) & 0xff;
+	int a = (((c>>24) & 0xff)*iu) >> 8;
+	return nsvg__RGBA(r,g,b,a);
+}
+
 static void nsvg__scanlineSolid(unsigned char* dst, int count, unsigned char* cover, int x, int y,
 								float tx, float ty, float scale, struct NSVGcachedPaint* cache)
 {
@@ -670,7 +680,7 @@ static void nsvg__unpremultiplyAlpha(unsigned char* image, int w, int h, int str
 }
 
 
-static void nsvg__initPaint(struct NSVGcachedPaint* cache, struct NSVGpaint* paint)
+static void nsvg__initPaint(struct NSVGcachedPaint* cache, struct NSVGpaint* paint, float opacity)
 {
 	int i, j;
 	struct NSVGgradient* grad;
@@ -678,7 +688,7 @@ static void nsvg__initPaint(struct NSVGcachedPaint* cache, struct NSVGpaint* pai
 	cache->type = paint->type;
 
 	if (paint->type == NSVG_PAINT_COLOR) {
-		cache->colors[0] = paint->color;
+		cache->colors[0] = nsvg__applyOpacity(paint->color, opacity);
 		return;
 	}
 
@@ -692,14 +702,13 @@ static void nsvg__initPaint(struct NSVGcachedPaint* cache, struct NSVGpaint* pai
 			cache->colors[i] = 0;
 	} if (grad->nstops == 1) {
 		for (i = 0; i < 256; i++)
-			cache->colors[i] = grad->stops[i].color;
+			cache->colors[i] = nsvg__applyOpacity(grad->stops[i].color, opacity);
 	} else {
 		unsigned int ca, cb;
 		float ua, ub, du, u;
 		int ia, ib, count;
 
-		ca = grad->stops[0].color;
-		cb = grad->stops[grad->nstops-1].color;
+		ca = nsvg__applyOpacity(grad->stops[0].color, opacity);
 		ua = nsvg__clampf(grad->stops[0].offset, 0, 1);
 		ub = nsvg__clampf(grad->stops[grad->nstops-1].offset, ua, 1);
 		ia = ua * 255.0f;
@@ -709,8 +718,8 @@ static void nsvg__initPaint(struct NSVGcachedPaint* cache, struct NSVGpaint* pai
 		}
 
 		for (i = 0; i < grad->nstops-1; i++) {
-			ca = grad->stops[i].color;
-			cb = grad->stops[i+1].color;
+			ca = nsvg__applyOpacity(grad->stops[i].color, opacity);
+			cb = nsvg__applyOpacity(grad->stops[i+1].color, opacity);
 			ua = nsvg__clampf(grad->stops[i].offset, 0, 1);
 			ub = nsvg__clampf(grad->stops[i+1].offset, 0, 1);
 			ia = ua * 255.0f;
@@ -778,7 +787,7 @@ void nsvgRasterize(struct NSVGrasterizer* r,
 		qsort(r->edges, r->nedges, sizeof(struct NSVGedge), nsvg__cmpEdge);
 
 		// now, traverse the scanlines and find the intersections on each scanline, use non-zero rule
-		nsvg__initPaint(&cache, &shape->fill);
+		nsvg__initPaint(&cache, &shape->fill, shape->opacity);
 	
 		nsvg__rasterizeSortedEdges(r, tx,ty,scale, &cache);
 	}

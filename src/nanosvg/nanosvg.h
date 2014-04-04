@@ -112,6 +112,7 @@ struct NSVGshape
 {
 	struct NSVGpaint fill;		// Fill paint
 	struct NSVGpaint stroke;	// Stroke paint
+	float opacity;				// Opacity of the shape.
 	float strokeWidth;			// Stroke width (scaled)
 	float bounds[4];			// Tight bounding box of the shape [minx,miny,maxx,maxy].
 	struct NSVGpath* paths;		// Linked list of paths in the image.
@@ -155,6 +156,8 @@ void nsvgDelete(struct NSVGimage* image);
 #define NSVG_ALIGN_NONE 0
 #define NSVG_ALIGN_MEET 1
 #define NSVG_ALIGN_SLICE 2
+
+#define NSVG_RGB(r, g, b) (((unsigned int)r) | ((unsigned int)g << 8) | ((unsigned int)b << 16))
 
 #ifdef _MSC_VER
 	#pragma warning (disable: 4996) // Switch off security warnings
@@ -335,6 +338,7 @@ struct NSVGattrib
 	float xform[6];
 	unsigned int fillColor;
 	unsigned int strokeColor;
+	float opacity;
 	float fillOpacity;
 	float strokeOpacity;
 	char fillGradient[64];
@@ -536,13 +540,14 @@ static struct NSVGparser* nsvg__createParser()
 
 	// Init style
 	nsvg__xformIdentity(p->attr[0].xform);
-	p->attr[0].fillColor = 0;
-	p->attr[0].strokeColor = 0;
+	p->attr[0].fillColor = NSVG_RGB(0,0,0);
+	p->attr[0].strokeColor = NSVG_RGB(0,0,0);
+	p->attr[0].opacity = 1;
 	p->attr[0].fillOpacity = 1;
 	p->attr[0].strokeOpacity = 1;
 	p->attr[0].stopOpacity = 1;
 	p->attr[0].strokeWidth = 1;
-	p->attr[0].hasFill = 0;
+	p->attr[0].hasFill = 1;
 	p->attr[0].hasStroke = 0;
 	p->attr[0].visible = 1;
 
@@ -743,6 +748,7 @@ static void nsvg__addShape(struct NSVGparser* p)
 
 	scale = nsvg__maxf(fabsf(attr->xform[0]), fabsf(attr->xform[3]));
 	shape->strokeWidth = attr->strokeWidth * scale;
+	shape->opacity = attr->opacity;
 
 	shape->paths = p->plist;
 	p->plist = NULL;
@@ -928,8 +934,6 @@ static float nsvg__actualLength(struct NSVGparser* p)
 	return sqrtf(w*w + h*h) / sqrtf(2.0f);	
 }
 
-
-#define NSVG_RGB(r, g, b) (((unsigned int)r) | ((unsigned int)g << 8) | ((unsigned int)b << 16))
 
 static unsigned int nsvg__parseColorHex(const char* str)
 {
@@ -1389,6 +1393,8 @@ static int nsvg__parseAttr(struct NSVGparser* p, const char* name, const char* v
 			attr->hasFill = 1;
 			attr->fillColor = nsvg__parseColor(value);
 		}
+	} else if (strcmp(name, "opacity") == 0) {
+		attr->opacity = nsvg__parseFloat(p, value, 2);
 	} else if (strcmp(name, "fill-opacity") == 0) {
 		attr->fillOpacity = nsvg__parseFloat(p, value, 2);
 	} else if (strcmp(name, "stroke") == 0) {
