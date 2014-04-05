@@ -88,7 +88,7 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 
 	for(unsigned int i = 0; i < labels.size(); i++)
 	{
-		labels[i]->applyTheme(theme, getName(), lblElements[i], ALL ^ ThemeFlags::TEXT);
+		labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
 	}
 
 

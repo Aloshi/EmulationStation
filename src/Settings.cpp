@@ -38,6 +38,7 @@ void Settings::setDefaults()
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
+	mBoolMap["DebugText"] = false;
 
 	mIntMap["DimTime"] = 120*1000;
 	mIntMap["ScraperResizeWidth"] = 400;

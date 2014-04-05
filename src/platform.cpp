@@ -1,6 +1,7 @@
 #include "platform.h"
 #include <stdlib.h>
 #include <boost/filesystem.hpp>
+#include <iostream>
 
 std::string sHomePathOverride;
 
@@ -8,6 +9,8 @@ void setHomePathOverride(const std::string& path)
 {
 	// make it use generic directory separators
 	sHomePathOverride = boost::filesystem::path(path).generic_string();
+
+	std::cout << "Using home path: " << sHomePathOverride;
 }
 
 std::string getHomePath()

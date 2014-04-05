@@ -4,6 +4,7 @@
 #include "../Window.h"
 #include "../ThemeData.h"
 #include "../Util.h"
+#include "../Settings.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
 	mFont(Font::get(FONT_SIZE_MEDIUM)), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT)
@@ -91,9 +92,21 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 			break;
 		}
 
+		if(Settings::getInstance()->getBool("DebugText"))
+		{
+			// draw the "textbox" area, what we are aligned within
+			Renderer::setMatrix(trans);
+			Renderer::drawRect(0.f, 0.f, mSize.x(), mSize.y(), 0xFF000033);
+		}
+		
 		trans.translate(off);
 		trans = roundMatrix(trans);
 		Renderer::setMatrix(trans);
+
+		// draw the text area, where the text actually is going
+		if(Settings::getInstance()->getBool("DebugText"))
+			Renderer::drawRect(0.0f, 0.0f, mTextCache->metrics.size.x(), mTextCache->metrics.size.y(), 0x00000033);
+
 		mFont->renderTextCache(mTextCache.get());
 	}
 
@@ -179,7 +192,7 @@ void TextComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const st
 			setAlignment(ALIGN_LEFT);
 		else if(str == "center")
 			setAlignment(ALIGN_CENTER);
-		else if(str == "ALIGN_RIGHT")
+		else if(str == "right")
 			setAlignment(ALIGN_RIGHT);
 		else
 			LOG(LogError) << "Unknown text alignment string: " << str;
