@@ -2,7 +2,7 @@
 #include "../../Window.h"
 #include "../../guis/GuiMetaDataEd.h"
 #include "../../guis/GuiMenu.h"
-#include "../../guis/GuiFastSelect.h"
+#include "../../guis/GuiGamelistOptions.h"
 #include "../ViewController.h"
 #include "../../Settings.h"
 #include "../../Log.h"
@@ -13,19 +13,13 @@ bool IGameListView::input(InputConfig* config, Input input)
 	// F3 to open metadata editor
 	if(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_F3 && input.value != 0)
 	{
-		// open metadata editor
-		FileData* file = getCursor();
-		ScraperSearchParams p;
-		p.game = file;
-		p.system = file->getSystem();
-		mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(), 
-			std::bind(&IGameListView::onFileChanged, this, file, FILE_METADATA_CHANGED), [file, this] { 
-				boost::filesystem::remove(file->getPath()); //actually delete the file on the filesystem
-				file->getParent()->removeChild(file); //unlink it so list repopulations triggered from onFileChanged won't see it
-				onFileChanged(file, FILE_REMOVED); //tell the view
-				delete file; //free it
-		}));
+		
+
+	// select to open GuiGamelistOptions
+	}else if(config->isMappedTo("select", input) && input.value)
+	{
 		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
+		mWindow->pushGui(new GuiGamelistOptions(mWindow, this));
 		return true;
 
 	// Ctrl-R to reload a view when debugging
@@ -34,13 +28,6 @@ bool IGameListView::input(InputConfig* config, Input input)
 	{
 		LOG(LogDebug) << "reloading view";
 		mWindow->getViewController()->reloadGameListView(this, true);
-		return true;
-	// select opens the fast select GUI
-	}else if(config->isMappedTo("select", input) && input.value != 0)
-	{
-		// open fast select
-		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
-		mWindow->pushGui(new GuiFastSelect(mWindow, this));
 		return true;
 	}
 

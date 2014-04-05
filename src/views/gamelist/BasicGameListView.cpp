@@ -68,9 +68,10 @@ void BasicGameListView::launch(FileData* game)
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("left/right", "switch"));
+	prompts.push_back(HelpPrompt("left/right", "system"));
 	prompts.push_back(HelpPrompt("up/down", "choose"));
-	prompts.push_back(HelpPrompt("a", "play"));
+	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("select", "options"));
 	return prompts;
 }
