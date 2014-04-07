@@ -9,7 +9,7 @@ RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 	mFilledTexture = TextureResource::get(":/star_filled.svg", true);
 	mUnfilledTexture = TextureResource::get(":/star_unfilled.svg", true);
 	mValue = 0.5f;
-	mSize << 64 * 5.0f, 64;
+	mSize << 64 * NUM_RATING_STARS, 64;
 	updateVertices();
 }
 
@@ -18,14 +18,14 @@ void RatingComponent::setValue(const std::string& value)
 	if(value.empty())
 	{
 		mValue = 0.0f;
-		return;
+	}else{
+		mValue = stof(value);
+		if(mValue > 1.0f)
+			mValue = 1.0f;
+		else if(mValue < 0.0f)
+			mValue = 0.0f;
 	}
 
-	mValue = stof(value);
-	if(mValue > 1.0f)
-		mValue = 1.0f;
-	else if(mValue < 0.0f)
-		mValue = 0.0f;
 	updateVertices();
 }
 
@@ -37,20 +37,20 @@ std::string RatingComponent::getValue() const
 void RatingComponent::onSizeChanged()
 {
 	if(mSize.y() == 0)
-		mSize[1] = mSize.x() / 5.0f;
+		mSize[1] = mSize.x() / NUM_RATING_STARS;
 	else if(mSize.x() == 0)
-		mSize[0] = mSize.y() * 5.0f;
+		mSize[0] = mSize.y() * NUM_RATING_STARS;
 
 	auto filledSVG = dynamic_cast<SVGResource*>(mFilledTexture.get());
 	auto unfilledSVG = dynamic_cast<SVGResource*>(mUnfilledTexture.get());
 
 	if(mSize.y() > 0)
 	{
-		size_t sz = (size_t)round(mSize.y());
+		size_t heightPx = (size_t)round(mSize.y());
 		if(filledSVG)
-			filledSVG->rasterizeAt(sz, sz);
+			filledSVG->rasterizeAt(heightPx, heightPx);
 		if(unfilledSVG)
-			unfilledSVG->rasterizeAt(sz, sz);
+			unfilledSVG->rasterizeAt(heightPx, heightPx);
 	}
 
 	updateVertices();
@@ -58,9 +58,9 @@ void RatingComponent::onSizeChanged()
 
 void RatingComponent::updateVertices()
 {
-	const float numStars = 5.0f;
+	const float numStars = NUM_RATING_STARS;
 
-	const float h = getSize().y();
+	const float h = getSize().y(); // is the same as a single star's width
 	const float w = h * mValue * numStars;
 	const float fw = h * numStars;
 
@@ -128,7 +128,7 @@ bool RatingComponent::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
-		mValue += 0.2f;
+		mValue += 1.f / NUM_RATING_STARS;
 		if(mValue > 1.0f)
 			mValue = 0.0f;
 

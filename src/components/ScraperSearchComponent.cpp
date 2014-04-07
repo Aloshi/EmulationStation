@@ -246,7 +246,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 
 void ScraperSearchComponent::onSearchError(const std::string& error)
 {
-	mWindow->pushGui(new GuiMsgBox(mWindow, error,
+	mWindow->pushGui(new GuiMsgBox(mWindow, strToUpper(error),
 		"RETRY", std::bind(&ScraperSearchComponent::search, this, mLastSearch),
 		"SKIP", mSkipCallback,
 		"CANCEL", mCancelCallback));

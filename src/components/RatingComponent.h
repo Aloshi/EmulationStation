@@ -3,6 +3,8 @@
 #include "../GuiComponent.h"
 #include "../resources/TextureResource.h"
 
+#define NUM_RATING_STARS 5
+
 // Used to visually display/edit some sort of "score" - e.g. 5/10, 3/5, etc.
 // setSize(x, y) works a little differently than you might expect:
 //   * (0, y != 0) - x will be automatically calculated (5*y).
@@ -36,7 +38,7 @@ private:
 		Eigen::Vector2f tex;
 	} mVertices[12];
 
-	std::shared_ptr<TextureResource> mFilledTexture; // Must be square (width == height)!
-	std::shared_ptr<TextureResource> mUnfilledTexture; // Must be square (width == height)!
+	std::shared_ptr<TextureResource> mFilledTexture;
+	std::shared_ptr<TextureResource> mUnfilledTexture;
 };
 
