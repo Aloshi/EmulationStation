@@ -52,7 +52,8 @@ private:
 	int mFrameTimeElapsed;
 	int mFrameCountElapsed;
 	int mAverageDeltaTime;
-	std::string mFrameDataString;
+
+	std::unique_ptr<TextCache> mFrameDataText;
 
 	bool mNormalizeNextUpdate;
 

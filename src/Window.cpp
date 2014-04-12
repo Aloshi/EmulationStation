@@ -156,7 +156,7 @@ void Window::update(int deltaTime)
 			float vramUsageMb = (TextureResource::getTotalMemUsage() + Font::getTotalMemUsage()) / 1000.0f / 1000.0f;
 			ss << "\nVRAM: " << vramUsageMb << "mb";
 
-			mFrameDataString = ss.str();
+			mFrameDataText = std::unique_ptr<TextCache>(mDefaultFonts.at(1)->buildTextCache(ss.str(), 50.f, 50.f, 0xFF00FFFF));
 		}
 
 		mFrameTimeElapsed = 0;
@@ -200,7 +200,7 @@ void Window::render()
 	if(Settings::getInstance()->getBool("DrawFramerate"))
 	{
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
-		mDefaultFonts.at(1)->drawText(mFrameDataString, Eigen::Vector2f(50, 50), 0xFF00FFFF);
+		mDefaultFonts.at(1)->renderTextCache(mFrameDataText.get());
 	}
 }
 
