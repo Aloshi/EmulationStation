@@ -197,7 +197,7 @@ void Window::render()
 
 	mHelp->render(transform);
 
-	if(Settings::getInstance()->getBool("DrawFramerate"))
+	if(Settings::getInstance()->getBool("DrawFramerate") && mFrameDataText)
 	{
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
 		mDefaultFonts.at(1)->renderTextCache(mFrameDataText.get());
@@ -254,16 +254,18 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts)
 		};
 		
 		int i = 0;
+		int aVal = 0;
+		int bVal = 0;
 		while(map[i] != NULL)
 		{
 			if(a.first == map[i])
-				return true;
-			else if(b.first == map[i])
-				return false;
+				aVal = i;
+			if(b.first == map[i])
+				bVal = i;
 			i++;
 		}
 
-		return true;
+		return aVal > bVal;
 	});
 
 	mHelp->setPrompts(addPrompts);

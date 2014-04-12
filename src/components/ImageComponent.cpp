@@ -25,6 +25,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
 	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
 {
+	updateColors();
 }
 
 ImageComponent::~ImageComponent()
@@ -80,6 +81,13 @@ void ImageComponent::resize()
 	{
 		svg->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
 	}
+
+	onSizeChanged();
+}
+
+void ImageComponent::onSizeChanged()
+{
+	updateVertices();
 }
 
 void ImageComponent::setImage(std::string path, bool tile)
@@ -111,6 +119,7 @@ void ImageComponent::setImage(const std::shared_ptr<TextureResource>& texture)
 void ImageComponent::setOrigin(float originX, float originY)
 {
 	mOrigin << originX, originY;
+	updateVertices();
 }
 
 void ImageComponent::setResize(float width, float height)
@@ -130,54 +139,33 @@ void ImageComponent::setMaxSize(float width, float height)
 void ImageComponent::setFlipX(bool flip)
 {
 	mFlipX = flip;
+	updateVertices();
 }
 
 void ImageComponent::setFlipY(bool flip)
 {
 	mFlipY = flip;
+	updateVertices();
 }
 
 void ImageComponent::setColorShift(unsigned int color)
 {
 	mColorShift = color;
+	updateColors();
 }
 
-void ImageComponent::render(const Eigen::Affine3f& parentTrans)
+void ImageComponent::setOpacity(unsigned char opacity)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
-	Renderer::setMatrix(trans);
-	
-	if(mTexture && getOpacity() > 0)
-	{
-		if(mTexture->isInitialized())
-		{
-			GLfloat points[12], texs[12];
-			GLubyte colors[6*4];
-
-			if(mTexture->isTiled())
-			{
-				float xCount = mSize.x() / getTextureSize().x();
-				float yCount = mSize.y() / getTextureSize().y();
-			
-				Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8)| (getOpacity()), 6);
-				buildImageArray(points, texs, xCount, yCount);
-			}else{
-				Renderer::buildGLColorArray(colors, (mColorShift >> 8 << 8) | (getOpacity()), 6);
-				buildImageArray(points, texs);
-			}
-
-			drawImageArray(points, texs, colors, 6);
-		}else{
-			LOG(LogError) << "Image texture is not initialized!";
-			mTexture.reset();
-		}
-	}
-
-	GuiComponent::renderChildren(trans);
+	mOpacity = opacity;
+	mColorShift = (mColorShift >> 8 << 8) | mOpacity;
+	updateColors();
 }
 
-void ImageComponent::buildImageArray(GLfloat* points, GLfloat* texs, float px, float py)
+void ImageComponent::updateVertices()
 {
+	if(!mTexture || !mTexture->isInitialized())
+		return;
+
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
 	Eigen::Vector2f topLeft(-mSize.x() * mOrigin.x(), -mSize.y() * mOrigin.y());
@@ -191,70 +179,88 @@ void ImageComponent::buildImageArray(GLfloat* points, GLfloat* texs, float px, f
 	bottomRight[0] = topLeft[0] + width;
 	bottomRight[1] = topLeft[1] + height;
 
-	points[0] = topLeft.x();      points[1] = topLeft.y();
-	points[2] = topLeft.x();      points[3] = bottomRight.y();
-	points[4] = bottomRight.x();  points[5] = topLeft.y();
+	mVertices[0].pos << topLeft.x(), topLeft.y();
+	mVertices[1].pos << topLeft.x(), bottomRight.y();
+	mVertices[2].pos << bottomRight.x(), topLeft.y();
 
-	points[6] = bottomRight.x();  points[7] = topLeft.y();
-	points[8] = topLeft.x();      points[9] = bottomRight.y();
-	points[10] = bottomRight.x(); points[11] = bottomRight.y();
+	mVertices[3].pos << bottomRight.x(), topLeft.y();
+	mVertices[4].pos << topLeft.x(), bottomRight.y();
+	mVertices[5].pos << bottomRight.x(), bottomRight.y();
 
-	texs[0] = 0;		texs[1] = py;
-	texs[2] = 0;		texs[3] = 0;
-	texs[4] = px;		texs[5] = py;
+	float px, py;
+	if(mTexture->isTiled())
+	{
+		px = mSize.x() / getTextureSize().x();
+		py = mSize.y() / getTextureSize().y();
+	}else{
+		px = 1;
+		py = 1;
+	}
 
-	texs[6] = px;		texs[7] = py;
-	texs[8] = 0;		texs[9] = 0;
-	texs[10] = px;		texs[11] = 0;
+	mVertices[0].tex << 0, py;
+	mVertices[1].tex << 0, 0;
+	mVertices[2].tex << px, py;
+
+	mVertices[3].tex << px, py;
+	mVertices[4].tex << 0, 0;
+	mVertices[5].tex << px, 0;
 
 	if(mFlipX)
 	{
-		for(int i = 0; i < 11; i += 2)
-			if(texs[i] == px)
-				texs[i] = 0;
-			else
-				texs[i] = px;
+		for(int i = 0; i < 6; i++)
+			mVertices[i].tex[0] = mVertices[i].tex[0] == px ? 0 : px;
 	}
 	if(mFlipY)
 	{
-		for(int i = 1; i < 12; i += 2)
-			if(texs[i] == py)
-				texs[i] = 0;
-			else
-				texs[i] = py;
+		for(int i = 1; i < 6; i++)
+			mVertices[i].tex[1] = mVertices[i].tex[1] == py ? 0 : py;
 	}
 }
 
-void ImageComponent::drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int numArrays)
+void ImageComponent::updateColors()
 {
-	mTexture->bind();
+	Renderer::buildGLColorArray(mColors, (mColorShift >> 8 << 8)| (getOpacity()), 6);
+}
 
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	if(colors != NULL)
+void ImageComponent::render(const Eigen::Affine3f& parentTrans)
+{
+	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Renderer::setMatrix(trans);
+	
+	if(mTexture && mOpacity > 0)
 	{
-		glEnableClientState(GL_COLOR_ARRAY);
-		glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+		if(mTexture->isInitialized())
+		{
+			// actually draw the image
+			mTexture->bind();
+
+			glEnable(GL_TEXTURE_2D);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glEnableClientState(GL_VERTEX_ARRAY);
+			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+			glEnableClientState(GL_COLOR_ARRAY);
+
+			glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
+			glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
+			glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
+
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+
+			glDisableClientState(GL_VERTEX_ARRAY);
+			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+			glDisableClientState(GL_COLOR_ARRAY);
+
+			glDisable(GL_TEXTURE_2D);
+			glDisable(GL_BLEND);
+		}else{
+			LOG(LogError) << "Image texture is not initialized!";
+			mTexture.reset();
+		}
 	}
 
-	glVertexPointer(2, GL_FLOAT, 0, points);
-	glTexCoordPointer(2, GL_FLOAT, 0, texs);
-
-	glDrawArrays(GL_TRIANGLES, 0, numArrays);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	if(colors != NULL)
-		glDisableClientState(GL_COLOR_ARRAY);
-
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
+	GuiComponent::renderChildren(trans);
 }
 
 bool ImageComponent::hasImage()

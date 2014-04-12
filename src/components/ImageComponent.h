@@ -22,6 +22,9 @@ public:
 	//Use an already existing texture.
 	void setImage(const std::shared_ptr<TextureResource>& texture);
 
+	void onSizeChanged() override;
+	void setOpacity(unsigned char opacity) override;
+
 	//Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setOrigin(float originX, float originY);
 	inline void setOrigin(Eigen::Vector2f origin) { setOrigin(origin.x(), origin.y()); }
@@ -67,10 +70,16 @@ private:
 	// Used internally whenever the resizing parameters or texture change.
 	void resize();
 
-	// Writes 12 GLfloat points and 12 GLfloat texture coordinates to a given array at a given position.
-	void buildImageArray(GLfloat* points, GLfloat* texs, float percentageX = 1, float percentageY = 1);
-	// Draws the given set of points and texture coordinates, number of coordinate pairs may be specified.
-	void drawImageArray(GLfloat* points, GLfloat* texs, GLubyte* colors, unsigned int count = 6);
+	struct Vertex
+	{
+		Eigen::Vector2f pos;
+		Eigen::Vector2f tex;
+	} mVertices[6];
+
+	GLubyte mColors[6*4];
+
+	void updateVertices();
+	void updateColors();
 
 	unsigned int mColorShift;
 
