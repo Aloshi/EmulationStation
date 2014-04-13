@@ -194,8 +194,6 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 		{
 			if(mWindow->peekGui() != NULL)
 				mWindow->peekGui()->textInput("\b");
-
-			return true;
 		}
 
 		if(ev.key.repeat)

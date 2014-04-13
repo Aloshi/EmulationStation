@@ -87,6 +87,7 @@ public:
 
 	void clear();
 	void mapInput(const std::string& name, Input input);
+	void unmapInput(const std::string& name); // unmap all Inputs mapped to this name
 
 	inline int getDeviceId() const { return mDeviceId; };
 	inline const std::string& getDeviceName() { return mDeviceName; }

@@ -68,6 +68,13 @@ void InputConfig::mapInput(const std::string& name, Input input)
 	mNameMap[toLower(name)] = input;
 }
 
+void InputConfig::unmapInput(const std::string& name)
+{
+	auto it = mNameMap.find(toLower(name));
+	if(it != mNameMap.end())
+		mNameMap.erase(it);
+}
+
 Input InputConfig::getInputByName(const std::string& name)
 {
 	return mNameMap[toLower(name)];
