@@ -92,6 +92,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 			{
 				if(config->isMappedTo("a", input) && input.value)
 				{
+					mList->stopScrolling();
 					mConfiguringRow = true;
 					setPress(mapping);
 					return true;
@@ -123,7 +124,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 				mHoldingInput = false;
 
-				if(assign(input, i))
+				if(assign(mHeldInput, i))
 					rowDone(); // if successful, move cursor/stop configuring - if not, we'll just try again
 
 				return true;

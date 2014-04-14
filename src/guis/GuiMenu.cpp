@@ -1,3 +1,4 @@
+#include "../EmulationStation.h"
 #include "GuiMenu.h"
 #include "../Window.h"
 #include "../Sound.h"
@@ -18,14 +19,17 @@
 #include "../scrapers/GamesDBScraper.h"
 #include "../scrapers/TheArchiveScraper.h"
 
-GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU")
+GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
-	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	// MAIN MENU
 
 	// SCRAPER >
 	// SOUND SETTINGS >
 	// UI SETTINGS >
+	// CONFIGURE INPUT >
 	// QUIT >
+
+	// [version]
 	
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 	addEntry("SCRAPER", 0x777777FF, true, 
@@ -170,8 +174,22 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(s);
 	});
 
+	mVersion.setFont(Font::get(FONT_SIZE_SMALL));
+	mVersion.setColor(0xC6C6C6FF);
+	mVersion.setText("EMULATIONSTATION V" PROGRAM_VERSION_STRING);
+	mVersion.setAlignment(TextComponent::ALIGN_CENTER);
+
 	addChild(&mMenu);
-	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
+	addChild(&mVersion);
+
+	setSize(mMenu.getSize());
+	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.15f);
+}
+
+void GuiMenu::onSizeChanged()
+{
+	mVersion.setSize(mSize.x(), 0);
+	mVersion.setPosition(0, mSize.y() - mVersion.getSize().y());
 }
 
 void GuiMenu::addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func)

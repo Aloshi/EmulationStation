@@ -27,12 +27,12 @@ BEGIN
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "emulationstation.exe\0"
             VALUE "ProductName", "EmulationStation\0"
-            VALUE "ProductVersion", RESOURCE_VERSION_STRING
+            VALUE "ProductVersion", PROGRAM_VERSION_STRING
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x407, 1200
+        VALUE "Translation", 0x409, 1252
     END
 END
 

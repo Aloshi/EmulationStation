@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
 
 	//start the logger
 	Log::open();
-	LOG(LogInfo) << "EmulationStation - " << PROGRAM_VERSION_STRING;
+	LOG(LogInfo) << "EmulationStation - v" << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING;
 
 	//always close the log on exit
 	atexit(&onExit);
