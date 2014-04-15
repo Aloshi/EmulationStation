@@ -16,11 +16,7 @@ GuiComponent::~GuiComponent()
 {
 	mWindow->removeGui(this);
 
-	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
-	{
-		if(mAnimationMap[i])
-			delete mAnimationMap[i];
-	}
+	cancelAllAnimations();
 
 	if(mParent)
 		mParent->removeChild(this);
@@ -225,6 +221,29 @@ void GuiComponent::stopAnimation(unsigned char slot)
 		delete mAnimationMap[slot];
 		mAnimationMap[slot] = NULL;
 	}
+}
+
+void GuiComponent::cancelAnimation(unsigned char slot)
+{
+	assert(slot < MAX_ANIMATIONS);
+	if(mAnimationMap[slot])
+	{
+		mAnimationMap[slot]->removeFinishedCallback();
+		delete mAnimationMap[slot];
+		mAnimationMap[slot] = NULL;
+	}
+}
+
+void GuiComponent::stopAllAnimations()
+{
+	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
+		stopAnimation(i);
+}
+
+void GuiComponent::cancelAllAnimations()
+{
+	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
+		cancelAnimation(i);
 }
 
 bool GuiComponent::isAnimationPlaying(unsigned char slot) const

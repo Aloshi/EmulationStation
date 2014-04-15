@@ -7,7 +7,6 @@
 class AnimationController
 {
 public:
-	// FinishedCallback is guaranteed to be called exactly once, even if the animation does not finish normally.
 	// Takes ownership of anim (will delete in destructor).
 	AnimationController(Animation* anim, std::function<void()> finishedCallback = nullptr, bool reverse = false);
 	virtual ~AnimationController();
@@ -17,6 +16,9 @@ public:
 
 	inline bool isReversed() const { return mReverse; }
 	inline int getTime() const { return mTime; }
+	inline const std::function<void()>& getFinishedCallback() const { return mFinishedCallback; }
+
+	inline void removeFinishedCallback() { mFinishedCallback = nullptr; }
 
 private:
 	Animation* mAnimation;

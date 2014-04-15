@@ -60,6 +60,9 @@ public:
 	int getAnimationTime(unsigned char slot) const;
 	void setAnimation(Animation* animation, std::function<void()> finishedCallback = nullptr, bool reverse = false, unsigned char slot = 0);
 	void stopAnimation(unsigned char slot);
+	void cancelAnimation(unsigned char slot); // like stopAnimation, but doesn't call finishedCallback - only removes the animation, leaving things in their current state
+	void stopAllAnimations();
+	void cancelAllAnimations();
 
 	virtual unsigned char getOpacity() const;
 	virtual void setOpacity(unsigned char opacity);
