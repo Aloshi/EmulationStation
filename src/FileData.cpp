@@ -1,11 +1,36 @@
 #include "FileData.h"
-#include <boost/regex/v4/regex.hpp>
 
 namespace fs = boost::filesystem;
 
 std::string getCleanFileName(const fs::path& path)
 {
-	return regex_replace(path.stem().generic_string(), boost::regex("\\((.*)\\)|\\[(.*)\\]"), "");
+	// remove anything in parenthesis or brackets
+	// should be roughly equivalent to the regex replace "\((.*)\)|\[(.*)\]" with ""
+	// I would love to just use regex, but it's not worth pulling in another boost lib for one function that is used once
+
+	std::string ret = path.stem().generic_string();
+	size_t start, end;
+
+	static const int NUM_TO_REPLACE = 2;
+	static const char toReplace[NUM_TO_REPLACE*2] = { '(', ')', '[', ']' };
+
+	bool done = false;
+	while(!done)
+	{
+		done = true;
+		for(int i = 0; i < NUM_TO_REPLACE; i++)
+		{
+			start = ret.find(toReplace[i*2]);
+			end = ret.find(toReplace[i*2+1], start != std::string::npos ? start + 1 : 0);
+			if(start != std::string::npos && end != std::string::npos)
+			{
+				ret.replace(start, end, "");
+				done = false;
+			}
+		}
+	}
+
+	return ret;
 }
 
 

@@ -1,6 +1,5 @@
 #include <iostream>
 #include "HttpReq.h"
-#include <boost/bind.hpp>
 #include "Log.h"
 #include <boost/filesystem.hpp>
 
