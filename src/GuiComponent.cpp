@@ -202,28 +202,31 @@ void GuiComponent::textInput(const char* text)
 	}
 }
 
-void GuiComponent::setAnimation(Animation* anim, std::function<void()> finishedCallback, bool reverse, unsigned char slot)
+void GuiComponent::setAnimation(Animation* anim, int delay, std::function<void()> finishedCallback, bool reverse, unsigned char slot)
 {
 	assert(slot < MAX_ANIMATIONS);
 
 	AnimationController* oldAnim = mAnimationMap[slot];
-	mAnimationMap[slot] = new AnimationController(anim, finishedCallback, reverse);
+	mAnimationMap[slot] = new AnimationController(anim, delay, finishedCallback, reverse);
 
 	if(oldAnim)
 		delete oldAnim;
 }
 
-void GuiComponent::stopAnimation(unsigned char slot)
+bool GuiComponent::stopAnimation(unsigned char slot)
 {
 	assert(slot < MAX_ANIMATIONS);
 	if(mAnimationMap[slot])
 	{
 		delete mAnimationMap[slot];
 		mAnimationMap[slot] = NULL;
+		return true;
+	}else{
+		return false;
 	}
 }
 
-void GuiComponent::cancelAnimation(unsigned char slot)
+bool GuiComponent::cancelAnimation(unsigned char slot)
 {
 	assert(slot < MAX_ANIMATIONS);
 	if(mAnimationMap[slot])
@@ -231,6 +234,26 @@ void GuiComponent::cancelAnimation(unsigned char slot)
 		mAnimationMap[slot]->removeFinishedCallback();
 		delete mAnimationMap[slot];
 		mAnimationMap[slot] = NULL;
+		return true;
+	}else{
+		return false;
+	}
+}
+
+bool GuiComponent::finishAnimation(unsigned char slot)
+{
+	assert(slot < MAX_ANIMATIONS);
+	if(mAnimationMap[slot])
+	{
+		// skip to animation's end
+		const bool done = mAnimationMap[slot]->update(mAnimationMap[slot]->getAnimation()->getDuration() - mAnimationMap[slot]->getTime());
+		assert(done);
+
+		delete mAnimationMap[slot]; // will also call finishedCallback
+		mAnimationMap[slot] = NULL;
+		return true;
+	}else{
+		return false;
 	}
 }
 

@@ -58,9 +58,10 @@ public:
 	bool isAnimationPlaying(unsigned char slot) const;
 	bool isAnimationReversed(unsigned char slot) const;
 	int getAnimationTime(unsigned char slot) const;
-	void setAnimation(Animation* animation, std::function<void()> finishedCallback = nullptr, bool reverse = false, unsigned char slot = 0);
-	void stopAnimation(unsigned char slot);
-	void cancelAnimation(unsigned char slot); // like stopAnimation, but doesn't call finishedCallback - only removes the animation, leaving things in their current state
+	void setAnimation(Animation* animation, int delay = 0, std::function<void()> finishedCallback = nullptr, bool reverse = false, unsigned char slot = 0);
+	bool stopAnimation(unsigned char slot);
+	bool cancelAnimation(unsigned char slot); // like stopAnimation, but doesn't call finishedCallback - only removes the animation, leaving things in their current state
+	bool finishAnimation(unsigned char slot); // calls update(1.f) and finishedCallback, then deletes the animation - basically skips to the end
 	void stopAllAnimations();
 	void cancelAllAnimations();
 

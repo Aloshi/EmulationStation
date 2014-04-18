@@ -1,7 +1,7 @@
 #include "AnimationController.h"
 
-AnimationController::AnimationController(Animation* anim, std::function<void()> finishedCallback, bool reverse)
-	: mAnimation(anim), mFinishedCallback(finishedCallback), mReverse(reverse), mTime(0)
+AnimationController::AnimationController(Animation* anim, int delay, std::function<void()> finishedCallback, bool reverse)
+	: mAnimation(anim), mFinishedCallback(finishedCallback), mReverse(reverse), mTime(-delay), mDelay(delay)
 {
 }
 
@@ -16,6 +16,10 @@ AnimationController::~AnimationController()
 bool AnimationController::update(int deltaTime)
 {
 	mTime += deltaTime;
+
+	if(mTime < 0) // are we still in delay?
+		return false;
+
 	float t = (float)mTime / mAnimation->getDuration();
 
 	if(t > 1.0f)

@@ -224,7 +224,7 @@ void DetailedGameListView::updateInfoPanel()
 			{
 				comp->setOpacity((unsigned char)(lerp<float>(0.0f, 1.0f, t)*255));
 			};
-			comp->setAnimation(new LambdaAnimation(func, 150), nullptr, fadingOut);
+			comp->setAnimation(new LambdaAnimation(func, 150), 0, nullptr, fadingOut);
 		}
 	}
 }
