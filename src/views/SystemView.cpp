@@ -6,15 +6,23 @@
 #include "ViewController.h"
 #include "../animations/LambdaAnimation.h"
 #include "../SystemData.h"
+#include "../Util.h"
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
 
-SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP)
+SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
+	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x77777700, TextComponent::ALIGN_CENTER)
 {
 	mCamOffset = 0;
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+	mSystemInfo.setSize(mSize.x(), 0);
+
+	float yOff = (mSize.y() - logoSize().y())/2;
+	mSystemInfo.setPosition(0, (yOff - (logoSize().y() * (SELECTED_SCALE - 1)) / 2) + (logoSize().y() * SELECTED_SCALE) - mSystemInfo.getSize().y());
+		//(mSize.y() - mSystemInfo.getSize().y()) / 2);
 
 	populate();
 }
@@ -141,8 +149,41 @@ void SystemView::onCursorChanged(const CursorState& state)
 			f -= posMax;
 		this->mCamOffset = f;
 	}, 500);
+	setAnimation(anim, 0, nullptr, false, 0);
 
-	setAnimation(anim);
+	// animate mSystemInfo's opacity (fade out, wait, fade back in)
+
+	cancelAnimation(1);
+	cancelAnimation(2);
+
+	const float infoStartOpacity = mSystemInfo.getOpacity() / 255.f;
+
+	Animation* infoFadeOut = new LambdaAnimation(
+		[infoStartOpacity, this] (float t)
+	{
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
+	}, (int)(infoStartOpacity * 300));
+
+	// also change the text after we've fully faded out
+	setAnimation(infoFadeOut, 0, [this] { 
+		std::stringstream ss;
+		unsigned int gameCount = getSelected()->getGameCount();
+
+		// only display a game count if there are at least 2 games
+		if(gameCount > 1)
+			ss << gameCount << " GAMES AVAILABLE";
+
+		mSystemInfo.setText(ss.str()); 
+	}, false, 1);
+
+	Animation* infoFadeIn = new LambdaAnimation(
+		[this] (float t)
+	{
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+	}, 300);
+
+	// wait 600ms to fade in
+	setAnimation(infoFadeIn, 700, nullptr, false, 2);
 }
 
 void SystemView::render(const Eigen::Affine3f& parentTrans)
@@ -206,6 +247,8 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 			comp->render(logoTrans);
 		}
 	}
+
+	mSystemInfo.render(trans);
 }
 
 std::vector<HelpPrompt> SystemView::getHelpPrompts()

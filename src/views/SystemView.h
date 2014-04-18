@@ -37,6 +37,8 @@ private:
 
 	void populate();
 
+	TextComponent mSystemInfo;
+
 	// unit is list index
 	float mCamOffset;
 };
