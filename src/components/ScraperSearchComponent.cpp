@@ -94,7 +94,7 @@ void ScraperSearchComponent::onSizeChanged()
 
 	mGrid.setRowHeightPerc(1, 0.505f);
 
-	const float boxartCellScale = 0.85f;
+	const float boxartCellScale = 0.9f;
 
 	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
 	// we also pad a little so it doesn't rub up against the metadata labels
