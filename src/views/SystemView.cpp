@@ -6,15 +6,25 @@
 #include "ViewController.h"
 #include "../animations/LambdaAnimation.h"
 #include "../SystemData.h"
+#include "../Util.h"
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
+#define BAND_HEIGHT (logoSize().y() * SELECTED_SCALE)
 
-SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP)
+SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
+	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, TextComponent::ALIGN_CENTER)
 {
 	mCamOffset = 0;
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+	mSystemInfo.setSize(mSize.x(), mSystemInfo.getSize().y() * 2.f);
+	mSystemInfo.setPosition(0, (mSize.y() + BAND_HEIGHT) / 2);
+
+	//const float sysInfoHeight = mSystemInfo.getSize().y() * 1.3f;
+	//mSystemInfo.setSize(mSize.x(), sysInfoHeight);
+	//mSystemInfo.setPosition(0, (mSize.y() - BAND_HEIGHT) / 2 + BAND_HEIGHT - sysInfoHeight);
 
 	populate();
 }
@@ -141,8 +151,41 @@ void SystemView::onCursorChanged(const CursorState& state)
 			f -= posMax;
 		this->mCamOffset = f;
 	}, 500);
+	setAnimation(anim, 0, nullptr, false, 0);
 
-	setAnimation(anim);
+	// animate mSystemInfo's opacity (fade out, wait, fade back in)
+
+	cancelAnimation(1);
+	cancelAnimation(2);
+
+	const float infoStartOpacity = mSystemInfo.getOpacity() / 255.f;
+
+	Animation* infoFadeOut = new LambdaAnimation(
+		[infoStartOpacity, this] (float t)
+	{
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
+	}, (int)(infoStartOpacity * 300));
+
+	// also change the text after we've fully faded out
+	setAnimation(infoFadeOut, 0, [this] { 
+		std::stringstream ss;
+		unsigned int gameCount = getSelected()->getGameCount();
+
+		// only display a game count if there are at least 2 games
+		if(gameCount > 1)
+			ss << gameCount << " GAMES AVAILABLE";
+
+		mSystemInfo.setText(ss.str()); 
+	}, false, 1);
+
+	Animation* infoFadeIn = new LambdaAnimation(
+		[this] (float t)
+	{
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+	}, 300);
+
+	// wait 600ms to fade in
+	setAnimation(infoFadeIn, 2000, nullptr, false, 2);
 }
 
 void SystemView::render(const Eigen::Affine3f& parentTrans)
@@ -179,8 +222,7 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 
 	// background behind the logos
 	Renderer::setMatrix(trans);
-	Renderer::drawRect(0, (int)(yOff - (logoSize().y() * (SELECTED_SCALE - 1)) / 2), 
-		(int)mSize.x(), (int)(logoSize().y() * SELECTED_SCALE), 0xDDDDDDD8);
+	Renderer::drawRect(0.f, (mSize.y() - BAND_HEIGHT) / 2, mSize.x(), BAND_HEIGHT, 0xFFFFFFD8);
 
 	Eigen::Affine3f logoTrans = trans;
 	for(int i = center - logoCount/2; i < center + logoCount/2 + 1; i++)
@@ -206,6 +248,11 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 			comp->render(logoTrans);
 		}
 	}
+
+	Renderer::setMatrix(trans);
+	Renderer::drawRect(mSystemInfo.getPosition().x(), mSystemInfo.getPosition().y() - 1, mSize.x(), mSystemInfo.getSize().y(), 0xDDDDDD00 | (unsigned char)(mSystemInfo.getOpacity() / 255.f * 0xD8));
+	//Renderer::drawRect(mSystemInfo.getPosition().x() + mSize.x() * 0.025f, mSystemInfo.getPosition().y() - 1, mSize.x() * 0.95f, 2.f, 0x777777FF);
+	mSystemInfo.render(trans);
 }
 
 std::vector<HelpPrompt> SystemView::getHelpPrompts()

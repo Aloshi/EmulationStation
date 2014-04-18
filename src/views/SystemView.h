@@ -33,9 +33,11 @@ protected:
 	void onCursorChanged(const CursorState& state) override;
 
 private:
-	inline Eigen::Vector2f logoSize() const { return Eigen::Vector2f(mSize.x() * 0.25f, mSize.y() * 0.175f); }
+	inline Eigen::Vector2f logoSize() const { return Eigen::Vector2f(mSize.x() * 0.25f, mSize.y() * 0.155f); }
 
 	void populate();
+
+	TextComponent mSystemInfo;
 
 	// unit is list index
 	float mCamOffset;
