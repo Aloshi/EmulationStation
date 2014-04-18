@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
 	window.getViewController()->preload();
 
 	//choose which GUI to open depending on if an input configuration already exists
-	if(fs::exists(InputManager::getConfigPath()) && window.getInputManager()->getNumConfiguredDevices() > 0)
+	if(fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 	{
 		window.getViewController()->goToStart();
 	}else{
@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
 				case SDL_TEXTEDITING:
 				case SDL_JOYDEVICEADDED:
 				case SDL_JOYDEVICEREMOVED:
-					if(window.getInputManager()->parseEvent(event))
+					if(InputManager::getInstance()->parseEvent(event, &window))
 					{
 						sleeping = false;
 						timeSinceLastEvent = 0;

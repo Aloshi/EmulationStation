@@ -13,9 +13,11 @@ class Window;
 class InputManager
 {
 private:
-	static const int DEADZONE = 23000;
+	InputManager();
 
-	Window* mWindow;
+	static InputManager* mInstance;
+
+	static const int DEADZONE = 23000;
 
 	void loadDefaultKBConfig();
 
@@ -32,8 +34,9 @@ private:
 	bool loadInputConfig(InputConfig* config); // returns true if successfully loaded, false if not (or didn't exist)
 
 public:
-	InputManager(Window* window);
-	~InputManager();
+	virtual ~InputManager();
+
+	static InputManager* getInstance();
 
 	void writeDeviceConfig(InputConfig* config);
 	static std::string getConfigPath();
@@ -49,7 +52,7 @@ public:
 
 	InputConfig* getInputConfigByDevice(int deviceId);
 
-	bool parseEvent(const SDL_Event& ev);
+	bool parseEvent(const SDL_Event& ev, Window* window);
 };
 
 #endif

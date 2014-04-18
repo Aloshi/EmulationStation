@@ -13,7 +13,6 @@
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true)
 {
-	mInputManager = new InputManager(this);
 	mViewController = new ViewController(this);
 	mHelp = new HelpComponent(this);
 
@@ -33,7 +32,6 @@ Window::~Window()
 		delete peekGui();
 	
 	delete mHelp;
-	delete mInputManager;
 }
 
 void Window::pushGui(GuiComponent* gui)
@@ -74,7 +72,7 @@ bool Window::init(unsigned int width, unsigned int height)
 		return false;
 	}
 
-	mInputManager->init();
+	InputManager::getInstance()->init();
 
 	ResourceManager::getInstance()->reloadAll();
 
@@ -97,9 +95,15 @@ bool Window::init(unsigned int width, unsigned int height)
 
 void Window::deinit()
 {
-	mInputManager->deinit();
+	InputManager::getInstance()->deinit();
 	ResourceManager::getInstance()->unloadAll();
 	Renderer::deinit();
+}
+
+void Window::textInput(const char* text)
+{
+	if(peekGui())
+		peekGui()->textInput(text);
 }
 
 void Window::input(InputConfig* config, Input input)
