@@ -10,19 +10,21 @@
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
+#define BAND_HEIGHT (logoSize().y() * SELECTED_SCALE)
 
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
-	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x77777700, TextComponent::ALIGN_CENTER)
+	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, TextComponent::ALIGN_CENTER)
 {
 	mCamOffset = 0;
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
-	mSystemInfo.setSize(mSize.x(), 0);
+	mSystemInfo.setSize(mSize.x(), mSystemInfo.getSize().y() * 2.f);
+	mSystemInfo.setPosition(0, (mSize.y() + BAND_HEIGHT) / 2);
 
-	float yOff = (mSize.y() - logoSize().y())/2;
-	mSystemInfo.setPosition(0, (yOff - (logoSize().y() * (SELECTED_SCALE - 1)) / 2) + (logoSize().y() * SELECTED_SCALE) - mSystemInfo.getSize().y());
-		//(mSize.y() - mSystemInfo.getSize().y()) / 2);
+	//const float sysInfoHeight = mSystemInfo.getSize().y() * 1.3f;
+	//mSystemInfo.setSize(mSize.x(), sysInfoHeight);
+	//mSystemInfo.setPosition(0, (mSize.y() - BAND_HEIGHT) / 2 + BAND_HEIGHT - sysInfoHeight);
 
 	populate();
 }
@@ -183,7 +185,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}, 300);
 
 	// wait 600ms to fade in
-	setAnimation(infoFadeIn, 700, nullptr, false, 2);
+	setAnimation(infoFadeIn, 2000, nullptr, false, 2);
 }
 
 void SystemView::render(const Eigen::Affine3f& parentTrans)
@@ -220,8 +222,7 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 
 	// background behind the logos
 	Renderer::setMatrix(trans);
-	Renderer::drawRect(0, (int)(yOff - (logoSize().y() * (SELECTED_SCALE - 1)) / 2), 
-		(int)mSize.x(), (int)(logoSize().y() * SELECTED_SCALE), 0xDDDDDDD8);
+	Renderer::drawRect(0.f, (mSize.y() - BAND_HEIGHT) / 2, mSize.x(), BAND_HEIGHT, 0xFFFFFFD8);
 
 	Eigen::Affine3f logoTrans = trans;
 	for(int i = center - logoCount/2; i < center + logoCount/2 + 1; i++)
@@ -248,6 +249,9 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 		}
 	}
 
+	Renderer::setMatrix(trans);
+	Renderer::drawRect(mSystemInfo.getPosition().x(), mSystemInfo.getPosition().y() - 1, mSize.x(), mSystemInfo.getSize().y(), 0xDDDDDD00 | (unsigned char)(mSystemInfo.getOpacity() / 255.f * 0xD8));
+	//Renderer::drawRect(mSystemInfo.getPosition().x() + mSize.x() * 0.025f, mSystemInfo.getPosition().y() - 1, mSize.x() * 0.95f, 2.f, 0x777777FF);
 	mSystemInfo.render(trans);
 }
 
