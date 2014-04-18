@@ -21,14 +21,23 @@
 
 namespace fs = boost::filesystem;
 
-InputManager::InputManager(Window* window) : mWindow(window), 
-	mKeyboardInputConfig(NULL)
+InputManager* InputManager::mInstance = NULL;
+
+InputManager::InputManager() : mKeyboardInputConfig(NULL)
 {
 }
 
 InputManager::~InputManager()
 {
 	deinit();
+}
+
+InputManager* InputManager::getInstance()
+{
+	if(!mInstance)
+		mInstance = new InputManager();
+
+	return mInstance;
 }
 
 void InputManager::init()
@@ -155,7 +164,7 @@ InputConfig* InputManager::getInputConfigByDevice(int device)
 		return mInputConfigs[device];
 }
 
-bool InputManager::parseEvent(const SDL_Event& ev)
+bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 {
 	bool causedEvent = false;
 	switch(ev.type)
@@ -173,7 +182,7 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 				else
 					normValue = -1;
 
-			mWindow->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, TYPE_AXIS, ev.jaxis.axis, normValue, false));
+			window->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, TYPE_AXIS, ev.jaxis.axis, normValue, false));
 			causedEvent = true;
 		}
 
@@ -182,18 +191,17 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
-		mWindow->input(getInputConfigByDevice(ev.jbutton.which), Input(ev.jbutton.which, TYPE_BUTTON, ev.jbutton.button, ev.jbutton.state == SDL_PRESSED, false));
+		window->input(getInputConfigByDevice(ev.jbutton.which), Input(ev.jbutton.which, TYPE_BUTTON, ev.jbutton.button, ev.jbutton.state == SDL_PRESSED, false));
 		return true;
 
 	case SDL_JOYHATMOTION:
-		mWindow->input(getInputConfigByDevice(ev.jhat.which), Input(ev.jhat.which, TYPE_HAT, ev.jhat.hat, ev.jhat.value, false));
+		window->input(getInputConfigByDevice(ev.jhat.which), Input(ev.jhat.which, TYPE_HAT, ev.jhat.hat, ev.jhat.value, false));
 		return true;
 
 	case SDL_KEYDOWN:
 		if(ev.key.keysym.sym == SDLK_BACKSPACE && SDL_IsTextInputActive())
 		{
-			if(mWindow->peekGui() != NULL)
-				mWindow->peekGui()->textInput("\b");
+			window->textInput("\b");
 		}
 
 		if(ev.key.repeat)
@@ -207,16 +215,15 @@ bool InputManager::parseEvent(const SDL_Event& ev)
 			return false;
 		}
 
-		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 1, false));
+		window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 1, false));
 		return true;
 
 	case SDL_KEYUP:
-		mWindow->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
+		window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
 		return true;
 
 	case SDL_TEXTINPUT:
-		if(mWindow->peekGui() != NULL)
-			mWindow->peekGui()->textInput(ev.text.text);
+		window->textInput(ev.text.text);
 		break;
 
 	case SDL_JOYDEVICEADDED:

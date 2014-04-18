@@ -37,7 +37,7 @@ GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun) : GuiComponent(w
 
 	// device info
 	std::stringstream deviceInfo;
-	int numDevices = mWindow->getInputManager()->getNumJoysticks();
+	int numDevices = InputManager::getInstance()->getNumJoysticks();
 	
 	if(numDevices > 0)
 		deviceInfo << numDevices << " GAMEPAD" << (numDevices > 1 ? "S" : "") << " DETECTED";

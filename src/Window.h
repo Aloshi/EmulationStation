@@ -2,9 +2,9 @@
 #define _WINDOW_H_
 
 #include "GuiComponent.h"
-#include "InputManager.h"
 #include <vector>
 #include "resources/Font.h"
+#include "InputManager.h"
 
 class ViewController;
 class HelpComponent;
@@ -20,6 +20,7 @@ public:
 	void removeGui(GuiComponent* gui);
 	GuiComponent* peekGui();
 
+	void textInput(const char* text);
 	void input(InputConfig* config, Input input);
 	void update(int deltaTime);
 	void render();
@@ -27,7 +28,6 @@ public:
 	bool init(unsigned int width = 0, unsigned int height = 0);
 	void deinit();
 
-	inline InputManager* getInputManager() { return mInputManager; }
 	inline ViewController* getViewController() { return mViewController; }
 
 	void normalizeNextUpdate();
@@ -40,7 +40,6 @@ public:
 	void setHelpPrompts(const std::vector<HelpPrompt>& prompts);
 
 private:
-	InputManager* mInputManager;
 	ViewController* mViewController;
 	HelpComponent* mHelp;
 	ImageComponent* mBackgroundOverlay;
