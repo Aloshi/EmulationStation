@@ -81,6 +81,9 @@ void ScraperSearchComponent::onSizeChanged()
 {
 	mGrid.setSize(mSize);
 	
+	if(mSize.x() == 0 || mSize.y() == 0)
+		return;
+
 	// column widths
 	mGrid.setColWidthPerc(0, 0.01f);
 	mGrid.setColWidthPerc(1, 0.25f);
@@ -249,6 +252,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 
 void ScraperSearchComponent::onSearchError(const std::string& error)
 {
+	LOG(LogInfo) << "ScraperSearchComponent search error: " << error;
 	mWindow->pushGui(new GuiMsgBox(mWindow, strToUpper(error),
 		"RETRY", std::bind(&ScraperSearchComponent::search, this, mLastSearch),
 		"SKIP", mSkipCallback,
@@ -369,14 +373,21 @@ void ScraperSearchComponent::update(int deltaTime)
 
 	if(mSearchHandle && mSearchHandle->status() != ASYNC_IN_PROGRESS)
 	{
-		if(mSearchHandle->status() == ASYNC_DONE)
-		{
-			onSearchDone(mSearchHandle->getResults());
-		}else if(mSearchHandle->status() == ASYNC_ERROR)
-		{
-			onSearchError(mSearchHandle->getStatusString());
-		}
+		auto status = mSearchHandle->status();
+		auto results = mSearchHandle->getResults();
+		auto statusString = mSearchHandle->getStatusString();
+
+		// we reset here because onSearchDone in auto mode can call mSkipCallback() which can call 
+		// another search() which will set our mSearchHandle to something important
 		mSearchHandle.reset();
+
+		if(status == ASYNC_DONE)
+		{
+			onSearchDone(results);
+		}else if(status == ASYNC_ERROR)
+		{
+			onSearchError(statusString);
+		}
 	}
 
 	if(mMDResolveHandle && mMDResolveHandle->status() != ASYNC_IN_PROGRESS)
