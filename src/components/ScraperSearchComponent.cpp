@@ -99,7 +99,12 @@ void ScraperSearchComponent::onSizeChanged()
 	else
 		mGrid.setRowHeightPerc(0, 0.0825f); // hide name but do padding
 
-	mGrid.setRowHeightPerc(1, 0.505f);
+	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
+	{
+		mGrid.setRowHeightPerc(2, 0.2f);
+	}else{
+		mGrid.setRowHeightPerc(1, 0.505f);
+	}
 
 	const float boxartCellScale = 0.9f;
 
