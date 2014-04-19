@@ -129,11 +129,8 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mButtons = makeButtonGrid(mWindow, buttons);
 	mGrid.setEntry(mButtons, Vector2i(0, 2), true, false);
 
-	// initially put cursor on "SCRAPE"
-	mGrid.setCursorTo(mButtons);
-	
 	// resize + center
-	setSize(Renderer::getScreenWidth() * 0.5f, Renderer::getScreenHeight() * 0.71f);
+	setSize(Renderer::getScreenWidth() * 0.5f, Renderer::getScreenHeight() * 0.82f);
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 }
 
@@ -144,7 +141,7 @@ void GuiMetaDataEd::onSizeChanged()
 	mGrid.setSize(mSize);
 
 	const float titleHeight = mTitle->getFont()->getLetterHeight();
-	const float subtitleHeight = mSubtitle->getFont()->getLetterHeight() + 2;
+	const float subtitleHeight = mSubtitle->getFont()->getLetterHeight();
 	const float titleSubtitleSpacing = mSize.y() * 0.03f;
 
 	mGrid.setRowHeightPerc(0, (titleHeight + titleSubtitleSpacing + subtitleHeight + TITLE_VERT_PADDING) / mSize.y());

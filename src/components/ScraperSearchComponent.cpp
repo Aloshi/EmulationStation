@@ -134,7 +134,7 @@ void ScraperSearchComponent::onSizeChanged()
 		mMD_Grid->setColWidthPerc(0, maxLblWidth / mMD_Grid->getSize().x());
 
 		// rating is manually sized
-		mMD_Rating->setSize(mMD_Grid->getColWidth(1), fontLbl->getLetterHeight());
+		mMD_Rating->setSize(mMD_Grid->getColWidth(1), fontLbl->getHeight() * 0.65f);
 		mMD_Grid->onSizeChanged();
 
 		// make result font follow label font
@@ -147,8 +147,6 @@ void ScraperSearchComponent::onSizeChanged()
 	mGrid.onSizeChanged();
 
 	mBusyAnim.setSize(mSize);
-	//mBusyAnim.setPosition(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT ? mDescContainer->getPosition() : mResultList->getPosition());
-	//mBusyAnim.setSize(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT ? mDescContainer->getSize() : mResultList->getSize());
 }
 
 void ScraperSearchComponent::updateViewStyle()
