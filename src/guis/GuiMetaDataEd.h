@@ -14,7 +14,7 @@ public:
 		const std::string& header, std::function<void()> savedCallback, std::function<void()> deleteFunc);
 	
 	bool input(InputConfig* config, Input input) override;
-
+	void onSizeChanged() override;
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
@@ -22,7 +22,14 @@ private:
 	void fetch();
 	void fetchDone(const ScraperSearchResult& result);
 
-	MenuComponent mMenu;
+	NinePatchComponent mBackground;
+	ComponentGrid mGrid;
+	
+	std::shared_ptr<TextComponent> mTitle;
+	std::shared_ptr<TextComponent> mSubtitle;
+	std::shared_ptr<ComponentGrid> mHeaderGrid;
+	std::shared_ptr<ComponentList> mList;
+	std::shared_ptr<ComponentGrid> mButtons;
 
 	ScraperSearchParams mScraperParams;
 

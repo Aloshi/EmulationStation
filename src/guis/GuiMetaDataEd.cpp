@@ -12,17 +12,34 @@
 #include "../components/RatingComponent.h"
 #include "GuiTextEditPopup.h"
 
+using namespace Eigen;
+
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
 	mScraperParams(scraperParams), 
-	mMenu(window, header.c_str()), 
+
+	mBackground(window, ":/frame.png"), 
+	mGrid(window, Vector2i(1, 3)),
+
 	mMetaDataDecl(mdd), 
 	mMetaData(md), 
 	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc)
 {
-	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	addChild(&mBackground);
+	addChild(&mGrid);
+
+	mHeaderGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(1, 5));
 	
-	addChild(&mMenu);
+	mTitle = std::make_shared<TextComponent>(mWindow, "EDIT METADATA", Font::get(FONT_SIZE_LARGE), 0x333333FF, TextComponent::ALIGN_CENTER);
+	mSubtitle = std::make_shared<TextComponent>(mWindow, strToUpper(scraperParams.game->getPath().filename().generic_string()), 
+		Font::get(FONT_SIZE_SMALL), 0x777777FF, TextComponent::ALIGN_CENTER);
+	mHeaderGrid->setEntry(mTitle, Vector2i(0, 1), false, true);
+	mHeaderGrid->setEntry(mSubtitle, Vector2i(0, 3), false, true);
+
+	mGrid.setEntry(mHeaderGrid, Vector2i(0, 0), false, true);
+
+	mList = std::make_shared<ComponentList>(mWindow);
+	mGrid.setEntry(mList, Vector2i(0, 1), true, true);
 
 	// populate list
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
@@ -47,21 +64,23 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				const float height = lbl->getSize().y() * 0.71f;
 				ed->setSize(height * 4.9f, height);
 				row.addElement(ed, false, true);
-				mMenu.addRow(row);
 				break;
 			}
 		case MD_DATE:
 			{
 				ed = std::make_shared<DateTimeComponent>(window);
 				row.addElement(ed, false);
-				mMenu.addRow(row);
+
+				auto spacer = std::make_shared<GuiComponent>(mWindow);
+				spacer->setSize(Renderer::getScreenWidth() * 0.0025f, 0);
+				row.addElement(spacer, false);
+
 				break;
 			}
 		case MD_TIME:
 			{
 				ed = std::make_shared<DateTimeComponent>(window, DateTimeComponent::DISP_RELATIVE_TO_NOW);
 				row.addElement(ed, false);
-				mMenu.addRow(row);
 				break;
 			}
 		case MD_MULTILINE_STRING:
@@ -71,6 +90,10 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				ed = std::make_shared<TextComponent>(window, "", Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF, TextComponent::ALIGN_RIGHT);
 				row.addElement(ed, true);
 				
+				auto spacer = std::make_shared<GuiComponent>(mWindow);
+				spacer->setSize(Renderer::getScreenWidth() * 0.005f, 0);
+				row.addElement(spacer, false);
+
 				auto bracket = std::make_shared<ImageComponent>(mWindow);
 				bracket->setImage(":/arrow.svg");
 				bracket->setResize(Eigen::Vector2f(0, lbl->getFont()->getLetterHeight()));
@@ -82,33 +105,54 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				row.makeAcceptInputHandler([this, title, ed, updateVal, multiLine] {
 					mWindow->pushGui(new GuiTextEditPopup(mWindow, title, ed->getValue(), updateVal, multiLine));
 				});
-
-				mMenu.addRow(row);
 				break;
 			}
 		}
 
 		assert(ed);
+		mList->addRow(row);
 		ed->setValue(mMetaData->get(iter->key));
 		mEditors.push_back(ed);
 	}
 
-	//add buttons	
-	mMenu.addButton("SCRAPE", "scrape", std::bind(&GuiMetaDataEd::fetch, this));
-	mMenu.addButton("SAVE", "save", [&] { save(); delete this; });
-	
+	std::vector< std::shared_ptr<ButtonComponent> > buttons;
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SCRAPE", "scrape", std::bind(&GuiMetaDataEd::fetch, this)));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SAVE", "save", [&] { save(); delete this; }));
+
 	if(mDeleteFunc)
 	{
 		auto deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };
 		auto deleteBtnFunc = [this, deleteFileAndSelf] { mWindow->pushGui(new GuiMsgBox(mWindow, "This will delete a file!\nAre you sure?", "YES", deleteFileAndSelf, "NO", nullptr)); };
-		mMenu.addButton("DELETE", "delete", deleteBtnFunc);
+		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "DELETE", "delete", deleteBtnFunc));
 	}
 
-	// initially put cursor on "SCRAPE"
-	mMenu.setCursorToButtons();
+	mButtons = makeButtonGrid(mWindow, buttons);
+	mGrid.setEntry(mButtons, Vector2i(0, 2), true, false);
 
-	// position menu
-	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f); //center it
+	// initially put cursor on "SCRAPE"
+	mGrid.setCursorTo(mButtons);
+	
+	// resize + center
+	setSize(Renderer::getScreenWidth() * 0.5f, Renderer::getScreenHeight() * 0.71f);
+	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
+}
+
+void GuiMetaDataEd::onSizeChanged()
+{
+	mBackground.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
+
+	mGrid.setSize(mSize);
+
+	const float titleHeight = mTitle->getFont()->getLetterHeight();
+	const float subtitleHeight = mSubtitle->getFont()->getLetterHeight() + 2;
+	const float titleSubtitleSpacing = mSize.y() * 0.03f;
+
+	mGrid.setRowHeightPerc(0, (titleHeight + titleSubtitleSpacing + subtitleHeight + TITLE_VERT_PADDING) / mSize.y());
+	mGrid.setRowHeightPerc(2, mButtons->getSize().y() / mSize.y());
+
+	mHeaderGrid->setRowHeightPerc(1, titleHeight / mHeaderGrid->getSize().y());
+	mHeaderGrid->setRowHeightPerc(2, titleSubtitleSpacing / mHeaderGrid->getSize().y());
+	mHeaderGrid->setRowHeightPerc(3, subtitleHeight / mHeaderGrid->getSize().y());
 }
 
 void GuiMetaDataEd::save()
@@ -160,7 +204,7 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 
 std::vector<HelpPrompt> GuiMetaDataEd::getHelpPrompts()
 {
-	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
+	std::vector<HelpPrompt> prompts = mGrid.getHelpPrompts();
 	prompts.push_back(HelpPrompt("b", "discard"));
 	return prompts;
 }
