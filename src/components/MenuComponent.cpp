@@ -4,9 +4,11 @@
 #define BUTTON_GRID_VERT_PADDING 32
 #define BUTTON_GRID_HORIZ_PADDING 10
 
+#define TITLE_HEIGHT (mTitle->getFont()->getLetterHeight() + Renderer::getScreenHeight()*0.0637f)
+
 using namespace Eigen;
 
-MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(window), 
+MenuComponent::MenuComponent(Window* window, const char* title, const std::shared_ptr<Font>& titleFont) : GuiComponent(window), 
 	mBackground(window), mGrid(window, Vector2i(1, 3))
 {	
 	addChild(&mBackground);
@@ -14,8 +16,11 @@ MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(w
 
 	mBackground.setImagePath(":/frame.png");
 
-	// set up title which will never change
-	mTitle = std::make_shared<TextComponent>(mWindow, strToUpper(title), Font::get(FONT_SIZE_LARGE), 0x555555FF, TextComponent::ALIGN_CENTER);
+	// set up title
+	mTitle = std::make_shared<TextComponent>(mWindow);
+	mTitle->setAlignment(TextComponent::ALIGN_CENTER);
+	mTitle->setColor(0x555555FF);
+	setTitle(title, titleFont);
 	mGrid.setEntry(mTitle, Vector2i(0, 0), false);
 
 	// set up list which will never change (externally, anyway)
@@ -28,6 +33,12 @@ MenuComponent::MenuComponent(Window* window, const char* title) : GuiComponent(w
 	mGrid.resetCursor();
 }
 
+void MenuComponent::setTitle(const char* title, const std::shared_ptr<Font>& font)
+{
+	mTitle->setText(strToUpper(title));
+	mTitle->setFont(font);
+}
+
 float MenuComponent::getButtonGridHeight() const
 {
 	return (mButtonGrid ? mButtonGrid->getSize().y() : Font::get(FONT_SIZE_MEDIUM)->getHeight() + BUTTON_GRID_VERT_PADDING);
@@ -35,7 +46,7 @@ float MenuComponent::getButtonGridHeight() const
 
 void MenuComponent::updateSize()
 {
-	float height = mTitle->getSize().y() + mList->getTotalRowHeight() + getButtonGridHeight() + 2;
+	float height = TITLE_HEIGHT + mList->getTotalRowHeight() + getButtonGridHeight() + 2;
 	if(height > Renderer::getScreenHeight() * 0.7f)
 		height = Renderer::getScreenHeight() * 0.7f;
 
@@ -47,7 +58,7 @@ void MenuComponent::onSizeChanged()
 	mBackground.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
 
 	// update grid row/col sizes
-	mGrid.setRowHeightPerc(0, mTitle->getSize().y() / mSize.y());
+	mGrid.setRowHeightPerc(0, TITLE_HEIGHT / mSize.y());
 	mGrid.setRowHeightPerc(2, getButtonGridHeight() / mSize.y());
 	
 	mGrid.setSize(mSize);
