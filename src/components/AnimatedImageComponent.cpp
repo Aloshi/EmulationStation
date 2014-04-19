@@ -2,16 +2,6 @@
 #include "ImageComponent.h"
 #include "../Log.h"
 
-// animation definitions because there's only one right now and i'm too lazy to make another file
-AnimationFrame BUSY_ANIMATION_FRAMES[] = {
-	{":/busy_0.svg", 500},
-	{":/busy_1.svg", 500},
-	{":/busy_2.svg", 500},
-	{":/busy_3.svg", 500},
-};
-const AnimationDef BUSY_ANIMATION_DEF = { BUSY_ANIMATION_FRAMES, 4, true };
-
-
 AnimatedImageComponent::AnimatedImageComponent(Window* window) : GuiComponent(window), mEnabled(false)
 {
 }

@@ -164,6 +164,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimatedImageComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/BusyComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentGrid.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentList.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.h
@@ -255,6 +256,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimatedImageComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/BusyComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentGrid.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentList.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp

@@ -39,7 +39,3 @@ private:
 	int mFrameAccumulator;
 	int mCurrentFrame;
 };
-
-
-// animation declarations because there's only one right now and I'm too lazy to make another file
-extern const AnimationDef BUSY_ANIMATION_DEF;

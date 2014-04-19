@@ -3,6 +3,7 @@
 #include "../GuiComponent.h"
 #include "../scrapers/Scraper.h"
 #include "../components/ComponentGrid.h"
+#include "../components/BusyComponent.h"
 #include <functional>
 
 #define MAX_SCRAPER_RESULTS 7
@@ -98,7 +99,5 @@ private:
 	std::vector<ScraperSearchResult> mScraperResults;
 	std::unique_ptr<HttpReq> mThumbnailReq;
 
-	ComponentGrid mBusyGrid;
-	std::shared_ptr<AnimatedImageComponent> mBusyAnimation;
-	std::shared_ptr<TextComponent> mBusyText;
+	BusyComponent mBusyAnim;
 };
