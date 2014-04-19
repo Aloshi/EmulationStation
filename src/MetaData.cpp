@@ -3,18 +3,18 @@
 #include "Log.h"
 
 MetaDataDecl gameDecls[] = { 
-	{"name",		MD_STRING,				"", 		false}, 
-	{"desc",		MD_MULTILINE_STRING,	"", 		false},
-	{"image",		MD_IMAGE_PATH,			"", 		false},
-	{"thumbnail",	MD_IMAGE_PATH,			"", 		false},
-	{"rating",		MD_RATING,				"0", 		false},
-	{"releasedate", MD_DATE,				"0", 		false},
-	{"developer",	MD_STRING,				"unknown",	false},
-	{"publisher",	MD_STRING,				"unknown",	false},
-	{"genre",		MD_STRING,				"unknown",	false},
-	{"players",		MD_INT,					"1",		false},
-	{"playcount",	MD_INT,					"0",		true},
-	{"lastplayed",	MD_TIME,				"0", 		true}
+	{"name",		MD_STRING,				"", 		false,	"name"}, 
+	{"desc",		MD_MULTILINE_STRING,	"", 		false,	"description"},
+	{"image",		MD_IMAGE_PATH,			"", 		false,	"image"},
+	{"thumbnail",	MD_IMAGE_PATH,			"", 		false,	"thumbnail"},
+	{"rating",		MD_RATING,				"0", 		false,	"rating"},
+	{"releasedate", MD_DATE,				"0", 		false,	"release date"},
+	{"developer",	MD_STRING,				"unknown",	false,	"developer"},
+	{"publisher",	MD_STRING,				"unknown",	false,	"publisher"},
+	{"genre",		MD_STRING,				"unknown",	false,	"genre"},
+	{"players",		MD_INT,					"1",		false,	"players"},
+	{"playcount",	MD_INT,					"0",		true,	"play count"},
+	{"lastplayed",	MD_TIME,				"0", 		true,	"last played"}
 };
 const std::vector<MetaDataDecl> gameMDD(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0]));
 

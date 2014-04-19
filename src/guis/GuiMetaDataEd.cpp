@@ -53,7 +53,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 		// create ed and add it (and any related components) to mMenu
 		// ed's value will be set below
 		ComponentListRow row;
-		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(iter->key), Font::get(FONT_SIZE_SMALL), 0x777777FF);
+		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(iter->displayName), Font::get(FONT_SIZE_SMALL), 0x777777FF);
 		row.addElement(lbl, true); // label
 
 		switch(iter->type)
