@@ -44,7 +44,8 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 		case MD_RATING:
 			{
 				ed = std::make_shared<RatingComponent>(window);
-				ed->setSize(0, lbl->getSize().y());
+				const float height = lbl->getSize().y() * 0.71f;
+				ed->setSize(height * 4.9f, height);
 				row.addElement(ed, false, true);
 				mMenu.addRow(row);
 				break;
