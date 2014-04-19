@@ -6,6 +6,7 @@
 #include "ImageComponent.h"
 #include "RatingComponent.h"
 #include "DateTimeComponent.h"
+#include "AnimatedImageComponent.h"
 #include "ComponentList.h"
 #include "../HttpReq.h"
 #include "../Settings.h"
@@ -14,7 +15,7 @@
 #include "../guis/GuiTextEditPopup.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
-	mGrid(window, Eigen::Vector2i(4, 3)),
+	mGrid(window, Eigen::Vector2i(4, 3)), mBusyGrid(window, Eigen::Vector2i(3, 1)), 
 	mSearchType(type)
 {
 	addChild(&mGrid);
@@ -72,6 +73,14 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	// result list
 	mResultList = std::make_shared<ComponentList>(mWindow);
 	mResultList->setCursorChangedCallback([this](CursorState state) { if(state == CURSOR_STOPPED) updateInfoPane(); });
+
+	mBusyAnimation = std::make_shared<AnimatedImageComponent>(mWindow);
+	mBusyAnimation->load(&BUSY_ANIMATION_DEF);
+	mBusyText = std::make_shared<TextComponent>(mWindow, "WORKING...", Font::get(FONT_SIZE_LARGE), 0x777777FF);
+
+	// col 0 = animation, col 1 = spacer, col 2 = text
+	mBusyGrid.setEntry(mBusyAnimation, Vector2i(0, 0), false, true);
+	mBusyGrid.setEntry(mBusyText, Vector2i(2, 0), false, true);
 
 	updateViewStyle();
 }
@@ -142,6 +151,20 @@ void ScraperSearchComponent::onSizeChanged()
 	
 	mDescContainer->setSize(mGrid.getColWidth(1)*boxartCellScale + mGrid.getColWidth(2), mResultDesc->getFont()->getHeight() * 3);
 	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
+
+	const float busyGridHeight = mBusyText->getSize().y();
+	const float busyGridWidth = (busyGridHeight + mBusyText->getSize().x()) * 1.03f;
+	if(busyGridWidth > 0 && busyGridHeight > 0)
+	{
+		mBusyGrid.setSize(busyGridWidth, busyGridHeight);
+
+		mBusyGrid.setColWidthPerc(0, (busyGridHeight) / busyGridWidth);
+		mBusyGrid.setColWidthPerc(1, 0.025f);
+
+		// in the far right
+		mBusyGrid.setPosition(mGrid.getColWidth(0) + mGrid.getColWidth(1) + mGrid.getColWidth(2) + (mGrid.getColWidth(3) - busyGridWidth)/2, 
+			mGrid.getRowHeight(0) + mGrid.getRowHeight(1) + (mGrid.getRowHeight(2) - busyGridHeight) / 2);
+	}
 
 	mGrid.onSizeChanged();
 }
@@ -330,6 +353,8 @@ void ScraperSearchComponent::render(const Eigen::Affine3f& parentTrans)
 		Renderer::setMatrix(trans);
 		Renderer::drawRect((int)mResultList->getPosition().x(), (int)mResultList->getPosition().y(),
 			(int)mResultList->getSize().x(), (int)mResultList->getSize().y(), 0x00000011);
+
+		mBusyGrid.render(trans);
 	}
 }
 
@@ -350,6 +375,11 @@ void ScraperSearchComponent::returnResult(ScraperSearchResult result)
 void ScraperSearchComponent::update(int deltaTime)
 {
 	GuiComponent::update(deltaTime);
+
+	if(mBlockAccept)
+	{
+		mBusyAnimation->update(deltaTime);
+	}
 
 	if(mThumbnailReq && mThumbnailReq->status() != HttpReq::REQ_IN_PROGRESS)
 	{

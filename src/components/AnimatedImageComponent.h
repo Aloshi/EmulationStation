@@ -18,9 +18,11 @@ struct AnimationDef
 class AnimatedImageComponent : public GuiComponent
 {
 public:
-	AnimatedImageComponent(Window* window, const AnimationDef* def = NULL);
+	AnimatedImageComponent(Window* window);
 	
 	void load(const AnimationDef* def); // no reference to def is kept after loading is complete
+
+	void reset(); // set to frame 0
 
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& trans) override;

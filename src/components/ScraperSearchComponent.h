@@ -14,7 +14,7 @@ class TextComponent;
 class DateTimeComponent;
 class ScrollableContainer;
 class HttpReq;
-
+class AnimatedImageComponent;
 
 class ScraperSearchComponent : public GuiComponent
 {
@@ -97,4 +97,8 @@ private:
 	std::unique_ptr<MDResolveHandle> mMDResolveHandle;
 	std::vector<ScraperSearchResult> mScraperResults;
 	std::unique_ptr<HttpReq> mThumbnailReq;
+
+	ComponentGrid mBusyGrid;
+	std::shared_ptr<AnimatedImageComponent> mBusyAnimation;
+	std::shared_ptr<TextComponent> mBusyText;
 };

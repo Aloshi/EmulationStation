@@ -12,10 +12,8 @@ AnimationFrame BUSY_ANIMATION_FRAMES[] = {
 const AnimationDef BUSY_ANIMATION_DEF = { BUSY_ANIMATION_FRAMES, 4, true };
 
 
-AnimatedImageComponent::AnimatedImageComponent(Window* window, const AnimationDef* def) : GuiComponent(window), mEnabled(false)
+AnimatedImageComponent::AnimatedImageComponent(Window* window) : GuiComponent(window), mEnabled(false)
 {
-	if(def)
-		load(def);
 }
 
 void AnimatedImageComponent::load(const AnimationDef* def)
@@ -44,6 +42,12 @@ void AnimatedImageComponent::load(const AnimationDef* def)
 	mCurrentFrame = 0;
 	mFrameAccumulator = 0;
 	mEnabled = true;
+}
+
+void AnimatedImageComponent::reset()
+{
+	mCurrentFrame = 0;
+	mFrameAccumulator = 0;
 }
 
 void AnimatedImageComponent::onSizeChanged()
