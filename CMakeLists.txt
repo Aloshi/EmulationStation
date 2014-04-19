@@ -314,6 +314,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_filled_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textinput_ninepatch_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textinput_ninepatch_active_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/frame_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
 

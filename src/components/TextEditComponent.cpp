@@ -25,11 +25,13 @@ TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
 void TextEditComponent::onFocusGained()
 {
 	mFocused = true;
+	mBox.setImagePath(":/textinput_ninepatch_active.png");
 }
 
 void TextEditComponent::onFocusLost()
 {
 	mFocused = false;
+	mBox.setImagePath(":/textinput_ninepatch.png");
 }
 
 void TextEditComponent::onSizeChanged()

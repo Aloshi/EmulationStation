@@ -77,6 +77,9 @@ extern const unsigned char star_unfilled_svg_data[];
 extern const size_t textinput_ninepatch_png_size;
 extern const unsigned char textinput_ninepatch_png_data[];
 
+extern const size_t textinput_ninepatch_active_png_size;
+extern const unsigned char textinput_ninepatch_active_png_data[];
+
 extern const size_t help_button_a_svg_size;
 extern const unsigned char help_button_a_svg_data[];
 
