@@ -85,14 +85,17 @@ void ScraperSearchComponent::onSizeChanged()
 		return;
 
 	// column widths
-	mGrid.setColWidthPerc(0, 0.01f);
+	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
+		mGrid.setColWidthPerc(0, 0.02f); // looks better when this is higher in auto mode
+	else
+		mGrid.setColWidthPerc(0, 0.01f);
+	
 	mGrid.setColWidthPerc(1, 0.25f);
 	mGrid.setColWidthPerc(2, 0.25f);
-	mGrid.setColWidthPerc(3, 0.49f);
-
+	
 	// row heights
 	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT) // show name
-		mGrid.setRowHeightPerc(0, (mResultName->getFont()->getHeight()) / mGrid.getSize().y()); // result name
+		mGrid.setRowHeightPerc(0, (mResultName->getFont()->getHeight() * 1.6f) / mGrid.getSize().y()); // result name
 	else
 		mGrid.setRowHeightPerc(0, 0.0825f); // hide name but do padding
 
@@ -105,6 +108,22 @@ void ScraperSearchComponent::onSizeChanged()
 	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) * boxartCellScale, mGrid.getRowHeight(1));
 
 	// metadata
+	resizeMetadata();
+	
+	if(mSearchType != ALWAYS_ACCEPT_FIRST_RESULT)
+		mDescContainer->setSize(mGrid.getColWidth(1)*boxartCellScale + mGrid.getColWidth(2), mResultDesc->getFont()->getHeight() * 3);
+	else
+		mDescContainer->setSize(mGrid.getColWidth(3)*boxartCellScale, mResultDesc->getFont()->getHeight() * 8);
+	
+	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
+
+	mGrid.onSizeChanged();
+
+	mBusyAnim.setSize(mSize);
+}
+
+void ScraperSearchComponent::resizeMetadata()
+{
 	mMD_Grid->setSize(mGrid.getColWidth(2), mGrid.getRowHeight(1));
 	if(mMD_Grid->getSize().y() > mMD_Pairs.size())
 	{
@@ -143,13 +162,6 @@ void ScraperSearchComponent::onSizeChanged()
 		// make result font follow label font
 		mResultDesc->setFont(Font::get(fontHeight, FONT_PATH_REGULAR));
 	}
-	
-	mDescContainer->setSize(mGrid.getColWidth(1)*boxartCellScale + mGrid.getColWidth(2), mResultDesc->getFont()->getHeight() * 3);
-	mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
-
-	mGrid.onSizeChanged();
-
-	mBusyAnim.setSize(mSize);
 }
 
 void ScraperSearchComponent::updateViewStyle()
@@ -166,6 +178,9 @@ void ScraperSearchComponent::updateViewStyle()
 	{
 		// show name
 		mGrid.setEntry(mResultName, Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
+
+		// need a border on the bottom left
+		mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 2), false, false, Vector2i(3, 1), GridFlags::BORDER_BOTTOM);
 
 		// show description on the right
 		mGrid.setEntry(mDescContainer, Vector2i(3, 0), false, false, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);

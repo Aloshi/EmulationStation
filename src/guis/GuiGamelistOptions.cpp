@@ -59,7 +59,7 @@ void GuiGamelistOptions::openMetaDataEd()
 
 bool GuiGamelistOptions::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("b", input) && input.value)
+	if((config->isMappedTo("b", input) || config->isMappedTo("select", input)) && input.value)
 	{
 		delete this;
 		return true;

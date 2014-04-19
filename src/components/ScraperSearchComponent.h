@@ -51,6 +51,8 @@ private:
 	void updateThumbnail();
 	void updateInfoPane();
 
+	void resizeMetadata();
+
 	void onSearchError(const std::string& error);
 	void onSearchDone(const std::vector<ScraperSearchResult>& results);
 
