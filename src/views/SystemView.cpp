@@ -22,10 +22,6 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 	mSystemInfo.setSize(mSize.x(), mSystemInfo.getSize().y() * 2.f);
 	mSystemInfo.setPosition(0, (mSize.y() + BAND_HEIGHT) / 2);
 
-	//const float sysInfoHeight = mSystemInfo.getSize().y() * 1.3f;
-	//mSystemInfo.setSize(mSize.x(), sysInfoHeight);
-	//mSystemInfo.setPosition(0, (mSize.y() - BAND_HEIGHT) / 2 + BAND_HEIGHT - sysInfoHeight);
-
 	populate();
 }
 
@@ -251,7 +247,6 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 
 	Renderer::setMatrix(trans);
 	Renderer::drawRect(mSystemInfo.getPosition().x(), mSystemInfo.getPosition().y() - 1, mSize.x(), mSystemInfo.getSize().y(), 0xDDDDDD00 | (unsigned char)(mSystemInfo.getOpacity() / 255.f * 0xD8));
-	//Renderer::drawRect(mSystemInfo.getPosition().x() + mSize.x() * 0.025f, mSystemInfo.getPosition().y() - 1, mSize.x() * 0.95f, 2.f, 0x777777FF);
 	mSystemInfo.render(trans);
 }
 

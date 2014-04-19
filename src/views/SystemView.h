@@ -8,6 +8,7 @@
 #include "../resources/TextureResource.h"
 
 class SystemData;
+class AnimatedImageComponent;
 
 struct SystemViewData
 {

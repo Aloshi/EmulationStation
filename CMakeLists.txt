@@ -161,6 +161,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.h
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimatedImageComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentGrid.h
@@ -251,6 +252,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/XMLReader.cpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AnimatedImageComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/AsyncReqComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ButtonComponent.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentGrid.cpp
@@ -342,6 +344,11 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/fav_add_svg.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/fav_remove_svg.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/slider_knob_svg.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/busy_0_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/busy_1_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/busy_2_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/busy_3_svg.cpp
 )
 
 #SOURCE_GROUP(resources FILES ResourceUtil.cpp)

@@ -8,6 +8,18 @@
 extern const size_t arrow_svg_size;
 extern const unsigned char arrow_svg_data[];
 
+extern const size_t busy_0_svg_size;
+extern const unsigned char busy_0_svg_data[];
+
+extern const size_t busy_1_svg_size;
+extern const unsigned char busy_1_svg_data[];
+
+extern const size_t busy_2_svg_size;
+extern const unsigned char busy_2_svg_data[];
+
+extern const size_t busy_3_svg_size;
+extern const unsigned char busy_3_svg_data[];
+
 extern const size_t button_png_size;
 extern const unsigned char button_png_data[];
 
