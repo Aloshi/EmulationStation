@@ -54,5 +54,5 @@ void BusyComponent::onSizeChanged()
 
 void BusyComponent::reset()
 {
-	mAnimation->reset();
+	//mAnimation->reset();
 }
