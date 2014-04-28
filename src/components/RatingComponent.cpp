@@ -60,9 +60,9 @@ void RatingComponent::updateVertices()
 {
 	const float numStars = NUM_RATING_STARS;
 
-	const float h = getSize().y(); // is the same as a single star's width
-	const float w = h * mValue * numStars;
-	const float fw = h * numStars;
+	const float h = round(getSize().y()); // is the same as a single star's width
+	const float w = round(h * mValue * numStars);
+	const float fw = round(h * numStars);
 
 	mVertices[0].pos << 0.0f, 0.0f;
 		mVertices[0].tex << 0.0f, 1.0f;
@@ -85,9 +85,6 @@ void RatingComponent::updateVertices()
 	mVertices[10].pos << fw, 0.0f;
 		mVertices[10].tex << numStars, 1.0f;
 	mVertices[11] = mVertices[7];
-
-	for(int i = 0; i < 12; i++)
-		mVertices[i].pos = roundVector(mVertices[i].pos);
 }
 
 void RatingComponent::render(const Eigen::Affine3f& parentTrans)

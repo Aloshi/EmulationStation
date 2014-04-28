@@ -62,8 +62,16 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 			{
 				ed = std::make_shared<RatingComponent>(window);
 				const float height = lbl->getSize().y() * 0.71f;
-				ed->setSize(height * 4.9f, height);
+				ed->setSize(0, height);
 				row.addElement(ed, false, true);
+
+				auto spacer = std::make_shared<GuiComponent>(mWindow);
+				spacer->setSize(Renderer::getScreenWidth() * 0.0025f, 0);
+				row.addElement(spacer, false);
+
+				// pass input to the actual RatingComponent instead of the spacer
+				row.input_handler = std::bind(&GuiComponent::input, ed.get(), std::placeholders::_1, std::placeholders::_2);
+
 				break;
 			}
 		case MD_DATE:
@@ -74,6 +82,9 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				auto spacer = std::make_shared<GuiComponent>(mWindow);
 				spacer->setSize(Renderer::getScreenWidth() * 0.0025f, 0);
 				row.addElement(spacer, false);
+
+				// pass input to the actual DateTimeComponent instead of the spacer
+				row.input_handler = std::bind(&GuiComponent::input, ed.get(), std::placeholders::_1, std::placeholders::_2);
 
 				break;
 			}
