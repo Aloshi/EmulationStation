@@ -28,6 +28,7 @@ private:
 	unsigned int mTotalGames;
 	unsigned int mCurrentGame;
 	unsigned int mTotalSuccessful;
+	unsigned int mTotalSkipped;
 	std::queue<ScraperSearchParams> mSearchQueue;
 
 	NinePatchComponent mBackground;
