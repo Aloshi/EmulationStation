@@ -10,7 +10,7 @@
 #include "GuiTextEditPopup.h"
 
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc) : GuiComponent(window), 
-	mGrid(window, Eigen::Vector2i(1, 3)), 
+	mGrid(window, Eigen::Vector2i(1, 7)), 
 	mBox(window, ":/frame.png"),
 	mSearchParams(params),
 	mClose(false)
@@ -18,13 +18,23 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	addChild(&mBox);
 	addChild(&mGrid);
 
-	// header
-	mHeader = std::make_shared<TextComponent>(mWindow, getCleanFileName(mSearchParams.game->getName()), Font::get(FONT_SIZE_LARGE), 0x777777FF, TextComponent::ALIGN_CENTER);
-	mGrid.setEntry(mHeader, Eigen::Vector2i(0, 0), false, true);
+	// row 0 is a spacer
+
+	mGameName = std::make_shared<TextComponent>(mWindow, strToUpper(mSearchParams.game->getPath().filename().generic_string()), 
+		Font::get(FONT_SIZE_MEDIUM), 0x777777FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mGameName, Eigen::Vector2i(0, 1), false, true);
+
+	// row 2 is a spacer
+
+	mSystemName = std::make_shared<TextComponent>(mWindow, strToUpper(mSearchParams.system->getFullName()), Font::get(FONT_SIZE_SMALL), 
+		0x888888FF, TextComponent::ALIGN_CENTER);
+	mGrid.setEntry(mSystemName, Eigen::Vector2i(0, 3), false, true);
+
+	// row 4 is a spacer
 
 	// ScraperSearchComponent
 	mSearch = std::make_shared<ScraperSearchComponent>(window, ScraperSearchComponent::NEVER_AUTO_ACCEPT);
-	mGrid.setEntry(mSearch, Eigen::Vector2i(0, 1), true);
+	mGrid.setEntry(mSearch, Eigen::Vector2i(0, 5), true);
 
 	// buttons
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
@@ -36,7 +46,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCEL", "cancel", [&] { delete this; }));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 
-	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 2), true, false);
+	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 6), true, false);
 
 	// we call this->close() instead of just delete this; in the accept callback:
 	// this is because of how GuiComponent::update works.  if it was just delete this, this would happen when the metadata resolver is done:
@@ -75,8 +85,12 @@ void GuiGameScraper::onSizeChanged()
 	mBox.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
 
 	mGrid.setSize(mSize);
-	mGrid.setRowHeightPerc(0, mHeader->getFont()->getHeight() / mSize.y()); // header
-	mGrid.setRowHeightPerc(2, mButtonGrid->getSize().y() / mSize.y()); // buttons
+	mGrid.setRowHeightPerc(0, 0.04f);
+	mGrid.setRowHeightPerc(1, mGameName->getFont()->getLetterHeight() / mSize.y()); // game name
+	mGrid.setRowHeightPerc(2, 0.04f);
+	mGrid.setRowHeightPerc(3, mSystemName->getFont()->getLetterHeight() / mSize.y()); // system name
+	mGrid.setRowHeightPerc(4, 0.04f);
+	mGrid.setRowHeightPerc(6, mButtonGrid->getSize().y() / mSize.y()); // buttons
 }
 
 bool GuiGameScraper::input(InputConfig* config, Input input)

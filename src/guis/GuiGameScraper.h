@@ -22,7 +22,8 @@ private:
 	ComponentGrid mGrid;
 	NinePatchComponent mBox;
 
-	std::shared_ptr<TextComponent> mHeader;
+	std::shared_ptr<TextComponent> mGameName;
+	std::shared_ptr<TextComponent> mSystemName;
 	std::shared_ptr<ScraperSearchComponent> mSearch;
 	std::shared_ptr<ComponentGrid> mButtonGrid;
 
