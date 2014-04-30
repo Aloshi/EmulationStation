@@ -28,6 +28,7 @@ struct MetaDataDecl
 	std::string defaultValue;
 	bool isStatistic; //if true, ignore scraper values for this metadata
 	std::string displayName; // displayed as this in editors
+	std::string displayPrompt; // phrase displayed in editors when prompted to enter value (currently only for strings)
 };
 
 boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");

@@ -111,7 +111,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				row.addElement(bracket, false);
 
 				bool multiLine = iter->type == MD_MULTILINE_STRING;
-				const std::string title = "INPUT GAME " + iter->key;
+				const std::string title = iter->displayPrompt;
 				auto updateVal = [ed](const std::string& newVal) { ed->setValue(newVal); }; // ok callback (apply new value to ed)
 				row.makeAcceptInputHandler([this, title, ed, updateVal, multiLine] {
 					mWindow->pushGui(new GuiTextEditPopup(mWindow, title, ed->getValue(), updateVal, multiLine));

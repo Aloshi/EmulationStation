@@ -3,18 +3,19 @@
 #include "Log.h"
 
 MetaDataDecl gameDecls[] = { 
-	{"name",		MD_STRING,				"", 		false,	"name"}, 
-	{"desc",		MD_MULTILINE_STRING,	"", 		false,	"description"},
-	{"image",		MD_IMAGE_PATH,			"", 		false,	"image"},
-	{"thumbnail",	MD_IMAGE_PATH,			"", 		false,	"thumbnail"},
-	{"rating",		MD_RATING,				"0", 		false,	"rating"},
-	{"releasedate", MD_DATE,				"0", 		false,	"release date"},
-	{"developer",	MD_STRING,				"unknown",	false,	"developer"},
-	{"publisher",	MD_STRING,				"unknown",	false,	"publisher"},
-	{"genre",		MD_STRING,				"unknown",	false,	"genre"},
-	{"players",		MD_INT,					"1",		false,	"players"},
-	{"playcount",	MD_INT,					"0",		true,	"play count"},
-	{"lastplayed",	MD_TIME,				"0", 		true,	"last played"}
+	// key,			type,					default,	statistic,	name in GuiMetaDataEd,	prompt in GuiMetaDataEd
+	{"name",		MD_STRING,				"", 		false,		"name",					"enter game name"}, 
+	{"desc",		MD_MULTILINE_STRING,	"", 		false,		"description",			"enter description"},
+	{"image",		MD_IMAGE_PATH,			"", 		false,		"image",				"enter path to image"},
+	{"thumbnail",	MD_IMAGE_PATH,			"", 		false,		"thumbnail",			"enter path to thumbnail"},
+	{"rating",		MD_RATING,				"0", 		false,		"rating",				"enter rating"},
+	{"releasedate", MD_DATE,				"0", 		false,		"release date",			"enter release date"},
+	{"developer",	MD_STRING,				"unknown",	false,		"developer",			"enter game developer"},
+	{"publisher",	MD_STRING,				"unknown",	false,		"publisher",			"enter game publisher"},
+	{"genre",		MD_STRING,				"unknown",	false,		"genre",				"enter game genre"},
+	{"players",		MD_INT,					"1",		false,		"players",				"enter number of players"},
+	{"playcount",	MD_INT,					"0",		true,		"play count",			"enter number of times played"},
+	{"lastplayed",	MD_TIME,				"0", 		true,		"last played",			"enter last played date"}
 };
 const std::vector<MetaDataDecl> gameMDD(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0]));
 
