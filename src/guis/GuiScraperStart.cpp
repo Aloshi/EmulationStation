@@ -1,6 +1,7 @@
 #include "GuiScraperStart.h"
 #include "GuiScraperMulti.h"
 #include "GuiMsgBox.h"
+#include "../views/ViewController.h"
 
 #include "../components/TextComponent.h"
 #include "../components/OptionListComponent.h"
@@ -102,6 +103,15 @@ bool GuiScraperStart::input(InputConfig* config, Input input)
 		return true;
 	}
 
+	if(config->isMappedTo("start", input) && input.value != 0)
+	{
+		// close everything
+		Window* window = mWindow;
+		while(window->peekGui() && window->peekGui() != window->getViewController())
+			delete window->peekGui();
+	}
+
+
 	return false;
 }
 
@@ -109,5 +119,6 @@ std::vector<HelpPrompt> GuiScraperStart::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
 	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("start", "close"));
 	return prompts;
 }

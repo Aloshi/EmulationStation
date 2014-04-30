@@ -1,5 +1,6 @@
 #include "GuiSettings.h"
 #include "../Settings.h"
+#include "../views/ViewController.h"
 
 GuiSettings::GuiSettings(Window* window, const char* title) : GuiComponent(window), mMenu(window, title)
 {
@@ -34,6 +35,14 @@ bool GuiSettings::input(InputConfig* config, Input input)
 		delete this;
 		return true;
 	}
+
+	if(config->isMappedTo("start", input) && input.value != 0)
+	{
+		// close everything
+		Window* window = mWindow;
+		while(window->peekGui() && window->peekGui() != window->getViewController())
+			delete window->peekGui();
+	}
 	
 	return GuiComponent::input(config, input);
 }
@@ -43,6 +52,7 @@ std::vector<HelpPrompt> GuiSettings::getHelpPrompts()
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
 
 	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("start", "close"));
 
 	return prompts;
 }
