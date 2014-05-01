@@ -47,6 +47,7 @@ void Settings::setDefaults()
 	mIntMap["GameListSortIndex"] = 0;
 
 	mStringMap["TransitionStyle"] = "fade";
+	mStringMap["ThemeSet"] = "";
 
 	mScraper = std::shared_ptr<Scraper>(new GamesDBScraper());
 }

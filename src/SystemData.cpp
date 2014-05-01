@@ -201,19 +201,18 @@ void SystemData::populateFolder(FileData* folder)
 }
 
 //creates systems from information located in a config file
-bool SystemData::loadConfig(const std::string& path, bool writeExample)
+bool SystemData::loadConfig()
 {
 	deleteSystems();
+
+	std::string path = getConfigPath(false);
 
 	LOG(LogInfo) << "Loading system config file " << path << "...";
 
 	if(!fs::exists(path))
 	{
-		LOG(LogError) << "File does not exist!";
-		
-		if(writeExample)
-			writeExampleConfig(path);
-
+		LOG(LogError) << "es_systems.cfg file does not exist!";
+		writeExampleConfig(getConfigPath(true));
 		return false;
 	}
 
@@ -222,7 +221,7 @@ bool SystemData::loadConfig(const std::string& path, bool writeExample)
 
 	if(!res)
 	{
-		LOG(LogError) << "Could not parse config file!";
+		LOG(LogError) << "Could not parse es_systems.cfg file!";
 		LOG(LogError) << res.description();
 		return false;
 	}
@@ -330,20 +329,16 @@ void SystemData::deleteSystems()
 	sSystemVector.clear();
 }
 
-std::string SystemData::getConfigPath()
+std::string SystemData::getConfigPath(bool forWrite)
 {
-	std::string home = getHomePath();
-	if(home.empty())
-	{
-		LOG(LogError) << "Home path environment variable empty or nonexistant!";
-		exit(1);
-		return "";
-	}
+	fs::path path = getHomePath() + "/.emulationstation/es_systems.cfg";
+	if(forWrite || fs::exists(path))
+		return path.generic_string();
 
-	return(home + "/.emulationstation/es_systems.cfg");
+	return "/etc/emulationstation/es_systems.cfg";
 }
 
-std::string SystemData::getGamelistPath() const
+std::string SystemData::getGamelistPath(bool forWrite) const
 {
 	fs::path filePath;
 
@@ -351,25 +346,33 @@ std::string SystemData::getGamelistPath() const
 	if(fs::exists(filePath))
 		return filePath.generic_string();
 
-	filePath = getHomePath() + "/.emulationstation/"+ getName() + "/gamelist.xml";
-	return filePath.generic_string();
+	filePath = getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
+	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
+		fs::create_directories(filePath.parent_path());
+	if(forWrite || fs::exists(filePath))
+		return filePath.generic_string();
+
+	return "/etc/emulationstation/gamelists/" + mName + "/gamelist.xml";
 }
 
 std::string SystemData::getThemePath() const
 {
-	fs::path filePath;
+	// where we check for themes, in order:
+	// 1. [SYSTEM_PATH]/theme.xml
+	// 2. currently selected theme set
 
-	filePath = mRootFolder->getPath() / "theme.xml";
-	if(fs::exists(filePath))
-		return filePath.generic_string();
+	// first, check game folder
+	fs::path localThemePath = mRootFolder->getPath() / "theme.xml";
+	if(fs::exists(localThemePath))
+		return localThemePath.generic_string();
 
-	filePath = getHomePath() + "/.emulationstation/" + getName() + "/theme.xml";
-	return filePath.generic_string();
+	// not in game folder, try theme sets
+	return ThemeData::getThemeFromCurrentSet(mName).generic_string();
 }
 
 bool SystemData::hasGamelist() const
 {
-	return (fs::exists(getGamelistPath()));
+	return (fs::exists(getGamelistPath(false)));
 }
 
 unsigned int SystemData::getGameCount() const
@@ -380,9 +383,15 @@ unsigned int SystemData::getGameCount() const
 void SystemData::loadTheme()
 {
 	mTheme = std::make_shared<ThemeData>();
+
+	std::string path = getThemePath();
+
+	if(!fs::exists(path)) // no theme available for this platform
+		return;
+
 	try
 	{
-		mTheme->loadFile(getThemePath());
+		mTheme->loadFile(path);
 	} catch(ThemeException& e)
 	{
 		LOG(LogError) << e.what();

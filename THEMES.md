@@ -3,9 +3,41 @@ Themes
 
 EmulationStation allows each system to have its own "theme." A theme is a collection **views** that define some **elements**, each with their own **properties**.
 
-Themes are loaded from two places.  If it is not in the first, it will try the next:
+The first place ES will check for a theme is in the system's `<path>` folder, for a theme.xml file:
 * `[SYSTEM_PATH]/theme.xml`
-* `[HOME]/.emulationstation/[SYSTEM_NAME]/theme.xml` (where `[HOME]` is the `$HOME` environment variable on Linux and `%HOMEPATH%` on Windows)
+
+If that file doesn't exist, ES will try to find the theme in the current **theme set**.  Theme sets are just a collection of individual system themes arranged in the "themes" folder under some name.  Here's an example:
+
+```
+...
+   themes/
+      my_theme_set/
+         snes/
+            theme.xml
+            my_cool_background.jpg
+
+         nes/
+            theme.xml
+            my_other_super_cool_background.jpg
+
+         common_resources/
+            scroll_sound.wav
+
+      another_theme_set/
+         snes/
+            theme.xml
+            some_resource.svg
+```
+
+The theme set system makes it easy for users to try different themes and allows distributions to include multiple theme options.  Users can change the currently active theme set in the "UI Settings" menu.  The option is only visible if at least one theme set exists.
+
+There are two places ES can load theme sets from:
+* `[HOME]/.emulationstation/themes/[CURRENT_THEME_SET]/[SYSTEM_NAME]/theme.xml`
+* `/etc/emulationstation/themes/[CURRENT_THEME_SET]/[SYSTEM_NAME]/theme.xml`
+
+If both files happen to exist, ES will pick the first one (the one located in the home directory).
+
+Again, the `[CURRENT_THEME_SET]` value is set in the "UI Settings" menu.  If it has not been set yet or the previously selected theme set is missing, the first available theme set will be used as the default.
 
 Simple Example
 ==============

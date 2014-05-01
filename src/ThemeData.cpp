@@ -4,6 +4,7 @@
 #include "Sound.h"
 #include "resources/TextureResource.h"
 #include "Log.h"
+#include "Settings.h"
 #include "pugiXML/pugixml.hpp"
 #include <boost/assign.hpp>
 
@@ -410,4 +411,55 @@ ThemeExtras::~ThemeExtras()
 {
 	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
 		delete *it;
+}
+
+
+std::map<std::string, ThemeSet> ThemeData::getThemeSets()
+{
+	std::map<std::string, ThemeSet> sets;
+
+	static const size_t pathCount = 2;
+	fs::path paths[pathCount] = { 
+		"/etc/emulationstation/themes", 
+		getHomePath() + "/.emulationstation/themes" 
+	};
+
+	fs::directory_iterator end;
+
+	for(size_t i = 0; i < pathCount; i++)
+	{
+		if(!fs::is_directory(paths[i]))
+			continue;
+
+		for(fs::directory_iterator it(paths[i]); it != end; ++it)
+		{
+			if(fs::is_directory(*it))
+			{
+				ThemeSet set = {*it};
+				sets[set.getName()] = set;
+			}
+		}
+	}
+
+	return sets;
+}
+
+fs::path ThemeData::getThemeFromCurrentSet(const std::string& system)
+{
+	auto themeSets = ThemeData::getThemeSets();
+	if(themeSets.empty())
+	{
+		// no theme sets available
+		return "";
+	}
+
+	auto set = themeSets.find(Settings::getInstance()->getString("ThemeSet"));
+	if(set == themeSets.end())
+	{
+		// currently selected theme set is missing, so just pick the first available set
+		set = themeSets.begin();
+		Settings::getInstance()->setString("ThemeSet", set->first);
+	}
+
+	return set->second.getThemePath(system);
 }

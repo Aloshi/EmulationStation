@@ -7,6 +7,7 @@
 #include "gamelist/DetailedGameListView.h"
 #include "gamelist/GridGameListView.h"
 #include "../guis/GuiMenu.h"
+#include "../guis/GuiMsgBox.h"
 #include "../animations/LaunchAnimation.h"
 #include "../animations/MoveCameraAnimation.h"
 #include "../animations/LambdaAnimation.h"
@@ -282,6 +283,37 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 
 			break;
 		}
+	}
+}
+
+void ViewController::reloadAll()
+{
+	std::map<SystemData*, FileData*> cursorMap;
+	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	{
+		cursorMap[it->first] = it->second->getCursor();
+	}
+	mGameListViews.clear();
+
+	for(auto it = cursorMap.begin(); it != cursorMap.end(); it++)
+	{
+		it->first->loadTheme();
+		getGameListView(it->first)->setCursor(it->second);
+	}
+
+	mSystemListView.reset();
+	getSystemListView();
+
+	// update mCurrentView since the pointers changed
+	if(mState.viewing == GAME_LIST)
+	{
+		mCurrentView = getGameListView(mState.getSystem());
+	}else if(mState.viewing == SYSTEM_SELECT)
+	{
+		mSystemListView->goToSystem(mState.getSystem());
+		mCurrentView = mSystemListView;
+	}else{
+		goToSystemView(SystemData::sSystemVector.front());
 	}
 }
 

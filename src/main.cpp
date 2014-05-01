@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
 	}
 
 	//try loading the system config file
-	if(!SystemData::loadConfig(SystemData::getConfigPath(), true))
+	if(!SystemData::loadConfig())
 	{
 		LOG(LogError) << "Error parsing system config file!";
 		return 1;

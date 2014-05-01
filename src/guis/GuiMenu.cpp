@@ -8,6 +8,7 @@
 #include "GuiSettings.h"
 #include "GuiScraperStart.h"
 #include "GuiDetectDevice.h"
+#include "../views/ViewController.h"
 
 #include "../components/ButtonComponent.h"
 #include "../components/SwitchComponent.h"
@@ -119,6 +120,34 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 				transition_style->add(*it, *it, Settings::getInstance()->getString("TransitionStyle") == *it);
 			s->addWithLabel("TRANSITION STYLE", transition_style);
 			s->addSaveFunc([transition_style] { Settings::getInstance()->setString("TransitionStyle", transition_style->getSelected()); });
+
+			// theme set
+			auto themeSets = ThemeData::getThemeSets();
+
+			if(!themeSets.empty())
+			{
+				auto selectedSet = themeSets.find(Settings::getInstance()->getString("ThemeSet"));
+				if(selectedSet == themeSets.end())
+					selectedSet = themeSets.begin();
+
+				auto theme_set = std::make_shared< OptionListComponent<std::string> >(mWindow, "THEME SET", false);
+				for(auto it = themeSets.begin(); it != themeSets.end(); it++)
+					theme_set->add(it->first, it->first, it == selectedSet);
+				s->addWithLabel("THEME SET", theme_set);
+
+				Window* window = mWindow;
+				s->addSaveFunc([window, theme_set] 
+				{
+					bool needReload = false;
+					if(Settings::getInstance()->getString("ThemeSet") != theme_set->getSelected())
+						needReload = true;
+
+					Settings::getInstance()->setString("ThemeSet", theme_set->getSelected());
+
+					if(needReload)
+						window->getViewController()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
+				});
+			}
 
 			mWindow->pushGui(s);
 	});

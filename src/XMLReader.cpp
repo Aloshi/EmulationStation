@@ -119,7 +119,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 
 void parseGamelist(SystemData* system)
 {
-	std::string xmlpath = system->getGamelistPath();
+	std::string xmlpath = system->getGamelistPath(false);
 
 	if(!boost::filesystem::exists(xmlpath))
 		return;
@@ -227,36 +227,32 @@ void updateGamelist(SystemData* system)
 	if(Settings::getInstance()->getBool("IgnoreGamelist"))
 		return;
 
-	std::string xmlpath = system->getGamelistPath();
-
 	pugi::xml_document doc;
+	pugi::xml_node root;
+	std::string xmlReadPath = system->getGamelistPath(false);
 
-	if(boost::filesystem::exists(xmlpath))
+	if(boost::filesystem::exists(xmlReadPath))
 	{
 		//parse an existing file first
-		pugi::xml_parse_result result = doc.load_file(xmlpath.c_str());
+		pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
 		
 		if(!result)
 		{
-			LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
+			LOG(LogError) << "Error parsing XML file \"" << xmlReadPath << "\"!\n	" << result.description();
+			return;
+		}
+
+		root = doc.child("gameList");
+		if(!root)
+		{
+			LOG(LogError) << "Could not find <gameList> node in gamelist \"" << xmlReadPath << "\"!";
 			return;
 		}
 	}else{
 		//set up an empty gamelist to append to
-		doc.append_child("gameList");
-
-		//make sure the folders leading up to this path exist (or the XML file write will fail later on)
-		boost::filesystem::path path(xmlpath);
-		boost::filesystem::create_directories(path.parent_path());
+		root = doc.append_child("gameList");
 	}
 
-
-	pugi::xml_node root = doc.child("gameList");
-	if(!root)
-	{
-		LOG(LogError) << "Could not find <gameList> node in gamelist \"" << xmlpath << "\"!";
-		return;
-	}
 
 	//now we have all the information from the XML. now iterate through all our games and add information from there
 	FileData* rootFolder = system->getRootFolder();
@@ -296,9 +292,15 @@ void updateGamelist(SystemData* system)
 
 			++fit;
 		}
+
 		//now write the file
-		if (!doc.save_file(xmlpath.c_str())) {
-			LOG(LogError) << "Error saving gamelist.xml file \"" << xmlpath << "\"!";
+
+		//make sure the folders leading up to this path exist (or the write will fail)
+		boost::filesystem::path xmlWritePath(system->getGamelistPath(true));
+		boost::filesystem::create_directories(xmlWritePath.parent_path());
+
+		if (!doc.save_file(xmlWritePath.c_str())) {
+			LOG(LogError) << "Error saving gamelist.xml to \"" << xmlWritePath << "\" (for system " << system->getName() << ")!";
 		}
 	}else{
 		LOG(LogError) << "Found no root folder for system \"" << system->getName() << "\"!";

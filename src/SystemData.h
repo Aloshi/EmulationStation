@@ -24,7 +24,7 @@ public:
 	inline PlatformIds::PlatformId getPlatformId() const { return mPlatformId; }
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
-	std::string getGamelistPath() const;
+	std::string getGamelistPath(bool forWrite) const;
 	bool hasGamelist() const;
 	std::string getThemePath() const;
 	
@@ -33,9 +33,9 @@ public:
 	void launchGame(Window* window, FileData* game);
 
 	static void deleteSystems();
-	static bool loadConfig(const std::string& path, bool writeExampleIfNonexistant = true); //Load the system config file at getConfigPath(). Returns true if no errors were encountered. An example can be written if the file doesn't exist.
+	static bool loadConfig(); //Load the system config file at getConfigPath(). Returns true if no errors were encountered. An example will be written if the file doesn't exist.
 	static void writeExampleConfig(const std::string& path);
-	static std::string getConfigPath();
+	static std::string getConfigPath(bool forWrite); // if forWrite, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 
 	static std::vector<SystemData*> sSystemVector;
 

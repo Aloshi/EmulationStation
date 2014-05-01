@@ -77,23 +77,26 @@ Configuring
 **~/.emulationstation/es_systems.cfg:**
 When first run, an example systems configuration file will be created at $HOME/.emulationstation/es_systems.cfg. This example has some comments explaining how to write the configuration file, and an example RetroArch launch command. See the "Writing an es_systems.cfg" section for more information.
 
-**~/.emulationstation/es_input.cfg:**
-When you first start EmulationStation, you will be prompted to configure any input devices you wish to use. The process is thus:
-
-1. Press a button on any device you wish to use. *This includes the keyboard.* Once you have selected all the devices you wish to configure, hold a button on the first device to continue to step 2.
-
-2. Press the displayed input for each device in sequence.  You will be prompted for Up, Down, Left, Right, A (Select), B (Back), Menu, Select (fast select), PageUp, and PageDown. If your controller doesn't have enough buttons for everything, you can press A to skip the remaining inputs.
-
-3. Your config will be saved to `~/.emulationstation/es_input.cfg`. *If you wish to reconfigure, just delete this file.*
-
-*NOTE: If `~/.emulationstation/es_input.cfg` is present but does not contain any available joysticks or a keyboard, an emergency default keyboard mapping will be used.*
-
-As long as ES hasn't frozen, you can always press F4 to close the application.
-
-
 **Keep in mind you'll have to set up your emulator separately from EmulationStation!**
 
 After you launch a game, EmulationStation will return once your system's command terminates (i.e. your emulator closes).
+
+**~/.emulationstation/es_input.cfg:**
+When you first start EmulationStation, you will be prompted to configure an input device. The process is thus:
+
+1. Hold a button on the device you want to configure.  This includes the keyboard.
+
+2. Press the buttons as they appear in the list.  Some inputs can be skipped by holding any button down for a few seconds (e.g. page up/page down).
+
+3. You can review your mappings by pressing up and down, making any changes by pressing A.
+
+4. Choose "SAVE" to save this device and close the input configuration screen.
+
+The new configuration will be added to the `~/.emulationstation/es_input.cfg` file.
+
+**Both new and old devices can be (re)configured at any time by pressing the Start button and choosing "CONFIGURE INPUT".**  From here, you may unplug the device you used to open the menu and plug in a new one, if necessary.  New devices will be appended to the existing input configuration file, so your old devices will remain configured.
+
+**If things stop working, you can delete the `~/.emulationstation/es_input.cfg` file to make the input configuration screen reappear on next run.**
 
 
 You can use `--help` or `-h` to view a list of command-line options. Briefly outlined here:
@@ -109,9 +112,17 @@ You can use `--help` or `-h` to view a list of command-line options. Briefly out
 --home-path [path]	- use [path] instead of the "home" environment variable (useful for portable installations).
 ```
 
+As long as ES hasn't frozen, you can always press F4 to close the application.
+
+
 Writing an es_systems.cfg
 =========================
-The file `~/.emulationstation/es_systems.cfg` contains the system configuration data for EmulationStation, written in XML.
+
+The `es_systems.cfg` file contains the system configuration data for EmulationStation, written in XML.  This tells EmulationStation what systems you have, what platform they correspond to (for scraping), and where the games are located.
+
+ES will check two places for an es_systems.cfg file, in the following order:
+* `~/.emulationstation/es_systems.cfg`
+* `/etc/emulationstation/es_systems.cfg`
 
 The order EmulationStation displays systems reflects the order you define them in.
 
@@ -163,7 +174,12 @@ gamelist.xml
 
 The gamelist.xml for a system defines metadata for a system's games, such as a name, image (like a screenshot or box art), description, release date, and rating.
 
-If a file named gamelist.xml is found in the root of a system's search directory OR within `~/.emulationstation/%NAME%/`, game metadata will be loaded from it. This allows you to define images, descriptions, and different names for files. Note that only standard ASCII characters are supported for text (if you see a weird [X] symbol, you're probably using unicode!).
+ES will check three places for a gamelist.xml, in the following order:
+* `[SYSTEM_PATH]/gamelist.xml`
+* `~/.emulationstation/gamelists/[SYSTEM_NAME]/gamelist.xml`
+* `/etc/emulationstation/gamelists/[SYSTEM_NAME]/gamelist.xml`
+
+This file allows you to define images, descriptions, and different names for files. Note that only standard ASCII characters are supported for text (if you see a weird [X] symbol, you're probably using Unicode!).
 Images will be automatically resized to fit within the left column of the screen. Smaller images will load faster, so try to keep your resolution low.
 An example gamelist.xml:
 ```xml
@@ -177,12 +193,17 @@ An example gamelist.xml:
 </gameList>
 ```
 
-The path element should be the absolute path of the ROM. Special characters SHOULD NOT be escaped. The image element is the path to an image to display above the description (like a screenshot or boxart). Most formats can be used (including png, jpg, gif, etc.). Not all elements need to be used.
+The path element should be the *absolute path* of the ROM. Special characters SHOULD NOT be escaped. The image element is the path to an image to display above the description (like a screenshot or boxart). Most formats can be used (including png, jpg, gif, etc.). Not all elements need to be used.
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
-The switch `--ignore-gamelist` can be used to ignore the gamelist and use the non-detailed view.
+The switch `--ignore-gamelist` can be used to ignore the gamelist and force ES to use the non-detailed view.
 
-*You can use ES's [scraping](http://en.wikipedia.org/wiki/Web_scraping) tools to avoid creating a gamelist.xml by hand.*  A command-line version is also provided - just run emulationstation with `--scrape`.
+*You can use ES's [scraping](http://en.wikipedia.org/wiki/Web_scraping) tools to avoid creating a gamelist.xml by hand.*  There are two ways to run the scraper:
+
+* **If you want to scrape multiple games:** press start to open the menu and choose the "SCRAPER" option.  Adjust your settings and press "SCRAPE NOW".
+* **If you just want to scrape one game:** find the game on the game list in ES and press select.  Choose "EDIT THIS GAME'S METADATA" and then press the "SCRAPE" button at the bottom of the metadata editor.
+
+A command-line version of the scraper is also provided - just run emulationstation with `--scrape` *(currently broken)*.
 
 Themes
 ======
@@ -190,6 +211,7 @@ Themes
 By default, EmulationStation looks pretty ugly. You can fix that. If you want to know more about making your own themes (or editing existing ones), read THEMES.md!
 
 I've put some themes up for download on my EmulationStation webpage: http://aloshi.com/emulationstation#themes
+
 If you're using RetroPie, you should already have a nice set of themes automatically installed!
 
 -Aloshi

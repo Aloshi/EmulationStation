@@ -81,6 +81,14 @@ private:
 	std::vector<GuiComponent*> mExtras;
 };
 
+struct ThemeSet
+{
+	boost::filesystem::path path;
+
+	inline std::string getName() const { return path.stem().string(); }
+	inline boost::filesystem::path getThemePath(const std::string& system) const { return path/system/"theme.xml"; }
+};
+
 class ThemeData
 {
 public:
@@ -130,6 +138,9 @@ public:
 	static std::vector<GuiComponent*> makeExtras(const std::shared_ptr<ThemeData>& theme, const std::string& view, Window* window);
 
 	static const std::shared_ptr<ThemeData>& getDefault();
+
+	static std::map<std::string, ThemeSet> getThemeSets();
+	static boost::filesystem::path getThemeFromCurrentSet(const std::string& system);
 
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
