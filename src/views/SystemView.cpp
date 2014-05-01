@@ -13,7 +13,7 @@
 #define BAND_HEIGHT (logoSize().y() * SELECTED_SCALE)
 
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
-	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, TextComponent::ALIGN_CENTER)
+	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
 {
 	mCamOffset = 0;
 
@@ -58,7 +58,7 @@ void SystemView::populate()
 				(*it)->getName(), 
 				Font::get(FONT_SIZE_LARGE), 
 				0x000000FF, 
-				TextComponent::ALIGN_CENTER);
+				ALIGN_CENTER);
 			text->setSize(logoSize());
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 
@@ -66,7 +66,7 @@ void SystemView::populate()
 				(*it)->getName(), 
 				Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)), 
 				0x000000FF, 
-				TextComponent::ALIGN_CENTER);
+				ALIGN_CENTER);
 			textSelected->setSize(logoSize());
 			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
 		}

@@ -123,8 +123,6 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 
 	if(size() == 0)
 	{
-		Renderer::setMatrix(trans);
-		font->drawText("The list is empty.", Eigen::Vector2f(0, 0), 0xFF0000FF);
 		return;
 	}
 

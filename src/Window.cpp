@@ -225,9 +225,17 @@ void Window::setAllowSleep(bool sleep)
 
 void Window::renderLoadingScreen()
 {
-	Renderer::setMatrix(Eigen::Affine3f::Identity());
+	Eigen::Affine3f trans = Eigen::Affine3f::Identity();
+	Renderer::setMatrix(trans);
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF);
-	mDefaultFonts.at(2)->drawCenteredText("LOADING", 0, (Renderer::getScreenHeight() - mDefaultFonts.at(2)->getHeight()) / 2.0f , 0xFFFFFFFF);
+
+	auto& font = mDefaultFonts.at(2);
+	TextCache* cache = font->buildTextCache("LOADING", 0, 0, 0xFFFFFFFF);
+	trans.translation() = Eigen::Vector3f((Renderer::getScreenWidth() - cache->metrics.size.x())/2, (Renderer::getScreenHeight() - cache->metrics.size.y())/2, 0);
+	Renderer::setMatrix(trans);
+	font->renderTextCache(cache);
+	delete cache;
+
 	Renderer::swapBuffers();
 }
 

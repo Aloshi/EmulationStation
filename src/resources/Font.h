@@ -19,6 +19,13 @@ class TextCache;
 #define FONT_PATH_LIGHT ":/opensans_hebrew_condensed_light.ttf"
 #define FONT_PATH_REGULAR ":/opensans_hebrew_condensed_regular.ttf"
 
+enum Alignment
+{
+	ALIGN_LEFT,
+	ALIGN_CENTER, // centers both horizontally and vertically
+	ALIGN_RIGHT
+};
+
 //A TrueType Font renderer that uses FreeType and OpenGL.
 //The library is automatically initialized when it's needed.
 class Font : public IReloadable
@@ -50,20 +57,14 @@ public:
 
 	GLuint textureID;
 
+	Eigen::Vector2f sizeText(std::string text) const; // Returns the expected size of a string when rendered.  Extra spacing is applied to the Y axis.
 	TextCache* buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color);
+	TextCache* buildWrappedTextCache(const std::string& text, const Eigen::Vector2f& offset, float xLen, Alignment alignment, unsigned int color);
 	void renderTextCache(TextCache* cache);
-
-	//Create a TextCache, render with it, then delete it.  Best used for short text or text that changes frequently.
-	void drawText(std::string text, const Eigen::Vector2f& offset, unsigned int color);
-	Eigen::Vector2f sizeText(std::string text) const; //Sets the width and height of a given string to supplied pointers. A dimension is skipped if its pointer is NULL.
 	
-	std::string wrapText(std::string text, float xLen) const;
-
-	void drawWrappedText(std::string text, const Eigen::Vector2f& offset, float xLen, unsigned int color);
-	Eigen::Vector2f sizeWrappedText(std::string text, float xLen) const;
-	Eigen::Vector2f getWrappedTextCursorOffset(std::string text, float xLen, int cursor) const;
-
-	void drawCenteredText(std::string text, float xOffset, float y, unsigned int color);
+	std::string wrapText(std::string text, float xLen) const; // Inserts newlines into text to make it wrap properly.
+	Eigen::Vector2f sizeWrappedText(std::string text, float xLen) const; // Returns the expected size of a string after wrapping is applied.
+	Eigen::Vector2f getWrappedTextCursorOffset(std::string text, float xLen, int cursor) const; // Returns the position of of the cursor after moving "cursor" characters.
 
 	float getHeight() const;
 	float getLetterHeight() const;

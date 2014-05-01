@@ -228,14 +228,6 @@ void Font::buildAtlas(ResourceData data)
 	}
 }
 
-
-void Font::drawText(std::string text, const Eigen::Vector2f& offset, unsigned int color)
-{
-	TextCache* cache = buildTextCache(text, offset[0], offset[1], color);
-	renderTextCache(cache);
-	delete cache;
-}
-
 void Font::renderTextCache(TextCache* cache)
 {
 	if(!textureID)
@@ -313,25 +305,6 @@ float Font::getHeight() const
 float Font::getLetterHeight() const
 {
 	return charData['S'].texH * fontScale;
-}
-
-void Font::drawCenteredText(std::string text, float xOffset, float y, unsigned int color)
-{
-	Eigen::Vector2f pos = sizeText(text);
-	
-	pos[0] = (Renderer::getScreenWidth() - pos.x());
-	pos[0] = (pos.x() / 2) + (xOffset / 2);
-	pos[1] = y;
-
-	drawText(text, pos, color);
-}
-
-//this could probably be optimized
-//draws text and ensures it's never longer than xLen
-void Font::drawWrappedText(std::string text, const Eigen::Vector2f& offset, float xLen, unsigned int color)
-{
-	text = wrapText(text, xLen);
-	drawText(text, offset, color);
 }
 
 //the worst algorithm ever written
@@ -446,6 +419,19 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, i
 //=============================================================================================================
 //TextCache
 //=============================================================================================================
+
+TextCache* Font::buildWrappedTextCache(const std::string& text, const Eigen::Vector2f& offset, float xLen, Alignment alignment, unsigned int color)
+{
+	if(!textureID)
+	{
+		LOG(LogError) << "Error - tried to build TextCache with Font that has no texture loaded!";
+		return NULL;
+	}
+
+	// todo
+
+	return NULL;
+}
 
 TextCache* Font::buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color)
 {

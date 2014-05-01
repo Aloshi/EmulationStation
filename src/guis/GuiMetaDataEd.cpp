@@ -30,9 +30,9 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 	mHeaderGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(1, 5));
 	
-	mTitle = std::make_shared<TextComponent>(mWindow, "EDIT METADATA", Font::get(FONT_SIZE_LARGE), 0x333333FF, TextComponent::ALIGN_CENTER);
+	mTitle = std::make_shared<TextComponent>(mWindow, "EDIT METADATA", Font::get(FONT_SIZE_LARGE), 0x333333FF, ALIGN_CENTER);
 	mSubtitle = std::make_shared<TextComponent>(mWindow, strToUpper(scraperParams.game->getPath().filename().generic_string()), 
-		Font::get(FONT_SIZE_SMALL), 0x777777FF, TextComponent::ALIGN_CENTER);
+		Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mHeaderGrid->setEntry(mTitle, Vector2i(0, 1), false, true);
 	mHeaderGrid->setEntry(mSubtitle, Vector2i(0, 3), false, true);
 
@@ -98,7 +98,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 		default:
 			{
 				// MD_STRING
-				ed = std::make_shared<TextComponent>(window, "", Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF, TextComponent::ALIGN_RIGHT);
+				ed = std::make_shared<TextComponent>(window, "", Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF, ALIGN_RIGHT);
 				row.addElement(ed, true);
 				
 				auto spacer = std::make_shared<GuiComponent>(mWindow);

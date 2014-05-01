@@ -14,13 +14,6 @@ class ThemeData;
 class TextComponent : public GuiComponent
 {
 public:
-	enum Alignment
-	{
-		ALIGN_LEFT,
-		ALIGN_CENTER, // centers both horizontally and vertically
-		ALIGN_RIGHT
-	};
-
 	TextComponent(Window* window);
 	TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color = 0x000000FF, Alignment align = ALIGN_LEFT,
 		Eigen::Vector3f pos = Eigen::Vector3f::Zero(), Eigen::Vector2f size = Eigen::Vector2f::Zero());

@@ -26,7 +26,7 @@ public:
 	inline void addWithLabel(const std::string& label, const std::shared_ptr<GuiComponent>& comp, bool setCursorHere = false, bool invert_when_selected = true)
 	{
 		ComponentListRow row;
-		row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), TextComponent::ALIGN_CENTER);
+		row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), ALIGN_CENTER);
 		row.addElement(comp, false, invert_when_selected);
 		addRow(row, setCursorHere);
 	}

@@ -206,7 +206,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	mVersion.setFont(Font::get(FONT_SIZE_SMALL));
 	mVersion.setColor(0xC6C6C6FF);
 	mVersion.setText("EMULATIONSTATION V" PROGRAM_VERSION_STRING);
-	mVersion.setAlignment(TextComponent::ALIGN_CENTER);
+	mVersion.setAlignment(ALIGN_CENTER);
 
 	addChild(&mMenu);
 	addChild(&mVersion);
