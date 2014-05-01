@@ -42,6 +42,7 @@ bool GuiSettings::input(InputConfig* config, Input input)
 		Window* window = mWindow;
 		while(window->peekGui() && window->peekGui() != window->getViewController())
 			delete window->peekGui();
+		return true;
 	}
 	
 	return GuiComponent::input(config, input);

@@ -122,11 +122,14 @@ void GuiScraperMulti::finish()
 {
 	std::stringstream ss;
 	if(mTotalSuccessful == 0)
-		ss << "NO GAMES SUCCESSFULLY SCRAPED.";
-	else
+	{
+		ss << "NO GAMES WERE SCRAPED.";
+	}else{
 		ss << mTotalSuccessful << " GAME" << ((mTotalSuccessful > 1) ? "S" : "") << " SUCCESSFULLY SCRAPED!";
-	if(mTotalSkipped > 0)
-		ss << "\n" << mTotalSkipped << " GAME" << ((mTotalSkipped > 1) ? "S" : "") << " SKIPPED.";
+
+		if(mTotalSkipped > 0)
+			ss << "\n" << mTotalSkipped << " GAME" << ((mTotalSkipped > 1) ? "S" : "") << " SKIPPED.";
+	}
 
 	mWindow->pushGui(new GuiMsgBox(mWindow, ss.str(), 
 		"OK", [&] { delete this; }));
