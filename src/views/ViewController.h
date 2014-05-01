@@ -62,6 +62,7 @@ public:
 
 private:
 	void playViewTransition();
+	int getSystemId(SystemData* system);
 
 	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
 	std::shared_ptr<SystemView> getSystemListView();

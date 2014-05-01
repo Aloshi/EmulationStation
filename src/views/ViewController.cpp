@@ -27,13 +27,23 @@ void ViewController::goToStart()
 	goToSystemView(SystemData::sSystemVector.at(0));
 }
 
+int ViewController::getSystemId(SystemData* system)
+{
+	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
+	return std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
+}
+
 void ViewController::goToSystemView(SystemData* system)
 {
 	mState.viewing = SYSTEM_SELECT;
 	mState.system = system;
 
-	getSystemListView()->goToSystem(system);
-	mCurrentView = getSystemListView();
+	auto systemList = getSystemListView();
+	systemList->setPosition(getSystemId(system) * (float)Renderer::getScreenWidth(), systemList->getPosition().y());
+
+	systemList->goToSystem(system, false);
+	mCurrentView = systemList;
+
 	updateHelpPrompts();
 	playViewTransition();
 }
@@ -56,6 +66,17 @@ void ViewController::goToPrevGameList()
 
 void ViewController::goToGameList(SystemData* system)
 {
+	if(mState.viewing == SYSTEM_SELECT)
+	{
+		// move system list
+		auto sysList = getSystemListView();
+		float offX = sysList->getPosition().x();
+		int sysId = getSystemId(system);
+		sysList->setPosition(sysId * (float)Renderer::getScreenWidth(), sysList->getPosition().y());
+		offX = sysList->getPosition().x() - offX;
+		mCamera.translation().x() -= offX;
+	}
+
 	mState.viewing = GAME_LIST;
 	mState.system = system;
 
@@ -310,7 +331,7 @@ void ViewController::reloadAll()
 		mCurrentView = getGameListView(mState.getSystem());
 	}else if(mState.viewing == SYSTEM_SELECT)
 	{
-		mSystemListView->goToSystem(mState.getSystem());
+		mSystemListView->goToSystem(mState.getSystem(), false);
 		mCurrentView = mSystemListView;
 	}else{
 		goToSystemView(SystemData::sSystemVector.front());

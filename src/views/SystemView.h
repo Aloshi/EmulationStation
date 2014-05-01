@@ -22,7 +22,7 @@ class SystemView : public IList<SystemViewData, SystemData*>
 public:
 	SystemView(Window* window);
 
-	void goToSystem(SystemData* system);
+	void goToSystem(SystemData* system, bool animate);
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;

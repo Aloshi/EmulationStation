@@ -79,9 +79,12 @@ void SystemView::populate()
 	}
 }
 
-void SystemView::goToSystem(SystemData* system)
+void SystemView::goToSystem(SystemData* system, bool animate)
 {
 	setCursor(system);
+
+	if(!animate)
+		finishAnimation(0);
 }
 
 bool SystemView::input(InputConfig* config, Input input)
