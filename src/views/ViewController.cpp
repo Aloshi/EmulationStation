@@ -139,14 +139,15 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 	{
 		// fade out, launch game, fade back in
 		auto fadeFunc = [this](float t) {
-			t -= 1;
-			mFadeOpacity = lerp<float>(0.0f, 1.0f, t*t*t + 1);
+			//t -= 1;
+			//mFadeOpacity = lerp<float>(0.0f, 1.0f, t*t*t + 1);
+			mFadeOpacity = lerp<float>(0.0f, 1.0f, t);
 		};
-		setAnimation(new LambdaAnimation(fadeFunc, 1500), 0, [this, game, fadeFunc]
+		setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this, game, fadeFunc]
 		{
 			game->getSystem()->launchGame(mWindow, game);
 			mLockInput = false;
-			setAnimation(new LambdaAnimation(fadeFunc, 1500), 0, nullptr, true);
+			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, nullptr, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
 		});
 	}else{
