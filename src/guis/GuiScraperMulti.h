@@ -14,6 +14,7 @@ class GuiScraperMulti : public GuiComponent
 {
 public:
 	GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults);
+	virtual ~GuiScraperMulti();
 
 	void onSizeChanged() override;
 	std::vector<HelpPrompt> getHelpPrompts() override;

@@ -1,6 +1,7 @@
 #include "GuiScraperMulti.h"
 #include "../Renderer.h"
 #include "../Log.h"
+#include "../views/ViewController.h"
 
 #include "../components/TextComponent.h"
 #include "../components/ButtonComponent.h"
@@ -65,6 +66,13 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 
 	doNextSearch();
+}
+
+GuiScraperMulti::~GuiScraperMulti()
+{
+	// view type probably changed (basic -> detailed)
+	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+		mWindow->getViewController()->reloadGameListView(*it, false);
 }
 
 void GuiScraperMulti::onSizeChanged()

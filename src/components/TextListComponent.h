@@ -130,12 +130,9 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	std::shared_ptr<Font>& font = mFont;
 
 	if(size() == 0)
-	{
 		return;
-	}
 
-	const int cutoff = 0;
-	const int entrySize = (int)font->getHeight() + 5;
+	const float entrySize = font->getHeight() + 5;
 
 	int startEntry = 0;
 
@@ -144,32 +141,34 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	
 	if(size() >= screenCount)
 	{
-		startEntry = mCursor - (int)(screenCount * 0.5);
+		startEntry = mCursor - screenCount/2;
 		if(startEntry < 0)
 			startEntry = 0;
 		if(startEntry >= size() - screenCount)
 			startEntry = size() - screenCount;
 	}
 
-	float y = (float)cutoff;
+	float y = 0;
 
 	int listCutoff = startEntry + screenCount;
 	if(listCutoff > size())
 		listCutoff = size();
 
+	// draw selector bar
+	if(startEntry < listCutoff)
+	{
+		Renderer::setMatrix(trans);
+		Renderer::drawRect(0.f, (mCursor - startEntry)*entrySize, mSize.x(), font->getHeight(), mSelectorColor);
+	}
+
+	// clip to inside margins
 	Eigen::Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
-	Renderer::pushClipRect(Eigen::Vector2i((int)trans.translation().x(), (int)trans.translation().y()), Eigen::Vector2i((int)dim.x(), (int)dim.y()));
+	Renderer::pushClipRect(Eigen::Vector2i((int)(trans.translation().x() + mHorizontalMargin), (int)trans.translation().y()), 
+		Eigen::Vector2i((int)(dim.x() - mHorizontalMargin*2), (int)dim.y()));
 
 	for(int i = startEntry; i < listCutoff; i++)
 	{
-		//draw selector bar
-		if(mCursor == i)
-		{
-			Renderer::setMatrix(trans);
-			Renderer::drawRect(0, (int)y, (int)mSize.x(), (int)font->getHeight(), mSelectorColor);
-		}
-
 		typename IList<TextListData, T>::Entry& entry = mEntries.at((unsigned int)i);
 
 		unsigned int color;
@@ -276,6 +275,7 @@ void TextListComponent<T>::update(int deltaTime)
 		Eigen::Vector2f textSize = mFont->sizeText(text);
 
 		//it's long enough to marquee
+		mMarqueeTime += deltaTime;
 		if(textSize.x() - mMarqueeOffset > mSize.x() - 12 - (mAlignment != ALIGN_CENTER ? mHorizontalMargin : 0))
 		{
 			mMarqueeTime += deltaTime;
