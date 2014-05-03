@@ -10,6 +10,7 @@
 #include "../Sound.h"
 #include "../Log.h"
 #include "../ThemeData.h"
+#include "../Util.h"
 #include <functional>
 
 struct TextListData
@@ -60,7 +61,13 @@ public:
 	inline void setFont(const std::shared_ptr<Font>& font)
 	{
 		mFont = font;
-		
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+			it->data.textCache.reset();
+	}
+
+	inline void setUppercase(bool uppercase) 
+	{
+		mUppercase = true;
 		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
 			it->data.textCache.reset();
 	}
@@ -74,7 +81,6 @@ public:
 protected:
 	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
 	virtual void onCursorChanged(const CursorState& state);
-
 
 private:
 	static const int MARQUEE_DELAY = 900;
@@ -90,6 +96,7 @@ private:
 	std::function<void(CursorState state)> mCursorChangedCallback;
 
 	std::shared_ptr<Font> mFont;
+	bool mUppercase;
 	unsigned int mSelectorColor;
 	unsigned int mSelectedColor;
 	std::shared_ptr<Sound> mScrollSound;
@@ -108,6 +115,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mAlignment = ALIGN_CENTER;
 
 	mFont = Font::get(FONT_SIZE_MEDIUM);
+	mUppercase = false;
 	mSelectorColor = 0x000000FF;
 	mSelectedColor = 0;
 	mColors[0] = 0x0000FFFF;
@@ -171,7 +179,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 			color = mColors[entry.data.colorId];
 
 		if(!entry.data.textCache)
-			entry.data.textCache = std::unique_ptr<TextCache>(font->buildTextCache(entry.name, 0, 0, 0x000000FF));
+			entry.data.textCache = std::unique_ptr<TextCache>(font->buildTextCache(mUppercase ? strToUpper(entry.name) : entry.name, 0, 0, 0x000000FF));
 
 		entry.data.textCache->setColor(color);
 
@@ -351,4 +359,7 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 			mHorizontalMargin = elem->get<float>("horizontalMargin") * (this->mParent ? this->mParent->getSize().x() : (float)Renderer::getScreenWidth());
 		}
 	}
+
+	if(properties & FORCE_UPPERCASE && elem->has("forceUppercase"))
+			setUppercase(elem->get<bool>("forceUppercase"));
 }

@@ -34,6 +34,7 @@ public:
 
 	void setColor(unsigned int color); // Text color.
 	void setFont(std::shared_ptr<Font> font); // Font to display with. Default is Font::get(FONT_SIZE_MEDIUM).
+	void setUppercase(bool uppercase); // Force text to be uppercase when in DISP_RELATIVE_TO_NOW mode.
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
@@ -59,6 +60,7 @@ private:
 
 	unsigned int mColor;
 	std::shared_ptr<Font> mFont;
+	bool mUppercase;
 
 	bool mSizeSet;
 };

@@ -35,6 +35,7 @@ namespace ThemeFlags
 		SOUND = 128,
 		ALIGNMENT = 256,
 		TEXT = 512,
+		FORCE_UPPERCASE = 1024,
 
 		ALL = 0xFFFFFFFF
 	};

@@ -342,6 +342,7 @@ Reference
 * `image name="logo"` - PATH
 	- A logo image, to be displayed in the system logo carousel.
 * You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.
+
 ---
 
 #### fastSelect
@@ -419,6 +420,7 @@ Can be created as an extra.
 	- Size of the font as a percentage of screen height (e.g. for a value of `0.1`, the text's height would be 10% of the screen height).
 * `alignment` - type: STRING.
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.  "center" will also align vertically.
+* `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 
 #### textlist
 
@@ -440,6 +442,7 @@ Can be created as an extra.
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.
 * `horizontalMargin` - type: FLOAT.
 	- Horizontal offset for text from the alignment point.  If `alignment` is "left", offsets the text to the right.  If `alignment` is "right", offsets text to the left.  No effect if `alignment` is "center".  Given as a percentage of the element's parent's width (same unit as `size`'s X value).
+* `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 
 #### ninepatch
 
@@ -467,6 +470,7 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `color` - type: COLOR.
 * `fontPath` - type: PATH.
 * `fontSize` - type: FLOAT.
+* `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 
 #### sound
 

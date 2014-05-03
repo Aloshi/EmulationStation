@@ -7,13 +7,13 @@
 #include "../Settings.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
-	mFont(Font::get(FONT_SIZE_MEDIUM)), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT)
+	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT)
 {
 }
 
 TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
 	Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
-	mFont(NULL), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align)
+	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align)
 {
 	setFont(font);
 	setColor(color);
@@ -60,6 +60,12 @@ unsigned char TextComponent::getOpacity() const
 void TextComponent::setText(const std::string& text)
 {
 	mText = text;
+	onTextChanged();
+}
+
+void TextComponent::setUppercase(bool uppercase)
+{
+	mUppercase = uppercase;
 	onTextChanged();
 }
 
@@ -118,11 +124,11 @@ void TextComponent::calculateExtent()
 {
 	if(mAutoCalcExtent.x())
 	{
-		mSize = mFont->sizeText(mText);
+		mSize = mFont->sizeText(mUppercase ? strToUpper(mText) : mText);
 	}else{
 		if(mAutoCalcExtent.y())
 		{
-			mSize[1] = mFont->sizeWrappedText(mText, getSize().x()).y();
+			mSize[1] = mFont->sizeWrappedText(mUppercase ? strToUpper(mText) : mText, getSize().x()).y();
 		}
 	}
 }
@@ -131,16 +137,17 @@ void TextComponent::onTextChanged()
 {
 	calculateExtent();
 
+	std::string text = mUppercase ? strToUpper(mText) : mText;
+
 	std::shared_ptr<Font> f = getFont();
 	const bool wrap = (mSize.y() == 0 || (int)mSize.y() > f->getHeight());
-	Eigen::Vector2f size = f->sizeText(mText);
-	if(!wrap && mSize.x() && mText.size() && size.x() > mSize.x())
+	Eigen::Vector2f size = f->sizeText(text);
+	if(!wrap && mSize.x() && text.size() && size.x() > mSize.x())
 	{
 		// abbreviate text
 		const std::string abbrev = "...";
 		Eigen::Vector2f abbrevSize = f->sizeText(abbrev);
 
-		std::string text = mText;
 		while(text.size() && size.x() + abbrevSize.x() > mSize.x())
 		{
 			text.erase(text.size() - 1, 1);
@@ -151,7 +158,7 @@ void TextComponent::onTextChanged()
 
 		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(text, 0, 0, (mColor >> 8 << 8) | mOpacity));
 	}else{
-		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(mText, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
+		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(text, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
 	}
 }
 
@@ -201,6 +208,9 @@ void TextComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const st
 
 	if(properties & TEXT && elem->has("text"))
 		setText(elem->get<std::string>("text"));
+
+	if(properties & FORCE_UPPERCASE && elem->has("forceUppercase"))
+		setUppercase(elem->get<bool>("forceUppercase"));
 
 	setFont(Font::getFromTheme(elem, properties, mFont));
 }

@@ -19,6 +19,7 @@ public:
 		Eigen::Vector3f pos = Eigen::Vector3f::Zero(), Eigen::Vector2f size = Eigen::Vector2f::Zero());
 
 	void setFont(const std::shared_ptr<Font>& font);
+	void setUppercase(bool uppercase);
 	void onSizeChanged() override;
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
@@ -44,6 +45,7 @@ private:
 
 	unsigned int mColor;
 	std::shared_ptr<Font> mFont;
+	bool mUppercase;
 	Eigen::Matrix<bool, 1, 2> mAutoCalcExtent;
 	std::string mText;
 	std::shared_ptr<TextCache> mTextCache;

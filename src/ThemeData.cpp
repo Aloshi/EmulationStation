@@ -39,7 +39,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("color", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)
-		("alignment", STRING)))
+		("alignment", STRING)
+		("forceUppercase", BOOLEAN)))
 	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
@@ -51,7 +52,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("fontSize", FLOAT)
 		("scrollSound", PATH)
 		("alignment", STRING)
-		("horizontalMargin", FLOAT)))
+		("horizontalMargin", FLOAT)
+		("forceUppercase", BOOLEAN)))
 	("container", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)))
@@ -64,7 +66,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("size", NORMALIZED_PAIR)
 		("color", COLOR)
 		("fontPath", PATH)
-		("fontSize", FLOAT)))
+		("fontSize", FLOAT)
+		("forceUppercase", BOOLEAN)))
 	("rating", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)

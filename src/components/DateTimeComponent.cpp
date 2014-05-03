@@ -7,7 +7,7 @@
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
-	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT)), mSizeSet(false)
+	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT)), mUppercase(false), mSizeSet(false)
 {
 	updateTextCache();
 }
@@ -15,6 +15,7 @@ DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : Gui
 void DateTimeComponent::setDisplayMode(DisplayMode mode)
 {
 	mDisplayMode = mode;
+	updateTextCache();
 }
 
 bool DateTimeComponent::input(InputConfig* config, Input input)
@@ -249,7 +250,7 @@ std::shared_ptr<Font> DateTimeComponent::getFont() const
 void DateTimeComponent::updateTextCache()
 {
 	DisplayMode mode = getCurrentDisplayMode();
-	const std::string dispString = getDisplayString(mode);
+	const std::string dispString = mUppercase ? strToUpper(getDisplayString(mode)) : getDisplayString(mode);
 	std::shared_ptr<Font> font = getFont();
 	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
 
@@ -302,6 +303,12 @@ void DateTimeComponent::onSizeChanged()
 	updateTextCache();
 }
 
+void DateTimeComponent::setUppercase(bool uppercase)
+{
+	mUppercase = uppercase;
+	updateTextCache();
+}
+
 void DateTimeComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
 	GuiComponent::applyTheme(theme, view, element, properties);
@@ -314,6 +321,9 @@ void DateTimeComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, cons
 
 	if(properties & COLOR && elem->has("color"))
 		setColor(elem->get<unsigned int>("color"));
+
+	if(properties & FORCE_UPPERCASE && elem->has("forceUppercase"))
+		setUppercase(elem->get<bool>("forceUppercase"));
 
 	setFont(Font::getFromTheme(elem, properties, mFont));
 }
