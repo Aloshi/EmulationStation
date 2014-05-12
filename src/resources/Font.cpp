@@ -7,11 +7,7 @@
 #include "../Log.h"
 #include "../Util.h"
 
-FT_Library Font::sLibrary;
-bool Font::libraryInitialized = false;
-
-int Font::getDpiX() { return 96; }
-int Font::getDpiY() { return 96; }
+FT_Library Font::sLibrary = NULL;
 
 int Font::getSize() const { return mSize; }
 
@@ -19,20 +15,20 @@ std::map< std::pair<std::string, int>, std::weak_ptr<Font> > Font::sFontMap;
 
 void Font::initLibrary()
 {
+	assert(sLibrary == NULL);
 	if(FT_Init_FreeType(&sLibrary))
 	{
+		sLibrary = NULL;
 		LOG(LogError) << "Error initializing FreeType!";
-	}else{
-		libraryInitialized = true;
 	}
 }
 
 size_t Font::getMemUsage() const
 {
-	if(!textureID)
+	if(!mTextureID)
 		return 0;
 
-	return textureWidth * textureHeight * 4;
+	return mTextureWidth * mTextureHeight * 4;
 }
 
 size_t Font::getTotalMemUsage()
@@ -55,7 +51,7 @@ size_t Font::getTotalMemUsage()
 	return total;
 }
 
-Font::Font(int size, const std::string& path) : fontScale(1.0f), mSize(size), mPath(path)
+Font::Font(int size, const std::string& path) : mFontScale(1.0f), mSize(size), mPath(path), mTextureID(0)
 {
 	reload(ResourceManager::getInstance());
 }
@@ -93,8 +89,10 @@ std::shared_ptr<Font> Font::get(int size, const std::string& path)
 
 void Font::init(ResourceData data)
 {
-	if(!libraryInitialized)
+	if(sLibrary == NULL)
 		initLibrary();
+
+	deinit();
 
 	mMaxGlyphHeight = 0;
 
@@ -103,51 +101,33 @@ void Font::init(ResourceData data)
 
 void Font::deinit()
 {
-	if(textureID)
+	if(mTextureID)
 	{
-		glDeleteTextures(1, &textureID);
-		textureID = 0;
+		glDeleteTextures(1, &mTextureID);
+		mTextureID = 0;
 	}
 }
 
 void Font::buildAtlas(ResourceData data)
-{
+{	
+	assert(mSize > 0);
+
+	FT_Face face;
 	if(FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face))
 	{
 		LOG(LogError) << "Error creating font face! (mPath: " << mPath << ", data.length: " << data.length << ")";
 		return;
 	}
 
-	//FT_Set_Char_Size(face, 0, size * 64, getDpiX(), getDpiY());
 	FT_Set_Pixel_Sizes(face, 0, mSize);
 
-	//find the size we should use
-	FT_GlyphSlot g = face->glyph;
-	int w = 0;
-	int h = 0;
+	// hardcoded texture size right now
+	mTextureWidth = 2048;
+	mTextureHeight = 512;
 
-	/*for(int i = 32; i < 128; i++)
-	{
-		if(FT_Load_Char(face, i, FT_LOAD_RENDER))
-		{
-			fprintf(stderr, "Loading character %c failed!\n", i);
-			continue;
-		}
-
-		w += g->bitmap.width;
-		h = std::max(h, g->bitmap.rows);
-	}*/
-
-	//the max size (GL_MAX_TEXTURE_SIZE) is like 3300
-	w = 2048;
-	h = 512;
-
-	textureWidth = w;
-	textureHeight = h;
-
-	//create the texture
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	// create the texture
+	glGenTextures(1, &mTextureID);
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -158,33 +138,19 @@ void Font::buildAtlas(ResourceData data)
 	glPixelStorei(GL_PACK_ALIGNMENT, 1);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, w, h, 0, GL_ALPHA, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, mTextureWidth, mTextureHeight, 0, GL_ALPHA, GL_UNSIGNED_BYTE, NULL);
 
 	//copy the glyphs into the texture
 	int x = 0;
 	int y = 0;
 	int maxHeight = 0;
+	FT_GlyphSlot g = face->glyph;
 	for(int i = 32; i < 128; i++)
 	{
 		if(FT_Load_Char(face, i, FT_LOAD_RENDER))
 			continue;
 
-		 //prints rendered texture to the console
-		/*std::cout << "uploading at x: " << x << ", w: " << g->bitmap.width << " h: " << g->bitmap.rows << "\n";
-
-		for(int k = 0; k < g->bitmap.rows; k++)
-		{
-			for(int j = 0; j < g->bitmap.width; j++)
-			{
-				if(g->bitmap.buffer[g->bitmap.width * k + j])
-					std::cout << ".";
-				else
-					std::cout << " ";
-			}
-			std::cout << "\n";
-		}*/
-
-		if(x + g->bitmap.width >= textureWidth)
+		if(x + g->bitmap.width >= mTextureWidth)
 		{
 			x = 0;
 			y += maxHeight + 1; //leave one pixel of space between glyphs
@@ -197,17 +163,17 @@ void Font::buildAtlas(ResourceData data)
 		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, g->bitmap.width, g->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, g->bitmap.buffer);
 
 
-		charData[i].texX = x;
-		charData[i].texY = y;
-		charData[i].texW = g->bitmap.width;
-		charData[i].texH = g->bitmap.rows;
-		charData[i].advX = (float)g->metrics.horiAdvance / 64.0f;
-		charData[i].advY = (float)g->metrics.vertAdvance / 64.0f;
-		charData[i].bearingX = (float)g->metrics.horiBearingX / 64.0f;
-		charData[i].bearingY = (float)g->metrics.horiBearingY / 64.0f;
+		mCharData[i].texX = x;
+		mCharData[i].texY = y;
+		mCharData[i].texW = g->bitmap.width;
+		mCharData[i].texH = g->bitmap.rows;
+		mCharData[i].advX = (float)g->metrics.horiAdvance / 64.0f;
+		mCharData[i].advY = (float)g->metrics.vertAdvance / 64.0f;
+		mCharData[i].bearingX = (float)g->metrics.horiBearingX / 64.0f;
+		mCharData[i].bearingY = (float)g->metrics.horiBearingY / 64.0f;
 
-		if(charData[i].texH > mMaxGlyphHeight)
-			mMaxGlyphHeight = charData[i].texH;
+		if(mCharData[i].texH > mMaxGlyphHeight)
+			mMaxGlyphHeight = mCharData[i].texH;
 
 		x += g->bitmap.width + 1; //leave one pixel of space between glyphs
 	}
@@ -216,13 +182,13 @@ void Font::buildAtlas(ResourceData data)
 
 	FT_Done_Face(face);
 
-	if((y + maxHeight) >= textureHeight)
+	if((y + maxHeight) >= mTextureHeight)
 	{
 		//failed to create a proper font texture
 		LOG(LogWarning) << "Font \"" << mPath << "\" with size " << mSize << " exceeded max texture size! Trying again...";
 		//try a 3/4th smaller size and redo initialization
-		fontScale *= 1.25f;
-		mSize = (int)(mSize * (1.0f / fontScale));
+		mFontScale *= 1.25f;
+		mSize = (int)(mSize * (1.0f / mFontScale));
 		deinit();
 		init(data);
 	}
@@ -230,7 +196,7 @@ void Font::buildAtlas(ResourceData data)
 
 void Font::renderTextCache(TextCache* cache)
 {
-	if(!textureID)
+	if(!mTextureID)
 	{
 		LOG(LogError) << "Error - tried to draw with Font that has no texture loaded!";
 		return;
@@ -242,7 +208,7 @@ void Font::renderTextCache(TextCache* cache)
 		return;
 	}
 
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, mTextureID);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -265,12 +231,12 @@ void Font::renderTextCache(TextCache* cache)
 	glDisable(GL_BLEND);
 }
 
-Eigen::Vector2f Font::sizeText(std::string text) const
+Eigen::Vector2f Font::sizeText(std::string text, float lineSpacing) const
 {
 	float lineWidth = 0.0f;
 	float highestWidth = 0.0f;
 
-	float y = getHeight();
+	float y = getHeight(lineSpacing);
 
 	for(unsigned int i = 0; i < text.length(); i++)
 	{
@@ -282,13 +248,13 @@ Eigen::Vector2f Font::sizeText(std::string text) const
 				highestWidth = lineWidth;
 
 			lineWidth = 0.0f;
-			y += getHeight();
+			y += getHeight(lineSpacing);
 		}
 
 		if(letter < 32 || letter >= 128)
 			letter = 127;
 
-		lineWidth += charData[letter].advX * fontScale;
+		lineWidth += mCharData[letter].advX * mFontScale;
 	}
 
 	if(lineWidth > highestWidth)
@@ -297,14 +263,14 @@ Eigen::Vector2f Font::sizeText(std::string text) const
 	return Eigen::Vector2f(highestWidth, y);
 }
 
-float Font::getHeight() const
+float Font::getHeight(float lineSpacing) const
 {
-	return mMaxGlyphHeight * 1.5f * fontScale;
+	return mMaxGlyphHeight * lineSpacing * mFontScale;
 }
 
 float Font::getLetterHeight() const
 {
-	return charData['S'].texH * fontScale;
+	return mCharData['S'].texH * mFontScale;
 }
 
 //the worst algorithm ever written
@@ -368,13 +334,13 @@ std::string Font::wrapText(std::string text, float xLen) const
 	return out;
 }
 
-Eigen::Vector2f Font::sizeWrappedText(std::string text, float xLen) const
+Eigen::Vector2f Font::sizeWrappedText(std::string text, float xLen, float lineSpacing) const
 {
 	text = wrapText(text, xLen);
-	return sizeText(text);
+	return sizeText(text, lineSpacing);
 }
 
-Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, int cursor) const
+Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, int cursor, float lineSpacing) const
 {
 	std::string wrappedText = wrapText(text, xLen);
 
@@ -393,7 +359,7 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, i
 			//this is where the wordwrap inserted a newline
 			//reset lineWidth and increment y, but don't consume a cursor character
 			lineWidth = 0.0f;
-			y += getHeight();
+			y += getHeight(lineSpacing);
 
 			wrapOffset++;
 			i--;
@@ -403,14 +369,14 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, i
 		if(letter == '\n')
 		{
 			lineWidth = 0.0f;
-			y += getHeight();
+			y += getHeight(lineSpacing);
 			continue;
 		}
 
 		if(letter < 32 || letter >= 128)
 			letter = 127;
 
-		lineWidth += charData[letter].advX * fontScale;
+		lineWidth += mCharData[letter].advX * mFontScale;
 	}
 
 	return Eigen::Vector2f(lineWidth, y);
@@ -420,9 +386,9 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, i
 //TextCache
 //=============================================================================================================
 
-TextCache* Font::buildWrappedTextCache(const std::string& text, const Eigen::Vector2f& offset, float xLen, Alignment alignment, unsigned int color)
+TextCache* Font::buildTextCache(const std::string& text, Eigen::Vector2f offset, unsigned int color, float xLen, Alignment alignment, float lineSpacing)
 {
-	if(!textureID)
+	if(!mTextureID)
 	{
 		LOG(LogError) << "Error - tried to build TextCache with Font that has no texture loaded!";
 		return NULL;
@@ -430,12 +396,14 @@ TextCache* Font::buildWrappedTextCache(const std::string& text, const Eigen::Vec
 
 	// todo
 
+
+
 	return NULL;
 }
 
 TextCache* Font::buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color)
 {
-	if(!textureID)
+	if(!mTextureID)
 	{
 		LOG(LogError) << "Error - tried to build TextCache with Font that has no texture loaded!";
 		return NULL;
@@ -446,13 +414,18 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 	TextCache::Vertex* vert = new TextCache::Vertex[vertCount];
 	GLubyte* colors = new GLubyte[vertCount * 4];
 
+	// all glyph sizes/texture offsets are in pixels,
+	// so the only rounding we have to worry about is the offset
+	offsetX = round(offsetX);
+	offsetY = round(offsetY);
+
 	//texture atlas width/height
-	float tw = (float)textureWidth;
-	float th = (float)textureHeight;
+	float tw = (float)mTextureWidth;
+	float th = (float)mTextureHeight;
 
 	float x = offsetX;
 
-	float yTop = charData['S'].bearingY * fontScale;
+	float yTop = mCharData['S'].bearingY * mFontScale;
 	float yBot = getHeight();
 	float y = offsetY + (yBot + yTop)/2.0f;
 
@@ -473,14 +446,14 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 			letter = 127; //print [X] if character is not standard ASCII
 
 		//the glyph might not start at the cursor position, but needs to be shifted a bit
-		const float glyphStartX = x + charData[letter].bearingX * fontScale;
+		const float glyphStartX = x + mCharData[letter].bearingX * mFontScale;
 		//order is bottom left, top right, top left
-		vert[i + 0].pos << glyphStartX, y + (charData[letter].texH - charData[letter].bearingY) * fontScale;
-		vert[i + 1].pos << glyphStartX + charData[letter].texW * fontScale, y - charData[letter].bearingY * fontScale;
+		vert[i + 0].pos << glyphStartX, y + (mCharData[letter].texH - mCharData[letter].bearingY) * mFontScale;
+		vert[i + 1].pos << glyphStartX + mCharData[letter].texW * mFontScale, y - mCharData[letter].bearingY * mFontScale;
 		vert[i + 2].pos << glyphStartX, vert[i + 1].pos.y();
 
-		Eigen::Vector2i charTexCoord(charData[letter].texX, charData[letter].texY);
-		Eigen::Vector2i charTexSize(charData[letter].texW, charData[letter].texH);
+		Eigen::Vector2i charTexCoord(mCharData[letter].texX, mCharData[letter].texY);
+		Eigen::Vector2i charTexSize(mCharData[letter].texW, mCharData[letter].texH);
 
 		vert[i + 0].tex << charTexCoord.x() / tw, (charTexCoord.y() + charTexSize.y()) / th;
 		vert[i + 1].tex << (charTexCoord.x() + charTexSize.x()) / tw, charTexCoord.y() / th;
@@ -497,13 +470,7 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 		vert[i + 5].tex[0] = vert[i + 1].tex.x();
 		vert[i + 5].tex[1] = vert[i + 0].tex.y();
 
-		// round
-		for(int j = 0; j < 6; j++)
-		{
-			vert[i + j].pos = roundVector(vert[i + j].pos);
-		}
-
-		x += charData[letter].advX * fontScale;
+		x += mCharData[letter].advX * mFontScale;
 	}
 
 	TextCache::CacheMetrics metrics = { sizeText(text) };
