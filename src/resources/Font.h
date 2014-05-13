@@ -99,6 +99,8 @@ private:
 	int mSize;
 	const std::string mPath;
 
+	float getNewlineStartOffset(const std::string& text, const unsigned int& charStart, const float& xLen, const Alignment& alignment);
+
 	friend TextCache;
 };
 

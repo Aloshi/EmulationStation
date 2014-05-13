@@ -386,6 +386,27 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, i
 //TextCache
 //=============================================================================================================
 
+float Font::getNewlineStartOffset(const std::string& text, const unsigned int& charStart, const float& xLen, const Alignment& alignment)
+{
+	switch(alignment)
+	{
+	case ALIGN_LEFT:
+		return 0;
+	case ALIGN_CENTER:
+		{
+			unsigned int endChar = text.find('\n', charStart);
+			return (xLen - sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x()) / 2.0f;
+		}
+	case ALIGN_RIGHT:
+		{
+			unsigned int endChar = text.find('\n', charStart);
+			return xLen - (sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x());
+		}
+	default:
+		return 0;
+	}
+}
+
 TextCache* Font::buildTextCache(const std::string& text, Eigen::Vector2f offset, unsigned int color, float xLen, Alignment alignment, float lineSpacing)
 {
 	if(!mTextureID)
@@ -394,50 +415,28 @@ TextCache* Font::buildTextCache(const std::string& text, Eigen::Vector2f offset,
 		return NULL;
 	}
 
-	// todo
-
-
-
-	return NULL;
-}
-
-TextCache* Font::buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color)
-{
-	if(!mTextureID)
-	{
-		LOG(LogError) << "Error - tried to build TextCache with Font that has no texture loaded!";
-		return NULL;
-	}
-
-	const int triCount = text.length() * 2;
-	const int vertCount = triCount * 3;
+	const unsigned int vertCount = text.length() * 2 * 3; // 2 triangles of 3 vertices per character
 	TextCache::Vertex* vert = new TextCache::Vertex[vertCount];
 	GLubyte* colors = new GLubyte[vertCount * 4];
-
-	// all glyph sizes/texture offsets are in pixels,
-	// so the only rounding we have to worry about is the offset
-	offsetX = round(offsetX);
-	offsetY = round(offsetY);
 
 	//texture atlas width/height
 	float tw = (float)mTextureWidth;
 	float th = (float)mTextureHeight;
 
-	float x = offsetX;
-
+	float x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, 0, xLen, alignment) : 0);
+	
 	float yTop = mCharData['S'].bearingY * mFontScale;
-	float yBot = getHeight();
-	float y = offsetY + (yBot + yTop)/2.0f;
+	float yBot = getHeight(lineSpacing);
+	float y = offset[1] + (yBot + yTop)/2.0f;
 
-	int charNum = 0;
-	for(int i = 0; i < vertCount; i += 6, charNum++)
+	for(unsigned int i = 0, charNum = 0; i < vertCount; i += 6, charNum++)
 	{
 		unsigned char letter = text[charNum];
 
 		if(letter == '\n')
 		{
-			y += (float)getHeight();
-			x = offsetX;
+			y += getHeight(lineSpacing);
+			x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, charNum+1, xLen, alignment) : 0);
 			memset(&vert[i], 0, 6 * sizeof(TextCache::Vertex));
 			continue;
 		}
@@ -470,6 +469,13 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 		vert[i + 5].tex[0] = vert[i + 1].tex.x();
 		vert[i + 5].tex[1] = vert[i + 0].tex.y();
 
+		// round to fix some weird "cut off" text bugs
+		for(unsigned int j = i; j < i + 6; j++)
+		{
+			vert[j].pos[0] = round(vert[j].pos[0]);
+			vert[j].pos[1] = round(vert[j].pos[1]);
+		}
+
 		x += mCharData[letter].advX * mFontScale;
 	}
 
@@ -479,6 +485,11 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 		cache->setColor(color);
 
 	return cache;
+}
+
+TextCache* Font::buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color)
+{
+	return buildTextCache(text, Eigen::Vector2f(offsetX, offsetY), color, 0.0f);
 }
 
 TextCache::TextCache(int verts, Vertex* v, GLubyte* c, const CacheMetrics& m) : vertCount(verts), verts(v), colors(c), metrics(m)

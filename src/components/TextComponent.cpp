@@ -82,22 +82,7 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 	if(mTextCache)
 	{
 		const Eigen::Vector2f& textSize = mTextCache->metrics.size;
-		Eigen::Vector3f off(0, 0, 0);
-
-		switch(mAlignment)
-		{
-		case ALIGN_LEFT:
-			off << 0, (getSize().y() - textSize.y()) / 2, 0;
-			break;
-
-		case ALIGN_CENTER:
-			off << (getSize().x() - textSize.x()) / 2, (getSize().y() - textSize.y()) / 2, 0;
-			break;
-
-		case ALIGN_RIGHT:
-			off << (getSize().x() - textSize.x()), (getSize().y() - textSize.y()) / 2, 0;
-			break;
-		}
+		Eigen::Vector3f off(0, (getSize().y() - textSize.y()) / 2.0f, 0);
 
 		if(Settings::getInstance()->getBool("DebugText"))
 		{
@@ -112,7 +97,20 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 
 		// draw the text area, where the text actually is going
 		if(Settings::getInstance()->getBool("DebugText"))
-			Renderer::drawRect(0.0f, 0.0f, mTextCache->metrics.size.x(), mTextCache->metrics.size.y(), 0x00000033);
+		{
+			switch(mAlignment)
+			{
+			case ALIGN_LEFT:
+				Renderer::drawRect(0.0f, 0.0f, mTextCache->metrics.size.x(), mTextCache->metrics.size.y(), 0x00000033);
+				break;
+			case ALIGN_CENTER:
+				Renderer::drawRect((mSize.x() - mTextCache->metrics.size.x()) / 2.0f, 0.0f, mTextCache->metrics.size.x(), mTextCache->metrics.size.y(), 0x00000033);
+				break;
+			case ALIGN_RIGHT:
+				Renderer::drawRect(mSize.x() - mTextCache->metrics.size.x(), 0.0f, mTextCache->metrics.size.x(), mTextCache->metrics.size.y(), 0x00000033);
+				break;
+			}
+		}
 
 		mFont->renderTextCache(mTextCache.get());
 	}
@@ -140,7 +138,7 @@ void TextComponent::onTextChanged()
 	std::string text = mUppercase ? strToUpper(mText) : mText;
 
 	std::shared_ptr<Font> f = getFont();
-	const bool wrap = (mSize.y() == 0 || (int)mSize.y() > f->getHeight());
+	const bool wrap = (mSize.y() == 0 || mSize.y() > f->getHeight()*1.2f);
 	Eigen::Vector2f size = f->sizeText(text);
 	if(!wrap && mSize.x() && text.size() && size.x() > mSize.x())
 	{
@@ -156,9 +154,9 @@ void TextComponent::onTextChanged()
 
 		text.append(abbrev);
 
-		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(text, 0, 0, (mColor >> 8 << 8) | mOpacity));
+		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(text, Eigen::Vector2f(0, 0), (mColor >> 8 << 8) | mOpacity, mSize.x(), mAlignment));
 	}else{
-		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(text, mSize.x()), 0, 0, (mColor >> 8 << 8) | mOpacity));
+		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(text, mSize.x()), Eigen::Vector2f(0, 0), (mColor >> 8 << 8) | mOpacity, mSize.x(), mAlignment));
 	}
 }
 
