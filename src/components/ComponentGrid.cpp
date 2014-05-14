@@ -62,20 +62,24 @@ float ComponentGrid::getRowHeight(int row)
 	return (freeHeightPerc * mSize.y()) / between;
 }
 
-void ComponentGrid::setColWidthPerc(int col, float width)
+void ComponentGrid::setColWidthPerc(int col, float width, bool update)
 {
 	assert(width >= 0 && width <= 1);
 	assert(col >= 0 && col < mGridSize.x());
 	mColWidths[col] = width;
-	onSizeChanged();
+
+	if(update)
+		onSizeChanged();
 }
 
-void ComponentGrid::setRowHeightPerc(int row, float height)
+void ComponentGrid::setRowHeightPerc(int row, float height, bool update)
 {
 	assert(height >= 0 && height <= 1);
 	assert(row >= 0 && row < mGridSize.y());
 	mRowHeights[row] = height;
-	onSizeChanged();
+
+	if(update)
+		onSizeChanged();
 }
 
 void ComponentGrid::setEntry(const std::shared_ptr<GuiComponent>& comp, const Eigen::Vector2i& pos, bool canFocus, bool resize, const Eigen::Vector2i& size,

@@ -84,13 +84,13 @@ void GuiGameScraper::onSizeChanged()
 {
 	mBox.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
 
+	mGrid.setRowHeightPerc(0, 0.04f, false);
+	mGrid.setRowHeightPerc(1, mGameName->getFont()->getLetterHeight() / mSize.y(), false); // game name
+	mGrid.setRowHeightPerc(2, 0.04f, false);
+	mGrid.setRowHeightPerc(3, mSystemName->getFont()->getLetterHeight() / mSize.y(), false); // system name
+	mGrid.setRowHeightPerc(4, 0.04f, false);
+	mGrid.setRowHeightPerc(6, mButtonGrid->getSize().y() / mSize.y(), false); // buttons
 	mGrid.setSize(mSize);
-	mGrid.setRowHeightPerc(0, 0.04f);
-	mGrid.setRowHeightPerc(1, mGameName->getFont()->getLetterHeight() / mSize.y()); // game name
-	mGrid.setRowHeightPerc(2, 0.04f);
-	mGrid.setRowHeightPerc(3, mSystemName->getFont()->getLetterHeight() / mSize.y()); // system name
-	mGrid.setRowHeightPerc(4, 0.04f);
-	mGrid.setRowHeightPerc(6, mButtonGrid->getSize().y() / mSize.y()); // buttons
 }
 
 bool GuiGameScraper::input(InputConfig* config, Input input)

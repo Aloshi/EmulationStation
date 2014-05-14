@@ -32,6 +32,7 @@ public:
 	void search(const ScraperSearchParams& params);
 	void openInputScreen(ScraperSearchParams& from);
 	void stop();
+	inline SearchType getSearchType() const { return mSearchType; }
 
 	// Metadata assets will be resolved before calling the accept callback (e.g. result.mdl's "image" is automatically downloaded and properly set).
 	inline void setAcceptCallback(const std::function<void(const ScraperSearchResult&)>& acceptCallback) { mAcceptCallback = acceptCallback; }

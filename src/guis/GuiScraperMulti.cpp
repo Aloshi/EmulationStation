@@ -40,7 +40,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mSearchComp->setAcceptCallback(std::bind(&GuiScraperMulti::acceptResult, this, std::placeholders::_1));
 	mSearchComp->setSkipCallback(std::bind(&GuiScraperMulti::skip, this));
 	mSearchComp->setCancelCallback(std::bind(&GuiScraperMulti::finish, this));
-	mGrid.setEntry(mSearchComp, Vector2i(0, 3), approveResults, true);
+	mGrid.setEntry(mSearchComp, Vector2i(0, 3), mSearchComp->getSearchType() != ScraperSearchComponent::ALWAYS_ACCEPT_FIRST_RESULT, true);
 
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 
@@ -78,12 +78,12 @@ GuiScraperMulti::~GuiScraperMulti()
 void GuiScraperMulti::onSizeChanged()
 {
 	mBackground.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
-	mGrid.setSize(mSize);
 
-	mGrid.setRowHeightPerc(0, mTitle->getFont()->getLetterHeight() * 1.9725f / mGrid.getSize().y());
-	mGrid.setRowHeightPerc(1, (mSystem->getFont()->getLetterHeight() + 2) / mGrid.getSize().y());
-	mGrid.setRowHeightPerc(2, mSubtitle->getFont()->getHeight() * 1.75f / mGrid.getSize().y());
-	mGrid.setRowHeightPerc(4, mButtonGrid->getSize().y() / mGrid.getSize().y());
+	mGrid.setRowHeightPerc(0, mTitle->getFont()->getLetterHeight() * 1.9725f / mSize.y(), false);
+	mGrid.setRowHeightPerc(1, (mSystem->getFont()->getLetterHeight() + 2) / mSize.y(), false);
+	mGrid.setRowHeightPerc(2, mSubtitle->getFont()->getHeight() * 1.75f / mSize.y(), false);
+	mGrid.setRowHeightPerc(4, mButtonGrid->getSize().y() / mSize.y(), false);
+	mGrid.setSize(mSize);
 }
 
 void GuiScraperMulti::doNextSearch()
