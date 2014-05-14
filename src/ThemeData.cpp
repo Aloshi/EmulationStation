@@ -54,7 +54,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("scrollSound", PATH)
 		("alignment", STRING)
 		("horizontalMargin", FLOAT)
-		("forceUppercase", BOOLEAN)))
+		("forceUppercase", BOOLEAN)
+		("lineSpacing", FLOAT)))
 	("container", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)))

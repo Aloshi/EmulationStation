@@ -77,6 +77,7 @@ public:
 	inline void setScrollSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
 	inline void setColor(unsigned int id, unsigned int color) { mColors[id] = color; }
 	inline void setSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
+	inline void setLineSpacing(float lineSpacing) { mLineSpacing = lineSpacing; }
 
 protected:
 	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
@@ -97,6 +98,7 @@ private:
 
 	std::shared_ptr<Font> mFont;
 	bool mUppercase;
+	float mLineSpacing;
 	unsigned int mSelectorColor;
 	unsigned int mSelectedColor;
 	std::shared_ptr<Sound> mScrollSound;
@@ -116,6 +118,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 
 	mFont = Font::get(FONT_SIZE_MEDIUM);
 	mUppercase = false;
+	mLineSpacing = 1.5f;
 	mSelectorColor = 0x000000FF;
 	mSelectedColor = 0;
 	mColors[0] = 0x0000FFFF;
@@ -132,7 +135,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	if(size() == 0)
 		return;
 
-	const float entrySize = font->getHeight() + 5;
+	const float entrySize = font->getHeight(mLineSpacing);
 
 	int startEntry = 0;
 
@@ -199,7 +202,6 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 			offset[0] -= mHorizontalMargin;
 			if(offset[0] < 0)
 				offset[0] = 0;
-
 			break;
 		}
 		
@@ -361,5 +363,8 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	}
 
 	if(properties & FORCE_UPPERCASE && elem->has("forceUppercase"))
-			setUppercase(elem->get<bool>("forceUppercase"));
+		setUppercase(elem->get<bool>("forceUppercase"));
+
+	if(properties & LINE_SPACING && elem->has("lineSpacing"))
+		setLineSpacing(elem->get<float>("lineSpacing"));
 }

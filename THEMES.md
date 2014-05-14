@@ -421,7 +421,7 @@ Can be created as an extra.
 * `alignment` - type: STRING.
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.  "center" will also align vertically.
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
-* `lineSpacing` - type: FLOAT.  Controls the space between lines.  Default is 1.5.
+* `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
 
 #### textlist
 
@@ -444,6 +444,7 @@ Can be created as an extra.
 * `horizontalMargin` - type: FLOAT.
 	- Horizontal offset for text from the alignment point.  If `alignment` is "left", offsets the text to the right.  If `alignment` is "right", offsets text to the left.  No effect if `alignment` is "center".  Given as a percentage of the element's parent's width (same unit as `size`'s X value).
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
+* `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
 
 #### ninepatch
 
