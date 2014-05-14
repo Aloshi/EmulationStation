@@ -421,6 +421,7 @@ Can be created as an extra.
 * `alignment` - type: STRING.
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.  "center" will also align vertically.
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
+* `lineSpacing` - type: FLOAT.  Controls the space between lines.  Default is 1.5.
 
 #### textlist
 

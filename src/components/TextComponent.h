@@ -23,7 +23,8 @@ public:
 	void onSizeChanged() override;
 	void setText(const std::string& text);
 	void setColor(unsigned int color);
-	inline void setAlignment(Alignment align) { mAlignment = align; }
+	void setAlignment(Alignment align);
+	void setLineSpacing(float spacing);
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 
@@ -50,6 +51,7 @@ private:
 	std::string mText;
 	std::shared_ptr<TextCache> mTextCache;
 	Alignment mAlignment;
+	float mLineSpacing;
 };
 
 #endif

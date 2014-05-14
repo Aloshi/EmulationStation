@@ -44,7 +44,7 @@ void GuiScraperStart::pressedStart()
 		if((*it)->getPlatformId() == PlatformIds::PLATFORM_UNKNOWN)
 		{
 			mWindow->pushGui(new GuiMsgBox(mWindow, 
-				"Warning: some of your selected systems do not have a platform ID set. Results may be even more inaccurate than usual!\nContinue anyway?", 
+				strToUpper("Warning: some of your selected systems do not have a platform ID set. Results may be even more inaccurate than usual!\nContinue anyway?"), 
 				"YES", std::bind(&GuiScraperStart::start, this), 
 				"NO", nullptr));
 			return;

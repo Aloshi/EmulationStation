@@ -36,6 +36,7 @@ namespace ThemeFlags
 		ALIGNMENT = 256,
 		TEXT = 512,
 		FORCE_UPPERCASE = 1024,
+		LINE_SPACING = 2048,
 
 		ALL = 0xFFFFFFFF
 	};
