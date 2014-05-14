@@ -52,7 +52,8 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(PLAYSTATION_VITA, "Sony Playstation Vita")
 	(PLAYSTATION_PORTABLE, "Sony PSP")
 	(SUPER_NINTENDO, "Super Nintendo (SNES)")
-	(TURBOGRAFX_16, "TurboGrafx 16");
+	(TURBOGRAFX_16, "TurboGrafx 16")
+	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
 
 
 std::unique_ptr<ScraperSearchHandle> GamesDBScraper::getResultsAsync(const ScraperSearchParams& params)
