@@ -195,15 +195,41 @@ void GuiMetaDataEd::fetchDone(const ScraperSearchResult& result)
 	}
 }
 
+void GuiMetaDataEd::close()
+{
+	// find out if the user made any changes
+	bool dirty = false;
+	for(unsigned int i = 0; i < mEditors.size(); i++)
+	{
+		const std::string& key = mMetaDataDecl.at(i).key;
+		if(mMetaData->get(key) != mEditors.at(i)->getValue())
+		{
+			dirty = true;
+			break;
+		}
+	}
+
+	if(dirty)
+	{
+		// changes were made, ask if the user wants to save them
+		mWindow->pushGui(new GuiMsgBox(mWindow, 
+			"SAVE CHANGES?",
+			"YES", [&] { save(); delete this; },
+			"NO", [&] { delete this; }
+		));
+	}else{
+		delete this;
+	}
+}
 
 bool GuiMetaDataEd::input(InputConfig* config, Input input)
 {
 	if(GuiComponent::input(config, input))
 		return true;
 
-	if(input.value != 0 && config->isMappedTo("b", input))
+	if(input.value != 0 && (config->isMappedTo("b", input) || config->isMappedTo("start", input)))
 	{
-		delete this;
+		close();
 		return true;
 	}
 
@@ -213,7 +239,7 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiMetaDataEd::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mGrid.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "discard"));
+	prompts.push_back(HelpPrompt("b", "close"));
 	prompts.push_back(HelpPrompt("start", "close"));
 	return prompts;
 }
