@@ -3,6 +3,7 @@
 #include "../../Window.h"
 #include "../ViewController.h"
 #include "../../Sound.h"
+#include "../../Settings.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
@@ -87,14 +88,20 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			return true;
 		}else if(config->isMappedTo("right", input))
 		{
-			onFocusLost();
-			mWindow->getViewController()->goToNextGameList();
-			return true;
+			if(Settings::getInstance()->getBool("QuickSystemSelect"))
+			{
+				onFocusLost();
+				mWindow->getViewController()->goToNextGameList();
+				return true;
+			}
 		}else if(config->isMappedTo("left", input))
 		{
-			onFocusLost();
-			mWindow->getViewController()->goToPrevGameList();
-			return true;
+			if(Settings::getInstance()->getBool("QuickSystemSelect"))
+			{
+				onFocusLost();
+				mWindow->getViewController()->goToPrevGameList();
+				return true;
+			}
 		}
 	}
 

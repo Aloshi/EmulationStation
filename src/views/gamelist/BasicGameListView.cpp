@@ -4,6 +4,7 @@
 #include "../../Window.h"
 #include "../../ThemeData.h"
 #include "../../SystemData.h"
+#include "../../Settings.h"
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
@@ -68,7 +69,9 @@ void BasicGameListView::launch(FileData* game)
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("left/right", "system"));
+
+	if(Settings::getInstance()->getBool("QuickSystemSelect"))
+		prompts.push_back(HelpPrompt("left/right", "system"));
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
