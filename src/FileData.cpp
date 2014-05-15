@@ -20,11 +20,12 @@ std::string getCleanFileName(const fs::path& path)
 		done = true;
 		for(int i = 0; i < NUM_TO_REPLACE; i++)
 		{
-			start = ret.find(toReplace[i*2]);
-			end = ret.find(toReplace[i*2+1], start != std::string::npos ? start + 1 : 0);
+			end = ret.find_first_of(toReplace[i*2+1]);
+			start = ret.find_last_of(toReplace[i*2], end);
+
 			if(start != std::string::npos && end != std::string::npos)
 			{
-				ret.replace(start, end, "");
+				ret.erase(start, end - start + 1);
 				done = false;
 			}
 		}
