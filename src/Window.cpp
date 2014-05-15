@@ -245,12 +245,36 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts)
 
 	std::vector<HelpPrompt> addPrompts;
 
-	std::map<std::string, bool> seenMap;
+	std::map<std::string, bool> inputSeenMap;
+	std::map<std::string, int> mappedToSeenMap;
 	for(auto it = prompts.begin(); it != prompts.end(); it++)
 	{
 		// only add it if the same icon hasn't already been added
-		if(seenMap.insert(std::make_pair<std::string, bool>(it->first, true)).second)
-			addPrompts.push_back(*it);
+		if(inputSeenMap.insert(std::make_pair<std::string, bool>(it->first, true)).second)
+		{
+			// this symbol hasn't been seen yet, what about the action name?
+			auto mappedTo = mappedToSeenMap.find(it->second);
+			if(mappedTo != mappedToSeenMap.end())
+			{
+				// yes, it has!
+
+				// can we combine? (dpad only)
+				if((it->first == "up/down" && addPrompts.at(mappedTo->second).first == "left/right") ||
+					(it->first == "left/right" && addPrompts.at(mappedTo->second).first == "up/down"))
+				{
+					// yes!
+					addPrompts.at(mappedTo->second).first = "up/down/left/right";
+					// don't need to add this to addPrompts since we just merged
+				}else{
+					// no, we can't combine!
+					addPrompts.push_back(*it);
+				}
+			}else{
+				// no, it hasn't!
+				mappedToSeenMap.insert(std::pair<std::string, int>(it->second, addPrompts.size()));
+				addPrompts.push_back(*it);
+			}
+		}
 	}
 
 	// sort prompts so it goes [dpad_all] [dpad_u/d] [dpad_l/r] [a/b/x/y/l/r] [start/select]
