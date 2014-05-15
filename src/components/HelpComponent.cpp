@@ -115,6 +115,16 @@ std::shared_ptr<TextureResource> HelpComponent::getIconTexture(const char* name)
 	return tex;
 }
 
+void HelpComponent::setOpacity(unsigned char opacity)
+{
+	GuiComponent::setOpacity(opacity);
+
+	for(unsigned int i = 0; i < mGrid->getChildCount(); i++)
+	{
+		mGrid->getChild(i)->setOpacity(opacity);
+	}
+}
+
 void HelpComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();

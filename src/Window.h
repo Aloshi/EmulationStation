@@ -37,6 +37,7 @@ public:
 	
 	void renderLoadingScreen();
 
+	void renderHelpPromptsEarly(); // used by ViewController to render HelpPrompts before a fade
 	void setHelpPrompts(const std::vector<HelpPrompt>& prompts);
 
 private:
@@ -57,6 +58,7 @@ private:
 	bool mNormalizeNextUpdate;
 
 	bool mAllowSleep;
+	bool mRenderedHelpPrompts;
 };
 
 #endif

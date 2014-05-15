@@ -44,7 +44,6 @@ void ViewController::goToSystemView(SystemData* system)
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
 
-	updateHelpPrompts();
 	playViewTransition();
 }
 
@@ -81,7 +80,6 @@ void ViewController::goToGameList(SystemData* system)
 	mState.system = system;
 
 	mCurrentView = getGameListView(system);
-	updateHelpPrompts();
 	playViewTransition();
 }
 
@@ -93,23 +91,36 @@ void ViewController::playViewTransition()
 
 	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
 	{
-		// fade animation
-		auto fadeAnim = [this, target](float t) {
-			float fadeStart = lerp<float>(0, 1, t / 0.3f);
-			float fadeEnd = lerp<float>(1, 0, (t - 0.7f) / 0.3f);
+		// fade
+		// stop whatever's currently playing, leaving mFadeOpacity wherever it is
+		cancelAnimation(0);
 
-			if(t <= 0.3f)
-			{
-				mFadeOpacity = fadeStart;
-			}else{
-				this->mCamera.translation() = -target;
-				mFadeOpacity = fadeEnd;
-			}
+		auto fadeFunc = [this](float t) {
+			mFadeOpacity = lerp<float>(0, 1, t);
 		};
-		setAnimation(new LambdaAnimation(fadeAnim, 800));
+
+		const static int FADE_DURATION = 240; // fade in/out time
+		const static int FADE_WAIT = 320; // time to wait between in/out
+		setAnimation(new LambdaAnimation(fadeFunc, FADE_DURATION), 0, [this, fadeFunc, target] {
+			this->mCamera.translation() = -target;
+			updateHelpPrompts();
+			setAnimation(new LambdaAnimation(fadeFunc, FADE_DURATION), FADE_WAIT, nullptr, true);
+		});
+
+		// fast-forward animation if we're partway faded
+		if(target == -mCamera.translation())
+		{
+			// not changing screens, so cancel the first half entirely
+			advanceAnimation(0, FADE_DURATION);
+			advanceAnimation(0, FADE_WAIT);
+			advanceAnimation(0, FADE_DURATION - (int)(mFadeOpacity * FADE_DURATION));
+		}else{
+			advanceAnimation(0, (int)(mFadeOpacity * FADE_DURATION));
+		}
 	}else{
 		// slide
 		setAnimation(new MoveCameraAnimation(mCamera, target));
+		updateHelpPrompts(); // update help prompts immediately
 	}
 }
 
@@ -266,6 +277,9 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 			guiStart.x() <= viewEnd.x() && guiStart.y() <= viewEnd.y())
 				it->second->render(trans);
 	}
+
+	if(mWindow->peekGui() == this)
+		mWindow->renderHelpPromptsEarly();
 
 	// fade out
 	if(mFadeOpacity)

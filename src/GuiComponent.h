@@ -60,8 +60,9 @@ public:
 	int getAnimationTime(unsigned char slot) const;
 	void setAnimation(Animation* animation, int delay = 0, std::function<void()> finishedCallback = nullptr, bool reverse = false, unsigned char slot = 0);
 	bool stopAnimation(unsigned char slot);
-	bool cancelAnimation(unsigned char slot); // like stopAnimation, but doesn't call finishedCallback - only removes the animation, leaving things in their current state
-	bool finishAnimation(unsigned char slot); // calls update(1.f) and finishedCallback, then deletes the animation - basically skips to the end
+	bool cancelAnimation(unsigned char slot); // Like stopAnimation, but doesn't call finishedCallback - only removes the animation, leaving things in their current state.  Returns true if successful (an animation was in this slot).
+	bool finishAnimation(unsigned char slot); // Calls update(1.f) and finishedCallback, then deletes the animation - basically skips to the end.  Returns true if successful (an animation was in this slot).
+	bool advanceAnimation(unsigned char slot, unsigned int time); // Returns true if successful (an animation was in this slot).
 	void stopAllAnimations();
 	void cancelAllAnimations();
 

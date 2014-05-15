@@ -175,6 +175,8 @@ void Window::render()
 {
 	Eigen::Affine3f transform = Eigen::Affine3f::Identity();
 
+	mRenderedHelpPrompts = false;
+
 	// draw only bottom and top of GuiStack (if they are different)
 	if(mGuiStack.size())
 	{
@@ -199,7 +201,8 @@ void Window::render()
 			mBackgroundOverlay->render(transform);
 	}*/
 
-	mHelp->render(transform);
+	if(!mRenderedHelpPrompts)
+		mHelp->render(transform);
 
 	if(Settings::getInstance()->getBool("DrawFramerate") && mFrameDataText)
 	{
@@ -237,6 +240,12 @@ void Window::renderLoadingScreen()
 	delete cache;
 
 	Renderer::swapBuffers();
+}
+
+void Window::renderHelpPromptsEarly()
+{
+	mHelp->render(Eigen::Affine3f::Identity());
+	mRenderedHelpPrompts = true;
 }
 
 void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts)

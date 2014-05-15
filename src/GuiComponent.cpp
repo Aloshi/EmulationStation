@@ -40,16 +40,7 @@ void GuiComponent::update(int deltaTime)
 {
 	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
 	{
-		AnimationController* anim = mAnimationMap[i];
-		if(anim)
-		{
-			bool done = anim->update(deltaTime);
-			if(done)
-			{
-				mAnimationMap[i] = NULL;
-				delete anim;
-			}
-		}
+		advanceAnimation(i, deltaTime);
 	}
 	
 	for(unsigned int i = 0; i < getChildCount(); i++)
@@ -251,6 +242,24 @@ bool GuiComponent::finishAnimation(unsigned char slot)
 
 		delete mAnimationMap[slot]; // will also call finishedCallback
 		mAnimationMap[slot] = NULL;
+		return true;
+	}else{
+		return false;
+	}
+}
+
+bool GuiComponent::advanceAnimation(unsigned char slot, unsigned int time)
+{
+	assert(slot < MAX_ANIMATIONS);
+	AnimationController* anim = mAnimationMap[slot];
+	if(anim)
+	{
+		bool done = anim->update(time);
+		if(done)
+		{
+			mAnimationMap[slot] = NULL;
+			delete anim;
+		}
 		return true;
 	}else{
 		return false;
