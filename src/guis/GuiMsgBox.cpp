@@ -90,10 +90,12 @@ void GuiMsgBox::onSizeChanged()
 
 void GuiMsgBox::deleteMeAndCall(const std::function<void()>& func)
 {
-	if(func)
-		func();
-
+	auto funcCopy = func;
 	delete this;
+
+	if(funcCopy)
+		funcCopy();
+
 }
 
 std::vector<HelpPrompt> GuiMsgBox::getHelpPrompts()

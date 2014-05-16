@@ -130,6 +130,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SCRAPE", "scrape", std::bind(&GuiMetaDataEd::fetch, this)));
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SAVE", "save", [&] { save(); delete this; }));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCEL", "cancel", [&] { delete this; }));
 
 	if(mDeleteFunc)
 	{
@@ -211,7 +212,7 @@ void GuiMetaDataEd::close(bool closeAllWindows)
 	}
 
 	std::function<void()> closeFunc;
-	if(closeAllWindows)
+	if(!closeAllWindows)
 	{
 		closeFunc = [this] { delete this; };
 	}else{

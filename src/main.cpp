@@ -273,6 +273,9 @@ int main(int argc, char* argv[])
 	}
 
 	window.deinit();
+	while(window.peekGui() != window.getViewController())
+		delete window.peekGui();
+
 	SystemData::deleteSystems();
 
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
