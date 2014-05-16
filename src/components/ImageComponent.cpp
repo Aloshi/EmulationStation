@@ -310,3 +310,10 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	if(properties & COLOR && elem->has("color"))
 		setColorShift(elem->get<unsigned int>("color"));
 }
+
+std::vector<HelpPrompt> ImageComponent::getHelpPrompts()
+{
+	std::vector<HelpPrompt> ret;
+	ret.push_back(HelpPrompt("a", "select"));
+	return ret;
+}

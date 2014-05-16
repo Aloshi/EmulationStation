@@ -321,7 +321,7 @@ std::vector<HelpPrompt> ComponentList::getHelpPrompts()
 		}
 
 		if(addMovePrompt)
-			prompts.push_back(HelpPrompt("up/down", "move"));
+			prompts.push_back(HelpPrompt("up/down", "choose"));
 	}
 
 	return prompts;

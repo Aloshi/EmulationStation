@@ -82,8 +82,7 @@ private:
 				mMenu.addRow(row, (!mParent->mMultiSelect && it->selected));
 			}
 
-			if(mParent->mMultiSelect)
-				mMenu.addButton("BACK", "accept", [this] { delete this; });
+			mMenu.addButton("BACK", "accept", [this] { delete this; });
 
 			mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 			addChild(&mMenu);
@@ -102,7 +101,9 @@ private:
 
 		std::vector<HelpPrompt> getHelpPrompts() override
 		{
-			return mMenu.getHelpPrompts();
+			auto prompts = mMenu.getHelpPrompts();
+			prompts.push_back(HelpPrompt("b", "back"));
+			return prompts;
 		}
 	};
 
@@ -274,7 +275,7 @@ private:
 		if(!mMultiSelect)
 			prompts.push_back(HelpPrompt("left/right", "change"));
 		
-		prompts.push_back(HelpPrompt("a", "change"));
+		prompts.push_back(HelpPrompt("a", "select"));
 		return prompts;
 	}
 
