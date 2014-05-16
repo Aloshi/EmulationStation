@@ -135,7 +135,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	if(size() == 0)
 		return;
 
-	const float entrySize = font->getHeight(mLineSpacing);
+	const float entrySize = round(font->getHeight(mLineSpacing));
 
 	int startEntry = 0;
 
@@ -161,7 +161,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	if(startEntry < listCutoff)
 	{
 		Renderer::setMatrix(trans);
-		Renderer::drawRect(0.f, (mCursor - startEntry)*entrySize, mSize.x(), font->getHeight(), mSelectorColor);
+		Renderer::drawRect(0.f, (mCursor - startEntry)*entrySize + (entrySize - font->getHeight())/2, mSize.x(), font->getHeight(), mSelectorColor);
 	}
 
 	// clip to inside margins
