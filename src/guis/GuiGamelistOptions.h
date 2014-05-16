@@ -9,7 +9,7 @@ class IGameListView;
 class GuiGamelistOptions : public GuiComponent
 {
 public:
-	GuiGamelistOptions(Window* window, IGameListView* gamelist);
+	GuiGamelistOptions(Window* window, SystemData* system);
 	virtual ~GuiGamelistOptions();
 
 	virtual bool input(InputConfig* config, Input input) override;
@@ -23,5 +23,6 @@ private:
 	typedef OptionListComponent<const FileData::SortType*> SortList;
 	std::shared_ptr<SortList> mListSort;
 	
-	IGameListView* mGamelist;
+	SystemData* mSystem;
+	IGameListView* getGamelist();
 };

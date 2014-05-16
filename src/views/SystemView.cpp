@@ -19,7 +19,7 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
-	mSystemInfo.setSize(mSize.x(), mSystemInfo.getSize().y() * 2.f);
+	mSystemInfo.setSize(mSize.x(), mSystemInfo.getSize().y() * 1.333f);
 	mSystemInfo.setPosition(0, (mSize.y() + BAND_HEIGHT) / 2);
 
 	populate();

@@ -61,12 +61,12 @@ public:
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
+	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
+	std::shared_ptr<SystemView> getSystemListView();
+
 private:
 	void playViewTransition();
 	int getSystemId(SystemData* system);
-
-	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
-	std::shared_ptr<SystemView> getSystemListView();
 	
 	std::shared_ptr<GuiComponent> mCurrentView;
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;

@@ -10,16 +10,11 @@
 
 bool IGameListView::input(InputConfig* config, Input input)
 {
-	// F3 to open metadata editor
-	if(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_F3 && input.value != 0)
-	{
-		
-
 	// select to open GuiGamelistOptions
-	}else if(config->isMappedTo("select", input) && input.value)
+	if(config->isMappedTo("select", input) && input.value)
 	{
 		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
-		mWindow->pushGui(new GuiGamelistOptions(mWindow, this));
+		mWindow->pushGui(new GuiGamelistOptions(mWindow, this->mRoot->getSystem()));
 		return true;
 
 	// Ctrl-R to reload a view when debugging

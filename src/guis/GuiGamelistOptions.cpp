@@ -1,9 +1,10 @@
 #include "GuiGamelistOptions.h"
 #include "GuiMetaDataEd.h"
 #include "../views/gamelist/IGameListView.h"
+#include "../views/ViewController.h"
 
-GuiGamelistOptions::GuiGamelistOptions(Window* window, IGameListView* gamelist) : GuiComponent(window), 
-	mGamelist(gamelist), 
+GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
+	mSystem(system), 
 	mMenu(window, "OPTIONS")
 {
 	addChild(&mMenu);
@@ -33,25 +34,25 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, IGameListView* gamelist) 
 GuiGamelistOptions::~GuiGamelistOptions()
 {
 	// apply sort
-	FileData* root = mGamelist->getCursor()->getSystem()->getRootFolder();
+	FileData* root = getGamelist()->getCursor()->getSystem()->getRootFolder();
 	root->sort(*mListSort->getSelected()); // will also recursively sort children
 
 	// notify that the root folder was sorted
-	mGamelist->onFileChanged(root, FILE_SORTED);
+	getGamelist()->onFileChanged(root, FILE_SORTED);
 }
 
 void GuiGamelistOptions::openMetaDataEd()
 {
 	// open metadata editor
-	FileData* file = mGamelist->getCursor();
+	FileData* file = getGamelist()->getCursor();
 	ScraperSearchParams p;
 	p.game = file;
 	p.system = file->getSystem();
 	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(), 
-		std::bind(&IGameListView::onFileChanged, mGamelist, file, FILE_METADATA_CHANGED), [this, file] { 
+		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), [this, file] { 
 			boost::filesystem::remove(file->getPath()); //actually delete the file on the filesystem
 			file->getParent()->removeChild(file); //unlink it so list repopulations triggered from onFileChanged won't see it
-			mGamelist->onFileChanged(file, FILE_REMOVED); //tell the view
+			getGamelist()->onFileChanged(file, FILE_REMOVED); //tell the view
 			delete file; //free it
 	}));
 }
@@ -72,4 +73,9 @@ std::vector<HelpPrompt> GuiGamelistOptions::getHelpPrompts()
 	auto prompts = mMenu.getHelpPrompts();
 	prompts.push_back(HelpPrompt("b", "close"));
 	return prompts;
+}
+
+IGameListView* GuiGamelistOptions::getGamelist()
+{
+	return mWindow->getViewController()->getGameListView(mSystem).get();
 }
