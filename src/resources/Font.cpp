@@ -479,7 +479,7 @@ TextCache* Font::buildTextCache(const std::string& text, Eigen::Vector2f offset,
 		x += mCharData[letter].advX * mFontScale;
 	}
 
-	TextCache::CacheMetrics metrics = { sizeText(text) };
+	TextCache::CacheMetrics metrics = { sizeText(text, lineSpacing) };
 	TextCache* cache = new TextCache(vertCount, vert, colors, metrics);
 	if(color != 0x00000000)
 		cache->setColor(color);

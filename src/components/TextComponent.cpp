@@ -122,11 +122,11 @@ void TextComponent::calculateExtent()
 {
 	if(mAutoCalcExtent.x())
 	{
-		mSize = mFont->sizeText(mUppercase ? strToUpper(mText) : mText);
+		mSize = mFont->sizeText(mUppercase ? strToUpper(mText) : mText, mLineSpacing);
 	}else{
 		if(mAutoCalcExtent.y())
 		{
-			mSize[1] = mFont->sizeWrappedText(mUppercase ? strToUpper(mText) : mText, getSize().x()).y();
+			mSize[1] = mFont->sizeWrappedText(mUppercase ? strToUpper(mText) : mText, getSize().x(), mLineSpacing).y();
 		}
 	}
 }
