@@ -3,6 +3,7 @@
 #include "../Log.h"
 #include "../components/AsyncReqComponent.h"
 #include "../Settings.h"
+#include "../views/ViewController.h"
 #include "GuiGameScraper.h"
 #include "GuiMsgBox.h"
 #include <boost/filesystem.hpp>
@@ -195,7 +196,7 @@ void GuiMetaDataEd::fetchDone(const ScraperSearchResult& result)
 	}
 }
 
-void GuiMetaDataEd::close()
+void GuiMetaDataEd::close(bool closeAllWindows)
 {
 	// find out if the user made any changes
 	bool dirty = false;
@@ -209,16 +210,29 @@ void GuiMetaDataEd::close()
 		}
 	}
 
+	std::function<void()> closeFunc;
+	if(closeAllWindows)
+	{
+		closeFunc = [this] { delete this; };
+	}else{
+		Window* window = mWindow;
+		closeFunc = [window, this] {
+			while(window->peekGui() != window->getViewController())
+				delete window->peekGui();
+		};
+	}
+
+
 	if(dirty)
 	{
 		// changes were made, ask if the user wants to save them
 		mWindow->pushGui(new GuiMsgBox(mWindow, 
 			"SAVE CHANGES?",
-			"YES", [&] { save(); delete this; },
-			"NO", [&] { delete this; }
+			"YES", [this, closeFunc] { save(); closeFunc(); },
+			"NO", closeFunc
 		));
 	}else{
-		delete this;
+		closeFunc();
 	}
 }
 
@@ -227,9 +241,10 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 	if(GuiComponent::input(config, input))
 		return true;
 
-	if(input.value != 0 && (config->isMappedTo("b", input) || config->isMappedTo("start", input)))
+	const bool isStart = config->isMappedTo("start", input);
+	if(input.value != 0 && (config->isMappedTo("b", input) || isStart))
 	{
-		close();
+		close(isStart);
 		return true;
 	}
 
@@ -239,7 +254,7 @@ bool GuiMetaDataEd::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiMetaDataEd::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mGrid.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "close"));
+	prompts.push_back(HelpPrompt("b", "back"));
 	prompts.push_back(HelpPrompt("start", "close"));
 	return prompts;
 }

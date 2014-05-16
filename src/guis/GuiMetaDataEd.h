@@ -21,7 +21,7 @@ private:
 	void save();
 	void fetch();
 	void fetchDone(const ScraperSearchResult& result);
-	void close();
+	void close(bool closeAllWindows);
 
 	NinePatchComponent mBackground;
 	ComponentGrid mGrid;

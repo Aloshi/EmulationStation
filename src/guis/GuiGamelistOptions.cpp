@@ -54,7 +54,6 @@ void GuiGamelistOptions::openMetaDataEd()
 			mGamelist->onFileChanged(file, FILE_REMOVED); //tell the view
 			delete file; //free it
 	}));
-	delete this;
 }
 
 bool GuiGamelistOptions::input(InputConfig* config, Input input)
