@@ -145,10 +145,20 @@ void RatingComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const 
 	if(!elem)
 		return;
 
+	bool imgChanged = false;
 	if(properties & PATH && elem->has("filledPath"))
+	{
 		mFilledTexture = TextureResource::get(elem->get<std::string>("filledPath"), true);
+		imgChanged = true;
+	}
 	if(properties & PATH && elem->has("unfilledPath"))
+	{
 		mUnfilledTexture = TextureResource::get(elem->get<std::string>("unfilledPath"), true);
+		imgChanged = true;
+	}
+
+	if(imgChanged)
+		onSizeChanged();
 }
 
 std::vector<HelpPrompt> RatingComponent::getHelpPrompts()
