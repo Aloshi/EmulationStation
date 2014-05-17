@@ -16,6 +16,7 @@ public:
 	void onSizeChanged() override;
 
 private:
+	bool mFirstRun;
 	InputConfig* mHoldingConfig;
 	int mHoldTime;
 

@@ -14,7 +14,7 @@
 
 using namespace Eigen;
 
-GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun) : GuiComponent(window),
+GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun) : GuiComponent(window), mFirstRun(firstRun), 
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5))
 {
 	mHoldingConfig = NULL;
@@ -49,7 +49,9 @@ GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun) : GuiComponent(w
 	// message
 	mMsg1 = std::make_shared<TextComponent>(mWindow, "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT.", Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mMsg1, Vector2i(0, 2), false, true);
-	mMsg2 = std::make_shared<TextComponent>(mWindow, "PRESS F4 TO QUIT AT ANY TIME.", Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
+
+	const char* msg2str = firstRun ? "PRESS F4 TO QUIT AT ANY TIME." : "PRESS ESC TO CANCEL.";
+	mMsg2 = std::make_shared<TextComponent>(mWindow, msg2str, Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mMsg2, Vector2i(0, 3), false, true);
 
 	// currently held device
@@ -75,6 +77,13 @@ void GuiDetectDevice::onSizeChanged()
 
 bool GuiDetectDevice::input(InputConfig* config, Input input)
 {
+	if(!mFirstRun && input.device == DEVICE_KEYBOARD && input.type == TYPE_KEY && input.value && input.id == SDLK_ESCAPE)
+	{
+		// cancel configuring
+		delete this;
+		return true;
+	}
+
 	if(input.type == TYPE_BUTTON || input.type == TYPE_KEY)
 	{
 		if(input.value && mHoldingConfig == NULL)
