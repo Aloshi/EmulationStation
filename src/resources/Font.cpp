@@ -280,56 +280,37 @@ std::string Font::wrapText(std::string text, float xLen) const
 	std::string out;
 
 	std::string line, word, temp;
-	size_t space, newline;
+	size_t space;
 
 	Eigen::Vector2f textSize;
 
-	while(text.length() > 0 || !line.empty()) //while there's text or we still have text to render
+	while(text.length() > 0) //while there's text or we still have text to render
 	{
-		space = text.find(' ', 0);
+		space = text.find_first_of(" \t\n");
 		if(space == std::string::npos)
 			space = text.length() - 1;
 
 		word = text.substr(0, space + 1);
-
-		//check if the next word contains a newline
-		newline = word.find('\n', 0);
-		if(newline != std::string::npos)
-		{
-			//get everything up to the newline
-			word = word.substr(0, newline);
-			text.erase(0, newline + 1);
-		}else{
-			text.erase(0, space + 1);
-		}
+		text.erase(0, space + 1);
 
 		temp = line + word;
 
 		textSize = sizeText(temp);
 
-		//if we're on the last word and it'll fit on the line, just add it to the line
-		if((textSize.x() <= xLen && text.length() == 0) || newline != std::string::npos)
+		// if the word will fit on the line, add it to our line, and continue
+		if(textSize.x() <= xLen)
 		{
 			line = temp;
-			word = "";
-		}
-
-		//if the next line will be too long or we're on the last of the text, render it
-		if(textSize.x() > xLen || text.length() == 0 || newline != std::string::npos)
-		{
-			//output line now
-			out += line + '\n';
-
-			//move the word we skipped to the next line
-			line = word;
+			continue;
 		}else{
-			//there's still space, continue building the line
-			line = temp;
+			// the next word won't fit, so break here
+			out += line + '\n';
+			line = word;
 		}
 	}
 
-	if(!out.empty() && newline == std::string::npos) //chop off the last newline if we added one
-		out.erase(out.length() - 1, 1);
+	// whatever's left should fit
+	out += line;
 
 	return out;
 }
