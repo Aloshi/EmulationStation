@@ -2,8 +2,12 @@
 #include "../Renderer.h"
 #include "../Log.h"
 
+#define AUTO_SCROLL_RESET_DELAY 10000 // ms to reset to top after we reach the bottom
+#define AUTO_SCROLL_DELAY 8000 // ms to wait before we start to scroll
+#define AUTO_SCROLL_SPEED 50 // ms between scrolls
+
 ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window), 
-	mAutoScrollDelay(0), mAutoScrollSpeed(0), mAutoScrollTimer(0), mScrollPos(0, 0), mScrollDir(0, 0)
+	mAutoScrollDelay(0), mAutoScrollSpeed(0), mAutoScrollAccumulator(0), mScrollPos(0, 0), mScrollDir(0, 0), mAutoScrollResetAccumulator(0)
 {
 }
 
@@ -18,7 +22,7 @@ void ScrollableContainer::render(const Eigen::Affine3f& parentTrans)
 
 	Renderer::pushClipRect(clipPos, clipDim);
 
-	trans.translate(Eigen::Vector3f((float)-mScrollPos.x(), (float)-mScrollPos.y(), 0));
+	trans.translate(-Eigen::Vector3f(mScrollPos.x(), mScrollPos.y(), 0));
 	Renderer::setMatrix(trans);
 
 	GuiComponent::renderChildren(trans);
@@ -26,49 +30,46 @@ void ScrollableContainer::render(const Eigen::Affine3f& parentTrans)
 	Renderer::popClipRect();
 }
 
-void ScrollableContainer::setAutoScroll(int delay, double speed)
+void ScrollableContainer::setAutoScroll(bool autoScroll)
 {
-	mAutoScrollDelay = delay;
-	mAutoScrollSpeed = speed;
-	mAutoScrollTimer = 0;
+	if(autoScroll)
+	{
+		mScrollDir << 0, 1;
+		mAutoScrollDelay = AUTO_SCROLL_DELAY;
+		mAutoScrollSpeed = AUTO_SCROLL_SPEED;
+		reset();
+	}else{
+		mScrollDir << 0, 0;
+		mAutoScrollDelay = 0;
+		mAutoScrollSpeed = 0;
+		mAutoScrollAccumulator = 0;
+	}
 }
 
-Eigen::Vector2d ScrollableContainer::getScrollPos() const
+Eigen::Vector2f ScrollableContainer::getScrollPos() const
 {
 	return mScrollPos;
 }
 
-void ScrollableContainer::setScrollPos(const Eigen::Vector2d& pos)
+void ScrollableContainer::setScrollPos(const Eigen::Vector2f& pos)
 {
 	mScrollPos = pos;
 }
 
 void ScrollableContainer::update(int deltaTime)
 {
-	double scrollAmt = (double)deltaTime;
-
 	if(mAutoScrollSpeed != 0)
 	{
-		mAutoScrollTimer += deltaTime;
+		mAutoScrollAccumulator += deltaTime;
 
-		scrollAmt = (float)(mAutoScrollTimer - mAutoScrollDelay);
-
-		if(scrollAmt > 0)
+		//scale speed by our width! more text per line = slower scrolling
+		const float widthMod = (680.0f / getSize().x());
+		while(mAutoScrollAccumulator >= mAutoScrollSpeed)
 		{
-			//scroll the amount of time left over from the delay
-			mAutoScrollTimer = mAutoScrollDelay;
-
-			//scale speed by our width! more text per line = slower scrolling
-			const double widthMod = (680.0 / getSize().x());
-			mScrollDir = Eigen::Vector2d(0, mAutoScrollSpeed * widthMod);
-		}else{
-			//not enough to pass the delay, do nothing
-			scrollAmt = 0;
+			mScrollPos += mScrollDir;
+			mAutoScrollAccumulator -= mAutoScrollSpeed;
 		}
 	}
-
-	Eigen::Vector2d scroll = mScrollDir * scrollAmt;
-	mScrollPos += scroll;
 
 	//clip scrolling within bounds
 	if(mScrollPos.x() < 0)
@@ -76,15 +77,28 @@ void ScrollableContainer::update(int deltaTime)
 	if(mScrollPos.y() < 0)
 		mScrollPos[1] = 0;
 
-	
-	Eigen::Vector2f contentSize = getContentSize();
+	const Eigen::Vector2f contentSize = getContentSize();
 	if(mScrollPos.x() + getSize().x() > contentSize.x())
-		mScrollPos[0] = (double)contentSize.x() - getSize().x();
+	{
+		mScrollPos[0] = contentSize.x() - getSize().x();
+		mAtEnd = true;
+	}
 
 	if(contentSize.y() < getSize().y())
+	{
 		mScrollPos[1] = 0;
-	else if(mScrollPos.y() + getSize().y() > contentSize.y())
-		mScrollPos[1] = (double)contentSize.y() - getSize().y();
+	}else if(mScrollPos.y() + getSize().y() > contentSize.y())
+	{
+		mScrollPos[1] = contentSize.y() - getSize().y();
+		mAtEnd = true;
+	}
+
+	if(mAtEnd)
+	{
+		mAutoScrollResetAccumulator += deltaTime;
+		if(mAutoScrollResetAccumulator >= AUTO_SCROLL_RESET_DELAY)
+			reset();
+	}
 
 	GuiComponent::update(deltaTime);
 }
@@ -106,7 +120,10 @@ Eigen::Vector2f ScrollableContainer::getContentSize()
 	return max;
 }
 
-void ScrollableContainer::resetAutoScrollTimer()
+void ScrollableContainer::reset()
 {
-	mAutoScrollTimer = 0;
+	mScrollPos << 0, 0;
+	mAutoScrollResetAccumulator = 0;
+	mAutoScrollAccumulator = -mAutoScrollDelay + mAutoScrollSpeed;
+	mAtEnd = false;
 }

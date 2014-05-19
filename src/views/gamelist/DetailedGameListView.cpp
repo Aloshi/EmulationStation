@@ -58,7 +58,7 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2*padding), mSize.y() - mDescContainer.getPosition().y());
-	mDescContainer.setAutoScroll((int)(1600 + mDescContainer.getSize().x()), 0.025f);
+	mDescContainer.setAutoScroll(true);
 	addChild(&mDescContainer);
 
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
@@ -199,8 +199,7 @@ void DetailedGameListView::updateInfoPanel()
 		mPlayCount.setValue(file->metadata.get("playcount"));
 		
 		mDescription.setText(file->metadata.get("desc"));
-		mDescContainer.resetAutoScrollTimer();
-		mDescContainer.setScrollPos(Eigen::Vector2d(0, 0));
+		mDescContainer.reset();
 		fadingOut = false;
 	}
 

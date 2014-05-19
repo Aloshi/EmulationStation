@@ -38,7 +38,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mDescContainer = std::make_shared<ScrollableContainer>(mWindow);
 	mResultDesc = std::make_shared<TextComponent>(mWindow, "Result desc", Font::get(FONT_SIZE_SMALL), 0x777777FF);
 	mDescContainer->addChild(mResultDesc.get());
-	mDescContainer->setAutoScroll(2200, 0.015f);
+	mDescContainer->setAutoScroll(true);
 	
 	// metadata
 	auto font = Font::get(FONT_SIZE_SMALL); // this gets replaced in onSizeChanged() so its just a placeholder
@@ -300,8 +300,7 @@ void ScraperSearchComponent::updateInfoPane()
 		ScraperSearchResult& res = mScraperResults.at(i);
 		mResultName->setText(strToUpper(res.mdl.get("name")));
 		mResultDesc->setText(strToUpper(res.mdl.get("desc")));
-		mDescContainer->setScrollPos(Eigen::Vector2d(0, 0));
-		mDescContainer->resetAutoScrollTimer();
+		mDescContainer->reset();
 
 		mResultThumbnail->setImage("");
 		const std::string& thumb = res.thumbnailUrl.empty() ? res.imageUrl : res.thumbnailUrl;
