@@ -135,12 +135,27 @@ void TextComponent::onTextChanged()
 {
 	calculateExtent();
 
+	if(!mFont || mText.empty())
+	{
+		mTextCache.reset();
+		return;
+	}
+
 	std::string text = mUppercase ? strToUpper(mText) : mText;
 
-	std::shared_ptr<Font> f = getFont();
-	const bool wrap = (mSize.y() == 0 || mSize.y() > f->getHeight()*1.2f);
+	std::shared_ptr<Font> f = mFont;
+	const bool isMultiline = (mSize.y() == 0 || mSize.y() > f->getHeight()*1.2f);
+
+	bool addAbbrev = false;
+	if(!isMultiline)
+	{
+		size_t newline = text.find('\n');
+		text = text.substr(0, newline); // single line of text - stop at the first newline since it'll mess everything up
+		addAbbrev = newline != std::string::npos;
+	}
+
 	Eigen::Vector2f size = f->sizeText(text);
-	if(!wrap && mSize.x() && text.size() && size.x() > mSize.x())
+	if(!isMultiline && mSize.x() && text.size() && (size.x() > mSize.x() || addAbbrev))
 	{
 		// abbreviate text
 		const std::string abbrev = "...";
