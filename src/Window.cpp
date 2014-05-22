@@ -157,8 +157,10 @@ void Window::update(int deltaTime)
 			ss << std::fixed << std::setprecision(2) << ((float)mFrameTimeElapsed / (float)mFrameCountElapsed) << "ms";
 
 			// vram
-			float vramUsageMb = (TextureResource::getTotalMemUsage() + Font::getTotalMemUsage()) / 1000.0f / 1000.0f;
-			ss << "\nVRAM: " << vramUsageMb << "mb";
+			float textureVramUsageMb = TextureResource::getTotalMemUsage() / 1000.0f / 1000.0f;;
+			float fontVramUsageMb = Font::getTotalMemUsage() / 1000.0f / 1000.0f;;
+			float totalVramUsageMb = textureVramUsageMb + fontVramUsageMb;
+			ss << "\nVRAM: " << totalVramUsageMb << "mb (texs: " << textureVramUsageMb << "mb, fonts: " << fontVramUsageMb << "mb)";
 
 			mFrameDataText = std::unique_ptr<TextCache>(mDefaultFonts.at(1)->buildTextCache(ss.str(), 50.f, 50.f, 0xFF00FFFF));
 		}
