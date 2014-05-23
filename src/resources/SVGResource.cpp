@@ -69,10 +69,6 @@ void SVGResource::rasterizeAt(size_t width, size_t height)
 		mLastHeight = height;
 	}
 
-	LOG(LogInfo) << "Rasterizing \"" << mPath << "\"...";
-	LOG(LogInfo) << "  Original width: " << mSVGImage->width << ", original height: " << mSVGImage->height;
-	LOG(LogInfo) << "  width: " << width << ", height: " << height << ", scale: " << height / mSVGImage->height;
-
 	unsigned char* imagePx = (unsigned char*)malloc(width * height * 4);
 
 	NSVGrasterizer* rast = nsvgCreateRasterizer();

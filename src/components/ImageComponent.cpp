@@ -283,14 +283,11 @@ bool ImageComponent::hasImage()
 
 void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
-	LOG(LogInfo) << " req image [" << view << "." << element << "]  (flags: " << properties << ")";
-
 	using namespace ThemeFlags;
 
 	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "image");
 	if(!elem)
 	{
-		LOG(LogInfo) << "    (missing)";
 		return;
 	}
 

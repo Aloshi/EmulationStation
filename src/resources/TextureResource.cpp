@@ -4,7 +4,7 @@
 #include GLHEADER
 #include "../ImageIO.h"
 #include "../Renderer.h"
-
+#include "../Util.h"
 #include "SVGResource.h"
 
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
@@ -102,14 +102,16 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 {
 	std::shared_ptr<ResourceManager>& rm = ResourceManager::getInstance();
 
-	if(path.empty())
+	const std::string canonicalPath = getCanonicalPath(path);
+
+	if(canonicalPath.empty())
 	{
 		std::shared_ptr<TextureResource> tex(new TextureResource("", tile));
 		rm->addReloadable(tex); //make sure we get properly deinitialized even though we do nothing on reinitialization
 		return tex;
 	}
 
-	TextureKeyType key(path, tile);
+	TextureKeyType key(canonicalPath, tile);
 	auto foundTexture = sTextureMap.find(key);
 	if(foundTexture != sTextureMap.end())
 	{
@@ -121,18 +123,18 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 	std::shared_ptr<TextureResource> tex;
 
 	// is it an SVG?
-	if(path.substr(path.size() - 4, std::string::npos) == ".svg")
+	if(key.first.substr(key.first.size() - 4, std::string::npos) == ".svg")
 	{
 		// probably
 		// don't add it to our map because 2 svgs might be rasterized at different sizes
-		tex = std::shared_ptr<SVGResource>(new SVGResource(path, tile));
+		tex = std::shared_ptr<SVGResource>(new SVGResource(key.first, tile));
 		sTextureList.push_back(tex); // add it to our list though
 		rm->addReloadable(tex);
 		tex->reload(rm);
 		return tex;
 	}else{
 		// normal texture
-		tex = std::shared_ptr<TextureResource>(new TextureResource(path, tile));
+		tex = std::shared_ptr<TextureResource>(new TextureResource(key.first, tile));
 		sTextureMap[key] = std::weak_ptr<TextureResource>(tex);
 		sTextureList.push_back(tex);
 		rm->addReloadable(tex);

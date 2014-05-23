@@ -1,4 +1,5 @@
 #include "Util.h"
+#include <boost/filesystem.hpp>
 
 std::string strToUpper(const char* from)
 {
@@ -58,4 +59,12 @@ Eigen::Vector2f roundVector(const Eigen::Vector2f& vec)
 	ret[0] = round(ret[0]);
 	ret[1] = round(ret[1]);
 	return ret;
+}
+
+std::string getCanonicalPath(const std::string& path)
+{
+	if(boost::filesystem::exists(path))
+		return boost::filesystem::canonical(path).generic_string();
+	else
+		return "";
 }

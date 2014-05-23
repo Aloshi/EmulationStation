@@ -73,7 +73,9 @@ void Font::unload(std::shared_ptr<ResourceManager>& rm)
 
 std::shared_ptr<Font> Font::get(int size, const std::string& path)
 {
-	std::pair<std::string, int> def(path.empty() ? getDefaultPath() : path, size);
+	const std::string canonicalPath = getCanonicalPath(path);
+
+	std::pair<std::string, int> def(canonicalPath.empty() ? getDefaultPath() : canonicalPath, size);
 	auto foundFont = sFontMap.find(def);
 	if(foundFont != sFontMap.end())
 	{
