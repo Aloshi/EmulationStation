@@ -69,6 +69,10 @@ void SVGResource::rasterizeAt(size_t width, size_t height)
 		mLastHeight = height;
 	}
 
+	LOG(LogInfo) << "Rasterizing \"" << mPath << "\"...";
+	LOG(LogInfo) << "  Original width: " << mSVGImage->width << ", original height: " << mSVGImage->height;
+	LOG(LogInfo) << "  width: " << width << ", height: " << height << ", scale: " << height / mSVGImage->height;
+
 	unsigned char* imagePx = (unsigned char*)malloc(width * height * 4);
 
 	NSVGrasterizer* rast = nsvgCreateRasterizer();
@@ -92,12 +96,12 @@ void SVGResource::rasterizeAt(size_t width, size_t height)
 	free(imagePx);
 }
 
-Eigen::Vector2i SVGResource::getImageSize() const
+Eigen::Vector2f SVGResource::getSourceImageSize() const
 {
 	if(mSVGImage)
-		return Eigen::Vector2i((int)round(mSVGImage->width), (int)round(mSVGImage->height));
+		return Eigen::Vector2f(mSVGImage->width, mSVGImage->height);
 
-	return Eigen::Vector2i::Zero();
+	return Eigen::Vector2f::Zero();
 }
 
 void SVGResource::deinitSVG()

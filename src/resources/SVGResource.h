@@ -14,7 +14,7 @@ public:
 	virtual void initFromMemory(const char* image, size_t length) override;
 
 	void rasterizeAt(size_t width, size_t height);
-	Eigen::Vector2i getImageSize() const;
+	Eigen::Vector2f getSourceImageSize() const;
 
 protected:
 	friend TextureResource;
