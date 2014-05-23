@@ -1,5 +1,6 @@
 #include "Util.h"
 #include <boost/filesystem.hpp>
+#include "resources/ResourceManager.h"
 
 std::string strToUpper(const char* from)
 {
@@ -63,8 +64,14 @@ Eigen::Vector2f roundVector(const Eigen::Vector2f& vec)
 
 std::string getCanonicalPath(const std::string& path)
 {
-	if(boost::filesystem::exists(path))
-		return boost::filesystem::canonical(path).generic_string();
-	else
-		return "";
+	// embedded resources, e.g. ":/font.ttf", need to be properly handled too
+	try
+	{
+		const std::string canonical = boost::filesystem::canonical(path).generic_string();
+		return canonical.empty() ? path : canonical;
+	}
+	catch (boost::filesystem::filesystem_error& e)
+	{
+		return path;
+	}
 }
