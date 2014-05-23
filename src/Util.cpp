@@ -21,10 +21,13 @@ std::string strToUpper(const std::string& str)
 	return strToUpper(str.c_str());
 }
 
+
+#if _MSC_VER < 1800
 float round(float num)
 {
 	return (float)((int)(num + 0.5f));
 }
+#endif
 
 Eigen::Affine3f& roundMatrix(Eigen::Affine3f& mat)
 {
