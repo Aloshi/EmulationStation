@@ -232,7 +232,7 @@ void ImageComponent::updateVertices()
 
 void ImageComponent::updateColors()
 {
-	Renderer::buildGLColorArray(mColors, (mColorShift >> 8 << 8)| (getOpacity()), 6);
+	Renderer::buildGLColorArray(mColors, mColorShift, 6);
 }
 
 void ImageComponent::render(const Eigen::Affine3f& parentTrans)

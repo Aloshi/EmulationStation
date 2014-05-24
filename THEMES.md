@@ -400,7 +400,7 @@ Can be created as an extra.
 * `tile` - type: BOOLEAN.
 	- If true, the image will be tiled instead of stretched to fit its size.  Useful for backgrounds.
 * `color` - type: COLOR.
-	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.
+	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.  You can also control the transparency of an image with `<color>FFFFFFAA</color>` - keeping all the pixels their normal color and only affecting the alpha channel.
 
 #### text
 
