@@ -30,6 +30,7 @@ void SVGResource::initFromMemory(const char* file, size_t length)
 
 	// nsvgParse excepts a modifiable, null-terminated string
 	char* copy = (char*)malloc(length + 1);
+	assert(copy != NULL);
 	memcpy(copy, file, length);
 	copy[length] = '\0';
 
@@ -70,6 +71,7 @@ void SVGResource::rasterizeAt(size_t width, size_t height)
 	}
 
 	unsigned char* imagePx = (unsigned char*)malloc(width * height * 4);
+	assert(imagePx != NULL);
 
 	NSVGrasterizer* rast = nsvgCreateRasterizer();
 	nsvgRasterize(rast, mSVGImage, 0, 0, height / mSVGImage->height, imagePx, width, height, width * 4);
