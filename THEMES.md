@@ -112,7 +112,7 @@ Or, you can create your own elements by adding `extra="true"` (as is done in the
 Advanced Features
 =================
 
-It is recommended that if you are writing a theme you launch EmulationStation with the `--debug` and `--windowed` switches.  This way you can read error messages without having to check the log file.  You can also reload the current gamelist view with `Ctrl-R` if `--debug` is specified.
+It is recommended that if you are writing a theme you launch EmulationStation with the `--debug` and `--windowed` switches.  This way you can read error messages without having to check the log file.  You can also reload the current gamelist view and system view with `Ctrl-R` if `--debug` is specified.
 
 ### The `<include>` tag
 

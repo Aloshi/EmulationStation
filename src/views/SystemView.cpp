@@ -6,6 +6,7 @@
 #include "ViewController.h"
 #include "../animations/LambdaAnimation.h"
 #include "../SystemData.h"
+#include "../Settings.h"
 #include "../Util.h"
 
 #define SELECTED_SCALE 1.5f
@@ -91,6 +92,17 @@ bool SystemView::input(InputConfig* config, Input input)
 {
 	if(input.value != 0)
 	{
+		if(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_r && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
+		{
+			LOG(LogInfo) << " Reloading SystemList view";
+
+			// reload themes
+			for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+				it->object->loadTheme();
+
+			populate();
+			return true;
+		}
 		if(config->isMappedTo("left", input))
 		{
 			listInput(-1);
