@@ -257,7 +257,13 @@ bool SystemData::loadConfig()
 		}
 
 		cmd = system.child("command").text().get();
-		platformId = (PlatformIds::PlatformId)system.child("platformid").text().as_uint(PlatformIds::PLATFORM_UNKNOWN);
+
+		const char* platformIdString = system.child("platform").text().as_string();
+		platformId = PlatformIds::getPlatformId(platformIdString);
+
+		// if there appears to be an actual platform ID supplied but it didn't match the list, warn
+		if(platformIdString != NULL && platformIdString[0] != '\0' && platformId == PlatformIds::PLATFORM_UNKNOWN)
+			LOG(LogWarning) << "  Unknown platform for system \"" << name << "\" (platform \"" << platformIdString << "\")";
 
 		//validate
 		if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
@@ -300,7 +306,7 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		<!-- A \"pretty\" name, displayed in the header and such. -->\n"
 			"		<fullname>Nintendo Entertainment System</fullname>\n"
 			"\n"
-			"		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME or $HOMEPATH, depending on platform. -->\n"
+			"		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME on Linux or %HOMEPATH% on Windows. -->\n"
 			"		<path>~/roms/nes</path>\n"
 			"\n"
 			"		<!-- A list of extensions to search for, delimited by a space. You MUST include the period! It's also case sensitive. -->\n"
@@ -311,6 +317,9 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		%BASENAME% is replaced by the \"base\" name of the ROM.  For example, \"/foo/bar.rom\" would have a basename of \"bar\". Useful for MAME.\n"
 			"		%ROM_RAW% is the raw, unescaped path to the ROM. -->\n"
 			"		<command>retroarch -L ~/cores/libretro-fceumm.so %ROM%</command>\n"
+			"\n"
+			"		<!-- The platform to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp. This tag is optional. -->\n"
+			"		<platform>nes</platform>\n"
 			"\n"
 			"	</system>\n"
 			"</systemList>\n";

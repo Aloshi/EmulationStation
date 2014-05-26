@@ -27,6 +27,8 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(XBOX, "Microsoft Xbox")
 	(XBOX_360, "Microsoft Xbox 360")
 	(NEOGEO, "NeoGeo")
+	(NEOGEO_POCKET, "Neo Geo Pocket")
+	(NEOGEO_POCKET_COLOR, "Neo Geo Pocket Color")
 	(NINTENDO_3DS, "Nintendo 3DS")
 	(NINTENDO_64, "Nintendo 64")
 	(NINTENDO_DS, "Nintendo DS")

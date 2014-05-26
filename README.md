@@ -154,8 +154,8 @@ All systems must be contained within the <systemList> tag.-->
 		<command>snesemulator %ROM%</command>
 		<!-- This example would run the bash command "snesemulator /home/user/roms/snes/Super\ Mario\ World.sfc". -->
 
-		<!-- The Platform ID to use for scraping. 42 is the platform ID for the SNES. You can see the full list in src/PlatformIds.h. -->
-		<platformid>42</system>
+		<!-- The platform to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp. -->
+		<platform>snes</platform>
 	</system>
 </systemList>
 ```
