@@ -62,16 +62,11 @@ Eigen::Vector2f roundVector(const Eigen::Vector2f& vec)
 	return ret;
 }
 
+// embedded resources, e.g. ":/font.ttf", need to be properly handled too
 std::string getCanonicalPath(const std::string& path)
 {
-	// embedded resources, e.g. ":/font.ttf", need to be properly handled too
-	try
-	{
-		const std::string canonical = boost::filesystem::canonical(path).generic_string();
-		return canonical.empty() ? path : canonical;
-	}
-	catch (boost::filesystem::filesystem_error& e)
-	{
+	if(path.empty() || !boost::filesystem::exists(path))
 		return path;
-	}
+
+	return boost::filesystem::canonical(path).generic_string();
 }
