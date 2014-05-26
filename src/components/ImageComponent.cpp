@@ -40,6 +40,8 @@ void ImageComponent::resize()
 	SVGResource* svg = dynamic_cast<SVGResource*>(mTexture.get());
 
 	const Eigen::Vector2f textureSize = svg ? svg->getSourceImageSize() : Eigen::Vector2f((float)mTexture->getSize().x(), (float)mTexture->getSize().y());
+	if(textureSize.isZero())
+		return;
 
 	if(mTexture->isTiled())
 	{

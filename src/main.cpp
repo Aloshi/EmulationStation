@@ -272,9 +272,9 @@ int main(int argc, char* argv[])
 		Log::flush();
 	}
 
-	window.deinit();
 	while(window.peekGui() != window.getViewController())
 		delete window.peekGui();
+	window.deinit();
 
 	SystemData::deleteSystems();
 
