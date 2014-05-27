@@ -53,7 +53,8 @@ namespace PlatformIds
 		"pcengine", // = 45,
 		"zxspectrum", // = 46,
 
-		"invalid" // = 47
+		"ignore", // = 47 // do not allow scraping for this system
+		"invalid" // = 48
 	};
 
 	PlatformId getPlatformId(const char* str)

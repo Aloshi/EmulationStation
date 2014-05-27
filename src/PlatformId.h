@@ -55,7 +55,8 @@ namespace PlatformIds
 		TURBOGRAFX_16 = 45,
 		ZX_SPECTRUM = 46,
 
-		PLATFORM_COUNT = 47
+		PLATFORM_IGNORE = 47, // do not allow scraping for this system
+		PLATFORM_COUNT = 48
 	};
 
 	PlatformId getPlatformId(const char* str);
