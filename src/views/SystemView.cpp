@@ -17,6 +17,8 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 	mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
 {
 	mCamOffset = 0;
+	mExtrasCamOffset = 0;
+	mExtrasFadeOpacity = 0.0f;
 
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
@@ -151,17 +153,51 @@ void SystemView::onCursorChanged(const CursorState& state)
 	if(abs(target - posMax - startPos) < dist)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
-	Animation* anim = new LambdaAnimation(
-		[startPos, endPos, posMax, this] (float t)
+	Animation* anim;
+	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
 	{
-		t -= 1;
-		float f = lerp<float>(startPos, endPos, t*t*t + 1);
-		if(f < 0)
-			f += posMax;
-		if(f >= posMax)
-			f -= posMax;
-		this->mCamOffset = f;
-	}, 500);
+		float startExtrasFade = mExtrasFadeOpacity;
+		anim = new LambdaAnimation(
+			[startExtrasFade, startPos, endPos, posMax, this](float t)
+		{
+			t -= 1;
+			float f = lerp<float>(startPos, endPos, t*t*t + 1);
+			if(f < 0)
+				f += posMax;
+			if(f >= posMax)
+				f -= posMax;
+
+			this->mCamOffset = f;
+
+			t += 1;
+			if(t < 0.3f)
+				this->mExtrasFadeOpacity = lerp<float>(0.0f, 1.0f, t / 0.3f + startExtrasFade);
+			else if(t < 0.7f)
+				this->mExtrasFadeOpacity = 1.0f;
+			else
+				this->mExtrasFadeOpacity = lerp<float>(1.0f, 0.0f, (t - 0.7f) / 0.3f);
+
+			if(t > 0.5f)
+				this->mExtrasCamOffset = endPos;
+			
+		}, 500);
+	}else{ // slide
+		anim = new LambdaAnimation(
+			[startPos, endPos, posMax, this](float t)
+		{
+			t -= 1;
+			float f = lerp<float>(startPos, endPos, t*t*t + 1);
+			if(f < 0)
+				f += posMax;
+			if(f >= posMax)
+				f -= posMax;
+
+			this->mCamOffset = f;
+			this->mExtrasCamOffset = f;
+		}, 500);
+	}
+
+	
 	setAnimation(anim, 0, nullptr, false, 0);
 
 	// animate mSystemInfo's opacity (fade out, wait, fade back in)
@@ -214,7 +250,8 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 
 	// draw background extras
 	Eigen::Affine3f extrasTrans = trans;
-	for(int i = center - 1; i < center + 2; i++)
+	int extrasCenter = (int)mExtrasCamOffset;
+	for(int i = extrasCenter - 1; i < extrasCenter + 2; i++)
 	{
 		int index = i;
 		while(index < 0)
@@ -222,9 +259,16 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 		while(index >= (int)mEntries.size())
 			index -= mEntries.size();
 
-		extrasTrans.translation() = trans.translation() + Eigen::Vector3f((i - mCamOffset) * mSize.x(), 0, 0);
+		extrasTrans.translation() = trans.translation() + Eigen::Vector3f((i - mExtrasCamOffset) * mSize.x(), 0, 0);
 		
 		mEntries.at(index).data.backgroundExtras->render(extrasTrans);
+	}
+
+	// fade extras if necessary
+	if(mExtrasFadeOpacity)
+	{
+		Renderer::setMatrix(trans);
+		Renderer::drawRect(0.0f, 0.0f, mSize.x(), mSize.y(), 0x00000000 | (unsigned char)(mExtrasFadeOpacity * 255));
 	}
 
 	// draw logos

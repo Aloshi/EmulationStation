@@ -42,4 +42,6 @@ private:
 
 	// unit is list index
 	float mCamOffset;
+	float mExtrasCamOffset;
+	float mExtrasFadeOpacity;
 };
