@@ -1,4 +1,5 @@
 #include "PlatformId.h"
+#include <string.h>
 
 namespace PlatformIds
 {
