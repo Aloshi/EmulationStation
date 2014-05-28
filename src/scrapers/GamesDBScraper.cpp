@@ -19,6 +19,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(ATARI_7800, "Atari 7800")
 	(ATARI_JAGUAR, "Atari Jaguar")
 	(ATARI_JAGUAR_CD, "Atari Jaguar CD")
+	(ATARI_LYNX, "Atari Lynx")
 	(ATARI_XE, "Atari XE")
 	(COLECOVISION, "Colecovision")
 	(COMMODORE_64, "Commodore 64")
@@ -55,6 +56,8 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(PLAYSTATION_PORTABLE, "Sony PSP")
 	(SUPER_NINTENDO, "Super Nintendo (SNES)")
 	(TURBOGRAFX_16, "TurboGrafx 16")
+	(WONDERSWAN, "WonderSwan")
+	(WONDERSWAN_COLOR, "WonderSwan Color")
 	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
 
 

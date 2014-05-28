@@ -6,57 +6,63 @@ extern const char* mameNameToRealName[];
 namespace PlatformIds
 {
 	const char* PlatformNames[PLATFORM_COUNT + 1] = {
-		"unknown", // = 0,
+		"unknown", // nothing set
 
-		"3do", // = 1,
-		"amiga", // = 2,
-		"arcade", // = 3,
-		"atari2600", // = 4,
-		"atari5200", // = 5,
-		"atari7800", // = 6,
-		"atariJaguar", // = 7,
-		"atariJaguarCD", // = 8,
-		"atariXE", // = 9,
-		"colecovision", // = 10,
-		"commodore64", // = 11,
-		"intellivision", // = 12,
-		"mac", // = 13,
-		"xbox", // = 14,
-		"xbox360", // = 15,
-		"neogeo", // = 16,
-		"ngp", // = 17,
-		"ngpc", // = 18,
-		"n3ds", // = 19,
-		"n64", // = 20,
-		"nds", // = 21,
-		"nes", // = 22,
-		"gb", // = 23,
-		"gba", // = 24,
-		"gbc", // = 25,
-		"gamecube", // = 26,
-		"wii", // = 27,
-		"wiiu", // = 28,
-		"pc", // = 29,
-		"sega32x", // = 30,
-		"segacd", // = 31,
-		"dreamcast", // = 32,
-		"gamegear", // = 33,
-		"genesis", // = 34,
-		"mastersystem", // = 35,
-		"megadrive", // = 36,
-		"saturn", // = 37,
-		"psx", // = 38,
-		"ps2", // = 39,
-		"ps3", // = 40,
-		"ps4", // = 41,
-		"psvita", // = 42,
-		"psp", // = 43,
-		"snes", // = 44,
-		"pcengine", // = 45,
-		"zxspectrum", // = 46,
+		"3do",
+		"amiga",
+		"arcade",
+		"apple2",
+		"atari800",
+		"atari2600",
+		"atari5200",
+		"atari7800",
+		"atarilynx",
+		"atarist",
+		"atarijaguar",
+		"atarijaguarcd",
+		"atarixe",
+		"colecovision",
+		"c64", // commodore 64
+		"intellivision",
+		"mac",
+		"xbox",
+		"xbox360",
+		"neogeo",
+		"ngp", // neo geo pocket
+		"ngpc", // neo geo pocket color
+		"n3ds", // nintendo 3DS
+		"n64", // nintendo 64
+		"nds", // nintendo DS
+		"nes", // nintendo entertainment system
+		"gb", // game boy
+		"gba", // game boy advance
+		"gbc", // game boy color
+		"gc", // gamecube
+		"wii",
+		"wiiu",
+		"pc",
+		"sega32x",
+		"segacd",
+		"dreamcast",
+		"gamegear",
+		"genesis", // sega genesis
+		"mastersystem", // sega master system
+		"megadrive", // sega megadrive
+		"saturn", // sega saturn
+		"psx",
+		"ps2",
+		"ps3",
+		"ps4",
+		"psvita",
+		"psp", // playstation portable
+		"snes", // super nintendo entertainment system
+		"pcengine", // turbografx-16/pcengine
+		"wonderswan",
+		"wonderswancolor",
+		"zxspectrum",
 
-		"ignore", // = 47 // do not allow scraping for this system
-		"invalid" // = 48
+		"ignore", // do not allow scraping for this system
+		"invalid"
 	};
 
 	PlatformId getPlatformId(const char* str)
