@@ -259,12 +259,14 @@ int main(int argc, char* argv[])
 		//sleeping entails setting a flag to start skipping frames
 		//and initially drawing a black semi-transparent rect to dim the screen
 		timeSinceLastEvent += deltaTime;
-		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("DimTime") && Settings::getInstance()->getInt("DimTime") != 0 && window.getAllowSleep())
+		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime") && Settings::getInstance()->getInt("ScreenSaverTime") != 0 && window.getAllowSleep())
 		{
 			sleeping = true;
 			timeSinceLastEvent = 0;
 			Renderer::setMatrix(Eigen::Affine3f::Identity());
-			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000A0);
+
+			unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
+			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
 		}
 
 		Renderer::swapBuffers();

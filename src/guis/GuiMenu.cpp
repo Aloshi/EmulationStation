@@ -93,11 +93,21 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		[this] {
 			auto s = new GuiSettings(mWindow, "UI SETTINGS");
 
-			// dim time
-			auto dim_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
-			dim_time->setValue((float)(Settings::getInstance()->getInt("DimTime") / (1000 * 60)));
-			s->addWithLabel("DIM SCREEN AFTER", dim_time);
-			s->addSaveFunc([dim_time] { Settings::getInstance()->setInt("DimTime", (int)round(dim_time->getValue()) * (1000 * 60)); });
+			// screensaver time
+			auto screensaver_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
+			screensaver_time->setValue((float)(Settings::getInstance()->getInt("ScreenSaverTime") / (1000 * 60)));
+			s->addWithLabel("SCREENSAVER AFTER", screensaver_time);
+			s->addSaveFunc([screensaver_time] { Settings::getInstance()->setInt("ScreenSaverTime", (int)round(screensaver_time->getValue()) * (1000 * 60)); });
+
+			// screensaver behavior
+			auto screensaver_behavior = std::make_shared< OptionListComponent<std::string> >(mWindow, "TRANSITION STYLE", false);
+			std::vector<std::string> screensavers;
+			screensavers.push_back("dim");
+			screensavers.push_back("black");
+			for(auto it = screensavers.begin(); it != screensavers.end(); it++)
+				screensaver_behavior->add(*it, *it, Settings::getInstance()->getString("ScreenSaverBehavior") == *it);
+			s->addWithLabel("SCREENSAVER BEHAVIOR", screensaver_behavior);
+			s->addSaveFunc([screensaver_behavior] { Settings::getInstance()->setString("ScreenSaverBehavior", screensaver_behavior->getSelected()); });
 
 			// framerate
 			auto framerate = std::make_shared<SwitchComponent>(mWindow);

@@ -41,7 +41,7 @@ void Settings::setDefaults()
 	mBoolMap["DebugGrid"] = false;
 	mBoolMap["DebugText"] = false;
 
-	mIntMap["DimTime"] = 120*1000;
+	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
 
@@ -49,6 +49,7 @@ void Settings::setDefaults()
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
+	mStringMap["ScreenSaverBehavior"] = "dim";
 
 	mScraper = std::shared_ptr<Scraper>(new GamesDBScraper());
 }
