@@ -76,3 +76,18 @@ std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * d
 	}
 	return rawData;
 }
+
+void ImageIO::flipPixelsVert(unsigned char* imagePx, const size_t& width, const size_t& height)
+{
+	unsigned int temp;
+	unsigned int* arr = (unsigned int*)imagePx;
+	for(size_t y = 0; y < height / 2; y++)
+	{
+		for(size_t x = 0; x < width; x++)
+		{
+			temp = arr[x + (y * width)];
+			arr[x + (y * width)] = arr[x + (height * width) - ((y + 1) * width)];
+			arr[x + (height * width) - ((y + 1) * width)] = temp;
+		}
+	}
+}

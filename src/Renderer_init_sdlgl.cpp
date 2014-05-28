@@ -75,9 +75,11 @@ namespace Renderer
 		//set an icon for the window
 		size_t width = 0;
 		size_t height = 0;
-		std::vector<unsigned char> rawData = ImageIO::loadFromMemoryRGBA32(ES_logo_32_png_data, ES_logo_32_png_size, width, height);
+		std::vector<unsigned char> rawData = ImageIO::loadFromMemoryRGBA32(window_icon_256_png_data, window_icon_256_png_size, width, height);
 		if (!rawData.empty())
 		{
+			ImageIO::flipPixelsVert(rawData.data(), width, height);
+
 			//SDL interprets each pixel as a 32-bit number, so our masks must depend on the endianness (byte order) of the machine
 			#if SDL_BYTEORDER == SDL_BIG_ENDIAN
 						Uint32 rmask = 0xff000000; Uint32 gmask = 0x00ff0000; Uint32 bmask = 0x0000ff00; Uint32 amask = 0x000000ff;

@@ -3,6 +3,7 @@
 #include "../nanosvg/nanosvgrast.h"
 #include "../Log.h"
 #include "../Util.h"
+#include "../ImageIO.h"
 
 #define DPI 96
 
@@ -77,18 +78,7 @@ void SVGResource::rasterizeAt(size_t width, size_t height)
 	nsvgRasterize(rast, mSVGImage, 0, 0, height / mSVGImage->height, imagePx, width, height, width * 4);
 	nsvgDeleteRasterizer(rast);
 
-	// flip the pixels
-	unsigned int temp;
-	unsigned int* arr = (unsigned int*)imagePx;
-	for(size_t y = 0; y < height / 2; y++)
-	{
-		for(size_t x = 0; x < width; x++)
-		{
-			temp = arr[x + (y * width)];
-			arr[x + (y * width)] = arr[x + (height * width) - ((y + 1) * width)];
-			arr[x + (height * width) - ((y + 1) * width)] = temp;
-		}
-	}
+	ImageIO::flipPixelsVert(imagePx, width, height);
 
 	initFromPixels(imagePx, width, height);
 	free(imagePx);

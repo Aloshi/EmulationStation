@@ -32,12 +32,6 @@ extern const unsigned char checkbox_checked_svg_data[];
 extern const size_t checkbox_unchecked_svg_size;
 extern const unsigned char checkbox_unchecked_svg_data[];
 
-extern const size_t ES_logo_16_png_size;
-extern const unsigned char ES_logo_16_png_data[];
-
-extern const size_t ES_logo_32_png_size;
-extern const unsigned char ES_logo_32_png_data[];
-
 extern const size_t fav_add_svg_size;
 extern const unsigned char fav_add_svg_data[];
 
@@ -68,6 +62,9 @@ extern const unsigned char scroll_gradient_png_data[];
 extern const size_t slider_knob_svg_size;
 extern const unsigned char slider_knob_svg_data[];
 
+extern const size_t splash_svg_size;
+extern const unsigned char splash_svg_data[];
+
 extern const size_t star_filled_svg_size;
 extern const unsigned char star_filled_svg_data[];
 
@@ -79,6 +76,9 @@ extern const unsigned char textinput_ninepatch_png_data[];
 
 extern const size_t textinput_ninepatch_active_png_size;
 extern const unsigned char textinput_ninepatch_active_png_data[];
+
+extern const size_t window_icon_256_png_size;
+extern const unsigned char window_icon_256_png_data[];
 
 extern const size_t help_button_a_svg_size;
 extern const unsigned char help_button_a_svg_data[];

@@ -311,8 +311,8 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/AnimationController.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/data/ResourceUtil.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_16_png.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/ES_logo_32_png.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/splash_svg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/window_icon_256_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/button_filled_png.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/data/converted/textinput_ninepatch_png.cpp
