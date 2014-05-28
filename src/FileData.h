@@ -25,7 +25,8 @@ enum FileChangeType
 const char* fileTypeToString(FileType type);
 FileType stringToFileType(const char* str);
 
-std::string getCleanFileName(const boost::filesystem::path& path);
+// Remove (.*) and [.*] from str
+std::string removeParenthesis(const std::string& str);
 
 // A tree node that holds information for a file.
 class FileData
@@ -48,6 +49,8 @@ public:
 	void addChild(FileData* file); // Error if mType != FOLDER
 	void removeChild(FileData* file); //Error if mType != FOLDER
 
+	// Returns our best guess at the "real" name for this file (will strip parenthesis and attempt to perform MAME name translation)
+	std::string getCleanName() const;
 
 	typedef bool ComparisonFunction(const FileData* a, const FileData* b);
 	struct SortType

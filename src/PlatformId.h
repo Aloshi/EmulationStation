@@ -61,4 +61,6 @@ namespace PlatformIds
 
 	PlatformId getPlatformId(const char* str);
 	const char* getPlatformName(PlatformId id);
+
+	const char* getCleanMameName(const char* from);
 }

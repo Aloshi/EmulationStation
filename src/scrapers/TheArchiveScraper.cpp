@@ -12,7 +12,7 @@ std::unique_ptr<ScraperSearchHandle> TheArchiveScraper::getResultsAsync(const Sc
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = getCleanFileName(params.game->getPath());
+		cleanName = params.game->getCleanName();
 	
 	path += HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method

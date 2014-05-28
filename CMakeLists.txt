@@ -238,6 +238,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/MameNameMap.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MathExp.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/MetaData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/platform.cpp

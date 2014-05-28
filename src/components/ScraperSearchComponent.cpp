@@ -452,7 +452,7 @@ void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
 	stop();
 	mWindow->pushGui(new GuiTextEditPopup(mWindow, "SEARCH FOR", 
 		// initial value is last search if there was one, otherwise the clean path name
-		params.nameOverride.empty() ? getCleanFileName(params.game->getPath()) : params.nameOverride, 
+		params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride, 
 		searchForFunc, false, "SEARCH"));
 }
 

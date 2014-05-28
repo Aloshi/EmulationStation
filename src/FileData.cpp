@@ -1,14 +1,15 @@
 #include "FileData.h"
+#include "SystemData.h"
 
 namespace fs = boost::filesystem;
 
-std::string getCleanFileName(const fs::path& path)
+std::string removeParenthesis(const std::string& str)
 {
 	// remove anything in parenthesis or brackets
 	// should be roughly equivalent to the regex replace "\((.*)\)|\[(.*)\]" with ""
 	// I would love to just use regex, but it's not worth pulling in another boost lib for one function that is used once
 
-	std::string ret = path.stem().generic_string();
+	std::string ret = str;
 	size_t start, end;
 
 	static const int NUM_TO_REPLACE = 2;
@@ -40,7 +41,7 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
-		metadata.set("name", getCleanFileName(mPath));
+		metadata.set("name", getCleanName());
 }
 
 FileData::~FileData()
@@ -50,6 +51,15 @@ FileData::~FileData()
 
 	while(mChildren.size())
 		delete mChildren.back();
+}
+
+std::string FileData::getCleanName() const
+{
+	std::string stem = mPath.stem().generic_string();
+	if(mSystem && mSystem->getPlatformId() == PlatformIds::ARCADE || mSystem->getPlatformId() == PlatformIds::NEOGEO)
+		stem = PlatformIds::getCleanMameName(stem.c_str());
+
+	return removeParenthesis(stem);
 }
 
 const std::string& FileData::getThumbnailPath() const

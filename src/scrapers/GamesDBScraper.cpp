@@ -64,7 +64,7 @@ std::unique_ptr<ScraperSearchHandle> GamesDBScraper::getResultsAsync(const Scrap
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = getCleanFileName(params.game->getPath());
+		cleanName = params.game->getCleanName();
 	
 	path += "name=" + HttpReq::urlEncode(cleanName);
 
