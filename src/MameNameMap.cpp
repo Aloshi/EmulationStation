@@ -1,4 +1,4 @@
-#include <map>
+#define NULL 0
 
 const char* mameNameToRealName[] = {
 	"005", "005", 
