@@ -74,6 +74,7 @@ void HelpComponent::updateGrid()
 	{
 		auto icon = std::make_shared<ImageComponent>(mWindow);
 		icon->setImage(getIconTexture(it->first));
+		icon->setColorShift(mStyle.iconColor);
 		icon->setResize(0, height);
 		icons.push_back(icon);
 

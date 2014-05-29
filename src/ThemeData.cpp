@@ -80,6 +80,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("helpsystem", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("textColor", COLOR)
+		("iconColor", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)));
 

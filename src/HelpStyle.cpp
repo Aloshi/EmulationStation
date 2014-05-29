@@ -5,7 +5,7 @@
 
 HelpStyle::HelpStyle()
 {
-	position = Eigen::Vector2f(12.0f, Renderer::getScreenHeight() * 0.955f);
+	position = Eigen::Vector2f(12.0f, Renderer::getScreenHeight() * 0.9515f);
 	iconColor = 0x777777FF;
 	textColor = 0x777777FF;
 	font = Font::get(FONT_SIZE_SMALL);
@@ -22,6 +22,9 @@ void HelpStyle::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::s
 
 	if(elem->has("textColor"))
 		textColor = elem->get<unsigned int>("textColor");
+
+	if(elem->has("iconColor"))
+		iconColor = elem->get<unsigned int>("iconColor");
 
 	if(elem->has("fontPath") || elem->has("fontSize"))
 		font = Font::getFromTheme(elem, ThemeFlags::ALL, font);
