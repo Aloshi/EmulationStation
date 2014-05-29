@@ -43,6 +43,12 @@ private:
 			auto font = Font::get(FONT_SIZE_MEDIUM);
 			ComponentListRow row;
 
+			static const char* CHECKED_PATH = ":/checkbox_checked.svg";
+			static const char* UNCHECKED_PATH = ":/checkbox_unchecked.svg";
+
+			// for select all/none
+			std::vector<ImageComponent*> checkboxes;
+
 			for(auto it = mParent->mEntries.begin(); it != mParent->mEntries.end(); it++)
 			{
 				row.elements.clear();
@@ -54,7 +60,7 @@ private:
 				{
 					// add checkbox
 					auto checkbox = std::make_shared<ImageComponent>(mWindow);
-					checkbox->setImage(it->selected ? ":/checkbox_checked.svg" : ":/checkbox_unchecked.svg");
+					checkbox->setImage(it->selected ? CHECKED_PATH : UNCHECKED_PATH);
 					checkbox->setResize(0, font->getLetterHeight());
 					row.addElement(checkbox, false);
 
@@ -63,9 +69,12 @@ private:
 					row.makeAcceptInputHandler([this, &e, checkbox]
 					{
 						e.selected = !e.selected;
-						checkbox->setImage(e.selected ? ":/checkbox_checked.svg" : ":/checkbox_unchecked.svg");
+						checkbox->setImage(e.selected ? CHECKED_PATH : UNCHECKED_PATH);
 						mParent->onSelectedChanged();
 					});
+
+					// for select all/none
+					checkboxes.push_back(checkbox.get());
 				}else{
 					// input handler for non-multiselect
 					// update selected value and close
@@ -83,6 +92,27 @@ private:
 			}
 
 			mMenu.addButton("BACK", "accept", [this] { delete this; });
+
+			if(mParent->mMultiSelect)
+			{
+				mMenu.addButton("SELECT ALL", "select all", [this, checkboxes] {
+					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
+					{
+						mParent->mEntries.at(i).selected = true;
+						checkboxes.at(i)->setImage(CHECKED_PATH);
+					}
+					mParent->onSelectedChanged();
+				});
+
+				mMenu.addButton("SELECT NONE", "select none", [this, checkboxes] {
+					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
+					{
+						mParent->mEntries.at(i).selected = false;
+						checkboxes.at(i)->setImage(UNCHECKED_PATH);
+					}
+					mParent->onSelectedChanged();
+				});
+			}
 
 			mMenu.setPosition((Renderer::getScreenWidth() - mMenu.getSize().x()) / 2, Renderer::getScreenHeight() * 0.15f);
 			addChild(&mMenu);
