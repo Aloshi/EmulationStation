@@ -141,6 +141,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileSorts.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HelpStyle.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.h
@@ -232,6 +233,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileData.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/FileSorts.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/GuiComponent.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/HelpStyle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/HttpReq.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ImageIO.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.cpp

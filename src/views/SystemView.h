@@ -29,7 +29,8 @@ public:
 	void render(const Eigen::Affine3f& parentTrans) override;
 
 	std::vector<HelpPrompt> getHelpPrompts() override;
-	
+	virtual HelpStyle getHelpStyle() override;
+
 protected:
 	void onCursorChanged(const CursorState& state) override;
 

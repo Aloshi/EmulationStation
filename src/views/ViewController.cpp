@@ -364,3 +364,11 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 
 	return prompts;
 }
+
+HelpStyle ViewController::getHelpStyle()
+{
+	if(!mCurrentView)
+		return GuiComponent::getHelpStyle();
+
+	return mCurrentView->getHelpStyle();
+}

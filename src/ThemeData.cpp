@@ -76,7 +76,12 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("filledPath", PATH)
 		("unfilledPath", PATH)))
 	("sound", makeMap(boost::assign::map_list_of
-		("path", PATH)));
+		("path", PATH)))
+	("helpsystem", makeMap(boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("textColor", COLOR)
+		("fontPath", PATH)
+		("fontSize", FLOAT)));
 
 namespace fs = boost::filesystem;
 

@@ -46,6 +46,12 @@ void HelpComponent::setPrompts(const std::vector<HelpPrompt>& prompts)
 	updateGrid();
 }
 
+void HelpComponent::setStyle(const HelpStyle& style)
+{
+	mStyle = style;
+	updateGrid();
+}
+
 void HelpComponent::updateGrid()
 {
 	if(!Settings::getInstance()->getBool("ShowHelpPrompts") || mPrompts.empty())
@@ -54,10 +60,10 @@ void HelpComponent::updateGrid()
 		return;
 	}
 
+	std::shared_ptr<Font>& font = mStyle.font;
+
 	mGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(mPrompts.size() * 4, 1));
 	// [icon] [spacer1] [text] [spacer2]
-
-	std::shared_ptr<Font> font = Font::get(FONT_SIZE_SMALL);
 	
 	std::vector< std::shared_ptr<ImageComponent> > icons;
 	std::vector< std::shared_ptr<TextComponent> > labels;
@@ -71,7 +77,7 @@ void HelpComponent::updateGrid()
 		icon->setResize(0, height);
 		icons.push_back(icon);
 
-		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(it->second), font, 0x777777FF);
+		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(it->second), font, mStyle.textColor);
 		labels.push_back(lbl);
 
 		width += icon->getSize().x() + lbl->getSize().x() + ICON_TEXT_SPACING + ENTRY_SPACING;
@@ -89,7 +95,8 @@ void HelpComponent::updateGrid()
 		mGrid->setEntry(labels.at(i), Vector2i(col + 2, 0), false, false);
 	}
 
-	mGrid->setPosition(OFFSET_X, Renderer::getScreenHeight() - mGrid->getSize().y() - OFFSET_Y);
+	mGrid->setPosition(Eigen::Vector3f(mStyle.position.x(), mStyle.position.y(), 0.0f));
+	//mGrid->setPosition(OFFSET_X, Renderer::getScreenHeight() - mGrid->getSize().y() - OFFSET_Y);
 }
 
 std::shared_ptr<TextureResource> HelpComponent::getIconTexture(const char* name)

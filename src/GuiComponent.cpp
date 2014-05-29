@@ -169,7 +169,7 @@ void GuiComponent::setOpacity(unsigned char opacity)
 	}
 }
 
-const Eigen::Affine3f GuiComponent::getTransform()
+const Eigen::Affine3f& GuiComponent::getTransform()
 {
 	mTransform.setIdentity();
 	mTransform.translate(mPosition);
@@ -325,5 +325,10 @@ void GuiComponent::updateHelpPrompts()
 	std::vector<HelpPrompt> prompts = getHelpPrompts();
 
 	if(mWindow->peekGui() == this)
-		mWindow->setHelpPrompts(prompts);
+		mWindow->setHelpPrompts(prompts, getHelpStyle());
+}
+
+HelpStyle GuiComponent::getHelpStyle()
+{
+	return HelpStyle();
 }

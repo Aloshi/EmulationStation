@@ -37,7 +37,7 @@ Window::~Window()
 void Window::pushGui(GuiComponent* gui)
 {
 	mGuiStack.push_back(gui);
-	setHelpPrompts(gui->getHelpPrompts());
+	gui->updateHelpPrompts();
 }
 
 void Window::removeGui(GuiComponent* gui)
@@ -49,7 +49,7 @@ void Window::removeGui(GuiComponent* gui)
 			i = mGuiStack.erase(i);
 
 			if(i == mGuiStack.end() && mGuiStack.size()) // we just popped the stack and the stack is not empty
-				setHelpPrompts(mGuiStack.back()->getHelpPrompts());
+				mGuiStack.back()->updateHelpPrompts();
 
 			return;
 		}
@@ -88,7 +88,7 @@ bool Window::init(unsigned int width, unsigned int height)
 
 	// update our help because font sizes probably changed
 	if(peekGui())
-		setHelpPrompts(peekGui()->getHelpPrompts());
+		peekGui()->updateHelpPrompts();
 
 	return true;
 }
@@ -257,9 +257,10 @@ void Window::renderHelpPromptsEarly()
 	mRenderedHelpPrompts = true;
 }
 
-void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts)
+void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpStyle& style)
 {
 	mHelp->clearPrompts();
+	mHelp->setStyle(style);
 
 	std::vector<HelpPrompt> addPrompts;
 

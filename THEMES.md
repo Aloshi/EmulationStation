@@ -270,6 +270,8 @@ Reference
 ## Views, their elements, and themable properties:
 
 #### basic
+* `helpsystem name="help"` - ALL
+	- The help system style for this view.
 * `image name="background"` - ALL
 	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
 * `text name="logoText"` - ALL
@@ -282,6 +284,8 @@ Reference
 ---
 
 #### detailed
+* `helpsystem name="help"` - ALL
+	- The help system style for this view.
 * `image name="background"` - ALL
 	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
 * `text name="logoText"` - ALL
@@ -329,6 +333,8 @@ Reference
 ---
 
 #### grid
+* `helpsystem name="help"` - ALL
+	- The help system style for this view.
 * `image name="background"` - ALL
 	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
 * `text name="logoText"` - ALL
@@ -339,31 +345,11 @@ Reference
 ---
 
 #### system
+* `helpsystem name="help"` - ALL
+	- The help system style for this view.
 * `image name="logo"` - PATH
 	- A logo image, to be displayed in the system logo carousel.
 * You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.
-
----
-
-#### fastSelect
-* `ninepatch name="windowBackground"` - PATH
-	- Fit around the fast select UI as a background.
-* `text name="letter"` - FONT_PATH | COLOR
-	- The big letter that shows what letter you'll jump to when you let go of the fast select button.
-* `text name="subtext"` - FONT_PATH | COLOR
-	- The text that displays the current sort mode.
-
----
-
-#### menu
-* `ninepatch name="windowBackground"` - PATH
-	- Background for the menu.  Fit from top-left corner at (0.175, 0.05) to bottom-right corner at (0.825, 0.95).
-* `textlist name="menulist"` - FONT_PATH | COLOR | SOUND
-	- The list of menu options. `primaryColor` is for most options, `secondaryColor` is for the "shutdown" option.
-* `sound name="menuOpen"` - PATH
-	- Played when the menu opens.
-* `sound name="menuClose"` - PATH
-	- Played when the menu closes.
 
 
 ## Types of properties:
@@ -479,7 +465,14 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `path` - type: PATH.
 	- Path to the sound file.  Only .wav files are currently supported.
 
+#### helpsystem
 
+* `pos` - type: NORMALIZED_PAIR.
+* `textColor` - type: COLOR.
+* `fontPath` - type: PATH.
+* `fontSize` - type: FLOAT.
+
+The help system is a special element that displays a context-sensitive list of actions the user can take at any time.  You should try and keep the position constant throughout every screen.  Keep in mind the "default" settings (including position) are used whenever the user opens a menu.
 
 [*Check out the "official" themes for some more examples!*](http://aloshi.com/emulationstation#themes)
 

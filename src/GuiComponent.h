@@ -1,14 +1,15 @@
-#ifndef _GUICOMPONENT_H_
-#define _GUICOMPONENT_H_
+#pragma once
 
 #include "InputConfig.h"
 #include <memory>
 #include <Eigen/Dense>
+#include "HelpStyle.h"
 
 class Window;
 class Animation;
 class AnimationController;
 class ThemeData;
+class Font;
 
 typedef std::pair<const char*, const char*> HelpPrompt;
 
@@ -69,7 +70,7 @@ public:
 	virtual unsigned char getOpacity() const;
 	virtual void setOpacity(unsigned char opacity);
 
-	const Eigen::Affine3f getTransform();
+	const Eigen::Affine3f& getTransform();
 
 	virtual std::string getValue() const;
 	virtual void setValue(const std::string& value);
@@ -86,6 +87,8 @@ public:
 
 	// Called whenever help prompts change.
 	void updateHelpPrompts();
+	
+	virtual HelpStyle getHelpStyle();
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;
@@ -106,5 +109,3 @@ private:
 	Eigen::Affine3f mTransform; //Don't access this directly! Use getTransform()!
 	AnimationController* mAnimationMap[MAX_ANIMATIONS];
 };
-
-#endif

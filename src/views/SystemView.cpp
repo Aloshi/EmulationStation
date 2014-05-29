@@ -316,3 +316,10 @@ std::vector<HelpPrompt> SystemView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("a", "select"));
 	return prompts;
 }
+
+HelpStyle SystemView::getHelpStyle()
+{
+	HelpStyle style;
+	style.applyTheme(mEntries.at(mCursor).object->getTheme(), "system");
+	return style;
+}

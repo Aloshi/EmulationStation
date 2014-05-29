@@ -60,6 +60,7 @@ public:
 	inline const State& getState() const { return mState; }
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+	virtual HelpStyle getHelpStyle() override;
 
 	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
 	std::shared_ptr<SystemView> getSystemListView();

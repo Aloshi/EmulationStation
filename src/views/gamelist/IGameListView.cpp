@@ -34,3 +34,10 @@ void IGameListView::setTheme(const std::shared_ptr<ThemeData>& theme)
 	mTheme = theme;
 	onThemeChanged(theme);
 }
+
+HelpStyle IGameListView::getHelpStyle()
+{
+	HelpStyle style;
+	style.applyTheme(mTheme, getName());
+	return style;
+}

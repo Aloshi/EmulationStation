@@ -38,7 +38,7 @@ public:
 	void renderLoadingScreen();
 
 	void renderHelpPromptsEarly(); // used by ViewController to render HelpPrompts before a fade
-	void setHelpPrompts(const std::vector<HelpPrompt>& prompts);
+	void setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpStyle& style);
 
 private:
 	ViewController* mViewController;

@@ -34,6 +34,8 @@ public:
 	virtual bool input(InputConfig* config, Input input) override;
 
 	virtual const char* getName() const = 0;
+
+	virtual HelpStyle getHelpStyle() override;
 protected:
 	FileData* mRoot;
 	std::shared_ptr<ThemeData> mTheme;
