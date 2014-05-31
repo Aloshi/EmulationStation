@@ -19,6 +19,9 @@
 // always
 // * press a -> open full list
 
+#define CHECKED_PATH ":/checkbox_checked.svg"
+#define UNCHECKED_PATH ":/checkbox_unchecked.svg"
+
 template<typename T>
 class OptionListComponent : public GuiComponent
 {
@@ -42,9 +45,6 @@ private:
 		{
 			auto font = Font::get(FONT_SIZE_MEDIUM);
 			ComponentListRow row;
-
-			const char* CHECKED_PATH = ":/checkbox_checked.svg";
-			const char* UNCHECKED_PATH = ":/checkbox_unchecked.svg";
 
 			// for select all/none
 			std::vector<ImageComponent*> checkboxes;
