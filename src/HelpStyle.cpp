@@ -8,7 +8,11 @@ HelpStyle::HelpStyle()
 	position = Eigen::Vector2f(12.0f, Renderer::getScreenHeight() * 0.9515f);
 	iconColor = 0x777777FF;
 	textColor = 0x777777FF;
-	font = Font::get(FONT_SIZE_SMALL);
+
+	if(FONT_SIZE_SMALL != 0)
+		font = Font::get(FONT_SIZE_SMALL);
+	else
+		font = nullptr;
 }
 
 void HelpStyle::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view)

@@ -75,15 +75,24 @@ void InputConfig::unmapInput(const std::string& name)
 		mNameMap.erase(it);
 }
 
-Input InputConfig::getInputByName(const std::string& name)
+bool InputConfig::getInputByName(const std::string& name, Input* result)
 {
-	return mNameMap[toLower(name)];
+	auto it = mNameMap.find(toLower(name));
+	if(it != mNameMap.end())
+	{
+		*result = it->second;
+		return true;
+	}
+
+	return false;
 }
 
 bool InputConfig::isMappedTo(const std::string& name, Input input)
 {
-	Input comp = getInputByName(name);
-
+	Input comp;
+	if(!getInputByName(name, &comp))
+		return false;
+	
 	if(comp.configured && comp.type == input.type && comp.id == input.id)
 	{
 		if(comp.type == TYPE_HAT)

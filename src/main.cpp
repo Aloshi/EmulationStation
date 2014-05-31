@@ -9,6 +9,7 @@
 #include "SystemData.h"
 #include <boost/filesystem.hpp>
 #include "guis/GuiDetectDevice.h"
+#include "guis/GuiMsgBox.h"
 #include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"
@@ -121,6 +122,32 @@ bool verifyHomeFolderExists()
 	return true;
 }
 
+// Returns true if everything is OK, 
+bool loadSystemConfigFile(const char** errorString)
+{
+	*errorString = NULL;
+
+	if(!SystemData::loadConfig())
+	{
+		LOG(LogError) << "Error while parsing systems configuration file!";
+		*errorString = "IT LOOKS LIKE YOUR SYSTEMS CONFIGURATION FILE HAS NOT BEEN SET UP OR IS INVALID. YOU'LL NEED TO DO THIS BY HAND, UNFORTUNATELY.\n\n"
+			"VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION.";
+		return false;
+	}
+
+	if(SystemData::sSystemVector.size() == 0)
+	{
+		LOG(LogError) << "No systems found! Does at least one system have a game present? (check that extensions match!)\n(Also, make sure you've updated your es_systems.cfg for XML!)";
+		*errorString = "WE CAN'T FIND ANY SYSTEMS!\n"
+			"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, "
+			"AND YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n\n"
+			"VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION.";
+		return false;
+	}
+
+	return true;
+}
+
 //called on exit, assuming we get far enough to have the log initialized
 void onExit()
 {
@@ -161,22 +188,26 @@ int main(int argc, char* argv[])
 		window.renderLoadingScreen();
 	}
 
-	//try loading the system config file
-	if(!SystemData::loadConfig())
+	const char* errorMsg = NULL;
+	if(!loadSystemConfigFile(&errorMsg))
 	{
-		LOG(LogError) << "Error parsing system config file!";
-		if(!scrape_cmdline)
-			Renderer::deinit();
-		return 1;
-	}
+		// something went terribly wrong
+		if(errorMsg == NULL)
+		{
+			LOG(LogError) << "Unknown error occured while parsing system config file.";
+			if(!scrape_cmdline)
+				Renderer::deinit();
+			return 1;
+		}
 
-	//make sure it wasn't empty
-	if(SystemData::sSystemVector.size() == 0)
-	{
-		LOG(LogError) << "No systems found! Does at least one system have a game present? (check that extensions match!)\n(Also, make sure you've updated your es_systems.cfg for XML!)";
-		if(!scrape_cmdline)
-			Renderer::deinit();
-		return 1;
+		// we can't handle es_systems.cfg file problems inside ES itself, so display the error message then quit
+		window.pushGui(new GuiMsgBox(&window,
+			errorMsg,
+			"QUIT", [] { 
+				SDL_Event* quit = new SDL_Event();
+				quit->type = SDL_QUIT;
+				SDL_PushEvent(quit);
+			}));
 	}
 
 	//run the command line scraper then quit
@@ -193,11 +224,15 @@ int main(int argc, char* argv[])
 	window.getViewController()->preload();
 
 	//choose which GUI to open depending on if an input configuration already exists
-	if(fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
+	if(errorMsg == NULL)
 	{
-		window.getViewController()->goToStart();
-	}else{
-		window.pushGui(new GuiDetectDevice(&window, true));
+		if(fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
+		{
+			window.getViewController()->goToStart();
+		}
+		else{
+			window.pushGui(new GuiDetectDevice(&window, true));
+		}
 	}
 
 	//generate joystick events since we're done loading

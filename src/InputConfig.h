@@ -93,9 +93,6 @@ public:
 	inline const std::string& getDeviceName() { return mDeviceName; }
 	inline const std::string& getDeviceGUIDString() { return mDeviceGUID; }
 
-	//Returns the input mapped to this name.
-	Input getInputByName(const std::string& name);
-
 	//Returns true if Input is mapped to this name, false otherwise.
 	bool isMappedTo(const std::string& name, Input input);
 
@@ -108,6 +105,10 @@ public:
 	bool isConfigured();
 
 private:
+	// Returns true if there is an Input mapped to this name, false otherwise.
+	// Writes Input mapped to this name to result if true.
+	bool getInputByName(const std::string& name, Input* result);
+
 	std::map<std::string, Input> mNameMap;
 	const int mDeviceId;
 	const std::string mDeviceName;
