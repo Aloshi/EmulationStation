@@ -43,8 +43,8 @@ private:
 			auto font = Font::get(FONT_SIZE_MEDIUM);
 			ComponentListRow row;
 
-			static const char* CHECKED_PATH = ":/checkbox_checked.svg";
-			static const char* UNCHECKED_PATH = ":/checkbox_unchecked.svg";
+			const char* CHECKED_PATH = ":/checkbox_checked.svg";
+			const char* UNCHECKED_PATH = ":/checkbox_unchecked.svg";
 
 			// for select all/none
 			std::vector<ImageComponent*> checkboxes;
