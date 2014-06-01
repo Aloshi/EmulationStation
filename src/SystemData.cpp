@@ -1,5 +1,5 @@
 #include "SystemData.h"
-#include "XMLReader.h"
+#include "Gamelist.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <stdlib.h>

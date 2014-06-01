@@ -2,7 +2,7 @@
 #include "../Renderer.h"
 #include "../Log.h"
 #include "../views/ViewController.h"
-#include "../XMLReader.h"
+#include "../Gamelist.h"
 
 #include "../components/TextComponent.h"
 #include "../components/ButtonComponent.h"

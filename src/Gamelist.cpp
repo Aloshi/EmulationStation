@@ -1,4 +1,4 @@
-#include "XMLReader.h"
+#include "Gamelist.h"
 #include "SystemData.h"
 #include "pugiXML/pugixml.hpp"
 #include <boost/filesystem.hpp>
