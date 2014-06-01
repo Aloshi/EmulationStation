@@ -153,6 +153,10 @@ void SystemView::onCursorChanged(const CursorState& state)
 	if(abs(target - posMax - startPos) < dist)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
+	// no need to animate, we're not going anywhere (probably mEntries.size() == 1)
+	if(endPos == mCamOffset && endPos == mExtrasCamOffset)
+		return;
+
 	Animation* anim;
 	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
 	{
@@ -247,6 +251,9 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 
 	int logoCount = (int)(mSize.x() / logoSizeX) + 2; // how many logos we need to draw
 	int center = (int)(mCamOffset);
+
+	if(mEntries.size() == 1)
+		logoCount = 1;
 
 	// draw background extras
 	Eigen::Affine3f extrasTrans = trans;
