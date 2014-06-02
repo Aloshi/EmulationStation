@@ -1,6 +1,9 @@
 #include "MetaData.h"
 #include "components/TextComponent.h"
 #include "Log.h"
+#include "Util.h"
+
+namespace fs = boost::filesystem;
 
 MetaDataDecl gameDecls[] = { 
 	// key,			type,					default,			statistic,	name in GuiMetaDataEd,	prompt in GuiMetaDataEd
@@ -52,7 +55,7 @@ MetaDataList::MetaDataList(MetaDataListType type)
 }
 
 
-MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node node)
+MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node node, const fs::path& relativeTo)
 {
 	MetaDataList mdl(type);
 
@@ -63,7 +66,12 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node n
 		pugi::xml_node md = node.child(iter->key.c_str());
 		if(md)
 		{
-			mdl.set(iter->key, md.text().get());
+			// if it's a path, resolve relative paths
+			std::string value = md.text().get();
+			if(iter->type == MD_IMAGE_PATH)
+				value = resolvePath(value, relativeTo, true).generic_string();
+
+			mdl.set(iter->key, value);
 		}else{
 			mdl.set(iter->key, iter->defaultValue);
 		}
@@ -72,30 +80,27 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node n
 	return mdl;
 }
 
-void MetaDataList::appendToXML(pugi::xml_node parent, bool ignoreDefaults) const
+void MetaDataList::appendToXML(pugi::xml_node parent, bool ignoreDefaults, const fs::path& relativeTo) const
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 
-	for(auto iter = mMap.begin(); iter != mMap.end(); iter++)
+	for(auto mddIter = mdd.begin(); mddIter != mdd.end(); mddIter++)
 	{
-		bool write = true;
-
-		if(ignoreDefaults)
+		auto mapIter = mMap.find(mddIter->key);
+		if(mapIter != mMap.end())
 		{
-			for(auto mddIter = mdd.begin(); mddIter != mdd.end(); mddIter++)
-			{
-				if(mddIter->key == iter->first)
-				{
-					if(iter->second == mddIter->defaultValue)
-						write = false;
+			// we have this value!
+			// if it's just the default (and we ignore defaults), don't write it
+			if(ignoreDefaults && mapIter->second == mddIter->defaultValue)
+				continue;
+			
+			// try and make paths relative if we can
+			std::string value = mapIter->second;
+			if(mddIter->type == MD_IMAGE_PATH)
+				value = makeRelativePath(value, relativeTo, true).generic_string();
 
-					break;
-				}
-			}
+			parent.append_child(mapIter->first.c_str()).text().set(value.c_str());
 		}
-
-		if(write)
-			parent.append_child(iter->first.c_str()).text().set(iter->second.c_str());
 	}
 }
 

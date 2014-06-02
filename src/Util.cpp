@@ -1,6 +1,8 @@
 #include "Util.h"
-#include <boost/filesystem.hpp>
 #include "resources/ResourceManager.h"
+#include "platform.h"
+
+namespace fs = boost::filesystem;
 
 std::string strToUpper(const char* from)
 {
@@ -69,4 +71,103 @@ std::string getCanonicalPath(const std::string& path)
 		return path;
 
 	return boost::filesystem::canonical(path).generic_string();
+}
+
+// expands "./my/path.sfc" to "[relativeTo]/my/path.sfc"
+// if allowHome is true, also expands "~/my/path.sfc" to "/home/pi/my/path.sfc"
+fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allowHome)
+{
+	// nothing here
+	if(path.begin() == path.end())
+		return path;
+
+	if(*path.begin() == ".")
+	{
+		fs::path ret = relativeTo;
+		for(auto it = ++path.begin(); it != path.end(); ++it)
+			ret /= *it;
+		return ret;
+	}
+
+	if(allowHome && *path.begin() == "~")
+	{
+		fs::path ret = getHomePath();
+		for(auto it = ++path.begin(); it != path.end(); ++it)
+			ret /= *it;
+		return ret;
+	}
+
+	return path;
+}
+
+// example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
+fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool& contains)
+{
+	fs::path p = fs::canonical(path);
+	fs::path r = fs::canonical(relativeTo);
+
+	if(p.root_path() != r.root_path())
+	{
+		contains = false;
+		return p;
+	}
+
+	fs::path result;
+
+	// find point of divergence
+	auto itr_path = p.begin();
+	auto itr_relative_to = r.begin();
+	while(*itr_path == *itr_relative_to && itr_path != p.end() && itr_relative_to != r.end())
+	{
+		++itr_path;
+		++itr_relative_to;
+	}
+
+	if(itr_relative_to != r.end())
+	{
+		contains = false;
+		return p;
+	}
+
+	while(itr_path != p.end())
+	{
+		if(*itr_path != fs::path("."))
+			result = result / *itr_path;
+
+		++itr_path;
+	}
+
+	contains = true;
+	return result;
+}
+
+// usage: makeRelativePath("/path/to/my/thing.sfc", "/path/to") -> "./my/thing.sfc"
+// usage: makeRelativePath("/home/pi/my/thing.sfc", "/path/to", true) -> "~/my/thing.sfc"
+fs::path makeRelativePath(const fs::path& path, const fs::path& relativeTo, bool allowHome)
+{
+	bool contains = false;
+
+	fs::path ret = removeCommonPath(path, relativeTo, contains);
+	if(contains)
+	{
+		// success
+		ret = "." / ret;
+		return ret;
+	}
+
+	if(allowHome)
+	{
+		contains = false;
+		std::string homePath = getHomePath();
+		ret = removeCommonPath(path, homePath, contains);
+		if(contains)
+		{
+			// success
+			ret = "~" / ret;
+			return ret;
+		}
+	}
+
+	// nothing could be resolved
+	return path;
 }

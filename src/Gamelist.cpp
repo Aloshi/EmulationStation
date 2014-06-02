@@ -4,64 +4,9 @@
 #include <boost/filesystem.hpp>
 #include "Log.h"
 #include "Settings.h"
+#include "Util.h"
 
 namespace fs = boost::filesystem;
-
-// expands "./my/path.sfc" to "[relativeTo]/my/path.sfc"
-fs::path resolvePath(const fs::path& path, const fs::path& relativeTo)
-{
-	if(path.begin() != path.end() && *path.begin() == fs::path("."))
-	{
-		fs::path ret = relativeTo;
-		for(auto it = ++path.begin(); it != path.end(); ++it)
-			ret /= *it;
-
-		return ret;
-	}
-
-	return path;
-}
-
-// example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
-fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool& contains)
-{
-	fs::path p = fs::canonical(path);
-	fs::path r = fs::canonical(relativeTo);
-
-	if(p.root_path() != r.root_path())
-	{
-		contains = false;
-		return p;
-	}
-
-	fs::path result;
-
-	// find point of divergence
-	auto itr_path = p.begin();
-    auto itr_relative_to = r.begin();
-    while(*itr_path == *itr_relative_to && itr_path != p.end() && itr_relative_to != r.end())
-	{
-        ++itr_path;
-        ++itr_relative_to;
-    }
-
-	if(itr_relative_to != r.end())
-	{
-		contains = false;
-		return p;
-	}
-
-	while(itr_path != p.end())
-	{
-		if(*itr_path != fs::path("."))
-			result = result / *itr_path;
-
-		++itr_path;
-	}
-
-	contains = true;
-	return result;
-}
 
 FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& path, FileType type)
 {
@@ -157,6 +102,8 @@ void parseGamelist(SystemData* system)
 		return;
 	}
 
+	fs::path relativeTo = system->getStartPath();
+
 	const char* tagList[2] = { "game", "folder" };
 	FileType typeList[2] = { GAME, FOLDER };
 	for(int i = 0; i < 2; i++)
@@ -165,7 +112,7 @@ void parseGamelist(SystemData* system)
 		FileType type = typeList[i];
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
-			fs::path path = resolvePath(fileNode.child("path").text().get(), system->getStartPath());
+			fs::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
 			
 			if(!boost::filesystem::exists(path))
 			{
@@ -182,7 +129,7 @@ void parseGamelist(SystemData* system)
 
 			//load the metadata
 			std::string defaultName = file->metadata.get("name");
-			file->metadata = MetaDataList::createFromXML(GAME_METADATA, fileNode);
+			file->metadata = MetaDataList::createFromXML(GAME_METADATA, fileNode, relativeTo);
 
 			//make sure name gets set if one didn't exist
 			if(file->metadata.get("name").empty())
@@ -197,7 +144,7 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 	pugi::xml_node newNode = parent.append_child(tag);
 
 	//write metadata
-	file->metadata.appendToXML(newNode, true);
+	file->metadata.appendToXML(newNode, true, system->getStartPath());
 	
 	if(newNode.children().begin() == newNode.child("name") //first element is name
 		&& ++newNode.children().begin() == newNode.children().end() //theres only one element
@@ -210,17 +157,7 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 		//there's something useful in there so we'll keep the node, add the path
 
 		// try and make the path relative if we can so things still work if we change the rom folder location in the future
-		fs::path relPath = file->getPath();
-
-		bool contains = false;
-		relPath = removeCommonPath(relPath, system->getStartPath(), contains);
-		if(contains)
-		{
-			// it's in the start path (which we just stripped off), so add a "./"
-			relPath = "." / relPath;
-		}
-
-		newNode.prepend_child("path").text().set(relPath.generic_string().c_str());
+		newNode.prepend_child("path").text().set(makeRelativePath(file->getPath(), system->getStartPath(), false).generic_string().c_str());
 	}
 }
 
@@ -284,7 +221,7 @@ void updateGamelist(SystemData* system)
 					continue;
 				}
 
-				fs::path nodePath = resolvePath(pathNode.text().get(), system->getStartPath());
+				fs::path nodePath = resolvePath(pathNode.text().get(), system->getStartPath(), true);
 				fs::path gamePath((*fit)->getPath());
 				if(nodePath == gamePath || (fs::exists(nodePath) && fs::exists(gamePath) && fs::equivalent(nodePath, gamePath)))
 				{
