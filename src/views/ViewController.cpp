@@ -90,7 +90,7 @@ void ViewController::playViewTransition()
 		target = mCurrentView->getPosition();
 
 	// no need to animate, we're not going anywhere (probably goToNextGamelist() or goToPrevGamelist() when there's only 1 system)
-	if(target == -mCamera.translation())
+	if(target == -mCamera.translation() && !isAnimationPlaying(0))
 		return;
 
 	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
