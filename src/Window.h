@@ -32,6 +32,7 @@ public:
 
 	void normalizeNextUpdate();
 
+	inline bool isSleeping() const { return mSleeping; }
 	bool getAllowSleep();
 	void setAllowSleep(bool sleep);
 	
@@ -41,6 +42,9 @@ public:
 	void setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpStyle& style);
 
 private:
+	void onSleep();
+	void onWake();
+
 	ViewController* mViewController;
 	HelpComponent* mHelp;
 	ImageComponent* mBackgroundOverlay;
@@ -58,6 +62,9 @@ private:
 	bool mNormalizeNextUpdate;
 
 	bool mAllowSleep;
+	bool mSleeping;
+	unsigned int mTimeSinceLastInput;
+
 	bool mRenderedHelpPrompts;
 };
 

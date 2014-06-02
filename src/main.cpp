@@ -238,8 +238,6 @@ int main(int argc, char* argv[])
 	//generate joystick events since we're done loading
 	SDL_JoystickEventState(SDL_ENABLE);
 
-	bool sleeping = false;
-	unsigned int timeSinceLastEvent = 0;
 	int lastTime = SDL_GetTicks();
 	bool running = true;
 
@@ -260,11 +258,7 @@ int main(int argc, char* argv[])
 				case SDL_TEXTEDITING:
 				case SDL_JOYDEVICEADDED:
 				case SDL_JOYDEVICEREMOVED:
-					if(InputManager::getInstance()->parseEvent(event, &window))
-					{
-						sleeping = false;
-						timeSinceLastEvent = 0;
-					}
+					InputManager::getInstance()->parseEvent(event, &window);
 					break;
 				case SDL_QUIT:
 					running = false;
@@ -272,10 +266,10 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		if(sleeping)
+		if(window.isSleeping())
 		{
 			lastTime = SDL_GetTicks();
-			SDL_Delay(1); //this doesn't need to be accurate
+			SDL_Delay(1); // this doesn't need to be accurate, we're just giving up our CPU time until something wakes us up
 			continue;
 		}
 
@@ -283,27 +277,12 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
-		//cap deltaTime at 1000
+		// cap deltaTime at 1000
 		if(deltaTime > 1000 || deltaTime < 0)
 			deltaTime = 1000;
 
 		window.update(deltaTime);
 		window.render();
-		
-		//sleep if we're past our threshold
-		//sleeping entails setting a flag to start skipping frames
-		//and initially drawing a black semi-transparent rect to dim the screen
-		timeSinceLastEvent += deltaTime;
-		if(timeSinceLastEvent >= (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime") && Settings::getInstance()->getInt("ScreenSaverTime") != 0 && window.getAllowSleep())
-		{
-			sleeping = true;
-			timeSinceLastEvent = 0;
-			Renderer::setMatrix(Eigen::Affine3f::Identity());
-
-			unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
-			Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
-		}
-
 		Renderer::swapBuffers();
 
 		Log::flush();

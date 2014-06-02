@@ -11,7 +11,7 @@
 #include "components/ImageComponent.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
-	mAllowSleep(true)
+	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
 {
 	mViewController = new ViewController(this);
 	mHelp = new HelpComponent(this);
@@ -108,6 +108,17 @@ void Window::textInput(const char* text)
 
 void Window::input(InputConfig* config, Input input)
 {
+	if(mSleeping)
+	{
+		// wake up
+		mTimeSinceLastInput = 0;
+		mSleeping = false;
+		onWake();
+		return;
+	}
+
+	mTimeSinceLastInput = 0;
+
 	if(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_g && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 	{
 		// toggle debug grid with Ctrl-G
@@ -169,6 +180,8 @@ void Window::update(int deltaTime)
 		mFrameCountElapsed = 0;
 	}
 
+	mTimeSinceLastInput += deltaTime;
+
 	if(peekGui())
 		peekGui()->update(deltaTime);
 }
@@ -193,16 +206,6 @@ void Window::render()
 		}
 	}
 
-	// draw everything
-	/*const unsigned int drawBGAfter = mGuiStack.size() > 1 ? mGuiStack.size() - 2 : mGuiStack.size();
-	for(unsigned int i = 0; i < mGuiStack.size(); i++)
-	{
-		mGuiStack.at(i)->render(transform);
-	
-		if(i == drawBGAfter)
-			mBackgroundOverlay->render(transform);
-	}*/
-
 	if(!mRenderedHelpPrompts)
 		mHelp->render(transform);
 
@@ -210,6 +213,14 @@ void Window::render()
 	{
 		Renderer::setMatrix(Eigen::Affine3f::Identity());
 		mDefaultFonts.at(1)->renderTextCache(mFrameDataText.get());
+	}
+
+	unsigned int screensaverTime = (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime");
+	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0 && mAllowSleep)
+	{
+		// go to sleep
+		mSleeping = true;
+		onSleep();
 	}
 }
 
@@ -324,4 +335,17 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 	});
 
 	mHelp->setPrompts(addPrompts);
+}
+
+
+void Window::onSleep()
+{
+	Renderer::setMatrix(Eigen::Affine3f::Identity());
+	unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
+}
+
+void Window::onWake()
+{
+
 }
