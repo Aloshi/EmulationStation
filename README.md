@@ -193,7 +193,15 @@ An example gamelist.xml:
 </gameList>
 ```
 
-The path element should be the *absolute path* of the ROM. Special characters SHOULD NOT be escaped. The image element is the path to an image to display above the description (like a screenshot or boxart). Most formats can be used (including png, jpg, gif, etc.). Not all elements need to be used.
+The path element should be either the absolute path of the ROM, or a path relative to the system games folder that starts with "./".  For example:
+
+`<path>/home/pi/ROMs/nes/mm2.nes</path>`
+
+or
+
+`<path>./mm2.nes</path>`
+
+ES will attempt to encode paths as relative to the system's `path` setting whenever it writes a gamelist.xml. Special characters SHOULD NOT be escaped. The image element is the path to an image to display above the description (like a screenshot or boxart). Most popular image formats can be used (png, jpg, gif, etc.). Not all elements need to be used.
 
 The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
 The switch `--ignore-gamelist` can be used to ignore the gamelist and force ES to use the non-detailed view.
@@ -202,6 +210,10 @@ The switch `--ignore-gamelist` can be used to ignore the gamelist and force ES t
 
 * **If you want to scrape multiple games:** press start to open the menu and choose the "SCRAPER" option.  Adjust your settings and press "SCRAPE NOW".
 * **If you just want to scrape one game:** find the game on the game list in ES and press select.  Choose "EDIT THIS GAME'S METADATA" and then press the "SCRAPE" button at the bottom of the metadata editor.
+
+You can also edit metadata within ES by using the metadata editor - just find the game you wish to edit on the gamelist, press select, and choose "EDIT THIS GAME'S METADATA."
+
+If you're writing a tool to generate gamelist.xml files, you can see the complete list of possible elements at the top of `src/MetaData.cpp`.
 
 A command-line version of the scraper is also provided - just run emulationstation with `--scrape` *(currently broken)*.
 

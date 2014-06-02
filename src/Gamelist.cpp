@@ -7,6 +7,21 @@
 
 namespace fs = boost::filesystem;
 
+// expands "./my/path.sfc" to "[relativeTo]/my/path.sfc"
+fs::path resolvePath(const fs::path& path, const fs::path& relativeTo)
+{
+	if(path.begin() != path.end() && *path.begin() == fs::path("."))
+	{
+		fs::path ret = relativeTo;
+		for(auto it = ++path.begin(); it != path.end(); ++it)
+			ret /= *it;
+
+		return ret;
+	}
+
+	return path;
+}
+
 // example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
 fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool& contains)
 {
@@ -150,7 +165,7 @@ void parseGamelist(SystemData* system)
 		FileType type = typeList[i];
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
-			boost::filesystem::path path = boost::filesystem::path(fileNode.child("path").text().get());
+			fs::path path = resolvePath(fileNode.child("path").text().get(), system->getStartPath());
 			
 			if(!boost::filesystem::exists(path))
 			{
@@ -176,26 +191,6 @@ void parseGamelist(SystemData* system)
 	}
 }
 
-void addGameDataNode(pugi::xml_node& parent, const FileData* game, SystemData* system)
-{
-	//create game and add to parent node
-	pugi::xml_node newGame = parent.append_child("game");
-
-	//write metadata
-	game->metadata.appendToXML(newGame, true);
-	
-	if(newGame.children().begin() == newGame.child("name") //first element is name
-		&& ++newGame.children().begin() == newGame.children().end() //theres only one element
-		&& newGame.child("name").text().get() == game->getCleanName()) //the name is the default
-	{
-		//if the only info is the default name, don't bother with this node
-		parent.remove_child(newGame);
-	}else{
-		//there's something useful in there so we'll keep the node, add the path
-		newGame.prepend_child("path").text().set(game->getPath().generic_string().c_str());
-	}
-}
-
 void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* tag, SystemData* system)
 {
 	//create game and add to parent node
@@ -213,7 +208,19 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 		parent.remove_child(newNode);
 	}else{
 		//there's something useful in there so we'll keep the node, add the path
-		newNode.prepend_child("path").text().set(file->getPath().generic_string().c_str());
+
+		// try and make the path relative if we can so things still work if we change the rom folder location in the future
+		fs::path relPath = file->getPath();
+
+		bool contains = false;
+		relPath = removeCommonPath(relPath, system->getStartPath(), contains);
+		if(contains)
+		{
+			// it's in the start path (which we just stripped off), so add a "./"
+			relPath = "." / relPath;
+		}
+
+		newNode.prepend_child("path").text().set(relPath.generic_string().c_str());
 	}
 }
 
@@ -277,7 +284,7 @@ void updateGamelist(SystemData* system)
 					continue;
 				}
 
-				fs::path nodePath(pathNode.text().get());
+				fs::path nodePath = resolvePath(pathNode.text().get(), system->getStartPath());
 				fs::path gamePath((*fit)->getPath());
 				if(nodePath == gamePath || (fs::exists(nodePath) && fs::exists(gamePath) && fs::equivalent(nodePath, gamePath)))
 				{
