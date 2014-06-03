@@ -73,8 +73,14 @@ std::unique_ptr<ScraperSearchHandle> GamesDBScraper::getResultsAsync(const Scrap
 
 	if(params.system->getPlatformId() != PLATFORM_UNKNOWN)
 	{
-		path += "&platform=";
-		path += HttpReq::urlEncode(gamesdb_platformid_map.at(params.system->getPlatformId()));
+		auto platformIt = gamesdb_platformid_map.find(params.system->getPlatformId());
+		if(platformIt != gamesdb_platformid_map.end())
+		{
+			path += "&platform=";
+			path += HttpReq::urlEncode(platformIt->second);
+		}else{
+			LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(params.system->getPlatformId());
+		}
 	}
 
 	path = "thegamesdb.net" + path;
