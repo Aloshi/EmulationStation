@@ -454,3 +454,6 @@ if(MSVC)
     set_target_properties(emulationstation PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
     set_target_properties(emulationstation PROPERTIES LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:WINDOWS")
 endif()
+
+install (FILES emulationstation DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+
