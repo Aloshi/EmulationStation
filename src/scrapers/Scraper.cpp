@@ -4,20 +4,89 @@
 #include "../Settings.h"
 #include <FreeImage.h>
 #include <boost/filesystem.hpp>
-#include <boost/regex.hpp>
+#include <boost/assign.hpp>
 
 #include "GamesDBScraper.h"
 #include "TheArchiveScraper.h"
 
-std::shared_ptr<Scraper> createScraperByName(const std::string& name)
-{
-	if(name == "TheGamesDB")
-		return std::shared_ptr<Scraper>(new GamesDBScraper());
-	else if(name == "TheArchive")
-		return std::shared_ptr<Scraper>(new TheArchiveScraper());
+const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
+	("TheGamesDB", &thegamesdb_generate_scraper_requests)
+	("TheArchive", &thearchive_generate_scraper_requests);
 
-	return nullptr;
+std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params)
+{
+	const std::string& name = Settings::getInstance()->getString("Scraper");
+
+	std::unique_ptr<ScraperSearchHandle> handle(new ScraperSearchHandle());
+	scraper_request_funcs.at(name)(params, handle->mRequestQueue, handle->mResults);
+	return handle;
 }
+
+std::vector<std::string> getScraperList()
+{
+	std::vector<std::string> list;
+	for(auto it = scraper_request_funcs.begin(); it != scraper_request_funcs.end(); it++)
+	{
+		list.push_back(it->first);
+	}
+
+	return list;
+}
+
+// ScraperSearchHandle
+ScraperSearchHandle::ScraperSearchHandle()
+{
+	setStatus(ASYNC_IN_PROGRESS);
+}
+
+void ScraperSearchHandle::update()
+{
+	if(mStatus == ASYNC_DONE)
+		return;
+
+	while(!mRequestQueue.empty() && mRequestQueue.front()->update())
+		mRequestQueue.pop();
+
+	if(mRequestQueue.empty())
+	{
+		setStatus(ASYNC_DONE);
+		return;
+	}
+}
+
+
+
+// ScraperRequest
+ScraperRequest::ScraperRequest(std::vector<ScraperSearchResult>& resultsWrite) : mResults(resultsWrite)
+{
+}
+
+
+// ScraperHttpRequest
+ScraperHttpRequest::ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url, scraper_process_httpreq processFunc) 
+	: ScraperRequest(resultsWrite), mProcessFunc(processFunc)
+{
+	mReq = std::unique_ptr<HttpReq>(new HttpReq(url));
+}
+
+bool ScraperHttpRequest::update()
+{
+	if(mReq->status() == HttpReq::REQ_SUCCESS)
+	{
+		mProcessFunc(mReq, mResults);
+		return true;
+	}
+
+	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
+		return false;
+
+	// everything else is some sort of error
+	LOG(LogError) << "ScraperHttpRequest network error - " << mReq->getErrorMsg();
+	return true;
+}
+
+
+// metadata resolving stuff
 
 std::unique_ptr<MDResolveHandle> resolveMetaDataAssets(const ScraperSearchResult& result, const ScraperSearchParams& search)
 {

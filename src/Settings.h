@@ -1,9 +1,6 @@
-#ifndef _SETTINGS_H_
-#define _SETTINGS_H_
-
+#pragma once
 #include <string>
 #include <map>
-#include "scrapers/Scraper.h"
 
 //This is a singleton for storing settings.
 class Settings
@@ -25,9 +22,6 @@ public:
 	void setFloat(const std::string& name, float value);
 	void setString(const std::string& name, const std::string& value);
 
-	std::shared_ptr<Scraper> getScraper();
-	void setScraper(std::shared_ptr<Scraper> scraper);
-
 private:
 	static Settings* sInstance;
 
@@ -41,8 +35,5 @@ private:
 	std::map<std::string, float> mFloatMap;
 	std::map<std::string, std::string> mStringMap;
 
-	std::shared_ptr<Scraper> mScraper;
 	std::string mHomePathOverride;
 };
-
-#endif

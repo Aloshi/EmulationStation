@@ -1,13 +1,11 @@
 #include "GamesDBScraper.h"
 #include "../components/ScraperSearchComponent.h"
-#include "../components/AsyncReqComponent.h"
+#include "Scraper.h"
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
 #include "../MetaData.h"
 #include "../Settings.h"
 #include <boost/assign.hpp>
-
-const char* GamesDBScraper::getName() { return "TheGamesDB"; }
 
 using namespace PlatformIds;
 const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::map_list_of
@@ -61,14 +59,15 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
 
 
-std::unique_ptr<ScraperSearchHandle> GamesDBScraper::getResultsAsync(const ScraperSearchParams& params)
+void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
+	std::vector<ScraperSearchResult>& results)
 {
-	std::string path = "/api/GetGame.php?";
+	std::string path = "thegamesdb.net/api/GetGame.php?";
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
 		cleanName = params.game->getCleanName();
-	
+
 	path += "name=" + HttpReq::urlEncode(cleanName);
 
 	if(params.system->getPlatformId() != PLATFORM_UNKNOWN)
@@ -78,58 +77,33 @@ std::unique_ptr<ScraperSearchHandle> GamesDBScraper::getResultsAsync(const Scrap
 		{
 			path += "&platform=";
 			path += HttpReq::urlEncode(platformIt->second);
-		}else{
+		}
+		else{
 			LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(params.system->getPlatformId());
 		}
 	}
 
-	path = "thegamesdb.net" + path;
-
-	return std::unique_ptr<ScraperSearchHandle>(new GamesDBHandle(params, path));
+	requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thegamesdb_process_httpreq)));
 }
 
-GamesDBHandle::GamesDBHandle(const ScraperSearchParams& params, const std::string& url) : 
-	mReq(std::unique_ptr<HttpReq>(new HttpReq(url)))
+void thegamesdb_process_httpreq(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
 {
-	setStatus(ASYNC_IN_PROGRESS);
-}
-
-void GamesDBHandle::update()
-{
-	if(mStatus == ASYNC_DONE)
-		return;
-
-	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
-		return;
-
-	if(mReq->status() != HttpReq::REQ_SUCCESS)
-	{
-		std::stringstream ss;
-		ss << "Network error - " << mReq->getErrorMsg();
-		setError(ss.str());
-		return;
-	}
-
-	// our HTTP request was successful
-	// try to build our result list
-
-	std::vector<ScraperSearchResult> results;
+	assert(req->status() == HttpReq::REQ_SUCCESS);
 
 	pugi::xml_document doc;
-	pugi::xml_parse_result parseResult = doc.load(mReq->getContent().c_str());
+	pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
 	if(!parseResult)
 	{
-		setError("Error parsing XML");
+		LOG(LogError) << "GamesDBRequest - Error parsing XML. \n\t" << parseResult.description() << "";
 		return;
 	}
 
 	pugi::xml_node data = doc.child("Data");
 
 	std::string baseImageUrl = data.child("baseImgUrl").text().get();
-	
-	unsigned int resultNum = 0;
+
 	pugi::xml_node game = data.child("Game");
-	while(game && resultNum < MAX_SCRAPER_RESULTS)
+	while(game && results.size() < MAX_SCRAPER_RESULTS)
 	{
 		ScraperSearchResult result;
 
@@ -166,12 +140,6 @@ void GamesDBHandle::update()
 		}
 
 		results.push_back(result);
-
-		resultNum++;
 		game = game.next_sibling("Game");
 	}
-
-	setStatus(ASYNC_DONE);
-	setResults(results);
-	return;
 }

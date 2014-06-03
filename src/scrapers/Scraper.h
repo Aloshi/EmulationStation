@@ -6,6 +6,7 @@
 #include "../AsyncHandle.h"
 #include <vector>
 #include <functional>
+#include <queue>
 
 struct ScraperSearchParams
 {
@@ -24,29 +25,87 @@ struct ScraperSearchResult
 	std::string thumbnailUrl;
 };
 
+// So let me explain why I've abstracted this so heavily.
+// There are two ways I can think of that you'd want to write a scraper.
+
+// 1. Do some HTTP request(s) -> process it -> return the results
+// 2. Do some local filesystem queries (an offline scraper) -> return the results
+
+// The first way needs to be asynchronous while it's waiting for the HTTP request to return.
+// The second doesn't.
+
+// It would be nice if we could write it like this:
+// search = generate_http_request(searchparams);
+// wait_until_done(search);
+// ... process search ...
+// return results;
+
+// We could do this if we used threads.  Right now ES doesn't because I'm pretty sure I'll fuck it up,
+// and I'm not sure of the performance of threads on the Pi (single-core ARM).
+// We could also do this if we used coroutines.  
+// I can't find a really good cross-platform coroutine library (x86/64/ARM Linux + Windows), 
+// and I don't want to spend more time chasing libraries than just writing it the long way once.
+
+// So, I did it the "long" way.
+// ScraperSearchHandle - one logical search, e.g. "search for mario"
+// ScraperRequest - encapsulates some sort of asynchronous request that will ultimately return some results
+// ScraperHttpRequest - implementation of ScraperRequest that waits on an HttpReq, then processes it with some processing function.
+
+
+// a scraper search gathers results from (potentially multiple) ScraperRequests
+class ScraperRequest
+{
+public:
+	ScraperRequest(std::vector<ScraperSearchResult>& resultsWrite);
+
+	// returns "true" once we're done
+	virtual bool update() = 0;
+
+protected:
+	std::vector<ScraperSearchResult>& mResults;
+};
+
+
+typedef void (*scraper_process_httpreq)(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results);
+
+// a single HTTP request that needs to be processed to get the results
+class ScraperHttpRequest : ScraperRequest
+{
+public:
+	ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url, scraper_process_httpreq processFunc);
+	bool update() override;
+
+private:
+	scraper_process_httpreq mProcessFunc;
+	std::unique_ptr<HttpReq> mReq;
+};
+
+// a request to get a list of results
 class ScraperSearchHandle : public AsyncHandle
 {
 public:
-	virtual void update() = 0;
+	ScraperSearchHandle();
+
+	void update();
 	inline const std::vector<ScraperSearchResult>& getResults() const { assert(mStatus != ASYNC_IN_PROGRESS); return mResults; }
 
 protected:
-	inline void setResults(const std::vector<ScraperSearchResult>& results) { mResults = results; }
+	friend std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params);
 
-private:
+	std::queue< std::unique_ptr<ScraperRequest> > mRequestQueue;
 	std::vector<ScraperSearchResult> mResults;
 };
 
-class Scraper
-{
-public:
-	//Get a list of potential results.
-	virtual std::unique_ptr<ScraperSearchHandle> getResultsAsync(const ScraperSearchParams& params) = 0;
+// will use the current scraper settings to pick the result source
+std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params);
 
-	virtual const char* getName() = 0;
-};
+// returns a list of valid scraper names
+std::vector<std::string> getScraperList();
 
-std::shared_ptr<Scraper> createScraperByName(const std::string& name);
+typedef void (*generate_scraper_requests_func)(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, std::vector<ScraperSearchResult>& results);
+
+// -------------------------------------------------------------------------
+
 
 
 // Meta data asset downloading stuff.

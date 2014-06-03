@@ -3,7 +3,6 @@
 #include "pugiXML/pugixml.hpp"
 #include "platform.h"
 #include <boost/filesystem.hpp>
-#include "scrapers/GamesDBScraper.h"
 
 Settings* Settings::sInstance = NULL;
 
@@ -50,8 +49,7 @@ void Settings::setDefaults()
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
-
-	mScraper = std::shared_ptr<Scraper>(new GamesDBScraper());
+	mStringMap["Scraper"] = "TheGamesDB";
 }
 
 template <typename K, typename V>
@@ -83,9 +81,6 @@ void Settings::saveFile()
 		node.append_attribute("value").set_value(iter->second.c_str());
 	}
 
-	pugi::xml_node scraperNode = doc.append_child("scraper");
-	scraperNode.append_attribute("value").set_value(mScraper->getName());
-
 	doc.save_file(path.c_str());
 }
 
@@ -112,23 +107,6 @@ void Settings::loadFile()
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
 	for(pugi::xml_node node = doc.child("string"); node; node = node.next_sibling("string"))
 		setString(node.attribute("name").as_string(), node.attribute("value").as_string());
-
-	if(doc.child("scraper"))
-	{
-		std::shared_ptr<Scraper> scr = createScraperByName(doc.child("scraper").attribute("value").as_string());
-		if(scr)
-			mScraper = scr;
-	}
-}
-
-std::shared_ptr<Scraper> Settings::getScraper()
-{
-	return mScraper;
-}
-
-void Settings::setScraper(std::shared_ptr<Scraper> scraper)
-{
-	mScraper = scraper;
 }
 
 //Print a warning message if the setting we're trying to get doesn't already exist in the map, then return the value in the map.

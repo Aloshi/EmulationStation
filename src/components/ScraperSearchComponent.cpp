@@ -212,7 +212,7 @@ void ScraperSearchComponent::search(const ScraperSearchParams& params)
 	updateInfoPane();
 
 	mLastSearch = params;
-	mSearchHandle = Settings::getInstance()->getScraper()->getResultsAsync(params);
+	mSearchHandle = startScraperSearch(params);
 }
 
 void ScraperSearchComponent::stop()

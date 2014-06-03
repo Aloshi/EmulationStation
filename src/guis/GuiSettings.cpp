@@ -1,4 +1,5 @@
 #include "GuiSettings.h"
+#include "../Window.h"
 #include "../Settings.h"
 #include "../views/ViewController.h"
 

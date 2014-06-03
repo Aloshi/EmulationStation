@@ -38,16 +38,13 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto s = new GuiSettings(mWindow, "SCRAPER");
 
 			// scrape from
-			auto scraper_list = std::make_shared< OptionListComponent< std::shared_ptr<Scraper> > >(mWindow, "SCRAPE FROM", false);
-			std::vector< std::shared_ptr<Scraper> > scrapers;
-			scrapers.push_back(std::make_shared<GamesDBScraper>());
-			scrapers.push_back(std::make_shared<TheArchiveScraper>());
-
+			auto scraper_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "SCRAPE FROM", false);
+			std::vector<std::string> scrapers = getScraperList();
 			for(auto it = scrapers.begin(); it != scrapers.end(); it++)
-				scraper_list->add((*it)->getName(), *it, (*it)->getName() == Settings::getInstance()->getScraper()->getName());
+				scraper_list->add(*it, *it, *it == Settings::getInstance()->getString("Scraper"));
 
 			s->addWithLabel("SCRAPE FROM", scraper_list);
-			s->addSaveFunc([scraper_list] { Settings::getInstance()->setScraper(scraper_list->getSelected()); });
+			s->addSaveFunc([scraper_list] { Settings::getInstance()->setString("Scraper", scraper_list->getSelected()); });
 
 			// scrape ratings
 			auto scrape_ratings = std::make_shared<SwitchComponent>(mWindow);

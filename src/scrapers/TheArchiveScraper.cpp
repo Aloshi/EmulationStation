@@ -4,64 +4,37 @@
 #include "../Log.h"
 #include "../pugiXML/pugixml.hpp"
 
-const char* TheArchiveScraper::getName() { return "TheArchive"; }
-
-std::unique_ptr<ScraperSearchHandle> TheArchiveScraper::getResultsAsync(const ScraperSearchParams& params)
+void thearchive_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests,
+	std::vector<ScraperSearchResult>& results)
 {
-	std::string path = "/2.0/Archive.search/xml/7TTRM4MNTIKR2NNAGASURHJOZJ3QXQC5/";
+	std::string path = "api.archive.vg/2.0/Archive.search/xml/7TTRM4MNTIKR2NNAGASURHJOZJ3QXQC5/";
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
 		cleanName = params.game->getCleanName();
-	
+
 	path += HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method
 
-	path = "api.archive.vg" + path;
-
-	return std::unique_ptr<ScraperSearchHandle>(new TheArchiveHandle(params, path));
+	requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thearchive_process_httpreq)));
 }
 
-TheArchiveHandle::TheArchiveHandle(const ScraperSearchParams& params, const std::string& url) : 
-	mReq(std::unique_ptr<HttpReq>(new HttpReq(url)))
+void thearchive_process_httpreq(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
 {
-	setStatus(ASYNC_IN_PROGRESS);
-}
-
-void TheArchiveHandle::update()
-{
-	if(mStatus == ASYNC_DONE)
-		return;
-
-	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
-		return;
-
-	if(mReq->status() != HttpReq::REQ_SUCCESS)
-	{
-		std::stringstream ss;
-		ss << "Network error: " << mReq->getErrorMsg();
-		setError(ss.str());
-		return;
-	}
-
-	// if we're here, our HTTP request finished successfully
-	
-	// so, let's try building our result list
-	std::vector<ScraperSearchResult> results;
+	assert(req->status() == HttpReq::REQ_SUCCESS);
 
 	pugi::xml_document doc;
-	pugi::xml_parse_result parseResult = doc.load(mReq->getContent().c_str());
+	pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
 	if(!parseResult)
 	{
-		setError("Error parsing XML");
+		LOG(LogError) << "TheArchiveRequest - error parsing XML.\n\t" << parseResult.description();
 		return;
 	}
 
 	pugi::xml_node data = doc.child("OpenSearchDescription").child("games");
 
-	unsigned int resultNum = 0;
 	pugi::xml_node game = data.child("game");
-	while(game && resultNum < MAX_SCRAPER_RESULTS)
+	while(game && results.size() < MAX_SCRAPER_RESULTS)
 	{
 		ScraperSearchResult result;
 
@@ -86,11 +59,6 @@ void TheArchiveHandle::update()
 			result.thumbnailUrl = thumbnail.text().get();
 
 		results.push_back(result);
-
-		resultNum++;
 		game = game.next_sibling("game");
 	}
-
-	setStatus(ASYNC_DONE);
-	setResults(results);
 }
