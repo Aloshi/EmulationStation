@@ -147,14 +147,17 @@ All systems must be contained within the <systemList> tag.-->
 		All subdirectories (and non-recursive links) will be included. -->
 		<path>~/roms/snes</path>
 
-		<!-- A list of extensions to search for, delimited by a space. You MUST include the period! It's also case sensitive. -->
+		<!-- A list of extensions to search for, delimited by any of the whitespace characters (", \r\n\t").
+		You MUST include the period at the start of the extension! It's also case sensitive. -->
 		<extension>.smc .sfc .SMC .SFC</extension>
 
 		<!-- The shell command executed when a game is selected. A few special tags are replaced if found in a command, like %ROM%. -->
 		<command>snesemulator %ROM%</command>
 		<!-- This example would run the bash command "snesemulator /home/user/roms/snes/Super\ Mario\ World.sfc". -->
 
-		<!-- The platform to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp. -->
+		<!-- The platform(s) to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp.
+		It's case sensitive, but everything is lowercase. This tag is optional.
+		You can use multiple platforms too, delimited with any of the whitespace characters (", \r\n\t"), eg: "<platform>genesis, megadrive</platform>" -->
 		<platform>snes</platform>
 	</system>
 </systemList>

@@ -24,8 +24,8 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, "SCRAPE THESE SYSTEMS", true);
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
-		if((*it)->getPlatformId() != PlatformIds::PLATFORM_IGNORE)
-			mSystems->add((*it)->getFullName(), *it, (*it)->getPlatformId() != PlatformIds::PLATFORM_UNKNOWN);
+		if(!(*it)->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
+			mSystems->add((*it)->getFullName(), *it, !(*it)->getPlatformIds().empty());
 	}
 	mMenu.addWithLabel("Systems", mSystems);
 
@@ -44,7 +44,7 @@ void GuiScraperStart::pressedStart()
 	std::vector<SystemData*> sys = mSystems->getSelectedObjects();
 	for(auto it = sys.begin(); it != sys.end(); it++)
 	{
-		if((*it)->getPlatformId() == PlatformIds::PLATFORM_UNKNOWN)
+		if((*it)->getPlatformIds().empty())
 		{
 			mWindow->pushGui(new GuiMsgBox(mWindow, 
 				strToUpper("Warning: some of your selected systems do not have a platform set. Results may be even more inaccurate than usual!\nContinue anyway?"), 

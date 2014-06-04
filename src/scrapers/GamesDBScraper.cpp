@@ -70,20 +70,29 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 
 	path += "name=" + HttpReq::urlEncode(cleanName);
 
-	if(params.system->getPlatformId() != PLATFORM_UNKNOWN)
+	if(params.system->getPlatformIds().empty())
 	{
-		auto platformIt = gamesdb_platformid_map.find(params.system->getPlatformId());
-		if(platformIt != gamesdb_platformid_map.end())
+		// no platform specified, we're done
+		requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thegamesdb_process_httpreq)));
+	}else{
+		// go through the list, we need to split this into multiple requests 
+		// because TheGamesDB API either sucks or I don't know how to use it properly...
+		std::string urlBase = path;
+		auto& platforms = params.system->getPlatformIds();
+		for(auto platformIt = platforms.begin(); platformIt != platforms.end(); platformIt++)
 		{
-			path += "&platform=";
-			path += HttpReq::urlEncode(platformIt->second);
-		}
-		else{
-			LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(params.system->getPlatformId());
+			path = urlBase;
+			auto mapIt = gamesdb_platformid_map.find(*platformIt);
+			if(mapIt != gamesdb_platformid_map.end())
+			{
+				path += "&platform=";
+				path += HttpReq::urlEncode(mapIt->second);
+			}else{
+				LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(*platformIt);
+			}
+			requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thegamesdb_process_httpreq)));
 		}
 	}
-
-	requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thegamesdb_process_httpreq)));
 }
 
 void thegamesdb_process_httpreq(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)

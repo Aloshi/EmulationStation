@@ -18,7 +18,7 @@ std::vector<SystemData*> SystemData::sSystemVector;
 namespace fs = boost::filesystem;
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-	const std::string& command, PlatformIds::PlatformId platformId)
+	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds)
 {
 	mName = name;
 	mFullName = fullName;
@@ -33,7 +33,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 
 	mSearchExtensions = extensions;
 	mLaunchCommand = command;
-	mPlatformId = platformId;
+	mPlatformIds = platformIds;
 
 	mRootFolder = new FileData(FOLDER, mStartPath, this);
 	mRootFolder->metadata.set("name", mFullName);
@@ -200,6 +200,23 @@ void SystemData::populateFolder(FileData* folder)
 	}
 }
 
+std::vector<std::string> readList(const std::string& str, const char* delims = " \t\r\n,")
+{
+	std::vector<std::string> ret;
+
+	size_t prevOff = str.find_first_not_of(delims, 0);
+	size_t off = str.find_first_of(delims, prevOff);
+	while(off != std::string::npos || prevOff != std::string::npos)
+	{
+		ret.push_back(str.substr(prevOff, off - prevOff));
+
+		prevOff = str.find_first_not_of(delims, off);
+		off = str.find_first_of(delims, prevOff);
+	}
+
+	return ret;
+}
+
 //creates systems from information located in a config file
 bool SystemData::loadConfig()
 {
@@ -244,26 +261,34 @@ bool SystemData::loadConfig()
 		fullname = system.child("fullname").text().get();
 		path = system.child("path").text().get();
 
-		//convert extensions list from a string into a vector of strings
-		const pugi::char_t* extStr = system.child("extension").text().get();
-		std::vector<std::string> extensions;
-		std::vector<char> buff(strlen(extStr) + 1);
-		strcpy(buff.data(), extStr);
-		char* ext = strtok(buff.data(), " ");
-		while(ext != NULL)
-		{
-			extensions.push_back(ext);
-			ext = strtok(NULL, " ");
-		}
+		// convert extensions list from a string into a vector of strings
+		std::vector<std::string> extensions = readList(system.child("extension").text().get());
 
 		cmd = system.child("command").text().get();
 
-		const char* platformIdString = system.child("platform").text().as_string();
-		platformId = PlatformIds::getPlatformId(platformIdString);
+		// platform id list
+		const char* platformList = system.child("platform").text().get();
+		std::vector<std::string> platformStrs = readList(platformList);
+		std::vector<PlatformIds::PlatformId> platformIds;
+		for(auto it = platformStrs.begin(); it != platformStrs.end(); it++)
+		{
+			const char* str = it->c_str();
+			PlatformIds::PlatformId platformId = PlatformIds::getPlatformId(str);
+			
+			if(platformId == PlatformIds::PLATFORM_IGNORE)
+			{
+				// when platform is ignore, do not allow other platforms
+				platformIds.clear();
+				platformIds.push_back(platformId);
+				break;
+			}
 
-		// if there appears to be an actual platform ID supplied but it didn't match the list, warn
-		if(platformIdString != NULL && platformIdString[0] != '\0' && platformId == PlatformIds::PLATFORM_UNKNOWN)
-			LOG(LogWarning) << "  Unknown platform for system \"" << name << "\" (platform \"" << platformIdString << "\")";
+			// if there appears to be an actual platform ID supplied but it didn't match the list, warn
+			if(str != NULL && str[0] != '\0' && platformId == PlatformIds::PLATFORM_UNKNOWN)
+				LOG(LogWarning) << "  Unknown platform for system \"" << name << "\" (platform \"" << str << "\" from list \"" << platformList << "\")";
+			else if(platformId != PlatformIds::PLATFORM_UNKNOWN)
+				platformIds.push_back(platformId);
+		}
 
 		//validate
 		if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
@@ -276,7 +301,7 @@ bool SystemData::loadConfig()
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformId);
+		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds);
 		if(newSys->getRootFolder()->getChildren().size() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
@@ -309,7 +334,8 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME on Linux or %HOMEPATH% on Windows. -->\n"
 			"		<path>~/roms/nes</path>\n"
 			"\n"
-			"		<!-- A list of extensions to search for, delimited by a space. You MUST include the period! It's also case sensitive. -->\n"
+			"		<!-- A list of extensions to search for, delimited by any of the whitespace characters (\", \\r\\n\\t\").\n"
+			"		You MUST include the period at the start of the extension! It's also case sensitive. -->\n"
 			"		<extension>.nes .NES</extension>\n"
 			"\n"
 			"		<!-- The shell command executed when a game is selected. A few special tags are replaced if found in a command:\n"
@@ -318,7 +344,9 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		%ROM_RAW% is the raw, unescaped path to the ROM. -->\n"
 			"		<command>retroarch -L ~/cores/libretro-fceumm.so %ROM%</command>\n"
 			"\n"
-			"		<!-- The platform to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp. This tag is optional. -->\n"
+			"		<!-- The platform to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp.\n"
+			"		It's case sensitive, but everything is lowercase. This tag is optional.\n"
+			"		You can use multiple platforms too, delimited with any of the whitespace characters (\", \\r\\n\\t\"), eg: \"<platform>genesis, megadrive</platform>\" -->\n"
 			"		<platform>nes</platform>\n"
 			"\n"
 			"	</system>\n"

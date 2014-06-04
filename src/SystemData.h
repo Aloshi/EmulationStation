@@ -1,5 +1,4 @@
-#ifndef _SYSTEMDATA_H_
-#define _SYSTEMDATA_H_
+#pragma once
 
 #include <vector>
 #include <string>
@@ -13,7 +12,7 @@ class SystemData
 {
 public:
 	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-		const std::string& command, PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN);
+		const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds);
 	~SystemData();
 
 	inline FileData* getRootFolder() const { return mRootFolder; };
@@ -21,7 +20,10 @@ public:
 	inline const std::string& getFullName() const { return mFullName; }
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
-	inline PlatformIds::PlatformId getPlatformId() const { return mPlatformId; }
+
+	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mPlatformIds; }
+	inline bool hasPlatformId(PlatformIds::PlatformId id) { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
+
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
 	std::string getGamelistPath(bool forWrite) const;
@@ -67,12 +69,10 @@ private:
 	std::string mStartPath;
 	std::vector<std::string> mSearchExtensions;
 	std::string mLaunchCommand;
-	PlatformIds::PlatformId mPlatformId;
+	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::shared_ptr<ThemeData> mTheme;
 
 	void populateFolder(FileData* folder);
 
 	FileData* mRootFolder;
 };
-
-#endif
