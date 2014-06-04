@@ -69,7 +69,7 @@ protected:
 typedef void (*scraper_process_httpreq)(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results);
 
 // a single HTTP request that needs to be processed to get the results
-class ScraperHttpRequest : ScraperRequest
+class ScraperHttpRequest : public ScraperRequest
 {
 public:
 	ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url, scraper_process_httpreq processFunc);
