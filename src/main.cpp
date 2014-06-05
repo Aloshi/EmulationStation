@@ -23,26 +23,6 @@ namespace fs = boost::filesystem;
 
 bool scrape_cmdline = false;
 
-// we do this separately from the other args because the other args might call Settings::getInstance()
-// which will load the file getHomePath() + "/.emulationstation/es_settings.cfg", and getHomePath() needs to be accurate by then
-bool parseArgsForHomeDir(int argc, char* argv[])
-{
-	for(int i = 1; i < argc; i++)
-	{
-		if(strcmp(argv[i], "--home-path") == 0)
-		{
-			if(i >= argc - 1)
-			{
-				std::cerr << "No home path specified!\n";
-				return false;
-			}
-			setHomePathOverride(argv[i + 1]);
-		}
-	}
-
-	return true;
-}
-
 bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
 {
 	for(int i = 1; i < argc; i++)
@@ -93,7 +73,6 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			std::cout << "--debug				even more logging\n";
 			std::cout << "--scrape			scrape using command line interface\n";
 			std::cout << "--windowed			not fullscreen, should be used in conjunction with --resolution\n";
-			std::cout << "--home-path [path]		use [path] instead of the \"home\" environment variable (for portable installations)\n";
 			std::cout << "--help, -h			summon a sentient, angry tuba\n\n";
 			std::cout << "More information available in README.md.\n";
 			return false; //exit after printing help
@@ -158,9 +137,6 @@ int main(int argc, char* argv[])
 {
 	unsigned int width = 0;
 	unsigned int height = 0;
-
-	if(!parseArgsForHomeDir(argc, argv)) // returns false if an invalid path was specified
-		return 1;
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;

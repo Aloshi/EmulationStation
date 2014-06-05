@@ -109,7 +109,6 @@ You can use `--help` or `-h` to view a list of command-line options. Briefly out
 --debug			- print additional output to the console, primarily about input.
 --windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
 --scrape	- run the interactive command-line metadata scraper.
---home-path [path]	- use [path] instead of the "home" environment variable (useful for portable installations).
 ```
 
 As long as ES hasn't frozen, you can always press F4 to close the application.

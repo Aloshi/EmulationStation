@@ -34,6 +34,4 @@ private:
 	std::map<std::string, int> mIntMap;
 	std::map<std::string, float> mFloatMap;
 	std::map<std::string, std::string> mStringMap;
-
-	std::string mHomePathOverride;
 };
