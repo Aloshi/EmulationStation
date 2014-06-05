@@ -11,13 +11,17 @@ using namespace PlatformIds;
 const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::map_list_of
 	(THREEDO, "3DO")
 	(AMIGA, "Amiga")
+	(AMSTRAD_CPC, "Amstrad CPC")
+	// missing apple2
 	(ARCADE, "Arcade")
+	// missing atari 800
 	(ATARI_2600, "Atari 2600")
 	(ATARI_5200, "Atari 5200")
 	(ATARI_7800, "Atari 7800")
 	(ATARI_JAGUAR, "Atari Jaguar")
 	(ATARI_JAGUAR_CD, "Atari Jaguar CD")
 	(ATARI_LYNX, "Atari Lynx")
+	// missing atari ST/STE/Falcon
 	(ATARI_XE, "Atari XE")
 	(COLECOVISION, "Colecovision")
 	(COMMODORE_64, "Commodore 64")
@@ -50,6 +54,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(PLAYSTATION, "Sony Playstation")
 	(PLAYSTATION_2, "Sony Playstation 2")
 	(PLAYSTATION_3, "Sony Playstation 3")
+	(PLAYSTATION_4, "Sony Playstation 4")
 	(PLAYSTATION_VITA, "Sony Playstation Vita")
 	(PLAYSTATION_PORTABLE, "Sony PSP")
 	(SUPER_NINTENDO, "Super Nintendo (SNES)")

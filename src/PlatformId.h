@@ -10,6 +10,7 @@ namespace PlatformIds
 
 		THREEDO, // name can't start with a constant
 		AMIGA,
+		AMSTRAD_CPC,
 		APPLE_II,
 		ARCADE,
 		ATARI_800,

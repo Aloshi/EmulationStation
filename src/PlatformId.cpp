@@ -10,8 +10,9 @@ namespace PlatformIds
 
 		"3do",
 		"amiga",
-		"arcade",
+		"amstradcpc",
 		"apple2",
+		"arcade",
 		"atari800",
 		"atari2600",
 		"atari5200",
