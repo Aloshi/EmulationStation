@@ -36,17 +36,24 @@ bool GuiComponent::input(InputConfig* config, Input input)
 	return false;
 }
 
-void GuiComponent::update(int deltaTime)
+void GuiComponent::updateSelf(int deltaTime)
 {
 	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
-	{
 		advanceAnimation(i, deltaTime);
-	}
-	
+}
+
+void GuiComponent::updateChildren(int deltaTime)
+{
 	for(unsigned int i = 0; i < getChildCount(); i++)
 	{
 		getChild(i)->update(deltaTime);
 	}
+}
+
+void GuiComponent::update(int deltaTime)
+{
+	updateSelf(deltaTime);
+	updateChildren(deltaTime);
 }
 
 void GuiComponent::render(const Eigen::Affine3f& parentTrans)

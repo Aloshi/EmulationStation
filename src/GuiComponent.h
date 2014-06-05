@@ -25,7 +25,7 @@ public:
 	//Return true if the input is consumed, false if it should continue to be passed to other children.
 	virtual bool input(InputConfig* config, Input input);
 
-	//Called when time passes.  Default implementation also calls update(deltaTime) on children - so you should probably call GuiComponent::update(deltaTime) at some point.
+	//Called when time passes.  Default implementation calls updateSelf(deltaTime) and updateChildren(deltaTime) - so you should probably call GuiComponent::update(deltaTime) at some point (or at least updateSelf so animations work).
 	virtual void update(int deltaTime);
 
 	//Called when it's time to render.  By default, just calls renderChildren(parentTrans * getTransform()).
@@ -92,6 +92,8 @@ public:
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;
+	void updateSelf(int deltaTime); // updates animations
+	void updateChildren(int deltaTime); // updates animations
 
 	unsigned char mOpacity;
 	Window* mWindow;

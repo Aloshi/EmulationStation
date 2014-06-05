@@ -214,6 +214,8 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	int id = std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
 	view->setPosition(id * (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight() * 2);
 
+	addChild(view.get());
+
 	mGameListViews[system] = view;
 	return view;
 }
@@ -225,6 +227,7 @@ std::shared_ptr<SystemView> ViewController::getSystemListView()
 		return mSystemListView;
 
 	mSystemListView = std::shared_ptr<SystemView>(new SystemView(mWindow));
+	addChild(mSystemListView.get());
 	mSystemListView->setPosition(0, (float)Renderer::getScreenHeight());
 	return mSystemListView;
 }
@@ -256,7 +259,7 @@ void ViewController::update(int deltaTime)
 		mCurrentView->update(deltaTime);
 	}
 
-	GuiComponent::update(deltaTime);
+	updateSelf(deltaTime);
 }
 
 void ViewController::render(const Eigen::Affine3f& parentTrans)
@@ -355,6 +358,8 @@ void ViewController::reloadAll()
 	}else{
 		goToSystemView(SystemData::sSystemVector.front());
 	}
+
+	updateHelpPrompts();
 }
 
 std::vector<HelpPrompt> ViewController::getHelpPrompts()

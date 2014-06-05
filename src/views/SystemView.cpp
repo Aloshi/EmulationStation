@@ -103,6 +103,7 @@ bool SystemView::input(InputConfig* config, Input input)
 				it->object->loadTheme();
 
 			populate();
+			updateHelpPrompts();
 			return true;
 		}
 		if(config->isMappedTo("left", input))
@@ -137,6 +138,9 @@ void SystemView::update(int deltaTime)
 
 void SystemView::onCursorChanged(const CursorState& state)
 {
+	// update help style
+	updateHelpPrompts();
+
 	float startPos = mCamOffset;
 
 	float posMax = (float)mEntries.size();
