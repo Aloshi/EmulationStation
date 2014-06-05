@@ -84,9 +84,9 @@ protected:
 	virtual void onCursorChanged(const CursorState& state);
 
 private:
-	static const int MARQUEE_DELAY = 900;
-	static const int MARQUEE_SPEED = 16;
-	static const int MARQUEE_RATE = 3;
+	static const int MARQUEE_DELAY = 2000;
+	static const int MARQUEE_SPEED = 8;
+	static const int MARQUEE_RATE = 1;
 
 	int mMarqueeOffset;
 	int mMarqueeTime;
@@ -277,7 +277,6 @@ void TextListComponent<T>::update(int deltaTime)
 		Eigen::Vector2f textSize = mFont->sizeText(text);
 
 		//it's long enough to marquee
-		mMarqueeTime += deltaTime;
 		if(textSize.x() - mMarqueeOffset > mSize.x() - 12 - (mAlignment != ALIGN_CENTER ? mHorizontalMargin : 0))
 		{
 			mMarqueeTime += deltaTime;
