@@ -62,19 +62,21 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			scrape_cmdline = true;
 		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
-			std::cout << "EmulationStation, a graphical front-end for ROM browsing.\n";
-			std::cout << "Written by Alec \"Aloshi\" Lofquist.\n";
-			std::cout << "Command line arguments:\n";
-			std::cout << "--resolution [width] [height]	try and force a particular resolution\n";
-			std::cout << "--gamelist-only			skip automatic game detection, only read from gamelist.xml\n";
-			std::cout << "--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n";
-			std::cout << "--draw-framerate		display the framerate\n";
-			std::cout << "--no-exit			don't show the exit option in the menu\n";
-			std::cout << "--debug				even more logging\n";
-			std::cout << "--scrape			scrape using command line interface\n";
-			std::cout << "--windowed			not fullscreen, should be used in conjunction with --resolution\n";
-			std::cout << "--help, -h			summon a sentient, angry tuba\n\n";
-			std::cout << "More information available in README.md.\n";
+			std::cout << 
+				"EmulationStation, a graphical front-end for ROM browsing.\n"
+				"Written by Alec \"Aloshi\" Lofquist.\n"
+				"Version " << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING << "\n\n"
+				"Command line arguments:\n"
+				"--resolution [width] [height]	try and force a particular resolution\n"
+				"--gamelist-only			skip automatic game search, only read from gamelist.xml\n"
+				"--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n"
+				"--draw-framerate		display the framerate\n"
+				"--no-exit			don't show the exit option in the menu\n"
+				"--debug				even more logging\n"
+				"--scrape			scrape using command line interface\n"
+				"--windowed			not fullscreen, should be used with --resolution\n"
+				"--help, -h			summon a sentient, angry tuba\n\n"
+				"More information available in README.md.\n";
 			return false; //exit after printing help
 		}
 	}
