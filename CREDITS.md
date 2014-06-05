@@ -26,6 +26,8 @@ cURL
 Boost
 	http://www.boost.org/
 
+nanosvg
+	https://github.com/memononen/nanosvg
 
 Resources
 =========
