@@ -3,8 +3,20 @@
 #include "pugiXML/pugixml.hpp"
 #include "platform.h"
 #include <boost/filesystem.hpp>
+#include <boost/assign.hpp>
 
 Settings* Settings::sInstance = NULL;
+
+// these values are NOT saved to es_settings.xml
+// since they're set through command-line arguments, and not the in-program settings menu
+std::vector<const char*> settings_dont_save = boost::assign::list_of
+	("Debug")
+	("DebugGrid")
+	("DebugText")
+	("ParseGamelistOnly")
+	("ShowExit")
+	("Windowed")
+	("IgnoreGamelist");
 
 Settings::Settings()
 {
@@ -33,7 +45,6 @@ void Settings::setDefaults()
 	mBoolMap["ShowHelpPrompts"] = true;
 	mBoolMap["ScrapeRatings"] = true;
 	mBoolMap["IgnoreGamelist"] = false;
-	mBoolMap["ParseGamelistOnly"] = false;
 	mBoolMap["QuickSystemSelect"] = true;
 
 	mBoolMap["Debug"] = false;
@@ -43,8 +54,6 @@ void Settings::setDefaults()
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
-
-	mIntMap["GameListSortIndex"] = 0;
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
@@ -57,6 +66,10 @@ void saveMap(pugi::xml_document& doc, std::map<K, V>& map, const char* type)
 {
 	for(auto iter = map.begin(); iter != map.end(); iter++)
 	{
+		// key is on the "don't save" list, so don't save it
+		if(std::find(settings_dont_save.begin(), settings_dont_save.end(), iter->first) != settings_dont_save.end())
+			continue;
+
 		pugi::xml_node node = doc.append_child(type);
 		node.append_attribute("name").set_value(iter->first.c_str());
 		node.append_attribute("value").set_value(iter->second);
