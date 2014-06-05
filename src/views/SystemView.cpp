@@ -157,7 +157,47 @@ void SystemView::onCursorChanged(const CursorState& state)
 	if(abs(target - posMax - startPos) < dist)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
-	// no need to animate, we're not going anywhere (probably mEntries.size() == 1)
+	
+	// animate mSystemInfo's opacity (fade out, wait, fade back in)
+
+	cancelAnimation(1);
+	cancelAnimation(2);
+
+	const float infoStartOpacity = mSystemInfo.getOpacity() / 255.f;
+
+	Animation* infoFadeOut = new LambdaAnimation(
+		[infoStartOpacity, this] (float t)
+	{
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
+	}, (int)(infoStartOpacity * 300));
+
+	unsigned int gameCount = getSelected()->getGameCount();
+
+	// also change the text after we've fully faded out
+	setAnimation(infoFadeOut, 0, [this, gameCount] {
+		std::stringstream ss;
+		
+		// only display a game count if there are at least 2 games
+		if(gameCount > 1)
+			ss << gameCount << " GAMES AVAILABLE";
+
+		mSystemInfo.setText(ss.str()); 
+	}, false, 1);
+
+	// only display a game count if there are at least 2 games
+	if(gameCount > 1)
+	{
+		Animation* infoFadeIn = new LambdaAnimation(
+			[this](float t)
+		{
+			mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+		}, 300);
+
+		// wait 600ms to fade in
+		setAnimation(infoFadeIn, 2000, nullptr, false, 2);
+	}
+
+	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
 	if(endPos == mCamOffset && endPos == mExtrasCamOffset)
 		return;
 
@@ -187,9 +227,10 @@ void SystemView::onCursorChanged(const CursorState& state)
 
 			if(t > 0.5f)
 				this->mExtrasCamOffset = endPos;
-			
+
 		}, 500);
-	}else{ // slide
+	}
+	else{ // slide
 		anim = new LambdaAnimation(
 			[startPos, endPos, posMax, this](float t)
 		{
@@ -205,42 +246,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 		}, 500);
 	}
 
-	
 	setAnimation(anim, 0, nullptr, false, 0);
-
-	// animate mSystemInfo's opacity (fade out, wait, fade back in)
-
-	cancelAnimation(1);
-	cancelAnimation(2);
-
-	const float infoStartOpacity = mSystemInfo.getOpacity() / 255.f;
-
-	Animation* infoFadeOut = new LambdaAnimation(
-		[infoStartOpacity, this] (float t)
-	{
-		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
-	}, (int)(infoStartOpacity * 300));
-
-	// also change the text after we've fully faded out
-	setAnimation(infoFadeOut, 0, [this] { 
-		std::stringstream ss;
-		unsigned int gameCount = getSelected()->getGameCount();
-
-		// only display a game count if there are at least 2 games
-		if(gameCount > 1)
-			ss << gameCount << " GAMES AVAILABLE";
-
-		mSystemInfo.setText(ss.str()); 
-	}, false, 1);
-
-	Animation* infoFadeIn = new LambdaAnimation(
-		[this] (float t)
-	{
-		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
-	}, 300);
-
-	// wait 600ms to fade in
-	setAnimation(infoFadeIn, 2000, nullptr, false, 2);
 }
 
 void SystemView::render(const Eigen::Affine3f& parentTrans)
