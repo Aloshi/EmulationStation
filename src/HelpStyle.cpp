@@ -5,7 +5,7 @@
 
 HelpStyle::HelpStyle()
 {
-	position = Eigen::Vector2f(12.0f, Renderer::getScreenHeight() * 0.9515f);
+	position = Eigen::Vector2f(Renderer::getScreenWidth() * 0.012f, Renderer::getScreenHeight() * 0.9515f);
 	iconColor = 0x777777FF;
 	textColor = 0x777777FF;
 

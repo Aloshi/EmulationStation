@@ -467,7 +467,7 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 
 #### helpsystem
 
-* `pos` - type: NORMALIZED_PAIR.
+* `pos` - type: NORMALIZED_PAIR.  Default is "0.012 0.9515"
 * `textColor` - type: COLOR.  Default is 777777FF.
 * `iconColor` - type: COLOR.  Default is 777777FF.
 * `fontPath` - type: PATH.
