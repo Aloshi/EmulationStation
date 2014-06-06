@@ -40,7 +40,7 @@ void BusyComponent::onSizeChanged()
 	const float middleSpacerWidth = 0.01f * Renderer::getScreenWidth();
 	const float textHeight = mText->getFont()->getLetterHeight();
 	mText->setSize(0, textHeight);
-	const float textWidth = mText->getSize().x();
+	const float textWidth = mText->getSize().x() + 4;
 
 	mGrid.setColWidthPerc(1, textHeight / mSize.x()); // animation is square
 	mGrid.setColWidthPerc(2, middleSpacerWidth / mSize.x());
