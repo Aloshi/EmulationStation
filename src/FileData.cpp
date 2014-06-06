@@ -32,6 +32,13 @@ std::string removeParenthesis(const std::string& str)
 		}
 	}
 
+	// also strip whitespace
+	end = ret.find_last_not_of(' ');
+	if(end != std::string::npos)
+		end++;
+
+	ret = ret.substr(0, end);
+
 	return ret;
 }
 
