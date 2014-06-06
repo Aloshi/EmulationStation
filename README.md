@@ -10,26 +10,27 @@ I found a bug! I have a problem!
 ================================
 
 - First, try to check the [issue list](https://github.com/Aloshi/EmulationStation/issues?state=open) for some entries that might match your problem.  Make sure to check closed issues too!
+
 - If you're running EmulationStation on a on Raspberry Pi and have problems with config file changes not taking effect, content missing after editing, etc., check if your SD card is corrupted (see issues [#78](https://github.com/Aloshi/EmulationStation/issues/78) and [#107](https://github.com/Aloshi/EmulationStation/issues/107)). You can do this with free tools like [h2testw](http://www.heise.de/download/h2testw.html) or [F3](http://oss.digirati.com.br/f3/).
+
 - Try to update to the latest version of EmulationStation using git (you might need to delete your `es_input.cfg` and `es_settings.cfg` after that to reset them to default values):
 ```bash
-cd EmulationStation
+cd YourEmulationStationDirectory
 git pull
-export CXX=g++-4.7
 cmake .
 make
 ```
+
 - If your problem still isn't gone, the best way to report a bug is to post an issue on GitHub. Try to post the simplest steps possible to reproduce the bug. Include files you think might be related (except for ROMs, of course). If you haven't re-run ES since the crash, the log file `~/.emulationstation/es_log.txt` is also helpful.
 
 Building
 ========
 
-EmulationStation uses some C++11 code, which means you'll need to install at least g++-4.7 on Linux, or VS2010 on Windows. 
-For installing and switching to g++-4.7 see [here](http://lektiondestages.blogspot.de/2013/05/installing-and-switching-gccg-versions.html).  You can also just use `export CXX=g++-4.7` to explicitly specify the compiler for CMake (make sure you delete your CMake cache files if it's not working).
+EmulationStation uses some C++11 code, which means you'll need to use at least g++-4.7 on Linux, or VS2010 on Windows, to compile.
 
 EmulationStation has a few dependencies. For building, you'll need SDL2, Boost (System, Filesystem, DateTime), FreeImage, FreeType, Eigen3, and cURL.
 
-**On Linux:**
+**On Debian/Ubuntu:**
 All of this be easily installed with apt-get:
 ```bash
 sudo apt-get install libsdl2-dev libboost-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl-dev libasound2-dev
@@ -40,12 +41,9 @@ Unless you're on the Raspberry Pi, you'll also need OpenGL:
 sudo apt-get install libgl1-mesa-dev
 ```
 
-On the Raspberry Pi, there are also a few special libraries, located in /opt/vc/: the Broadcom libraries, libEGL, and GLES.  You shouldn't need to install them; they are used by the Raspberry Pi port of SDL 2.
-
 **Generate and Build Makefile with CMake:**
-```
-cd EmulationStation
-export CXX=g++-4.7
+```bash
+cd YourEmulationStationDirectory
 cmake .
 make
 ```
@@ -119,13 +117,13 @@ Writing an es_systems.cfg
 
 The `es_systems.cfg` file contains the system configuration data for EmulationStation, written in XML.  This tells EmulationStation what systems you have, what platform they correspond to (for scraping), and where the games are located.
 
-ES will check two places for an es_systems.cfg file, in the following order:
+ES will check two places for an es_systems.cfg file, in the following order, stopping after it finds one that works:
 * `~/.emulationstation/es_systems.cfg`
 * `/etc/emulationstation/es_systems.cfg`
 
 The order EmulationStation displays systems reflects the order you define them in.
 
-**NOTE:** A system *must* have at least one game present in its "path" directory, or ES will ignore it! If no systems are found, ES won't even start!
+**NOTE:** A system *must* have at least one game present in its "path" directory, or ES will ignore it! If no valid systems are found, ES will report an error and quit!
 
 Here's an example es_systems.cfg:
 
@@ -168,65 +166,40 @@ The following "tags" are replaced by ES in launch commands:
 
 `%BASENAME%`	- Replaced with the "base" name of the path to the selected ROM. For example, a path of "/foo/bar.rom", this tag would be "bar". This tag is useful for setting up AdvanceMAME.
 
-`%ROM_RAW%`	- Replaced with the unescaped absolute path to the selected ROM.  If your emulator is picky about paths, you might want to use this instead of %ROM%, but enclosed in quotes.
+`%ROM_RAW%`	- Replaced with the unescaped, absolute path to the selected ROM.  If your emulator is picky about paths, you might want to use this instead of %ROM%, but enclosed in quotes.
 
 
 gamelist.xml
 ============
 
-The gamelist.xml for a system defines metadata for a system's games, such as a name, image (like a screenshot or box art), description, release date, and rating.
+The gamelist.xml file for a system defines metadata for games, such as a name, image (like a screenshot or box art), description, release date, and rating.
 
-ES will check three places for a gamelist.xml, in the following order:
-* `[SYSTEM_PATH]/gamelist.xml`
-* `~/.emulationstation/gamelists/[SYSTEM_NAME]/gamelist.xml`
-* `/etc/emulationstation/gamelists/[SYSTEM_NAME]/gamelist.xml`
-
-This file allows you to define images, descriptions, and different names for files. Note that only standard ASCII characters are supported for text (if you see a weird [X] symbol, you're probably using Unicode!).
-Images will be automatically resized to fit within the left column of the screen. Smaller images will load faster, so try to keep your resolution low.
-An example gamelist.xml:
-```xml
-<gameList>
-	<game>
-		<path>/home/pi/ROMs/nes/mm2.nes</path>
-		<name>Mega Man 2</name>
-		<desc>Mega Man 2 is a classic NES game which follows Mega Man as he murders eight robot masters.</desc>
-		<image>/home/pi/Screenshots/megaman2.png</image>
-	</game>
-</gameList>
-```
-
-The path element should be either the absolute path of the ROM, or a path relative to the system games folder that starts with "./".  For example:
-
-`<path>/home/pi/ROMs/nes/mm2.nes</path>`
-
-or
-
-`<path>./mm2.nes</path>`
-
-ES will attempt to encode paths as relative to the system's `path` setting whenever it writes a gamelist.xml. Special characters SHOULD NOT be escaped. The image element is the path to an image to display above the description (like a screenshot or boxart). Most popular image formats can be used (png, jpg, gif, etc.). Not all elements need to be used.
-
-The switch `--gamelist-only` can be used to skip automatic searching, and only display games defined in the system's gamelist.xml.
-The switch `--ignore-gamelist` can be used to ignore the gamelist and force ES to use the non-detailed view.
+If at least one game in a system has an image specified, ES will use the detailed view for that system (which displays metadata alongside the game list).
 
 *You can use ES's [scraping](http://en.wikipedia.org/wiki/Web_scraping) tools to avoid creating a gamelist.xml by hand.*  There are two ways to run the scraper:
 
 * **If you want to scrape multiple games:** press start to open the menu and choose the "SCRAPER" option.  Adjust your settings and press "SCRAPE NOW".
 * **If you just want to scrape one game:** find the game on the game list in ES and press select.  Choose "EDIT THIS GAME'S METADATA" and then press the "SCRAPE" button at the bottom of the metadata editor.
 
-You can also edit metadata within ES by using the metadata editor - just find the game you wish to edit on the gamelist, press select, and choose "EDIT THIS GAME'S METADATA."
-
-If you're writing a tool to generate gamelist.xml files, you can see the complete list of possible elements at the top of `src/MetaData.cpp`.
+You can also edit metadata within ES by using the metadata editor - just find the game you wish to edit on the gamelist, press Select, and choose "EDIT THIS GAME'S METADATA."
 
 A command-line version of the scraper is also provided - just run emulationstation with `--scrape` *(currently broken)*.
+
+The switch `--ignore-gamelist` can be used to ignore the gamelist and force ES to use the non-detailed view.
+
+If you're writing a tool to generate or parse gamelist.xml files, you should check out [GAMELISTS.md](GAMELISTS.md) for more detailed documentation.
+
 
 Themes
 ======
 
-By default, EmulationStation looks pretty ugly. You can fix that. If you want to know more about making your own themes (or editing existing ones), read THEMES.md!
+By default, EmulationStation looks pretty ugly. You can fix that. If you want to know more about making your own themes (or editing existing ones), read [THEMES.md](THEMES.md)!
 
 I've put some themes up for download on my EmulationStation webpage: http://aloshi.com/emulationstation#themes
 
 If you're using RetroPie, you should already have a nice set of themes automatically installed!
 
--Aloshi
+
+-Alec "Aloshi" Lofquist
 http://www.aloshi.com
+http://www.emulationstation.org

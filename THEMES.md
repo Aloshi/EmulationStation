@@ -476,6 +476,3 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 The help system is a special element that displays a context-sensitive list of actions the user can take at any time.  You should try and keep the position constant throughout every screen.  Keep in mind the "default" settings (including position) are used whenever the user opens a menu.
 
 [*Check out the "official" themes for some more examples!*](http://aloshi.com/emulationstation#themes)
-
--Aloshi
-http://www.aloshi.com
