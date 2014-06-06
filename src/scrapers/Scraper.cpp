@@ -44,9 +44,34 @@ void ScraperSearchHandle::update()
 	if(mStatus == ASYNC_DONE)
 		return;
 
-	while(!mRequestQueue.empty() && mRequestQueue.front()->update())
-		mRequestQueue.pop();
+	while(!mRequestQueue.empty())
+	{
+		auto& req = mRequestQueue.front();
+		AsyncHandleStatus status = req->status();
 
+		if(status == ASYNC_ERROR)
+		{
+			// propegate error
+			setError(req->getStatusString());
+
+			// empty our queue
+			while(!mRequestQueue.empty())
+				mRequestQueue.pop();
+
+			return;
+		}
+
+		// finished this one, see if we have any more
+		if(status == ASYNC_DONE)
+		{
+			mRequestQueue.pop();
+			continue;
+		}
+
+		// status == ASYNC_IN_PROGRESS
+	}
+
+	// we finished without any errors!
 	if(mRequestQueue.empty())
 	{
 		setStatus(ASYNC_DONE);
@@ -63,26 +88,30 @@ ScraperRequest::ScraperRequest(std::vector<ScraperSearchResult>& resultsWrite) :
 
 
 // ScraperHttpRequest
-ScraperHttpRequest::ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url, scraper_process_httpreq processFunc) 
-	: ScraperRequest(resultsWrite), mProcessFunc(processFunc)
+ScraperHttpRequest::ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url) 
+	: ScraperRequest(resultsWrite)
 {
+	setStatus(ASYNC_IN_PROGRESS);
 	mReq = std::unique_ptr<HttpReq>(new HttpReq(url));
 }
 
-bool ScraperHttpRequest::update()
+void ScraperHttpRequest::update()
 {
-	if(mReq->status() == HttpReq::REQ_SUCCESS)
+	HttpReq::Status status = mReq->status();
+	if(status == HttpReq::REQ_SUCCESS)
 	{
-		mProcessFunc(mReq, mResults);
-		return true;
+		setStatus(ASYNC_DONE); // if process() has an error, status will be changed to ASYNC_ERROR
+		process(mReq, mResults);
+		return;
 	}
 
-	if(mReq->status() == HttpReq::REQ_IN_PROGRESS)
-		return false;
+	// not ready yet
+	if(status == HttpReq::REQ_IN_PROGRESS)
+		return;
 
 	// everything else is some sort of error
-	LOG(LogError) << "ScraperHttpRequest network error - " << mReq->getErrorMsg();
-	return true;
+	LOG(LogError) << "ScraperHttpRequest network error (status: " << status << ") - " << mReq->getErrorMsg();
+	setError(mReq->getErrorMsg());
 }
 
 

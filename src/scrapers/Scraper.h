@@ -53,30 +53,30 @@ struct ScraperSearchResult
 
 
 // a scraper search gathers results from (potentially multiple) ScraperRequests
-class ScraperRequest
+class ScraperRequest : public AsyncHandle
 {
 public:
 	ScraperRequest(std::vector<ScraperSearchResult>& resultsWrite);
 
 	// returns "true" once we're done
-	virtual bool update() = 0;
-
+	virtual void update() = 0;
+	
 protected:
 	std::vector<ScraperSearchResult>& mResults;
 };
 
 
-typedef void (*scraper_process_httpreq)(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results);
-
 // a single HTTP request that needs to be processed to get the results
 class ScraperHttpRequest : public ScraperRequest
 {
 public:
-	ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url, scraper_process_httpreq processFunc);
-	bool update() override;
+	ScraperHttpRequest(std::vector<ScraperSearchResult>& resultsWrite, const std::string& url);
+	virtual void update() override;
+
+protected:
+	virtual void process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results) = 0;
 
 private:
-	scraper_process_httpreq mProcessFunc;
 	std::unique_ptr<HttpReq> mReq;
 };
 

@@ -78,7 +78,7 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 	if(params.system->getPlatformIds().empty())
 	{
 		// no platform specified, we're done
-		requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thegamesdb_process_httpreq)));
+		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
 	}else{
 		// go through the list, we need to split this into multiple requests 
 		// because TheGamesDB API either sucks or I don't know how to use it properly...
@@ -95,12 +95,13 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 			}else{
 				LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(*platformIt);
 			}
-			requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thegamesdb_process_httpreq)));
+
+			requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
 		}
 	}
 }
 
-void thegamesdb_process_httpreq(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
+void TheGamesDBRequest::process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
 {
 	assert(req->status() == HttpReq::REQ_SUCCESS);
 
@@ -108,7 +109,11 @@ void thegamesdb_process_httpreq(const std::unique_ptr<HttpReq>& req, std::vector
 	pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
 	if(!parseResult)
 	{
-		LOG(LogError) << "GamesDBRequest - Error parsing XML. \n\t" << parseResult.description() << "";
+		std::stringstream ss;
+		ss << "GamesDBRequest - Error parsing XML. \n\t" << parseResult.description() << "";
+		std::string err = ss.str();
+		setError(err);
+		LOG(LogError) << err;
 		return;
 	}
 

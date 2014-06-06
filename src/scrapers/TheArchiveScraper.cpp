@@ -16,10 +16,10 @@ void thearchive_generate_scraper_requests(const ScraperSearchParams& params, std
 	path += HttpReq::urlEncode(cleanName);
 	//platform TODO, should use some params.system get method
 
-	requests.push(std::unique_ptr<ScraperRequest>(new ScraperHttpRequest(results, path, &thearchive_process_httpreq)));
+	requests.push(std::unique_ptr<ScraperRequest>(new TheArchiveRequest(results, path)));
 }
 
-void thearchive_process_httpreq(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
+void TheArchiveRequest::process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
 {
 	assert(req->status() == HttpReq::REQ_SUCCESS);
 
@@ -27,7 +27,11 @@ void thearchive_process_httpreq(const std::unique_ptr<HttpReq>& req, std::vector
 	pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
 	if(!parseResult)
 	{
-		LOG(LogError) << "TheArchiveRequest - error parsing XML.\n\t" << parseResult.description();
+		std::stringstream ss;
+		ss << "TheArchiveRequest - error parsing XML.\n\t" << parseResult.description();
+		std::string err = ss.str();
+		setError(err);
+		LOG(LogError) << err;
 		return;
 	}
 
