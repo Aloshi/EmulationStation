@@ -277,8 +277,11 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 			index -= mEntries.size();
 
 		extrasTrans.translation() = trans.translation() + Eigen::Vector3f((i - mExtrasCamOffset) * mSize.x(), 0, 0);
-		
+
+		Eigen::Vector2i clipRect = Eigen::Vector2i((int)((i - mExtrasCamOffset) * mSize.x()), 0);
+		Renderer::pushClipRect(clipRect, mSize.cast<int>());
 		mEntries.at(index).data.backgroundExtras->render(extrasTrans);
+		Renderer::popClipRect();
 	}
 
 	// fade extras if necessary
