@@ -169,7 +169,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 		[infoStartOpacity, this] (float t)
 	{
 		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
-	}, (int)(infoStartOpacity * 300));
+	}, (int)(infoStartOpacity * 150));
 
 	unsigned int gameCount = getSelected()->getGameCount();
 
