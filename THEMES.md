@@ -46,7 +46,7 @@ Here is a very simple theme that changes the description text's color:
 
 ```xml
 <theme>
-	<version>3</version>
+	<formatVersion>3</formatVersion>
 	<view name="detailed">
 		<text name="description">
 			<color>00FF00</color>
@@ -66,7 +66,7 @@ How it works
 
 Everything must be inside a `<theme>` tag.
 
-**The `<version>` tag *must* be specified**.  This is the version of the theming system the theme was designed for.  The current version is 3.
+**The `<formatVersion>` tag *must* be specified**.  This is the version of the theming system the theme was designed for.  The current version is 3.
 
 
 
@@ -121,7 +121,7 @@ You can include theme files within theme files, similar to `#include` in C (thou
 `~/.emulationstation/all_themes.xml`:
 ```xml
 <theme>
-	<version>3</version>
+	<formatVersion>3</formatVersion>
 	<view name="detailed">
 		<text name="description">
 			<fontPath>./all_themes/myfont.ttf</fontPath>
@@ -134,7 +134,7 @@ You can include theme files within theme files, similar to `#include` in C (thou
 `~/.emulationstation/snes/theme.xml`:
 ```xml
 <theme>
-	<version>3</version>
+	<formatVersion>3</formatVersion>
 	<include>./../all_themes.xml</include>
 	<view name="detailed">
 		<text name="description">
@@ -147,7 +147,7 @@ You can include theme files within theme files, similar to `#include` in C (thou
 Is equivalent to this `snes/theme.xml`:
 ```xml
 <theme>
-	<version>3</version>
+	<formatVersion>3</formatVersion>
 	<view name="detailed">
 		<text name="description">
 			<fontPath>./all_themes/myfont.ttf</fontPath>
@@ -157,7 +157,7 @@ Is equivalent to this `snes/theme.xml`:
 </theme>
 ```
 
-Notice that properties that were not specified got merged (`<fontPath>`) and the `snes/theme.xml` could overwrite the included files' values (`<color>`).  Also notice the included file still needed the `<version>` tag.
+Notice that properties that were not specified got merged (`<fontPath>`) and the `snes/theme.xml` could overwrite the included files' values (`<color>`).  Also notice the included file still needed the `<formatVersion>` tag.
 
 
 
@@ -167,7 +167,7 @@ Sometimes you want to apply the same properties to the same elements across mult
 
 ```xml
 <theme>
-	<version>3</version>
+	<formatVersion>3</formatVersion>
 	<view name="basic, grid, system">
 		<image name="logo">
 			<path>./snes_art/snes_header.png</path>
@@ -184,7 +184,7 @@ Sometimes you want to apply the same properties to the same elements across mult
 This is equivalent to:
 ```xml
 <theme>
-	<version>3</version>
+	<formatVersion>3</formatVersion>
 	<view name="basic">
 		<image name="logo">
 			<path>./snes_art/snes_header.png</path>
@@ -217,7 +217,7 @@ You can theme multiple elements *of the same type* simultaneously.  The `name` a
 
 ```xml
 <theme>
-    <version>3</version>
+    <formatVersion>3</formatVersion>
     <view name="detailed">
     	<!-- Weird spaces/newline on purpose! -->
     	<text name="md_lbl_rating, md_lbl_releasedate, md_lbl_developer, md_lbl_publisher, 
@@ -231,7 +231,7 @@ You can theme multiple elements *of the same type* simultaneously.  The `name` a
 Which is equivalent to:
 ```xml
 <theme>
-    <version>3</version>
+    <formatVersion>3</formatVersion>
     <view name="detailed">
     	<text name="md_lbl_rating">
     		<color>48474D</color>

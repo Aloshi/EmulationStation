@@ -86,8 +86,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 
 namespace fs = boost::filesystem;
 
-#define MINIMUM_THEME_VERSION 3
-#define CURRENT_THEME_VERSION 3
+#define MINIMUM_THEME_FORMAT_VERSION 3
+#define CURRENT_THEME_FORMAT_VERSION 3
 
 // helper
 unsigned int getHexColor(const char* str)
@@ -164,12 +164,12 @@ void ThemeData::loadFile(const std::string& path)
 		throw error << "Missing <theme> tag!";
 
 	// parse version
-	mVersion = root.child("version").text().as_float(-404);
+	mVersion = root.child("formatVersion").text().as_float(-404);
 	if(mVersion == -404)
-		throw error << "<version> tag missing!\n   It's either out of date or you need to add <version>" << CURRENT_THEME_VERSION << "</version> inside your <theme> tag.";
+		throw error << "<formatVersion> tag missing!\n   It's either out of date or you need to add <formatVersion>" << CURRENT_THEME_FORMAT_VERSION << "</formatVersion> inside your <theme> tag.";
 
-	if(mVersion < MINIMUM_THEME_VERSION)
-		throw error << "Theme is version " << mVersion << ". Minimum supported version is " << MINIMUM_THEME_VERSION << ".";
+	if(mVersion < MINIMUM_THEME_FORMAT_VERSION)
+		throw error << "Theme uses format version " << mVersion << ". Minimum supported version is " << MINIMUM_THEME_FORMAT_VERSION << ".";
 
 	parseIncludes(root);
 	parseViews(root);
