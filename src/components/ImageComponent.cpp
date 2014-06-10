@@ -189,8 +189,8 @@ void ImageComponent::updateVertices()
 	const float width = round(bottomRight.x() - topLeft.x());
 	const float height = round(bottomRight.y() - topLeft.y());
 
-	topLeft[0] = round(topLeft[0]);
-	topLeft[1] = round(topLeft[1]);
+	topLeft[0] = floor(topLeft[0]);
+	topLeft[1] = floor(topLeft[1]);
 	bottomRight[0] = topLeft[0] + width;
 	bottomRight[1] = topLeft[1] + height;
 

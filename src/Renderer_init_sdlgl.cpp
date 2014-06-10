@@ -66,7 +66,7 @@ namespace Renderer
 
 		if(sdlWindow == NULL)
 		{
-			LOG(LogError) << "Error creating SDL window!";
+			LOG(LogError) << "Error creating SDL window!\n\t" << SDL_GetError();
 			return false;
 		}
 
