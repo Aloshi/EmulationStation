@@ -25,7 +25,7 @@ namespace PlatformIds
 		"colecovision",
 		"c64", // commodore 64
 		"intellivision",
-		"mac",
+		"macintosh",
 		"xbox",
 		"xbox360",
 		"neogeo",
