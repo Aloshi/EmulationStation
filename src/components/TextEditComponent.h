@@ -28,6 +28,8 @@ public:
 	inline bool isEditing() const { return mEditing; };
 	inline const std::shared_ptr<Font>& getFont() const { return mFont; }
 
+	void setCursor(size_t pos);
+
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:

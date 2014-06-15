@@ -174,6 +174,16 @@ void TextEditComponent::moveCursor(int amt)
 	onCursorChanged();
 }
 
+void TextEditComponent::setCursor(size_t pos)
+{
+	if(pos == std::string::npos)
+		mCursor = mText.length();
+	else
+		mCursor = (int)pos;
+
+	moveCursor(0);
+}
+
 void TextEditComponent::onTextChanged()
 {
 	std::string wrappedText = (isMultiline() ? mFont->wrapText(mText, getTextAreaSize().x()) : mText);
