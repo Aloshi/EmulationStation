@@ -32,8 +32,10 @@ If that file doesn't exist, ES will try to find the theme in the current **theme
 The theme set system makes it easy for users to try different themes and allows distributions to include multiple theme options.  Users can change the currently active theme set in the "UI Settings" menu.  The option is only visible if at least one theme set exists.
 
 There are two places ES can load theme sets from:
-* `[HOME]/.emulationstation/themes/[CURRENT_THEME_SET]/[SYSTEM_NAME]/theme.xml`
-* `/etc/emulationstation/themes/[CURRENT_THEME_SET]/[SYSTEM_NAME]/theme.xml`
+* `[HOME]/.emulationstation/themes/[CURRENT_THEME_SET]/[SYSTEM_THEME]/theme.xml`
+* `/etc/emulationstation/themes/[CURRENT_THEME_SET]/[SYSTEM_THEME]/theme.xml`
+
+`[SYSTEM_THEME]` is the `<theme>` tag for the system, as defined in `es_systems.cfg`.  If the `<theme>` tag is not set, ES will use the system's `<name>`.
 
 If both files happen to exist, ES will pick the first one (the one located in the home directory).
 

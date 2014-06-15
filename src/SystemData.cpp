@@ -18,7 +18,7 @@ std::vector<SystemData*> SystemData::sSystemVector;
 namespace fs = boost::filesystem;
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds)
+	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder)
 {
 	mName = name;
 	mFullName = fullName;
@@ -34,6 +34,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mSearchExtensions = extensions;
 	mLaunchCommand = command;
 	mPlatformIds = platformIds;
+	mThemeFolder = themeFolder;
 
 	mRootFolder = new FileData(FOLDER, mStartPath, this);
 	mRootFolder->metadata.set("name", mFullName);
@@ -254,7 +255,7 @@ bool SystemData::loadConfig()
 
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
-		std::string name, fullname, path, cmd;
+		std::string name, fullname, path, cmd, themeFolder;
 		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
@@ -290,6 +291,9 @@ bool SystemData::loadConfig()
 				platformIds.push_back(platformId);
 		}
 
+		// theme folder
+		themeFolder = system.child("theme").text().as_string(name.c_str());
+
 		//validate
 		if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
 		{
@@ -301,7 +305,7 @@ bool SystemData::loadConfig()
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds);
+		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
 		if(newSys->getRootFolder()->getChildren().size() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
@@ -328,7 +332,7 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		<!-- A short name, used internally. Traditionally lower-case. -->\n"
 			"		<name>nes</name>\n"
 			"\n"
-			"		<!-- A \"pretty\" name, displayed in the header and such. -->\n"
+			"		<!-- A \"pretty\" name, displayed in menus and such. -->\n"
 			"		<fullname>Nintendo Entertainment System</fullname>\n"
 			"\n"
 			"		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME on Linux or %HOMEPATH% on Windows. -->\n"
@@ -346,9 +350,12 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"\n"
 			"		<!-- The platform to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp.\n"
 			"		It's case sensitive, but everything is lowercase. This tag is optional.\n"
-			"		You can use multiple platforms too, delimited with any of the whitespace characters (\", \\r\\n\\t\"), eg: \"<platform>genesis, megadrive</platform>\" -->\n"
+			"		You can use multiple platforms too, delimited with any of the whitespace characters (\", \\r\\n\\t\"), eg: \"genesis, megadrive\" -->\n"
 			"		<platform>nes</platform>\n"
 			"\n"
+			"		<!-- The theme to load from the current theme set.  See THEMES.md for more information.\n"
+			"		This tag is optional. If not set, it will default to the value of <name>. -->\n"
+			"		<theme>nes</theme>\n"
 			"	</system>\n"
 			"</systemList>\n";
 
@@ -404,7 +411,7 @@ std::string SystemData::getThemePath() const
 		return localThemePath.generic_string();
 
 	// not in game folder, try theme sets
-	return ThemeData::getThemeFromCurrentSet(mName).generic_string();
+	return ThemeData::getThemeFromCurrentSet(mThemeFolder).generic_string();
 }
 
 bool SystemData::hasGamelist() const

@@ -3,8 +3,16 @@ EmulationStation
 
 A cross-platform graphical front-end for emulators with controller navigation.
 
+Project website: http://emulationstation.org
+
 **Raspberry Pi users:**
 A cool guy named petrockblog made a script which automatically installs many emulators and ES. It also includes options for configuring your RPi and setting it up to boot directly into ES. You can find it here: https://github.com/petrockblog/RetroPie-Setup
+
+Download
+========
+
+Download a pre-compiled version at [emulationstation.org](http://emulationstation.org#download).
+
 
 I found a bug! I have a problem!
 ================================
@@ -33,20 +41,19 @@ EmulationStation has a few dependencies. For building, you'll need SDL2, Boost (
 **On Debian/Ubuntu:**
 All of this be easily installed with apt-get:
 ```bash
-sudo apt-get install libsdl2-dev libboost-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl-dev libasound2-dev
+sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev
 ```
 
-Unless you're on the Raspberry Pi, you'll also need OpenGL:
-```bash
-sudo apt-get install libgl1-mesa-dev
-```
-
-**Generate and Build Makefile with CMake:**
+Then, generate and build the Makefile with CMake:
 ```bash
 cd YourEmulationStationDirectory
 cmake .
 make
 ```
+
+**On the Raspberry Pi:**
+
+Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
 
 **On Windows:**
 
@@ -62,7 +69,7 @@ make
 
 [CURL](http://curl.haxx.se/download.html) (you'll need to compile or get the pre-compiled (DLL version))
 
-(remember to copy necessary .DLLs into the same folder as the executable: FreeImage.dll, freetype6.dll, SDL2.dll, and zlib1.dll)
+(remember to copy necessary .DLLs into the same folder as the executable: FreeImage.dll, freetype6.dll, SDL2.dll, libcurl.dll, and zlib1.dll)
 
 [CMake](http://www.cmake.org/cmake/resources/software.html) (this is used for generating the Visual Studio project)
 
@@ -73,11 +80,9 @@ Configuring
 ===========
 
 **~/.emulationstation/es_systems.cfg:**
-When first run, an example systems configuration file will be created at $HOME/.emulationstation/es_systems.cfg. This example has some comments explaining how to write the configuration file, and an example RetroArch launch command. See the "Writing an es_systems.cfg" section for more information.
+When first run, an example systems configuration file will be created at `~/.emulationstation/es_systems.cfg`.  `~` is `$HOME` on Linux, and `%HOMEPATH%` on Windows.  This example has some comments explaining how to write the configuration file. See the "Writing an es_systems.cfg" section for more information.
 
 **Keep in mind you'll have to set up your emulator separately from EmulationStation!**
-
-After you launch a game, EmulationStation will return once your system's command terminates (i.e. your emulator closes).
 
 **~/.emulationstation/es_input.cfg:**
 When you first start EmulationStation, you will be prompted to configure an input device. The process is thus:
@@ -94,7 +99,7 @@ The new configuration will be added to the `~/.emulationstation/es_input.cfg` fi
 
 **Both new and old devices can be (re)configured at any time by pressing the Start button and choosing "CONFIGURE INPUT".**  From here, you may unplug the device you used to open the menu and plug in a new one, if necessary.  New devices will be appended to the existing input configuration file, so your old devices will remain configured.
 
-**If things stop working, you can delete the `~/.emulationstation/es_input.cfg` file to make the input configuration screen reappear on next run.**
+**If your controller stops working, you can delete the `~/.emulationstation/es_input.cfg` file to make the input configuration screen re-appear on next run.**
 
 
 You can use `--help` or `-h` to view a list of command-line options. Briefly outlined here:
@@ -114,6 +119,8 @@ As long as ES hasn't frozen, you can always press F4 to close the application.
 
 Writing an es_systems.cfg
 =========================
+
+Complete configuration instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#config).
 
 The `es_systems.cfg` file contains the system configuration data for EmulationStation, written in XML.  This tells EmulationStation what systems you have, what platform they correspond to (for scraping), and where the games are located.
 
@@ -135,12 +142,12 @@ All systems must be contained within the <systemList> tag.-->
 	<!-- Here's an example system to get you started. -->
 	<system>
 		<!-- A short name, used internally. -->
-		<name>SNES</name>
+		<name>snes</name>
 
 		<!-- A "pretty" name, displayed in the menus and such. This one is optional. -->
 		<fullname>Super Nintendo Entertainment System</fullname>
 
-		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME or $HOMEPATH, depending on platform. 
+		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME or %HOMEPATH%, depending on platform. 
 		All subdirectories (and non-recursive links) will be included. -->
 		<path>~/roms/snes</path>
 
@@ -148,14 +155,18 @@ All systems must be contained within the <systemList> tag.-->
 		You MUST include the period at the start of the extension! It's also case sensitive. -->
 		<extension>.smc .sfc .SMC .SFC</extension>
 
-		<!-- The shell command executed when a game is selected. A few special tags are replaced if found in a command, like %ROM%. -->
+		<!-- The shell command executed when a game is selected. A few special tags are replaced if found in a command, like %ROM% (see below). -->
 		<command>snesemulator %ROM%</command>
 		<!-- This example would run the bash command "snesemulator /home/user/roms/snes/Super\ Mario\ World.sfc". -->
 
 		<!-- The platform(s) to use when scraping. You can see the full list of accepted platforms in src/PlatformIds.cpp.
 		It's case sensitive, but everything is lowercase. This tag is optional.
-		You can use multiple platforms too, delimited with any of the whitespace characters (", \r\n\t"), eg: "<platform>genesis, megadrive</platform>" -->
+		You can use multiple platforms too, delimited with any of the whitespace characters (", \r\n\t"), eg: "genesis, megadrive" -->
 		<platform>snes</platform>
+
+		<!-- The theme to load from the current theme set. See THEMES.md for more information.
+		This tag is optional; if not set, it will use the value of <name>. -->
+		<theme>snes</theme>
 	</system>
 </systemList>
 ```

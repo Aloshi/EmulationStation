@@ -12,7 +12,7 @@ class SystemData
 {
 public:
 	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-		const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds);
+		const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder);
 	~SystemData();
 
 	inline FileData* getRootFolder() const { return mRootFolder; };
@@ -20,6 +20,7 @@ public:
 	inline const std::string& getFullName() const { return mFullName; }
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
+	inline const std::string& getThemeFolder() const { return mThemeFolder; }
 
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mPlatformIds; }
 	inline bool hasPlatformId(PlatformIds::PlatformId id) { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
@@ -70,6 +71,7 @@ private:
 	std::vector<std::string> mSearchExtensions;
 	std::string mLaunchCommand;
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
+	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
 
 	void populateFolder(FileData* folder);
