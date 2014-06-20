@@ -2,7 +2,7 @@
 #include "InputConfig.h"
 #include "Window.h"
 #include "Log.h"
-#include "pugiXML/pugixml.hpp"
+#include "pugixml/pugixml.hpp"
 #include <boost/filesystem.hpp>
 #include "platform.h"
 
