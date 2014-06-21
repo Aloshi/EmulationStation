@@ -54,6 +54,9 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
+
+	# Embedded assets (needed by ResourceManager)
+	${emulationstation-all_SOURCE_DIR}/data/Resources.h
 )
 
 set(CORE_SOURCES
@@ -106,56 +109,53 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
-
-	# Embedded assets (needed by ResourceManager)
-	${emulationstation_SOURCE_DIR}/data/Resources.h
 )
 
 set(EMBEDDED_ASSET_SOURCES
-	${emulationstation_SOURCE_DIR}/data/ResourceUtil.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/splash_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/window_icon_256_png.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/button_png.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/button_filled_png.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/textinput_ninepatch_png.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/textinput_ninepatch_active_png.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/frame_png.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
+	${emulationstation-all_SOURCE_DIR}/data/ResourceUtil.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/splash_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/window_icon_256_png.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/button_png.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/button_filled_png.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/textinput_ninepatch_png.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/textinput_ninepatch_active_png.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/frame_png.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
 
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_x_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_y_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_l_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_dpad_right_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_dpad_updown_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_dpad_leftright_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/help_dpad_all_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_x_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_y_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_updown_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_leftright_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_all_svg.cpp
 
-    ${emulationstation_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/arrow_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/option_arrow_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/checkbox_checked_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/checkbox_unchecked_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/star_filled_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/star_unfilled_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/on_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/off_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/fav_add_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/fav_remove_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/slider_knob_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/arrow_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/option_arrow_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/checkbox_checked_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/checkbox_unchecked_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/star_filled_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/star_unfilled_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/on_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/off_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/fav_add_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/fav_remove_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/slider_knob_svg.cpp
 
-    ${emulationstation_SOURCE_DIR}/data/converted/busy_0_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/busy_1_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/busy_2_svg.cpp
-    ${emulationstation_SOURCE_DIR}/data/converted/busy_3_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/busy_0_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/busy_1_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/busy_2_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/busy_3_svg.cpp
 )
 
 list(APPEND CORE_SOURCES ${EMBEDDED_ASSET_SOURCES})

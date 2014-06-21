@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(emulationstation)
+project(emulationstation-all)
 
 #-------------------------------------------------------------------------------
 #add local find scripts to CMAKE path
@@ -90,7 +90,7 @@ set(COMMON_INCLUDE_DIRS
     ${EIGEN3_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/external
-    ${CMAKE_CURRENT_SOURCE_DIR}/core/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
 )
 
 #add ALSA for Linux
@@ -184,5 +184,5 @@ set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 # add each component
 
 add_subdirectory("external")
-add_subdirectory("core")
-add_subdirectory("es")
+add_subdirectory("es-core")
+add_subdirectory("emulationstation")
