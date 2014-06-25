@@ -185,4 +185,4 @@ set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 
 add_subdirectory("external")
 add_subdirectory("es-core")
-add_subdirectory("emulationstation")
+add_subdirectory("es-app")
