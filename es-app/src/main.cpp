@@ -166,6 +166,10 @@ int main(int argc, char* argv[])
 			return 1;
 		}
 
+		std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
+		LOG(LogInfo) << "Checking available OpenGL extensions...";
+		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
+
 		window.renderLoadingScreen();
 	}
 
