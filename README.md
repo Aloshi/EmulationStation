@@ -37,7 +37,7 @@ sudo apt-get install libsdl1.2-dev libboost-system-dev libboost-filesystem-dev l
 
 On "desktop" Linux (that is, *not* the Raspberry Pi), you'll also need OpenGL.  Try installing the MESA development package with:
 ```
-sudo apt-get libgl1-mesa-dev
+sudo apt-get install libgl1-mesa-dev
 ```
 
 On the Raspberry Pi, there are also a few special libraries, located in /opt/vc/: the Broadcom libraries, libEGL, and GLES.  You shouldn't need to install them.
