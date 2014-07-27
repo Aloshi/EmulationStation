@@ -164,13 +164,7 @@ void TextEditComponent::updateCursorRepeat(int deltaTime)
 
 void TextEditComponent::moveCursor(int amt)
 {
-	mCursor += amt;
-
-	if(mCursor < 0)
-		mCursor = 0;
-	if(mCursor >= (int)mText.length())
-		mCursor = mText.length();
-
+	mCursor = Font::moveCursor(mText, mCursor, amt);
 	onCursorChanged();
 }
 
