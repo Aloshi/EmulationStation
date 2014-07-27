@@ -9,6 +9,31 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 {
 	addChild(&mMenu);
 
+	// jump to letter
+	char curChar = getGamelist()->getCursor()->getName()[0];
+	mJumpToLetterList = std::make_shared<LetterList>(mWindow, "JUMP TO LETTER", false);
+	for(char c = 'A'; c <= 'Z'; c++)
+	{
+		mJumpToLetterList->add(std::string(1, c), c, c == curChar);
+	}
+
+	ComponentListRow row;
+	row.addElement(std::make_shared<TextComponent>(mWindow, "JUMP TO LETTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.addElement(mJumpToLetterList, false);
+	row.input_handler = [&](InputConfig* config, Input input) {
+		if(config->isMappedTo("a", input) && input.value)
+		{
+			jumpToLetter();
+			return true;
+		}
+		else if(mJumpToLetterList->input(config, input))
+		{
+			return true;
+		}
+		return false;
+	};
+	mMenu.addRow(row);
+
 	// sort list by
 	mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
 	for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
@@ -20,7 +45,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	mMenu.addWithLabel("SORT GAMES BY", mListSort);
 
 	// edit game metadata
-	ComponentListRow row;
+	row.elements.clear();
 	row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	row.addElement(makeArrow(mWindow), false);
 	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
@@ -55,6 +80,41 @@ void GuiGamelistOptions::openMetaDataEd()
 			getGamelist()->onFileChanged(file, FILE_REMOVED); //tell the view
 			delete file; //free it
 	}));
+}
+
+void GuiGamelistOptions::jumpToLetter()
+{
+	char letter = mJumpToLetterList->getSelected();
+	IGameListView* gamelist = getGamelist();
+
+	// this is a really shitty way to get a list of files
+	const std::vector<FileData*>& files = gamelist->getCursor()->getParent()->getChildren();
+	
+	long min = 0;
+	long max = files.size() - 1;
+	long mid = 0;
+
+	while(max >= min)
+	{
+		mid = ((max - min) / 2) + min;
+
+		// game somehow has no first character to check
+		if(files.at(mid)->getName().empty())
+			continue;
+
+		char checkLetter = toupper(files.at(mid)->getName()[0]);
+
+		if(checkLetter < letter)
+			min = mid + 1;
+		else if(checkLetter > letter)
+			max = mid - 1;
+		else
+			break; //exact match found
+	}
+
+	gamelist->setCursor(files.at(mid));
+
+	delete this;
 }
 
 bool GuiGamelistOptions::input(InputConfig* config, Input input)
