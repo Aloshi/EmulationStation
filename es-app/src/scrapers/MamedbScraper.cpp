@@ -25,6 +25,7 @@ boost::regex infolineregex("^.*?<h1>Game Details</h1>(.*?)</table>.*$");
         boost::regex scoreregex("^.*?<b>Score:&nbsp;</b>(?<rating>.*?) \\(.*? votes\\)<br/>.*$");
         boost::regex genreregex("^.*?<b>Category:&nbsp;</b><a href='.*?'>(?<genre>.*?)</a><br/>.*$");
         boost::regex playersregex("^.*?<b>Players:&nbsp;</b>(?<players>.*?)<br/>.*$");
+        boost::regex snapregex("^.*?<img src='/snap/(?<img>.*?)\\.png'.*$");
         
 void MamedbRequest::process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
 {
@@ -75,15 +76,13 @@ void MamedbRequest::process(const std::unique_ptr<HttpReq>& req, std::vector<Scr
                 }
                 
                 // IMAGES
-                boost::smatch clonematches;
+                boost::smatch snapmatches;
                 std::stringstream ss;
-                if(boost::regex_match(line, clonematches, cloneregex)){
-                    ss << "http://www.mamedb.com/snap/"<<std::string(clonematches["clone"]) <<".png";
-                }else {
-                    ss << "http://www.mamedb.com/snap/"<< std::string(linematches["filename"]) <<".png"; 
+                if(boost::regex_match(req->getContent(), snapmatches, snapregex)){
+                    ss << "http://www.mamedb.com/snap/"<<std::string(snapmatches["img"]) <<".png";
+                    result.imageUrl = ss.str();
+                    result.thumbnailUrl = ss.str();
                 }
-                result.imageUrl = ss.str();
-                result.thumbnailUrl = ss.str();
                 
                 results.push_back(result);
             }
