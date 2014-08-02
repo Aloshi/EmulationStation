@@ -137,7 +137,6 @@ set(COMMON_LIBRARIES
     ${FREETYPE_LIBRARIES}
     ${FreeImage_LIBRARIES}
 	${SDL2_LIBRARY}
-    ${SDL2MAIN_LIBRARY}
     ${CURL_LIBRARIES}
     pugixml
     nanosvg
