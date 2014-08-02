@@ -34,3 +34,21 @@ std::string getHomePath()
 	boost::filesystem::path genericPath(homePath);
 	return genericPath.generic_string();
 }
+
+int runShutdownCommand()
+{
+#ifdef WIN32 // windows
+	return system("shutdown -s -t 0");
+#else // osx / linux
+	return system("sudo shutdown -h now");
+#endif
+}
+
+int runRestartCommand()
+{
+#ifdef WIN32 // windows
+	return system("shutdown -r -t 0");
+#else // osx / linux
+	return system("sudo shutdown -r now");
+#endif
+}
