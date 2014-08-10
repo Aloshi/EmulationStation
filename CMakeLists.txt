@@ -38,6 +38,7 @@ find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem date_time)
 find_package(Eigen3 REQUIRED)
 find_package(CURL REQUIRED)
+find_package(Archive REQUIRED)
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -138,6 +139,7 @@ set(COMMON_LIBRARIES
     ${FreeImage_LIBRARIES}
 	${SDL2_LIBRARY}
     ${CURL_LIBRARIES}
+    ${LIBARCHIVE_LIBRARY}
     pugixml
     nanosvg
 )

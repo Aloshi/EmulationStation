@@ -41,7 +41,9 @@ public:
 	inline FileData* getParent() const { return mParent; }
 	inline const std::vector<FileData*>& getChildren() const { return mChildren; }
 	inline SystemData* getSystem() const { return mSystem; }
-	
+	bool isTemporary() { return mTemporary; }
+	void setTemporary() { mTemporary = true; }
+
 	virtual const std::string& getThumbnailPath() const;
 
 	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
@@ -59,7 +61,7 @@ public:
 		bool ascending;
 		std::string description;
 
-		SortType(ComparisonFunction* sortFunction, bool sortAscending, const std::string & sortDescription) 
+		SortType(ComparisonFunction* sortFunction, bool sortAscending, const std::string & sortDescription)
 			: comparisonFunction(sortFunction), ascending(sortAscending), description(sortDescription) {}
 	};
 
@@ -74,4 +76,5 @@ private:
 	SystemData* mSystem;
 	FileData* mParent;
 	std::vector<FileData*> mChildren;
+	bool mTemporary{};
 };
