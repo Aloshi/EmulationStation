@@ -75,9 +75,6 @@ private:
 
 	Font(int size, const std::string& path);
 
-	void reloadGlyphTextures();
-	void freeTextures();
-
 	struct FontTexture
 	{
 		GLuint textureId;
@@ -86,16 +83,17 @@ private:
 		Eigen::Vector2i writePos;
 		int rowHeight;
 
-		FontTexture()
-		{
-			textureId = 0;
-			textureSize << 2048, 512;
-			writePos = Eigen::Vector2i::Zero();
-			rowHeight = 0;
-		}
-
+		FontTexture();
+		~FontTexture();
 		bool findEmpty(const Eigen::Vector2i& size, Eigen::Vector2i& cursor_out);
+
+		// you must call initTexture() after creating a FontTexture to get a textureId
+		void initTexture(); // initializes the OpenGL texture according to this FontTexture's settings, updating textureId
+		void deinitTexture(); // deinitializes the OpenGL texture if any exists, is automatically called in the destructor
 	};
+
+	void rebuildTextures();
+	void unloadTextures();
 
 	std::vector<FontTexture> mTextures;
 
@@ -141,7 +139,7 @@ protected:
 
 	struct VertexList
 	{
-		GLuint textureId;
+		GLuint* textureIdPtr; // this is a pointer because the texture ID can change during deinit/reinit (when launching a game)
 		std::vector<Vertex> verts;
 		std::vector<GLubyte> colors;
 	};
