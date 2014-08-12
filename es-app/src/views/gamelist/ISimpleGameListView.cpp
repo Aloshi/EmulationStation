@@ -88,6 +88,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				// Add to the list so that we can enter it
 				auto f = new FileData(FOLDER, extractedFolder, cursor->getSystem());
 				f->setTemporary();
+				f->metadata.set("name", cursor->getName());
 
 				cursor->getParent()->addChild(f);
 
@@ -123,7 +124,12 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				{
 					mCursorStack.top()->getParent()->removeChild(mCursorStack.top());
 					populateList(parent->getChildren());
-					setCursor(parent->getChildren()[0]); // TODO save the name of the archive somewhere
+					
+					auto it = std::find_if(parent->getChildren().begin(),
+										   parent->getChildren().end(),
+										   [&] (FileData* fd) { return fd->getName() == mCursorStack.top()->getName();});
+
+					setCursor(*it);
 				}
 				else
 				{
