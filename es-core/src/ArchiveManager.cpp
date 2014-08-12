@@ -10,8 +10,8 @@
 std::vector<std::string> ArchiveManager::list()
 {
 	std::vector<std::string> names;
-	struct archive *a;
-	struct archive_entry *entry;
+	archive *a;
+	archive_entry *entry;
 	int r;
 
 	a = archive_read_new();
@@ -20,7 +20,11 @@ std::vector<std::string> ArchiveManager::list()
 	r = archive_read_open_filename(a, mFilename.c_str(), 10240); // Note 1
 
 	if (r != ARCHIVE_OK)
+	{
+		archive_read_close(a);
+		archive_read_free(a);
 		throw std::runtime_error("Can't open the archive");
+	}
 
 	while (archive_read_next_header(a, &entry) == ARCHIVE_OK)
 	{
@@ -36,19 +40,11 @@ std::vector<std::string> ArchiveManager::list()
 	return names;
 }
 
-void ArchiveManager::checkError(int retcode, archive* arch)
-{
-	if (retcode < ARCHIVE_OK)
-		std::cerr << "Archive error: " << archive_error_string(arch) << std::endl;
-	if (retcode < ARCHIVE_WARN)
-		throw std::runtime_error("Error in the archive");
-}
-
 std::string ArchiveManager::extract()
 {
-	struct archive *a;
-	struct archive *ext;
-	struct archive_entry *entry;
+	archive *a;
+	archive *ext;
+	archive_entry *entry;
 	int flags;
 	int r;
 
@@ -66,48 +62,65 @@ std::string ArchiveManager::extract()
 	archive_write_disk_set_options(ext, flags);
 	archive_write_disk_set_standard_lookup(ext);
 
+	auto cleanup = [&] () {
+		archive_read_close(a);
+		archive_read_free(a);
+		archive_write_close(ext);
+		archive_write_free(ext);
+	};
+
 	if ((r = archive_read_open_filename(a, mFilename.c_str(), 10240)))
+	{
+		cleanup();
 		throw std::runtime_error("Can't open the archive"); //TODO handle error
+	}
 
 	auto extractionFolder = tempPath.native() + "/" + boost::filesystem::unique_path().native();
 
-	for (;;)
+	try
 	{
-		r = archive_read_next_header(a, &entry);
-
-		if (r == ARCHIVE_EOF)
-			break;
-
-		checkError(r, a);
-
-		const std::string tempstr = extractionFolder +
-									"/" +
-									archive_entry_pathname(entry);  // optional
-
-		archive_entry_update_pathname_utf8(entry, tempstr.c_str());
-//		printf("Extracting : %s\n", archive_entry_pathname(entry));
-
-		r = archive_write_header(ext, entry);
-
-		if (r < ARCHIVE_OK)
+		for (;;)
 		{
-			std::cerr << "Archive error: " << archive_error_string(ext) << std::endl;
-		}
-		else if (archive_entry_size(entry) > 0)
-		{
-			r = copyData(a, ext);
-			checkError(r, ext);
-		}
+			r = archive_read_next_header(a, &entry);
 
-		r = archive_write_finish_entry(ext);
-		checkError(r, ext);
+			if (r == ARCHIVE_EOF)
+				break;
+
+			if (r < ARCHIVE_OK)
+				throw std::runtime_error(archive_error_string(a));
+
+			const std::string tempstr = extractionFolder +
+										"/" +
+										archive_entry_pathname(entry);  // optional
+
+			archive_entry_update_pathname_utf8(entry, tempstr.c_str());
+
+			r = archive_write_header(ext, entry);
+
+			if (r < ARCHIVE_OK)
+				throw std::runtime_error(archive_error_string(ext));
+			else if (archive_entry_size(entry) > 0)
+			{
+				r = copyData(a, ext);
+				
+				if (r < ARCHIVE_OK)
+					throw std::runtime_error(archive_error_string(ext));
+				
+			}
+
+			r = archive_write_finish_entry(ext);
+			
+			if (r < ARCHIVE_OK)
+				throw std::runtime_error(archive_error_string(ext));
+		}
+	}
+	catch(std::runtime_error& e)
+	{
+		cleanup();
+		throw;
 	}
 
-	archive_read_close(a);
-	archive_read_free(a);
-
-	archive_write_close(ext);
-	archive_write_free(ext);
+	cleanup();
 
 	return extractionFolder;
 }
@@ -134,7 +147,7 @@ int ArchiveManager::copyData(archive* ar, archive* aw)
 
 		if (r < ARCHIVE_OK)
 		{
-			std::cerr << "Archive error: " << archive_error_string(aw) << std::endl;
+			throw std::runtime_error(archive_error_string(aw));
 			return r;
 		}
 	}

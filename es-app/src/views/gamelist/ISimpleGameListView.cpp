@@ -8,6 +8,8 @@
 #include <algorithm>
 #include "PlatformId.h"
 #include "SystemData.h"
+#include "guis/GuiMsgBox.h"
+
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
 {
@@ -68,7 +70,20 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			{
 				// Extraction in /tmp/somefolder
 				ArchiveManager mgr{cursor->getPath().native()};
-				std::string extractedFolder(mgr.extract());
+				decltype(mgr.list()) filelist;
+				std::string extractedFolder;
+
+				try
+				{
+					extractedFolder = mgr.extract();
+					filelist = mgr.list();
+				}
+				catch(std::runtime_error& e)
+				{
+					std::cerr << e.what() << std::endl;
+					mWindow->pushGui(new GuiMsgBox(mWindow, "An error occured while opening the archive.", "OK"));
+					return true;
+				}
 
 				// Add to the list so that we can enter it
 				auto f = new FileData(FOLDER, extractedFolder, cursor->getSystem());
@@ -77,7 +92,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				cursor->getParent()->addChild(f);
 
 				// Add the files inside the archive
-				for(auto& e : mgr.list())
+				for(auto& e : filelist)
 				{
 					f->addChild(new FileData(GAME, extractedFolder + "/" + e, cursor->getSystem()));
 				}

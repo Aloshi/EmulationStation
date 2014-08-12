@@ -24,7 +24,6 @@ class ArchiveManager
 
 	private:
 		int copyData(archive *ar, archive *aw);
-		void checkError(int retcode, archive* arch);
 
 		boost::filesystem::path tempPath{boost::filesystem::temp_directory_path()};
 		std::string mFilename;
