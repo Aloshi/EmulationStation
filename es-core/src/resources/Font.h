@@ -92,12 +92,25 @@ private:
 		void deinitTexture(); // deinitializes the OpenGL texture if any exists, is automatically called in the destructor
 	};
 
+	struct FontFace
+	{
+		const ResourceData data;
+		FT_Face face;
+
+		FontFace(ResourceData&& d, int size);
+		virtual ~FontFace();
+	};
+
 	void rebuildTextures();
 	void unloadTextures();
 
 	std::vector<FontTexture> mTextures;
 
 	void getTextureForNewGlyph(const Eigen::Vector2i& glyphSize, FontTexture*& tex_out, Eigen::Vector2i& cursor_out);
+
+	std::map< unsigned int, std::unique_ptr<FontFace> > mFaceCache;
+	FT_Face getFaceForChar(UnicodeChar id);
+	void clearFaceCache();
 
 	struct Glyph
 	{

@@ -137,6 +137,20 @@ UnicodeChar Font::readUnicodeChar(const std::string& str, size_t& cursor)
 }
 
 
+Font::FontFace::FontFace(ResourceData&& d, int size) : data(d)
+{
+	int err = FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face);
+	assert(!err);
+	
+	FT_Set_Pixel_Sizes(face, 0, size);
+}
+
+Font::FontFace::~FontFace()
+{
+	if(face)
+		FT_Done_Face(face);
+}
+
 void Font::initLibrary()
 {
 	assert(sLibrary == NULL);
@@ -152,6 +166,9 @@ size_t Font::getMemUsage() const
 	size_t memUsage = 0;
 	for(auto it = mTextures.begin(); it != mTextures.end(); it++)
 		memUsage += it->textureSize.x() * it->textureSize.y() * 4;
+
+	for(auto it = mFaceCache.begin(); it != mFaceCache.end(); it++)
+		memUsage += it->second->data.length;
 
 	return memUsage;
 }
@@ -186,6 +203,8 @@ Font::Font(int size, const std::string& path) : mSize(size), mPath(path)
 	// always initialize ASCII characters
 	for(UnicodeChar i = 32; i < 128; i++)
 		getGlyph(i);
+
+	clearFaceCache();
 }
 
 Font::~Font()
@@ -326,6 +345,93 @@ void Font::getTextureForNewGlyph(const Eigen::Vector2i& glyphSize, FontTexture*&
 	}
 }
 
+std::vector<std::string> getFallbackFontPaths()
+{
+#ifdef WIN32
+	// Windows
+
+	// get this system's equivalent of "C:\Windows" (might be on a different drive or in a different folder)
+	// so we can check the Fonts subdirectory for fallback fonts
+	TCHAR winDir[MAX_PATH];
+	GetWindowsDirectory(winDir, MAX_PATH);
+	std::string fontDir = winDir;
+	fontDir += "\\Fonts\\";
+
+	const char* fontNames[] = {
+		"meiryo.ttc", // japanese
+		"simhei.ttf", // chinese
+		"arial.ttf"   // latin
+	};
+
+	//prepend to font file names
+	std::vector<std::string> fontPaths;
+	fontPaths.reserve(sizeof(fontNames) / sizeof(fontNames[0]));
+
+	for(unsigned int i = 0; i < sizeof(fontNames) / sizeof(fontNames[0]); i++)
+	{
+		std::string path = fontDir + fontNames[i];
+		if(ResourceManager::getInstance()->fileExists(path))
+			fontPaths.push_back(path);
+	}
+
+	fontPaths.shrink_to_fit();
+	return fontPaths;
+
+#else
+	// Linux
+
+	// TODO
+	const char* paths[] = {
+		"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
+		"/usr/share/fonts/TTF/DejaVuSerif.ttf",
+		"/usr/share/fonts/dejavu/DejaVuSerif.ttf"
+	};
+
+	std::vector<std::string> fontPaths;
+	for(unsigned int i = 0; i < sizeof(paths) / sizeof(paths[0]); i++)
+	{
+		if(ResourceManager::getInstance()->fileExists(paths[i]))
+			fontPaths.push_back(paths[i]);
+	}
+
+	fontPaths.shrink_to_fit();
+	return fonts;
+
+#endif
+}
+
+FT_Face Font::getFaceForChar(UnicodeChar id)
+{
+	static const std::vector<std::string> fallbackFonts = getFallbackFontPaths();
+
+	// look through our current font + fallback fonts to see if any have the glyph we're looking for
+	for(unsigned int i = 0; i < fallbackFonts.size() + 1; i++)
+	{
+		auto fit = mFaceCache.find(i);
+
+		if(fit == mFaceCache.end()) // doesn't exist yet
+		{
+			// i == 0 -> mPath
+			// otherwise, take from fallbackFonts
+			const std::string& path = (i == 0 ? mPath : fallbackFonts.at(i - 1));
+			ResourceData data = ResourceManager::getInstance()->getFileData(path);
+			mFaceCache[i] = std::unique_ptr<FontFace>(new FontFace(std::move(data), mSize));
+			fit = mFaceCache.find(i);
+		}
+
+		if(FT_Get_Char_Index(fit->second->face, id) != 0)
+				return fit->second->face;
+	}
+
+	// nothing has a valid glyph - return the "real" face so we get a "missing" character
+	return mFaceCache.begin()->second->face;
+}
+
+void Font::clearFaceCache()
+{
+	mFaceCache.clear();
+}
+
 Font::Glyph* Font::getGlyph(UnicodeChar id)
 {
 	// is it already loaded?
@@ -334,17 +440,12 @@ Font::Glyph* Font::getGlyph(UnicodeChar id)
 		return &it->second;
 
 	// nope, need to make a glyph
-	// get the font data
-	ResourceData data = ResourceManager::getInstance()->getFileData(mPath);
-
-	FT_Face face;
-	if(FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face))
+	FT_Face face = getFaceForChar(id);
+	if(!face)
 	{
-		LOG(LogError) << "Error creating font face! (mPath: " << mPath << ", data.length: " << data.length << ")";
+		LOG(LogError) << "Could not find appropriate font face for character " << id << " for font " << mPath;
 		return NULL;
 	}
-
-	FT_Set_Pixel_Sizes(face, 0, mSize);
 
 	FT_GlyphSlot g = face->glyph;
 
@@ -382,9 +483,6 @@ Font::Glyph* Font::getGlyph(UnicodeChar id)
 	glTexSubImage2D(GL_TEXTURE_2D, 0, cursor.x(), cursor.y(), glyphSize.x(), glyphSize.y(), GL_ALPHA, GL_UNSIGNED_BYTE, g->bitmap.buffer);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	// free the FT face
-	FT_Done_Face(face);
-
 	// update max glyph height
 	if(glyphSize.y() > mMaxGlyphHeight)
 		mMaxGlyphHeight = glyphSize.y();
@@ -402,21 +500,12 @@ void Font::rebuildTextures()
 		it->initTexture();
 	}
 
-	// open the font file
-	ResourceData data = ResourceManager::getInstance()->getFileData(mPath);
-
-	// load the font with FT
-	FT_Face face;
-	FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face);
-
-	// set the size
-	FT_Set_Pixel_Sizes(face, 0, mSize);
-
-	FT_GlyphSlot glyphSlot = face->glyph;
-	
 	// reupload the texture data
 	for(auto it = mGlyphMap.begin(); it != mGlyphMap.end(); it++)
 	{
+		FT_Face face = getFaceForChar(it->first);
+		FT_GlyphSlot glyphSlot = face->glyph;
+
 		// load the glyph bitmap through FT
 		FT_Load_Char(face, it->first, FT_LOAD_RENDER);
 
@@ -432,9 +521,6 @@ void Font::rebuildTextures()
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	// free the FT face
-	FT_Done_Face(face);
 }
 
 void Font::renderTextCache(TextCache* cache)
@@ -721,6 +807,8 @@ TextCache* Font::buildTextCache(const std::string& text, Eigen::Vector2f offset,
 		vertList.colors.resize(4 * it->second.size());
 		Renderer::buildGLColorArray(vertList.colors.data(), color, it->second.size());
 	}
+
+	clearFaceCache();
 
 	return cache;
 }
