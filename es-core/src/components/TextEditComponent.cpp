@@ -60,12 +60,13 @@ void TextEditComponent::textInput(const char* text)
 		{
 			if(mCursor > 0)
 			{
-				mText.erase(mText.begin() + mCursor - 1, mText.begin() + mCursor);
-				mCursor--;
+				size_t newCursor = Font::getPrevCursor(mText, mCursor);
+				mText.erase(mText.begin() + newCursor, mText.begin() + mCursor);
+				mCursor = newCursor;
 			}
 		}else{
 			mText.insert(mCursor, text);
-			mCursor++;
+			mCursor += strlen(text);
 		}
 	}
 
