@@ -382,6 +382,10 @@ std::vector<std::string> getFallbackFontPaths()
 
 	// TODO
 	const char* paths[] = {
+		// Japanese
+		"/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
+
+		// Latin
 		"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
 		"/usr/share/fonts/TTF/DejaVuSerif.ttf",
 		"/usr/share/fonts/dejavu/DejaVuSerif.ttf"
@@ -395,7 +399,7 @@ std::vector<std::string> getFallbackFontPaths()
 	}
 
 	fontPaths.shrink_to_fit();
-	return fonts;
+	return fontPaths;
 
 #endif
 }
