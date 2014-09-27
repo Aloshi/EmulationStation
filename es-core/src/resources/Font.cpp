@@ -384,13 +384,7 @@ std::vector<std::string> getFallbackFontPaths()
 
 	// TODO
 	const char* paths[] = {
-		// Japanese
-		"/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
-
-		// Latin
-		"/usr/share/fonts/truetype/ttf-dejavu/DejaVuSerif.ttf",
-		"/usr/share/fonts/TTF/DejaVuSerif.ttf",
-		"/usr/share/fonts/dejavu/DejaVuSerif.ttf"
+		"/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf" // japanese, chinese, present on Debian
 	};
 
 	std::vector<std::string> fontPaths;
