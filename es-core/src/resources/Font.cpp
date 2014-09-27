@@ -197,6 +197,8 @@ Font::Font(int size, const std::string& path) : mSize(size), mPath(path)
 {
 	assert(mSize > 0);
 	
+	mMaxGlyphHeight = 0;
+
 	if(!sLibrary)
 		initLibrary();
 
@@ -424,7 +426,7 @@ FT_Face Font::getFaceForChar(UnicodeChar id)
 		}
 
 		if(FT_Get_Char_Index(fit->second->face, id) != 0)
-				return fit->second->face;
+			return fit->second->face;
 	}
 
 	// nothing has a valid glyph - return the "real" face so we get a "missing" character
@@ -588,7 +590,9 @@ Eigen::Vector2f Font::sizeText(std::string text, float lineSpacing)
 			y += lineHeight;
 		}
 
-		lineWidth += getGlyph(character)->advance.x();
+		Glyph* glyph = getGlyph(character);
+		if(glyph)
+			lineWidth += glyph->advance.x();
 	}
 
 	if(lineWidth > highestWidth)
@@ -605,6 +609,7 @@ float Font::getHeight(float lineSpacing) const
 float Font::getLetterHeight()
 {
 	Glyph* glyph = getGlyph((UnicodeChar)'S');
+	assert(glyph);
 	return glyph->texSize.y() * glyph->texture->textureSize.y();
 }
 
@@ -689,7 +694,9 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, s
 			continue;
 		}
 
-		lineWidth += getGlyph(character)->advance.x();
+		Glyph* glyph = glyph;
+		if(glyph)
+			lineWidth += glyph->advance.x();
 	}
 
 	return Eigen::Vector2f(lineWidth, y);
