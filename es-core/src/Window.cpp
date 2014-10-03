@@ -13,7 +13,6 @@ Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCoun
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
-	mBackgroundOverlay->setImage(":/scroll_gradient.png");
 }
 
 Window::~Window()
@@ -64,6 +63,7 @@ bool Window::init(unsigned int width, unsigned int height)
 		LOG(LogError) << "Renderer failed to initialize!";
 		return false;
 	}
+	mBackgroundOverlay->setImage(":/scroll_gradient.png");
 
 	InputManager::getInstance()->init();
 
