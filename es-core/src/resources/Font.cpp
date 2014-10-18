@@ -688,7 +688,7 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, s
 			continue;
 		}
 
-		Glyph* glyph = glyph;
+		Glyph* glyph = getGlyph(character);
 		if(glyph)
 			lineWidth += glyph->advance.x();
 	}
