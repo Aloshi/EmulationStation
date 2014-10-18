@@ -684,7 +684,6 @@ Eigen::Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, s
 		{
 			lineWidth = 0.0f;
 			y += getHeight(lineSpacing);
-			wrapCursor = getPrevCursor(wrappedText, wrapCursor); // unconsume
 			continue;
 		}
 
