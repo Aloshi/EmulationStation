@@ -61,14 +61,13 @@ SystemData::~SystemData()
 	delete mRootFolder;
 }
 
-std::string strreplace(std::string& str, std::string replace, std::string with)
+std::string strreplace(std::string str, const std::string& replace, const std::string& with)
 {
-	size_t pos = str.find(replace);
-
-	if(pos != std::string::npos)
-		return str.replace(pos, replace.length(), with.c_str(), with.length());
-	else
-		return str;
+	size_t pos;
+	while((pos = str.find(replace)) != std::string::npos)
+		str = str.replace(pos, replace.length(), with.c_str(), with.length());
+	
+	return str;
 }
 
 std::string escapePath(const boost::filesystem::path& path)
