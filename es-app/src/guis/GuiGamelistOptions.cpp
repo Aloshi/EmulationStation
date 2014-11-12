@@ -20,7 +20,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	ComponentListRow row;
 	row.addElement(std::make_shared<TextComponent>(mWindow, "JUMP TO LETTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	row.addElement(mJumpToLetterList, false);
-	row.input_handler = [&](InputConfig* config, Input input) {
+	row.input_handler = [&](InputConfig* config, Input input)->bool {
 		if(config->isMappedTo("a", input) && input.value)
 		{
 			jumpToLetter();
