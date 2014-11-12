@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Log.h"
 #include "Util.h"
+#include "freetype2/ftbitmap.h"
 
 FT_Library Font::sLibrary = NULL;
 
@@ -149,26 +150,47 @@ void Font::buildAtlas(ResourceData data)
 	FT_GlyphSlot g = face->glyph;
 	for(int i = 32; i < 128; i++)
 	{
-		if(FT_Load_Char(face, i, FT_LOAD_RENDER))
+		int result = FT_Load_Char(face, i, FT_LOAD_DEFAULT);
+    if (result) {
+      LOG(LogError) << "Error loading char: " << result;
 			continue;
+    }
+    result = FT_Render_Glyph(face->glyph,FT_RENDER_MODE_MONO);
+    if (result) {
+      LOG(LogError) << "Error rendering char: " << result;
+			continue;
+    }
+    FT_Bitmap targetBitmap;
+    FT_Bitmap_New(&targetBitmap);
+    result = FT_Bitmap_Convert(sLibrary,&(g->bitmap),&targetBitmap,1);
+    if (result) {
+      LOG(LogError) << "Error converting char: " << result;
+			continue;
+    }
 
-		if(x + g->bitmap.width >= mTextureWidth)
+		if(x + targetBitmap.width >= mTextureWidth)
 		{
 			x = 0;
 			y += maxHeight + 1; //leave one pixel of space between glyphs
 			maxHeight = 0;
 		}
 
-		if(g->bitmap.rows > maxHeight)
-			maxHeight = g->bitmap.rows;
+		if(targetBitmap.rows > maxHeight)
+			maxHeight = targetBitmap.rows;
 
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, g->bitmap.width, g->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, g->bitmap.buffer);
+    for (int a=0;a<targetBitmap.rows;a++) {
+      for (int b=0;b<targetBitmap.width;b++) {
+        // Convert binary image from [0,1] to [0,255]
+        targetBitmap.buffer[a*targetBitmap.width+b] = targetBitmap.buffer[a*targetBitmap.width+b]>0?255:0;
+      }
+    }
 
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, targetBitmap.width, targetBitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, targetBitmap.buffer);
 
 		mCharData[i].texX = x;
 		mCharData[i].texY = y;
-		mCharData[i].texW = g->bitmap.width;
-		mCharData[i].texH = g->bitmap.rows;
+		mCharData[i].texW = targetBitmap.width;
+		mCharData[i].texH = targetBitmap.rows;
 		mCharData[i].advX = (float)g->metrics.horiAdvance / 64.0f;
 		mCharData[i].advY = (float)g->metrics.vertAdvance / 64.0f;
 		mCharData[i].bearingX = (float)g->metrics.horiBearingX / 64.0f;
@@ -177,7 +199,7 @@ void Font::buildAtlas(ResourceData data)
 		if(mCharData[i].texH > mMaxGlyphHeight)
 			mMaxGlyphHeight = mCharData[i].texH;
 
-		x += g->bitmap.width + 1; //leave one pixel of space between glyphs
+		x += targetBitmap.width + 1; //leave one pixel of space between glyphs
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
