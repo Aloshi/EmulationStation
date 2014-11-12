@@ -49,7 +49,9 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
-		metadata.set("name", getDefaultName());
+		metadata.set("name", getCleanName());
+	
+	mFileName = mPath.stem().generic_string();
 }
 
 FileData::~FileData()
@@ -68,17 +70,6 @@ std::string FileData::getCleanName() const
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
 	return removeParenthesis(stem);
-}
-
-std::string FileData::getUncleanName() const
-{
-	return mPath.stem().generic_string();
-}
-
-std::string FileData::getDefaultName() const
-{
-	bool useCleanName = Settings::getInstance()->getBool("UseCleanNames");
-	return useCleanName ? getCleanName() : getUncleanName();
 }
 
 const std::string& FileData::getThumbnailPath() const
@@ -155,21 +146,14 @@ void FileData::sort(const SortType& type)
 	sort(*type.comparisonFunction, type.ascending);
 }
 
-void FileData::refreshNamesRecursive()
+const std::string& FileData::getName() const
 {
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	if (Settings::getInstance()->getBool("UseFileNames"))
 	{
-		if((*it)->getType() & GAME)
-			(*it)->refreshName();
-
-		if((*it)->getChildren().size() > 0)
-		{
-			(*it)->refreshNamesRecursive();
-		}
+		return mFileName;
 	}
-}
-
-void FileData::refreshName()
-{
-	metadata.set("name", getDefaultName());
+	else
+	{
+		return metadata.get("name");
+	}
 }

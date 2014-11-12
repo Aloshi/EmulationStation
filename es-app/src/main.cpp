@@ -60,9 +60,9 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--scrape") == 0)
 		{
 			scrape_cmdline = true;
-		}else if(strcmp(argv[i], "--use-unclean-names") == 0)
+		}else if(strcmp(argv[i], "--use-file-names") == 0)
 		{
-			Settings::getInstance()->setBool("UseCleanNames", false);
+			Settings::getInstance()->setBool("UseFileNames", true);
 		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 			std::cout << 
@@ -78,7 +78,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--debug				even more logging\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
-				"--use-unclean-names	don't \"clean\" the rom names by removing parentheses etc.\n"
+				"--use-file-names	don't \"clean\" the rom names by removing parentheses etc.\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help

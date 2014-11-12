@@ -441,14 +441,3 @@ void SystemData::loadTheme()
 		mTheme = std::make_shared<ThemeData>(); // reset to empty
 	}
 }
-
-void SystemData::refreshFileNames()
-{
-	for(auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
-	{
-		(*it)->getRootFolder()->refreshNamesRecursive();
-
-		if(!Settings::getInstance()->getBool("IgnoreGamelist"))
-			parseGamelist(*it);
-	}
-}
