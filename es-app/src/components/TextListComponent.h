@@ -337,10 +337,13 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	}
 
 	setFont(Font::getFromTheme(elem, properties, mFont));
-	
-	if(properties & SOUND && elem->has("scrollSound"))
+        LOG(LogInfo) << "Searching sound on "<< elem->type;
+        if(properties & SOUND && elem->has("scrollSound")){
+                    LOG(LogInfo) << "Found sound on "<< elem->type;
+
 		setSound(Sound::get(elem->get<std::string>("scrollSound")));
 
+        }
 	if(properties & ALIGNMENT)
 	{
 		if(elem->has("alignment"))
