@@ -3,6 +3,11 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
+#ifdef WIN32
+#include <Windows.h>
+#include <ShlObj.h>
+#endif
+
 std::string getHomePath()
 {
 	std::string homePath;
@@ -15,19 +20,9 @@ std::string getHomePath()
 	}
 
 #ifdef WIN32
-	// but does not seem to work for Windows XP or Vista, so try something else
-	if (homePath.empty()) {
-		const char * envDir = getenv("HOMEDRIVE");
-		const char * envPath = getenv("HOMEPATH");
-		if (envDir != nullptr && envPath != nullptr) {
-			homePath = envDir;
-			homePath += envPath;
-
-			for(unsigned int i = 0; i < homePath.length(); i++)
-				if(homePath[i] == '\\')
-					homePath[i] = '/';
-		}
-	}
+	char path[MAX_PATH];
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, path);
+	homePath = path;
 #endif
 
 	// convert path to generic directory seperators
