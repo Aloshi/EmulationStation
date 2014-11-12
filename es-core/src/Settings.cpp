@@ -46,6 +46,7 @@ void Settings::setDefaults()
 	mBoolMap["ScrapeRatings"] = true;
 	mBoolMap["IgnoreGamelist"] = false;
 	mBoolMap["QuickSystemSelect"] = true;
+	mBoolMap["UseCleanNames"] = true;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;

@@ -51,6 +51,8 @@ public:
 
 	// Returns our best guess at the "real" name for this file (will strip parenthesis and attempt to perform MAME name translation)
 	std::string getCleanName() const;
+	std::string getUncleanName() const;
+	std::string getDefaultName() const;
 
 	typedef bool ComparisonFunction(const FileData* a, const FileData* b);
 	struct SortType
@@ -65,6 +67,9 @@ public:
 
 	void sort(ComparisonFunction& comparator, bool ascending = true);
 	void sort(const SortType& type);
+
+	void refreshNamesRecursive();
+	void refreshName();
 
 	MetaDataList metadata;
 

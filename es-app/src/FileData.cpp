@@ -1,5 +1,6 @@
 #include "FileData.h"
 #include "SystemData.h"
+#include "Settings.h"
 
 namespace fs = boost::filesystem;
 
@@ -48,7 +49,7 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
-		metadata.set("name", getCleanName());
+		metadata.set("name", getDefaultName());
 }
 
 FileData::~FileData()
@@ -67,6 +68,17 @@ std::string FileData::getCleanName() const
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
 	return removeParenthesis(stem);
+}
+
+std::string FileData::getUncleanName() const
+{
+	return mPath.stem().generic_string();
+}
+
+std::string FileData::getDefaultName() const
+{
+	bool useCleanName = Settings::getInstance()->getBool("UseCleanNames");
+	return useCleanName ? getCleanName() : getUncleanName();
 }
 
 const std::string& FileData::getThumbnailPath() const
@@ -141,4 +153,23 @@ void FileData::sort(ComparisonFunction& comparator, bool ascending)
 void FileData::sort(const SortType& type)
 {
 	sort(*type.comparisonFunction, type.ascending);
+}
+
+void FileData::refreshNamesRecursive()
+{
+	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	{
+		if((*it)->getType() & GAME)
+			(*it)->refreshName();
+
+		if((*it)->getChildren().size() > 0)
+		{
+			(*it)->refreshNamesRecursive();
+		}
+	}
+}
+
+void FileData::refreshName()
+{
+	metadata.set("name", getDefaultName());
 }

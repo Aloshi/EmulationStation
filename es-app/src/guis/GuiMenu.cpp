@@ -134,6 +134,17 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("TRANSITION STYLE", transition_style);
 			s->addSaveFunc([transition_style] { Settings::getInstance()->setString("TransitionStyle", transition_style->getSelected()); });
 
+			// use clean names (remove parentheses etc.)
+			auto use_clean_names = std::make_shared<SwitchComponent>(mWindow);
+			use_clean_names->setState(Settings::getInstance()->getBool("UseCleanNames"));
+			s->addWithLabel("USE CLEAN NAMES", use_clean_names);
+			s->addSaveFunc([use_clean_names] 
+			{
+				Settings::getInstance()->setBool("UseCleanNames", use_clean_names->getState()); 
+				SystemData::refreshFileNames();
+				ViewController::get()->reloadGameListView();
+			});
+
 			// theme set
 			auto themeSets = ThemeData::getThemeSets();
 
