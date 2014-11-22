@@ -111,6 +111,7 @@ You can use `--help` or `-h` to view a list of command-line options. Briefly out
 --no-exit		- do not display 'exit' in the ES menu.
 --debug			- print additional output to the console, primarily about input.
 --windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
+--vsync [0/1]		- turn vsync on or off (default is on), only works in fullscreen.
 --scrape	- run the interactive command-line metadata scraper.
 ```
 
