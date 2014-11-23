@@ -18,6 +18,7 @@
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include <sstream>
+#include <boost/locale.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -145,6 +146,9 @@ int main(int argc, char* argv[])
 {
 	unsigned int width = 0;
 	unsigned int height = 0;
+
+	std::locale::global(boost::locale::generator().generate(""));
+	boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;
