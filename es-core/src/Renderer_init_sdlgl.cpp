@@ -49,7 +49,6 @@ namespace Renderer
 #ifdef USE_OPENGL_ES
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
 #endif
-		//SDL_GL_SetSwapInterval(1); //0 for immediate updates, 1 for updates synchronized with the vertical retrace, -1 for late swap tearing
 
 		SDL_DisplayMode dispMode;
 		SDL_GetDesktopDisplayMode(0, &dispMode);
@@ -95,6 +94,19 @@ namespace Renderer
 		}
 
 		sdlContext = SDL_GL_CreateContext(sdlWindow);
+
+		// vsync
+		if(Settings::getInstance()->getBool("VSync"))
+		{
+			// SDL_GL_SetSwapInterval(0) for immediate updates (no vsync, default), 
+			// 1 for updates synchronized with the vertical retrace, 
+			// or -1 for late swap tearing.
+			// SDL_GL_SetSwapInterval returns 0 on success, -1 on error.
+			// if vsync is requested, try late swap tearing; if that doesn't work, try normal vsync
+			// if that doesn't work, report an error
+			if(SDL_GL_SetSwapInterval(-1) != 0 && SDL_GL_SetSwapInterval(1) != 0)
+				LOG(LogWarning) << "Tried to enable vsync, but failed! (" << SDL_GetError() << ")";
+		}
 
 		//hide mouse cursor
 		initialCursorState = SDL_ShowCursor(0) == 1;
