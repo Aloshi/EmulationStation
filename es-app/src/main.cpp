@@ -59,7 +59,8 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			Settings::getInstance()->setBool("Windowed", true);
 		}else if(strcmp(argv[i], "--vsync") == 0)
 		{
-			Settings::getInstance()->setBool("VSync", atoi(argv[i + 1]));
+			bool vsync = (strcmp(argv[i + 1], "true") == 0 || strcmp(argv[i + 1], "1") == 0) ? true : false;
+			Settings::getInstance()->setBool("VSync", vsync);
 			i++; // skip vsync value
 		}else if(strcmp(argv[i], "--scrape") == 0)
 		{
@@ -79,7 +80,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--debug				even more logging\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
-				"--vsync [0/1]		turn vsync on or off (default is on)\n"
+				"--vsync [1/true or 0/false]	turn vsync on or off (default is on)\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help
