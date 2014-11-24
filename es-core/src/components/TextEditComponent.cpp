@@ -13,7 +13,8 @@
 
 TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
 	mBox(window, ":/textinput_ninepatch.png"), mFocused(false), 
-	mScrollOffset(0.0f, 0.0f), mCursor(0), mEditing(false), mFont(Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT))
+	mScrollOffset(0.0f, 0.0f), mCursor(0), mEditing(false), mFont(Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT)), 
+	mCursorRepeatDir(0)
 {
 	addChild(&mBox);
 	
@@ -60,12 +61,13 @@ void TextEditComponent::textInput(const char* text)
 		{
 			if(mCursor > 0)
 			{
-				mText.erase(mText.begin() + mCursor - 1, mText.begin() + mCursor);
-				mCursor--;
+				size_t newCursor = Font::getPrevCursor(mText, mCursor);
+				mText.erase(mText.begin() + newCursor, mText.begin() + mCursor);
+				mCursor = newCursor;
 			}
 		}else{
 			mText.insert(mCursor, text);
-			mCursor++;
+			mCursor += strlen(text);
 		}
 	}
 
@@ -164,13 +166,7 @@ void TextEditComponent::updateCursorRepeat(int deltaTime)
 
 void TextEditComponent::moveCursor(int amt)
 {
-	mCursor += amt;
-
-	if(mCursor < 0)
-		mCursor = 0;
-	if(mCursor >= (int)mText.length())
-		mCursor = mText.length();
-
+	mCursor = Font::moveCursor(mText, mCursor, amt);
 	onCursorChanged();
 }
 
