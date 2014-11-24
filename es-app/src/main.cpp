@@ -20,6 +20,7 @@
 #include <sstream>
 #include <boost/locale.hpp>
 
+
 namespace fs = boost::filesystem;
 
 bool scrape_cmdline = false;
@@ -142,6 +143,38 @@ void onExit()
 	Log::close();
 }
 
+int setLocale(char * argv1)
+{
+	boost::locale::generator gen;
+ 	char path_save[PATH_MAX];
+  	char abs_exe_path[PATH_MAX];
+  	char *p;
+
+  	if(!(p = strrchr(argv1, '/')))
+    		getcwd(abs_exe_path, sizeof(abs_exe_path));
+  	else
+  	{
+    		*p = '\0';
+    		getcwd(path_save, sizeof(path_save));
+    		chdir(argv1);
+    		getcwd(abs_exe_path, sizeof(abs_exe_path));
+    		chdir(path_save);
+  	}
+
+	std::string localeDir = abs_exe_path;
+	localeDir += "/locale/";
+	LOG(LogInfo) << "Setting local directory to " << localeDir;
+    	// Specify location of dictionaries
+    	gen.add_messages_path(localeDir);
+    	gen.add_messages_domain("messages");
+
+    	// Generate locales and imbue them to iostream
+    	std::locale::global(gen(""));
+    	std::cout.imbue(std::locale());
+        LOG(LogInfo) << "Locals set...";
+
+}
+
 int main(int argc, char* argv[])
 {
 	unsigned int width = 0;
@@ -163,6 +196,9 @@ int main(int argc, char* argv[])
 
 	//always close the log on exit
 	atexit(&onExit);
+
+	// Set locale
+	setLocale(argv[0]);
 
 	Window window;
 	ViewController::init(&window);

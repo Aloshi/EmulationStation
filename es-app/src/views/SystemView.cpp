@@ -8,6 +8,7 @@
 #include "SystemData.h"
 #include "Settings.h"
 #include "Util.h"
+#include <boost/locale.hpp>
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
@@ -179,7 +180,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 		
 		// only display a game count if there are at least 2 games
 		if(gameCount > 1)
-			ss << gameCount << " GAMES AVAILABLE";
+			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
 
 		mSystemInfo.setText(ss.str()); 
 	}, false, 1);

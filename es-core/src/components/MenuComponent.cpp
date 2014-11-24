@@ -1,5 +1,6 @@
 #include "components/MenuComponent.h"
 #include "components/ButtonComponent.h"
+#include <boost/locale.hpp>
 
 #define BUTTON_GRID_VERT_PADDING 32
 #define BUTTON_GRID_HORIZ_PADDING 10
@@ -35,7 +36,7 @@ MenuComponent::MenuComponent(Window* window, const char* title, const std::share
 
 void MenuComponent::setTitle(const char* title, const std::shared_ptr<Font>& font)
 {
-	mTitle->setText(strToUpper(title));
+	mTitle->setText(strToUpper(boost::locale::gettext(title)));
 	mTitle->setFont(font);
 }
 
