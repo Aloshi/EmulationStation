@@ -48,7 +48,7 @@ VolumeControl & VolumeControl::operator=(const VolumeControl & right)
 VolumeControl::~VolumeControl()
 {
 	//set original volume levels for system
-	setVolume(originalVolume);
+	//setVolume(originalVolume);
 
 	deinit();
 }

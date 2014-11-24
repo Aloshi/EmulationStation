@@ -41,7 +41,7 @@ EmulationStation has a few dependencies. For building, you'll need SDL2, Boost (
 **On Debian/Ubuntu:**
 All of this be easily installed with apt-get:
 ```bash
-sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev
+sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev
 ```
 
 Then, generate and build the Makefile with CMake:
@@ -111,7 +111,7 @@ You can use `--help` or `-h` to view a list of command-line options. Briefly out
 --no-exit		- do not display 'exit' in the ES menu.
 --debug			- print additional output to the console, primarily about input.
 --windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
---vsync [0/1]		- turn vsync on or off (default is on), only works in fullscreen.
+--vsync [1/on or 0/off]	- turn vsync on or off (default is on).
 --scrape	- run the interactive command-line metadata scraper.
 ```
 
