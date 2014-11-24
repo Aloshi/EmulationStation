@@ -8,6 +8,7 @@
 #include "guis/GuiSettings.h"
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
+#include "guis/GuiUpdate.h"
 #include "views/ViewController.h"
 
 #include "components/ButtonComponent.h"
@@ -165,11 +166,16 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(s);
 	});
 
-	addEntry("CONFIGURE INPUT", 0x777777FF, true, 
+	/*addEntry("CONFIGURE INPUT", 0x777777FF, true, 
 		[this] { 
 			mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
+	});*/
+	addEntry("UPDATE", 0x777777FF, true, 
+		    [this] {
+		         Window* window = mWindow;
+		        auto s = new GuiUpdate(window);
+		        window->pushGui(s);
 	});
-
 	addEntry("QUIT", 0x777777FF, true, 
 		[this] {
 			auto s = new GuiSettings(mWindow, "QUIT");
@@ -198,7 +204,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			s->addRow(row);
 
-			if(Settings::getInstance()->getBool("ShowExit"))
+			/*if(Settings::getInstance()->getBool("ShowExit"))
 			{
 				row.elements.clear();
 				row.makeAcceptInputHandler([window] {
@@ -211,7 +217,8 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 				});
 				row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 				s->addRow(row);
-			}
+			}*/
+			//ViewController::get()->reloadAll();
 
 			mWindow->pushGui(s);
 	});
