@@ -45,4 +45,5 @@ private:
 	float mCamOffset;
 	float mExtrasCamOffset;
 	float mExtrasFadeOpacity;
+        SystemData * lastSystem;
 };

@@ -2,6 +2,8 @@
 //http://www.aloshi.com
 
 #include <SDL.h>
+#include <SDL_mixer.h>
+
 #include <iostream>
 #include <iomanip>
 #include "Renderer.h"
@@ -10,13 +12,14 @@
 #include <boost/filesystem.hpp>
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
-#include "AudioManager.h"
+//#include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"
 #include "Window.h"
 #include "EmulationStation.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
+#include "Music.h"
 #include <sstream>
 #include <boost/locale.hpp>
 
@@ -250,6 +253,9 @@ int main(int argc, char* argv[])
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
 
+        // INITIALIZE SOUND SYSTEM
+        Music::init();
+        
 	// preload what we can right away instead of waiting for the user to select it
 	// this makes for no delays when accessing content, but a longer startup time
 	ViewController::get()->preload();
@@ -270,7 +276,8 @@ int main(int argc, char* argv[])
 
 	int lastTime = SDL_GetTicks();
 	bool running = true;
-
+        
+           
 	while(running)
 	{
 		SDL_Event event;
