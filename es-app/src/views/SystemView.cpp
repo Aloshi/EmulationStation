@@ -8,6 +8,8 @@
 #include "SystemData.h"
 #include "Settings.h"
 #include "Util.h"
+#include "ThemeData.h"
+#include "Music.h"
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
@@ -84,6 +86,8 @@ void SystemView::populate()
 
 void SystemView::goToSystem(SystemData* system, bool animate)
 {
+
+        
 	setCursor(system);
 
 	if(!animate)
@@ -138,6 +142,11 @@ void SystemView::update(int deltaTime)
 
 void SystemView::onCursorChanged(const CursorState& state)
 {
+    
+        if(lastSystem != getSelected()){
+                lastSystem = getSelected();
+                Music::startMusic(getSelected()->getTheme());
+        }
 	// update help style
 	updateHelpPrompts();
 
@@ -247,6 +256,8 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}
 
 	setAnimation(anim, 0, nullptr, false, 0);
+
+
 }
 
 void SystemView::render(const Eigen::Affine3f& parentTrans)

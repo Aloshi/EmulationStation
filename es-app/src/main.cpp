@@ -2,6 +2,8 @@
 //http://www.aloshi.com
 
 #include <SDL.h>
+#include <SDL_mixer.h>
+
 #include <iostream>
 #include <iomanip>
 #include "Renderer.h"
@@ -10,13 +12,14 @@
 #include <boost/filesystem.hpp>
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
-#include "AudioManager.h"
+//#include "AudioManager.h"
 #include "platform.h"
 #include "Log.h"
 #include "Window.h"
 #include "EmulationStation.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
+#include "Music.h"
 #include <sstream>
 
 namespace fs = boost::filesystem;
@@ -230,7 +233,17 @@ int main(int argc, char* argv[])
 
 	int lastTime = SDL_GetTicks();
 	bool running = true;
-
+        
+//        // START SDLMIXER
+//        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
+//	//if (SDL_OpenAudio(&sAudioFormat, NULL) < 0) {
+//		LOG(LogError) << "SDL AUDIO Error - Unable to open SDL audio: " << SDL_GetError() << std::endl;
+//	}else {
+//            	LOG(LogInfo) << "SDL AUDIO OK"  << std::endl;
+//        }
+        Music::init();
+	//Sound::get("./bg.mp3")->play();
+           
 	while(running)
 	{
 		SDL_Event event;
