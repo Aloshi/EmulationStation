@@ -20,6 +20,10 @@
 #include <sstream>
 #include <boost/locale.hpp>
 
+#ifdef WIN32
+#include <Windows.h>
+#endif
+
 namespace fs = boost::filesystem;
 
 bool scrape_cmdline = false;
@@ -54,6 +58,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--debug") == 0)
 		{
 			Settings::getInstance()->setBool("Debug", true);
+			Settings::getInstance()->setBool("HideConsole", false);
 			Log::setReportingLevel(LogDebug);
 		}else if(strcmp(argv[i], "--windowed") == 0)
 		{
@@ -78,10 +83,10 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n"
 				"--draw-framerate		display the framerate\n"
 				"--no-exit			don't show the exit option in the menu\n"
-				"--debug				even more logging\n"
+				"--debug				more logging, show console on Windows\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
-				"--vsync [1/on or 0/off]	turn vsync on or off (default is on)\n"
+				"--vsync [1/on or 0/off]		turn vsync on or off (default is on)\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help
@@ -152,6 +157,39 @@ int main(int argc, char* argv[])
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;
+
+	// only show the console on Windows if HideConsole is false
+#ifdef WIN32
+	// MSVC has a "SubSystem" option, with two primary options: "WINDOWS" and "CONSOLE".
+	// In "WINDOWS" mode, no console is automatically created for us.  This is good, 
+	// because we can choose to only create the console window if the user explicitly 
+	// asks for it, preventing it from flashing open and then closing.
+	// In "CONSOLE" mode, a console is always automatically created for us before we
+	// enter main. In this case, we can only hide the console after the fact, which
+	// will leave a brief flash.
+	// TL;DR: You should compile ES under the "WINDOWS" subsystem.
+	// I have no idea how this works with non-MSVC compilers.
+	if(!Settings::getInstance()->getBool("HideConsole"))
+	{
+		// we want to show the console
+		// if we're compiled in "CONSOLE" mode, this is already done.
+		// if we're compiled in "WINDOWS" mode, no console is created for us automatically;
+		// the user asked for one, so make one and then hook stdin/stdout/sterr up to it
+		if(AllocConsole()) // should only pass in "WINDOWS" mode
+		{
+			freopen("CONIN$", "r", stdin);
+			freopen("CONOUT$", "wb", stdout);
+			freopen("CONOUT$", "wb", stderr);
+		}
+	}else{
+		// we want to hide the console
+		// if we're compiled with the "WINDOWS" subsystem, this is already done.
+		// if we're compiled with the "CONSOLE" subsystem, a console is already created; 
+		// it'll flash open, but we hide it nearly immediately
+		if(GetConsoleWindow()) // should only pass in "CONSOLE" mode
+			ShowWindow(GetConsoleWindow(), SW_HIDE);
+	}
+#endif
 
 	//if ~/.emulationstation doesn't exist and cannot be created, bail
 	if(!verifyHomeFolderExists())

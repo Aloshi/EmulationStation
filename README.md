@@ -36,12 +36,12 @@ Building
 
 EmulationStation uses some C++11 code, which means you'll need to use at least g++-4.7 on Linux, or VS2010 on Windows, to compile.
 
-EmulationStation has a few dependencies. For building, you'll need SDL2, Boost (System, Filesystem, DateTime), FreeImage, FreeType, Eigen3, and cURL.
+EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, Boost (System, Filesystem, DateTime, Locale), FreeImage, FreeType, Eigen3, and cURL.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
 
 **On Debian/Ubuntu:**
 All of this be easily installed with apt-get:
 ```bash
-sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev
+sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid
 ```
 
 Then, generate and build the Makefile with CMake:
@@ -59,21 +59,21 @@ Complete Raspberry Pi build instructions at [emulationstation.org](http://emulat
 
 [Boost](http://www.boost.org/users/download/) (you'll need to compile yourself or get the pre-compiled binaries)
 
-[Eigen3](http://eigen.tuxfamily.org/index.php?title=Main_Page)
+[Eigen3](http://eigen.tuxfamily.org/index.php?title=Main_Page) (header-only library)
 
 [FreeImage](http://downloads.sourceforge.net/freeimage/FreeImage3154Win32.zip)
 
 [FreeType2](http://download.savannah.gnu.org/releases/freetype/freetype-2.4.9.tar.bz2) (you'll need to compile)
 
-[SDL2](http://www.libsdl.org/release/SDL2-devel-2.0.0-VC.zip)
+[SDL2](http://www.libsdl.org/release/SDL2-devel-2.0.3-VC.zip)
 
-[CURL](http://curl.haxx.se/download.html) (you'll need to compile or get the pre-compiled (DLL version))
+[cURL](http://curl.haxx.se/download.html) (you'll need to compile or get the pre-compiled DLL version)
 
-(remember to copy necessary .DLLs into the same folder as the executable: FreeImage.dll, freetype6.dll, SDL2.dll, libcurl.dll, and zlib1.dll)
+(Remember to copy necessary .DLLs into the same folder as the executable: probably FreeImage.dll, freetype6.dll, SDL2.dll, libcurl.dll, and zlib1.dll. Exact list depends on if you built your libraries in "static" mode or not.)
 
 [CMake](http://www.cmake.org/cmake/resources/software.html) (this is used for generating the Visual Studio project)
 
-(If you don't know how to use CMake, here are some hints: run cmake-gui and point it at your EmulationStation folder.  Point the "build" directory somewhere - I use EmulationStation/build.  Click configure, choose "Visual Studio [year] Project", fill in red fields as they appear and keep clicking Configure, then click Generate.)
+(If you don't know how to use CMake, here are some hints: run cmake-gui and point it at your EmulationStation folder.  Point the "build" directory somewhere - I use EmulationStation/build.  Click configure, choose "Visual Studio [year] Project", fill in red fields as they appear and keep clicking Configure (you may need to check "Advanced"), then click Generate.)
 
 
 Configuring
@@ -109,7 +109,7 @@ You can use `--help` or `-h` to view a list of command-line options. Briefly out
 --ignore-gamelist	- do not parse any gamelist.xml files.
 --draw-framerate	- draw the framerate.
 --no-exit		- do not display 'exit' in the ES menu.
---debug			- print additional output to the console, primarily about input.
+--debug			- show the console window on Windows, do slightly more logging
 --windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
 --vsync [1/on or 0/off]	- turn vsync on or off (default is on).
 --scrape	- run the interactive command-line metadata scraper.
