@@ -73,6 +73,14 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			scrape_cmdline = true;
 		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
+#ifdef WIN32
+			// This is a bit of a hack, but otherwise output will go to nowhere
+			// when the application is compiled with the "WINDOWS" subsystem (which we usually are).
+			// If you're an experienced Windows programmer and know how to do this
+			// the right way, please submit a pull request!
+			AttachConsole(ATTACH_PARENT_PROCESS);
+			freopen("CONOUT$", "wb", stdout);
+#endif
 			std::cout << 
 				"EmulationStation, a graphical front-end for ROM browsing.\n"
 				"Written by Alec \"Aloshi\" Lofquist.\n"
