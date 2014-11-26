@@ -18,6 +18,8 @@
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include <sstream>
+#include <boost/locale.hpp>
+
 
 namespace fs = boost::filesystem;
 
@@ -59,7 +61,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			Settings::getInstance()->setBool("Windowed", true);
 		}else if(strcmp(argv[i], "--vsync") == 0)
 		{
-			bool vsync = (strcmp(argv[i + 1], "true") == 0 || strcmp(argv[i + 1], "1") == 0) ? true : false;
+			bool vsync = (strcmp(argv[i + 1], "on") == 0 || strcmp(argv[i + 1], "1") == 0) ? true : false;
 			Settings::getInstance()->setBool("VSync", vsync);
 			i++; // skip vsync value
 		}else if(strcmp(argv[i], "--scrape") == 0)
@@ -80,7 +82,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--debug				even more logging\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
-				"--vsync [1/true or 0/false]	turn vsync on or off (default is on)\n"
+				"--vsync [1/on or 0/off]	turn vsync on or off (default is on)\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help
@@ -141,10 +143,45 @@ void onExit()
 	Log::close();
 }
 
+int setLocale(char * argv1)
+{
+	boost::locale::generator gen;
+ 	char path_save[PATH_MAX];
+  	char abs_exe_path[PATH_MAX];
+  	char *p;
+
+  	if(!(p = strrchr(argv1, '/')))
+    		getcwd(abs_exe_path, sizeof(abs_exe_path));
+  	else
+  	{
+    		*p = '\0';
+    		getcwd(path_save, sizeof(path_save));
+    		chdir(argv1);
+    		getcwd(abs_exe_path, sizeof(abs_exe_path));
+    		chdir(path_save);
+  	}
+
+	std::string localeDir = abs_exe_path;
+	localeDir += "/locale/";
+	LOG(LogInfo) << "Setting local directory to " << localeDir;
+    	// Specify location of dictionaries
+    	gen.add_messages_path(localeDir);
+    	gen.add_messages_domain("messages");
+
+    	// Generate locales and imbue them to iostream
+    	std::locale::global(gen(""));
+    	std::cout.imbue(std::locale());
+        LOG(LogInfo) << "Locals set...";
+
+}
+
 int main(int argc, char* argv[])
 {
 	unsigned int width = 0;
 	unsigned int height = 0;
+
+	std::locale::global(boost::locale::generator().generate(""));
+	boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;
@@ -159,6 +196,9 @@ int main(int argc, char* argv[])
 
 	//always close the log on exit
 	atexit(&onExit);
+
+	// Set locale
+	setLocale(argv[0]);
 
 	Window window;
 	ViewController::init(&window);
