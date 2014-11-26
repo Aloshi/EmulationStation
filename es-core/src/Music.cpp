@@ -2,59 +2,10 @@
 #include "Log.h"
 #include "Settings.h"
 #include "ThemeData.h"
+#include "AudioManager.h"
 
 std::map< std::string, std::shared_ptr<Music> > Music::sMap;
-std::shared_ptr<Music>  Music::currentMusic = NULL;
-void Music::init()
-{
-	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0)
-	{
-		LOG(LogError) << "Error initializing SDL audio!\n" << SDL_GetError();
-		return;
-	}
 
-	//Open the audio device and pause
-        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 ) < 0 ){
-		LOG(LogError) << "MUSIC Error - Unable to open SDLMixer audio: " << SDL_GetError() << std::endl;
-	}
-}
-
-void Music::deinit()
-{
-	Mix_HaltMusic();
-	//completely tear down SDL audio. else SDL hogs audio resources and emulators might fail to start...
-	// TODO FOREACH MUSIC CLEAN
-        Mix_CloseAudio();
-	SDL_QuitSubSystem(SDL_INIT_AUDIO);
-}
-
-void Music::stopMusic()
-{
-       Mix_FadeOutMusic(1000);
-    
-       Mix_HaltMusic();
-       Music::currentMusic = NULL;
-}
-
-void Music::startMusic(const std::shared_ptr<ThemeData>& theme)
-{
-    std::shared_ptr<Music> bgsound = Music::getFromTheme(theme,"system", "bgsound");
-    if(bgsound){
-         Music::stopMusic();
-         bgsound->play();
-         Music::currentMusic = bgsound;
-    }else {
-        LOG(LogError) << "NO SOUND FOUND";
-        Music::stopMusic();
-    }
-}
-
-void Music::resume(){
-    Music::init();
-    if(Music::currentMusic != NULL){
-        Music::currentMusic->play();
-    }
-}
 
 std::shared_ptr<Music> Music::get(const std::string& path)
 {
@@ -63,6 +14,8 @@ std::shared_ptr<Music> Music::get(const std::string& path)
 		return it->second;
 	std::shared_ptr<Music> music = std::shared_ptr<Music>(new Music(path));
 	sMap[path] = music;
+        AudioManager::getInstance()->registerMusic(music);
+
 	return music;
 }
 
@@ -93,7 +46,7 @@ Music::~Music()
 void Music::initMusic()
 {
 	if(music != NULL)
-		deinit();
+		deinitMusic();
 
 	if(mPath.empty())
 		return;
@@ -134,9 +87,4 @@ void Music::play()
             printf("Mix_PlayMusic: %s\n", Mix_GetError());
         }else {
         }
-}
-
-bool Music::isPlaying() const
-{
-	return playing;
 }
