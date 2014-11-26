@@ -10,7 +10,7 @@ std::vector<std::shared_ptr<Music>> AudioManager::sMusicVector;
 std::shared_ptr<AudioManager> AudioManager::sInstance;
 
 
-AudioManager::AudioManager(): currentMusic(NULL)
+AudioManager::AudioManager(): currentMusic(NULL), running(0)
 {
 	init();
 }
@@ -31,6 +31,7 @@ std::shared_ptr<AudioManager> & AudioManager::getInstance()
 
 void AudioManager::init()
 {
+    if(running == 0){
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0)
 	{
 		LOG(LogError) << "Error initializing SDL audio!\n" << SDL_GetError();
@@ -40,25 +41,29 @@ void AudioManager::init()
 	//Open the audio device and pause
         if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 ) < 0 ){
 		LOG(LogError) << "MUSIC Error - Unable to open SDLMixer audio: " << SDL_GetError() << std::endl;
-	}
+	}else {
+                LOG(LogInfo) << "SDL AUDIO Initialized";
+                running = 1;
+        }
+    }
 }
 
 void AudioManager::deinit()
 {
 	//stop all playback
-	stop();
+	//stop();
 	//completely tear down SDL audio. else SDL hogs audio resources and emulators might fail to start...
+        LOG(LogInfo) << "Shutting down SDL AUDIO";
+
 	Mix_HaltMusic();
-	//completely tear down SDL audio. else SDL hogs audio resources and emulators might fail to start...
-	// TODO FOREACH MUSIC CLEAN
         Mix_CloseAudio();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+        running = 0;
 }
 
 void AudioManager::stopMusic()
 {
        Mix_FadeOutMusic(1000);
-    
        Mix_HaltMusic();
        currentMusic = NULL;
 }
@@ -77,7 +82,7 @@ void AudioManager::startMusic(const std::shared_ptr<ThemeData>& theme)
 }
 
 void AudioManager::resumeMusic(){
-    init();
+    this->init();
     if(currentMusic != NULL){
         currentMusic->play();
     }
@@ -130,7 +135,7 @@ void AudioManager::play()
 	getInstance();
 
 	//unpause audio, the mixer will figure out if samples need to be played...
-	SDL_PauseAudio(0);
+	//SDL_PauseAudio(0);
 }
 
 void AudioManager::stop()
@@ -147,5 +152,5 @@ void AudioManager::stop()
 
         
 	//pause audio
-	SDL_PauseAudio(1);
+	//SDL_PauseAudio(1);
 }

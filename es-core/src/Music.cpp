@@ -84,7 +84,7 @@ void Music::play()
 	}
         LOG(LogError) << "playing";
         if(Mix_FadeInMusic(music, -1, 1000) == -1){
-            printf("Mix_PlayMusic: %s\n", Mix_GetError());
+            LOG(LogError) << "Mix_PlayMusic: " << Mix_GetError();
         }else {
         }
 }

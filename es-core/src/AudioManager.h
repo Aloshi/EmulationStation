@@ -40,6 +40,9 @@ public:
 	void stop();
 
 	virtual ~AudioManager();
+
+private:
+    bool running;
 };
 
 #endif
