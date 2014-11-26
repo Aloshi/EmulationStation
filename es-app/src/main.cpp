@@ -17,6 +17,7 @@
 #include "EmulationStation.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
+#include "VolumeControl.h"
 #include <sstream>
 
 namespace fs = boost::filesystem;
@@ -209,8 +210,9 @@ int main(int argc, char* argv[])
 
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
-
+        
         // Initialize audio manager
+        VolumeControl::getInstance()->init();
         AudioManager::getInstance()->init();
         
 	// preload what we can right away instead of waiting for the user to select it
