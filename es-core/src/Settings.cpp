@@ -69,6 +69,8 @@ void Settings::setDefaults()
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
+	mStringMap["UpdateScript"] = "";
+	mStringMap["VersionFile"] = "";
 }
 
 template <typename K, typename V>

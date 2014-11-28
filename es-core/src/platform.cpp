@@ -95,5 +95,12 @@ bool isFreeSpaceLimit()
 
 std::string getVersion()
 {
-      std::ifstream ifs("");
+    std::string version = Settings::getInstance()->getString("VersionFile");
+    if(version.size() > 0){
+        std::ifstream ifs(version);
+        std::string content( (std::istreambuf_iterator<char>(ifs) ),
+                       (std::istreambuf_iterator<char>()    ) );
+        return content;
+    }
+    return "";
 }

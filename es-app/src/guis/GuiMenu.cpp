@@ -40,6 +40,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
         addEntry("INFOS", 0x777777FF, true, 
 		[this] { 
 			auto s = new GuiSettings(mWindow, "INFOS");
+                        
                         auto version = std::make_shared<TextComponent>(mWindow, "Text TEST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
                         s->addWithLabel("VERSION", version);
                         bool warning = isFreeSpaceLimit();
