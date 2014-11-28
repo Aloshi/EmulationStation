@@ -31,7 +31,23 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// QUIT >
 
 	// [version]
+//       	addEntry("INFOS", 0x777777FF, true, 
+//		[this] { 
+//			mWindow->pushGui(new GuiInfo(mWindow));
+//	});
+    
+        addEntry("INFOS", 0x777777FF, true, 
+		[this] { 
+			auto s = new GuiSettings(mWindow, "INFOS");
+                        auto version = std::make_shared<TextComponent>(mWindow, "Text TEST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+                        s->addWithLabel("VERSION", version);
+                        bool warning = isFreeSpaceLimit();
+                        auto space = std::make_shared<TextComponent>(mWindow, getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
+                        s->addWithLabel("USED SPACE", space);
+                        
+                        mWindow->pushGui(s);
 
+	});
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 	addEntry("SCRAPER", 0x777777FF, true, 
 		[this, openScrapeNow] { 
