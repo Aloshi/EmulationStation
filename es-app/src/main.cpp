@@ -19,6 +19,7 @@
 #include "ScraperCmdLine.h"
 #include <sstream>
 #include <boost/locale.hpp>
+#include "GamelistDB.h"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -157,7 +158,14 @@ void onExit()
 
 int main(int argc, char* argv[])
 {
-	unsigned int width = 0;
+	const char* errorMsg;
+
+	loadSystemConfigFile(&errorMsg);
+	GamelistDB test("test.db");
+	test.importXML(SystemData::sSystemVector.at(0), SystemData::sSystemVector.at(0)->getGamelistPath(false));
+	test.exportXML(SystemData::sSystemVector.at(0), "test_db_to_xml.xml");
+
+	/*unsigned int width = 0;
 	unsigned int height = 0;
 
 	std::locale::global(boost::locale::generator().generate(""));
@@ -333,7 +341,7 @@ int main(int argc, char* argv[])
 	window.deinit();
 
 	SystemData::deleteSystems();
-
+	*/
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
 	return 0;

@@ -10,7 +10,7 @@
 class GuiMetaDataEd : public GuiComponent
 {
 public:
-	GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams params, 
+	GuiMetaDataEd(Window* window, MetaDataMap* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams params, 
 		const std::string& header, std::function<void()> savedCallback, std::function<void()> deleteFunc);
 	
 	bool input(InputConfig* config, Input input) override;
@@ -37,7 +37,7 @@ private:
 	std::vector< std::shared_ptr<GuiComponent> > mEditors;
 
 	std::vector<MetaDataDecl> mMetaDataDecl;
-	MetaDataList* mMetaData;
+	MetaDataMap* mMetaData;
 	std::function<void()> mSavedCallback;
 	std::function<void()> mDeleteFunc;
 };

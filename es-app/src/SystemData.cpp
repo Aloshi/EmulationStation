@@ -1,5 +1,4 @@
 #include "SystemData.h"
-#include "Gamelist.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <stdlib.h>
@@ -42,9 +41,6 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	if(!Settings::getInstance()->getBool("ParseGamelistOnly"))
 		populateFolder(mRootFolder);
 
-	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
-		parseGamelist(this);
-
 	mRootFolder->sort(FileSorts::SortTypes.at(0));
 
 	loadTheme();
@@ -52,12 +48,6 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 
 SystemData::~SystemData()
 {
-	//save changed game data back to xml
-	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
-	{
-		updateGamelist(this);
-	}
-
 	delete mRootFolder;
 }
 
@@ -130,12 +120,12 @@ void SystemData::launchGame(Window* window, FileData* game)
 	window->normalizeNextUpdate();
 
 	//update number of times the game has been launched
-	int timesPlayed = game->metadata.getInt("playcount") + 1;
-	game->metadata.set("playcount", std::to_string(static_cast<long long>(timesPlayed)));
+	int timesPlayed = game->metadata.get<int>("playcount") + 1;
+	game->metadata.set("playcount", timesPlayed);
 
 	//update last played time
 	boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
-	game->metadata.setTime("lastplayed", time);
+	game->metadata.set("lastplayed", time);
 }
 
 void SystemData::populateFolder(FileData* folder)

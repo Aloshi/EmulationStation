@@ -42,7 +42,7 @@ namespace FileSorts
 		//only games have rating metadata
 		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
 		{
-			return file1->metadata.getFloat("rating") < file2->metadata.getFloat("rating");
+			return file1->metadata.get<float>("rating") < file2->metadata.get<float>("rating");
 		}
 
 		return false;
@@ -53,7 +53,7 @@ namespace FileSorts
 		//only games have playcount metadata
 		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
 		{
-			return (file1)->metadata.getInt("playcount") < (file2)->metadata.getInt("playcount");
+			return (file1)->metadata.get<int>("playcount") < (file2)->metadata.get<int>("playcount");
 		}
 
 		return false;
@@ -64,7 +64,7 @@ namespace FileSorts
 		//only games have lastplayed metadata
 		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
 		{
-			return (file1)->metadata.getTime("lastplayed") < (file2)->metadata.getTime("lastplayed");
+			return (file1)->metadata.get<boost::posix_time::ptime>("lastplayed") < (file2)->metadata.get<boost::posix_time::ptime>("lastplayed");
 		}
 
 		return false;

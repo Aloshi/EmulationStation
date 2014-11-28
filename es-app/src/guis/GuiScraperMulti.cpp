@@ -2,7 +2,6 @@
 #include "Renderer.h"
 #include "Log.h"
 #include "views/ViewController.h"
-#include "Gamelist.h"
 
 #include "components/TextComponent.h"
 #include "components/ButtonComponent.h"
@@ -111,8 +110,7 @@ void GuiScraperMulti::acceptResult(const ScraperSearchResult& result)
 {
 	ScraperSearchParams& search = mSearchQueue.front();
 
-	search.game->metadata = result.mdl;
-	updateGamelist(search.system);
+	search.game->metadata = result.metadata;
 
 	mSearchQueue.pop();
 	mCurrentGame++;

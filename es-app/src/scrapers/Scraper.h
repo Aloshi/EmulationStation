@@ -20,9 +20,9 @@ struct ScraperSearchParams
 
 struct ScraperSearchResult
 {
-	ScraperSearchResult() : mdl(GAME_METADATA) {};
+	ScraperSearchResult() : metadata(GAME_METADATA) {};
 
-	MetaDataList mdl;
+	MetaDataMap metadata;
 	std::string imageUrl;
 	std::string thumbnailUrl;
 };

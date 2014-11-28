@@ -40,17 +40,17 @@ void TheArchiveRequest::process(const std::unique_ptr<HttpReq>& req, std::vector
 	{
 		ScraperSearchResult result;
 
-		result.mdl.set("name", game.child("title").text().get());
-		result.mdl.set("desc", game.child("description").text().get());
+		result.metadata.set("name", game.child("title").text().get());
+		result.metadata.set("desc", game.child("description").text().get());
 
 		//Archive.search does not return ratings
 
-		result.mdl.set("developer", game.child("developer").text().get());
+		result.metadata.set("developer", game.child("developer").text().get());
 
 		std::string genre = game.child("genre").text().get();
 		size_t search = genre.find_last_of(" &gt; ");
 		genre = genre.substr(search == std::string::npos ? 0 : search, std::string::npos);
-		result.mdl.set("genre", genre);
+		result.metadata.set("genre", genre);
 
 		pugi::xml_node image = game.child("box_front");
 		pugi::xml_node thumbnail = game.child("box_front_small");

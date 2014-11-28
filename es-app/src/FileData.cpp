@@ -47,7 +47,7 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 	: mType(type), mPath(path), mSystem(system), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
 {
 	// metadata needs at least a name field (since that's what getName() will return)
-	if(metadata.get("name").empty())
+	if(metadata.get<std::string>("name").empty())
 		metadata.set("name", getCleanName());
 }
 
@@ -69,12 +69,12 @@ std::string FileData::getCleanName() const
 	return removeParenthesis(stem);
 }
 
-const std::string& FileData::getThumbnailPath() const
+const std::string FileData::getThumbnailPath() const
 {
-	if(!metadata.get("thumbnail").empty())
-		return metadata.get("thumbnail");
+	if(!metadata.get<std::string>("thumbnail").empty())
+		return metadata.get<std::string>("thumbnail");
 	else
-		return metadata.get("image");
+		return metadata.get<std::string>("image");
 }
 
 

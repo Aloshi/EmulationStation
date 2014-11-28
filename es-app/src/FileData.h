@@ -35,14 +35,14 @@ public:
 	FileData(FileType type, const boost::filesystem::path& path, SystemData* system);
 	virtual ~FileData();
 
-	inline const std::string& getName() const { return metadata.get("name"); }
+	inline const std::string getName() const { return metadata.get<std::string>("name"); }
 	inline FileType getType() const { return mType; }
 	inline const boost::filesystem::path& getPath() const { return mPath; }
 	inline FileData* getParent() const { return mParent; }
 	inline const std::vector<FileData*>& getChildren() const { return mChildren; }
 	inline SystemData* getSystem() const { return mSystem; }
 	
-	virtual const std::string& getThumbnailPath() const;
+	const std::string getThumbnailPath() const;
 
 	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
 
@@ -66,7 +66,7 @@ public:
 	void sort(ComparisonFunction& comparator, bool ascending = true);
 	void sort(const SortType& type);
 
-	MetaDataList metadata;
+	MetaDataMap metadata;
 
 private:
 	FileType mType;

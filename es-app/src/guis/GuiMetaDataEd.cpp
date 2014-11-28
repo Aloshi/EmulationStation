@@ -15,7 +15,7 @@
 
 using namespace Eigen;
 
-GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
+GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataMap* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
 	mScraperParams(scraperParams), 
 
@@ -196,7 +196,7 @@ void GuiMetaDataEd::fetchDone(const ScraperSearchResult& result)
 			continue;
 
 		const std::string& key = mMetaDataDecl.at(i).key;
-		mEditors.at(i)->setValue(result.mdl.get(key));
+		mEditors.at(i)->setValue(result.metadata.get(key));
 	}
 }
 
