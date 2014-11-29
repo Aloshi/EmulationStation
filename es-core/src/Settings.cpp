@@ -69,7 +69,8 @@ void Settings::setDefaults()
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
-	mStringMap["UpdateScript"] = "";
+	mStringMap["UpdateCommand"] = "";
+	mStringMap["UpdateServer"] = "";
 	mStringMap["VersionFile"] = "";
 }
 

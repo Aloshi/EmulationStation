@@ -4,6 +4,7 @@
 #include "Sound.h"
 #include "Log.h"
 #include "Settings.h"
+#include "SystemInfo.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
 #include "guis/GuiScraperStart.h"
@@ -41,11 +42,11 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		[this] { 
 			auto s = new GuiSettings(mWindow, "INFOS");
                         
-                        auto version = std::make_shared<TextComponent>(mWindow, "Text TEST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+                        auto version = std::make_shared<TextComponent>(mWindow, SystemInfo::getInstance()->getVersion(), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
                         s->addWithLabel("VERSION", version);
-                        bool warning = isFreeSpaceLimit();
-                        auto space = std::make_shared<TextComponent>(mWindow, getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
-                        s->addWithLabel("USED SPACE", space);
+                        bool warning = SystemInfo::getInstance()->isFreeSpaceLimit();
+                        auto space = std::make_shared<TextComponent>(mWindow, SystemInfo::getInstance()->getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
+                        s->addWithLabel("STOCKAGE", space);
                         
                         mWindow->pushGui(s);
 
