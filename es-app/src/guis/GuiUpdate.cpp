@@ -112,7 +112,7 @@ void GuiUpdate::threadSystemCall()
 
 void GuiUpdate::pingThread() 
 {
-        std::string updateserver = Settings::getInstance()->getString("Updaterver");
+        std::string updateserver = Settings::getInstance()->getString("UpdateServer");
         std::string s("ping -c 1 " + updateserver);
 	int exitcode = system(s.c_str());
 	if(exitcode == 0){
