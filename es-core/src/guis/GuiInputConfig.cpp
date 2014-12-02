@@ -10,13 +10,13 @@
 
 using namespace boost::locale;
 
-static const int inputCount = 10;
-static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown" };
-static const bool inputSkippable[inputCount] = { false, false, false, false, false, false, false, false, true, true };
-static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"), "A", "B", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN") };
+static const int inputCount = 13;
+static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "HotKey" };
+static const bool inputSkippable[inputCount] = { false, false, false, false,     false, false, true, true,   false,     false,     true,      true,  false};
+static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"), "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"), gettext("HOTKEY") };
 static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
-											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
-											":/help/button_l.svg", ":/help/button_r.svg" };
+											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
+											":/help/button_l.svg", ":/help/button_r.svg", "" };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.
@@ -259,6 +259,7 @@ bool GuiInputConfig::assign(Input input, int inputId)
 
 	// if this input is mapped to something other than "nothing" or the current row, error
 	// (if it's the same as what it was before, allow it)
+        if(std::string("HotKey").compare(inputName[inputId]) != 0)
 	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(inputName[inputId], input))
 	{
 		error(mMappings.at(inputId), "Already mapped!");

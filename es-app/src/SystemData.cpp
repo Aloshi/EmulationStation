@@ -104,6 +104,12 @@ void SystemData::launchGame(Window* window, FileData* game)
 	VolumeControl::getInstance()->deinit();
 	window->deinit();
 
+        LOG(LogInfo) << "Attempting to configure emulators...";
+
+        if(InputManager::getInstance()->configureEmulators() == true){
+            LOG(LogInfo) << "Emulators configured";
+        }
+        
 	std::string command = mLaunchCommand;
 
 	const std::string rom = escapePath(game->getPath());
