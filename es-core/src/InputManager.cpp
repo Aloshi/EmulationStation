@@ -5,6 +5,7 @@
 #include "pugixml/pugixml.hpp"
 #include <boost/filesystem.hpp>
 #include "platform.h"
+#include "Settings.h"
 
 #define KEYBOARD_GUID_STRING "-1"
 
@@ -368,4 +369,37 @@ std::string InputManager::getDeviceGUIDString(int deviceId)
 	char guid[65];
 	SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(it->second), guid, 65);
 	return std::string(guid);
+}
+
+bool InputManager::configureEmulators() {
+    std::stringstream command;
+    command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
+    for (int player = 0; player < 2; player++) {
+        std::stringstream sstm;
+        sstm << "INPUT P" << player;
+        std::string confName = sstm.str();
+
+        std::string playerConfigName = Settings::getInstance()->getString(confName);
+        bool found = false;
+        InputConfig * playerInputConfig;
+        for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
+            InputConfig * config = InputManager::getInstance()->getInputConfigByDevice(it);
+            if(!config->isConfigured()) continue;
+            found = playerConfigName.compare(config->getDeviceName()) == 0;
+            if(found)
+            playerInputConfig = config;
+        }
+
+        // If the config has not been configured or the peripherial is not connected
+        if (playerConfigName.compare("") == 0 || ! found) {
+            playerConfigName  = "DEFAULT";
+        }
+        if (playerConfigName.compare("DEFAULT") == 0) {
+            command << " " << "DEFAULT";
+        } else {
+            command << " " << playerInputConfig->getDeviceGUIDString();
+        }
+
+    }
+    return system(command.str().c_str()) == 0;
 }

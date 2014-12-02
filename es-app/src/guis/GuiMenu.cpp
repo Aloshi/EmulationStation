@@ -166,16 +166,17 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(s);
 	});
 
-	/*addEntry("CONFIGURE INPUT", 0x777777FF, true, 
-		[this] { 
-			mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
-	});*/
+            // TODO refactoring
+        addEntry("CONFIGURE INPUT", 0x777777FF, true, [this] { this->createConfigInput(); });
+                
+                
 	addEntry("UPDATE", 0x777777FF, true, 
 		    [this] {
 		         Window* window = mWindow;
 		        auto s = new GuiUpdate(window);
 		        window->pushGui(s);
 	});
+        
 	addEntry("QUIT", 0x777777FF, true, 
 		[this] {
 			auto s = new GuiSettings(mWindow, "QUIT");
@@ -233,6 +234,127 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
 	setSize(mMenu.getSize());
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.15f);
+}
+
+void GuiMenu::createConfigInput(){
+    
+                GuiSettings *  s = new GuiSettings(mWindow, "CONFIGURE INPUT");
+
+                Window* window = mWindow;
+
+                ComponentListRow row;
+                row.makeAcceptInputHandler([window, this, s] {
+
+                    window->pushGui(new GuiDetectDevice(window, false, [this, s] {
+                        s->setSave(false);
+                        delete s;
+                        this->createConfigInput();
+                    }));
+                });
+                        
+                
+                row.addElement(std::make_shared<TextComponent>(window, "CONFIGURE INPUT", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+                s->addRow(row);
+
+                row.elements.clear();
+
+                // Add the default setting
+
+                // Allow selection of a default input for each player
+                std::vector<std::shared_ptr<OptionListComponent<InputConfig*>>> options;
+                for (int player = 0; player < 2; player++) {
+                    std::stringstream sstm;
+                    sstm << "INPUT P" << player;
+                    std::string confName = sstm.str();
+
+                    auto inputOptionList = std::make_shared< OptionListComponent<InputConfig*> >(mWindow, confName, false);
+                    options.push_back(inputOptionList);
+                    // Checking if a setting has been saved, else setting to default
+                    std::string current_p1 = Settings::getInstance()->getString(confName);
+                    bool found = false;
+                    for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
+                        InputConfig * config = InputManager::getInstance()->getInputConfigByDevice(it);
+                        if(!config->isConfigured()) continue;
+                        bool ifound = current_p1.compare(config->getDeviceName()) == 0;
+                        std::string displayName = config->getDeviceName();
+                        if(displayName.size() > 25){
+                            displayName = displayName.substr(0, 22) + "...";
+                        }
+                        if(ifound) found = true;
+                        inputOptionList->add(displayName, config, ifound);
+                    }
+                    LOG(LogWarning) << "Current config : " << current_p1;
+                    if (current_p1.compare("") == 0 || !found) {
+                        Settings::getInstance()->setString(confName, "DEFAULT");
+                    }
+                    
+                    
+                    LOG(LogWarning) << "ADDING DEFAULT WITH SELECTED : " << (Settings::getInstance()->getString(confName).compare("DEFAULT") == 0);
+                    // ADD default config
+                    inputOptionList->add("DEFAULT", NULL, Settings::getInstance()->getString(confName).compare("DEFAULT") == 0);
+                    
+                    // Populate controllers list
+                    s->addWithLabel(confName, inputOptionList);
+                             
+                }
+                s->addSaveFunc([this, options, window] {
+                      std::stringstream command;
+                      command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
+                      for (int player = 0; player < 2; player++) {
+                        std::stringstream sstm;
+                        sstm << "INPUT P" << player;
+                        std::string confName = sstm.str();
+
+                        auto input_p1 = options.at(player);
+                        std::string name;
+                        std::string selectedName = input_p1->getSelectedName();
+                        LOG(LogWarning) << "SELECTED NAME : "<< input_p1->getSelectedName();
+
+                        if (input_p1->getSelectedName().compare("DEFAULT") == 0) {
+                            name = "DEFAULT";
+                            Settings::getInstance()->setString(confName, name);
+                            Settings::getInstance()->saveFile();
+                            command << " " << name;
+                        } else {
+                            LOG(LogWarning) << "SELECTED DEVICE NAME : " << input_p1->getSelected();
+                            name = input_p1->getSelected()->getDeviceName();
+                            Settings::getInstance()->setString(confName, name);
+                            command << " " << input_p1->getSelected()->getDeviceGUIDString();
+                        }
+                        LOG(LogWarning) << "OK";
+
+                    }
+                        LOG(LogWarning) << "OK sorti";
+                        Settings::getInstance()->saveFile();
+                        if (system(command.str().c_str()) == 0) {
+                            window->pushGui(new GuiMsgBox(window, "CONFIGURATION EMULATEURS OK"));
+                        } else {
+                            window->pushGui(new GuiMsgBox(window, "ERREUR LORS DE LA CONFIGURATION DES EMULATEURS"));                      
+                        }
+                        // TODO RECONFIGURE DEFAULT SETTINGS ON EMULATIONSTATION ??
+                });
+                row.makeAcceptInputHandler([window, this] {
+                    std::string command = Settings::getInstance()->getString("GenerateInputConfigScript") + " DEFAULT";
+                    for (int player = 0; player < 2; player++) {
+                        std::stringstream sstm;
+                        sstm << "INPUT P" << player;
+                        std::string confName = sstm.str();
+                        Settings::getInstance()->setString(confName, "DEFAULT");
+                        Settings::getInstance()->saveFile();
+                        
+                    }
+                    if (system(command.c_str()) == 0) {
+                        window->pushGui(new GuiMsgBox(window, "CONFIGURATION RETABLIE", "OK"));
+                    }else {
+                        window->pushGui(new GuiMsgBox(window, "ERREUR"));                      
+                    }
+                    
+                });
+                //row.addElement(std::make_shared<TextComponent>(window, "REINITIALISER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+                //s->addRow(row);
+                row.elements.clear();
+                window->pushGui(s);
+                
 }
 
 void GuiMenu::onSizeChanged()

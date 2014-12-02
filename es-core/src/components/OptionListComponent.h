@@ -232,13 +232,30 @@ public:
 		return ret;
 	}
 
+        
 	T getSelected()
 	{
 		assert(mMultiSelect == false);
 		auto selected = getSelectedObjects();
-		assert(selected.size() == 1);
-		return selected.at(0);
+                LOG(LogWarning) << "SELECTED size ==  "<<selected.size();
+		if(selected.size() == 1){
+                    return selected.at(0);
+                }else {
+                    return NULL;
+                }
 	}
+        
+        std::string getSelectedName()
+	{
+                assert(mMultiSelect == false);
+                for(unsigned int i = 0; i < mEntries.size(); i++)
+		{
+			if(mEntries.at(i).selected)
+				return mEntries.at(i).name;
+		}
+                return "";
+	}
+        
 
 	void add(const std::string& name, const T& obj, bool selected)
 	{
