@@ -283,13 +283,10 @@ void GuiMenu::createConfigInput(){
                         if(ifound) found = true;
                         inputOptionList->add(displayName, config, ifound);
                     }
-                    LOG(LogWarning) << "Current config : " << current_p1;
                     if (current_p1.compare("") == 0 || !found) {
                         Settings::getInstance()->setString(confName, "DEFAULT");
                     }
                     
-                    
-                    LOG(LogWarning) << "ADDING DEFAULT WITH SELECTED : " << (Settings::getInstance()->getString(confName).compare("DEFAULT") == 0);
                     // ADD default config
                     inputOptionList->add("DEFAULT", NULL, Settings::getInstance()->getString(confName).compare("DEFAULT") == 0);
                     
@@ -308,7 +305,6 @@ void GuiMenu::createConfigInput(){
                         auto input_p1 = options.at(player);
                         std::string name;
                         std::string selectedName = input_p1->getSelectedName();
-                        LOG(LogWarning) << "SELECTED NAME : "<< input_p1->getSelectedName();
 
                         if (input_p1->getSelectedName().compare("DEFAULT") == 0) {
                             name = "DEFAULT";
@@ -316,15 +312,11 @@ void GuiMenu::createConfigInput(){
                             Settings::getInstance()->saveFile();
                             command << " " << name;
                         } else {
-                            LOG(LogWarning) << "SELECTED DEVICE NAME : " << input_p1->getSelected();
                             name = input_p1->getSelected()->getDeviceName();
                             Settings::getInstance()->setString(confName, name);
                             command << " " << input_p1->getSelected()->getDeviceGUIDString();
                         }
-                        LOG(LogWarning) << "OK";
-
                     }
-                        LOG(LogWarning) << "OK sorti";
                         Settings::getInstance()->saveFile();
                         if (system(command.str().c_str()) == 0) {
                             window->pushGui(new GuiMsgBox(window, "CONFIGURATION EMULATEURS OK"));

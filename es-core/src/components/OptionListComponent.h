@@ -237,7 +237,6 @@ public:
 	{
 		assert(mMultiSelect == false);
 		auto selected = getSelectedObjects();
-                LOG(LogWarning) << "SELECTED size ==  "<<selected.size();
 		if(selected.size() == 1){
                     return selected.at(0);
                 }else {
