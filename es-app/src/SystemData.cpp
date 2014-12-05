@@ -100,15 +100,15 @@ void SystemData::launchGame(Window* window, FileData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
+        if(InputManager::getInstance()->configureEmulators() == true){
+            LOG(LogInfo) << "Emulators configured";
+        }
 	AudioManager::getInstance()->deinit();
 	VolumeControl::getInstance()->deinit();
 	window->deinit();
 
         LOG(LogInfo) << "Attempting to configure emulators...";
 
-        if(InputManager::getInstance()->configureEmulators() == true){
-            LOG(LogInfo) << "Emulators configured";
-        }
         
 	std::string command = mLaunchCommand;
 

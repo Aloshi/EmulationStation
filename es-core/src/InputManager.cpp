@@ -50,13 +50,9 @@ void InputManager::init()
 	SDL_JoystickEventState(SDL_ENABLE);
 
 	// first, open all currently present joysticks
-	int numJoysticks = SDL_NumJoysticks();
-	for(int i = 0; i < numJoysticks; i++)
-	{
-		addJoystickByDeviceIndex(i);
-	}
+        this->addAllJoysticks();
 
-	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD, "Keyboard", KEYBOARD_GUID_STRING);
+	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD, -1, "Keyboard", KEYBOARD_GUID_STRING);
 	loadInputConfig(mKeyboardInputConfig);
 }
 
@@ -76,7 +72,7 @@ void InputManager::addJoystickByDeviceIndex(int id)
 	SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(joy), guid, 65);
 
 	// create the InputConfig
-	mInputConfigs[joyId] = new InputConfig(joyId, SDL_JoystickName(joy), guid);
+	mInputConfigs[joyId] = new InputConfig(joyId, id, SDL_JoystickName(joy), guid);
 	if(!loadInputConfig(mInputConfigs[joyId]))
 	{
 		LOG(LogInfo) << "Added unconfigured joystick " << SDL_JoystickName(joy) << " (GUID: " << guid << ", instance ID: " << joyId << ", device index: " << id << ").";
@@ -113,14 +109,22 @@ void InputManager::removeJoystickByJoystickID(SDL_JoystickID joyId)
 	}else{
 		LOG(LogError) << "Could not find joystick to close (instance ID: " << joyId << ")";
 	}
+        LOG(LogError) << "I removed a joystick";
+
 }
 
-void InputManager::deinit()
+void InputManager::addAllJoysticks()
 {
-	if(!initialized())
-		return;
-
-	for(auto iter = mJoysticks.begin(); iter != mJoysticks.end(); iter++)
+    clearJoystick();
+    int numJoysticks = SDL_NumJoysticks();
+    for(int i = 0; i < numJoysticks; i++)
+    {
+            addJoystickByDeviceIndex(i);
+    }
+}
+void InputManager::clearJoystick()
+{
+    for(auto iter = mJoysticks.begin(); iter != mJoysticks.end(); iter++)
 	{
 		SDL_JoystickClose(iter->second);
 	}
@@ -138,12 +142,21 @@ void InputManager::deinit()
 	}
 	mPrevAxisValues.clear();
 
+}
+void InputManager::deinit()
+{
+	if(!initialized())
+		return;
+
+	this->clearJoystick();
+
+        
 	if(mKeyboardInputConfig != NULL)
 	{
 		delete mKeyboardInputConfig;
 		mKeyboardInputConfig = NULL;
 	}
-
+        
 	SDL_JoystickEventState(SDL_DISABLE);
 	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 }
@@ -228,12 +241,20 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 		break;
 
 	case SDL_JOYDEVICEADDED:
-		addJoystickByDeviceIndex(ev.jdevice.which); // ev.jdevice.which is a device index
-		return true;
+            if(! getInputConfigByDevice(ev.jdevice.which)){
+                //addJoystickByDeviceIndex(ev.jdevice.which); // ev.jdevice.which is a device index
+                LOG(LogInfo) << "Reinitialize because of SDL_JOYDEVADDED unknown";
+		//addAllJoysticks();
+                this->init();
+            }
+            return true;
 
 	case SDL_JOYDEVICEREMOVED:
-		removeJoystickByJoystickID(ev.jdevice.which); // ev.jdevice.which is an SDL_JoystickID (instance ID)
-		return false;
+		//removeJoystickByJoystickID(ev.jdevice.which); // ev.jdevice.which is an SDL_JoystickID (instance ID)
+                LOG(LogInfo) << "Reinitialize because of SDL_JOYDEVICEREMOVED";
+
+                this->init();
+                return false;
 	}
 
 	return false;
@@ -376,30 +397,40 @@ bool InputManager::configureEmulators() {
     command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
     for (int player = 0; player < 2; player++) {
         std::stringstream sstm;
-        sstm << "INPUT P" << player;
+        sstm << "INPUT P" << player+1;
         std::string confName = sstm.str();
 
-        std::string playerConfigName = Settings::getInstance()->getString(confName);
+        std::string playerConfigGUID = Settings::getInstance()->getString(confName);
         bool found = false;
         InputConfig * playerInputConfig;
+        //LOG(LogInfo) << "I am checking for joystick there are  "<< InputManager::getInstance()->getNumJoysticks();
+
         for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
             InputConfig * config = InputManager::getInstance()->getInputConfigByDevice(it);
+            //LOG(LogInfo) << "I am checking for an input named "<< config->getDeviceName() << " this configured ? "<<config->isConfigured();
             if(!config->isConfigured()) continue;
-            found = playerConfigName.compare(config->getDeviceName()) == 0;
-            if(found)
-            playerInputConfig = config;
+            bool ifound = playerConfigGUID.compare(config->getDeviceGUIDString()) == 0;
+            //LOG(LogInfo) << "I was checking for an input named "<< playerConfigName << " and i compared to "
+            //            << config->getDeviceName();
+            if(ifound){
+                found = true;
+                playerInputConfig = config;
+                break;
+            }
         }
 
         // If the config has not been configured or the peripherial is not connected
-        if (playerConfigName.compare("") == 0 || ! found) {
-            playerConfigName  = "DEFAULT";
+        if (playerConfigGUID.compare("") == 0 || ! found) {
+            playerConfigGUID  = "DEFAULT";
         }
-        if (playerConfigName.compare("DEFAULT") == 0) {
-            command << " " << "DEFAULT";
+        if (playerConfigGUID.compare("DEFAULT") == 0) {
+            command << " " << "DEFAULT " << " -1 DEFAULTDONOTFINDMEINCOMMAND";
         } else {
-            command << " " << playerInputConfig->getDeviceGUIDString();
+            command << " " << playerInputConfig->getDeviceGUIDString() << " " <<  playerInputConfig->getDeviceIndex() <<  " \"" <<  playerInputConfig->getDeviceName() << "\"";
         }
 
+        //LOG(LogInfo) << "I have for "<< "INPUT P" << player << " a configname : " << playerConfigName;
     }
+    LOG(LogInfo) << "Configure emulators command : " << command.str().c_str();
     return system(command.str().c_str()) == 0;
 }

@@ -31,7 +31,10 @@ private:
 
 	void addJoystickByDeviceIndex(int id);
 	void removeJoystickByJoystickID(SDL_JoystickID id);
-	bool loadInputConfig(InputConfig* config); // returns true if successfully loaded, false if not (or didn't exist)
+	bool loadInputConfig(InputConfig* config); // returns true if successfully loaded, false if not (or didn't exist)                
+        void clearJoystick();
+        void addAllJoysticks();
+
 
 public:
 	virtual ~InputManager();

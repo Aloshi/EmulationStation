@@ -49,7 +49,7 @@ std::string toLower(std::string str)
 }
 //end util functions
 
-InputConfig::InputConfig(int deviceId, const std::string& deviceName, const std::string& deviceGUID) : mDeviceId(deviceId), mDeviceName(deviceName), mDeviceGUID(deviceGUID)
+InputConfig::InputConfig(int deviceId, int deviceIndex, const std::string& deviceName, const std::string& deviceGUID) : mDeviceId(deviceId), mDeviceIndex(deviceIndex), mDeviceName(deviceName), mDeviceGUID(deviceGUID)
 {
 }
 
