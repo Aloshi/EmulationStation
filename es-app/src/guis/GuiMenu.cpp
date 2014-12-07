@@ -11,6 +11,7 @@
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiUpdate.h"
 #include "views/ViewController.h"
+#include "AudioManager.h"
 
 #include "components/ButtonComponent.h"
 #include "components/SwitchComponent.h"
@@ -100,7 +101,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto sounds_enabled = std::make_shared<SwitchComponent>(mWindow);
 			sounds_enabled->setState(Settings::getInstance()->getBool("EnableSounds"));
 			s->addWithLabel("ENABLE SOUNDS", sounds_enabled);
-			s->addSaveFunc([sounds_enabled] { Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); });
+			s->addSaveFunc([sounds_enabled] { 
+                            Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); 
+                            AudioManager::getInstance()->stopMusic();
+                        });
 
 			mWindow->pushGui(s);
 	});
