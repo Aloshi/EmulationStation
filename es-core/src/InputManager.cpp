@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "pugixml/pugixml.hpp"
 #include <boost/filesystem.hpp>
+#include <utility>
 #include "platform.h"
 #include "Settings.h"
 
@@ -395,6 +396,25 @@ std::string InputManager::getDeviceGUIDString(int deviceId)
 bool InputManager::configureEmulators() {
     std::stringstream command;
     command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
+    // 1 recuperer les configurated
+    
+    
+    std::list<InputConfig *> availableConfigured;
+    
+
+    for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
+        InputConfig * config = InputManager::getInstance()->getInputConfigByDevice(it);
+        //LOG(LogInfo) << "I am checking for an input named "<< config->getDeviceName() << " this configured ? "<<config->isConfigured();
+        if(config->isConfigured()) {
+            availableConfigured.push_back(config);
+            LOG(LogInfo) << "Available and configurated : " << config->getDeviceName();
+        }
+    }
+    //2 pour chaque joueur verifier si il y a un configurated
+        // associer le input au joueur
+        // enlever des disponibles 
+    std::map<int, InputConfig*> playerJoysticks;
+
     for (int player = 0; player < 2; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player+1;
@@ -403,34 +423,51 @@ bool InputManager::configureEmulators() {
         std::string playerConfigGUID = Settings::getInstance()->getString(confName);
         bool found = false;
         InputConfig * playerInputConfig;
-        //LOG(LogInfo) << "I am checking for joystick there are  "<< InputManager::getInstance()->getNumJoysticks();
 
-        for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
-            InputConfig * config = InputManager::getInstance()->getInputConfigByDevice(it);
+        for (std::list<InputConfig *>::iterator it1=availableConfigured.begin(); it1!=availableConfigured.end(); ++it1)
+        {
+            InputConfig * config = *it1;
             //LOG(LogInfo) << "I am checking for an input named "<< config->getDeviceName() << " this configured ? "<<config->isConfigured();
-            if(!config->isConfigured()) continue;
+            //if(!config->isConfigured()) continue;
             bool ifound = playerConfigGUID.compare(config->getDeviceGUIDString()) == 0;
             //LOG(LogInfo) << "I was checking for an input named "<< playerConfigName << " and i compared to "
             //            << config->getDeviceName();
             if(ifound){
                 found = true;
-                playerInputConfig = config;
+                availableConfigured.erase(it1);
+                playerJoysticks[player] = config;
+                LOG(LogInfo) << "Saved "<< config->getDeviceName() << " for player " << player;
+
+                break;
+            }
+        }
+    }
+    
+    for (int player = 0; player < 2; player++) {
+        InputConfig * playerInputConfig = playerJoysticks[player];
+        std::string playerConfigGUID = "";
+        // si aucune config a été trouvé pour le joueur, on essaie de lui filer un libre
+        if(playerInputConfig == NULL){
+            LOG(LogInfo) << "No config for player " << player;
+
+            for (std::list<InputConfig *>::iterator it1=availableConfigured.begin(); it1!=availableConfigured.end(); ++it1)
+            {
+                playerInputConfig = *it1;
+                availableConfigured.erase(it1);
+                LOG(LogInfo) << "So i set "<< playerInputConfig->getDeviceName() << " for player " << player;
                 break;
             }
         }
 
-        // If the config has not been configured or the peripherial is not connected
-        if (playerConfigGUID.compare("") == 0 || ! found) {
-            playerConfigGUID  = "DEFAULT";
-        }
-        if (playerConfigGUID.compare("DEFAULT") == 0) {
-            command << " " << "DEFAULT " << " -1 DEFAULTDONOTFINDMEINCOMMAND";
-        } else {
+        if(playerInputConfig != NULL){
             command << " " << playerInputConfig->getDeviceGUIDString() << " " <<  playerInputConfig->getDeviceIndex() <<  " \"" <<  playerInputConfig->getDeviceName() << "\"";
+        }else {
+            command << " " << "DEFAULT " << " -1 DEFAULTDONOTFINDMEINCOMMAND";
         }
-
-        //LOG(LogInfo) << "I have for "<< "INPUT P" << player << " a configname : " << playerConfigName;
+        
     }
+        //LOG(LogInfo) << "I have for "<< "INPUT P" << player << " a configname : " << playerConfigName;
+    
     LOG(LogInfo) << "Configure emulators command : " << command.str().c_str();
     return system(command.str().c_str()) == 0;
 }
