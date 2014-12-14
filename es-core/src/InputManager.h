@@ -56,7 +56,7 @@ public:
 	InputConfig* getInputConfigByDevice(int deviceId);
 
 	bool parseEvent(const SDL_Event& ev, Window* window);
-        bool configureEmulators();
+        bool configureEmulators(const std::string& systemName);
 
 };
 

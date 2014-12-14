@@ -283,13 +283,13 @@ void GuiMenu::createConfigInput(){
                 // Add the default setting
 
                 // Allow selection of a default input for each player
-                std::vector<std::shared_ptr<OptionListComponent<InputConfig*>>> options;
+                std::vector<std::shared_ptr<OptionListComponent<std::string>>> options;
                 for (int player = 0; player < 2; player++) {
                     std::stringstream sstm;
                     sstm << "INPUT P" << player +1;
                     std::string confName = sstm.str();
 
-                    auto inputOptionList = std::make_shared< OptionListComponent<InputConfig*> >(mWindow, confName, false);
+                    auto inputOptionList = std::make_shared<OptionListComponent<std::string> >(mWindow, confName, false);
                     options.push_back(inputOptionList);
                     // Checking if a setting has been saved, else setting to default
                     std::string current_p1 = Settings::getInstance()->getString(confName);
@@ -303,14 +303,14 @@ void GuiMenu::createConfigInput(){
                             displayName = displayName.substr(0, 22) + "...";
                         }
                         if(ifound) found = true;
-                        inputOptionList->add(displayName, config, ifound);
+                        inputOptionList->add(displayName, config->getDeviceGUIDString(), ifound);
                     }
                     if (current_p1.compare("") == 0 || !found) {
                         Settings::getInstance()->setString(confName, "DEFAULT");
                     }
                     
                     // ADD default config
-                    inputOptionList->add("DEFAULT", NULL, Settings::getInstance()->getString(confName).compare("DEFAULT") == 0);
+                    inputOptionList->add("DEFAULT", "", Settings::getInstance()->getString(confName).compare("DEFAULT") == 0);
                     
                     // Populate controllers list
                     s->addWithLabel(confName, inputOptionList);
@@ -331,18 +331,13 @@ void GuiMenu::createConfigInput(){
                                 Settings::getInstance()->setString(confName, name);                            
                             } else {
                                 LOG(LogWarning) << "Found the thing ! : name in list  = "<< selectedName;
-                                LOG(LogWarning) << "Found the thing ! : guid  = "<< input_p1->getSelected()->getDeviceGUIDString();
+                                LOG(LogWarning) << "Found the thing ! : guid  = "<< input_p1->getSelected();
 
-                                std::string selectedGuid = input_p1->getSelected()->getDeviceGUIDString();
+                                std::string selectedGuid = input_p1->getSelected();
                                 Settings::getInstance()->setString(confName, selectedGuid);
                             }
                         }
                         Settings::getInstance()->saveFile();
-                        if (InputManager::getInstance()->configureEmulators()) {
-                            window->pushGui(new GuiMsgBox(window, "CONFIGURATION EMULATEURS OK"));
-                        } else {
-                            window->pushGui(new GuiMsgBox(window, "ERREUR LORS DE LA CONFIGURATION DES EMULATEURS"));                      
-                        }
                         // TODO RECONFIGURE DEFAULT SETTINGS ON EMULATIONSTATION ??
                 });
                 /*row.makeAcceptInputHandler([window, this] {

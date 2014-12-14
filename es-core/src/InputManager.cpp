@@ -393,7 +393,7 @@ std::string InputManager::getDeviceGUIDString(int deviceId)
 	return std::string(guid);
 }
 
-bool InputManager::configureEmulators() {
+bool InputManager::configureEmulators(const std::string& systemName) {
     std::stringstream command;
     command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
     // 1 recuperer les configurated
@@ -467,7 +467,7 @@ bool InputManager::configureEmulators() {
         
     }
         //LOG(LogInfo) << "I have for "<< "INPUT P" << player << " a configname : " << playerConfigName;
-    
+    command << " \"" << systemName << "\"" ;
     LOG(LogInfo) << "Configure emulators command : " << command.str().c_str();
     return system(command.str().c_str()) == 0;
 }
