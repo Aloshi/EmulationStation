@@ -16,18 +16,16 @@
 #include "Window.h"
 #include "EmulationStation.h"
 #include "Settings.h"
-#include "ScraperCmdLine.h"
 #include <sstream>
 #include <boost/locale.hpp>
 #include "GamelistDB.h"
+#include "SystemManager.h"
 
 #ifdef WIN32
 #include <Windows.h>
 #endif
 
 namespace fs = boost::filesystem;
-
-bool scrape_cmdline = false;
 
 bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
 {
@@ -69,9 +67,6 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			bool vsync = (strcmp(argv[i + 1], "on") == 0 || strcmp(argv[i + 1], "1") == 0) ? true : false;
 			Settings::getInstance()->setBool("VSync", vsync);
 			i++; // skip vsync value
-		}else if(strcmp(argv[i], "--scrape") == 0)
-		{
-			scrape_cmdline = true;
 		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 #ifdef WIN32
@@ -107,7 +102,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 
 bool verifyHomeFolderExists()
 {
-	//make sure the config directory exists
+	// make sure the config directory exists
 	std::string home = getHomePath();
 	std::string configDir = home + "/.emulationstation";
 	if(!fs::exists(configDir))
@@ -129,15 +124,18 @@ bool loadSystemConfigFile(const char** errorString)
 {
 	*errorString = NULL;
 
-	if(!SystemData::loadConfig())
-	{
+	try {
+		SystemManager::getInstance()->loadConfig();
+	}
+	catch(ESException& e) {
 		LOG(LogError) << "Error while parsing systems configuration file!";
+		LOG(LogError) << e.what();
 		*errorString = "IT LOOKS LIKE YOUR SYSTEMS CONFIGURATION FILE HAS NOT BEEN SET UP OR IS INVALID. YOU'LL NEED TO DO THIS BY HAND, UNFORTUNATELY.\n\n"
 			"VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION.";
 		return false;
 	}
 
-	if(SystemData::sSystemVector.size() == 0)
+	if(SystemManager::getInstance()->getSystems().size() == 0)
 	{
 		LOG(LogError) << "No systems found! Does at least one system have a game present? (check that extensions match!)\n(Also, make sure you've updated your es_systems.cfg for XML!)";
 		*errorString = "WE CAN'T FIND ANY SYSTEMS!\n"
@@ -150,10 +148,16 @@ bool loadSystemConfigFile(const char** errorString)
 	return true;
 }
 
-//called on exit, assuming we get far enough to have the log initialized
-void onExit()
+// called on exit, assuming we get far enough to have the log initialized
+void close_log_on_exit()
 {
 	Log::close();
+}
+
+void delete_singletons_on_exit()
+{
+	delete SystemManager::getInstance();
+	delete InputManager::getInstance();
 }
 
 int main(int argc, char* argv[])
@@ -162,10 +166,12 @@ int main(int argc, char* argv[])
 
 	loadSystemConfigFile(&errorMsg);
 	GamelistDB test("test.db");
-	test.importXML(SystemData::sSystemVector.at(0), SystemData::sSystemVector.at(0)->getGamelistPath(false));
-	test.exportXML(SystemData::sSystemVector.at(0), "test_db_to_xml.xml");
+	SystemData* system = SystemManager::getInstance()->getSystems().at(0);
+	test.importXML(system, system->getGamelistPath(false));
+	test.exportXML(system, "test_db_to_xml.xml");
 
-	/*unsigned int width = 0;
+	/*
+	unsigned int width = 0;
 	unsigned int height = 0;
 
 	std::locale::global(boost::locale::generator().generate(""));
@@ -207,35 +213,35 @@ int main(int argc, char* argv[])
 	}
 #endif
 
-	//if ~/.emulationstation doesn't exist and cannot be created, bail
+	// if ~/.emulationstation doesn't exist and cannot be created, bail
 	if(!verifyHomeFolderExists())
 		return 1;
 
-	//start the logger
+	// start the logger
 	Log::open();
 	LOG(LogInfo) << "EmulationStation - v" << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING;
 
-	//always close the log on exit
-	atexit(&onExit);
+	// always close the log on exit
+	atexit(&close_log_on_exit);
+
+	// delete SystemDatas at exit too
+	atexit(&delete_singletons_on_exit);
 
 	Window window;
 	ViewController::init(&window);
 	window.pushGui(ViewController::get());
 
-	if(!scrape_cmdline)
+	if(!window.init(width, height))
 	{
-		if(!window.init(width, height))
-		{
-			LOG(LogError) << "Window failed to initialize!";
-			return 1;
-		}
-
-		std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
-		LOG(LogInfo) << "Checking available OpenGL extensions...";
-		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
-
-		window.renderLoadingScreen();
+		LOG(LogError) << "Window failed to initialize!";
+		return 1;
 	}
+
+	std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
+	LOG(LogInfo) << "Checking available OpenGL extensions...";
+	LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
+
+	window.renderLoadingScreen();
 
 	const char* errorMsg = NULL;
 	if(!loadSystemConfigFile(&errorMsg))
@@ -244,8 +250,7 @@ int main(int argc, char* argv[])
 		if(errorMsg == NULL)
 		{
 			LOG(LogError) << "Unknown error occured while parsing system config file.";
-			if(!scrape_cmdline)
-				Renderer::deinit();
+			Renderer::deinit();
 			return 1;
 		}
 
@@ -259,12 +264,6 @@ int main(int argc, char* argv[])
 			}));
 	}
 
-	//run the command line scraper then quit
-	if(scrape_cmdline)
-	{
-		return run_scraper_cmdline();
-	}
-
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
 
@@ -272,7 +271,7 @@ int main(int argc, char* argv[])
 	// this makes for no delays when accessing content, but a longer startup time
 	ViewController::get()->preload();
 
-	//choose which GUI to open depending on if an input configuration already exists
+	// choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
 	{
 		if(fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
@@ -338,10 +337,10 @@ int main(int argc, char* argv[])
 
 	while(window.peekGui() != ViewController::get())
 		delete window.peekGui();
-	window.deinit();
 
-	SystemData::deleteSystems();
+	window.deinit();
 	*/
+
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
 	return 0;

@@ -2,6 +2,7 @@
 #include "guis/GuiScraperMulti.h"
 #include "guis/GuiMsgBox.h"
 #include "views/ViewController.h"
+#include "SystemManager.h"
 
 #include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
@@ -22,7 +23,7 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 
 	//add systems (all with a platformid specified selected)
 	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, "SCRAPE THESE SYSTEMS", true);
-	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	for(auto it = SystemManager::getInstance()->getSystems().begin(); it != SystemManager::getInstance()->getSystems().end(); it++)
 	{
 		if(!(*it)->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
 			mSystems->add((*it)->getFullName(), *it, !(*it)->getPlatformIds().empty());

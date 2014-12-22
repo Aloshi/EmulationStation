@@ -11,6 +11,7 @@
 #include "animations/LaunchAnimation.h"
 #include "animations/MoveCameraAnimation.h"
 #include "animations/LambdaAnimation.h"
+#include "SystemManager.h"
 
 ViewController* ViewController::sInstance = NULL;
 
@@ -44,12 +45,12 @@ void ViewController::goToStart()
 	/* mState.viewing = START_SCREEN;
 	mCurrentView.reset();
 	playViewTransition(); */
-	goToSystemView(SystemData::sSystemVector.at(0));
+	goToSystemView(SystemManager::getInstance()->getSystems().at(0));
 }
 
 int ViewController::getSystemId(SystemData* system)
 {
-	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
+	const std::vector<SystemData*>& sysVec = SystemManager::getInstance()->getSystems();
 	return std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
 }
 
@@ -72,7 +73,7 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getNext());
+	goToGameList(SystemManager::getInstance()->getNext(system));
 }
 
 void ViewController::goToPrevGameList()
@@ -80,7 +81,7 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getPrev());
+	goToGameList(SystemManager::getInstance()->getPrev(system));
 }
 
 void ViewController::goToGameList(SystemData* system)
@@ -230,7 +231,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 
 	view->setTheme(system->getTheme());
 
-	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
+	const std::vector<SystemData*>& sysVec = SystemManager::getInstance()->getSystems();
 	int id = std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
 	view->setPosition(id * (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight() * 2);
 
@@ -318,7 +319,8 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 void ViewController::preload()
 {
-	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	const std::vector<SystemData*>& systems = SystemManager::getInstance()->getSystems();
+	for(auto it = systems.begin(); it != systems.end(); it++)
 	{
 		getGameListView(*it);
 	}
@@ -376,7 +378,7 @@ void ViewController::reloadAll()
 		mSystemListView->goToSystem(mState.getSystem(), false);
 		mCurrentView = mSystemListView;
 	}else{
-		goToSystemView(SystemData::sSystemVector.front());
+		goToSystemView(SystemManager::getInstance()->getSystems().front());
 	}
 
 	updateHelpPrompts();
