@@ -167,7 +167,7 @@ int setLocale(char * argv1)
 	boost::locale::localization_backend_manager::global(my);
     	// set this backend globally
 
-    	boost::locale::generator gen();
+    	boost::locale::generator gen;
 
 	std::string localeDir = abs_exe_path;
 	localeDir += "/locale/";
