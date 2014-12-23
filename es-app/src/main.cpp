@@ -160,7 +160,7 @@ int setLocale(char * argv1)
     		getcwd(abs_exe_path, sizeof(abs_exe_path));
     		chdir(path_save);
   	}
-	boost::locale::boostlocalization_backend_manager my = localization_backend_manager::global(); 
+	boost::locale::localization_backend_manager my = localization_backend_manager::global(); 
 	// Get global backend
 
     	my.select("std"); 
