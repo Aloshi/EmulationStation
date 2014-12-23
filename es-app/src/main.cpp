@@ -146,7 +146,6 @@ void onExit()
 
 int setLocale(char * argv1)
 {
-	boost::locale::generator gen;
  	char path_save[PATH_MAX];
   	char abs_exe_path[PATH_MAX];
   	char *p;
@@ -161,6 +160,14 @@ int setLocale(char * argv1)
     		getcwd(abs_exe_path, sizeof(abs_exe_path));
     		chdir(path_save);
   	}
+	boost::locale::boostlocalization_backend_manager my = localization_backend_manager::global(); 
+	// Get global backend
+
+    	my.select("std"); 
+	boost::locale::localization_backend_manager::global(my);
+    	// set this backend globally
+
+    	boost::locale::generator gen();
 
 	std::string localeDir = abs_exe_path;
 	localeDir += "/locale/";
