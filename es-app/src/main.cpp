@@ -167,7 +167,8 @@ int setLocale(char * argv1)
 	LOG(LogInfo) << "Setting local directory to " << localeDir;
     	// Specify location of dictionaries
     	gen.add_messages_path(localeDir);
-    	gen.add_messages_domain("messages");
+    	gen.add_messages_path("/usr/share/locale");
+    	gen.add_messages_domain("emulationstation2");
 
     	// Generate locales and imbue them to iostream
     	std::locale::global(gen(""));
