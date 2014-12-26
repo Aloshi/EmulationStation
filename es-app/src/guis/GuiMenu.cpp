@@ -284,7 +284,7 @@ void GuiMenu::createConfigInput(){
 
                 // Allow selection of a default input for each player
                 std::vector<std::shared_ptr<OptionListComponent<std::string>>> options;
-                for (int player = 0; player < 2; player++) {
+                for (int player = 0; player < 4; player++) {
                     std::stringstream sstm;
                     sstm << "INPUT P" << player +1;
                     std::string confName = sstm.str();
@@ -317,7 +317,7 @@ void GuiMenu::createConfigInput(){
                              
                 }
                 s->addSaveFunc([this, options, window] {
-                      for (int player = 0; player < 2; player++) {
+                      for (int player = 0; player < 4; player++) {
                             std::stringstream sstm;
                             sstm << "INPUT P" << player+1;
                             std::string confName = sstm.str();

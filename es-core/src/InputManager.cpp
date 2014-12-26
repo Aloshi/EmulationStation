@@ -415,13 +415,12 @@ bool InputManager::configureEmulators(const std::string& systemName) {
         // enlever des disponibles 
     std::map<int, InputConfig*> playerJoysticks;
 
-    for (int player = 0; player < 2; player++) {
+    for (int player = 0; player < 4; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player+1;
         std::string confName = sstm.str();
 
         std::string playerConfigGUID = Settings::getInstance()->getString(confName);
-        bool found = false;
         InputConfig * playerInputConfig;
 
         for (std::list<InputConfig *>::iterator it1=availableConfigured.begin(); it1!=availableConfigured.end(); ++it1)
@@ -433,7 +432,6 @@ bool InputManager::configureEmulators(const std::string& systemName) {
             //LOG(LogInfo) << "I was checking for an input named "<< playerConfigName << " and i compared to "
             //            << config->getDeviceName();
             if(ifound){
-                found = true;
                 availableConfigured.erase(it1);
                 playerJoysticks[player] = config;
                 LOG(LogInfo) << "Saved "<< config->getDeviceName() << " for player " << player;
@@ -443,7 +441,7 @@ bool InputManager::configureEmulators(const std::string& systemName) {
         }
     }
     
-    for (int player = 0; player < 2; player++) {
+    for (int player = 0; player < 4; player++) {
         InputConfig * playerInputConfig = playerJoysticks[player];
         std::string playerConfigGUID = "";
         // si aucune config a été trouvé pour le joueur, on essaie de lui filer un libre
@@ -462,7 +460,7 @@ bool InputManager::configureEmulators(const std::string& systemName) {
         if(playerInputConfig != NULL){
             command << " " << playerInputConfig->getDeviceGUIDString() << " " <<  playerInputConfig->getDeviceIndex() <<  " \"" <<  playerInputConfig->getDeviceName() << "\"";
         }else {
-            command << " " << "DEFAULT " << " -1 DEFAULTDONOTFINDMEINCOMMAND";
+            command << " " << "DEFAULT" << " -1 DEFAULTDONOTFINDMEINCOMMAND";
         }
         
     }
