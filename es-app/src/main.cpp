@@ -163,8 +163,11 @@ int main(int argc, char* argv[])
 {
 	const char* errorMsg;
 
+	Log::open();
+
 	loadSystemConfigFile(&errorMsg);
 	GamelistDB test("test.db");
+
 	const std::vector<SystemData*>& systems = SystemManager::getInstance()->getSystems();
 	for(auto it = systems.begin(); it != systems.end(); it++)
 	{
@@ -174,6 +177,8 @@ int main(int argc, char* argv[])
 		out_path += sys->getName() + ".xml";
 		test.exportXML(sys, out_path);
 	}
+
+	Log::close();
 
 	/*
 	unsigned int width = 0;

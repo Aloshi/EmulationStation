@@ -3,8 +3,11 @@
 #include "Log.h"
 #include "SystemData.h"
 #include <sstream>
+#include <map>
 
 namespace fs = boost::filesystem;
+
+#define RESERVED_COLUMNS 4
 
 std::string pathToFileID(const fs::path& path, const fs::path& systemStartPath)
 {
@@ -105,7 +108,10 @@ void GamelistDB::openDB(const char* path)
 			"\t" << sqlite3_errmsg(mDB);
 	}
 
-	createTables();
+	createMissingTables();
+
+	if(!hasValidSchema())
+		recreateTables();
 }
 
 void GamelistDB::closeDB()
@@ -117,7 +123,7 @@ void GamelistDB::closeDB()
 	}
 }
 
-void GamelistDB::createTables()
+void GamelistDB::createMissingTables()
 {
 	auto decl_type = GAME_METADATA;
 	const std::vector<MetaDataDecl>& decl = getMDDMap().at(decl_type);
@@ -174,15 +180,98 @@ void GamelistDB::createTables()
 		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
 }
 
-// what this does:
-// - if we add at least one valid file in this folder, return true.
-// - given a folder (start_dir), go through all the files and folders in it.
-// - if it's a file, check if its extension matches our list (extensions),
-//   adding it to the "files" table if it does (filetype = game).
-//   also mark this folder as having a file.
-// - if it's a folder, recurse into it. if that recursion returns true, also mark this folder as having a file.
-// - if this folder is marked as having a file at return time, add it to the database.
+// returns a vector of all columns in a particular table
+// (order is preserved)
+std::vector<std::string> get_columns(sqlite3* db, const std::string& table_name)
+{
+	std::vector<std::string> columns;
 
+	std::string query = "PRAGMA table_info(" + table_name + ")";
+	SQLPreparedStmt stmt(db, query);
+	while(stmt.step() != SQLITE_DONE)
+	{
+		columns.push_back((const char*)sqlite3_column_text(stmt, 1));
+	}
+
+	return columns;
+}
+
+// returns a vector of all columns common to all supplied tables
+// order is not preserved!
+std::vector<std::string> get_common_columns(sqlite3* db, const std::vector<std::string>& table_names)
+{
+	std::map<std::string, int> columns;
+
+	for(auto it = table_names.begin(); it != table_names.end(); it++)
+	{
+		std::string query = "PRAGMA table_info(" + *it + ")";
+		SQLPreparedStmt stmt(db, query);
+		while(stmt.step() != SQLITE_DONE)
+		{
+			columns[((const char*)sqlite3_column_text(stmt, 1))]++;
+		}
+	}
+
+	std::vector<std::string> common;
+	for(auto it = columns.begin(); it != columns.end(); it++)
+	{
+		if(it->second == table_names.size())
+			common.push_back(it->first);
+	}
+
+	return common;
+}
+
+bool GamelistDB::hasValidSchema() const
+{
+	auto decl_type = GAME_METADATA;
+	const std::vector<MetaDataDecl>& decl = getMDDMap().at(decl_type);
+
+	std::vector<std::string> columns = get_columns(mDB, "files");
+	if(columns.size() != RESERVED_COLUMNS + decl.size())
+		return false;
+
+	for(unsigned int i = 0; i < decl.size(); i++)
+	{
+		if(columns[RESERVED_COLUMNS + i] != decl.at(i).key)
+		{
+			LOG(LogInfo) << "Non-matching column #" << i << " (expected " << decl.at(i).key << ", got " << columns[RESERVED_COLUMNS + i] << ")";
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void GamelistDB::recreateTables()
+{
+	LOG(LogInfo) << "Re-creating files table...";
+
+	if(sqlite3_exec(mDB, "ALTER TABLE files RENAME TO files_old", NULL, NULL, NULL))
+		throw DBException() << "Existing table could not be renamed!";
+
+	createMissingTables();
+
+	std::vector<std::string> common_cols = get_common_columns(mDB, { "files", "files_old" });
+	std::stringstream ss;
+	for(unsigned int i = 0; i < common_cols.size(); i++)
+	{
+		ss << common_cols.at(i) << (i + 1 < common_cols.size() ? ", " : "");
+	}
+
+	std::string copy = "INSERT INTO files (" + ss.str() + ") SELECT " + ss.str() + " FROM files_old";
+	if(sqlite3_exec(mDB, copy.c_str(), NULL, NULL, NULL))
+		throw DBException() << "Error copying into new table!";
+
+	if(sqlite3_exec(mDB, "DROP TABLE files_old", NULL, NULL, NULL))
+		throw DBException() << "Error dropping old table!";
+
+	LOG(LogInfo) << "Recreated files table successfully!";
+}
+
+// used by populate_recursive to insert a single file into the database
+// assumes insert_stmt already has system ID set, and that
+// ?1 = fileid and ?2 = filetype
 void add_file(const char* fileid, int filetype, sqlite3* db, sqlite3_stmt* insert_stmt)
 {
 	if(sqlite3_bind_text(insert_stmt, 1, fileid, strlen(fileid), SQLITE_STATIC))
@@ -197,6 +286,15 @@ void add_file(const char* fileid, int filetype, sqlite3* db, sqlite3_stmt* inser
 	if(sqlite3_reset(insert_stmt))
 		throw DBException() << "Error resetting statement for \"" << fileid << "\" in populate().\n\t" << sqlite3_errmsg(db);
 }
+
+// what this does:
+// - if we add at least one valid file in this folder, return true.
+// - given a folder (start_dir), go through all the files and folders in it.
+// - if it's a file, check if its extension matches our list (extensions),
+//   adding it to the "files" table if it does (filetype = game).
+//   also mark this folder as having a file.
+// - if it's a folder, recurse into it. if that recursion returns true, also mark this folder as having a file.
+// - if this folder is marked as having a file at return time, add it to the database.
 
 bool populate_recursive(const fs::path& relativeTo, const std::vector<std::string>& extensions, 
 	const fs::path& start_dir, sqlite3* db, sqlite3_stmt* insert_stmt)
@@ -320,7 +418,7 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	auto& mdd = metadata.getMDD();
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
-		ss << "?" << i + 5;
+		ss << "?" << i + RESERVED_COLUMNS + 1;
 
 		if(i + 1 < mdd.size())
 			ss << ", ";
@@ -337,7 +435,7 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
 		const std::string& val = metadata.get(mdd.at(i).key);
-		sqlite3_bind_text(stmt, i + 5, val.c_str(), val.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, i + RESERVED_COLUMNS + 1, val.c_str(), val.size(), SQLITE_STATIC);
 	}
 
 	stmt.step_expected(SQLITE_DONE);

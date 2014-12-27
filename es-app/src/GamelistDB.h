@@ -14,7 +14,7 @@ boost::filesystem::path fileIDToPath(const std::string& fileID, SystemData* syst
 /*
  Gamelist DB format:
 
- A separate table is made for each system (snes, nes, etc.), with these columns:
+ A single table named "files" is created, with columns like so:
 
  [file ID] [system ID] [file type] [file exists] [metadata 0] [metadata 1] [metadata 2] ... etc.
  The primary key for this table is the pair (file ID, system ID).
@@ -63,7 +63,9 @@ public:
 
 private:
 	void openDB(const char* path);
-	void createTables();
+	void createMissingTables(); // will do nothing if a "files" table already exists
+	bool hasValidSchema() const; // returns true if the current "files" table's schema matches our metadata declarations
+	void recreateTables(); // recreates the "files" table with the current metadata schema, copying any values with the same column names
 	void closeDB();
 
 	sqlite3* mDB;
