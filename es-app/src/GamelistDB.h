@@ -19,7 +19,8 @@ boost::filesystem::path fileIDToPath(const std::string& fileID, SystemData* syst
  [file ID] [system ID] [file type] [file exists] [metadata 0] [metadata 1] [metadata 2] ... etc.
  The primary key for this table is the pair (file ID, system ID).
 
- File ID is a string. File type is an int. Metadata types correspond to the MetaDataDecl vector.
+ File ID and system ID are strings. File type is an int. File exists is a boolean. 
+ Metadata types correspond to the MetaDataDecl vector.
 
  File ID is in the following format:
  ./path/to/game.rom  - for paths relative to system root
@@ -29,12 +30,10 @@ boost::filesystem::path fileIDToPath(const std::string& fileID, SystemData* syst
 
  File ID is ALWAYS stored with forward slashes ("generic directory separators," as boost::filesystem calls them).
 
- File type is an enum value, where:
- 0 - game
- 1 - folder
+ File type corresponds to the C++ enum FileType.
 
  File exists is a boolean indicating whether or not the file is present on the file system.
- This value is set at startup.
+ This value is set at startup by the "updateExists" method.
 */
 
 

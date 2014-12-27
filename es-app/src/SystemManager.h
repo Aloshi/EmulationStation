@@ -38,6 +38,9 @@ private:
 
 	// if forWrite is true, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 	static boost::filesystem::path getConfigPath(bool forWrite);
+	static bool isValidSystemName(const std::string& name);
 	static std::string getDatabasePath();
-	void writeExampleConfig(const boost::filesystem::path& path);
+	static void writeExampleConfig(const boost::filesystem::path& path);
+
+	void updateDatabase();
 };

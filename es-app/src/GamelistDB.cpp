@@ -337,12 +337,10 @@ void GamelistDB::addMissingFiles(const SystemData* system)
 	const std::string& relativeTo = system->getStartPath(); 
 	const std::vector<std::string>& extensions = system->getExtensions();
 
-	// ?1 = fileid, ?2 = filetype
-	std::stringstream ss;
-	ss << "INSERT OR IGNORE INTO files (fileid, systemid, filetype) VALUES (?1, " << system->getName() << ", ?2)";
-	std::string insert = ss.str();
-	
-	SQLPreparedStmt stmt(mDB, insert);
+	// ?1 = fileid, ?2 = filetype, ?3 = systemid
+	SQLPreparedStmt stmt(mDB, "INSERT OR IGNORE INTO files (fileid, systemid, filetype, fileexists) VALUES (?1, ?3, ?2, 1)");
+	sqlite3_bind_text(stmt, 3, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
+
 	SQLTransaction transaction(mDB);
 
 	// actually start adding things
@@ -355,16 +353,11 @@ void GamelistDB::updateExists(const SystemData* system)
 {
 	const std::string& relativeTo = system->getStartPath();
 
-	std::stringstream ss;
-	ss << "SELECT fileid FROM files WHERE systemid = " << system->getName();
-	std::string readstr = ss.str();
-
-	ss.str("");
-	ss << "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = " << system->getName();
-	std::string updatestr = ss.str();
-
-	SQLPreparedStmt readStmt(mDB, readstr);
-	SQLPreparedStmt updateStmt(mDB, updatestr);
+	SQLPreparedStmt readStmt(mDB, "SELECT fileid FROM files WHERE systemid = ?1");
+	sqlite3_bind_text(readStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
+	
+	SQLPreparedStmt updateStmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
+	sqlite3_bind_text(readStmt, 3, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 
 	SQLTransaction transaction(mDB);
 

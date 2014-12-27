@@ -122,7 +122,7 @@ void SystemManager::loadConfig()
 		themeFolder = system.child("theme").text().as_string(name.c_str());
 
 		// validate as best we can (make sure we're not missing required information)
-		if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
+		if(!isValidSystemName(name) || path.empty() || extensions.empty() || cmd.empty())
 			throw ESException() << "System \"" << name << "\" is missing name, path, extension, or command!";
 
 		// convert path to generic directory seperators
@@ -142,6 +142,8 @@ void SystemManager::loadConfig()
 			mSystems.push_back(newSys);
 		}
 	}
+
+	updateDatabase();
 }
 
 void SystemManager::writeExampleConfig(const fs::path& path)
@@ -217,4 +219,29 @@ SystemData* SystemManager::getPrev(SystemData* system) const
 		return *mSystems.rbegin();
 	else
 		return *it;
+}
+
+bool SystemManager::isValidSystemName(const std::string& name)
+{
+	if(name.empty())
+		return false;
+
+	const std::string invalid_chars = "/\\";
+	for(unsigned int i = 0; i < name.size(); i++)
+	{
+		for(unsigned int j = 0; j < invalid_chars.size(); j++)
+			if(name[i] == invalid_chars[j])
+				return false;
+	}
+
+	return true;
+}
+
+void SystemManager::updateDatabase()
+{
+	for(auto it = mSystems.begin(); it != mSystems.end(); it++)
+	{
+		mDatabase.addMissingFiles(*it);
+		mDatabase.updateExists(*it);
+	}
 }

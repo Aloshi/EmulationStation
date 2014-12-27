@@ -161,26 +161,6 @@ void delete_singletons_on_exit()
 
 int main(int argc, char* argv[])
 {
-	const char* errorMsg;
-
-	Log::open();
-
-	loadSystemConfigFile(&errorMsg);
-	GamelistDB test("test.db");
-
-	const std::vector<SystemData*>& systems = SystemManager::getInstance()->getSystems();
-	for(auto it = systems.begin(); it != systems.end(); it++)
-	{
-		SystemData* sys = *it;
-		test.importXML(sys, sys->getGamelistPath(false));
-		std::string out_path = "test_db_to_xml_";
-		out_path += sys->getName() + ".xml";
-		test.exportXML(sys, out_path);
-	}
-
-	Log::close();
-
-	/*
 	unsigned int width = 0;
 	unsigned int height = 0;
 
@@ -349,8 +329,7 @@ int main(int argc, char* argv[])
 		delete window.peekGui();
 
 	window.deinit();
-	*/
-
+	
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
 	return 0;
