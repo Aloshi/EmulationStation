@@ -3,6 +3,8 @@
 #include <boost/filesystem.hpp>
 #include <vector>
 
+#include "GamelistDB.h"
+
 class SystemData;
 
 class SystemManager
@@ -10,6 +12,7 @@ class SystemManager
 public:
 	static SystemManager* getInstance();
 
+	SystemManager();
 	virtual ~SystemManager();
 
 	inline const std::vector<SystemData*>& getSystems() const { return mSystems; }
@@ -31,8 +34,10 @@ private:
 	static SystemManager* sInstance;
 	
 	std::vector<SystemData*> mSystems;
+	GamelistDB mDatabase;
 
 	// if forWrite is true, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 	static boost::filesystem::path getConfigPath(bool forWrite);
+	static std::string getDatabasePath();
 	void writeExampleConfig(const boost::filesystem::path& path);
 };

@@ -17,6 +17,15 @@ SystemManager* SystemManager::getInstance()
 	return sInstance;
 }
 
+std::string SystemManager::getDatabasePath()
+{
+	return getHomePath() + "/.emulationstation/gamelist.db";
+}
+
+SystemManager::SystemManager() : mDatabase(getDatabasePath())
+{
+}
+
 SystemManager::~SystemManager()
 {
 	// delete all systems
@@ -119,6 +128,10 @@ void SystemManager::loadConfig()
 		// convert path to generic directory seperators
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
+
+		// strip trailing slash
+		if(path[path.size() - 1] == '/')
+			path = path.erase(path.size() - 1);
 
 		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
 		if(newSys->getRootFolder()->getChildren().size() == 0)

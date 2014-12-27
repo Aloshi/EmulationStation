@@ -6,20 +6,90 @@
 
 namespace fs = boost::filesystem;
 
-std::string pathToFileID(const fs::path& path, SystemData* system)
+std::string pathToFileID(const fs::path& path, const fs::path& systemStartPath)
 {
-	return makeRelativePath(path, system->getStartPath(), true).generic_string();
+	return makeRelativePath(path, systemStartPath, false).generic_string();
 }
 
-fs::path fileIDToPath(const std::string& fileID, SystemData* system)
+std::string pathToFileID(const fs::path& path, const SystemData* system)
+{
+	return pathToFileID(path, system->getStartPath());
+}
+
+fs::path fileIDToPath(const std::string& fileID, const SystemData* system)
 {
 	return resolvePath(fileID, system->getStartPath(), true);
 }
 
+
+// super simple RAII wrapper for sqlite3
+// prepared statement, can be used just like an sqlite3_stmt* thanks to overloaded operator
+class SQLPreparedStmt
+{
+public:
+	SQLPreparedStmt(sqlite3* db, const char* stmt) : mDB(db), mStmt(NULL) {
+		if(sqlite3_prepare_v2(db, stmt, strlen(stmt), &mStmt, NULL))
+			throw DBException() << "Error creating prepared stmt \"" << stmt << "\".\n\t" << sqlite3_errmsg(db);
+	}
+
+	SQLPreparedStmt(sqlite3* db, const std::string& stmt) : SQLPreparedStmt(db, stmt.c_str()) {};
+
+	int step() { return sqlite3_step(mStmt); }
+
+	void step_expected(int expected) {
+		if(step() != expected)
+			throw DBException() << "Step failed!\n\t" << sqlite3_errmsg(mDB);
+	}
+
+	void reset() { 
+		if(sqlite3_reset(mStmt))
+			throw DBException() << "Error resetting statement!\n\t" << sqlite3_errmsg(mDB);
+	}
+
+	~SQLPreparedStmt() {
+		if(mStmt)
+			sqlite3_finalize(mStmt);
+	}
+
+	operator sqlite3_stmt*() { return mStmt; }
+
+private:
+	sqlite3* mDB; // used for error messages
+	sqlite3_stmt* mStmt;
+};
+
+// encapsulates a transaction that cannot outlive the lifetime of this object
+class SQLTransaction
+{
+public:
+	SQLTransaction(sqlite3* db) : mDB(db) {
+		if(sqlite3_exec(mDB, "BEGIN TRANSACTION", NULL, NULL, NULL))
+			throw DBException() << "Error beginning transaction.\n\t" << sqlite3_errmsg(mDB);
+	}
+
+	void commit() {
+		if(!mDB)
+			throw DBException() << "Transaction already committed!";
+
+		if(sqlite3_exec(mDB, "COMMIT TRANSACTION", NULL, NULL, NULL))
+			throw DBException() << "Error committing transaction.\n\t" << sqlite3_errmsg(mDB);
+
+		mDB = NULL;
+	}
+
+	~SQLTransaction() {
+		if(mDB)
+			commit();
+	}
+
+private:
+	sqlite3* mDB;
+};
+
+
 GamelistDB::GamelistDB(const std::string& path) : mDB(NULL)
 {
 	openDB(path.c_str());
-	createTables();
 }
 
 GamelistDB::~GamelistDB()
@@ -34,6 +104,8 @@ void GamelistDB::openDB(const char* path)
 		throw DBException() << "Could not open database \"" << path << "\".\n"
 			"\t" << sqlite3_errmsg(mDB);
 	}
+
+	createTables();
 }
 
 void GamelistDB::closeDB()
@@ -52,8 +124,10 @@ void GamelistDB::createTables()
 
 	std::stringstream ss;
 	ss << "CREATE TABLE IF NOT EXISTS files (" <<
-		"fileid VARCHAR(255), " <<
-		"isfolder BOOLEAN NOT NULL, ";
+		"fileid VARCHAR(255) NOT NULL, " <<
+		"systemid VARCHAR(255) NOT NULL, " <<
+		"filetype INT NOT NULL, " <<
+		"fileexists BOOLEAN, ";
 	for(auto it = decl.begin(); it != decl.end(); it++)
 	{
 		// format here is "[key] [type] DEFAULT [default_value],"
@@ -94,158 +168,135 @@ void GamelistDB::createTables()
 		ss << ", ";
 	}
 
-	ss << "PRIMARY KEY (fileid))";
+	ss << "PRIMARY KEY (fileid, systemid))";
 
 	if(sqlite3_exec(mDB, ss.str().c_str(), NULL, NULL, NULL))
 		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
 }
 
-void populate_recursive(const fs::path& relativeTo, const std::vector<std::string>& extensions, const fs::path& start_dir, sqlite3* db, sqlite3_stmt* insert_stmt)
+// what this does:
+// - if we add at least one valid file in this folder, return true.
+// - given a folder (start_dir), go through all the files and folders in it.
+// - if it's a file, check if its extension matches our list (extensions),
+//   adding it to the "files" table if it does (filetype = game).
+//   also mark this folder as having a file.
+// - if it's a folder, recurse into it. if that recursion returns true, also mark this folder as having a file.
+// - if this folder is marked as having a file at return time, add it to the database.
+
+void add_file(const char* fileid, int filetype, sqlite3* db, sqlite3_stmt* insert_stmt)
+{
+	if(sqlite3_bind_text(insert_stmt, 1, fileid, strlen(fileid), SQLITE_STATIC))
+		throw DBException() << "Error binding fileid in populate().\n\t" << sqlite3_errmsg(db);
+
+	if(sqlite3_bind_int(insert_stmt, 2, FileType::GAME))
+		throw DBException() << "Error binding filetype in populate().\n\t" << sqlite3_errmsg(db);
+
+	if(sqlite3_step(insert_stmt) != SQLITE_DONE)
+		throw DBException() << "Error adding file \"" << fileid << "\" in populate().\n\t" << sqlite3_errmsg(db);
+
+	if(sqlite3_reset(insert_stmt))
+		throw DBException() << "Error resetting statement for \"" << fileid << "\" in populate().\n\t" << sqlite3_errmsg(db);
+}
+
+bool populate_recursive(const fs::path& relativeTo, const std::vector<std::string>& extensions, 
+	const fs::path& start_dir, sqlite3* db, sqlite3_stmt* insert_stmt)
 {
 	bool contains; // ignored
+
+	bool has_a_file = false;
 	for(fs::directory_iterator end, dir(start_dir); dir != end; ++dir)
 	{
 		if(fs::is_directory(*dir))
 		{
-			populate_recursive(relativeTo, extensions, *dir, db, insert_stmt);
+			if(populate_recursive(relativeTo, extensions, *dir, db, insert_stmt))
+				has_a_file = true;
+
 			continue;
 		}
 
 		fs::path path = *dir;
-		path = removeCommonPath(path, relativeTo, contains).generic_string();
-
 		if(std::find(extensions.begin(), extensions.end(), path.extension()) == extensions.end())
 			continue;
 
-		const std::string fileid_str = path.generic_string();
-		if(sqlite3_bind_text(insert_stmt, 1, fileid_str.c_str(), fileid_str.size(), SQLITE_STATIC))
-		{
-			LOG(LogError) << "Error binding fileid in populate().\n\t" << sqlite3_errmsg(db);
-			break;
-		}
+		const std::string fileid = pathToFileID(path, relativeTo);
+		add_file(fileid.c_str(), FileType::GAME, db, insert_stmt);
 
-		if(sqlite3_step(insert_stmt) != SQLITE_DONE)
-		{
-			LOG(LogError) << "Error committing game \"" << fileid_str << "\" in populate().\n\t" << sqlite3_errmsg(db);
-			break;
-		}
-
-		if(sqlite3_reset(insert_stmt))
-		{
-			LOG(LogError) << "Error resetting statement for \"" << fileid_str << "\" in populate().\n\t" << sqlite3_errmsg(db);
-			break;
-		}
+		has_a_file = true;
 	}
+
+	if(has_a_file)
+	{
+		// this folder had a game, add it to the DB
+		std::string fileid = pathToFileID(start_dir, relativeTo);
+		add_file(fileid.c_str(), FileType::FOLDER, db, insert_stmt);
+	}
+
+	return has_a_file;
 }
 
-void GamelistDB::populate(const std::string& relativeTo, const std::vector<std::string>& extensions)
+void GamelistDB::addMissingFiles(const SystemData* system)
 {
-	const char* insert = "INSERT OR IGNORE INTO game (fileid) VALUES (?1)";
+	const std::string& relativeTo = system->getStartPath(); 
+	const std::vector<std::string>& extensions = system->getExtensions();
 
-	sqlite3_stmt* stmt;
-	if(sqlite3_prepare_v2(mDB, insert, strlen(insert), &stmt, NULL))
-		throw DBException() << "Error preparing insert statement in populate().\n\t" << sqlite3_errmsg(mDB);
+	// ?1 = fileid, ?2 = filetype
+	std::stringstream ss;
+	ss << "INSERT OR IGNORE INTO files (fileid, systemid, filetype) VALUES (?1, " << system->getName() << ", ?2)";
+	std::string insert = ss.str();
+	
+	SQLPreparedStmt stmt(mDB, insert);
+	SQLTransaction transaction(mDB);
 
-	if(sqlite3_exec(mDB, "BEGIN TRANSACTION", NULL, NULL, NULL))
-	{
-		sqlite3_finalize(stmt);
-		throw DBException() << "Error beginning transaction in populate().\n\t" << sqlite3_errmsg(mDB);
-	}
-
-	// fill the game table
+	// actually start adding things
 	populate_recursive(relativeTo, extensions, relativeTo, mDB, stmt);
 
-	int err = sqlite3_exec(mDB, "COMMIT TRANSACTION", NULL, NULL, NULL);
-	sqlite3_finalize(stmt);
-
-	if(err)
-		throw DBException() << "Error committing transaction in populate().\n\t" << sqlite3_errmsg(mDB);
+	transaction.commit();
 }
 
-void GamelistDB::prune(const std::string& relativeTo)
+void GamelistDB::updateExists(const SystemData* system)
 {
-	sqlite3_stmt* readStmt;
-	const char* read = "SELECT fileid FROM game";
-	if(sqlite3_prepare_v2(mDB, read, strlen(read), &readStmt, NULL))
-		throw DBException() << "Error preparing read statement.\n\t" << sqlite3_errmsg(mDB);
+	const std::string& relativeTo = system->getStartPath();
 
-	sqlite3_stmt* removeStmt;
-	const char* remove = "DELETE FROM game WHERE fileid = ?1";
-	if(sqlite3_prepare_v2(mDB, remove, strlen(remove), &removeStmt, NULL))
-	{
-		sqlite3_finalize(readStmt);
-		throw DBException() << "Error preparing delete statement.\n\t" << sqlite3_errmsg(mDB);
-	}
+	std::stringstream ss;
+	ss << "SELECT fileid FROM files WHERE systemid = " << system->getName();
+	std::string readstr = ss.str();
 
-	if(sqlite3_exec(mDB, "BEGIN TRANSACTION", NULL, NULL, NULL))
-	{
-		sqlite3_finalize(readStmt);
-		sqlite3_finalize(removeStmt);
-		throw DBException() << "Error beginning transaction.\n\t" << sqlite3_errmsg(mDB);
-	}
+	ss.str("");
+	ss << "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = " << system->getName();
+	std::string updatestr = ss.str();
+
+	SQLPreparedStmt readStmt(mDB, readstr);
+	SQLPreparedStmt updateStmt(mDB, updatestr);
+
+	SQLTransaction transaction(mDB);
 
 	// for each game, check if its file exists - if it doesn't remove it from the DB
-	while(sqlite3_step(readStmt) != SQLITE_DONE)
+	while(readStmt.step() != SQLITE_DONE)
 	{
 		const char* path = (const char*)sqlite3_column_text(readStmt, 0);
-		if(!fs::exists(relativeTo + "/" + path) && !fs::exists(path))
-		{
-			// doesn't exist, remove it
-			LOG(LogInfo) << " Pruning game: \"" << relativeTo << "/" << path << "\"";
-			sqlite3_bind_text(removeStmt, 1, path, strlen(path), SQLITE_STATIC);
-			int err = sqlite3_step(removeStmt);
-			if(err != SQLITE_DONE)
-			{
-				LOG(LogError) << "Error in prune() remove statement: " << sqlite3_errstr(err);
-				break;
-			}
-			sqlite3_reset(removeStmt);
-		}
+
+		bool exists = false;
+		if(path && path[0] == '.') // it's relative
+			exists = fs::exists(relativeTo + "/" + path);
+		else
+			exists = fs::exists(path);
+
+		sqlite3_bind_text(updateStmt, 2, path, strlen(path), SQLITE_STATIC);
+		sqlite3_bind_int(updateStmt, 1, exists);
+		updateStmt.step_expected(SQLITE_DONE);
+		updateStmt.reset();
 	}
 
-	int err = sqlite3_exec(mDB, "COMMIT TRANSACTION", NULL, NULL, NULL);
-	sqlite3_finalize(readStmt);
-	sqlite3_finalize(removeStmt);
-
-	if(err)
-		throw DBException() << "Error committing transaction.\n\t" << sqlite3_errmsg(mDB);
+	transaction.commit();
 }
 
-std::string GamelistDB::getValue(const std::string& fileID, const std::string& key) const
+MetaDataMap GamelistDB::getFileData(const std::string& fileID, const std::string& systemID) const
 {
-	sqlite3_stmt* readStmt;
-	const char* read = "SELECT ?1 FROM files WHERE fileid = ?2";
-	if(sqlite3_prepare_v2(mDB, read, strlen(read), &readStmt, NULL))
-		throw DBException() << "Error preparing read statement.\n\t" << sqlite3_errmsg(mDB);
-
-	sqlite3_bind_text(readStmt, 1, key.c_str(), key.size(), SQLITE_STATIC);
-	sqlite3_bind_text(readStmt, 2, fileID.c_str(), fileID.size(), SQLITE_STATIC);
-
-	if(sqlite3_step(readStmt) != SQLITE_DONE)
-	{
-		sqlite3_finalize(readStmt);
-		throw DBException() << "Error reading file data (file \"" << fileID << "\")";
-	}
-
-	std::string ret = (const char*)sqlite3_column_text(readStmt, 0);
-	sqlite3_finalize(readStmt);
-	return ret;
-}
-
-MetaDataMap GamelistDB::getFileData(const std::string& fileID) const
-{
-	sqlite3_stmt* readStmt;
-	const char* read = "SELECT * FROM files WHERE fileid = ?1";
-	if(sqlite3_prepare_v2(mDB, read, strlen(read), &readStmt, NULL))
-		throw DBException() << "Error preparing read statement.\n\t" << sqlite3_errmsg(mDB);
-
+	SQLPreparedStmt readStmt(mDB, "SELECT * FROM files WHERE fileid = ?1 AND systemid = ?2");
 	sqlite3_bind_text(readStmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+	sqlite3_bind_text(readStmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
 
-	if(sqlite3_step(readStmt) != SQLITE_DONE)
-	{
-		sqlite3_finalize(readStmt);
-		throw DBException() << "Error reading file data (file \"" << fileID << "\")";
-	}
+	readStmt.step_expected(SQLITE_DONE);
 
 	MetaDataListType type = sqlite3_column_int(readStmt, 1) ? FOLDER_METADATA : GAME_METADATA;
 	MetaDataMap mdl(type);
@@ -258,49 +309,43 @@ MetaDataMap GamelistDB::getFileData(const std::string& fileID) const
 		mdl.set(col, value);
 	}
 
-	sqlite3_finalize(readStmt);
-
 	return mdl;
 }
 
-void GamelistDB::setFileData(const std::string& fileID, const MetaDataMap& metadata)
+void GamelistDB::setFileData(const std::string& fileID, const std::string& systemID, const MetaDataMap& metadata)
 {
 	std::stringstream ss;
-	ss << "INSERT OR REPLACE INTO files VALUES (?1, ?2, ";
+	ss << "INSERT OR REPLACE INTO files VALUES (?1, ?2, ?3, ?4, ";
 
 	auto& mdd = metadata.getMDD();
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
-		ss << "?" << i + 3;
+		ss << "?" << i + 5;
 
 		if(i + 1 < mdd.size())
 			ss << ", ";
 	}
 	ss << ")";
 
-	sqlite3_stmt* stmt;
-	std::string insert = ss.str();
-	if(sqlite3_prepare_v2(mDB, insert.c_str(), insert.size(), &stmt, NULL))
-		throw DBException() << "Error preparing insert statement: " << sqlite3_errmsg(mDB);
-	
+	std::string insertstr = ss.str();
+	SQLPreparedStmt stmt(mDB, insertstr.c_str());
 	sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC); // fileid
-	sqlite3_bind_int(stmt, 2, metadata.getType() == FOLDER_METADATA); // isfolder
+	sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC); // systemid
+	sqlite3_bind_int(stmt, 3, metadata.getType() == FOLDER_METADATA); // filetype
+	sqlite3_bind_int(stmt, 4, 1); // fileexists
 
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
 		const std::string& val = metadata.get(mdd.at(i).key);
-		sqlite3_bind_text(stmt, i + 3, val.c_str(), val.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, i + 5, val.c_str(), val.size(), SQLITE_STATIC);
 	}
 
-	if(sqlite3_step(stmt) != SQLITE_DONE)
-		LOG(LogError) << "Error inserting/replacing fileID \"" << fileID << "\".\n\t" << sqlite3_errmsg(mDB);
-
-	sqlite3_finalize(stmt);
+	stmt.step_expected(SQLITE_DONE);
 }
 
-void GamelistDB::importXML(SystemData* system, const std::string& xml_path)
+void GamelistDB::importXML(const SystemData* system, const std::string& xml_path)
 {
-	LOG(LogInfo) << "Appending gamelist.xml file \"" << xml_path << "\" to database...";
+	LOG(LogInfo) << "Appending gamelist.xml file \"" << xml_path << "\" to database (system: " << system->getName() << ")...";
 
 	if(!fs::exists(xml_path))
 		throw ESException() << "XML file not found (path: " << xml_path << ")";
@@ -316,9 +361,6 @@ void GamelistDB::importXML(SystemData* system, const std::string& xml_path)
 
 	const fs::path relativeTo = system->getStartPath();
 	
-	// set up SQLite stuff
-	const char* insert = "INSERT OR IGNORE INTO game (fileid) VALUES (?1)";
-
 	unsigned int skipCount = 0;
 	const char* tagList[2] = { "game", "folder" };
 	MetaDataListType typeList[2] = { GAME_METADATA, FOLDER_METADATA };
@@ -359,39 +401,40 @@ void GamelistDB::importXML(SystemData* system, const std::string& xml_path)
 			// make sure the name is set
 			assert(!mdl.get<std::string>("name").empty());
 
-			this->setFileData(pathToFileID(path, system), mdl);
+			this->setFileData(pathToFileID(path, system), system->getName(), mdl);
 		}
 	}
 }
 
-void GamelistDB::exportXML(SystemData* system, const std::string& xml_path)
+void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path)
 {
 	pugi::xml_document doc;
 	pugi::xml_node root = doc.append_child("gameList");
 
-	sqlite3_stmt* readStmt;
-	const char* read = "SELECT * FROM files";
-	if(sqlite3_prepare_v2(mDB, read, strlen(read), &readStmt, NULL))
-		throw DBException() << "Error preparing read statement.\n\t" << sqlite3_errmsg(mDB);
-
-	while(sqlite3_step(readStmt) != SQLITE_DONE)
+	SQLPreparedStmt readStmt(mDB, "SELECT * FROM files WHERE systemid = ?1");
+	sqlite3_bind_text(readStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
+	
+	std::string relativeTo = system->getStartPath();
+	while(readStmt.step() != SQLITE_DONE)
 	{
-		MetaDataListType type = sqlite3_column_int(readStmt, 1) ? FOLDER_METADATA : GAME_METADATA;
+		MetaDataListType type = sqlite3_column_int(readStmt, 2) ? FOLDER_METADATA : GAME_METADATA;
 		pugi::xml_node node = root.append_child(type == GAME_METADATA ? "game" : "folder");
 
 		// write path
-		node.append_child("path").text().set((const char*)sqlite3_column_text(readStmt, 0));
+		std::string path = (const char*)sqlite3_column_text(readStmt, 0);
+		if(path[0] == '.')
+			path = relativeTo + path.substr(1, std::string::npos);
 
-		// skip column 0 (fileid) and column 1 (isfolder)
-		for(int i = 2; i < sqlite3_column_count(readStmt); i++)
+		node.append_child("path").text().set(path.c_str());
+
+		// skip column 0 (fileid), 1 (systemid), 2 (filetype), 3 (fileexists)
+		for(int i = 4; i < sqlite3_column_count(readStmt); i++)
 		{
 			const char* col = (const char*)sqlite3_column_name(readStmt, i);
 			const char* value = (const char*)sqlite3_column_text(readStmt, i);
 			node.append_child(col).text().set(value);
 		}
 	}
-
-	sqlite3_finalize(readStmt);
 
 	doc.save_file(xml_path.c_str());
 }

@@ -157,7 +157,6 @@ void close_log_on_exit()
 void delete_singletons_on_exit()
 {
 	delete SystemManager::getInstance();
-	delete InputManager::getInstance();
 }
 
 int main(int argc, char* argv[])
@@ -166,9 +165,15 @@ int main(int argc, char* argv[])
 
 	loadSystemConfigFile(&errorMsg);
 	GamelistDB test("test.db");
-	SystemData* system = SystemManager::getInstance()->getSystems().at(0);
-	test.importXML(system, system->getGamelistPath(false));
-	test.exportXML(system, "test_db_to_xml.xml");
+	const std::vector<SystemData*>& systems = SystemManager::getInstance()->getSystems();
+	for(auto it = systems.begin(); it != systems.end(); it++)
+	{
+		SystemData* sys = *it;
+		test.importXML(sys, sys->getGamelistPath(false));
+		std::string out_path = "test_db_to_xml_";
+		out_path += sys->getName() + ".xml";
+		test.exportXML(sys, out_path);
+	}
 
 	/*
 	unsigned int width = 0;
