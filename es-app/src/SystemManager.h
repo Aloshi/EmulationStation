@@ -17,6 +17,8 @@ public:
 
 	inline const std::vector<SystemData*>& getSystems() const { return mSystems; }
 
+	SystemData* getSystemByName(const std::string& name) const;
+
 	// iterators
 	inline std::vector<SystemData*>::const_iterator getIterator(SystemData* system) const { return std::find(mSystems.begin(), mSystems.end(), system); };
 	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator(SystemData* system) const { return std::find(mSystems.rbegin(), mSystems.rend(), system); };
@@ -29,6 +31,8 @@ public:
 	// An example will be written if the file doesn't exist.
 	// Any pre-existing systems (in mSystems) will be deleted!
 	void loadConfig();
+
+	inline GamelistDB& database() { return mDatabase; }
 
 private:
 	static SystemManager* sInstance;

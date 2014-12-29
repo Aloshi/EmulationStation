@@ -1,5 +1,6 @@
 #include "FileData.h"
 #include "SystemData.h"
+#include "SystemManager.h"
 
 namespace fs = boost::filesystem;
 
@@ -42,103 +43,77 @@ std::string removeParenthesis(const std::string& str)
 	return ret;
 }
 
-
-FileData::FileData(FileType type, const fs::path& path, SystemData* system)
-	: mType(type), mPath(path), mSystem(system), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
+std::string getCleanGameName(const std::string& str, const SystemData* system)
 {
-	// metadata needs at least a name field (since that's what getName() will return)
-	if(metadata.get<std::string>("name").empty())
-		metadata.set("name", getCleanName());
-}
-
-FileData::~FileData()
-{
-	if(mParent)
-		mParent->removeChild(this);
-
-	while(mChildren.size())
-		delete mChildren.back();
-}
-
-std::string FileData::getCleanName() const
-{
-	std::string stem = mPath.stem().generic_string();
-	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
+	fs::path path(str);
+	std::string stem = path.stem().generic_string();
+	if(system && system->hasPlatformId(PlatformIds::ARCADE) || system->hasPlatformId(PlatformIds::NEOGEO))
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
 	return removeParenthesis(stem);
 }
 
-const std::string FileData::getThumbnailPath() const
+FileData::FileData(const std::string& fileID, SystemData* system, const std::string& nameCache)
+	: mFileID(fileID), mSystem(system), mNameCache(nameCache), mTypeCache((FileType)0)
 {
-	if(!metadata.get<std::string>("thumbnail").empty())
-		return metadata.get<std::string>("thumbnail");
-	else
-		return metadata.get<std::string>("image");
 }
 
-
-std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask) const
+FileData::FileData() : FileData("", NULL)
 {
-	std::vector<FileData*> out;
-
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
-	{
-		if((*it)->getType() & typeMask)
-			out.push_back(*it);
-		
-		if((*it)->getChildren().size() > 0)
-		{
-			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask);
-			out.insert(out.end(), subchildren.cbegin(), subchildren.cend());
-		}
-	}
-
-	return out;
 }
 
-void FileData::addChild(FileData* file)
+FileData::FileData(const std::string& fileID, const std::string& systemID) : 
+	FileData(fileID, SystemManager::getInstance()->getSystemByName(systemID))
 {
-	assert(mType == FOLDER);
-	assert(file->getParent() == NULL);
-
-	mChildren.push_back(file);
-	file->mParent = this;
 }
 
-void FileData::removeChild(FileData* file)
+const std::string& FileData::getSystemID() const
 {
-	assert(mType == FOLDER);
-	assert(file->getParent() == this);
-
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
-	{
-		if(*it == file)
-		{
-			mChildren.erase(it);
-			return;
-		}
-	}
-
-	// File somehow wasn't in our children.
-	assert(false);
+	return mSystem->getName();
 }
 
-void FileData::sort(ComparisonFunction& comparator, bool ascending)
+const std::string& FileData::getName() const
 {
-	std::sort(mChildren.begin(), mChildren.end(), comparator);
+	// try and cache what's in the DB
+	if(mNameCache.empty())
+		mNameCache = get_metadata().get<std::string>("name");
 
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
-	{
-		if((*it)->getChildren().size() > 0)
-			(*it)->sort(comparator, ascending);
-	}
+	// nothing was in the DB...use the clean version of our path
+	if(mNameCache.empty())
+		mNameCache = getCleanName();
 
-	if(!ascending)
-		std::reverse(mChildren.begin(), mChildren.end());
+	return mNameCache;
 }
 
-void FileData::sort(const SortType& type)
+fs::path FileData::getPath() const
 {
-	sort(*type.comparisonFunction, type.ascending);
+	return fileIDToPath(mFileID, mSystem);
+}
+
+FileType FileData::getType() const
+{
+	if(mTypeCache == 0)
+		mTypeCache = (get_metadata().getType() == GAME_METADATA ? GAME : FOLDER);
+
+	return mTypeCache;
+}
+
+MetaDataMap FileData::get_metadata() const
+{
+	return SystemManager::getInstance()->database().getFileData(mFileID, mSystem->getName());
+}
+
+void FileData::set_metadata(const MetaDataMap& metadata)
+{
+	SystemManager::getInstance()->database().setFileData(mFileID, mSystem->getName(), metadata);
+}
+
+std::vector<FileData> FileData::getChildren() const
+{
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true);
+}
+
+std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders) const
+{
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders);
 }

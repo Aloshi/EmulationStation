@@ -20,19 +20,20 @@ public:
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mPlatformIds; }
-	inline bool hasPlatformId(PlatformIds::PlatformId id) { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
+	inline bool hasPlatformId(PlatformIds::PlatformId id) const { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
-	inline FileData* getRootFolder() const { return mRootFolder; };
+	inline const FileData& getRootFolder() const { return mRoot; }
 
 	std::string getThemePath() const;
 	
 	unsigned int getGameCount() const;
+	bool hasFileWithImage() const;
 
 	std::string getGamelistPath(bool forWrite) const;
 
-	void launchGame(Window* window, FileData* game);
+	void launchGame(Window* window, FileData* game) const;
 
 	// Load or re-load theme.
 	void loadTheme();
@@ -47,7 +48,5 @@ private:
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
 
-	void populateFolder(FileData* folder);
-
-	FileData* mRootFolder;
+	FileData mRoot;
 };

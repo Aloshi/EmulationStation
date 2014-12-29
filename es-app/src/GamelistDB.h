@@ -2,6 +2,7 @@
 
 #include "ESException.h"
 #include "MetaData.h"
+#include "FileData.h"
 #include <string>
 #include <sqlite3/sqlite3.h>
 
@@ -9,7 +10,7 @@ class SystemData;
 
 class DBException : public ESException {};
 
-boost::filesystem::path fileIDToPath(const std::string& fileID, SystemData* system);
+boost::filesystem::path fileIDToPath(const std::string& fileID, const SystemData* system);
 
 /*
  Gamelist DB format:
@@ -45,9 +46,9 @@ public:
 
 	void addMissingFiles(const SystemData* system);
 	void updateExists(const SystemData* system);
-	// void pruneMissingFiles(const SystemData* system);
-
-	// returns all metadata for a given fileID (basically "SELECT *" in SQL)
+	void updateExists(const FileData& file); // update the fileexists flag for a particular file
+	
+	// returns all metadata for a given fileID
 	MetaDataMap getFileData(const std::string& fileID, const std::string& systemID) const;
 
 	// Sets all metadata for a given fileID (overwrites existing data).
@@ -56,6 +57,10 @@ public:
 	// true, the record for this fileID will be completely deleted (if it exists) 
 	// before setting the new data.
 	void setFileData(const std::string& fileID, const std::string& systemID, const MetaDataMap& metadata);
+
+	// returns either all immediate children (immediate_children_only) OR 
+	// all children, children of children, etc. of file ID (immedate_children_only = false)
+	std::vector<FileData> getChildrenOf(const std::string& fileID, SystemData* system, bool immediate_children_only, bool includeFolders);
 
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);
@@ -69,3 +74,13 @@ private:
 
 	sqlite3* mDB;
 };
+
+struct FileSort
+{
+	const char* description;
+	const char* sql;
+
+	FileSort(const char* d, const char* s) : description(d), sql(s) {};
+};
+
+const std::vector<FileSort>& getFileSorts();

@@ -12,9 +12,10 @@
 
 struct ScraperSearchParams
 {
-	SystemData* system;
-	FileData* game;
+	ScraperSearchParams(SystemData* s, const FileData& g, const std::string& n = "") : system(s), game(g), nameOverride(n) {};
 
+	SystemData* system;
+	FileData game;
 	std::string nameOverride;
 };
 

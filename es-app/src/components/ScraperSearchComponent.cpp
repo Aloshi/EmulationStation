@@ -16,7 +16,7 @@
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
 	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
-	mSearchType(type)
+	mSearchType(type), mLastSearch(NULL, FileData("", NULL))
 {
 	addChild(&mGrid);
 
@@ -452,7 +452,7 @@ void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
 	stop();
 	mWindow->pushGui(new GuiTextEditPopup(mWindow, "SEARCH FOR", 
 		// initial value is last search if there was one, otherwise the clean path name
-		params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride, 
+		params.nameOverride.empty() ? params.game.getCleanName() : params.nameOverride, 
 		searchForFunc, false, "SEARCH"));
 }
 

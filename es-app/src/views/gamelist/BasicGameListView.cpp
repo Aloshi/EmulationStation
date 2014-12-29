@@ -6,14 +6,14 @@
 #include "SystemData.h"
 #include "Settings.h"
 
-BasicGameListView::BasicGameListView(Window* window, FileData* root)
+BasicGameListView::BasicGameListView(Window* window, const FileData& root)
 	: ISimpleGameListView(window, root), mList(window)
 {
 	mList.setSize(mSize.x(), mSize.y() * 0.8f);
 	mList.setPosition(0, mSize.y() * 0.2f);
 	addChild(&mList);
 
-	populateList(root->getChildren());
+	populateList(mCursorStack.top().getChildren());
 }
 
 void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
@@ -23,40 +23,36 @@ void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	mList.applyTheme(theme, getName(), "gamelist", ALL);
 }
 
-void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
+void BasicGameListView::onMetaDataChanged(const FileData& file)
 {
-	if(change == FILE_METADATA_CHANGED)
-	{
-		// might switch to a detailed view
-		ViewController::get()->reloadGameListView(this);
-		return;
-	}
-
-	ISimpleGameListView::onFileChanged(file, change);
+	// might switch to a detailed view
+	ViewController::get()->reloadGameListView(this);
 }
 
-void BasicGameListView::populateList(const std::vector<FileData*>& files)
+void BasicGameListView::populateList(const std::vector<FileData>& files)
 {
 	mList.clear();
 
-	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
+	mHeaderText.setText(mRoot.getSystem()->getFullName());
 
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		mList.add(it->getName(), *it, (it->getType() == FOLDER));
 	}
 }
 
-FileData* BasicGameListView::getCursor()
+const FileData& BasicGameListView::getCursor()
 {
 	return mList.getSelected();
 }
 
-void BasicGameListView::setCursor(FileData* cursor)
+void BasicGameListView::setCursor(const FileData& cursor)
 {
 	if(!mList.setCursor(cursor))
 	{
-		populateList(cursor->getParent()->getChildren());
+		// TODO
+		assert(false);
+		/*populateList(cursor->getParent()->getChildren());
 		mList.setCursor(cursor);
 
 		// update our cursor stack in case our cursor just got set to some folder we weren't in before
@@ -77,13 +73,13 @@ void BasicGameListView::setCursor(FileData* cursor)
 				mCursorStack.push(tmp.top());
 				tmp.pop();
 			}
-		}
+		}*/
 	}
 }
 
-void BasicGameListView::launch(FileData* game)
+void BasicGameListView::launch(FileData& game)
 {
-	ViewController::get()->launch(game);
+	ViewController::get()->launch(&game);
 }
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()

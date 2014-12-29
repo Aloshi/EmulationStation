@@ -134,7 +134,10 @@ void SystemManager::loadConfig()
 			path = path.erase(path.size() - 1);
 
 		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
-		if(newSys->getRootFolder()->getChildren().size() == 0)
+		mDatabase.addMissingFiles(newSys);
+		mDatabase.updateExists(newSys);
+
+		if(newSys->getGameCount() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
 			delete newSys;
@@ -235,6 +238,15 @@ bool SystemManager::isValidSystemName(const std::string& name)
 	}
 
 	return true;
+}
+
+SystemData* SystemManager::getSystemByName(const std::string& name) const
+{
+	for(auto it = mSystems.begin(); it != mSystems.end(); it++)
+		if((*it)->getName() == name)
+			return *it;
+
+	return NULL;
 }
 
 void SystemManager::updateDatabase()

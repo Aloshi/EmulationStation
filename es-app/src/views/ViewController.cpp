@@ -149,11 +149,18 @@ void ViewController::playViewTransition()
 	}
 }
 
-void ViewController::onFileChanged(FileData* file, FileChangeType change)
+void ViewController::onFilesChanged(SystemData* system)
 {
-	auto it = mGameListViews.find(file->getSystem());
+	auto it = mGameListViews.find(system);
 	if(it != mGameListViews.end())
-		it->second->onFileChanged(file, change);
+		it->second->onFilesChanged();
+}
+
+void ViewController::onMetaDataChanged(SystemData* system, const FileData& file)
+{
+	auto it = mGameListViews.find(system);
+	if(it != mGameListViews.end())
+		it->second->onMetaDataChanged(file);
 }
 
 void ViewController::launch(FileData* game, Eigen::Vector3f center)
@@ -184,7 +191,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 			game->getSystem()->launchGame(mWindow, game);
 			mLockInput = false;
 			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, nullptr, true);
-			this->onFileChanged(game, FILE_METADATA_CHANGED);
+			this->onMetaDataChanged(game->getSystem(), *game);
 		});
 	}else{
 		// move camera to zoom in on center + fade out, launch game, come back in
@@ -194,7 +201,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 			mCamera = origCamera;
 			mLockInput = false;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, nullptr, true);
-			this->onFileChanged(game, FILE_METADATA_CHANGED);
+			this->onMetaDataChanged(game->getSystem(), *game);
 		});
 	}
 }
@@ -210,18 +217,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	std::shared_ptr<IGameListView> view;
 
 	//decide type
-	bool detailed = false;
-	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
-	for(auto it = files.begin(); it != files.end(); it++)
-	{
-		if(!(*it)->getThumbnailPath().empty())
-		{
-			detailed = true;
-			break;
-		}
-	}
-		
-	if(detailed)
+	if(system->hasFileWithImage())
 		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
@@ -252,7 +248,6 @@ std::shared_ptr<SystemView> ViewController::getSystemListView()
 	mSystemListView->setPosition(0, (float)Renderer::getScreenHeight());
 	return mSystemListView;
 }
-
 
 bool ViewController::input(InputConfig* config, Input input)
 {
@@ -334,7 +329,7 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 		{
 			bool isCurrent = (mCurrentView == it->second);
 			SystemData* system = it->first;
-			FileData* cursor = view->getCursor();
+			FileData cursor = view->getCursor();
 			mGameListViews.erase(it);
 
 			if(reloadTheme)
@@ -353,7 +348,7 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 
 void ViewController::reloadAll()
 {
-	std::map<SystemData*, FileData*> cursorMap;
+	std::map<SystemData*, FileData> cursorMap;
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
 		cursorMap[it->first] = it->second->getCursor();

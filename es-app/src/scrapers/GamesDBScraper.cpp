@@ -71,7 +71,7 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = params.game->getCleanName();
+		cleanName = params.game.getCleanName();
 
 	path += "name=" + HttpReq::urlEncode(cleanName);
 

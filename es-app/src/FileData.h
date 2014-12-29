@@ -28,50 +28,39 @@ FileType stringToFileType(const char* str);
 // Remove (.*) and [.*] from str
 std::string removeParenthesis(const std::string& str);
 
-// A tree node that holds information for a file.
+std::string getCleanGameName(const std::string& str, const SystemData* system);
+
 class FileData
 {
 public:
-	FileData(FileType type, const boost::filesystem::path& path, SystemData* system);
-	virtual ~FileData();
+	FileData();
+	FileData(const std::string& fileID, SystemData* system, const std::string& nameCache = "");
+	FileData(const std::string& fileID, const std::string& systemID);
 
-	inline const std::string getName() const { return metadata.get<std::string>("name"); }
-	inline FileType getType() const { return mType; }
-	inline const boost::filesystem::path& getPath() const { return mPath; }
-	inline FileData* getParent() const { return mParent; }
-	inline const std::vector<FileData*>& getChildren() const { return mChildren; }
-	inline SystemData* getSystem() const { return mSystem; }
-	
-	const std::string getThumbnailPath() const;
+	inline bool operator==(const FileData& rhs) const { return (mFileID == rhs.mFileID && mSystem == rhs.mSystem); }
+	inline bool operator!=(const FileData& rhs) const { return !(*this == rhs); }
 
-	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
+	MetaDataMap get_metadata() const;
+	void set_metadata(const MetaDataMap& metadata);
 
-	void addChild(FileData* file); // Error if mType != FOLDER
-	void removeChild(FileData* file); //Error if mType != FOLDER
+	const std::string& getName() const;
+	FileType getType() const;
 
-	// Returns our best guess at the "real" name for this file (will strip parenthesis and attempt to perform MAME name translation)
-	std::string getCleanName() const;
+	boost::filesystem::path getPath() const;
 
-	typedef bool ComparisonFunction(const FileData* a, const FileData* b);
-	struct SortType
-	{
-		ComparisonFunction* comparisonFunction;
-		bool ascending;
-		std::string description;
+	inline const std::string& getFileID() const { return mFileID; }
+	const std::string& getSystemID() const;
+	SystemData* getSystem() const { return mSystem; }
 
-		SortType(ComparisonFunction* sortFunction, bool sortAscending, const std::string & sortDescription) 
-			: comparisonFunction(sortFunction), ascending(sortAscending), description(sortDescription) {}
-	};
+	std::vector<FileData> getChildren() const;
+	std::vector<FileData> getChildrenRecursive(bool includeFolders) const;
 
-	void sort(ComparisonFunction& comparator, bool ascending = true);
-	void sort(const SortType& type);
-
-	MetaDataMap metadata;
+	inline std::string getCleanName() const { return getCleanGameName(mFileID, mSystem); }
 
 private:
-	FileType mType;
-	boost::filesystem::path mPath;
+	std::string mFileID;
 	SystemData* mSystem;
-	FileData* mParent;
-	std::vector<FileData*> mChildren;
+	
+	mutable std::string mNameCache;
+	mutable FileType mTypeCache;
 };
