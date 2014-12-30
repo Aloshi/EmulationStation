@@ -148,7 +148,7 @@ All systems must be contained within the <systemList> tag.-->
 		<!-- A "pretty" name, displayed in the menus and such. This one is optional. -->
 		<fullname>Super Nintendo Entertainment System</fullname>
 
-		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME or %HOMEPATH%, depending on platform. 
+		<!-- The path to start searching for ROMs in. '~' will be expanded to $HOME or %HOMEPATH%, depending on platform.
 		All subdirectories (and non-recursive links) will be included. -->
 		<path>~/roms/snes</path>
 
@@ -180,6 +180,7 @@ The following "tags" are replaced by ES in launch commands:
 
 `%ROM_RAW%`	- Replaced with the unescaped, absolute path to the selected ROM.  If your emulator is picky about paths, you might want to use this instead of %ROM%, but enclosed in quotes.
 
+See [SYSTEMS.md](SYSTEMS.md) for some live examples in EmulationStation.
 
 gamelist.xml
 ============
