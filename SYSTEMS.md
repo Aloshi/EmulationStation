@@ -182,6 +182,7 @@ Requires a [Nintendo GameBoy Advance Core](http://wiki.libretro.com/index.php?ti
 </system>
 ```
 
+
 ## [Steam](http://store.steampowered.com)
 
 1. Create a folder at `~/.emulationstation/steam`
@@ -208,5 +209,21 @@ EmulationStation where:
   <command>steam steam://rungameid/$(tail %ROM%)</command>
   <platform>pc</platform>
   <theme>steam</theme>
+</system>
+```
+
+
+## [PlayStation Portable](http://en.wikipedia.org/wiki/PlayStation_Portable)
+
+### [PPSSPP](http://www.ppsspp.org)
+``` xml
+<system>
+  <name>psp</name>
+  <fullname>PlayStation Portable</fullname>
+  <path>/path/to/roms</path>
+  <extension>.iso</extension>
+  <command>ppsspp --fullscreen --escape-exit "%ROM_RAW%"</command>
+  <platform>psp</platform>
+  <theme>psp</theme>
 </system>
 ```
