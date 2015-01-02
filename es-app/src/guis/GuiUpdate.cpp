@@ -77,7 +77,8 @@ void GuiUpdate::update(int deltaTime) {
             window->pushGui(
                 new GuiMsgBox(window, "UPDATE OK, THE SYSTEM WILL NOW REBOOT", "OK", 
                 [this] {
-                    system("sudo reboot");
+                    if(runRestartCommand() != 0)
+			LOG(LogWarning) << "Reboot terminated with non-zero result!";
                 })
             );
             mState = 0;
@@ -86,7 +87,8 @@ void GuiUpdate::update(int deltaTime) {
             window->pushGui(
                 new GuiMsgBox(window, "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT", "OK", 
                 [this] {
-                    system("sudo reboot");
+                    if(runRestartCommand() != 0)
+			LOG(LogWarning) << "Reboot terminated with non-zero result!";
                 })
             );
             mState = 0;
