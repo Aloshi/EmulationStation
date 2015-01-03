@@ -28,29 +28,43 @@ SystemInfo * SystemInfo::getInstance() {
 unsigned long SystemInfo::getFreeSpaceGB(std::string mountpoint) {
     struct statvfs fiData;
     const char * fnPath = mountpoint.c_str();
-    unsigned long free = (fiData.f_bfree * fiData.f_bsize) / (1024 * 1024 * 1024);
+    int free = 0;
+    if ((statvfs(fnPath, &fiData)) >= 0) {
+        free = (fiData.f_bfree * fiData.f_bsize) / (1024 * 1024 * 1024);
+    }
     return free;
 }
 
 std::string SystemInfo::getFreeSpaceInfo() {
     struct statvfs fiData;
-    const char * fnPath = std::string("/").c_str();
-    if ((statvfs(fnPath, &fiData)) < 0) {
-        return "";
-    } else {
-        unsigned long total = (fiData.f_blocks * (fiData.f_bsize / 1024)) / (1024L * 1024L);
-        unsigned long free = (fiData.f_bfree * (fiData.f_bsize / 1024)) / (1024L * 1024L);
-        unsigned long used = total - free;
-        unsigned long percent = used * 100 / total;
+    std::string sharePart = Settings::getInstance()->getString("SharePartition");
+    if(sharePart.size() > 0){
+        const char * fnPath = sharePart.c_str();
+        if ((statvfs(fnPath, &fiData)) < 0) {
+            return "";
+        } else {
+            unsigned long total = (fiData.f_blocks * (fiData.f_bsize / 1024)) / (1024L * 1024L);
+            unsigned long free = (fiData.f_bfree * (fiData.f_bsize / 1024)) / (1024L * 1024L);
+            unsigned long used = total - free;
+            unsigned long percent = used * 100 / total;
 
-        std::ostringstream oss;
-        oss << used << "GO/" << total << "GO (" << percent << "%)";
-        return oss.str();
+            std::ostringstream oss;
+            oss << used << "GO/" << total << "GO (" << percent << "%)";
+            return oss.str();
+        }
+    } else {
+        return "ERROR";
     }
 }
 
 bool SystemInfo::isFreeSpaceLimit() {
-    return getFreeSpaceGB("/") < 2;
+    std::string sharePart = Settings::getInstance()->getString("SharePartition");
+    if(sharePart.size() > 0){
+        return getFreeSpaceGB(sharePart) < 2;
+    } else {
+        return "ERROR";
+    }
+    
 }
 
 std::string SystemInfo::getVersion() {

@@ -72,6 +72,7 @@ void Settings::setDefaults()
 	mStringMap["UpdateCommand"] = "";
 	mStringMap["UpdateServer"] = "";
 	mStringMap["VersionFile"] = "";
+	mStringMap["SharePartition"] = "";
 }
 
 template <typename K, typename V>
