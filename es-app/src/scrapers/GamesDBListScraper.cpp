@@ -125,12 +125,16 @@ void TheGamesDBListRequest::process(const std::unique_ptr<HttpReq>& req, std::ve
 		ScraperSearchResult result;
 		std::string gameId = game.child("id").text().get();
 		std::string gameUrl = "thegamesdb.net/api/GetGame.php?id=" + gameId;
+
+		// Perform GetGame request for each game id in GetGamesList result
 		HttpReq gameReq(gameUrl);
 
+		// Wait for request to finish (make it synchronous)
 		while (gameReq.status() == HttpReq::REQ_IN_PROGRESS);
 
 		if (gameReq.status() == HttpReq::REQ_SUCCESS)
 		{
+			// Process response into game result, results are unique based on id
 			pugi::xml_document doc;
 			pugi::xml_parse_result parseResult = doc.load(gameReq.getContent().c_str());
 			if(!parseResult)
