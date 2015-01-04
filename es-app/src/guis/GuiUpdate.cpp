@@ -12,13 +12,13 @@ GuiUpdate::GuiUpdate(Window* window) : GuiComponent(window), mBusyAnim(window)
 {
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
         mLoading = true;
-        mPingHandle = boost::thread(&GuiUpdate::threadPing);
+        mPingHandle = new boost::thread(boost::bind(&GuiUpdate::threadPing, this));
         mBusyAnim.setSize(mSize);
 }
 
 GuiUpdate::~GuiUpdate()
 {
-	mPingHandle.join();
+	mPingHandle->join();
 }
 
 bool GuiUpdate::input(InputConfig* config, Input input)
@@ -56,10 +56,12 @@ void GuiUpdate::update(int deltaTime) {
                            [this] { 
                                mState = 2;
                                mLoading = true;
-                               mHandle = boost::thread(&GuiUpdate::threadUpdate);
+                               mHandle = new boost::thread(boost::bind(&GuiUpdate::threadUpdate, this));
+
                            }, "NO", [this] { 
                                mState = -1;
                            })
+                                   
             );
             mState = 0;
         }

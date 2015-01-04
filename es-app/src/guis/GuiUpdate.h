@@ -21,8 +21,8 @@ private:
         BusyComponent mBusyAnim;
         bool mLoading;
         int mState;
-	boost::thread mHandle;
-        boost::thread mPingHandle;
+	boost::thread* mHandle;
+        boost::thread* mPingHandle;
 	void onUpdateError();
 	void onUpdateOk();
         void threadUpdate();
