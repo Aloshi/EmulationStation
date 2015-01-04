@@ -5,7 +5,7 @@
 #include "components/BusyComponent.h"
 
 
-#include <thread>
+#include <boost/thread.hpp>
 
 class GuiUpdate : public GuiComponent
 {
@@ -21,12 +21,12 @@ private:
         BusyComponent mBusyAnim;
         bool mLoading;
         int mState;
-	std::thread mHandle;
-        std::thread mPingHandle;
+	boost::thread mHandle;
+        boost::thread mPingHandle;
 	void onUpdateError();
 	void onUpdateOk();
-        void threadSystemCall();
-        void pingThread();
+        void threadUpdate();
+        void threadPing();
         void onPingOk();
         void onPingError();
 };

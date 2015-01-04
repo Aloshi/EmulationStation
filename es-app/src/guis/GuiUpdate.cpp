@@ -2,7 +2,7 @@
 #include "guis/GuiMsgBox.h"
 
 #include "Window.h"
-#include <thread>
+#include <boost/thread.hpp>
 #include <string>
 #include "Log.h"
 #include "Settings.h"
@@ -12,7 +12,7 @@ GuiUpdate::GuiUpdate(Window* window) : GuiComponent(window), mBusyAnim(window)
 {
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
         mLoading = true;
-        mPingHandle = std::thread(&GuiUpdate::pingThread, this);
+        mPingHandle = boost::thread(&GuiUpdate::threadPing);
         mBusyAnim.setSize(mSize);
 }
 
@@ -56,7 +56,7 @@ void GuiUpdate::update(int deltaTime) {
                            [this] { 
                                mState = 2;
                                mLoading = true;
-                               mHandle = std::thread(&GuiUpdate::threadSystemCall, this);
+                               mHandle = boost::thread(&GuiUpdate::threadUpdate);
                            }, "NO", [this] { 
                                mState = -1;
                            })
@@ -98,7 +98,7 @@ void GuiUpdate::update(int deltaTime) {
         }
 }
 
-void GuiUpdate::threadSystemCall() 
+void GuiUpdate::threadUpdate() 
 {
 	//int exitcode = system("sudo su pi -c /home/pi/RetroPie/configscripts/rsync-update/rsync-update.sh");
     std::string updatecommand = Settings::getInstance()->getString("UpdateCommand");
@@ -112,7 +112,7 @@ void GuiUpdate::threadSystemCall()
     }
 }
 
-void GuiUpdate::pingThread() 
+void GuiUpdate::threadPing() 
 {
         std::string updateserver = Settings::getInstance()->getString("UpdateServer");
         std::string s("ping -c 1 " + updateserver);
