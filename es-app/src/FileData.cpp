@@ -65,8 +65,8 @@ std::string FileData::getCleanName() const
 	std::string stem = mPath.stem().generic_string();
 	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
 		stem = PlatformIds::getCleanMameName(stem.c_str());
-
-	return removeParenthesis(stem);
+        return stem;
+	//return removeParenthesis(stem);
 }
 
 const std::string& FileData::getThumbnailPath() const
