@@ -473,7 +473,7 @@ void GamelistDB::updateExists(const SystemData* system)
 	sqlite3_bind_text(readStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 	
 	SQLPreparedStmt updateStmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
-	sqlite3_bind_text(readStmt, 3, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
+	sqlite3_bind_text(updateStmt, 3, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 
 	SQLTransaction transaction(mDB);
 
