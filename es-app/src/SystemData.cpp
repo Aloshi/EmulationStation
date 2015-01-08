@@ -154,7 +154,7 @@ std::string SystemData::getThemePath() const
 
 unsigned int SystemData::getGameCount() const
 {
-	return getRootFolder().getChildrenRecursive(FileType::GAME).size();
+	return getRootFolder().getChildrenRecursive(false).size();
 }
 
 void SystemData::loadTheme()

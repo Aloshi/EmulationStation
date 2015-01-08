@@ -151,9 +151,22 @@ void ViewController::playViewTransition()
 
 void ViewController::onFilesChanged(SystemData* system)
 {
-	auto it = mGameListViews.find(system);
-	if(it != mGameListViews.end())
-		it->second->onFilesChanged();
+	if(system == NULL) // (all systems)
+	{
+		// onFilesChanged() can cause a view to be recreated, which will invalidate
+		// any iterators for mGameListViews, so we make a vector of views to reload
+		std::vector<IGameListView*> toReload;
+		for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+			toReload.push_back(it->second.get());
+
+		for(auto it = toReload.begin(); it != toReload.end(); it++)
+			(*it)->onFilesChanged();
+
+	}else{
+		auto it = mGameListViews.find(system);
+		if(it != mGameListViews.end())
+			it->second->onFilesChanged();
+	}
 }
 
 void ViewController::onMetaDataChanged(SystemData* system, const FileData& file)

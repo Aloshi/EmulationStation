@@ -78,7 +78,7 @@ std::queue<ScraperSearchParams> GuiScraperStart::getSearches(std::vector<SystemD
 	std::queue<ScraperSearchParams> queue;
 	for(auto sys = systems.begin(); sys != systems.end(); sys++)
 	{
-		std::vector<FileData> games = (*sys)->getRootFolder().getChildrenRecursive(GAME);
+		std::vector<FileData> games = (*sys)->getRootFolder().getChildrenRecursive(false);
 		for(auto game = games.begin(); game != games.end(); game++)
 		{
 			if(selector((*sys), (*game)))

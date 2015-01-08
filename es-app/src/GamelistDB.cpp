@@ -27,7 +27,7 @@ fs::path fileIDToPath(const std::string& fileID, const SystemData* system)
 
 std::vector<FileSort> sFileSorts = boost::assign::list_of
 	(FileSort("Alphabetical, asc", "ORDER BY name"))
-	(FileSort("Alphabetical, desc", "ORDER BY name DSC"));
+	(FileSort("Alphabetical, desc", "ORDER BY name DESC"));
 
 const std::vector<FileSort>& getFileSorts()
 {
@@ -408,8 +408,6 @@ bool populate_recursive(const fs::path& relativeTo, const std::vector<std::strin
 		}
 	}
 
-	bool contains; // ignored
-
 	bool has_a_file = false;
 	for(fs::directory_iterator end, dir(start_dir); dir != end; ++dir)
 	{
@@ -561,14 +559,15 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	stmt.step_expected(SQLITE_DONE);
 }
 
-std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, SystemData* system, bool immediate_children_only, bool includeFolders)
+std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, SystemData* system, 
+	bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType)
 {
 	const std::string& systemID = system->getName();
 	std::vector<FileData> children;
 
 	std::stringstream ss;
 	ss << "SELECT fileid, name FROM files WHERE systemid = ?1 AND fileexists = 1 ";
-	if(immediate_children_only)
+	if(immediateChildrenOnly)
 		ss << "AND inimmediatedir(fileid, ?2) ";
 	else
 		ss << "AND indir(fileid, ?2) ";
@@ -576,7 +575,10 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	if(!includeFolders)
 		ss << "AND NOT filetype = " << FileType::FOLDER << " ";
 
-	ss << "ORDER BY name";
+	if(sortType)
+		ss << sortType->sql;
+	else
+		ss << "ORDER BY name";
 
 	std::string query = ss.str();
 	SQLPreparedStmt stmt(mDB, query);

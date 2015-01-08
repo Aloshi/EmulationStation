@@ -1,6 +1,7 @@
 #include "FileData.h"
 #include "SystemData.h"
 #include "SystemManager.h"
+#include "Settings.h"
 
 namespace fs = boost::filesystem;
 
@@ -108,12 +109,18 @@ void FileData::set_metadata(const MetaDataMap& metadata)
 	SystemManager::getInstance()->database().setFileData(mFileID, mSystem->getName(), metadata);
 }
 
-std::vector<FileData> FileData::getChildren() const
+std::vector<FileData> FileData::getChildren(const FileSort* sort) const
 {
-	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true);
+	if(sort == NULL)
+		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
+
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true, sort);
 }
 
-std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders) const
+std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const FileSort* sort) const
 {
-	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders);
+	if(sort == NULL)
+		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
+
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, sort);
 }

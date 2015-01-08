@@ -6,6 +6,7 @@
 #include "MetaData.h"
 
 class SystemData;
+struct FileSort;
 
 enum FileType
 {
@@ -52,8 +53,8 @@ public:
 	const std::string& getSystemID() const;
 	SystemData* getSystem() const { return mSystem; }
 
-	std::vector<FileData> getChildren() const;
-	std::vector<FileData> getChildrenRecursive(bool includeFolders) const;
+	std::vector<FileData> getChildren(const FileSort* sortType = NULL) const;
+	std::vector<FileData> getChildrenRecursive(bool includeFolders, const FileSort* sortType = NULL) const;
 
 	inline std::string getCleanName() const { return getCleanGameName(mFileID, mSystem); }
 

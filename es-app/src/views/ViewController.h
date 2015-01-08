@@ -31,6 +31,7 @@ public:
 	void goToSystemView(SystemData* system);
 	void goToStart();
 
+	// pass NULL for "all systems"
 	void onFilesChanged(SystemData* system);
 	void onMetaDataChanged(SystemData* system, const FileData& file);
 	

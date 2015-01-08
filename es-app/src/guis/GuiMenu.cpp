@@ -158,7 +158,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 					Settings::getInstance()->setString("ThemeSet", theme_set->getSelected());
 
 					if(needReload)
-						ViewController::get()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
+						ViewController::get()->reloadAll();
 				});
 			}
 

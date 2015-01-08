@@ -58,9 +58,10 @@ public:
 	// before setting the new data.
 	void setFileData(const std::string& fileID, const std::string& systemID, const MetaDataMap& metadata);
 
-	// returns either all immediate children (immediate_children_only) OR 
-	// all children, children of children, etc. of file ID (immedate_children_only = false)
-	std::vector<FileData> getChildrenOf(const std::string& fileID, SystemData* system, bool immediate_children_only, bool includeFolders);
+	// returns either all immediate children (immediateChildrenOnly) OR 
+	// all children, children of children, etc. of file ID (immedateChildrenOnly = false)
+	std::vector<FileData> getChildrenOf(const std::string& fileID, SystemData* system, 
+		bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType = NULL);
 
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);
