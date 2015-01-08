@@ -44,6 +44,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			if(boost::filesystem::exists(path))
 				db.importXML(*it, path);
 			db.updateExists(*it);
+			ViewController::get()->onFilesChanged(*it);
 		}
 
 		Window* windowCopy = this->mWindow;

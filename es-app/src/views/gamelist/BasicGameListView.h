@@ -8,7 +8,10 @@ class BasicGameListView : public ISimpleGameListView
 public:
 	BasicGameListView(Window* window, const FileData& root);
 
-	// Called when a FileData* is added, has its metadata changed, or is removed
+	// Called when a new FileData is added or is removed
+	virtual void onFilesChanged() override;
+
+	// Called when an existing FileData's metadata changes
 	virtual void onMetaDataChanged(const FileData& file) override;
 
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme);

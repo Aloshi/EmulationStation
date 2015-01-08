@@ -551,7 +551,7 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	SQLPreparedStmt stmt(mDB, insertstr.c_str());
 	sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC); // fileid
 	sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC); // systemid
-	sqlite3_bind_int(stmt, 3, metadata.getType() == FOLDER_METADATA); // filetype
+	sqlite3_bind_int(stmt, 3, metadata.getType() == FOLDER_METADATA ? FileType::FOLDER : FileType::GAME); // filetype
 	sqlite3_bind_int(stmt, 4, 1); // fileexists
 
 	for(unsigned int i = 0; i < mdd.size(); i++)

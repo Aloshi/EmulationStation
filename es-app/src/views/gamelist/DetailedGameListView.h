@@ -12,6 +12,9 @@ public:
 
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
+	virtual void onFilesChanged() override;
+	virtual void onMetaDataChanged(const FileData& file) override;
+
 	virtual const char* getName() const override { return "detailed"; }
 
 protected:

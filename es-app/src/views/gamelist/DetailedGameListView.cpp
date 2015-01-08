@@ -242,6 +242,19 @@ void DetailedGameListView::launch(FileData& game)
 	ViewController::get()->launch(game, target);
 }
 
+// we know we won't be recreated as a new type of gamelist,
+// so we do the ISimpleGameListView implementation, which is
+// to just repopulate
+void DetailedGameListView::onFilesChanged()
+{
+	ISimpleGameListView::onFilesChanged();
+}
+
+void DetailedGameListView::onMetaDataChanged(const FileData& file)
+{
+	ISimpleGameListView::onMetaDataChanged(file);
+}
+
 std::vector<TextComponent*> DetailedGameListView::getMDLabels()
 {
 	std::vector<TextComponent*> ret;

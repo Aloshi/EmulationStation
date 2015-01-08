@@ -23,6 +23,12 @@ void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	mList.applyTheme(theme, getName(), "gamelist", ALL);
 }
 
+void BasicGameListView::onFilesChanged()
+{
+	// might switch to a detailed view
+	ViewController::get()->reloadGameListView(this);
+}
+
 void BasicGameListView::onMetaDataChanged(const FileData& file)
 {
 	// might switch to a detailed view
