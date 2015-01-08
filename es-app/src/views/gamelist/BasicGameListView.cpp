@@ -56,7 +56,7 @@ void BasicGameListView::setCursor(const FileData& cursor)
 
 void BasicGameListView::launch(FileData& game)
 {
-	ViewController::get()->launch(&game);
+	ViewController::get()->launch(game);
 }
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()

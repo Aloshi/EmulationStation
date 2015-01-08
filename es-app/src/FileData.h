@@ -10,16 +10,8 @@ struct FileSort;
 
 enum FileType
 {
-	GAME = 1,   // Cannot have children.
+	GAME = 1,
 	FOLDER = 2
-};
-
-enum FileChangeType
-{
-	FILE_ADDED,
-	FILE_METADATA_CHANGED,
-	FILE_REMOVED,
-	FILE_SORTED
 };
 
 // Used for loading/saving gamelist.xml.

@@ -9,6 +9,10 @@
 namespace fs = boost::filesystem;
 
 #define RESERVED_COLUMNS 4
+#define COL_FILEID 0
+#define COL_SYSTEMID 1
+#define COL_FILETYPE 2
+#define COL_FILEEXISTS 3
 
 std::string pathToFileID(const fs::path& path, const fs::path& systemStartPath)
 {
@@ -366,12 +370,12 @@ void GamelistDB::recreateTables()
 // used by populate_recursive to insert a single file into the database
 // assumes insert_stmt already has system ID set, and that
 // ?1 = fileid and ?2 = filetype
-void add_file(const char* fileid, int filetype, const SystemData* system, sqlite3* db, sqlite3_stmt* insert_stmt)
+void add_file(const char* fileid, FileType filetype, const SystemData* system, sqlite3* db, sqlite3_stmt* insert_stmt)
 {
 	if(sqlite3_bind_text(insert_stmt, 1, fileid, strlen(fileid), SQLITE_STATIC))
 		throw DBException() << "Error binding fileid in populate().\n\t" << sqlite3_errmsg(db);
 
-	if(sqlite3_bind_int(insert_stmt, 2, FileType::GAME))
+	if(sqlite3_bind_int(insert_stmt, 2, filetype))
 		throw DBException() << "Error binding filetype in populate().\n\t" << sqlite3_errmsg(db);
 
 	std::string clean_name = getCleanGameName(fileid, system);
@@ -511,10 +515,10 @@ MetaDataMap GamelistDB::getFileData(const std::string& fileID, const std::string
 
 	readStmt.step_expected(SQLITE_ROW);
 
-	MetaDataListType type = sqlite3_column_int(readStmt, 1) ? FOLDER_METADATA : GAME_METADATA;
+	MetaDataListType type = sqlite3_column_int(readStmt, COL_FILETYPE) == FOLDER ? FOLDER_METADATA : GAME_METADATA;
 	MetaDataMap mdl(type);
 
-	for(int i = 2; i < sqlite3_column_count(readStmt); i++)
+	for(int i = RESERVED_COLUMNS; i < sqlite3_column_count(readStmt); i++)
 	{
 		const char* col = (const char*)sqlite3_column_name(readStmt, i);
 		const char* value = (const char*)sqlite3_column_text(readStmt, i);
@@ -669,18 +673,18 @@ void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path
 	std::string relativeTo = system->getStartPath();
 	while(readStmt.step() != SQLITE_DONE)
 	{
-		MetaDataListType type = sqlite3_column_int(readStmt, 2) ? FOLDER_METADATA : GAME_METADATA;
+		MetaDataListType type = sqlite3_column_int(readStmt, COL_FILETYPE) == FOLDER ? FOLDER_METADATA : GAME_METADATA;
 		pugi::xml_node node = root.append_child(type == GAME_METADATA ? "game" : "folder");
 
 		// write path
-		std::string path = (const char*)sqlite3_column_text(readStmt, 0);
+		std::string path = (const char*)sqlite3_column_text(readStmt, COL_FILEID);
 		if(path[0] == '.')
 			path = relativeTo + path.substr(1, std::string::npos);
 
 		node.append_child("path").text().set(path.c_str());
 
 		// skip column 0 (fileid), 1 (systemid), 2 (filetype), 3 (fileexists)
-		for(int i = 4; i < sqlite3_column_count(readStmt); i++)
+		for(int i = RESERVED_COLUMNS; i < sqlite3_column_count(readStmt); i++)
 		{
 			const char* col = (const char*)sqlite3_column_name(readStmt, i);
 			const char* value = (const char*)sqlite3_column_text(readStmt, i);

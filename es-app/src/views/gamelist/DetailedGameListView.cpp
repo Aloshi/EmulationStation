@@ -239,7 +239,7 @@ void DetailedGameListView::launch(FileData& game)
 	if(mImage.hasImage())
 		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
 
-	ViewController::get()->launch(&game, target);
+	ViewController::get()->launch(game, target);
 }
 
 std::vector<TextComponent*> DetailedGameListView::getMDLabels()

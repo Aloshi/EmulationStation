@@ -2,6 +2,7 @@
 #include "SystemData.h"
 #include "SystemManager.h"
 #include "Settings.h"
+#include "Log.h"
 
 namespace fs = boost::filesystem;
 
@@ -94,7 +95,10 @@ fs::path FileData::getPath() const
 FileType FileData::getType() const
 {
 	if(mTypeCache == 0)
-		mTypeCache = (get_metadata().getType() == GAME_METADATA ? GAME : FOLDER);
+		mTypeCache = (get_metadata().getType() == GAME_METADATA ? GAME : FOLDER);	
+
+	if(mTypeCache == FOLDER)
+		LOG(LogInfo) << " found a folder, " << mFileID;
 
 	return mTypeCache;
 }

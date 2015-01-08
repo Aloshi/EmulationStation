@@ -75,7 +75,7 @@ std::string escapePath(const boost::filesystem::path& path)
 	return pathStr;
 }
 
-void SystemData::launchGame(Window* window, FileData* game) const
+void SystemData::launchGame(Window* window, FileData game) const
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
@@ -85,9 +85,9 @@ void SystemData::launchGame(Window* window, FileData* game) const
 
 	std::string command = mLaunchCommand;
 
-	const std::string rom = escapePath(game->getPath());
-	const std::string basename = game->getPath().stem().string();
-	const std::string rom_raw = game->getPath().string();
+	const std::string rom = escapePath(game.getPath());
+	const std::string basename = game.getPath().stem().string();
+	const std::string rom_raw = game.getPath().string();
 
 	command = strreplace(command, "%ROM%", rom);
 	command = strreplace(command, "%BASENAME%", basename);
@@ -109,7 +109,7 @@ void SystemData::launchGame(Window* window, FileData* game) const
 	window->normalizeNextUpdate();
 
 	// update number of times the game has been launched
-	MetaDataMap metadata = game->get_metadata();
+	MetaDataMap metadata = game.get_metadata();
 	int timesPlayed = metadata.get<int>("playcount") + 1;
 	metadata.set("playcount", timesPlayed);
 
@@ -117,7 +117,7 @@ void SystemData::launchGame(Window* window, FileData* game) const
 	boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
 	metadata.set("lastplayed", time);
 
-	game->set_metadata(metadata);
+	game.set_metadata(metadata);
 }
 
 std::string SystemData::getGamelistPath(bool forWrite) const
