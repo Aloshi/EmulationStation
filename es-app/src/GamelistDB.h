@@ -52,11 +52,7 @@ public:
 	MetaDataMap getFileData(const std::string& fileID, const std::string& systemID) const;
 
 	// Sets all metadata for a given fileID (overwrites existing data).
-	// If delete_existing is false, then any data that is not specified in data 
-	// but already exists in the database will be left alone. If delete_existing is
-	// true, the record for this fileID will be completely deleted (if it exists) 
-	// before setting the new data.
-	void setFileData(const std::string& fileID, const std::string& systemID, const MetaDataMap& metadata);
+	void setFileData(const std::string& fileID, const std::string& systemID, FileType type, const MetaDataMap& metadata);
 
 	// returns either all immediate children (immediateChildrenOnly) OR 
 	// all children, children of children, etc. of file ID (immedateChildrenOnly = false)

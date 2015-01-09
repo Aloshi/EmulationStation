@@ -54,17 +54,17 @@ std::string getCleanGameName(const std::string& str, const SystemData* system)
 	return removeParenthesis(stem);
 }
 
-FileData::FileData(const std::string& fileID, SystemData* system, const std::string& nameCache)
-	: mFileID(fileID), mSystem(system), mNameCache(nameCache), mTypeCache((FileType)0)
+FileData::FileData(const std::string& fileID, SystemData* system, FileType type, const std::string& nameCache)
+	: mFileID(fileID), mSystem(system), mType(type), mNameCache(nameCache)
 {
 }
 
-FileData::FileData() : FileData("", NULL)
+FileData::FileData() : FileData("", NULL, (FileType)0)
 {
 }
 
-FileData::FileData(const std::string& fileID, const std::string& systemID) : 
-	FileData(fileID, SystemManager::getInstance()->getSystemByName(systemID))
+FileData::FileData(const std::string& fileID, const std::string& systemID, FileType type) : 
+	FileData(fileID, SystemManager::getInstance()->getSystemByName(systemID), type)
 {
 }
 
@@ -93,10 +93,7 @@ fs::path FileData::getPath() const
 
 FileType FileData::getType() const
 {
-	if(mTypeCache == 0)
-		mTypeCache = (get_metadata().getType() == GAME_METADATA ? GAME : FOLDER);	
-
-	return mTypeCache;
+	return mType;
 }
 
 MetaDataMap FileData::get_metadata() const
@@ -106,7 +103,7 @@ MetaDataMap FileData::get_metadata() const
 
 void FileData::set_metadata(const MetaDataMap& metadata)
 {
-	SystemManager::getInstance()->database().setFileData(mFileID, mSystem->getName(), metadata);
+	SystemManager::getInstance()->database().setFileData(mFileID, getSystemID(), mType, metadata);
 }
 
 std::vector<FileData> FileData::getChildren(const FileSort* sort) const

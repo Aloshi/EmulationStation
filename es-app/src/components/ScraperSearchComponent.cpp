@@ -16,7 +16,7 @@
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
 	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
-	mSearchType(type), mLastSearch(NULL, FileData("", NULL))
+	mSearchType(type), mLastSearch(NULL, FileData("", NULL, (FileType)0))
 {
 	addChild(&mGrid);
 

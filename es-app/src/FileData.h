@@ -27,8 +27,8 @@ class FileData
 {
 public:
 	FileData();
-	FileData(const std::string& fileID, SystemData* system, const std::string& nameCache = "");
-	FileData(const std::string& fileID, const std::string& systemID);
+	FileData(const std::string& fileID, SystemData* system, FileType type, const std::string& nameCache = "");
+	FileData(const std::string& fileID, const std::string& systemID, FileType type);
 
 	inline bool operator==(const FileData& rhs) const { return (mFileID == rhs.mFileID && mSystem == rhs.mSystem); }
 	inline bool operator!=(const FileData& rhs) const { return !(*this == rhs); }
@@ -53,7 +53,7 @@ public:
 private:
 	std::string mFileID;
 	SystemData* mSystem;
-	
+	FileType mType;
+
 	mutable std::string mNameCache;
-	mutable FileType mTypeCache;
 };

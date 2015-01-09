@@ -29,6 +29,20 @@ fs::path fileIDToPath(const std::string& fileID, const SystemData* system)
 	return resolvePath(fileID, system->getStartPath(), true);
 }
 
+MetaDataListType fileTypeToMetaDataType(FileType type)
+{
+	switch(type)
+	{
+	case GAME:
+		return GAME_METADATA;
+	case FOLDER:
+		return FOLDER_METADATA;
+	}
+
+	assert(false);
+	return GAME_METADATA;
+}
+
 std::vector<FileSort> sFileSorts = boost::assign::list_of
 	(FileSort("Alphabetical, asc", "ORDER BY name"))
 	(FileSort("Alphabetical, desc", "ORDER BY name DESC"));
@@ -223,8 +237,7 @@ void GamelistDB::closeDB()
 
 void GamelistDB::createMissingTables()
 {
-	auto decl_type = GAME_METADATA;
-	const std::vector<MetaDataDecl>& decl = getMDDMap().at(decl_type);
+	const std::vector<MetaDataDecl>& decl = getMDDMap().at(GAME_METADATA);
 
 	std::stringstream ss;
 	ss << "CREATE TABLE IF NOT EXISTS files (" <<
@@ -515,7 +528,7 @@ MetaDataMap GamelistDB::getFileData(const std::string& fileID, const std::string
 
 	readStmt.step_expected(SQLITE_ROW);
 
-	MetaDataListType type = sqlite3_column_int(readStmt, COL_FILETYPE) == FOLDER ? FOLDER_METADATA : GAME_METADATA;
+	MetaDataListType type = fileTypeToMetaDataType((FileType)sqlite3_column_int(readStmt, COL_FILETYPE));
 	MetaDataMap mdl(type);
 
 	for(int i = RESERVED_COLUMNS; i < sqlite3_column_count(readStmt); i++)
@@ -532,7 +545,7 @@ MetaDataMap GamelistDB::getFileData(const std::string& fileID, const std::string
 	return mdl;
 }
 
-void GamelistDB::setFileData(const std::string& fileID, const std::string& systemID, const MetaDataMap& metadata)
+void GamelistDB::setFileData(const std::string& fileID, const std::string& systemID, FileType type, const MetaDataMap& metadata)
 {
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO files VALUES (?1, ?2, ?3, ?4, ";
@@ -551,7 +564,7 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	SQLPreparedStmt stmt(mDB, insertstr.c_str());
 	sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC); // fileid
 	sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC); // systemid
-	sqlite3_bind_int(stmt, 3, metadata.getType() == FOLDER_METADATA ? FileType::FOLDER : FileType::GAME); // filetype
+	sqlite3_bind_int(stmt, 3, type); // filetype
 	sqlite3_bind_int(stmt, 4, 1); // fileexists
 
 	for(unsigned int i = 0; i < mdd.size(); i++)
@@ -570,7 +583,7 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	std::vector<FileData> children;
 
 	std::stringstream ss;
-	ss << "SELECT fileid, name FROM files WHERE systemid = ?1 AND fileexists = 1 ";
+	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1 AND fileexists = 1 ";
 	if(immediateChildrenOnly)
 		ss << "AND inimmediatedir(fileid, ?2) ";
 	else
@@ -593,7 +606,8 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	{
 		const char* fileid = (const char*)sqlite3_column_text(stmt, 0);
 		const char* name = (const char*)sqlite3_column_text(stmt, 1);
-		children.push_back(FileData(fileid, system, name ? name : ""));
+		FileType filetype = (FileType)sqlite3_column_int(stmt, 2);
+		children.push_back(FileData(fileid, system, filetype, name ? name : ""));
 	}
 
 	return children;
@@ -619,12 +633,14 @@ void GamelistDB::importXML(const SystemData* system, const std::string& xml_path
 	
 	unsigned int skipCount = 0;
 	const char* tagList[2] = { "game", "folder" };
-	MetaDataListType typeList[2] = { GAME_METADATA, FOLDER_METADATA };
+	MetaDataListType metadataTypeList[2] = { GAME_METADATA, FOLDER_METADATA };
+	FileType fileTypeList[2] = { GAME, FOLDER };
 
 	for(int i = 0; i < 2; i++)
 	{
 		const char* tag = tagList[i];
-		MetaDataListType type = typeList[i];
+		MetaDataListType metadataType = metadataTypeList[i];
+		FileType fileType = fileTypeList[i];
 
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
@@ -638,7 +654,7 @@ void GamelistDB::importXML(const SystemData* system, const std::string& xml_path
 			}
 
 			// make a metadata map
-			MetaDataMap mdl(type);
+			MetaDataMap mdl(metadataType);
 			const std::vector<MetaDataDecl>& mdd = mdl.getMDD();
 			for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
 			{
@@ -654,10 +670,13 @@ void GamelistDB::importXML(const SystemData* system, const std::string& xml_path
 				}
 			}
 
-			// make sure the name is set
-			assert(!mdl.get<std::string>("name").empty());
+			const std::string fileID = pathToFileID(path, system);
 
-			this->setFileData(pathToFileID(path, system), system->getName(), mdl);
+			// make sure the name is set
+			if(mdl.get<std::string>("name").empty())
+				mdl.set<std::string>("name", getCleanGameName(fileID, system));
+
+			this->setFileData(fileID, system->getName(), fileType, mdl);
 		}
 	}
 }
@@ -673,7 +692,7 @@ void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path
 	std::string relativeTo = system->getStartPath();
 	while(readStmt.step() != SQLITE_DONE)
 	{
-		MetaDataListType type = sqlite3_column_int(readStmt, COL_FILETYPE) == FOLDER ? FOLDER_METADATA : GAME_METADATA;
+		MetaDataListType type = fileTypeToMetaDataType((FileType)sqlite3_column_int(readStmt, COL_FILETYPE));
 		pugi::xml_node node = root.append_child(type == GAME_METADATA ? "game" : "folder");
 
 		// write path
