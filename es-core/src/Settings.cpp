@@ -73,6 +73,7 @@ void Settings::setDefaults()
 	mStringMap["UpdateServer"] = "";
 	mStringMap["VersionFile"] = "";
 	mStringMap["SharePartition"] = "";
+	mStringMap["Lang"] = "en_US";
 }
 
 template <typename K, typename V>
