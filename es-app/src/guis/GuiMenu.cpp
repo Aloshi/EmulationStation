@@ -199,6 +199,27 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		        window->pushGui(s);
 	});
         
+        addEntry("LANGUAGE", 0x777777FF, true, 
+		    [this, window] {
+			auto s = new GuiSettings(window, "LANGUAGE");
+			// language choice 
+			auto language_choice = std::make_shared< OptionListComponent<std::string> >(window, "LANGUAGE", false);
+                        language_choice->add("Français", "fr_FR", Settings::getInstance()->getString("Lang") == "fr_FR");
+                        language_choice->add("English", "en_US", Settings::getInstance()->getString("Lang") == "en_US");
+                        s->addWithLabel("LANGUAGE", language_choice);
+			s->addSaveFunc([language_choice, window] { 
+                            Settings::getInstance()->setString("Lang", language_choice->getSelected()); 
+                            window->pushGui(
+                               new GuiMsgBox(window, "THE SYSTEM WILL NOW REBOOT", "OK", 
+                               [] {
+                                   if(runRestartCommand() != 0)
+                                       LOG(LogWarning) << "Reboot terminated with non-zero result!";
+                               })
+                            );
+                        });
+
+	});
+        
 	addEntry("QUIT", 0x777777FF, true, 
 		[this] {
 			auto s = new GuiSettings(mWindow, "QUIT");
