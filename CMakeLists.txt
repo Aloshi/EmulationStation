@@ -25,6 +25,16 @@ else()
     MESSAGE("bcm_host.h not found")
 endif()
 
+#-------------------------------------------------------------------------------
+#check if we're running on olinuxino
+MESSAGE("Looking for libMali.so")
+if(EXISTS "/usr/lib/libMali.so")
+    MESSAGE("libMali.so found")
+    set(GLSystem "OpenGL ES")
+else()
+    MESSAGE("libMali.so not found")
+endif()
+
 #finding necessary packages
 #-------------------------------------------------------------------------------
 if(${GLSystem} MATCHES "Desktop OpenGL")
@@ -168,6 +178,7 @@ else()
         )
     else()
         LIST(APPEND COMMON_LIBRARIES
+            EGL
             ${OPENGLES_LIBRARIES}
         )
     endif()
