@@ -200,7 +200,8 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	});
         
         addEntry("LANGUAGE", 0x777777FF, true, 
-		    [this, window] {
+		    [this] {
+                        Window* window = mWindow;
 			auto s = new GuiSettings(window, "LANGUAGE");
 			// language choice 
 			auto language_choice = std::make_shared< OptionListComponent<std::string> >(window, "LANGUAGE", false);
@@ -217,6 +218,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                                })
                             );
                         });
+                        mWindow->pushGui(s);
 
 	});
         

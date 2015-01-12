@@ -74,6 +74,10 @@ void Settings::setDefaults()
 	mStringMap["VersionFile"] = "";
 	mStringMap["SharePartition"] = "";
 	mStringMap["Lang"] = "en_US";
+	mStringMap["INPUT P1"] = "DEFAULT";
+	mStringMap["INPUT P2"] = "DEFAULT";
+	mStringMap["INPUT P3"] = "DEFAULT";
+	mStringMap["INPUT P4"] = "DEFAULT";
 }
 
 template <typename K, typename V>
