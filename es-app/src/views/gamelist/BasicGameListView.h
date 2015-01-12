@@ -23,6 +23,7 @@ public:
 protected:
 	virtual void populateList(const std::vector<FileData*>& files) override;
 	virtual void launch(FileData* game) override;
+	virtual void remove(FileData* game) override;
 
 	TextListComponent<FileData*> mList;
 };
