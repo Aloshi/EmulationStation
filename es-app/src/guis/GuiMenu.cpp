@@ -47,7 +47,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         s->addWithLabel("VERSION", version);
                         bool warning = SystemInfo::getInstance()->isFreeSpaceLimit();
                         auto space = std::make_shared<TextComponent>(mWindow, SystemInfo::getInstance()->getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
-                        s->addWithLabel("STOCKAGE", space);
+                        s->addWithLabel("STORAGE", space);
                         
                         mWindow->pushGui(s);
 
