@@ -207,6 +207,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto language_choice = std::make_shared< OptionListComponent<std::string> >(window, "LANGUAGE", false);
                         language_choice->add("Français", "fr_FR", Settings::getInstance()->getString("Lang") == "fr_FR");
                         language_choice->add("English", "en_US", Settings::getInstance()->getString("Lang") == "en_US");
+                        language_choice->add("Portugues", "pt_BR", Settings::getInstance()->getString("Lang") == "pt_BR");
                         s->addWithLabel("LANGUAGE", language_choice);
 			s->addSaveFunc([language_choice, window] { 
                             Settings::getInstance()->setString("Lang", language_choice->getSelected()); 
