@@ -49,7 +49,7 @@ std::string SystemInfo::getFreeSpaceInfo() {
             unsigned long percent = used * 100 / total;
 
             std::ostringstream oss;
-            oss << used << "GO/" << total << "GO (" << percent << "%)";
+            oss << used << "GB/" << total << "GB (" << percent << "%)";
             return oss.str();
         }
     } else {

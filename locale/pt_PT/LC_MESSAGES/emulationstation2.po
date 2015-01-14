@@ -274,3 +274,13 @@ msgstr "IDIOMA"
 
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "REINICIANDO SISTEMA"
+
+
+msgid "INFOS"
+msgstr "INFORMAÇÕES"
+
+msgid "VERSION"
+msgstr "VERSÃO"
+
+msgid "STORAGE"
+msgstr "ARMAZENAMENTO"

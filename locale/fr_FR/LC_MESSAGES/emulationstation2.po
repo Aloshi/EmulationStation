@@ -274,3 +274,13 @@ msgstr "LANGUE"
 
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "LE SYSTEME VA REDEMARRER"
+
+
+msgid "INFOS"
+msgstr "INFOS"
+
+msgid "VERSION"
+msgstr "VERSION"
+
+msgid "STORAGE"
+msgstr "STOCKAGE"
