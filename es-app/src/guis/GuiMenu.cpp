@@ -209,7 +209,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         language_choice->add("English", "en_US", Settings::getInstance()->getString("Lang") == "en_US");
                         language_choice->add("Portugues", "pt_BR", Settings::getInstance()->getString("Lang") == "pt_BR");
                         s->addWithLabel("LANGUAGE", language_choice);
-			s->addSaveFunc([language_choice, window] { 
+			s->addSaveFunc([language_choice, window] {
+                            if(Settings::getInstance()->getString("Lang") == language_choice->getSelected()){
+                                return;
+                            }
                             Settings::getInstance()->setString("Lang", language_choice->getSelected()); 
                             window->pushGui(
                                new GuiMsgBox(window, "THE SYSTEM WILL NOW REBOOT", "OK", 
