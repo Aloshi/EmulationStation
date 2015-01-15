@@ -95,7 +95,7 @@ msgstr "OPÇÕES DA INTERFACE"
 msgid "SCREENSAVER AFTER"
 msgstr "TEMPO PARA A PROTEÇÃO DE TELA"
 msgid "TRANSITION STYLE"
-msgstr "ESTIDO DE TRANSIÇÃO"
+msgstr "ESTILO DE TRANSIÇÃO"
 msgid "SCREENSAVER BEHAVIOR"
 msgstr "COMPORTAMENTO DA PROTEÇÃO DE TELA"
 msgid "SHOW FRAMERATE"
@@ -144,7 +144,7 @@ msgstr "SELECIONAR NADA"
 
 #: es-app/src/guis/GuiScraperMulti.cpp"
 msgid "SCRAPING IN PROGRESS"
-msgstr "SCRAPING EM PROGRESSO"
+msgstr "SCRAPING EM ANDAMENTO"
 
 #: es-app/src/components/ScraperSearchComponent.cpp
 msgid "NO GAMES FOUND - SKIP"
