@@ -16,6 +16,8 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("ParseGamelistOnly")
 	("ShowExit")
 	("Windowed")
+	("VSync")
+	("HideConsole")
 	("IgnoreGamelist");
 
 Settings::Settings()
@@ -41,10 +43,20 @@ void Settings::setDefaults()
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
 	mBoolMap["Windowed"] = false;
+
+#ifdef _RPI_
+	// don't enable VSync by default on the Pi, since it already 
+	// has trouble trying to render things at 60fps in certain menus
+	mBoolMap["VSync"] = false;
+#else
+	mBoolMap["VSync"] = true;
+#endif
+
 	mBoolMap["EnableSounds"] = true;
 	mBoolMap["ShowHelpPrompts"] = true;
 	mBoolMap["ScrapeRatings"] = true;
 	mBoolMap["IgnoreGamelist"] = false;
+	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
 
 	mBoolMap["Debug"] = false;

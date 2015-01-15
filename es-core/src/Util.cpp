@@ -103,6 +103,13 @@ fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allo
 // example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
 fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool& contains)
 {
+	// if either of these doesn't exist, fs::canonical() is going to throw an error
+	if(!fs::exists(path) || !fs::exists(relativeTo))
+	{
+		contains = false;
+		return path;
+	}
+
 	fs::path p = fs::canonical(path);
 	fs::path r = fs::canonical(relativeTo);
 
