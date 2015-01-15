@@ -197,7 +197,7 @@ msgstr "IR PARA A LETRA"
 msgid "SORT GAMES BY"
 msgstr "ORDENAR JOGOS POR"
 msgid "EDIT THIS GAME'S METADATA"
-msgstr "EDITAR OS METADADOS DESSE JOGOS"
+msgstr "EDITAR OS METADADOS DESSE JOGO"
 
 
 #: es-app/src/guis/GuiMetaDataEd.cpp
