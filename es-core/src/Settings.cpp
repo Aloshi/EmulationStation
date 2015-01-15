@@ -39,6 +39,7 @@ void Settings::setDefaults()
 	mBoolMap.clear();
 	mIntMap.clear();
 
+	mBoolMap["BackgroundJoystickInput"] = false;
 	mBoolMap["ParseGamelistOnly"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
