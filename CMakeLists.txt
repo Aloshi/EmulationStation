@@ -187,3 +187,13 @@ set(LIBRARY_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 add_subdirectory("external")
 add_subdirectory("es-core")
 add_subdirectory("es-app")
+
+
+# i18n
+find_program (MSGFMT_EXECUTABLE msgfmt)
+if (MSGFMT_EXECUTABLE)
+	message (STATUS "Native language support enabled.")
+	add_subdirectory (locale)
+endif (MSGFMT_EXECUTABLE)
+
+
