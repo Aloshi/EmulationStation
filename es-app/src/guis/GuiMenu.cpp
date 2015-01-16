@@ -118,7 +118,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addSaveFunc([output_list] { 
                             if(Settings::getInstance()->getString("AudioOutputDevice") != output_list->getSelected()){
                                 Settings::getInstance()->setString("AudioOutputDevice", output_list->getSelected()); 
-                                
+                                RetroboxSystem::getInstance()->setAudioOutputDevice(output_list->getSelected());
                             }
                         });
 
