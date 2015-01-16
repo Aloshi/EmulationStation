@@ -97,7 +97,9 @@ bool RetroboxSystem::setAudioOutputDevice(std::string device) {
     }
     
     if(commandValue != -1){
-        std::string command =  "amixer cset numid=3 " + commandValue;
+        std::ostringstream oss;
+        oss << "amixer cset numid=3 " << commandValue;
+        std::string command = oss.str();
         LOG(LogInfo) << "Launching " << command;
         if(system(command.c_str())){
             LOG(LogWarning) << "Error executing " << command;
