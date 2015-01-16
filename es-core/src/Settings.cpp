@@ -78,6 +78,8 @@ void Settings::setDefaults()
 	mStringMap["INPUT P2"] = "DEFAULT";
 	mStringMap["INPUT P3"] = "DEFAULT";
 	mStringMap["INPUT P4"] = "DEFAULT";
+        mStringMap["AudioOutputDevice"] = "AUTO";
+
 }
 
 template <typename K, typename V>

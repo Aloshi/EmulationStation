@@ -284,3 +284,7 @@ msgstr "VERSÃO"
 
 msgid "STORAGE"
 msgstr "ARMAZENAMENTO"
+
+
+msgid "OUTPUT DEVICE"
+msgstr "OUTPUT DEVICE"

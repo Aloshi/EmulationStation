@@ -4,7 +4,7 @@
 #include "Sound.h"
 #include "Log.h"
 #include "Settings.h"
-#include "SystemInfo.h"
+#include "RetroboxSystem.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
 #include "guis/GuiScraperStart.h"
@@ -43,10 +43,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		[this] { 
 			auto s = new GuiSettings(mWindow, "INFOS");
                         
-                        auto version = std::make_shared<TextComponent>(mWindow, SystemInfo::getInstance()->getVersion(), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+                        auto version = std::make_shared<TextComponent>(mWindow, RetroboxSystem::getInstance()->getVersion(), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
                         s->addWithLabel("VERSION", version);
-                        bool warning = SystemInfo::getInstance()->isFreeSpaceLimit();
-                        auto space = std::make_shared<TextComponent>(mWindow, SystemInfo::getInstance()->getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
+                        bool warning = RetroboxSystem::getInstance()->isFreeSpaceLimit();
+                        auto space = std::make_shared<TextComponent>(mWindow, RetroboxSystem::getInstance()->getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
                         s->addWithLabel("STORAGE", space);
                         
                         mWindow->pushGui(s);
@@ -103,7 +103,23 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("ENABLE SOUNDS", sounds_enabled);
 			s->addSaveFunc([sounds_enabled] { 
                             Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); 
-                            AudioManager::getInstance()->stopMusic();
+                            if(!sounds_enabled->getState())
+                                AudioManager::getInstance()->stopMusic();
+                        });
+                        
+			auto output_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "OUTPUT DEVICE", false);
+			
+                        std::string currentDevice = Settings::getInstance()->getString("AudioOutputDevice");
+                        output_list->add("HDMI", "HDMI", "HDMI" == currentDevice);
+                        output_list->add("JACK", "JACK", "JACK" == currentDevice);
+                        output_list->add("AUTO", "AUTO", "AUTO" == currentDevice);
+
+			s->addWithLabel("OUTPUT DEVICE", output_list);
+			s->addSaveFunc([output_list] { 
+                            if(Settings::getInstance()->getString("AudioOutputDevice") != output_list->getSelected()){
+                                Settings::getInstance()->setString("AudioOutputDevice", output_list->getSelected()); 
+                                
+                            }
                         });
 
 			mWindow->pushGui(s);

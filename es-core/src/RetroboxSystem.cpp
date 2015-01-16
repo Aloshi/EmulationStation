@@ -1,31 +1,32 @@
 /* 
- * File:   SystemInfo.cpp
+ * File:   RetroboxSystem.cpp
  * Author: matthieu
  * 
  * Created on 29 novembre 2014, 03:15
  */
 
-#include "SystemInfo.h"
+#include "RetroboxSystem.h"
 #include <stdlib.h>
 #include <sys/statvfs.h>
 #include <sstream>
 #include "Settings.h"
 #include <iostream>
 #include <fstream>
+#include "Log.h"
 
-SystemInfo::SystemInfo() {
+RetroboxSystem::RetroboxSystem() {
 }
 
-SystemInfo * SystemInfo::instance = NULL;
+RetroboxSystem * RetroboxSystem::instance = NULL;
 
-SystemInfo * SystemInfo::getInstance() {
-    if (SystemInfo::instance == NULL) {
-        SystemInfo::instance = new SystemInfo();
+RetroboxSystem * RetroboxSystem::getInstance() {
+    if (RetroboxSystem::instance == NULL) {
+        RetroboxSystem::instance = new RetroboxSystem();
     }
-    return SystemInfo::instance;
+    return RetroboxSystem::instance;
 }
 
-unsigned long SystemInfo::getFreeSpaceGB(std::string mountpoint) {
+unsigned long RetroboxSystem::getFreeSpaceGB(std::string mountpoint) {
     struct statvfs fiData;
     const char * fnPath = mountpoint.c_str();
     int free = 0;
@@ -35,7 +36,7 @@ unsigned long SystemInfo::getFreeSpaceGB(std::string mountpoint) {
     return free;
 }
 
-std::string SystemInfo::getFreeSpaceInfo() {
+std::string RetroboxSystem::getFreeSpaceInfo() {
     struct statvfs fiData;
     std::string sharePart = Settings::getInstance()->getString("SharePartition");
     if(sharePart.size() > 0){
@@ -57,7 +58,7 @@ std::string SystemInfo::getFreeSpaceInfo() {
     }
 }
 
-bool SystemInfo::isFreeSpaceLimit() {
+bool RetroboxSystem::isFreeSpaceLimit() {
     std::string sharePart = Settings::getInstance()->getString("SharePartition");
     if(sharePart.size() > 0){
         return getFreeSpaceGB(sharePart) < 2;
@@ -67,7 +68,7 @@ bool SystemInfo::isFreeSpaceLimit() {
     
 }
 
-std::string SystemInfo::getVersion() {
+std::string RetroboxSystem::getVersion() {
     std::string version = Settings::getInstance()->getString("VersionFile");
     if (version.size() > 0) {
         std::ifstream ifs(version);
@@ -79,4 +80,32 @@ std::string SystemInfo::getVersion() {
         }
     }
     return "";
+}
+
+bool RetroboxSystem::setAudioOutputDevice(std::string device) {
+    int commandValue = -1;
+    int returnValue = false;
+    
+    if(device == "AUTO"){
+        commandValue = 0;
+    }else if(device == "JACK"){
+        commandValue = 1;
+    }else if(device == "HDMI"){            
+        commandValue = 2;
+    }else {
+        LOG(LogWarning) << "Unable to find audio output device to use !";
+    }
+    
+    if(commandValue != -1){
+        std::string command =  "amixer cset numid=3 " + commandValue;
+        LOG(LogInfo) << "Launching " << command;
+        if(system(command.c_str())){
+            LOG(LogWarning) << "Error executing " << command;
+            returnValue = false;
+        }else {
+            LOG(LogInfo) << "Audio output device set to : " << device;
+            returnValue = true;
+        }
+      }
+    return returnValue;
 }
