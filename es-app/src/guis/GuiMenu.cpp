@@ -68,7 +68,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         // smoothing
 			auto smoothing_enabled = std::make_shared<SwitchComponent>(mWindow);
 			smoothing_enabled->setState(Settings::getInstance()->getBool("Smooth"));
-			s->addWithLabel("SMOOTHING GAMES", smoothing_enabled);
+			s->addWithLabel("SMOOTH GAMES", smoothing_enabled);
 			
                         
                         s->addSaveFunc([overscan_enabled,smoothing_enabled ,overclock_choice, window] { 

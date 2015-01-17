@@ -288,5 +288,5 @@ msgstr "STOCKAGE"
 msgid "OUTPUT DEVICE"
 msgstr "SORTIE AUDIO"
 
-msgid "SMOOTHING GAMES"
+msgid "SMOOTH GAMES"
 msgstr "LISSER LES JEUX"
