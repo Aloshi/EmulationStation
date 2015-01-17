@@ -11,3 +11,7 @@ set(SQLITE3_SOURCES
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_library(sqlite3 STATIC ${SQLITE3_SOURCES} ${SQLITE3_HEADERS})
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	target_link_libraries(sqlite3 dl)
+endif()
