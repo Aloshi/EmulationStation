@@ -86,11 +86,11 @@ bool RetroboxSystem::setAudioOutputDevice(std::string device) {
     int commandValue = -1;
     int returnValue = false;
     
-    if(device == "AUTO"){
+    if(device == "auto"){
         commandValue = 0;
-    }else if(device == "JACK"){
+    }else if(device == "jack"){
         commandValue = 1;
-    }else if(device == "HDMI"){            
+    }else if(device == "hdmi"){            
         commandValue = 2;
     }else {
         LOG(LogWarning) << "Unable to find audio output device to use !";
@@ -110,4 +110,43 @@ bool RetroboxSystem::setAudioOutputDevice(std::string device) {
         }
       }
     return returnValue;
+}
+
+
+
+bool RetroboxSystem::setOverscan(bool enable){
+   
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RetroboxSettingScript") << " " << "overscan";
+    if(enable){
+        oss << " " << "enable";
+    }else {
+        oss << " " << "disable";
+    }
+    std::string command = oss.str();
+    LOG(LogInfo) << "Launching " << command;
+    if(system(command.c_str())){
+        LOG(LogWarning) << "Error executing " << command;
+        return false;
+    }else {
+        LOG(LogInfo) << "Overscan set to : " << enable;
+        return true;
+    }
+      
+}
+bool RetroboxSystem::setOverclock(std::string mode){
+    if(mode != ""){
+        std::ostringstream oss;
+        oss << Settings::getInstance()->getString("RetroboxSettingScript") << " " 
+                << "overclock" << " " << mode;
+        std::string command = oss.str();
+        LOG(LogInfo) << "Launching " << command;
+        if(system(command.c_str())){
+            LOG(LogWarning) << "Error executing " << command;
+            return false;
+        }else {
+            LOG(LogInfo) << "Overclocking set to " << mode;
+            return true;
+        }
+      }
 }

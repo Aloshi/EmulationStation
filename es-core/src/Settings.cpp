@@ -60,6 +60,10 @@ void Settings::setDefaults()
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
 	mBoolMap["DebugText"] = false;
+        
+        
+        mBoolMap["Overscan"] = false;
+        mBoolMap["Smooth"] = true;
 
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
@@ -78,7 +82,11 @@ void Settings::setDefaults()
 	mStringMap["INPUT P2"] = "DEFAULT";
 	mStringMap["INPUT P3"] = "DEFAULT";
 	mStringMap["INPUT P4"] = "DEFAULT";
-        mStringMap["AudioOutputDevice"] = "AUTO";
+        mStringMap["AudioOutputDevice"] = "auto";
+        mStringMap["Overclock"] = "extrem";
+        mStringMap["RetroboxSettingScript"] = "";
+
+        
 
 }
 

@@ -39,9 +39,11 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 //			mWindow->pushGui(new GuiInfo(mWindow));
 //	});
     
-        addEntry("INFOS", 0x777777FF, true, 
+        addEntry("SYSTEM SETTINGS", 0x777777FF, true, 
 		[this] { 
-			auto s = new GuiSettings(mWindow, "INFOS");
+                        Window* window = mWindow;
+
+			auto s = new GuiSettings(mWindow, "SYSTEM SETTINGS");
                         
                         auto version = std::make_shared<TextComponent>(mWindow, RetroboxSystem::getInstance()->getVersion(), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
                         s->addWithLabel("VERSION", version);
@@ -49,6 +51,53 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         auto space = std::make_shared<TextComponent>(mWindow, RetroboxSystem::getInstance()->getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
                         s->addWithLabel("STORAGE", space);
                         
+                        // language choice 
+			auto overclock_choice = std::make_shared< OptionListComponent<std::string> >(window, "OVERCLOCK", false);
+                        std::string currentOverclock = Settings::getInstance()->getString("Overclock");
+                        overclock_choice->add("EXTREM", "extrem", currentOverclock == "extrem");
+                        overclock_choice->add("TURBO", "turbo", currentOverclock == "turbo");
+                        overclock_choice->add("HIGH", "high", currentOverclock == "high");
+                        overclock_choice->add("NONE", "none", currentOverclock == "none");
+                        s->addWithLabel("OVERCLOCK", overclock_choice);
+                        
+                        // overscan
+			auto overscan_enabled = std::make_shared<SwitchComponent>(mWindow);
+			overscan_enabled->setState(Settings::getInstance()->getBool("Overscan"));
+			s->addWithLabel("OVERSCAN", overscan_enabled);
+                        
+                        // smoothing
+			auto smoothing_enabled = std::make_shared<SwitchComponent>(mWindow);
+			smoothing_enabled->setState(Settings::getInstance()->getBool("Smooth"));
+			s->addWithLabel("SMOOTHING GAMES", smoothing_enabled);
+			
+                        
+                        s->addSaveFunc([overscan_enabled,smoothing_enabled ,overclock_choice, window] { 
+                            bool reboot = false;
+                            if(Settings::getInstance()->getBool("Smooth") != smoothing_enabled->getState()){
+                                Settings::getInstance()->setBool("Smooth", smoothing_enabled->getState()); 
+                            }
+                            if(Settings::getInstance()->getBool("Overscan") != overscan_enabled->getState()){
+                                Settings::getInstance()->setBool("Overscan", overscan_enabled->getState()); 
+                                RetroboxSystem::getInstance()->setOverscan(overscan_enabled->getState());
+                                reboot = true;
+                            }
+                            
+                            if(Settings::getInstance()->getString("Overclock") != overclock_choice->getSelected()){
+                                Settings::getInstance()->setString("Overclock", overclock_choice->getSelected()); 
+                                RetroboxSystem::getInstance()->setOverclock(overclock_choice->getSelected());
+                                reboot = true;
+                            }
+                            if(reboot){
+                                window->pushGui(
+                                   new GuiMsgBox(window, "THE SYSTEM WILL NOW REBOOT", "OK", 
+                                   [] {
+                                       if(runRestartCommand() != 0)
+                                           LOG(LogWarning) << "Reboot terminated with non-zero result!";
+                                   })
+                                );
+                            }
+                            
+                        });
                         mWindow->pushGui(s);
 
 	});
@@ -110,9 +159,9 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto output_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "OUTPUT DEVICE", false);
 			
                         std::string currentDevice = Settings::getInstance()->getString("AudioOutputDevice");
-                        output_list->add("HDMI", "HDMI", "HDMI" == currentDevice);
-                        output_list->add("JACK", "JACK", "JACK" == currentDevice);
-                        output_list->add("AUTO", "AUTO", "AUTO" == currentDevice);
+                        output_list->add("HDMI", "hdmi", "hdmi" == currentDevice);
+                        output_list->add("JACK", "jack", "jack" == currentDevice);
+                        output_list->add("AUTO", "auto", "auto" == currentDevice);
 
 			s->addWithLabel("OUTPUT DEVICE", output_list);
 			s->addSaveFunc([output_list] { 

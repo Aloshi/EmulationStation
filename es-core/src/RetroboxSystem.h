@@ -21,6 +21,8 @@ public:
     bool isFreeSpaceLimit();
     std::string getVersion();
     bool setAudioOutputDevice(std::string device);
+    bool setOverscan(bool enable);
+    bool setOverclock(std::string mode);
 
 private:
     static RetroboxSystem * instance;

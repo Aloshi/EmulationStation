@@ -276,8 +276,8 @@ msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "LE SYSTEME VA REDEMARRER"
 
 
-msgid "INFOS"
-msgstr "INFOS"
+msgid "SYSTEM SETTINGS"
+msgstr "OPTIONS SYSTEME"
 
 msgid "VERSION"
 msgstr "VERSION"
@@ -287,3 +287,6 @@ msgstr "STOCKAGE"
 
 msgid "OUTPUT DEVICE"
 msgstr "SORTIE AUDIO"
+
+msgid "SMOOTHING GAMES"
+msgstr "LISSER LES JEUX"
