@@ -58,7 +58,7 @@ boost::filesystem::path get_or_fetch_hash_file()
 void init_hash_maps ()
 {
 	boost::filesystem::path hash_path = get_or_fetch_hash_file();
-	if (hash_path.c_str() == "")
+	if (hash_path.empty())
 	{
 		return;
 	}
@@ -167,7 +167,7 @@ void TheGamesDBShaRequest::process(const std::unique_ptr<HttpReq>& req, std::vec
 	{
 		ScraperSearchResult result;
 
-		if (noIntroName == "")
+		if (noIntroName.empty())
 		{
 			result.mdl.set("name", game.child("GameTitle").text().get());
 		}

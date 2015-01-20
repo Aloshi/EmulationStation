@@ -64,8 +64,7 @@ std::map<std::string, Decoder> decoders = boost::assign::map_list_of
 
 std::string hash_file(HashFunc * hf, std::ifstream& file, std::streampos start)
 {
-	std::streampos bs;
-	bs = 16384;
+	size_t bs = 16384;
 	char * b = new char [bs];
 	file.seekg (start, std::ios::beg);
 	while (file)
@@ -77,7 +76,10 @@ std::string hash_file(HashFunc * hf, std::ifstream& file, std::streampos start)
 		}
 		else if (file.eof())
 		{
-			hf->process_bytes(b, file.gcount());
+			// file.gcount() returns an std::streamsize, which is the signed counterpart of std::size_t
+			// it only returns a negative value in the constructors of std::strstreambuf, so we can
+			// safely cast to size_t (taken from http://en.cppreference.com/w/cpp/io/streamsize)
+			hf->process_bytes(b, (size_t)file.gcount());
 		}
 		else
 		{
@@ -130,9 +132,10 @@ std::string hash_nes(HashFunc * hf, std::ifstream& file)
 void deinterleave(char* p, unsigned int n)
 {
 	unsigned int m, i;
-        m = n / 2;
+	m = n / 2;
 	char * b = new char [n];
-        for (i=0 ; i<n ; i++) {
+	for (i=0 ; i<n ; i++)
+	{
 		if (i < m)
 		{
 			b[i*2+1] = p[i];
@@ -142,11 +145,11 @@ void deinterleave(char* p, unsigned int n)
 			b[i*2-n] = p[i];
 		}
 	}
-        for (i=0 ; i<n; i++)
+	for (i=0 ; i<n; i++)
 	{
 		p[i] = b[i];
-        }
-        delete[] b;
+	}
+	delete[] b;
 }
 
 std::string hash_block(HashFunc * hf, std::ifstream& file, unsigned int bs, void (*mod)(char*, unsigned int))
@@ -247,7 +250,7 @@ std::string hash_rom(HashFunc * hf, boost::filesystem::path path)
 	{
 		size = file.tellg();
 		ext = path.extension();
-		switch (decoders[ext.c_str()])
+		switch (decoders[ext.string()])
 		{
 			case DEC_BINARY:
 				return hash_file(hf, file, 0);
@@ -258,7 +261,7 @@ std::string hash_rom(HashFunc * hf, boost::filesystem::path path)
 					return hash_file(hf, file, 0);
 				break;
 			case DEC_MGD:
-				return hash_block(hf, file, size, deinterleave);
+				return hash_block(hf, file, (size_t)size, deinterleave);
 			case DEC_SMD:
 				return hash_block(hf, file, 16384, deinterleave);
 			case DEC_LNX:
