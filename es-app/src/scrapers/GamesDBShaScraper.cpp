@@ -20,9 +20,9 @@ std::map<std::string, std::string> hash_to_name;
 boost::filesystem::path get_hash_path()
 {
 	std::string home = getHomePath();
-	boost::filesystem::path hash_path = home + "/.emulationstation/rom_hashes/";
+	boost::filesystem::path hash_path = home + "/.emulationstation/rom_hashes";
 	boost::filesystem::create_directories(hash_path);
-	hash_path += "hash.tsv";
+	hash_path = hash_path / "hash.tsv";
 	return hash_path;
 }
 
