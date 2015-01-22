@@ -286,7 +286,7 @@ msgid "STORAGE"
 msgstr "ALMACENAMIENTO"
 
 msgid "OUTPUT DEVICE"
-msgstr “SALIDA DE AUDIO"
+msgstr "SALIDA DE AUDIO"
 
 msgid "SMOOTH GAMES"
-msgstr “JUEGOS SENCILLOS"
+msgstr "JUEGOS SENCILLOS"

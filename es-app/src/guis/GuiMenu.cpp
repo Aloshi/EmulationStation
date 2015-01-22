@@ -390,20 +390,28 @@ void GuiMenu::createConfigInput(){
                     for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
                         InputConfig * config = InputManager::getInstance()->getInputConfigByDevice(it);
                         if(!config->isConfigured()) continue;
-                        bool ifound = current_p1.compare(config->getDeviceGUIDString()) == 0;
                         std::string displayName = config->getDeviceName();
                         if(displayName.size() > 25){
                             displayName = displayName.substr(0, 22) + "...";
                         }
-                        if(ifound) found = true;
+                        bool ifound = current_p1 == config->getDeviceGUIDString();
+                        LOG(LogWarning) << "adding entry for player"<<player << "(selected : ) " << ifound <<  " : " << config->getDeviceName() << "  " << config->getDeviceGUIDString();
                         inputOptionList->add(displayName, config->getDeviceGUIDString(), ifound);
+                        if(ifound) {
+                            found = true;
+                            break;
+                        }
                     }
                     if (current_p1.compare("") == 0 || !found) {
-                        Settings::getInstance()->setString(confName, "DEFAULT");
+                        LOG(LogWarning) << "adding default entry for player"<<player << "(selected : true)";
+                        inputOptionList->add("DEFAULT", "", true);
+                    }else {
+                        LOG(LogWarning) << "adding default entry for player"<<player << "(selected : false)";
+
+                        inputOptionList->add("DEFAULT", "", false);
                     }
                     
                     // ADD default config
-                    inputOptionList->add("DEFAULT", "", Settings::getInstance()->getString(confName).compare("DEFAULT") == 0);
                     
                     // Populate controllers list
                     s->addWithLabel(confName, inputOptionList);
@@ -423,8 +431,8 @@ void GuiMenu::createConfigInput(){
                                 name = "DEFAULT";
                                 Settings::getInstance()->setString(confName, name);                            
                             } else {
-                                LOG(LogWarning) << "Found the thing ! : name in list  = "<< selectedName;
-                                LOG(LogWarning) << "Found the thing ! : guid  = "<< input_p1->getSelected();
+                                LOG(LogWarning) << "Found the selected controller ! : name in list  = "<< selectedName;
+                                LOG(LogWarning) << "Found the selected controller ! : guid  = "<< input_p1->getSelected();
 
                                 std::string selectedGuid = input_p1->getSelected();
                                 Settings::getInstance()->setString(confName, selectedGuid);
