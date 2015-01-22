@@ -51,7 +51,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         auto space = std::make_shared<TextComponent>(mWindow, RetroboxSystem::getInstance()->getFreeSpaceInfo(), Font::get(FONT_SIZE_MEDIUM), warning ? 0xFF0000FF : 0x777777FF);
                         s->addWithLabel("STORAGE", space);
                         
-                        // language choice 
+                        // Overclock choice 
 			auto overclock_choice = std::make_shared< OptionListComponent<std::string> >(window, "OVERCLOCK", false);
                         std::string currentOverclock = Settings::getInstance()->getString("Overclock");
                         overclock_choice->add("EXTREM", "extrem", currentOverclock == "extrem");
@@ -273,6 +273,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         language_choice->add("Français", "fr_FR", Settings::getInstance()->getString("Lang") == "fr_FR");
                         language_choice->add("English", "en_US", Settings::getInstance()->getString("Lang") == "en_US");
                         language_choice->add("Portugues", "pt_BR", Settings::getInstance()->getString("Lang") == "pt_BR");
+                        language_choice->add("Español", "es_ES", Settings::getInstance()->getString("Lang") == "es_ES");
                         s->addWithLabel("LANGUAGE", language_choice);
 			s->addSaveFunc([language_choice, window] {
                             if(Settings::getInstance()->getString("Lang") == language_choice->getSelected()){
