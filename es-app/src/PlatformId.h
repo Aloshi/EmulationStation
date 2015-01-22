@@ -28,6 +28,7 @@ namespace PlatformIds
 		MAC_OS,
 		XBOX,
 		XBOX_360,
+		MSX,
 		NEOGEO,
 		NEOGEO_POCKET,
 		NEOGEO_POCKET_COLOR,

@@ -17,6 +17,7 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("ShowExit")
 	("Windowed")
 	("VSync")
+	("HideConsole")
 	("IgnoreGamelist");
 
 Settings::Settings()
@@ -38,6 +39,7 @@ void Settings::setDefaults()
 	mBoolMap.clear();
 	mIntMap.clear();
 
+	mBoolMap["BackgroundJoystickInput"] = false;
 	mBoolMap["ParseGamelistOnly"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
@@ -55,6 +57,7 @@ void Settings::setDefaults()
 	mBoolMap["ShowHelpPrompts"] = true;
 	mBoolMap["ScrapeRatings"] = true;
 	mBoolMap["IgnoreGamelist"] = false;
+	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
 
 	mBoolMap["Debug"] = false;
