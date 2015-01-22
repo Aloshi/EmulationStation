@@ -24,6 +24,7 @@ namespace PlatformIds
 		ATARI_XE,
 		COLECOVISION,
 		COMMODORE_64,
+                FAMILY_COMPUTER_DISK_SYSTEM,
 		INTELLIVISION,
 		MAC_OS,
 		XBOX,
@@ -57,6 +58,7 @@ namespace PlatformIds
 		PLAYSTATION_4,
 		PLAYSTATION_VITA,
 		PLAYSTATION_PORTABLE,
+                SG_1000,
 		SUPER_NINTENDO,
 		TURBOGRAFX_16, // (also PC Engine)
 		WONDERSWAN,

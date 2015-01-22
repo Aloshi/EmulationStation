@@ -23,7 +23,8 @@ namespace PlatformIds
 		"atarijaguarcd",
 		"atarixe",
 		"colecovision",
-		"c64", // commodore 64
+		"c64", // commodore 64,
+                "fds", // Nintendo Family Computer Disk System
 		"intellivision",
 		"macintosh",
 		"xbox",
@@ -57,6 +58,7 @@ namespace PlatformIds
 		"ps4",
 		"psvita",
 		"psp", // playstation portable
+                "sg1000", // Sega SG1000
 		"snes", // super nintendo entertainment system
 		"pcengine", // turbografx-16/pcengine
 		"wonderswan",
