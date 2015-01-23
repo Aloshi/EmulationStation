@@ -456,7 +456,7 @@ void GuiMenu::createConfigInput(){
                                 LOG(LogWarning) << "Found the selected controller ! : name in list  = "<< selectedName;
                                 LOG(LogWarning) << "Found the selected controller ! : guid  = "<< input_p1->getSelected();
 
-                                Settings::getInstance()->setString(confName, selectedName);
+                                Settings::getInstance()->setString(confName, input_p1->getSelected());
                             }
                         }
                         Settings::getInstance()->saveFile();
