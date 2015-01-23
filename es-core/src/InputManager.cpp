@@ -423,22 +423,20 @@ bool InputManager::configureEmulators(const std::string& systemName) {
         sstm << "INPUT P" << player+1;
         std::string confName = sstm.str();
 
-        std::string playerConfigGUID = Settings::getInstance()->getString(confName);
-        InputConfig * playerInputConfig;
+        std::string playerConfigName = Settings::getInstance()->getString(confName);
 
         for (std::list<InputConfig *>::iterator it1=availableConfigured.begin(); it1!=availableConfigured.end(); ++it1)
         {
             InputConfig * config = *it1;
             //LOG(LogInfo) << "I am checking for an input named "<< config->getDeviceName() << " this configured ? "<<config->isConfigured();
             //if(!config->isConfigured()) continue;
-            bool ifound = playerConfigGUID.compare(config->getDeviceGUIDString()) == 0;
+            bool ifound = playerConfigName.compare(config->getDeviceName()) == 0;
             //LOG(LogInfo) << "I was checking for an input named "<< playerConfigName << " and i compared to "
             //            << config->getDeviceName();
             if(ifound){
                 availableConfigured.erase(it1);
                 playerJoysticks[player] = config;
                 LOG(LogInfo) << "Saved "<< config->getDeviceName() << " for player " << player;
-
                 break;
             }
         }
@@ -446,7 +444,6 @@ bool InputManager::configureEmulators(const std::string& systemName) {
     
     for (int player = 0; player < 4; player++) {
         InputConfig * playerInputConfig = playerJoysticks[player];
-        std::string playerConfigGUID = "";
         // si aucune config a été trouvé pour le joueur, on essaie de lui filer un libre
         if(playerInputConfig == NULL){
             LOG(LogInfo) << "No config for player " << player;

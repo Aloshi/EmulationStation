@@ -1,3 +1,8 @@
+#include <list>
+#include <algorithm>
+#include <string>
+#include <sstream>
+
 #include "EmulationStation.h"
 #include "guis/GuiMenu.h"
 #include "Window.h"
@@ -373,9 +378,7 @@ void GuiMenu::createConfigInput(){
 
                 row.elements.clear();
 
-                // Add the default setting
-
-                // Allow selection of a default input for each player
+                // Here we go; for each player
                 std::vector<std::shared_ptr<OptionListComponent<std::string>>> options;
                 for (int player = 0; player < 4; player++) {
                     std::stringstream sstm;
@@ -384,30 +387,49 @@ void GuiMenu::createConfigInput(){
 
                     auto inputOptionList = std::make_shared<OptionListComponent<std::string> >(mWindow, confName, false);
                     options.push_back(inputOptionList);
+                    
                     // Checking if a setting has been saved, else setting to default
-                    std::string current_p1 = Settings::getInstance()->getString(confName);
+                    std::string configuratedName = Settings::getInstance()->getString(confName);
+                    std::list<int> alreadyTaken = std::list<int>();
+                    
                     bool found = false;
+                    // For each available and configured input
                     for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
                         InputConfig * config = InputManager::getInstance()->getInputConfigByDevice(it);
-                        if(!config->isConfigured()) continue;
-                        std::string displayName = config->getDeviceName();
-                        if(displayName.size() > 25){
-                            displayName = displayName.substr(0, 22) + "...";
-                        }
-                        bool ifound = current_p1 == config->getDeviceGUIDString();
-                        LOG(LogWarning) << "adding entry for player"<<player << "(selected : ) " << ifound <<  " : " << config->getDeviceName() << "  " << config->getDeviceGUIDString();
-                        inputOptionList->add(displayName, config->getDeviceGUIDString(), ifound);
-                        if(ifound) {
-                            found = true;
-                            break;
+                        if(config->isConfigured()) {
+                            // create name
+                            std::stringstream dispNameSS;
+                            dispNameSS << "#" << config->getDeviceId() << " ";
+                            std::string deviceName = config->getDeviceName();
+                            if(deviceName.size() > 25){ 
+                                dispNameSS << deviceName.substr(0, 16) << "..." << deviceName.substr(deviceName.size()-5, deviceName.size()-1);
+                            }else {
+                                dispNameSS << deviceName;
+                            }
+                            
+                            std::string displayName = dispNameSS.str();
+                            
+                            
+                            bool foundFromConfig = configuratedName == config->getDeviceName();
+                            int deviceID = config->getDeviceId();
+                            // Si la manette est configurée, qu'elle correspond a la configuration, et qu'elle n'est pas 
+                            // deja selectionnée on l'ajoute en séléctionnée
+                            if(foundFromConfig && ! (std::find(alreadyTaken.begin(), alreadyTaken.end(), deviceID) != alreadyTaken.end())) {
+                                found = true;
+                                alreadyTaken.push_back(deviceID);
+                                LOG(LogWarning) << "adding entry for player"<<player << " (selected): " << config->getDeviceName() << "  " << config->getDeviceGUIDString();
+                                inputOptionList->add(displayName, config->getDeviceName(), true);
+                            }else {
+                                LOG(LogWarning) << "adding entry for player"<<player << " (not selected): " << config->getDeviceName() << "  " << config->getDeviceGUIDString();
+                                inputOptionList->add(displayName, config->getDeviceName(), false);
+                            }
                         }
                     }
-                    if (current_p1.compare("") == 0 || !found) {
-                        LOG(LogWarning) << "adding default entry for player"<<player << "(selected : true)";
+                    if (configuratedName.compare("") == 0 || !found) {
+                        LOG(LogWarning) << "adding default entry for player "<<player << "(selected : true)";
                         inputOptionList->add("DEFAULT", "", true);
                     }else {
                         LOG(LogWarning) << "adding default entry for player"<<player << "(selected : false)";
-
                         inputOptionList->add("DEFAULT", "", false);
                     }
                     
@@ -434,32 +456,13 @@ void GuiMenu::createConfigInput(){
                                 LOG(LogWarning) << "Found the selected controller ! : name in list  = "<< selectedName;
                                 LOG(LogWarning) << "Found the selected controller ! : guid  = "<< input_p1->getSelected();
 
-                                std::string selectedGuid = input_p1->getSelected();
-                                Settings::getInstance()->setString(confName, selectedGuid);
+                                Settings::getInstance()->setString(confName, selectedName);
                             }
                         }
                         Settings::getInstance()->saveFile();
                         // TODO RECONFIGURE DEFAULT SETTINGS ON EMULATIONSTATION ??
                 });
-                /*row.makeAcceptInputHandler([window, this] {
-                    std::string command = Settings::getInstance()->getString("GenerateInputConfigScript") + " DEFAULT";
-                    for (int player = 0; player < 2; player++) {
-                        std::stringstream sstm;
-                        sstm << "INPUT P" << player;
-                        std::string confName = sstm.str();
-                        Settings::getInstance()->setString(confName, "DEFAULT");
-                        Settings::getInstance()->saveFile();
-                        
-                    }
-                    if (system(command.c_str()) == 0) {
-                        window->pushGui(new GuiMsgBox(window, "CONFIGURATION RETABLIE", "OK"));
-                    }else {
-                        window->pushGui(new GuiMsgBox(window, "ERREUR"));                      
-                    }
-                    
-                });*/
-                //row.addElement(std::make_shared<TextComponent>(window, "REINITIALISER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-                //s->addRow(row);
+                
                 row.elements.clear();
                 window->pushGui(s);
                 
