@@ -290,3 +290,6 @@ msgstr "SORTIE AUDIO"
 
 msgid "SMOOTH GAMES"
 msgstr "LISSER LES JEUX"
+
+msgid "GPIO CONTROLLERS"
+msgstr "MANETTES SUR GPIO"

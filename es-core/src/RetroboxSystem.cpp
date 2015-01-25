@@ -150,3 +150,23 @@ bool RetroboxSystem::setOverclock(std::string mode){
         }
       }
 }
+
+
+bool RetroboxSystem::setGPIOControllers(bool enable){
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RetroboxSettingScript") << " " << "gpiocontrollers";
+    if(enable){
+        oss << " " << "enable";
+    }else {
+        oss << " " << "disable";
+    }
+    std::string command = oss.str();
+    LOG(LogInfo) << "Launching " << command;
+    if(system(command.c_str())){
+        LOG(LogWarning) << "Error executing " << command;
+        return false;
+    }else {
+        LOG(LogInfo) << "Overscan set to : " << enable;
+        return true;
+    }
+}

@@ -38,12 +38,6 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// CONFIGURE INPUT >
 	// QUIT >
 
-	// [version]
-//       	addEntry("INFOS", 0x777777FF, true, 
-//		[this] { 
-//			mWindow->pushGui(new GuiInfo(mWindow));
-//	});
-    
         addEntry("SYSTEM SETTINGS", 0x777777FF, true, 
 		[this] { 
                         Window* window = mWindow;
@@ -376,7 +370,12 @@ void GuiMenu::createConfigInput(){
                 row.addElement(std::make_shared<TextComponent>(window, "CONFIGURE A CONTROLLER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
                 s->addRow(row);
 
+                
                 row.elements.clear();
+		// quick system select (left/right in game list view)
+                auto gpio_select = std::make_shared<SwitchComponent>(mWindow);
+                gpio_select->setState(Settings::getInstance()->getBool("GpioControllers"));
+                s->addWithLabel("GPIO CONTROLLERS", gpio_select);
 
                 // Here we go; for each player
                 std::vector<std::shared_ptr<OptionListComponent<std::string>>> options;
@@ -439,7 +438,7 @@ void GuiMenu::createConfigInput(){
                     s->addWithLabel(confName, inputOptionList);
                              
                 }
-                s->addSaveFunc([this, options, window] {
+                s->addSaveFunc([this, options, window, gpio_select] {
                       for (int player = 0; player < 4; player++) {
                             std::stringstream sstm;
                             sstm << "INPUT P" << player+1;
@@ -459,8 +458,20 @@ void GuiMenu::createConfigInput(){
                                 Settings::getInstance()->setString(confName, input_p1->getSelected());
                             }
                         }
+                        
+                        // GPIOS
+                        if(Settings::getInstance()->getBool("GpioControllers") != gpio_select->getState()){
+                            Settings::getInstance()->setBool("GpioControllers", gpio_select->getState()); 
+                            RetroboxSystem::getInstance()->setGPIOControllers(gpio_select->getState());
+                            
+                            if(gpio_select->getState()){
+                                window->pushGui(
+                                           new GuiMsgBox(window, "GPIO ACTIVATED", "OK")
+                                        );
+                            }
+                        }
                         Settings::getInstance()->saveFile();
-                        // TODO RECONFIGURE DEFAULT SETTINGS ON EMULATIONSTATION ??
+
                 });
                 
                 row.elements.clear();

@@ -23,6 +23,7 @@ public:
     bool setAudioOutputDevice(std::string device);
     bool setOverscan(bool enable);
     bool setOverclock(std::string mode);
+    bool setGPIOControllers(bool enable);
 
 private:
     static RetroboxSystem * instance;
