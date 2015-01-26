@@ -798,7 +798,7 @@ TextCache* Font::buildTextCache(const std::string& text, Eigen::Vector2f offset,
 
 	TextCache* cache = new TextCache();
 	cache->vertexLists.resize(vertMap.size());
-	cache->metrics = { sizeText(text, lineSpacing) };
+	cache->metrics.size = sizeText(text, lineSpacing);
 
 	unsigned int i = 0;
 	for(auto it = vertMap.begin(); it != vertMap.end(); it++)
