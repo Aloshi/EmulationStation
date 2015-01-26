@@ -88,7 +88,7 @@ void Settings::setDefaults()
 	mStringMap["INPUT P4"] = "DEFAULT";
         mStringMap["AudioOutputDevice"] = "auto";
         mStringMap["Overclock"] = "extrem";
-        mStringMap["RetroboxSettingScript"] = "";
+        mStringMap["RecalboxSettingScript"] = "";
 
         
 
