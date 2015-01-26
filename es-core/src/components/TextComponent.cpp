@@ -163,7 +163,8 @@ void TextComponent::onTextChanged()
 
 		while(text.size() && size.x() + abbrevSize.x() > mSize.x())
 		{
-			text.erase(text.size() - 1, 1);
+			size_t newSize = Font::getPrevCursor(text, text.size());
+			text.erase(newSize, text.size() - newSize);
 			size = f->sizeText(text);
 		}
 

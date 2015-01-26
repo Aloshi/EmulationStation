@@ -28,6 +28,7 @@ namespace PlatformIds
 		"macintosh",
 		"xbox",
 		"xbox360",
+		"msx",
 		"neogeo",
 		"ngp", // neo geo pocket
 		"ngpc", // neo geo pocket color
