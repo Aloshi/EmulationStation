@@ -117,7 +117,7 @@ bool RetroboxSystem::setAudioOutputDevice(std::string device) {
 bool RetroboxSystem::setOverscan(bool enable){
    
     std::ostringstream oss;
-    oss << Settings::getInstance()->getString("RetroboxSettingScript") << " " << "overscan";
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "overscan";
     if(enable){
         oss << " " << "enable";
     }else {
@@ -137,7 +137,7 @@ bool RetroboxSystem::setOverscan(bool enable){
 bool RetroboxSystem::setOverclock(std::string mode){
     if(mode != ""){
         std::ostringstream oss;
-        oss << Settings::getInstance()->getString("RetroboxSettingScript") << " " 
+        oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
                 << "overclock" << " " << mode;
         std::string command = oss.str();
         LOG(LogInfo) << "Launching " << command;
@@ -154,7 +154,7 @@ bool RetroboxSystem::setOverclock(std::string mode){
 
 bool RetroboxSystem::setGPIOControllers(bool enable){
     std::ostringstream oss;
-    oss << Settings::getInstance()->getString("RetroboxSettingScript") << " " << "gpiocontrollers";
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "gpiocontrollers";
     if(enable){
         oss << " " << "enable";
     }else {
