@@ -466,7 +466,7 @@ void GuiMenu::createConfigInput(){
                             
                             if(gpio_select->getState()){
                                 window->pushGui(
-                                           new GuiMsgBox(window, "GPIO ACTIVATED", "OK")
+                                           new GuiMsgBox(window, "GPIO CONTROLLERS ARE NOW ON", "OK")
                                         );
                             }
                         }
