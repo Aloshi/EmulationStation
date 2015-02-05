@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include "Log.h"
+#include "HttpReq.h"
 
 RetroboxSystem::RetroboxSystem() {
 }
@@ -80,6 +81,49 @@ std::string RetroboxSystem::getVersion() {
         }
     }
     return "";
+}
+
+bool RetroboxSystem::needToShowVersionMessage() {
+    std::string versionFile = Settings::getInstance()->getString("LastVersionFile");
+    if (versionFile.size() > 0) {
+        std::ifstream lvifs(versionFile);
+        if (lvifs.good()) {
+            std::string lastVersion;
+            std::getline(lvifs,lastVersion);
+            std::string currentVersion = getVersion();
+            if(lastVersion == currentVersion){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool RetroboxSystem::versionMessageDisplayed() {
+    std::string versionFile = Settings::getInstance()->getString("LastVersionFile");
+    std::string currentVersion = getVersion();
+    std::ostringstream oss;
+    oss << "echo " << currentVersion << " > " << versionFile;
+    if(system(oss.str().c_str())){
+            LOG(LogWarning) << "Error executing " << oss.str().c_str();
+        }else {
+            LOG(LogInfo) << "Version message displayed ok";
+        }
+}
+
+std::string RetroboxSystem::getVersionMessage(){
+    std::string versionMessageFile = Settings::getInstance()->getString("VersionMessage");
+        if (versionMessageFile.size() > 0) {
+        std::ifstream ifs(versionMessageFile);
+
+        if (ifs.good()) {
+            std::string contents;
+            std::getline(ifs,contents);
+            return contents;
+        }
+    }
+    return "";
+
 }
 
 bool RetroboxSystem::setAudioOutputDevice(std::string device) {
@@ -168,5 +212,35 @@ bool RetroboxSystem::setGPIOControllers(bool enable){
     }else {
         LOG(LogInfo) << "Overscan set to : " << enable;
         return true;
+    }
+}
+
+bool RetroboxSystem::updateSystem(){
+    std::string updatecommand = Settings::getInstance()->getString("UpdateCommand");
+    if(updatecommand.size() > 0){
+	int exitcode = system(updatecommand.c_str());
+        return exitcode == 0;
+    }
+    return false;
+}
+
+bool RetroboxSystem::ping(){
+    std::string updateserver = Settings::getInstance()->getString("UpdateServer");
+    std::string s("ping -c 1 " + updateserver);
+    int exitcode = system(s.c_str());
+    return exitcode == 0;
+}
+
+bool RetroboxSystem::canUpdate(){
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "canupdate";
+    std::string command = oss.str();
+    LOG(LogInfo) << "Launching " << command;
+    if(system(command.c_str()) == 0){
+        LOG(LogInfo) << "Can update ";
+        return true;
+    }else {
+        LOG(LogInfo) << "Cannot update ";
+        return false;
     }
 }

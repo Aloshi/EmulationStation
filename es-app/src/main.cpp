@@ -15,6 +15,7 @@
 #include "Log.h"
 #include "Window.h"
 #include "EmulationStation.h"
+#include "RetroboxSystem.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include "VolumeControl.h"
@@ -292,6 +293,23 @@ int main(int argc, char* argv[])
 				SDL_PushEvent(quit);
 			}));
 	}
+        
+        
+        if(RetroboxSystem::getInstance()->needToShowVersionMessage()){
+             window.pushGui(new GuiMsgBox(&window,
+			RetroboxSystem::getInstance()->getVersionMessage(),
+			"OK", [] { 
+                            RetroboxSystem::getInstance()->versionMessageDisplayed();
+                        }));
+        }
+        
+        if(RetroboxSystem::getInstance()->canUpdate()){
+             window.pushGui(new GuiMsgBox(&window,
+			"AN UPDATE IS AVAILABLE FOR YOUR RECALBOX",
+			"OK", [] { 
+                            RetroboxSystem::getInstance()->versionMessageDisplayed();
+                        }));
+        }
 
 	//run the command line scraper then quit
 	if(scrape_cmdline)

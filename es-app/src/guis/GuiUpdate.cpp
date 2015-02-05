@@ -6,6 +6,7 @@
 #include <string>
 #include "Log.h"
 #include "Settings.h"
+#include "RetroboxSystem.h"
 
 
 GuiUpdate::GuiUpdate(Window* window) : GuiComponent(window), mBusyAnim(window)
@@ -102,24 +103,17 @@ void GuiUpdate::update(int deltaTime) {
 
 void GuiUpdate::threadUpdate() 
 {
-	//int exitcode = system("sudo su pi -c /home/pi/RetroPie/configscripts/rsync-update/rsync-update.sh");
-    std::string updatecommand = Settings::getInstance()->getString("UpdateCommand");
-    if(updatecommand.size() > 0){
-	int exitcode = system(updatecommand.c_str());
-	if(exitcode == 0){
-            this->onUpdateOk();
-        }else {
-            this->onUpdateError();
-        }
-    }
+    bool updateOk = RetroboxSystem::getInstance()->updateSystem();
+    if(updateOk){
+        this->onUpdateOk();
+    }else {
+        this->onUpdateError();
+    }  
 }
 
 void GuiUpdate::threadPing() 
 {
-        std::string updateserver = Settings::getInstance()->getString("UpdateServer");
-        std::string s("ping -c 1 " + updateserver);
-	int exitcode = system(s.c_str());
-	if(exitcode == 0){
+        if(RetroboxSystem::getInstance()->ping()){
             this->onPingOk();
         }else {
             this->onPingError();

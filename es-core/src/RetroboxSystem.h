@@ -24,6 +24,14 @@ public:
     bool setOverscan(bool enable);
     bool setOverclock(std::string mode);
     bool setGPIOControllers(bool enable);
+    bool versionMessageDisplayed();
+    bool needToShowVersionMessage();
+    std::string getVersionMessage();
+    bool updateSystem();
+    bool ping();
+    bool canUpdate();
+
+
 
 private:
     static RetroboxSystem * instance;
