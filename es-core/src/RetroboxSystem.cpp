@@ -116,9 +116,9 @@ std::string RetroboxSystem::getVersionMessage(){
         if (versionMessageFile.size() > 0) {
         std::ifstream ifs(versionMessageFile);
 
-        if (ifs.good()) {
-            std::string contents;
-            std::getline(ifs,contents);
+        if (ifs.good()) {            
+            std::string contents((std::istreambuf_iterator<char>(ifs)),
+                 std::istreambuf_iterator<char>());
             return contents;
         }
     }
