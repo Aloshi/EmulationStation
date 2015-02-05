@@ -21,6 +21,8 @@
 #include "VolumeControl.h"
 #include <sstream>
 #include <boost/locale.hpp>
+#include "resources/Font.h"
+
 
 
 #ifdef WIN32
@@ -300,7 +302,7 @@ int main(int argc, char* argv[])
 			RetroboxSystem::getInstance()->getVersionMessage(),
 			"OK", [] { 
                             RetroboxSystem::getInstance()->versionMessageDisplayed();
-                        }));
+                        },"",nullptr,"",nullptr, ALIGN_LEFT));
         }else {
             if(RetroboxSystem::getInstance()->canUpdate()){
                  window.pushGui(new GuiMsgBox(&window,

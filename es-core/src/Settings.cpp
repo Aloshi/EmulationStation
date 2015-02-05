@@ -89,7 +89,7 @@ void Settings::setDefaults()
         mStringMap["AudioOutputDevice"] = "auto";
         mStringMap["Overclock"] = "extrem";
         mStringMap["RecalboxSettingScript"] = "/recalbox/scripts/recalbox-config.sh";
-	mStringMap["LastVersionFile"] = "/root/version.done";
+	mStringMap["LastVersionFile"] = "/root/update.done";
 	mStringMap["VersionMessage"] = "/recalbox/recalbox.msg";
 
         
