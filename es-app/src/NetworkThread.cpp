@@ -34,7 +34,7 @@ void NetworkThread::run(){
 
         if(RetroboxSystem::getInstance()->canUpdate()){
             if(RetroboxSystem::getInstance()->canUpdate()){
-                 mWindow->pushGui(new GuiMsgBox(mWindow,
+                mWindow->pushGui(new GuiMsgBox(mWindow,
                             "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX",
                             "OK", [] { 
                                 RetroboxSystem::getInstance()->versionMessageDisplayed();

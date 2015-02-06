@@ -33,6 +33,11 @@ void Window::pushGui(GuiComponent* gui)
 	gui->updateHelpPrompts();
 }
 
+void Window::pushGuiFromThread(GuiComponent* gui)
+{
+    mGuiStackThread.push_back(gui);
+}
+
 void Window::removeGui(GuiComponent* gui)
 {
 	for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
@@ -131,6 +136,14 @@ void Window::input(InputConfig* config, Input input)
 
 void Window::update(int deltaTime)
 {
+    
+        if(!mGuiStackThread.empty()){
+            for(std::vector<GuiComponent*>::iterator it = mGuiStackThread.begin(); it != mGuiStackThread.end(); ++it) {
+                GuiComponent* gui = *it;
+                pushGui(gui);
+                mGuiStackThread.erase(it);
+            } 
+        }
 	if(mNormalizeNextUpdate)
 	{
 		mNormalizeNextUpdate = false;

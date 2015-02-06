@@ -15,6 +15,7 @@ public:
 	~Window();
 
 	void pushGui(GuiComponent* gui);
+	void pushGuiFromThread(GuiComponent* gui);
 	void removeGui(GuiComponent* gui);
 	GuiComponent* peekGui();
 
@@ -45,6 +46,7 @@ private:
 	ImageComponent* mBackgroundOverlay;
 
 	std::vector<GuiComponent*> mGuiStack;
+	std::vector<GuiComponent*> mGuiStackThread;
 
 	std::vector< std::shared_ptr<Font> > mDefaultFonts;
 
