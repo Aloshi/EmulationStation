@@ -96,6 +96,14 @@ void GuiUpdate::update(int deltaTime) {
             );
             mState = 0;
         }
+        if(mState == 6){
+            window->pushGui(
+                new GuiMsgBox(window, "NO UPDATE AVAILABLE", "OK", 
+                [this] {
+                    mState = -1;
+                }));
+            mState = 0;
+        }
         if(mState == -1){
             delete this;
         }
@@ -114,18 +122,28 @@ void GuiUpdate::threadUpdate()
 void GuiUpdate::threadPing() 
 {
         if(RetroboxSystem::getInstance()->ping()){
-            this->onPingOk();
+            if(RetroboxSystem::getInstance()->canUpdate()){
+                this->onUpdateAvailable();
+            }else {
+                this->onNoUpdateAvailable();
+
+            }
         }else {
             this->onPingError();
         }
 }
-void GuiUpdate::onPingOk() 
+void GuiUpdate::onUpdateAvailable() 
 {	
     mLoading = false;
-    LOG(LogInfo) << "ping ok" << "\n";	
+    LOG(LogInfo) << "update available" << "\n";	
     mState = 1;
 }
-
+void GuiUpdate::onNoUpdateAvailable() 
+{	
+    mLoading = false;
+    LOG(LogInfo) << "no update available" << "\n";	
+    mState = 6;
+}
 void GuiUpdate::onPingError() 
 {
     LOG(LogInfo) << "ping nok" << "\n";	

@@ -27,6 +27,7 @@ private:
 	void onUpdateOk();
         void threadUpdate();
         void threadPing();
-        void onPingOk();
+        void onUpdateAvailable();
+        void onNoUpdateAvailable();
         void onPingError();
 };
