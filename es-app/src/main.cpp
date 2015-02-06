@@ -22,6 +22,7 @@
 #include <sstream>
 #include <boost/locale.hpp>
 #include "resources/Font.h"
+#include "NetworkThread.h"
 
 
 
@@ -297,21 +298,17 @@ int main(int argc, char* argv[])
 	}
         
         
+        // UPDATED VERSION MESSAGE
         if(RetroboxSystem::getInstance()->needToShowVersionMessage()){
              window.pushGui(new GuiMsgBox(&window,
 			RetroboxSystem::getInstance()->getVersionMessage(),
 			"OK", [] { 
                             RetroboxSystem::getInstance()->versionMessageDisplayed();
                         },"",nullptr,"",nullptr, ALIGN_LEFT));
-        }else {
-            if(RetroboxSystem::getInstance()->canUpdate()){
-                 window.pushGui(new GuiMsgBox(&window,
-                            "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX",
-                            "OK", [] { 
-                                RetroboxSystem::getInstance()->versionMessageDisplayed();
-                            }));
-            }
         }
+        
+        // UPDATE CHECK THREAD
+        NetworkThread * nthread = new NetworkThread(&window);
 
 	//run the command line scraper then quit
 	if(scrape_cmdline)
