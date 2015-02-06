@@ -283,7 +283,7 @@ msgid "VERSION"
 msgstr "VERSION"
 
 msgid "STORAGE"
-msgstr "SPEICHER
+msgstr "SPEICHER"
 
 msgid "OUTPUT DEVICE"
 msgstr "AUDIOAUSGANG"
