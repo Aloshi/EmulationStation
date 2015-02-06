@@ -143,7 +143,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
 			volume->setValue((float)VolumeControl::getInstance()->getVolume());
 			s->addWithLabel("SYSTEM VOLUME", volume);
-			s->addSaveFunc([volume] { VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); });
+			s->addSaveFunc([volume] { 
+                            VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); 
+                            Settings::getInstance()->setInt("SystemVolume", (int)round(volume->getValue())); 
+                        });
 			
 			// disable sounds
 			auto sounds_enabled = std::make_shared<SwitchComponent>(mWindow);
