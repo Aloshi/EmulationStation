@@ -14,6 +14,15 @@ NinePatchComponent::NinePatchComponent(Window* window, const std::string& path, 
 		buildVertices();
 }
 
+NinePatchComponent::~NinePatchComponent()
+{
+	if (mVertices != NULL)
+		delete[] mVertices;
+
+	if (mColors != NULL)
+		delete[] mColors;
+}
+
 void NinePatchComponent::updateColors()
 {
 	Renderer::buildGLColorArray(mColors, mEdgeColor, 6 * 9);
