@@ -20,7 +20,8 @@ public:
 
 	// If a basic view detected a metadata change, it can request to recreate
 	// the current gamelist view (as it may change to be detailed).
-	void reloadGameListView(IGameListView* gamelist, bool reloadTheme = false);
+	// If NULL is used for the first parameter then reload them all.
+	void reloadGameListView(IGameListView* gamelist = NULL, bool reloadTheme = false);
 	inline void reloadGameListView(SystemData* system, bool reloadTheme = false) { reloadGameListView(getGameListView(system).get(), reloadTheme); }
 	void reloadAll(); // Reload everything with a theme.  Used when the "ThemeSet" setting changes.
 

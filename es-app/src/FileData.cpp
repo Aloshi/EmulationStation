@@ -1,5 +1,6 @@
 #include "FileData.h"
 #include "SystemData.h"
+#include "Settings.h"
 
 namespace fs = boost::filesystem;
 
@@ -49,6 +50,8 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
 		metadata.set("name", getCleanName());
+	
+	mFileName = mPath.stem().generic_string();
 }
 
 FileData::~FileData()
@@ -141,4 +144,16 @@ void FileData::sort(ComparisonFunction& comparator, bool ascending)
 void FileData::sort(const SortType& type)
 {
 	sort(*type.comparisonFunction, type.ascending);
+}
+
+const std::string& FileData::getName() const
+{
+	if (Settings::getInstance()->getBool("UseFileNames"))
+	{
+		return mFileName;
+	}
+	else
+	{
+		return metadata.get("name");
+	}
 }

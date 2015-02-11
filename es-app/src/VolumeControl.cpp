@@ -2,6 +2,7 @@
 
 #include "Log.h"
 
+#include "Util.h"
 
 #if defined(__linux__)
     #ifdef _RPI_

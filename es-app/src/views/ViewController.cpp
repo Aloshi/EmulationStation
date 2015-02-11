@@ -326,14 +326,19 @@ void ViewController::preload()
 
 void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 {
-	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	bool reloadAll = (view == NULL);
+
+	for(auto it = mGameListViews.begin(); it != mGameListViews.end();)
 	{
+		if (reloadAll)
+			view = it->second.get();
+
 		if(it->second.get() == view)
 		{
 			bool isCurrent = (mCurrentView == it->second);
 			SystemData* system = it->first;
 			FileData* cursor = view->getCursor();
-			mGameListViews.erase(it);
+			mGameListViews.erase(it++);
 
 			if(reloadTheme)
 				system->loadTheme();
@@ -344,7 +349,12 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 			if(isCurrent)
 				mCurrentView = newView;
 
-			break;
+			if (!reloadAll)
+				break;
+		}
+		else
+		{
+			++it;
 		}
 	}
 }
