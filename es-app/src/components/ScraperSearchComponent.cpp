@@ -14,9 +14,10 @@
 #include "Util.h"
 #include "guis/GuiTextEditPopup.h"
 
-ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
+ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type, SkipType skip) : GuiComponent(window),
 	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
-	mSearchType(type)
+	mSearchType(type),
+	mAutoSkipType(skip)
 {
 	addChild(&mGrid);
 
@@ -231,42 +232,51 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 
 	const int end = results.size() > MAX_SCRAPER_RESULTS ? MAX_SCRAPER_RESULTS : results.size(); // at max display 5
 
-	auto font = Font::get(FONT_SIZE_MEDIUM);
-	unsigned int color = 0x777777FF;
-	if(end == 0)
+	if (mAutoSkipType == AUTO_SKIP_NO_RESULTS && end == 0)
 	{
-		ComponentListRow row;
-		row.addElement(std::make_shared<TextComponent>(mWindow, "NO GAMES FOUND - SKIP", font, color), true);
-
-		if(mSkipCallback)
-			row.makeAcceptInputHandler(mSkipCallback);
-
-		mResultList->addRow(row);
-		mGrid.resetCursor();
-	}else{
-		ComponentListRow row;
-		for(int i = 0; i < end; i++)
-		{
-			row.elements.clear();
-			row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(results.at(i).mdl.get("name")), font, color), true);
-			row.makeAcceptInputHandler([this, i] { returnResult(mScraperResults.at(i)); });
-			mResultList->addRow(row);
-		}
-		mGrid.resetCursor();
+		mSkipCallback();
 	}
-
-	mBlockAccept = false;
-	updateInfoPane();
-
-	if(mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
+	else
 	{
-		if(mScraperResults.size() == 0)
-			mSkipCallback();
-		else
-			returnResult(mScraperResults.front());
-	}else if(mSearchType == ALWAYS_ACCEPT_MATCHING_CRC)
-	{
-		// TODO
+		auto font = Font::get(FONT_SIZE_MEDIUM);
+		unsigned int color = 0x777777FF;
+		if (end == 0)
+		{
+			ComponentListRow row;
+			row.addElement(std::make_shared<TextComponent>(mWindow, "NO GAMES FOUND - SKIP", font, color), true);
+
+			if (mSkipCallback)
+				row.makeAcceptInputHandler(mSkipCallback);
+
+			mResultList->addRow(row);
+			mGrid.resetCursor();
+		}
+		else{
+			ComponentListRow row;
+			for (int i = 0; i < end; i++)
+			{
+				row.elements.clear();
+				row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(results.at(i).mdl.get("name")), font, color), true);
+				row.makeAcceptInputHandler([this, i] { returnResult(mScraperResults.at(i)); });
+				mResultList->addRow(row);
+			}
+			mGrid.resetCursor();
+		}
+
+		mBlockAccept = false;
+		updateInfoPane();
+
+		if (mSearchType == ALWAYS_ACCEPT_FIRST_RESULT)
+		{
+			if (mScraperResults.size() == 0)
+				mSkipCallback();
+			else
+				returnResult(mScraperResults.front());
+		}
+		else if (mSearchType == ALWAYS_ACCEPT_MATCHING_CRC)
+		{
+			// TODO
+		}
 	}
 }
 

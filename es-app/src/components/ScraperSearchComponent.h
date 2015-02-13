@@ -25,7 +25,13 @@ public:
 		NEVER_AUTO_ACCEPT
 	};
 
-	ScraperSearchComponent(Window* window, SearchType searchType = NEVER_AUTO_ACCEPT);
+	enum SkipType
+	{
+		AUTO_SKIP_NO_RESULTS,
+		NEVER_SKIP_NO_RESULTS
+	};
+
+	ScraperSearchComponent(Window* window, SearchType searchType = NEVER_AUTO_ACCEPT, SkipType skipType = NEVER_SKIP_NO_RESULTS);
 
 	void search(const ScraperSearchParams& params);
 	void openInputScreen(ScraperSearchParams& from);
@@ -89,6 +95,7 @@ private:
 	std::vector<MetaDataPair> mMD_Pairs;
 
 	SearchType mSearchType;
+	SkipType mAutoSkipType;
 	ScraperSearchParams mLastSearch;
 	std::function<void(const ScraperSearchResult&)> mAcceptCallback;
 	std::function<void()> mSkipCallback;

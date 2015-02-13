@@ -33,6 +33,7 @@ private:
 	std::shared_ptr< OptionListComponent<GameFilterFunc> > mFilters;
 	std::shared_ptr< OptionListComponent<SystemData*> > mSystems;
 	std::shared_ptr<SwitchComponent> mApproveResults;
+	std::shared_ptr<SwitchComponent> mAutoSkipNoResults;
 
 	MenuComponent mMenu;
 };
