@@ -96,6 +96,42 @@ std::string escapePath(const boost::filesystem::path& path)
 	return pathStr;
 }
 
+std::string SystemData::replaceOptions( std::string command, FileData* game )
+{
+	// generate system options for this game by building up
+	// one string per 'section', and then replace that section in the command
+
+	std::map<std::string, std::stringstream> sections;
+
+	for( auto option = mOptions.begin(); option != mOptions.end(); option++ )
+	{
+		std::string section = (*option)->getReplace();
+		std::string current = game->getOption( (*option), true, true );
+
+		if( current.size() > 0 )
+		{
+			SystemOptionValue* value = (*option)->getValue( current );
+
+			sections[ section ] << "";
+
+			if( value && value->getCode().size() > 0 )
+			{
+				if( sections[ section ].tellp() > 0 )
+					sections[ section ] << " ";
+
+				sections[ section ] << value->getCode();
+			}
+		}
+	}
+
+	// now we have a list of sections and their replacement text,
+	// go thru all of them and replace the text in the command
+	for( auto sectionAdder = sections.begin(); sectionAdder != sections.end(); sectionAdder++ )
+		command = strreplace( command, sectionAdder->first, sectionAdder->second.str() );
+
+	return command;
+}
+
 void SystemData::launchGame(Window* window, FileData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";
@@ -114,8 +150,11 @@ void SystemData::launchGame(Window* window, FileData* game)
 	command = strreplace(command, "%BASENAME%", basename);
 	command = strreplace(command, "%ROM_RAW%", rom_raw);
 
+	command = replaceOptions( command, game );
+
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";
+	std::cout << command << "\n";
 	int exitCode = system(command.c_str());
 	std::cout << "==============================================\n";
 
@@ -309,7 +348,35 @@ bool SystemData::loadConfig()
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
 			delete newSys;
-		}else{
+		}
+		else
+		{
+
+			// read any options & values defined for the system
+			for( pugi::xml_node option = system.child("option"); option; option = option.next_sibling("option") )
+			{
+				SystemOption* newOption = new SystemOption( option.child("id").text().get(),
+														    option.child("replace").text().get(),
+														    option.child("desc").text().get(),
+														    option.child("default").text().get()
+														  );
+
+				// read option values
+
+				for( pugi::xml_node value = option.child("value"); value; value = value.next_sibling("value") )
+				{
+					SystemOptionValue* newValue = new SystemOptionValue( value.child("id").text().get(),
+															             value.child("desc").text().get(),
+															             value.child("code").text().get()
+															           );
+
+					newOption->addValue( newValue );
+				}
+
+
+				newSys->mOptions.push_back( newOption );
+			}
+
 			sSystemVector.push_back(newSys);
 		}
 	}

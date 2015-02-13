@@ -51,6 +51,45 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 	mMenu.addRow(row);
 
+	if( system->hasOptions() )
+	{
+		// show system options specific to this game
+
+		FileData* file = getGamelist()->getCursor();
+		SystemOptionValue* value;
+
+		std::vector<SystemOption*> options = system->getOptions();
+
+		for(unsigned int i = 0; i < options.size(); i++)
+		{
+			SystemOption* option = options.at(i);
+			auto option_set = std::make_shared< OptionListComponent<SystemOptionValue*> >(mWindow, option->getDesc(), false);
+
+			std::string key = "option_" + option->getID();
+
+			std::string currentID = file->metadata.has( key ) ? file->metadata.get( key ) : "";
+			std::string defaultID = file->getParent() ? file->getParent()->getOption( option, true, true ) : option->getDefaultID();
+
+			value = option->getValue( defaultID );
+			if( value )
+				option_set->add( "Default [" + value->getDesc() + "]", NULL, currentID.size() == 0 );
+			else
+				option_set->add( "Default", NULL, currentID.size() == 0 );
+
+			std::vector<SystemOptionValue*> values = option->getValues();
+			for(unsigned int j = 0; j < values.size(); j++)
+			{
+				value = values.at(j);
+				option_set->add( value->getDesc(), value, currentID.compare(value->getID()) == 0 );
+			}
+
+			mOptions[ option ] = option_set;
+
+			mMenu.addWithLabel( option->getDesc(), option_set );
+		}
+
+	}
+
 	// center the menu
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, (mSize.y() - mMenu.getSize().y()) / 2);
@@ -64,6 +103,19 @@ GuiGamelistOptions::~GuiGamelistOptions()
 
 	// notify that the root folder was sorted
 	getGamelist()->onFileChanged(root, FILE_SORTED);
+
+	// save any system option changes to metadata
+	FileData* file = getGamelist()->getCursor();
+
+	for( auto optionIter = mOptions.begin(); optionIter != mOptions.end(); optionIter++ )
+	{
+		if( optionIter->second->getSelected() != NULL )
+			file->metadata.set( "option_" + optionIter->first->getID(), optionIter->second->getSelected()->getID() );
+		else
+			file->metadata.set( "option_" + optionIter->first->getID(), "" );
+	}
+
+	getGamelist()->onFileChanged(root, FILE_METADATA_CHANGED);
 }
 
 void GuiGamelistOptions::openMetaDataEd()

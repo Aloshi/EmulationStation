@@ -77,6 +77,11 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node n
 		}
 	}
 
+	// special-case reading the 'options_' entries
+	for (pugi::xml_node child = node.first_child(); child; child = child.next_sibling())
+		if( isOption( child.name() ) )
+			mdl.set( child.name(), child.text().get() );
+
 	return mdl;
 }
 
@@ -102,6 +107,11 @@ void MetaDataList::appendToXML(pugi::xml_node parent, bool ignoreDefaults, const
 			parent.append_child(mapIter->first.c_str()).text().set(value.c_str());
 		}
 	}
+
+	// special-case writing the 'options_' entries
+	for(auto optionIter = mMap.begin(); optionIter != mMap.end(); optionIter++)
+	    if( isOption(optionIter->first.c_str()) && optionIter->second.size() > 0 )
+			parent.append_child(optionIter->first.c_str()).text().set( optionIter->second.c_str() );
 }
 
 void MetaDataList::set(const std::string& key, const std::string& value)
@@ -112,6 +122,11 @@ void MetaDataList::set(const std::string& key, const std::string& value)
 void MetaDataList::setTime(const std::string& key, const boost::posix_time::ptime& time)
 {
 	mMap[key] = boost::posix_time::to_iso_string(time);
+}
+
+const bool MetaDataList::has( const std::string& key ) const
+{
+	return mMap.count( key );
 }
 
 const std::string& MetaDataList::get(const std::string& key) const
@@ -133,3 +148,9 @@ boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
 {
 	return string_to_ptime(get(key), "%Y%m%dT%H%M%S%F%q");
 }
+
+bool MetaDataList::isOption(const char * key)
+{
+	return strncmp( key, "option_", 7 ) == 0;
+}
+
