@@ -6,6 +6,7 @@
 #include "MetaData.h"
 
 class SystemData;
+class SystemOption;
 
 enum FileType
 {
@@ -65,6 +66,8 @@ public:
 
 	void sort(ComparisonFunction& comparator, bool ascending = true);
 	void sort(const SortType& type);
+
+	std::string getOption( SystemOption* option, bool inheritParents, bool useDefault );
 
 	MetaDataList metadata;
 

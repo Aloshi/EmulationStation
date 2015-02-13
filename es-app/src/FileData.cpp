@@ -142,3 +142,26 @@ void FileData::sort(const SortType& type)
 {
 	sort(*type.comparisonFunction, type.ascending);
 }
+
+
+std::string FileData::getOption( SystemOption* option, bool inheritParents, bool useDefault )
+{
+	std::string value;
+	std::string metaDataID = option->getMetaDataID();
+
+	if( metadata.has( metaDataID ) )
+	{
+		value = metadata.get( metaDataID );
+
+		if( value.size() > 0 )
+			return value;
+	}
+
+	if( inheritParents && mParent != NULL )
+		return mParent->getOption( option, inheritParents, useDefault );
+
+	if( useDefault )
+		return option->getDefaultID();
+
+	return "";
+}

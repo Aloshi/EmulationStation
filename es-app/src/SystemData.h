@@ -7,6 +7,7 @@
 #include "MetaData.h"
 #include "PlatformId.h"
 #include "ThemeData.h"
+#include "SystemOption.h"
 
 class SystemData
 {
@@ -33,7 +34,12 @@ public:
 	
 	unsigned int getGameCount() const;
 
+	std::string replaceOptions( std::string command, FileData* game );
 	void launchGame(Window* window, FileData* game);
+
+	bool hasOptions() const { return mOptions.size() > 0; }
+	const std::vector<SystemOption*>& getOptions() const { return mOptions; }
+	std::string getOption( std::string id, FileData *game );
 
 	static void deleteSystems();
 	static bool loadConfig(); //Load the system config file at getConfigPath(). Returns true if no errors were encountered. An example will be written if the file doesn't exist.
@@ -73,6 +79,7 @@ private:
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+	std::vector<SystemOption*> mOptions;
 
 	void populateFolder(FileData* folder);
 
