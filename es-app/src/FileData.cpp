@@ -106,6 +106,16 @@ void FileData::set_metadata(const MetaDataMap& metadata)
 	SystemManager::getInstance()->database().setFileData(mFileID, getSystemID(), mType, metadata);
 }
 
+std::map<std::string, std::string> FileData::get_options( FileOptionType type ) const
+{
+	return SystemManager::getInstance()->database().getFileOptions(mFileID, mSystem->getName(), type);
+}
+
+void FileData::set_options(FileOptionType type, const std::map<std::string, std::string>& options)
+{
+	SystemManager::getInstance()->database().setFileOptions(mFileID, getSystemID(), type, options);
+}
+
 std::vector<FileData> FileData::getChildren(const FileSort* sort) const
 {
 	if(sort == NULL)
@@ -120,4 +130,9 @@ std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const 
 		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
 
 	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, sort);
+}
+
+std::vector<FileData> FileData::getParents() const
+{
+	return SystemManager::getInstance()->database().getParentsOf(mFileID, mSystem);
 }

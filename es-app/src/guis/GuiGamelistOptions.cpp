@@ -57,6 +57,46 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	row.addElement(makeArrow(mWindow), false);
 	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 	mMenu.addRow(row);
+	
+
+	// show system options specific to this game
+	if( system->hasOptions() )
+	{
+		std::vector<SystemOption*> options = system->getOptions();
+
+		FileData cursor = getGamelist()->getCursor();
+
+		// get options set specifically against selected file separately from those against the parents
+		mFileOptions = cursor.get_options( FileOptionType::SYSTEM );
+
+		// now get all options from all parents
+		std::vector<FileData> fileStack = cursor.getParents();
+		std::map<std::string, std::string> defaults = SystemOption::getInheritedOptions( fileStack, FileOptionType::SYSTEM );
+
+		// list all the options
+		for( auto option = options.begin(); option != options.end(); option++ )
+		{
+			std::string id = (*option)->getID();
+			auto option_set = std::make_shared< OptionListComponent<SystemOptionValue*> >(mWindow, (*option)->getDesc(), false);
+
+			std::string currentValueID = (mFileOptions.count( id ) > 0) ? mFileOptions[id] : "";
+			std::string defaultValueID = defaults.count(id) > 0 ? defaults[id] : (*option)->getDefaultID();
+			SystemOptionValue *defaultValue = (*option)->getValue( defaultValueID );
+
+			if( defaultValue )
+				option_set->add( "[" + defaultValue->getDesc() + "]", NULL, currentValueID.empty() );
+			else
+				option_set->add( "[NOT SET]", NULL, currentValueID.empty() );
+
+		 	std::vector<SystemOptionValue*> values =(*option)->getValues();
+		 	for( auto value = values.begin(); value != values.end(); value++ )
+		 		option_set->add( (*value)->getDesc(), (*value), currentValueID.compare((*value)->getID()) == 0 );
+
+		 	mOptions[ (*option) ] = option_set;
+
+			mMenu.addWithLabel( (*option)->getDesc(), option_set );
+		}
+	}	
 
 	// center the menu
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
@@ -71,6 +111,22 @@ GuiGamelistOptions::~GuiGamelistOptions()
 		Settings::getInstance()->setInt("SortTypeIndex", mListSort->getSelected());
 		ViewController::get()->onFilesChanged(NULL);
 	}
+
+	// save any system option changes
+	FileData file = getGamelist()->getCursor();
+
+	for( auto optionIter = mOptions.begin(); optionIter != mOptions.end(); optionIter++ )
+	{
+		std::string id = optionIter->first->getID();
+
+		mFileOptions.erase(id);
+
+		if( optionIter->second->getSelectedObjects().size() > 0 )
+			if( optionIter->second->getSelected() )
+				mFileOptions[id] = optionIter->second->getSelected()->getID();
+	}	
+
+	file.set_options( FileOptionType::SYSTEM, mFileOptions );
 }
 
 void GuiGamelistOptions::openMetaDataEd()

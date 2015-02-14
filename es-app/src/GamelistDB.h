@@ -54,17 +54,29 @@ public:
 	// Sets all metadata for a given fileID (overwrites existing data).
 	void setFileData(const std::string& fileID, const std::string& systemID, FileType type, const MetaDataMap& metadata);
 
+	// return all options for given file & system
+	std::map<std::string, std::string> getFileOptions(const std::string& fileID, const std::string& systemID, FileOptionType type) const;
+
+	// save all options for given file & system (deletes all old options for file)
+	void setFileOptions(const std::string& fileID, const std::string& systemID, FileOptionType type, std::map<std::string, std::string>);
+
 	// returns either all immediate children (immediateChildrenOnly) OR 
 	// all children, children of children, etc. of file ID (immedateChildrenOnly = false)
 	std::vector<FileData> getChildrenOf(const std::string& fileID, SystemData* system, 
 		bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType = NULL);
+
+	std::vector<FileData> getParentsOf( const std::string& fileID, SystemData* system );
 
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);
 
 private:
 	void openDB(const char* path);
-	void createMissingTables(); // will do nothing if a "files" table already exists
+	
+	void createMissingTables();
+	void createFilesTable();		// does nothing if 'files' already exists
+	void createFileOptionsTable();	// does nothing if 'fileoptions' already exists
+
 	bool hasValidSchema() const; // returns true if the current "files" table's schema matches our metadata declarations
 	void recreateTables(); // recreates the "files" table with the current metadata schema, copying any values with the same column names
 	void closeDB();

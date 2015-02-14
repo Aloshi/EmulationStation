@@ -14,6 +14,11 @@ enum FileType
 	FOLDER = 2
 };
 
+enum FileOptionType
+{
+	SYSTEM = 1
+};
+
 // Used for loading/saving gamelist.xml.
 const char* fileTypeToString(FileType type);
 FileType stringToFileType(const char* str);
@@ -36,6 +41,9 @@ public:
 	MetaDataMap get_metadata() const;
 	void set_metadata(const MetaDataMap& metadata);
 
+	std::map<std::string, std::string> get_options( FileOptionType type ) const;
+	void set_options( FileOptionType type, const std::map<std::string, std::string>& options);
+
 	const std::string& getName() const;
 	FileType getType() const;
 
@@ -47,6 +55,9 @@ public:
 
 	std::vector<FileData> getChildren(const FileSort* sortType = NULL) const;
 	std::vector<FileData> getChildrenRecursive(bool includeFolders, const FileSort* sortType = NULL) const;
+	std::vector<FileData> getParents() const;
+
+	FileData getParent() const;
 
 	inline std::string getCleanName() const { return getCleanGameName(mFileID, mSystem); }
 

@@ -237,6 +237,12 @@ void GamelistDB::closeDB()
 
 void GamelistDB::createMissingTables()
 {
+	createFilesTable();
+	createFileOptionsTable();
+}
+
+void GamelistDB::createFilesTable()
+{
 	const std::vector<MetaDataDecl>& decl = getMDDMap().at(GAME_METADATA);
 
 	std::stringstream ss;
@@ -288,7 +294,26 @@ void GamelistDB::createMissingTables()
 	ss << "PRIMARY KEY (fileid, systemid))";
 
 	if(sqlite3_exec(mDB, ss.str().c_str(), NULL, NULL, NULL))
-		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
+		throw DBException() << "Error creating 'files' table!\n\t" << sqlite3_errmsg(mDB);
+
+}
+
+void GamelistDB::createFileOptionsTable()
+{
+	std::stringstream ss;
+
+	ss  << "CREATE TABLE IF NOT EXISTS fileoptions"
+	    << "("
+		<< " fileid     VARCHAR(255) NOT NULL, "
+		<< " systemid   VARCHAR(255) NOT NULL, "
+		<< " optiontype INT          NOT NULL, "
+		<< " optionid   VARCHAR(255) NOT NULL, "
+		<< " valueid    VARCHAR(255) NOT NULL, "
+		<< " PRIMARY KEY (fileid, systemid, optiontype, optionid)"
+		<< ")";
+
+	if(sqlite3_exec(mDB, ss.str().c_str(), NULL, NULL, NULL))
+		throw DBException() << "Error creating 'fileoptions' table!\n\t" << sqlite3_errmsg(mDB);
 }
 
 // returns a vector of all columns in a particular table
@@ -576,6 +601,48 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	stmt.step_expected(SQLITE_DONE);
 }
 
+std::map<std::string, std::string> GamelistDB::getFileOptions( const std::string& fileID, const std::string& systemID, FileOptionType type ) const
+{
+	std::map<std::string, std::string> options;
+
+	SQLPreparedStmt readStmt(mDB, "SELECT optionid, valueid FROM fileoptions WHERE fileid = ?1 AND systemid = ?2 AND optiontype = ?3");
+	sqlite3_bind_text( readStmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC );
+	sqlite3_bind_text( readStmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC );
+	sqlite3_bind_int( readStmt, 3, type );
+
+	while( readStmt.step() != SQLITE_DONE )
+	{
+		const char* id = (const char*)sqlite3_column_text( readStmt, 0 );
+		const char* value = (const char*)sqlite3_column_text( readStmt, 1 );
+		options[id] = value;
+	}
+
+	return options;
+}
+
+void GamelistDB::setFileOptions(const std::string& fileID, const std::string& systemID, FileOptionType type, std::map<std::string, std::string> options )
+{
+	SQLPreparedStmt readStmt(mDB, "DELETE FROM fileoptions WHERE fileid = ?1 AND systemid = ?2 AND optiontype = ?3");
+	sqlite3_bind_text( readStmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC );
+	sqlite3_bind_text( readStmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC );
+	sqlite3_bind_int( readStmt, 3, type );
+	readStmt.step();
+
+	for( auto option = options.begin(); option != options.end(); option++ )
+	{
+		std::string id    = (*option).first;
+		std::string value = (*option).second;
+
+		SQLPreparedStmt writer(mDB, "INSERT INTO fileoptions (fileid, systemid, optiontype, optionid, valueid) values (?1, ?2, ?3, ?4, ?5)");
+		sqlite3_bind_text( writer, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC );
+		sqlite3_bind_text( writer, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC );
+		sqlite3_bind_int(  writer, 3, type );
+		sqlite3_bind_text( writer, 4, id.c_str(), id.size(), SQLITE_STATIC );
+		sqlite3_bind_text( writer, 5, value.c_str(), value.size(), SQLITE_STATIC );
+		writer.step();
+	}
+}
+
 std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, SystemData* system, 
 	bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType)
 {
@@ -611,6 +678,32 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	}
 
 	return children;
+}
+
+std::vector<FileData> GamelistDB::getParentsOf( const std::string& fileID, SystemData* system )
+{
+	const std::string& systemID = system->getName();
+	std::vector<FileData> parents;
+
+	std::stringstream ss;
+	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1 AND fileexists = 1 "
+	   << "AND indir(?2, fileid) "
+	   << "order by length( fileid ) desc ";
+
+	std::string query = ss.str();
+	SQLPreparedStmt stmt(mDB, query);
+	sqlite3_bind_text(stmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 2, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+
+	while(stmt.step() != SQLITE_DONE)
+	{
+		const char* fileid = (const char*)sqlite3_column_text(stmt, 0);
+		const char* name = (const char*)sqlite3_column_text(stmt, 1);
+		FileType filetype = (FileType)sqlite3_column_int(stmt, 2);
+		parents.push_back(FileData(fileid, system, filetype, name ? name : ""));
+	}
+
+	return parents;
 }
 
 void GamelistDB::importXML(const SystemData* system, const std::string& xml_path)
