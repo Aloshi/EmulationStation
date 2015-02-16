@@ -358,4 +358,4 @@ void GuiComponent::onHide()
 		getChild(i)->onHide();
 }
 
-
+void GuiComponent::setScrollDir(int dir) {}

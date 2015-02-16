@@ -41,9 +41,39 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 
 	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
 
+	bool hasFavorites = false;
+
+	if (Settings::getInstance()->getBool("FavoritesOnly"))
+	{
+		for (auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					hasFavorites = true;
+					break;
+				}
+			}
+		}
+	}
+
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		if (Settings::getInstance()->getBool("FavoritesOnly") && hasFavorites)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				}
+			}
+		}
+		else
+		{
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		}
 	}
 }
 
@@ -107,6 +137,8 @@ void BasicGameListView::remove(FileData *game)
 	delete game;                                 // remove before repopulating (removes from parent)
 	onFileChanged(game, FILE_REMOVED);           // update the view, with game removed
 }
+
+void BasicGameListView::updateInfoPanel() {}
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 {

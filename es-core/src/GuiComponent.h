@@ -96,6 +96,8 @@ public:
 	// Returns true if the component is busy doing background processing (e.g. HTTP downloads)
 	bool isProcessing() const;
 
+	virtual inline void setScrollDir(int dir) {}
+
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;
 	void updateSelf(int deltaTime); // updates animations
