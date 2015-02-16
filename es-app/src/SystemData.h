@@ -32,6 +32,9 @@ public:
 	std::string getThemePath() const;
 	
 	unsigned int getGameCount() const;
+	unsigned int getFavoritesCount() const;
+
+	bool getHasFavorites() const;
 
 	void launchGame(Window* window, FileData* game);
 
@@ -73,6 +76,8 @@ private:
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+
+	bool mHasFavorites;
 
 	void populateFolder(FileData* folder);
 

@@ -20,8 +20,10 @@ public:
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
+   virtual void populateList(const std::vector<FileData*>& files) override;
+
+   virtual void updateInfoPanel() override;
 protected:
-	virtual void populateList(const std::vector<FileData*>& files) override;
 	virtual void launch(FileData* game) override;
 
 	TextListComponent<FileData*> mList;

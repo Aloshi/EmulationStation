@@ -45,6 +45,7 @@ public:
 	virtual const std::string& getThumbnailPath() const;
 
 	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
+	std::vector<FileData*> getFavoritesRecursive(unsigned int typeMask) const;
 
 	void addChild(FileData* file); // Error if mType != FOLDER
 	void removeChild(FileData* file); //Error if mType != FOLDER

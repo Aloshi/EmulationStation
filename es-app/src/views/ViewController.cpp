@@ -53,7 +53,50 @@ int ViewController::getSystemId(SystemData* system)
 	return std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
 }
 
-void ViewController::goToSystemView(SystemData* system)
+void ViewController::UpdateFavorite(SystemData* system, FileData* file)
+{
+      //reloadGameListView(system);
+   
+      IGameListView* view = getGameListView(system).get();
+      
+      //view->
+      //ileData* file = view->getCursor();
+      //if (file->metadata.get("favorite").compare("no") == 0 && Settings::getInstance()->getBool("FavoritesOnly"))
+      if (Settings::getInstance()->getBool("FavoritesOnly"))
+      {
+         const std::vector<FileData*>& files = system->getRootFolder()->getChildren();
+         view->populateList(files);
+         int pos = std::find(files.begin(), files.end(), file) - files.begin();
+         bool found = false;
+         for (auto it = files.begin() + pos; it != files.end(); it++)
+         {
+            if ((*it)->metadata.get("favorite").compare("yes") == 0)
+            {
+               view->setCursor(*it);
+               found = true;
+               break;
+            }
+         }
+
+         if (!found)
+         {
+            for (auto it = files.begin() + pos; it != files.begin(); it--)
+            {
+               if ((*it)->metadata.get("favorite").compare("yes") == 0)
+               {
+                  view->setCursor(*it);
+                  break;
+               }
+            }
+         }
+      }
+
+     // IGameListView* view = getGameListView(system).get();
+      view->updateInfoPanel();
+
+}
+
+void ViewController::goToSystemView(SystemData* system, bool forceReload, FileData* file)
 {
 	mState.viewing = SYSTEM_SELECT;
 	mState.system = system;
@@ -64,26 +107,33 @@ void ViewController::goToSystemView(SystemData* system)
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
 
-	playViewTransition();
+
+   playViewTransition();
+   if (forceReload)
+   {
+      UpdateFavorite(system, file);
+   }
+   
+
 }
 
-void ViewController::goToNextGameList()
+void ViewController::goToNextGameList(SystemData* lastSystem, bool forceReload, FileData* file)
 {
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getNext());
+   goToGameList(system->getNext(), lastSystem, forceReload, file);
 }
 
-void ViewController::goToPrevGameList()
+void ViewController::goToPrevGameList(SystemData* lastSystem, bool forceReload, FileData* file)
 {
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getPrev());
+   goToGameList(system->getPrev(), lastSystem, forceReload, file);
 }
 
-void ViewController::goToGameList(SystemData* system)
+void ViewController::goToGameList(SystemData* system, SystemData* lastSystem, bool forceReload, FileData* file)
 {
 	if(mState.viewing == SYSTEM_SELECT)
 	{
@@ -101,6 +151,11 @@ void ViewController::goToGameList(SystemData* system)
 
 	mCurrentView = getGameListView(system);
 	playViewTransition();
+
+   if (forceReload)
+   {
+      UpdateFavorite(lastSystem, file);
+   }
 }
 
 void ViewController::playViewTransition()
@@ -221,7 +276,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	}
 		
 	if(detailed)
-		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder(), system));
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 		
@@ -380,6 +435,21 @@ void ViewController::reloadAll()
 	}
 
 	updateHelpPrompts();
+}
+
+void ViewController::reloadAllGameLists()
+{
+   std::map<SystemData*, FileData*> cursorMap;
+   for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+   {
+      cursorMap[it->first] = it->second->getCursor();
+   }
+
+   for (auto it = cursorMap.begin(); it != cursorMap.end(); it++)
+   {
+      reloadGameListView(it->first);
+   }
+
 }
 
 std::vector<HelpPrompt> ViewController::getHelpPrompts()

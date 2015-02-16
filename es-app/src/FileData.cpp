@@ -97,6 +97,22 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask) const
 	return out;
 }
 
+std::vector<FileData*> FileData::getFavoritesRecursive(unsigned int typeMask) const
+{
+	std::vector<FileData*> out;
+	std::vector<FileData*> files = getFilesRecursive(typeMask);
+
+	for (auto it = files.begin(); it != files.end(); it++)
+	{
+		if ((*it)->metadata.get("favorite").compare("yes") == 0)
+		{
+			out.push_back(*it);
+		}
+	}
+
+	return out;
+}
+
 void FileData::addChild(FileData* file)
 {
 	assert(mType == FOLDER);

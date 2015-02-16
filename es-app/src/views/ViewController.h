@@ -23,12 +23,13 @@ public:
 	void reloadGameListView(IGameListView* gamelist, bool reloadTheme = false);
 	inline void reloadGameListView(SystemData* system, bool reloadTheme = false) { reloadGameListView(getGameListView(system).get(), reloadTheme); }
 	void reloadAll(); // Reload everything with a theme.  Used when the "ThemeSet" setting changes.
+	void reloadAllGameLists();
 
 	// Navigation.
-	void goToNextGameList();
-	void goToPrevGameList();
-	void goToGameList(SystemData* system);
-	void goToSystemView(SystemData* system);
+	void goToNextGameList(SystemData* system = nullptr, bool forceReload = false, FileData* file = nullptr);
+	void goToPrevGameList(SystemData* system = nullptr,  bool forceReload = false, FileData* file = nullptr);
+	void goToGameList(SystemData* system, SystemData* lastSystem = nullptr, bool forceReload = false, FileData* file = nullptr);
+	void goToSystemView(SystemData* system, bool forceReload = false, FileData* file = nullptr);
 	void goToStart();
 
 	void onFileChanged(FileData* file, FileChangeType change);
@@ -40,6 +41,8 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Eigen::Affine3f& parentTrans) override;
+
+   void UpdateFavorite(SystemData* system, FileData* file);
 
 	enum ViewMode
 	{
