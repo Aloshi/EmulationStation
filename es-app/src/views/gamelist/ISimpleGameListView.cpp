@@ -1,5 +1,6 @@
 #include "views/gamelist/ISimpleGameListView.h"
 #include "ThemeData.h"
+#include "SystemData.h"
 #include "Window.h"
 #include "views/ViewController.h"
 #include "Sound.h"
@@ -97,7 +98,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 		}else if (config->isMappedTo("x", input))
 		{
 			FileData* cursor = getCursor();
-			if (!(cursor)->getThumbnailPath().empty())
+			if (cursor->getSystem()->getHasFavorites())
 			{
 				if (cursor->getType() == GAME)
 				{
