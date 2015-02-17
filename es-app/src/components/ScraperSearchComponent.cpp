@@ -232,6 +232,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 
 	const int end = results.size() > MAX_SCRAPER_RESULTS ? MAX_SCRAPER_RESULTS : results.size(); // at max display 5
 
+	//check if we are auto skipping results and if we did not receive a result
 	if (mAutoSkipType == AUTO_SKIP_NO_RESULTS && end == 0)
 	{
 		mSkipCallback();
@@ -250,8 +251,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 
 			mResultList->addRow(row);
 			mGrid.resetCursor();
-		}
-		else{
+		}else{
 			ComponentListRow row;
 			for (int i = 0; i < end; i++)
 			{
@@ -272,8 +272,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 				mSkipCallback();
 			else
 				returnResult(mScraperResults.front());
-		}
-		else if (mSearchType == ALWAYS_ACCEPT_MATCHING_CRC)
+		}else if(mSearchType == ALWAYS_ACCEPT_MATCHING_CRC)
 		{
 			// TODO
 		}
