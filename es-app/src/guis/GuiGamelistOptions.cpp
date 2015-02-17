@@ -1,9 +1,9 @@
 #include "GuiGamelistOptions.h"
 #include "GuiMetaDataEd.h"
+#include "Settings.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "components/SwitchComponent.h"
-#include "Settings.h"
 #include "guis/GuiSettings.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
@@ -47,10 +47,10 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 	mMenu.addWithLabel("SORT GAMES BY", mListSort);
 
-   auto favorite_only = std::make_shared<SwitchComponent>(mWindow);
-   favorite_only->setState(Settings::getInstance()->getBool("FavoritesOnly"));
-   mMenu.addWithLabel("FAVORITES ONLY", favorite_only);
-   addSaveFunc([favorite_only] { Settings::getInstance()->setBool("FavoritesOnly", favorite_only->getState()); });
+	auto favorite_only = std::make_shared<SwitchComponent>(mWindow);
+	favorite_only->setState(Settings::getInstance()->getBool("FavoritesOnly"));
+	mMenu.addWithLabel("FAVORITES ONLY", favorite_only);
+	addSaveFunc([favorite_only] { Settings::getInstance()->setBool("FavoritesOnly", favorite_only->getState()); });
 
 	// edit game metadata
 	row.elements.clear();
@@ -63,7 +63,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, (mSize.y() - mMenu.getSize().y()) / 2);
 
-   mFavoriteState = Settings::getInstance()->getBool("FavoritesOnly");
+	mFavoriteState = Settings::getInstance()->getBool("FavoritesOnly");
 }
 
 GuiGamelistOptions::~GuiGamelistOptions()
@@ -75,10 +75,11 @@ GuiGamelistOptions::~GuiGamelistOptions()
 	// notify that the root folder was sorted
 	getGamelist()->onFileChanged(root, FILE_SORTED);
 
-   if (Settings::getInstance()->getBool("FavoritesOnly") != mFavoriteState)
-   {
-      ViewController::get()->reloadAllGameLists();
-   }
+	if (Settings::getInstance()->getBool("FavoritesOnly") != mFavoriteState)
+	{
+		ViewController::get()->setAllInvalidGamesList(getGamelist()->getCursor()->getSystem());
+		ViewController::get()->reloadGameListView(getGamelist()->getCursor()->getSystem());
+	}
 }
 
 void GuiGamelistOptions::openMetaDataEd()
@@ -136,7 +137,7 @@ bool GuiGamelistOptions::input(InputConfig* config, Input input)
 {
 	if((config->isMappedTo("b", input) || config->isMappedTo("select", input)) && input.value)
 	{
-        save();
+		save();
 		delete this;
 		return true;
 	}
@@ -158,11 +159,11 @@ IGameListView* GuiGamelistOptions::getGamelist()
 
 void GuiGamelistOptions::save()
 {
-   if (!mSaveFuncs.size())
-      return;
+	if (!mSaveFuncs.size())
+		return;
 
-   for (auto it = mSaveFuncs.begin(); it != mSaveFuncs.end(); it++)
-      (*it)();
+	for (auto it = mSaveFuncs.begin(); it != mSaveFuncs.end(); it++)
+		(*it)();
 
-   Settings::getInstance()->saveFile();
+	Settings::getInstance()->saveFile();
 }

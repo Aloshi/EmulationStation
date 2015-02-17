@@ -41,17 +41,17 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 	mGrid.clear();
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-      if (Settings::getInstance()->getBool("FavoritesOnly"))
-      {
-         if ((*it)->metadata.get("favorite").compare("yes") == 0)
-         {
-            mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
-         }
-      }
-      else
-      {
-         mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
-      }
+		if (Settings::getInstance()->getBool("FavoritesOnly"))
+		{
+			if ((*it)->metadata.get("favorite").compare("yes") == 0)
+			{
+				mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
+			}
+		}
+		else
+		{
+			mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
+		}
 	}
 }
 

@@ -30,6 +30,7 @@ ViewController::ViewController(Window* window)
 	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
 	mState.viewing = NOTHING;
+	mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
 }
 
 ViewController::~ViewController()
@@ -53,50 +54,7 @@ int ViewController::getSystemId(SystemData* system)
 	return std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
 }
 
-void ViewController::UpdateFavorite(SystemData* system, FileData* file)
-{
-      //reloadGameListView(system);
-   
-      IGameListView* view = getGameListView(system).get();
-      
-      //view->
-      //ileData* file = view->getCursor();
-      //if (file->metadata.get("favorite").compare("no") == 0 && Settings::getInstance()->getBool("FavoritesOnly"))
-      if (Settings::getInstance()->getBool("FavoritesOnly"))
-      {
-         const std::vector<FileData*>& files = system->getRootFolder()->getChildren();
-         view->populateList(files);
-         int pos = std::find(files.begin(), files.end(), file) - files.begin();
-         bool found = false;
-         for (auto it = files.begin() + pos; it != files.end(); it++)
-         {
-            if ((*it)->metadata.get("favorite").compare("yes") == 0)
-            {
-               view->setCursor(*it);
-               found = true;
-               break;
-            }
-         }
-
-         if (!found)
-         {
-            for (auto it = files.begin() + pos; it != files.begin(); it--)
-            {
-               if ((*it)->metadata.get("favorite").compare("yes") == 0)
-               {
-                  view->setCursor(*it);
-                  break;
-               }
-            }
-         }
-      }
-
-     // IGameListView* view = getGameListView(system).get();
-      view->updateInfoPanel();
-
-}
-
-void ViewController::goToSystemView(SystemData* system, bool forceReload, FileData* file)
+void ViewController::goToSystemView(SystemData* system)
 {
 	mState.viewing = SYSTEM_SELECT;
 	mState.system = system;
@@ -107,33 +65,26 @@ void ViewController::goToSystemView(SystemData* system, bool forceReload, FileDa
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
 
-
-   playViewTransition();
-   if (forceReload)
-   {
-      UpdateFavorite(system, file);
-   }
-   
-
+	playViewTransition();
 }
 
-void ViewController::goToNextGameList(SystemData* lastSystem, bool forceReload, FileData* file)
+void ViewController::goToNextGameList()
 {
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-   goToGameList(system->getNext(), lastSystem, forceReload, file);
+	goToGameList(system->getNext());
 }
 
-void ViewController::goToPrevGameList(SystemData* lastSystem, bool forceReload, FileData* file)
+void ViewController::goToPrevGameList()
 {
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-   goToGameList(system->getPrev(), lastSystem, forceReload, file);
+	goToGameList(system->getPrev());
 }
 
-void ViewController::goToGameList(SystemData* system, SystemData* lastSystem, bool forceReload, FileData* file)
+void ViewController::goToGameList(SystemData* system)
 {
 	if(mState.viewing == SYSTEM_SELECT)
 	{
@@ -146,16 +97,57 @@ void ViewController::goToGameList(SystemData* system, SystemData* lastSystem, bo
 		mCamera.translation().x() -= offX;
 	}
 
+	if (mInvalidGameList[system] == true)
+	{
+		updateFavorite(system, getGameListView(system).get()->getCursor());
+		if (mFavoritesOnly != Settings::getInstance()->getBool("FavoritesOnly"))
+		{
+			reloadGameListView(system);
+			mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
+		}
+		mInvalidGameList[system] = false;
+	}
+
 	mState.viewing = GAME_LIST;
 	mState.system = system;
 
 	mCurrentView = getGameListView(system);
 	playViewTransition();
+}
 
-   if (forceReload)
-   {
-      UpdateFavorite(lastSystem, file);
-   }
+void ViewController::updateFavorite(SystemData* system, FileData* file)
+{
+	IGameListView* view = getGameListView(system).get();
+	if (Settings::getInstance()->getBool("FavoritesOnly"))
+	{
+		const std::vector<FileData*>& files = system->getRootFolder()->getChildren();
+		view->populateList(files);
+		int pos = std::find(files.begin(), files.end(), file) - files.begin();
+		bool found = false;
+		for (auto it = files.begin() + pos; it != files.end(); it++)
+		{
+			if ((*it)->metadata.get("favorite").compare("yes") == 0)
+			{
+				view->setCursor(*it);
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			for (auto it = files.begin() + pos; it != files.begin(); it--)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					view->setCursor(*it);
+					break;
+				}
+			}
+		}
+	}
+
+	view->updateInfoPanel();
 }
 
 void ViewController::playViewTransition()
@@ -292,6 +284,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	addChild(view.get());
 
 	mGameListViews[system] = view;
+	mInvalidGameList[system] = false;
 	return view;
 }
 
@@ -437,19 +430,26 @@ void ViewController::reloadAll()
 	updateHelpPrompts();
 }
 
-void ViewController::reloadAllGameLists()
+void ViewController::setInvalidGamesList(SystemData* system)
 {
-   std::map<SystemData*, FileData*> cursorMap;
-   for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
-   {
-      cursorMap[it->first] = it->second->getCursor();
-   }
+	for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	{
+		if (system == (it->first))
+		{
+			mInvalidGameList[it->first] = true;
+		}
+	}
+}
 
-   for (auto it = cursorMap.begin(); it != cursorMap.end(); it++)
-   {
-      reloadGameListView(it->first);
-   }
-
+void ViewController::setAllInvalidGamesList(SystemData* systemExclude)
+{
+	for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	{
+		if (systemExclude != (it->first))
+		{
+			mInvalidGameList[it->first] = true;
+		}
+	}
 }
 
 std::vector<HelpPrompt> ViewController::getHelpPrompts()

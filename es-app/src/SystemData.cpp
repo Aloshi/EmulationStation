@@ -428,11 +428,6 @@ unsigned int SystemData::getFavoritesCount() const
 	return mRootFolder->getFavoritesRecursive(GAME).size();
 }
 
-bool SystemData::getHasFavorites() const
-{
-	return mHasFavorites;
-}
-
 void SystemData::loadTheme()
 {
 	mTheme = std::make_shared<ThemeData>();

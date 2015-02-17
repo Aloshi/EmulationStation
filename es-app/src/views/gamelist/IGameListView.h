@@ -37,9 +37,9 @@ public:
 
 	virtual HelpStyle getHelpStyle() override;
 
-   virtual void updateInfoPanel() = 0;
+	virtual void updateInfoPanel() = 0;
 
-   virtual void populateList(const std::vector<FileData*>& files) = 0;
+	virtual void populateList(const std::vector<FileData*>& files) = 0;
 
 protected:
 	FileData* mRoot;

@@ -12,8 +12,8 @@ static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A",
 static const bool inputSkippable[inputCount] = { false, false, false, false, false, false, true, false, false, true, true };
 static const char* inputDispName[inputCount] = { "UP", "DOWN", "LEFT", "RIGHT", "A", "B", "X", "START", "SELECT", "PAGE UP", "PAGE DOWN" };
 static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
-											            ":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_start.svg", 
-                                             ":/help/button_select.svg", ":/help/button_l.svg", ":/help/button_r.svg" };
+":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_start.svg", 
+											":/help/button_select.svg", ":/help/button_l.svg", ":/help/button_r.svg" };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.

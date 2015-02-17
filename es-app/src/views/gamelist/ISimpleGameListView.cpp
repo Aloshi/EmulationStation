@@ -73,70 +73,56 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}
 				
 			return true;
-      }
-      else if (config->isMappedTo("b", input))
-      {
-         if (mCursorStack.size())
-         {
-            populateList(mCursorStack.top()->getParent()->getChildren());
-            setCursor(mCursorStack.top());
-            mCursorStack.pop();
-            Sound::getFromTheme(getTheme(), getName(), "back")->play();
-         }
-         else
-         {
-            onFocusLost();
+		}else if(config->isMappedTo("b", input))
+		{
+			if(mCursorStack.size())
+			{
+				populateList(mCursorStack.top()->getParent()->getChildren());
+				setCursor(mCursorStack.top());
+				mCursorStack.pop();
+				Sound::getFromTheme(getTheme(), getName(), "back")->play();
+			}else{
+				onFocusLost();
 
-            if (mFavoriteChange)
-            {
-               ViewController::get()->goToSystemView(getCursor()->getSystem(), true, getCursor());
-            mFavoriteChange = false;
+				if (mFavoriteChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+				}
 
-            }
-            else
+				ViewController::get()->goToSystemView(getCursor()->getSystem());
+			}
 
-            {
-
-               ViewController::get()->goToSystemView(getCursor()->getSystem());
-            }
-         }
-
-         return true;
-      }else if (config->isMappedTo("x", input))
-      {
-         FileData* cursor = getCursor();
-         if (cursor->getType() == GAME)
-         {
-            mFavoriteChange = true;
-            MetaDataList* md = &cursor->metadata;
-            
-            std::string value = md->get("favorite");
-            if (value.compare("no") == 0)
-            {
-               md->set("favorite", "yes");
-            }
-            else
-            {
-               md->set("favorite", "no");
-            }
-               updateInfoPanel();
-         }
-      }else if(config->isMappedTo("right", input))
+			return true;
+		}else if (config->isMappedTo("x", input))
+		{
+			FileData* cursor = getCursor();
+			if (cursor->getType() == GAME)
+			{
+				mFavoriteChange = true;
+				MetaDataList* md = &cursor->metadata;
+				std::string value = md->get("favorite");
+				if (value.compare("no") == 0)
+				{
+					md->set("favorite", "yes");
+				}
+				else
+				{
+					md->set("favorite", "no");
+				}
+				updateInfoPanel();
+			}
+		}else if(config->isMappedTo("right", input))
 		{
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
 				onFocusLost();
-            if (mFavoriteChange)
-            {
-               ViewController::get()->goToNextGameList(getCursor()->getSystem(), true, getCursor());
-               mFavoriteChange = false;
-
-            }
-            else
-
-            {
-               ViewController::get()->goToNextGameList();
-            }
+				if (mFavoriteChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+				}
+				ViewController::get()->goToNextGameList();
 				return true;
 			}
 		}else if(config->isMappedTo("left", input))
@@ -144,17 +130,12 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
 				onFocusLost();
-            if (mFavoriteChange)
-            {
-               ViewController::get()->goToPrevGameList(getCursor()->getSystem(), true, getCursor());
-               mFavoriteChange = false;
-
-            }
-            else
-
-            {
-               ViewController::get()->goToPrevGameList();
-            }
+				if (mFavoriteChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+				}
+				ViewController::get()->goToPrevGameList();
 				return true;
 			}
 		}
@@ -162,8 +143,3 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 
 	return IGameListView::input(config, input);
 }
-
-void ISimpleGameListView::updateInfoPanel() {}
-
-void ISimpleGameListView::populateList(const std::vector<FileData*>& files) {}
-

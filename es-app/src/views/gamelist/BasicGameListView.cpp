@@ -41,39 +41,39 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 
 	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
 
-   bool hasFavorites = false;
+	bool hasFavorites = false;
 
-   if (Settings::getInstance()->getBool("FavoritesOnly"))
-   {
-      for (auto it = files.begin(); it != files.end(); it++)
-      {
-         if ((*it)->getType() == GAME)
-         {
-            if ((*it)->metadata.get("favorite").compare("yes") == 0)
-            {
-               hasFavorites = true;
-               break;
-            }
-         }
-      }
-   }
+	if (Settings::getInstance()->getBool("FavoritesOnly"))
+	{
+		for (auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					hasFavorites = true;
+					break;
+				}
+			}
+		}
+	}
 
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-      if (Settings::getInstance()->getBool("FavoritesOnly") && hasFavorites)
-      {
-         if ((*it)->getType() == GAME)
-         {
-            if ((*it)->metadata.get("favorite").compare("yes") == 0)
-            {
-               mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
-            }
-         }
-      }
-      else
-      {
-         mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
-      }
+		if (Settings::getInstance()->getBool("FavoritesOnly") && hasFavorites)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				}
+			}
+		}
+		else
+		{
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		}
 	}
 }
 
@@ -115,8 +115,6 @@ void BasicGameListView::launch(FileData* game)
 {
 	ViewController::get()->launch(game);
 }
-
-void BasicGameListView::updateInfoPanel() {}
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 {

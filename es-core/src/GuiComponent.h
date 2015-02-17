@@ -90,7 +90,7 @@ public:
 	
 	virtual HelpStyle getHelpStyle();
 
-   virtual void setScrollDir(int dir);
+	virtual inline void setScrollDir(int dir) {}
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;

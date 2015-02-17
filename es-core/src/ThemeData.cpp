@@ -477,5 +477,5 @@ fs::path ThemeData::getThemeFromCurrentSet(const std::string& system)
 
 bool ThemeData::getHasFavoritesInTheme()
 {
-   return (mVersion >= CURRENT_THEME_FORMAT_VERSION);
+	return (mVersion >= CURRENT_THEME_FORMAT_VERSION);
 }

@@ -339,5 +339,3 @@ HelpStyle GuiComponent::getHelpStyle()
 {
 	return HelpStyle();
 }
-
-void GuiComponent::setScrollDir(int dir) {}

@@ -172,38 +172,37 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}, (int)(infoStartOpacity * 150));
 
 	unsigned int gameCount = getSelected()->getGameCount();
-   unsigned int favoritesCount = getSelected()->getFavoritesCount();
+	unsigned int favoritesCount = getSelected()->getFavoritesCount();
 
 	// also change the text after we've fully faded out
-   setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
+	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
 		std::stringstream ss;
 		
 		// only display a game count if there are at least 2 games
-      if (gameCount == 1)
-      {
-         ss << gameCount << " GAME AVAILABLE";
-         if (favoritesCount == 1)
-         {
-            ss << ", " << favoritesCount << " FAVORITE";
-         }
-         else if (favoritesCount > 1)
-         {
-            ss << ", " << favoritesCount << " FAVORITES";
-         }
-      }
-      if (gameCount > 1)
-      {
-         ss << gameCount << " GAMES AVAILABLE";
-         if (favoritesCount == 1)
-         {
-            ss << ", " << favoritesCount << " FAVORITE";
-         }
-         else if (favoritesCount > 1)
-         {
-            ss << ", " << favoritesCount << " FAVORITES";
-         }
-      }
-			
+	if (gameCount == 1)
+	{
+		ss << gameCount << " GAME AVAILABLE";
+		if (favoritesCount == 1)
+		{
+			ss << ", " << favoritesCount << " FAVORITE";
+		}
+		else if (favoritesCount > 1)
+		{
+			ss << ", " << favoritesCount << " FAVORITES";
+		}
+	}
+	if(gameCount > 1)
+	{
+		ss << gameCount << " GAMES AVAILABLE";
+		if (favoritesCount == 1)
+		{
+			ss << ", " << favoritesCount << " FAVORITE";
+		}
+		else if (favoritesCount > 1)
+		{
+			ss << ", " << favoritesCount << " FAVORITES";
+		}
+	}
 
 		mSystemInfo.setText(ss.str()); 
 	}, false, 1);
@@ -214,7 +213,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
 	}, 300);
 
-	// wait xxxms to fade in
+	// wait ms to fade in
 	setAnimation(infoFadeIn, 800, nullptr, false, 2);
 
 	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
