@@ -15,6 +15,9 @@
 #include "Log.h"
 #include "HttpReq.h"
 
+#include "AudioManager.h"
+#include "VolumeControl.h"
+
 RetroboxSystem::RetroboxSystem() {
 }
 
@@ -243,4 +246,26 @@ bool RetroboxSystem::canUpdate(){
         LOG(LogInfo) << "Cannot update ";
         return false;
     }
+}
+    
+bool RetroboxSystem::launchKodi(Window * window){
+    
+    LOG(LogInfo) << "Attempting to launch kodi...";
+
+
+    AudioManager::getInstance()->deinit();
+    VolumeControl::getInstance()->deinit();
+
+    window->deinit();
+
+    std::string command = "/recalbox/scripts/kodilauncher.sh";
+    int exitCode = system(command.c_str());
+
+    window->init();
+    VolumeControl::getInstance()->init();
+    AudioManager::getInstance()->resumeMusic();
+    window->normalizeNextUpdate();
+    
+    return exitCode == 0;
+
 }

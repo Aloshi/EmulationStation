@@ -8,6 +8,7 @@
 #ifndef RETROBOXSYSTEM_H
 #define	RETROBOXSYSTEM_H
 #include <string>
+#include "Window.h"
 
 
 class RetroboxSystem {
@@ -30,7 +31,7 @@ public:
     bool updateSystem();
     bool ping();
     bool canUpdate();
-
+    bool launchKodi(Window * window);
 
 
 private:

@@ -101,7 +101,9 @@ set(COMMON_INCLUDE_DIRS
     ${EIGEN3_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/external
+    ${CMAKE_CURRENT_SOURCE_DIR}/es-app/src
     ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
+
 )
 
 #add ALSA for Linux

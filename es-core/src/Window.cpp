@@ -8,6 +8,7 @@
 #include "components/HelpComponent.h"
 #include "components/ImageComponent.h"
 #include "guis/GuiMsgBox.h"
+#include "RetroboxSystem.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
@@ -130,8 +131,17 @@ void Window::input(InputConfig* config, Input input)
 	}
 	else
 	{
+            if(config->isMappedTo("x", input)){
+                Window * window = this;
+                this->pushGui(new GuiMsgBox(this, "Do you want to start Kodi Media Center ?", "YES", 
+				[window] { 
+                                    if( ! RetroboxSystem::getInstance()->launchKodi(window))
+						LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+				}, "NO", nullptr));
+            }else {
 		if(peekGui())
 			this->peekGui()->input(config, input);
+            }
 	}
 }
 
