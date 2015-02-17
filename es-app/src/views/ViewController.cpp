@@ -126,11 +126,14 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 		bool found = false;
 		for (auto it = files.begin() + pos; it != files.end(); it++)
 		{
-			if ((*it)->metadata.get("favorite").compare("yes") == 0)
+			if ((*it)->getType() == GAME)
 			{
-				view->setCursor(*it);
-				found = true;
-				break;
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					view->setCursor(*it);
+					found = true;
+					break;
+				}
 			}
 		}
 
@@ -138,12 +141,20 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 		{
 			for (auto it = files.begin() + pos; it != files.begin(); it--)
 			{
-				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				if ((*it)->getType() == GAME)
 				{
-					view->setCursor(*it);
-					break;
+					if ((*it)->metadata.get("favorite").compare("yes") == 0)
+					{
+						view->setCursor(*it);
+						break;
+					}
 				}
 			}
+		}
+
+		if (!found)
+		{
+			view->setCursor(*(files.begin() + pos));
 		}
 	}
 
@@ -437,6 +448,7 @@ void ViewController::setInvalidGamesList(SystemData* system)
 		if (system == (it->first))
 		{
 			mInvalidGameList[it->first] = true;
+			break;
 		}
 	}
 }

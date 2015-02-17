@@ -97,20 +97,23 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 		}else if (config->isMappedTo("x", input))
 		{
 			FileData* cursor = getCursor();
-			if (cursor->getType() == GAME)
+			if (!(cursor)->getThumbnailPath().empty())
 			{
-				mFavoriteChange = true;
-				MetaDataList* md = &cursor->metadata;
-				std::string value = md->get("favorite");
-				if (value.compare("no") == 0)
+				if (cursor->getType() == GAME)
 				{
-					md->set("favorite", "yes");
+					mFavoriteChange = true;
+					MetaDataList* md = &cursor->metadata;
+					std::string value = md->get("favorite");
+					if (value.compare("no") == 0)
+					{
+						md->set("favorite", "yes");
+					}
+					else
+					{
+						md->set("favorite", "no");
+					}
+					updateInfoPanel();
 				}
-				else
-				{
-					md->set("favorite", "no");
-				}
-				updateInfoPanel();
 			}
 		}else if(config->isMappedTo("right", input))
 		{
