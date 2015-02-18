@@ -1,3 +1,12 @@
+Recalbox Emulationstation
+================
+Your are on the Emulationstation github for the recalbox.
+The frontend has been modified for the need of the recalbox.
+
+Rendez-vous on https://github.com/digitalLumberjack/recalbox-os for wiki, issues and more !
+
+Below this line is the original readme.
+
 EmulationStation
 ================
 
