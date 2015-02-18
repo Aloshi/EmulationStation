@@ -134,7 +134,7 @@ void Window::input(InputConfig* config, Input input)
             if(config->isMappedTo("x", input) && input.value && !launchKodi){
                 launchKodi = true;
                 Window * window = this;
-                this->pushGui(new GuiMsgBox(this, "Do you want to start Kodi Media Center ?", "YES", 
+                this->pushGui(new GuiMsgBox(this, "DO YOU WANT TO START KODI MEDIA CENTER ?", "YES", 
 				[window, this] { 
                                     if( ! RetroboxSystem::getInstance()->launchKodi(window))
 						LOG(LogWarning) << "Shutdown terminated with non-zero result!";

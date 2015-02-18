@@ -37,7 +37,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// UI SETTINGS >
 	// CONFIGURE INPUT >
 	// QUIT >
-        addEntry("Kodi Media Center", 0x777777FF, true, 
+        addEntry("KODI MEDIA CENTER", 0x777777FF, true, 
 		[this] { 
                     Window* window = mWindow;
 
