@@ -35,12 +35,12 @@ void GuiMenu::createInputTextRow(GuiSettings * gui, const char*  title, const ch
         Window * window = mWindow;
         ComponentListRow row;
 
-        auto lbl = std::make_shared<TextComponent>(window, title, Font::get(FONT_SIZE_SMALL), 0x777777FF);
+        auto lbl = std::make_shared<TextComponent>(window, title, Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
         row.addElement(lbl, true); // label
 
         std::shared_ptr<GuiComponent> ed;
 
-        ed = std::make_shared<TextComponent>(window, Settings::getInstance()->getString(settingsID), Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF, ALIGN_RIGHT);
+        ed = std::make_shared<TextComponent>(window, Settings::getInstance()->getString(settingsID), Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT), 0x777777FF, ALIGN_RIGHT);
         row.addElement(ed, true);
 
         auto spacer = std::make_shared<GuiComponent>(mWindow);
@@ -160,7 +160,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
                         s->addSaveFunc([baseEnabled, baseSSID, baseKEY, enable_wifi] {
                             bool wifienabled = enable_wifi->getState();
-                            Settings::getInstance()->setBool("EWifiSSIDnableWifi", wifienabled); 
+                            Settings::getInstance()->setBool("EnableWifi", wifienabled); 
                             std::string newSSID = Settings::getInstance()->getString("WifiSSID");
                             std::string newKey = Settings::getInstance()->getString("WifiKey");
                             if(wifienabled){
