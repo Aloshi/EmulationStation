@@ -28,6 +28,39 @@
 #include "scrapers/GamesDBScraper.h"
 #include "scrapers/TheArchiveScraper.h"
 
+#include "guis/GuiTextEditPopup.h"
+
+void GuiMenu::createInputTextRow(GuiSettings * gui, const char*  title, const char*  settingsID){
+    // LABEL
+        Window * window = mWindow;
+        ComponentListRow row;
+
+        auto lbl = std::make_shared<TextComponent>(window, title, Font::get(FONT_SIZE_SMALL), 0x777777FF);
+        row.addElement(lbl, true); // label
+
+        std::shared_ptr<GuiComponent> ed;
+
+        ed = std::make_shared<TextComponent>(window, Settings::getInstance()->getString(settingsID), Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF, ALIGN_RIGHT);
+        row.addElement(ed, true);
+
+        auto spacer = std::make_shared<GuiComponent>(mWindow);
+        spacer->setSize(Renderer::getScreenWidth() * 0.005f, 0);
+        row.addElement(spacer, false);
+
+        auto bracket = std::make_shared<ImageComponent>(mWindow);
+        bracket->setImage(":/arrow.svg");
+        bracket->setResize(Eigen::Vector2f(0, lbl->getFont()->getLetterHeight()));
+        row.addElement(bracket, false);
+
+        auto updateVal = [ed,settingsID](const std::string& newVal) { 
+            ed->setValue(newVal); 
+            Settings::getInstance()->setString(settingsID, newVal);
+        }; // ok callback (apply new value to ed)
+        row.makeAcceptInputHandler([this, title, ed, updateVal] {
+                mWindow->pushGui(new GuiTextEditPopup(mWindow, title, ed->getValue(), updateVal, false));
+        });
+        gui->addRow(row);
+}
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
 	// MAIN MENU
@@ -106,6 +139,44 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         mWindow->pushGui(s);
 
 	});
+        addEntry("NETWORK SETTINGS", 0x777777FF, true, 
+		[this] { 
+                        Window* window = mWindow;
+
+			auto s = new GuiSettings(mWindow, "NETWORK SETTINGS");
+                        	// scrape ratings
+			auto enable_wifi = std::make_shared<SwitchComponent>(mWindow);
+			enable_wifi->setState(Settings::getInstance()->getBool("EnableWifi"));
+			s->addWithLabel("ENABLE WIFI", enable_wifi);
+                        
+                        
+                        // TODO PUT THIS IN A FUNCTION
+                        // window, title, settingstring, 
+                        const std::string baseSSID =  Settings::getInstance()->getString("WifiSSID");
+                        const std::string baseKEY = Settings::getInstance()->getString("WifiKey");
+                        bool baseEnabled = Settings::getInstance()->getBool("EnableWifi");
+                        createInputTextRow(s, "WIFI SSID", "WifiSSID");
+                        createInputTextRow(s, "WIFI KEY", "WifiKey");
+
+                        s->addSaveFunc([baseEnabled, baseSSID, baseKEY, enable_wifi] {
+                            bool wifienabled = enable_wifi->getState();
+                            Settings::getInstance()->setBool("EWifiSSIDnableWifi", wifienabled); 
+                            std::string newSSID = Settings::getInstance()->getString("WifiSSID");
+                            std::string newKey = Settings::getInstance()->getString("WifiKey");
+                            if(wifienabled){
+                                if(baseSSID != newSSID
+                                    || baseKEY!= newKey
+                                        || ! baseEnabled ){
+                                    RetroboxSystem::getInstance()->enableWifi(newSSID,newKey);
+                                }
+                            }else if(baseEnabled){
+                                 RetroboxSystem::getInstance()->disableWifi();
+                            }
+                        });
+			mWindow->pushGui(s);
+
+
+                });
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 	addEntry("SCRAPER", 0x777777FF, true, 
 		[this, openScrapeNow] { 

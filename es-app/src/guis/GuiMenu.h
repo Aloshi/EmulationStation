@@ -3,6 +3,7 @@
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
 #include <functional>
+#include "guis/GuiSettings.h"
 
 class GuiMenu : public GuiComponent
 {
@@ -16,6 +17,7 @@ public:
 private:
 	void addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func);
         void createConfigInput();
+        void createInputTextRow(GuiSettings * gui, const char* title, const char* settingsID);
 	MenuComponent mMenu;
 	TextComponent mVersion;
 };

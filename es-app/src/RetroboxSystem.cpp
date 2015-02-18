@@ -269,3 +269,36 @@ bool RetroboxSystem::launchKodi(Window * window){
     return exitCode == 0;
 
 }
+
+bool RetroboxSystem::enableWifi(std::string ssid, std::string key){
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
+            << "wifi" << " " 
+            << "enable" << " " 
+            << ssid << " " << key;
+    std::string command = oss.str();
+    LOG(LogInfo) << "Launching " << command;
+    if(system(command.c_str()) == 0){
+        LOG(LogInfo) << "Wifi enabled ";
+        return true;
+    }else {
+        LOG(LogInfo) << "Cannot enable wifi ";
+        return false;
+    }
+}
+
+bool RetroboxSystem::disableWifi(){
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
+            << "wifi" << " " 
+            << "disable";
+    std::string command = oss.str();
+    LOG(LogInfo) << "Launching " << command;
+    if(system(command.c_str()) == 0){
+        LOG(LogInfo) << "Wifi disabled ";
+        return true;
+    }else {
+        LOG(LogInfo) << "Cannot disable wifi ";
+        return false;
+    }
+}

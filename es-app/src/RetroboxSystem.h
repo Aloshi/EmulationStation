@@ -32,6 +32,9 @@ public:
     bool ping();
     bool canUpdate();
     bool launchKodi(Window * window);
+    bool enableWifi(std::string ssid, std::string key);
+    bool disableWifi();
+
 
 
 private:

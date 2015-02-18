@@ -68,6 +68,7 @@ void Settings::setDefaults()
         mBoolMap["Overscan"] = false;
         mBoolMap["Smooth"] = true;
         mBoolMap["GpioControllers"] = false;
+        mBoolMap["EnableWifi"] = false;
         
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
@@ -92,6 +93,8 @@ void Settings::setDefaults()
         mStringMap["RecalboxSettingScript"] = "/recalbox/scripts/recalbox-config.sh";
 	mStringMap["LastVersionFile"] = "/root/update.done";
 	mStringMap["VersionMessage"] = "/recalbox/recalbox.msg";
+        mStringMap["WifiSSID"] = "";
+        mStringMap["WifiKey"] = "";
 
         
 
