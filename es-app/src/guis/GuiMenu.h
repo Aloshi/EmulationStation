@@ -17,7 +17,7 @@ public:
 private:
 	void addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func);
         void createConfigInput();
-        void createInputTextRow(GuiSettings * gui, const char* title, const char* settingsID);
+        void createInputTextRow(GuiSettings * gui, const char* title, const char* settingsID, bool password);
 	MenuComponent mMenu;
 	TextComponent mVersion;
 };
