@@ -177,7 +177,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                                          );
                                     }else {
                                         window->pushGui(
-                                            new GuiMsgBox(window, "ERROR WIFI")
+                                            new GuiMsgBox(window, "WIFI CONFIGURATION ERROR")
                                          );
                                     }
                                 }

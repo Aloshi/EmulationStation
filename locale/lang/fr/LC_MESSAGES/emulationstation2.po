@@ -311,3 +311,15 @@ msgstr "ACTIVER LE WIFI"
 
 msgid "NETWORK SETTINGS"
 msgstr "OPTIONS RESEAU"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI ACTIVÉ"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "ERREUR DE CONFIGURATION WIFI"
+
+msgid "WIFI KEY"
+msgstr "CLÉ WIFI"
+
+msgid "WIFI SSID"
+msgid "SSID WIFI"
