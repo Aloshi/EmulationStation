@@ -55,6 +55,9 @@ void GuiMenu::createInputTextRow(GuiSettings * gui, const char*  title, const ch
         auto updateVal = [ed,settingsID, password](const std::string& newVal) { 
             if(!password)
                 ed->setValue(newVal); 
+            else {
+                ed->setValue("*********"); 
+            }
             Settings::getInstance()->setString(settingsID, newVal);
         }; // ok callback (apply new value to ed)
         row.makeAcceptInputHandler([this, title, updateVal,settingsID] {
