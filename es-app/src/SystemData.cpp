@@ -80,7 +80,7 @@ std::string SystemData::replaceOptions( std::string command, FileData game ) con
 	// generate system options for this game by building up
 	// one string per 'section', and then replace that section in the command
 
-	std::map<std::string, std::stringstream> sections;
+	std::map<std::string, std::string> sections;
 
 	std::vector<FileData> fileStack = game.getParents();
 	fileStack.insert( fileStack.begin(), game );
@@ -91,18 +91,21 @@ std::string SystemData::replaceOptions( std::string command, FileData game ) con
 		std::string id = (*option)->getID();
 		std::string section = (*option)->getReplace();
 		std::string valueID = optionvalues.count(id) > 0 ? optionvalues[id] : (*option)->getDefaultID();
-		sections[ section ] << "";
 
+		std::string replacement = sections.count(section) > 0 ? sections[section] : "";
+        
 		if( !valueID.empty() )
 		{
 			SystemOptionValue* value = (*option)->getValue( valueID );
 
 			if( value )
 			{
-				if( sections[ section ].tellp() > 0 )
-					sections[ section ] << " ";
+				if( !replacement.empty() )
+					replacement += " ";
 
-				sections[ section ] << value->getCode();
+				replacement += value->getCode();
+
+				sections[section] = replacement;
 			}
 		}
 	}
@@ -110,7 +113,7 @@ std::string SystemData::replaceOptions( std::string command, FileData game ) con
 	// now we have a list of sections and their replacement text,
 	// go thru all of them and replace the text in the command
 	for( auto sectionAdder = sections.begin(); sectionAdder != sections.end(); sectionAdder++ )
-		command = strreplace( command, sectionAdder->first, sectionAdder->second.str() );
+		command = strreplace( command, sectionAdder->first, sectionAdder->second );
 	
 	return command;
 }
