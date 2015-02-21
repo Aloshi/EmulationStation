@@ -61,6 +61,7 @@ SystemData::~SystemData()
 	delete mRootFolder;
 }
 
+
 std::string strreplace(std::string str, const std::string& replace, const std::string& with)
 {
 	size_t pos;
@@ -75,7 +76,7 @@ std::string strreplace(std::string str, const std::string& replace, const std::s
 // everything else: assume bash and escape special characters with backslashes
 std::string escapePath(const boost::filesystem::path& path)
 {
-#ifdef _WIN32
+#ifdef WIN32
 	// windows escapes stuff by just putting everything in quotes
 	return '"' + fs::path(path).make_preferred().string() + '"';
 #else
@@ -123,7 +124,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";
-	int exitCode = system(command.c_str());
+	int exitCode = runSystemCommand(command);
 	std::cout << "==============================================\n";
 
 	if(exitCode != 0)
