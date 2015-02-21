@@ -275,6 +275,8 @@ msgstr "IDIOMA"
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "REINICIANDO SISTEMA"
 
+msgid "SYSTEM SETTINGS"
+msgstr "OPÇÕES DE SISTEMA"
 
 msgid "INFOS"
 msgstr "INFORMAÇÕES"
