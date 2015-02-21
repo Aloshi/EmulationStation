@@ -322,4 +322,4 @@ msgid "WIFI KEY"
 msgstr "CLÉ WIFI"
 
 msgid "WIFI SSID"
-msgid "SSID WIFI"
+msgstr "SSID WIFI"
