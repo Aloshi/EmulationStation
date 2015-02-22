@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <boost/filesystem.hpp>
 #include <iostream>
+
+#ifdef WIN32
 #include <codecvt>
+#endif
 
 std::string getHomePath()
 {
