@@ -107,17 +107,25 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			overscan_enabled->setState(Settings::getInstance()->getBool("Overscan"));
 			s->addWithLabel("OVERSCAN", overscan_enabled);
                         
+                        // Screen ratio choice 
+			auto ratio_choice = std::make_shared< OptionListComponent<std::string> >(window, "GAME RATIO", false);
+                        std::string currentRatio = Settings::getInstance()->getString("GameRatio");
+                        ratio_choice->add("AUTO", "auto", currentRatio == "auto");
+                        ratio_choice->add("4/3", "4/3", currentRatio == "4/3");
+                        ratio_choice->add("16/9", "16/9", currentRatio == "16/9");
+                        s->addWithLabel("GAME RATIO", ratio_choice);
+                        
                         // smoothing
 			auto smoothing_enabled = std::make_shared<SwitchComponent>(mWindow);
 			smoothing_enabled->setState(Settings::getInstance()->getBool("Smooth"));
 			s->addWithLabel("SMOOTH GAMES", smoothing_enabled);
 			
                         
-                        s->addSaveFunc([overscan_enabled,smoothing_enabled ,overclock_choice, window] { 
+                        s->addSaveFunc([overscan_enabled,smoothing_enabled ,overclock_choice, ratio_choice, window] { 
                             bool reboot = false;
-                            if(Settings::getInstance()->getBool("Smooth") != smoothing_enabled->getState()){
-                                Settings::getInstance()->setBool("Smooth", smoothing_enabled->getState()); 
-                            }
+                            Settings::getInstance()->setBool("Smooth", smoothing_enabled->getState()); 
+                            Settings::getInstance()->setBool("GameRatio", ratio_choice->getState());
+                            
                             if(Settings::getInstance()->getBool("Overscan") != overscan_enabled->getState()){
                                 Settings::getInstance()->setBool("Overscan", overscan_enabled->getState()); 
                                 RetroboxSystem::getInstance()->setOverscan(overscan_enabled->getState());

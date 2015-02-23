@@ -95,6 +95,7 @@ void Settings::setDefaults()
 	mStringMap["VersionMessage"] = "/recalbox/recalbox.msg";
         mStringMap["WifiSSID"] = "";
         mStringMap["WifiKey"] = "";
+        mStringMap["GameRatio"] = "auto";
 
         
 

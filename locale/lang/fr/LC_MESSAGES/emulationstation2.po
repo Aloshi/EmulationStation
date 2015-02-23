@@ -323,3 +323,6 @@ msgstr "CLÉ WIFI"
 
 msgid "WIFI SSID"
 msgstr "SSID WIFI"
+
+msgid "GAME RATIO"
+msgstr "FORMAT JEUX"
