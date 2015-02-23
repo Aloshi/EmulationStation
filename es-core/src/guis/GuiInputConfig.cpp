@@ -10,10 +10,11 @@
 
 using namespace boost::locale;
 
-static const int inputCount = 13;
-static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "HotKey" };
-static const bool inputSkippable[inputCount] = { false, false, false, false,     false, false, true, true,   false,     false,     true,      true,  false};
-static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"), "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"), gettext("HOTKEY") };
+static const int inputCount = 17;
+static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "LeftJoystick" , "RightJoystick", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "L2", "R2", "HotKey" };
+static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,      false,  false,  true,   true, false,    false,     true,      true, true, true,  false};
+static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"), gettext("LEFT JOYSTICK (ANY DIRECTION)"), gettext("RIGHT JOYSTICK (ANY DIRECTION)"), 
+                                                    "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", gettext("HOTKEY") };
 static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
 											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
 											":/help/button_l.svg", ":/help/button_r.svg", "" };

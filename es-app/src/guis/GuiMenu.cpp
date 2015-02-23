@@ -124,7 +124,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         s->addSaveFunc([overscan_enabled,smoothing_enabled ,overclock_choice, ratio_choice, window] { 
                             bool reboot = false;
                             Settings::getInstance()->setBool("Smooth", smoothing_enabled->getState()); 
-                            Settings::getInstance()->setBool("GameRatio", ratio_choice->getState());
+                            Settings::getInstance()->setString("GameRatio", ratio_choice->getSelected());
                             
                             if(Settings::getInstance()->getBool("Overscan") != overscan_enabled->getState()){
                                 Settings::getInstance()->setBool("Overscan", overscan_enabled->getState()); 
