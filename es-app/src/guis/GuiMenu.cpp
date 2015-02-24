@@ -459,12 +459,14 @@ void GuiMenu::createConfigInput(){
 
                 ComponentListRow row;
                 row.makeAcceptInputHandler([window, this, s] {
-
-                    window->pushGui(new GuiDetectDevice(window, false, [this, s] {
-                        s->setSave(false);
-                        delete s;
-                        this->createConfigInput();
-                    }));
+                    window->pushGui(new GuiMsgBox(window, "I18NMESSAGECONTROLLERS", "OK", 
+                            [window, this, s] {
+                                window->pushGui(new GuiDetectDevice(window, false, [this, s] {
+                                    s->setSave(false);
+                                    delete s;
+                                    this->createConfigInput();
+                                }));
+                            }));
                 });
                         
                 
