@@ -15,9 +15,9 @@ static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right",
 static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,      false,  false,  true,   true, false,    false,     true,      true, true, true,  false};
 static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"), gettext("LEFT JOYSTICK (ANY DIRECTION)"), gettext("RIGHT JOYSTICK (ANY DIRECTION)"), 
                                                     "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", gettext("HOTKEY") };
-static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", "", "", 
+static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", ":/help/joystick_left.svg", ":/help/joystick_right.svg", 
 											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
-											":/help/button_l.svg", ":/help/button_r.svg", "", "", "" };
+											":/help/button_l.svg", ":/help/button_r.svg", ":/help/button_l2.svg", ":/help/button_r2.svg", ":/help/button_hotkey.svg" };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.
@@ -200,7 +200,7 @@ void GuiInputConfig::update(int deltaTime)
 				// crossed the second boundary, update text
 				const auto& text = mMappings.at(mHeldInputId);
 				std::stringstream ss;
-				ss << "HOLD FOR " << HOLD_TO_SKIP_MS/1000 - curSec << "S TO SKIP";
+				ss << gettext("HOLD FOR ") << HOLD_TO_SKIP_MS/1000 - curSec << gettext("S TO SKIP");
 				text->setText(ss.str());
 				text->setColor(0x777777FF);
 			}

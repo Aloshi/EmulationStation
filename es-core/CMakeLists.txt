@@ -130,8 +130,11 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_y_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l2_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r2_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_hotkey_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
@@ -139,6 +142,9 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_updown_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_leftright_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_all_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_joystick_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_joystick_right_svg.cpp
+
 
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp
