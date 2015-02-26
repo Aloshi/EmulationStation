@@ -54,6 +54,11 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     find_package(ALSA REQUIRED)
 endif()
 
+find_package(DBus)
+if (DBUS_FOUND)
+    add_definitions(-DUSE_DBUS)
+endif()
+
 #-------------------------------------------------------------------------------
 #set up compiler flags and excutable names
 if(DEFINED BCMHOST)
