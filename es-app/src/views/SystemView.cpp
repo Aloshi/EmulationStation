@@ -177,34 +177,27 @@ void SystemView::onCursorChanged(const CursorState& state)
 	// also change the text after we've fully faded out
 	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
 		std::stringstream ss;
-		
-		// only display a game count if there are at least 2 games
-	if (gameCount == 1)
-	{
-		ss << gameCount << " GAME AVAILABLE";
-		if (favoritesCount == 1)
-		{
-			ss << ", " << favoritesCount << " FAVORITE";
-		}
-		else if (favoritesCount > 1)
-		{
-			ss << ", " << favoritesCount << " FAVORITES";
-		}
-	}
-	if(gameCount > 1)
-	{
-		ss << gameCount << " GAMES AVAILABLE";
-		if (favoritesCount == 1)
-		{
-			ss << ", " << favoritesCount << " FAVORITE";
-		}
-		else if (favoritesCount > 1)
-		{
-			ss << ", " << favoritesCount << " FAVORITES";
-		}
-	}
 
-		mSystemInfo.setText(ss.str()); 
+		// only display a game count if there are at least 2 games
+		if (gameCount == 1)
+		{
+			ss << gameCount << " GAME AVAILABLE";
+		}
+		else if (gameCount > 1)
+		{
+			ss << gameCount << " GAMES AVAILABLE";
+		}
+
+		if (favoritesCount == 1)
+		{
+			ss << ", " << favoritesCount << " FAVORITE";
+		}
+		else if (favoritesCount > 1)
+		{
+			ss << ", " << favoritesCount << " FAVORITES";
+		}
+
+		mSystemInfo.setText(ss.str());
 	}, false, 1);
 
 	Animation* infoFadeIn = new LambdaAnimation(
