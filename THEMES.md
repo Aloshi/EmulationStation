@@ -259,6 +259,9 @@ Which is equivalent to:
     	<text name="md_lbl_playcount">
     		<color>48474D</color>
     	</text>
+    	<text name="md_lbl_favorite">
+    		<color>48474D</color>
+    	</text>
     </view>
 </theme>
 ```
@@ -307,6 +310,7 @@ Reference
 		* `text name="md_lbl_players"` - ALL
 		* `text name="md_lbl_lastplayed"` - ALL
 		* `text name="md_lbl_playcount"` - ALL
+      * `text name="md_lbl_favorite"` - ALL
 
 	* Values
 		* All values will follow to the right of their labels if a position isn't specified.
@@ -329,6 +333,8 @@ Reference
 			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
 		* `text name="md_playcount"` - ALL
 			- The "playcount" metadata (number of times the game has been played).
+		* `text name="md_favorite"` - ALL
+			- The "favorite" metadata (is this game a favorite).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR
 			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
 
