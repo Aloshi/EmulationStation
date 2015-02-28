@@ -12,7 +12,7 @@
 
 using namespace Eigen;
 
-GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults) : 
+GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults, bool autoSkipNoResults) :
 	GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)), 
 	mSearchQueue(searches)
 {
@@ -37,7 +37,8 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mGrid.setEntry(mSubtitle, Vector2i(0, 2), false, true);
 
 	mSearchComp = std::make_shared<ScraperSearchComponent>(mWindow, 
-		approveResults ? ScraperSearchComponent::ALWAYS_ACCEPT_MATCHING_CRC : ScraperSearchComponent::ALWAYS_ACCEPT_FIRST_RESULT);
+		approveResults ? ScraperSearchComponent::ALWAYS_ACCEPT_MATCHING_CRC : ScraperSearchComponent::ALWAYS_ACCEPT_FIRST_RESULT, 
+		autoSkipNoResults ? ScraperSearchComponent::AUTO_SKIP_NO_RESULTS : ScraperSearchComponent::NEVER_SKIP_NO_RESULTS);
 	mSearchComp->setAcceptCallback(std::bind(&GuiScraperMulti::acceptResult, this, std::placeholders::_1));
 	mSearchComp->setSkipCallback(std::bind(&GuiScraperMulti::skip, this));
 	mSearchComp->setCancelCallback(std::bind(&GuiScraperMulti::finish, this));

@@ -13,7 +13,7 @@ class TextComponent;
 class GuiScraperMulti : public GuiComponent
 {
 public:
-	GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults);
+	GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults, bool autoSkipNoResults);
 	virtual ~GuiScraperMulti();
 
 	void onSizeChanged() override;
