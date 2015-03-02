@@ -131,7 +131,7 @@ void Window::input(InputConfig* config, Input input)
 	}
 	else
 	{
-            if(config->isMappedTo("x", input) && input.value && !launchKodi){
+            if(config->isMappedTo("x", input) && input.value && !launchKodi && Settings::getInstance()->getBool("EnableKodi")){
                 launchKodi = true;
                 Window * window = this;
                 this->pushGui(new GuiMsgBox(this, "DO YOU WANT TO START KODI MEDIA CENTER ?", "YES", 

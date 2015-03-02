@@ -69,6 +69,8 @@ void Settings::setDefaults()
         mBoolMap["Smooth"] = true;
         mBoolMap["GpioControllers"] = false;
         mBoolMap["EnableWifi"] = false;
+        mBoolMap["EnableKodi"] = true;
+        mBoolMap["KodiStartup"] = false;
         
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;

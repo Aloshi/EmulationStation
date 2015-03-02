@@ -74,13 +74,15 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// UI SETTINGS >
 	// CONFIGURE INPUT >
 	// QUIT >
-        addEntry("KODI MEDIA CENTER", 0x777777FF, true, 
-		[this] { 
-                    Window* window = mWindow;
+        if(Settings::getInstance()->getBool("EnableKodi")){
+            addEntry("KODI MEDIA CENTER", 0x777777FF, true, 
+                    [this] { 
+                        Window* window = mWindow;
 
-                    if( ! RetroboxSystem::getInstance()->launchKodi(window))
-                        LOG(LogWarning) << "Shutdown terminated with non-zero result!";
-                    });
+                        if( ! RetroboxSystem::getInstance()->launchKodi(window))
+                            LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+                        });
+        }
         addEntry("SYSTEM SETTINGS", 0x777777FF, true, 
 		[this] { 
                         Window* window = mWindow;

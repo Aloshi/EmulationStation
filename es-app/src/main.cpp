@@ -23,6 +23,7 @@
 #include <boost/locale.hpp>
 #include "resources/Font.h"
 #include "NetworkThread.h"
+#include "RetroboxSystem.h"
 
 
 
@@ -296,7 +297,9 @@ int main(int argc, char* argv[])
 				SDL_PushEvent(quit);
 			}));
 	}
-        
+        if(Settings::getInstance()->getBool("EnableKodi")){
+            RetroboxSystem::getInstance()->launchKodi(&window);
+        }
         
         // UPDATED VERSION MESSAGE
         if(RetroboxSystem::getInstance()->needToShowVersionMessage()){
