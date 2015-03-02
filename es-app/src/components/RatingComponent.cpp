@@ -31,7 +31,11 @@ void RatingComponent::setValue(const std::string& value)
 
 std::string RatingComponent::getValue() const
 {
-	return std::to_string((long double)mValue);
+	// do not use std::to_string here as it will use the current locale
+	// and that sometimes encodes decimals as commas
+	std::stringstream ss;
+	ss << mValue;
+	return ss.str();
 }
 
 void RatingComponent::onSizeChanged()
