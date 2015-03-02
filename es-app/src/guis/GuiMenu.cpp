@@ -478,9 +478,9 @@ void GuiMenu::createConfigInput(){
                 
                 row.elements.clear();
 		// quick system select (left/right in game list view)
-                auto gpio_select = std::make_shared<SwitchComponent>(mWindow);
-                gpio_select->setState(Settings::getInstance()->getBool("GpioControllers"));
-                s->addWithLabel("GPIO CONTROLLERS", gpio_select);
+//                auto gpio_select = std::make_shared<SwitchComponent>(mWindow);
+//                gpio_select->setState(Settings::getInstance()->getBool("GpioControllers"));
+//                s->addWithLabel("GPIO CONTROLLERS", gpio_select);
 
                 // Here we go; for each player
                 std::vector<std::shared_ptr<OptionListComponent<std::string>>> options;
@@ -543,7 +543,7 @@ void GuiMenu::createConfigInput(){
                     s->addWithLabel(confName, inputOptionList);
                              
                 }
-                s->addSaveFunc([this, options, window, gpio_select] {
+                s->addSaveFunc([this, options, window] {
                       for (int player = 0; player < 4; player++) {
                             std::stringstream sstm;
                             sstm << "INPUT P" << player+1;
@@ -565,16 +565,16 @@ void GuiMenu::createConfigInput(){
                         }
                         
                         // GPIOS
-                        if(Settings::getInstance()->getBool("GpioControllers") != gpio_select->getState()){
-                            Settings::getInstance()->setBool("GpioControllers", gpio_select->getState()); 
-                            RetroboxSystem::getInstance()->setGPIOControllers(gpio_select->getState());
-                            
-                            if(gpio_select->getState()){
-                                window->pushGui(
-                                           new GuiMsgBox(window, "GPIO CONTROLLERS ARE NOW ON", "OK")
-                                        );
-                            }
-                        }
+//                        if(Settings::getInstance()->getBool("GpioControllers") != gpio_select->getState()){
+//                            Settings::getInstance()->setBool("GpioControllers", gpio_select->getState()); 
+//                            RetroboxSystem::getInstance()->setGPIOControllers(gpio_select->getState());
+//                            
+//                            if(gpio_select->getState()){
+//                                window->pushGui(
+//                                           new GuiMsgBox(window, "GPIO CONTROLLERS ARE NOW ON", "OK")
+//                                        );
+//                            }
+//                        }
                         Settings::getInstance()->saveFile();
 
                 });
