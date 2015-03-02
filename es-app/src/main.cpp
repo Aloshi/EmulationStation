@@ -297,7 +297,7 @@ int main(int argc, char* argv[])
 				SDL_PushEvent(quit);
 			}));
 	}
-        if(Settings::getInstance()->getBool("EnableKodi")){
+        if(Settings::getInstance()->getBool("KodiStartup")){
             RetroboxSystem::getInstance()->launchKodi(&window);
         }
         
