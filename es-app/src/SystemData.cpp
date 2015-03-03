@@ -128,23 +128,6 @@ void SystemData::launchGame(Window* window, FileData game) const
 	game.set_metadata(metadata);
 }
 
-std::string SystemData::getGamelistPath(bool forWrite) const
-{
-	fs::path filePath;
-
-	filePath = mStartPath + "/gamelist.xml";
-	if(fs::exists(filePath))
-		return filePath.generic_string();
-
-	filePath = getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
-	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
-		fs::create_directories(filePath.parent_path());
-	if(forWrite || fs::exists(filePath))
-		return filePath.generic_string();
-
-	return "/etc/emulationstation/gamelists/" + mName + "/gamelist.xml";
-}
-
 std::string SystemData::getThemePath() const
 {
 	// where we check for themes, in order:

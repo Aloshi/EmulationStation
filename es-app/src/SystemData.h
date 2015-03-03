@@ -31,8 +31,6 @@ public:
 	unsigned int getGameCount() const;
 	bool hasFileWithImage() const;
 
-	std::string getGamelistPath(bool forWrite) const;
-
 	void launchGame(Window* window, FileData game) const;
 
 	// Load or re-load theme.

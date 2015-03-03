@@ -4,6 +4,8 @@
 #include "SystemData.h"
 #include <fstream>
 #include <pugixml/pugixml.hpp>
+#include "Settings.h"
+#include "views/ViewController.h"
 
 namespace fs = boost::filesystem;
 
@@ -256,4 +258,64 @@ void SystemManager::updateDatabase()
 		mDatabase.addMissingFiles(*it);
 		mDatabase.updateExists(*it);
 	}
+}
+
+fs::path SystemManager::getGamelistXMLPath(const SystemData* sys, bool forWrite)
+{
+	fs::path filePath;
+
+	filePath = sys->getStartPath() + "/gamelist.xml";
+	if(fs::exists(filePath))
+		return filePath;
+
+	filePath = getHomePath() + "/.emulationstation/gamelists/" + sys->getName() + "/gamelist.xml";
+	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
+		fs::create_directories(filePath.parent_path());
+	if(forWrite || fs::exists(filePath))
+		return filePath;
+
+	return "/etc/emulationstation/gamelists/" + sys->getName() + "/gamelist.xml";
+}
+
+bool SystemManager::hasNewGamelistXML(const SystemData* sys)
+{
+	fs::path path = getGamelistXMLPath(sys, false);
+	if(!fs::exists(path))
+		return false;
+
+	std::time_t time = fs::last_write_time(path);
+	if(time == (std::time_t)(-1))
+		return false;
+
+	return time > Settings::getInstance()->getTime("LastXMLImportTime");
+}
+
+bool SystemManager::hasNewGamelistXML() const
+{
+	for(auto it = mSystems.begin(); it != mSystems.end(); it++)
+	{
+		if(hasNewGamelistXML(*it))
+			return true;
+	}
+	return false;
+}
+
+void SystemManager::importGamelistXML(bool onlyNew)
+{
+	for(auto it = mSystems.begin(); it != mSystems.end(); it++)
+	{
+		if(onlyNew && !hasNewGamelistXML(*it))
+			continue;
+
+		boost::filesystem::path path = getGamelistXMLPath(*it, false);
+		if(boost::filesystem::exists(path))
+			database().importXML(*it, path.generic_string());
+
+		database().updateExists(*it);
+		ViewController::get()->onFilesChanged(*it);
+	}
+
+	std::time_t now;
+	time(&now);
+	Settings::getInstance()->setTime("LastXMLImportTime", now);
 }
