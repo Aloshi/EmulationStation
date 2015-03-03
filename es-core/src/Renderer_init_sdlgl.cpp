@@ -153,15 +153,11 @@ namespace Renderer
 		glMatrixMode(GL_MODELVIEW);
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-		onInit();
-
 		return true;
 	}
 
 	void deinit()
 	{
-		onDeinit();
-
 		destroySurface();
 	}
 };
