@@ -61,6 +61,7 @@ SystemData::~SystemData()
 	delete mRootFolder;
 }
 
+
 std::string strreplace(std::string str, const std::string& replace, const std::string& with)
 {
 	size_t pos;
@@ -70,11 +71,17 @@ std::string strreplace(std::string str, const std::string& replace, const std::s
 	return str;
 }
 
+// plaform-specific escape path function
+// on windows: just puts the path in quotes
+// everything else: assume bash and escape special characters with backslashes
 std::string escapePath(const boost::filesystem::path& path)
 {
-	// a quick and dirty way to insert a backslash before most characters that would mess up a bash path;
-	// someone with regex knowledge should make this into a one-liner
-	std::string pathStr = path.generic_string();
+#ifdef WIN32
+	// windows escapes stuff by just putting everything in quotes
+	return '"' + fs::path(path).make_preferred().string() + '"';
+#else
+	// a quick and dirty way to insert a backslash before most characters that would mess up a bash path
+	std::string pathStr = path.string();
 
 	const char* invalidChars = " '\"\\!$^&*(){}[]?;<>";
 	for(unsigned int i = 0; i < pathStr.length(); i++)
@@ -94,6 +101,7 @@ std::string escapePath(const boost::filesystem::path& path)
 	}
 
 	return pathStr;
+#endif
 }
 
 void SystemData::launchGame(Window* window, FileData* game)
@@ -108,7 +116,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 	const std::string rom = escapePath(game->getPath());
 	const std::string basename = game->getPath().stem().string();
-	const std::string rom_raw = game->getPath().string();
+	const std::string rom_raw = fs::path(game->getPath()).make_preferred().string();
 
 	command = strreplace(command, "%ROM%", rom);
 	command = strreplace(command, "%BASENAME%", basename);
@@ -116,7 +124,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";
-	int exitCode = system(command.c_str());
+	int exitCode = runSystemCommand(command);
 	std::cout << "==============================================\n";
 
 	if(exitCode != 0)
