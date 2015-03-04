@@ -196,8 +196,8 @@ void SystemData::populateFolder(FileData* folder)
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
 
 		isGame = false;
-		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
-		{
+		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end()
+                        && filePath.filename().string().compare(0, 1, ".") != 0 ){
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), this);
 			folder->addChild(newGame);
 			isGame = true;
