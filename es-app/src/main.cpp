@@ -311,7 +311,9 @@ int main(int argc, char* argv[])
         }
         
         // UPDATE CHECK THREAD
-        NetworkThread * nthread = new NetworkThread(&window);
+        if(Settings::getInstance()->getBool("CheckUpdates")){
+            NetworkThread * nthread = new NetworkThread(&window);
+        }
 
 	//run the command line scraper then quit
 	if(scrape_cmdline)

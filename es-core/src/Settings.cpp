@@ -71,6 +71,8 @@ void Settings::setDefaults()
         mBoolMap["EnableWifi"] = false;
         mBoolMap["EnableKodi"] = true;
         mBoolMap["KodiStartup"] = false;
+        mBoolMap["XKodi"] = true;
+        mBoolMap["CheckUpdates"] = true;
         
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
