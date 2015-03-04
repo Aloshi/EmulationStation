@@ -4,6 +4,11 @@
 #include "views/ViewController.h"
 #include "Sound.h"
 #include "Settings.h"
+#include "ArchiveManager.h"
+#include <algorithm>
+#include "PlatformId.h"
+#include "SystemData.h"
+#include "guis/GuiMsgBox.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
@@ -12,7 +17,7 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 	mHeaderText.setSize(mSize.x(), 0);
 	mHeaderText.setPosition(0, 0);
 	mHeaderText.setAlignment(ALIGN_CENTER);
-	
+
 	mHeaderImage.setResize(0, mSize.y() * 0.185f);
 	mHeaderImage.setOrigin(0.5f, 0.0f);
 	mHeaderImage.setPosition(mSize.x() / 2, 0);
@@ -58,7 +63,45 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 		if(config->isMappedTo("a", input))
 		{
 			FileData* cursor = getCursor();
-			if(cursor->getType() == GAME)
+
+			if(ArchiveManager::isAnArchive(cursor->getPath().native()) &&
+			   !(cursor->getSystem()->hasPlatformId(PlatformIds::ARCADE) ||
+				 cursor->getSystem()->hasPlatformId(PlatformIds::NEOGEO)))
+			{
+				// Extraction in /tmp/somefolder
+				ArchiveManager mgr{cursor->getPath().native()};
+				decltype(mgr.list()) filelist;
+				std::string extractedFolder;
+
+				try
+				{
+					extractedFolder = mgr.extract();
+					filelist = mgr.list();
+				}
+				catch(std::runtime_error& e)
+				{
+					std::cerr << e.what() << std::endl;
+					mWindow->pushGui(new GuiMsgBox(mWindow, "An error occured while opening the archive.", "OK"));
+					return true;
+				}
+
+				// Add to the list so that we can enter it
+				auto f = new FileData(FOLDER, extractedFolder, cursor->getSystem());
+				f->setTemporary();
+				f->metadata.set("name", cursor->getName());
+
+				cursor->getParent()->addChild(f);
+
+				// Add the files inside the archive
+				for(auto& e : filelist)
+				{
+					f->addChild(new FileData(GAME, extractedFolder + "/" + e, cursor->getSystem()));
+				}
+
+				mCursorStack.push(f);
+				populateList(f->getChildren());
+			}
+			else if(cursor->getType() == GAME)
 			{
 				Sound::getFromTheme(getTheme(), getName(), "launch")->play();
 				launch(cursor);
@@ -70,15 +113,32 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					populateList(cursor->getChildren());
 				}
 			}
-				
+
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{
 			if(mCursorStack.size())
 			{
-				populateList(mCursorStack.top()->getParent()->getChildren());
-				setCursor(mCursorStack.top());
+				auto parent = mCursorStack.top()->getParent();
+				if(mCursorStack.top()->isTemporary())
+				{
+					mCursorStack.top()->getParent()->removeChild(mCursorStack.top());
+					populateList(parent->getChildren());
+					
+					auto it = std::find_if(parent->getChildren().begin(),
+										   parent->getChildren().end(),
+										   [&] (FileData* fd) { return fd->getName() == mCursorStack.top()->getName();});
+
+					setCursor(*it);
+				}
+				else
+				{
+					populateList(parent->getChildren());
+					setCursor(mCursorStack.top());
+				}
+
 				mCursorStack.pop();
+
 				Sound::getFromTheme(getTheme(), getName(), "back")->play();
 			}else{
 				onFocusLost();

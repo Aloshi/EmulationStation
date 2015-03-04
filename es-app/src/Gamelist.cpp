@@ -12,7 +12,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 {
 	// first, verify that path is within the system's root folder
 	FileData* root = system->getRootFolder();
-	
+
 	bool contains = false;
 	fs::path relative = removeCommonPath(path, root->getPath(), contains);
 	if(!contains)
@@ -64,7 +64,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 				LOG(LogWarning) << "gameList: folder doesn't already exist, won't create";
 				return NULL;
 			}
-			
+
 			// create missing folder
 			FileData* folder = new FileData(FOLDER, treeNode->getPath().stem() / *path_it, system);
 			treeNode->addChild(folder);
@@ -113,7 +113,7 @@ void parseGamelist(SystemData* system)
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
 			fs::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
-			
+
 			if(!boost::filesystem::exists(path))
 			{
 				LOG(LogWarning) << "File \"" << path << "\" does not exist! Ignoring.";
@@ -145,7 +145,7 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 
 	//write metadata
 	file->metadata.appendToXML(newNode, true, system->getStartPath());
-	
+
 	if(newNode.children().begin() == newNode.child("name") //first element is name
 		&& ++newNode.children().begin() == newNode.children().end() //theres only one element
 		&& newNode.child("name").text().get() == file->getCleanName()) //the name is the default
@@ -179,7 +179,7 @@ void updateGamelist(SystemData* system)
 	{
 		//parse an existing file first
 		pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
-		
+
 		if(!result)
 		{
 			LOG(LogError) << "Error parsing XML file \"" << xmlReadPath << "\"!\n	" << result.description();
@@ -230,6 +230,10 @@ void updateGamelist(SystemData* system)
 					break;
 				}
 			}
+
+			// We don't want to add the files inside an archive
+			if((*fit)->getParent()->isTemporary())
+				continue;
 
 			// it was either removed or never existed to begin with; either way, we can add it now
 			addFileDataNode(root, *fit, tag, system);

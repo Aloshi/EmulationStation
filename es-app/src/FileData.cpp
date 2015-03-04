@@ -86,7 +86,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask) const
 	{
 		if((*it)->getType() & typeMask)
 			out.push_back(*it);
-		
+
 		if((*it)->getChildren().size() > 0)
 		{
 			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask);
@@ -104,6 +104,10 @@ void FileData::addChild(FileData* file)
 
 	mChildren.push_back(file);
 	file->mParent = this;
+
+	// Archive case, we use the filename instead of the scraped name
+	if(isTemporary())
+		file->metadata.set("name", file->getPath().stem().native());
 }
 
 void FileData::removeChild(FileData* file)
