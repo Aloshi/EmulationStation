@@ -89,7 +89,7 @@ private:
 template<>
 inline boost::posix_time::ptime MetaDataMap::get(const char* key) const
 {
-	return string_to_ptime(mMap.at(key), "%Y%m%dT%H%M%S%F%q");
+	return string_to_ptime(mMap.at(key), SQLITE_TIME_STRING_FORMAT);
 }
 
 template<>

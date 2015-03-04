@@ -665,6 +665,10 @@ void GamelistDB::importXML(const SystemData* system, const std::string& xml_path
 					std::string value = md.text().get();
 					if(iter->type == MD_IMAGE_PATH)
 						value = resolvePath(value, relativeTo, true).generic_string();
+					
+					// if it's a time/date, convert it into the SQLite format
+					if(iter->type == MD_TIME || iter->type == MD_DATE)
+						value = ptime_to_string(string_to_ptime(value, LEGACY_TIME_STRING_FORMAT), SQLITE_TIME_STRING_FORMAT);
 
 					mdl.set(iter->key, value);
 				}
@@ -702,11 +706,29 @@ void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path
 
 		node.append_child("path").text().set(path.c_str());
 
+		const auto& mdd = getMDDMap().at(type);
+
 		// skip column 0 (fileid), 1 (systemid), 2 (filetype), 3 (fileexists)
+		std::string temp;
 		for(int i = RESERVED_COLUMNS; i < sqlite3_column_count(readStmt); i++)
 		{
 			const char* col = (const char*)sqlite3_column_name(readStmt, i);
 			const char* value = (const char*)sqlite3_column_text(readStmt, i);
+			
+			for(auto it = mdd.begin(); it != mdd.end(); it++)
+			{
+				if(it->key == col)
+				{
+					// convert from SQLite time format to legacy gamelist.xml time format
+					if(it->type == MD_TIME || it->type == MD_DATE)
+					{
+						temp = ptime_to_string(string_to_ptime(value, SQLITE_TIME_STRING_FORMAT), LEGACY_TIME_STRING_FORMAT);
+						value = temp.c_str();
+					}
+					break;
+				}
+			}
+
 			node.append_child(col).text().set(value);
 		}
 	}
