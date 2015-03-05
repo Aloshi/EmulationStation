@@ -253,8 +253,9 @@ void DateTimeComponent::updateTextCache()
 	std::shared_ptr<Font> font = getFont();
 	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
 
-	if(!mSizeSet)
-		mSize = mTextCache->metrics.size;
+	mSize = mTextCache->metrics.size;
+	if(getParent())
+		getParent()->onSizeChanged();
 
 	//set up cursor positions
 	mCursorBoxes.clear();
