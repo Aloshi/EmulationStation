@@ -34,11 +34,17 @@ public:
 
 	inline GamelistDB& database() { return mDatabase; }
 
+	bool hasNewGamelistXML() const;
+	void importGamelistXML(bool onlyNew);
+	static boost::filesystem::path getGamelistXMLPath(const SystemData* sys, bool forWrite);
+
 private:
 	static SystemManager* sInstance;
 	
 	std::vector<SystemData*> mSystems;
 	GamelistDB mDatabase;
+
+	static bool hasNewGamelistXML(const SystemData* sys);
 
 	// if forWrite is true, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 	static boost::filesystem::path getConfigPath(bool forWrite);

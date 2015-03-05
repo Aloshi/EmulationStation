@@ -36,16 +36,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 
 	auto importXMLAndClose = [this] {
-		GamelistDB& db = SystemManager::getInstance()->database();
-		auto sysvec = SystemManager::getInstance()->getSystems();
-		for(auto it = sysvec.begin(); it != sysvec.end(); it++)
-		{
-			std::string path = (*it)->getGamelistPath(false);
-			if(boost::filesystem::exists(path))
-				db.importXML(*it, path);
-			db.updateExists(*it);
-			ViewController::get()->onFilesChanged(*it);
-		}
+		SystemManager::getInstance()->importGamelistXML(false);
 
 		Window* windowCopy = this->mWindow;
 		while(windowCopy->peekGui() != ViewController::get())

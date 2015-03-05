@@ -267,6 +267,18 @@ int main(int argc, char* argv[])
 		if(fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
 			ViewController::get()->goToStart();
+			if(SystemManager::getInstance()->hasNewGamelistXML())
+			{
+				window.pushGui(new GuiMsgBox(&window,
+					"NEW GAMELIST.XML DATA FOUND. IMPORT NOW?",
+					"YES", [] { SystemManager::getInstance()->importGamelistXML(true); },
+					"NO", [] { 
+						// don't ask again
+						std::time_t now;
+						time(&now);
+						Settings::getInstance()->setTime("LastXMLImportTime", now);
+				}));
+			}
 		}else{
 			window.pushGui(new GuiDetectDevice(&window, true, [] { ViewController::get()->goToStart(); }));
 		}
@@ -324,6 +336,8 @@ int main(int argc, char* argv[])
 
 		Log::flush();
 	}
+
+	Settings::getInstance()->saveFile();
 
 	while(window.peekGui() != ViewController::get())
 		delete window.peekGui();

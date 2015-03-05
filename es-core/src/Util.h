@@ -5,6 +5,11 @@
 #include <boost/filesystem.hpp>
 #include <boost/date_time.hpp>
 
+// the original gamelist.xml used this format - it's something ISO, I forget what
+#define LEGACY_TIME_STRING_FORMAT "%Y%m%dT%H%M%S%F%q"
+// the SQLite database uses this format, as do MD_TIME/MD_DATE entries in the MetaDataMap
+#define SQLITE_TIME_STRING_FORMAT "%Y-%m-%d %H:%M:%S.%F"
+
 std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);
 std::string strToUpper(const std::string& str);
@@ -30,4 +35,5 @@ boost::filesystem::path makeRelativePath(const boost::filesystem::path& path, co
 // if allowHome is true, also expands "~/my/path.sfc" to "/home/pi/my/path.sfc"
 boost::filesystem::path resolvePath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool allowHome);
 
-boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");
+boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt);
+std::string ptime_to_string(const boost::posix_time::ptime& str, const std::string& fmt);

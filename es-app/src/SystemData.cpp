@@ -40,6 +40,7 @@ SystemData::~SystemData()
 {
 }
 
+
 std::string strreplace(std::string str, const std::string& replace, const std::string& with)
 {
 	size_t pos;
@@ -49,11 +50,17 @@ std::string strreplace(std::string str, const std::string& replace, const std::s
 	return str;
 }
 
+// plaform-specific escape path function
+// on windows: just puts the path in quotes
+// everything else: assume bash and escape special characters with backslashes
 std::string escapePath(const boost::filesystem::path& path)
 {
-	// a quick and dirty way to insert a backslash before most characters that would mess up a bash path;
-	// someone with regex knowledge should make this into a one-liner
-	std::string pathStr = path.generic_string();
+#ifdef WIN32
+	// windows escapes stuff by just putting everything in quotes
+	return '"' + fs::path(path).make_preferred().string() + '"';
+#else
+	// a quick and dirty way to insert a backslash before most characters that would mess up a bash path
+	std::string pathStr = path.string();
 
 	const char* invalidChars = " '\"\\!$^&*(){}[]?;<>";
 	for(unsigned int i = 0; i < pathStr.length(); i++)
@@ -73,6 +80,7 @@ std::string escapePath(const boost::filesystem::path& path)
 	}
 
 	return pathStr;
+#endif
 }
 
 std::string SystemData::replaceOptions( std::string command, FileData game ) const
@@ -130,7 +138,7 @@ void SystemData::launchGame(Window* window, FileData game) const
 
 	const std::string rom = escapePath(game.getPath());
 	const std::string basename = game.getPath().stem().string();
-	const std::string rom_raw = game.getPath().string();
+	const std::string rom_raw = fs::path(game.getPath()).make_preferred().string();
 
 	command = strreplace(command, "%ROM%", rom);
 	command = strreplace(command, "%BASENAME%", basename);
@@ -140,8 +148,7 @@ void SystemData::launchGame(Window* window, FileData game) const
 
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";
-	std::cout << command << "\n";
-	int exitCode = system(command.c_str());
+	int exitCode = runSystemCommand(command);
 	std::cout << "==============================================\n";
 
 	if(exitCode != 0)
@@ -164,23 +171,6 @@ void SystemData::launchGame(Window* window, FileData game) const
 	metadata.set("lastplayed", time);
 
 	game.set_metadata(metadata);
-}
-
-std::string SystemData::getGamelistPath(bool forWrite) const
-{
-	fs::path filePath;
-
-	filePath = mStartPath + "/gamelist.xml";
-	if(fs::exists(filePath))
-		return filePath.generic_string();
-
-	filePath = getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
-	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
-		fs::create_directories(filePath.parent_path());
-	if(forWrite || fs::exists(filePath))
-		return filePath.generic_string();
-
-	return "/etc/emulationstation/gamelists/" + mName + "/gamelist.xml";
 }
 
 std::string SystemData::getThemePath() const
