@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "Settings.h"
 
-GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc) : GuiComponent(window), 
+GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, const std::function<void(const ScraperSearchResult&)>& doneFunc) : GuiComponent(window), 
 	mGrid(window, Eigen::Vector2i(1, 7)), 
 	mBox(window, ":/frame.png"),
 	mSearchParams(params),
@@ -19,7 +19,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 
 	// row 0 is a spacer
 
-	mGameName = std::make_shared<TextComponent>(mWindow, strToUpper(mSearchParams.game->getPath().filename().generic_string()), 
+	mGameName = std::make_shared<TextComponent>(mWindow, strToUpper(mSearchParams.game.getPath().filename().generic_string()), 
 		Font::get(FONT_SIZE_MEDIUM), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mGameName, Eigen::Vector2i(0, 1), false, true);
 

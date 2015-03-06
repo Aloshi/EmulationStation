@@ -16,7 +16,7 @@
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
 	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
-	mSearchType(type)
+	mSearchType(type), mLastSearch(NULL, FileData("", NULL, (FileType)0))
 {
 	addChild(&mGrid);
 
@@ -248,7 +248,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 		for(int i = 0; i < end; i++)
 		{
 			row.elements.clear();
-			row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(results.at(i).mdl.get("name")), font, color), true);
+			row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(results.at(i).metadata.get<std::string>("name")), font, color), true);
 			row.makeAcceptInputHandler([this, i] { returnResult(mScraperResults.at(i)); });
 			mResultList->addRow(row);
 		}
@@ -298,8 +298,8 @@ void ScraperSearchComponent::updateInfoPane()
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
 		ScraperSearchResult& res = mScraperResults.at(i);
-		mResultName->setText(strToUpper(res.mdl.get("name")));
-		mResultDesc->setText(strToUpper(res.mdl.get("desc")));
+		mResultName->setText(strToUpper(res.metadata.get<std::string>("name")));
+		mResultDesc->setText(strToUpper(res.metadata.get<std::string>("desc")));
 		mDescContainer->reset();
 
 		mResultThumbnail->setImage("");
@@ -312,12 +312,12 @@ void ScraperSearchComponent::updateInfoPane()
 		}
 
 		// metadata
-		mMD_Rating->setValue(strToUpper(res.mdl.get("rating")));
-		mMD_ReleaseDate->setValue(strToUpper(res.mdl.get("releasedate")));
-		mMD_Developer->setText(strToUpper(res.mdl.get("developer")));
-		mMD_Publisher->setText(strToUpper(res.mdl.get("publisher")));
-		mMD_Genre->setText(strToUpper(res.mdl.get("genre")));
-		mMD_Players->setText(strToUpper(res.mdl.get("players")));
+		mMD_Rating->setValue(strToUpper(res.metadata.get((const char*)"rating")));
+		mMD_ReleaseDate->setValue(strToUpper(res.metadata.get("releasedate")));
+		mMD_Developer->setText(strToUpper(res.metadata.get("developer")));
+		mMD_Publisher->setText(strToUpper(res.metadata.get("publisher")));
+		mMD_Genre->setText(strToUpper(res.metadata.get("genre")));
+		mMD_Players->setText(strToUpper(res.metadata.get("players")));
 		mGrid.onSizeChanged();
 	}else{
 		mResultName->setText("");
@@ -452,7 +452,7 @@ void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
 	stop();
 	mWindow->pushGui(new GuiTextEditPopup(mWindow, "SEARCH FOR", 
 		// initial value is last search if there was one, otherwise the clean path name
-		params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride, 
+		params.nameOverride.empty() ? params.game.getCleanName() : params.nameOverride, 
 		searchForFunc, false, "SEARCH"));
 }
 

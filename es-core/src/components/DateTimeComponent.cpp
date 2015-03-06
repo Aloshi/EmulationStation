@@ -165,7 +165,7 @@ void DateTimeComponent::render(const Eigen::Affine3f& parentTrans)
 
 void DateTimeComponent::setValue(const std::string& val)
 {
-	mTime = string_to_ptime(val);
+	mTime = string_to_ptime(val, SQLITE_TIME_STRING_FORMAT);
 	updateTextCache();
 }
 
