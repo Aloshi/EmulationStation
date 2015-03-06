@@ -256,6 +256,8 @@ void DateTimeComponent::updateTextCache()
 	if(mAutoSize)
 	{
 		mSize = mTextCache->metrics.size;
+
+		mAutoSize = false;
 		if(getParent())
 			getParent()->onSizeChanged();
 	}
@@ -302,6 +304,7 @@ void DateTimeComponent::setFont(std::shared_ptr<Font> font)
 
 void DateTimeComponent::onSizeChanged()
 {
+	mAutoSize = false;
 	updateTextCache();
 }
 
