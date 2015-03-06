@@ -18,9 +18,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 	mJumpToLetterList = std::make_shared<LetterList>(mWindow, "JUMP TO LETTER", false);
 	for(char c = 'A'; c <= 'Z'; c++)
-	{
 		mJumpToLetterList->add(std::string(1, c), c, c == curChar);
-	}
 
 	ComponentListRow row;
 	row.addElement(std::make_shared<TextComponent>(mWindow, "JUMP TO LETTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
