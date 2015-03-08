@@ -9,6 +9,8 @@
 #include "components/MenuComponent.h"
 #include <sstream>
 #include "Log.h"
+#include <boost/locale.hpp>
+
 
 //Used to display a list of options.
 //Can select one or multiple options.
@@ -292,7 +294,7 @@ private:
 		{
 			// display # selected
 			std::stringstream ss;
-			ss << getSelectedObjects().size() << " SELECTED";
+			ss << getSelectedObjects().size() << gettext(" SELECTED");
 			mText.setText(ss.str());
 			mText.setSize(0, mText.getSize().y());
 			setSize(mText.getSize().x() + mRightArrow.getSize().x() + 24, mText.getSize().y());

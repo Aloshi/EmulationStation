@@ -357,3 +357,44 @@ msgid "MOVE CURSOR"
 msgstr "BOUGER LE CURSEUR"
 msgid "DISCARD CHANGES"
 msgstr "ANNULER MODIFICATIONS"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "Seulement images manquantes"
+
+msgid "All Games"
+msgstr "Tous les jeux"
+
+msgid "accept"
+msgstr "ACCEPTER"
+
+msgid " SELECTED"
+msgstr " SÉLECTIONNÉS"
+
+msgid "accept result"
+msgstr "accepter"
+
+msgid "stop (progress saved)"
+msgstr "stop (progrès sauvegardé)"
+
+msgid "search"
+msgstr "rechercher"
+
+msgid "GAME"
+msgstr "JEU"
+
+# PLURAL FOR GAME(S)
+msgid "S"
+msgstr "X"
+
+msgid " OF "
+msgstr " SUR "
+
+msgid "NO GAMES WERE SCRAPED."
+msgstr "AUCUN JEU SCRAPPÉ"
+
+msgid " SUCCESSFULLY SCRAPED!"
+msgstr " SCRAPPÉS !"
+
+msgid " SKIPPED."
+msgstr " PASSÉS."
