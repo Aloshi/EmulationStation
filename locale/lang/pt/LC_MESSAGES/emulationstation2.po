@@ -173,7 +173,7 @@ msgstr "EXECUTAR"
 msgid "SYSTEM"
 msgstr "SISTEMA"
 msgid "INPUT"
-msgstr "CONTROLE"
+msgstr "EDITAR"
 msgid "SKIP"
 msgstr "PASSAR"
 msgid "CHANGE"
@@ -317,3 +317,72 @@ msgstr "OPÇÕES DE REDE"
 
 msgid "I18NMESSAGECONTROLLERS"
 msgstr "VOCE CONFIGURARÁ UM CONTROLE. SE VOCE TEM SÓ UM CONTROLE, CONFIGURE OS DIRECIONAIS E PULE A CONFIGURAÇÃO DE JOSTICK PRESSIONANDO QUALQUER BOTÃO. SE SEU CONTROLE NÃO TEM UMA TECLA ESPECIAL PARA SER HOTKEY, SELECIONE O BOTÃO SELECT. PULE AS CONFIGURAÇÕES DOS BOTÕES QUE NÃO EXISTEM EM SEU CONTROLE PRESSIONANDO QUALQUER BOTÃO."
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "PRESSIONE QUALQUER BOTÃO"
+msgid "-NOT DEFINED-"
+msgstr "-NÃO CONFIGURADO-"
+msgid "ALREADY TAKEN"
+msgstr "BOTÃO JÁ ESCOLHIDO"
+msgid "HOLD FOR "
+msgstr "MANTENHA PRESSIONADO PER"
+msgid "S TO SKIP"
+msgstr "S PARA PULAR"
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "MANTENHA PRESSIONADO QUALQUER BOTÃO PARA PULAR CONFIGURAÇÃO"
+msgid "JOYSTICK UP"
+msgstr "ANALÓGICO PARA CIMA"
+msgid "JOYSTICK LEFT"
+msgstr "ANALÓGICO PARA ESQUERDA"
+
+#TEXT EDITING
+msgid "EDIT"
+msgstr "EDITAR"
+msgid "STOP EDITING"
+msgstr "PARAR EDIÇÃO"
+msgid "MOVE CURSOR"
+msgstr "MOVER CURSOR"
+msgid "DISCARD CHANGES"
+msgstr "DESCARTAR MODIFICAÇÕES"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "Somente imagens faltantes"
+
+msgid "All Games"
+msgstr "Todos os jogos"
+
+msgid "accept"
+msgstr "ACEITAR"
+
+msgid " SELECTED"
+msgstr " SELECIONADOS"
+
+msgid "accept result"
+msgstr "Aceitar"
+
+msgid "stop (progress saved)"
+msgstr "Parar (Progresso salvo)"
+
+msgid "search"
+msgstr "Procurar"
+
+msgid "GAME"
+msgstr "JOGO"
+
+# PLURAL FOR GAME(S)
+msgid "S"
+msgstr "S"
+
+msgid " OF "
+msgstr " DE "
+
+msgid "NO GAMES WERE SCRAPED."
+msgstr "NENHUM JOGO COM SCRAPES "
+
+msgid " SUCCESSFULLY SCRAPED!"
+msgstr " SCRAPES !"
+
+msgid " SKIPPED."
+msgstr " PULADOS."
