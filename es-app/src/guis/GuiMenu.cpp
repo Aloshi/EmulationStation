@@ -115,6 +115,8 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         ratio_choice->add("AUTO", "auto", currentRatio == "auto");
                         ratio_choice->add("4/3", "4/3", currentRatio == "4/3");
                         ratio_choice->add("16/9", "16/9", currentRatio == "16/9");
+                        ratio_choice->add("CUSTOM", "custom", currentRatio == "custom");
+
                         s->addWithLabel("GAME RATIO", ratio_choice);
                         
                         // smoothing
