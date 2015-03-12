@@ -57,10 +57,13 @@ namespace Renderer
 		if(display_height == 0)
 			display_height = dispMode.h;
 
+		// Forcing SDL_WINDOW_FULLSCREEN_DESKTOP seems to fix res issues in windows.
+		Uint32 windowFullscreenMode = (Settings::getInstance()->getBool("ForceDesktopResolution") ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN);
+
 		sdlWindow = SDL_CreateWindow("EmulationStation", 
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
 			display_width, display_height, 
-			SDL_WINDOW_OPENGL | (Settings::getInstance()->getBool("Windowed") ? 0 : SDL_WINDOW_FULLSCREEN));
+			SDL_WINDOW_OPENGL | (Settings::getInstance()->getBool("Windowed") ? 0 : windowFullscreenMode));
 
 		if(sdlWindow == NULL)
 		{

@@ -62,6 +62,10 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--windowed") == 0)
 		{
 			Settings::getInstance()->setBool("Windowed", true);
+		}
+		else if (strcmp(argv[i], "--force-desktop-resolution") == 0)
+		{
+			Settings::getInstance()->setBool("ForceDesktopResolution", true);
 		}else if(strcmp(argv[i], "--vsync") == 0)
 		{
 			bool vsync = (strcmp(argv[i + 1], "on") == 0 || strcmp(argv[i + 1], "1") == 0) ? true : false;
@@ -83,6 +87,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"Version " << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING << "\n\n"
 				"Command line arguments:\n"
 				"--resolution [width] [height]	try and force a particular resolution\n"
+				"--force-desktop-resolution	force the use of desktop resolution in fullscreen mode\n"
 				"--gamelist-only			skip automatic game search, only read from gamelist.xml\n"
 				"--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n"
 				"--draw-framerate		display the framerate\n"
