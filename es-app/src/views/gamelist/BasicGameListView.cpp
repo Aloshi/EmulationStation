@@ -43,7 +43,12 @@ void BasicGameListView::populateList(const std::vector<FileData>& files)
 
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mList.add(it->getName(), *it, (it->getType() == FOLDER));
+		if (it->getType() == FOLDER && it->getChildren().size() == 1 && it->getChildren().front().getType() == GAME) {
+			mList.add(it->getChildren().front().getName(), it->getChildren().front(), GAME);
+		}
+		else {
+			mList.add(it->getName(), *it, (it->getType() == FOLDER));
+		}
 	}
 }
 
