@@ -7,6 +7,7 @@
 #include "MetaData.h"
 #include "PlatformId.h"
 #include "ThemeData.h"
+#include "SystemOption.h"
 
 class SystemData
 {
@@ -24,12 +25,20 @@ public:
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
+	bool hasOptions() const { return mOptions.size() > 0; }
+	const std::vector<SystemOption*>& getOptions() const { return mOptions; }
+	void addOption( SystemOption* option ) { mOptions.push_back( option ); }
+	std::string getOption( std::string id, FileData *game );
+
 	inline const FileData& getRootFolder() const { return mRoot; }
 
 	std::string getThemePath() const;
 	
 	unsigned int getGameCount() const;
 	bool hasFileWithImage() const;
+
+	std::string getGamelistPath(bool forWrite) const;
+	std::string replaceOptions( std::string command, FileData game ) const;
 
 	void launchGame(Window* window, FileData game) const;
 
@@ -45,6 +54,7 @@ private:
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+	std::vector<SystemOption*> mOptions;
 
 	FileData mRoot;
 };

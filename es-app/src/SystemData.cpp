@@ -83,6 +83,49 @@ std::string escapePath(const boost::filesystem::path& path)
 #endif
 }
 
+std::string SystemData::replaceOptions( std::string command, FileData game ) const
+{
+	// generate system options for this game by building up
+	// one string per 'section', and then replace that section in the command
+
+	std::map<std::string, std::string> sections;
+
+	std::vector<FileData> fileStack = game.getParents();
+	fileStack.insert( fileStack.begin(), game );
+	std::map<std::string, std::string> optionvalues = SystemOption::getInheritedOptions( fileStack, FileOptionType::SYSTEM );
+
+	for( auto option = mOptions.begin(); option != mOptions.end(); option++ )
+	{
+		std::string id = (*option)->getID();
+		std::string section = (*option)->getReplace();
+		std::string valueID = optionvalues.count(id) > 0 ? optionvalues[id] : (*option)->getDefaultID();
+
+		std::string replacement = sections.count(section) > 0 ? sections[section] : "";
+        
+		if( !valueID.empty() )
+		{
+			SystemOptionValue* value = (*option)->getValue( valueID );
+
+			if( value )
+			{
+				if( !replacement.empty() )
+					replacement += " ";
+
+				replacement += value->getCode();
+
+				sections[section] = replacement;
+			}
+		}
+	}
+
+	// now we have a list of sections and their replacement text,
+	// go thru all of them and replace the text in the command
+	for( auto sectionAdder = sections.begin(); sectionAdder != sections.end(); sectionAdder++ )
+		command = strreplace( command, sectionAdder->first, sectionAdder->second );
+	
+	return command;
+}
+
 void SystemData::launchGame(Window* window, FileData game) const
 {
 	LOG(LogInfo) << "Attempting to launch game...";
@@ -100,6 +143,8 @@ void SystemData::launchGame(Window* window, FileData game) const
 	command = strreplace(command, "%ROM%", rom);
 	command = strreplace(command, "%BASENAME%", basename);
 	command = strreplace(command, "%ROM_RAW%", rom_raw);
+
+	command = replaceOptions( command, game );
 
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";

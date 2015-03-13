@@ -143,7 +143,34 @@ void SystemManager::loadConfig()
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
 			delete newSys;
-		}else{
+		}
+		else
+		{
+			// read any options & values defined for the system
+			for( pugi::xml_node option = system.child("option"); option; option = option.next_sibling("option") )
+			{
+				SystemOption* newOption = new SystemOption( option.child("id").text().get(),
+														    option.child("replace").text().get(),
+														    option.child("desc").text().get(),
+														    option.child("default").text().get()
+														  );
+
+				// read option values
+
+				for( pugi::xml_node value = option.child("value"); value; value = value.next_sibling("value") )
+				{
+					SystemOptionValue* newValue = new SystemOptionValue( value.child("id").text().get(),
+															             value.child("desc").text().get(),
+															             value.child("code").text().get()
+															           );
+
+					newOption->addValue( newValue );
+				}
+
+
+				newSys->addOption( newOption );
+			}
+
 			mSystems.push_back(newSys);
 		}
 	}

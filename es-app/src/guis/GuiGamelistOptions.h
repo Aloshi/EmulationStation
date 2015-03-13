@@ -2,6 +2,7 @@
 #include "components/MenuComponent.h"
 #include "components/OptionListComponent.h"
 #include "GamelistDB.h"
+#include "SystemOption.h"
 
 class IGameListView;
 
@@ -28,4 +29,7 @@ private:
 	
 	SystemData* mSystem;
 	IGameListView* getGamelist();
+
+	std::map< SystemOption*, std::shared_ptr<OptionListComponent<SystemOptionValue*> > > mOptions;
+	std::map<std::string, std::string> mFileOptions;
 };

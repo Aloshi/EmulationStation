@@ -182,6 +182,8 @@ The following "tags" are replaced by ES in launch commands:
 
 See [SYSTEMS.md](SYSTEMS.md) for some live examples in EmulationStation.
 
+Additionally, you can specify options which can be set per-game - see [SYSTEMOPTIONS.md](SYSTEMOPTIONS.md).
+
 gamelist.xml
 ============
 
