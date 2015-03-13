@@ -148,7 +148,7 @@ void SystemManager::loadConfig()
 		}
 	}
 
-	updateDatabase();
+	//updateDatabase();
 }
 
 void SystemManager::writeExampleConfig(const fs::path& path)
