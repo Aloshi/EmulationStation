@@ -378,6 +378,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         language_choice->add("Portugues", "pt_BR", Settings::getInstance()->getString("Lang") == "pt_BR");
                         language_choice->add("Español", "es_ES", Settings::getInstance()->getString("Lang") == "es_ES");
                         language_choice->add("Deutsch", "de_DE", Settings::getInstance()->getString("Lang") == "de_DE");
+                        language_choice->add("Italiano", "it_IT", Settings::getInstance()->getString("Lang") == "it_IT");
                         s->addWithLabel("LANGUAGE", language_choice);
 			s->addSaveFunc([language_choice, window] {
                             if(Settings::getInstance()->getString("Lang") == language_choice->getSelected()){
