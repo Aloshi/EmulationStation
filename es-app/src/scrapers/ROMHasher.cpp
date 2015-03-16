@@ -41,10 +41,8 @@ std::map<std::string, Decoder> decoders = boost::assign::map_list_of
 	(".gb", DEC_BINARY)
 	(".gbc", DEC_BINARY)
 	(".gba", DEC_BINARY)
-	(".gen", DEC_BINARY)
 	(".gg", DEC_BINARY)
 	(".lyx", DEC_BINARY)
-	(".md", DEC_BINARY)
 	(".pce", DEC_BINARY)
 	(".rom", DEC_BINARY)
 	(".sms", DEC_BINARY)
@@ -52,9 +50,10 @@ std::map<std::string, Decoder> decoders = boost::assign::map_list_of
 	(".sfc", DEC_SNES)
 	(".smc", DEC_SNES)
 	(".swc", DEC_SNES)
-	// TODO: Switch Sega to parsing ROM header to detect interleaving instead of extension.
-	(".mgd", DEC_MGD)
-	(".smd", DEC_SMD)
+	(".gen", DEC_MD)
+	(".md", DEC_MD)
+	(".mgd", DEC_MD)
+	(".smd", DEC_MD)
 	(".lnx", DEC_LNX)
 	(".n64", DEC_N64)
 	(".v64", DEC_N64)
@@ -152,10 +151,10 @@ void deinterleave(char* p, unsigned int n)
 	delete[] b;
 }
 
-std::string hash_block(HashFunc * hf, std::ifstream& file, unsigned int bs, void (*mod)(char*, unsigned int))
+std::string hash_block(HashFunc * hf, std::ifstream& file, unsigned int bs, void (*mod)(char*, unsigned int), std::streampos start = 0)
 {
 	char * b = new char [bs];
-	file.seekg (0, std::ios::beg);
+	file.seekg (start, std::ios::beg);
 	while (file)
 	{
 		file.read (b, bs);
@@ -218,6 +217,60 @@ void z_swap(char* b, unsigned int n)
 	}
 }
 
+
+std::string hash_md(HashFunc * hf, std::ifstream& file, std::streampos size, std::string ext)
+{
+	std::streampos start;
+	char * b = new char [8];
+	// All MD roms are increments of 16kB but SMD have a 512B header.
+	if (size % 16384 == 512)
+		start = 512;
+	else
+		start = 0;
+	file.seekg(start, std::ios::beg);
+	file.seekg (256, std::ios::cur);
+	file.read (b, 4);
+	// BIN, GEN, MD
+	if (strncmp(b, "SEGA", 4) == 0)
+	{
+		delete[] b;
+		return hash_file(hf, file, start);
+	}
+	file.seekg(start, std::ios::beg);
+	file.seekg (8320, std::ios::cur);
+	file.read (b, 8);
+	// SMD
+	if (strncmp(b, "SG EEI  ", 8) == 0 || strncmp(b, "SG EADIE", 8) == 0)
+	{
+		delete[] b;
+		return hash_block(hf, file, 16384, deinterleave, start);
+	}
+	file.seekg(start, std::ios::beg);
+	file.seekg (128, std::ios::cur);
+	file.read (b, 7);
+	// MGD
+	if (strncmp(b, "EAGNSS ", 7) == 0 || strncmp(b, "EAMG RV", 7) == 0)
+	{
+		delete[] b;
+		return hash_block(hf, file, (size_t)size, deinterleave, start);
+	}
+
+	// Odd Header, Fallback to file extension.
+	if (ext == ".smd")
+	{
+		delete[] b;
+		return hash_block(hf, file, 16384, deinterleave, start);
+	}
+	if (ext == ".mgd")
+	{
+		delete[] b;
+		return hash_block(hf, file, (size_t)size, deinterleave, start);
+	}
+	delete[] b;
+	return hash_file(hf, file, start);
+}
+
+
 std::string hash_n64(HashFunc * hf, std::ifstream& file)
 {
 	char * b = new char [4];
@@ -260,10 +313,8 @@ std::string hash_rom(HashFunc * hf, boost::filesystem::path path)
 				else
 					return hash_file(hf, file, 0);
 				break;
-			case DEC_MGD:
-				return hash_block(hf, file, (size_t)size, deinterleave);
-			case DEC_SMD:
-				return hash_block(hf, file, 16384, deinterleave);
+			case DEC_MD:
+				return hash_md(hf, file, size, ext.string());
 			case DEC_LNX:
 				return hash_file(hf, file, 64);
 			case DEC_N64:
