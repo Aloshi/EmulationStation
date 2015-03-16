@@ -11,8 +11,7 @@ enum Decoder
 	DEC_NOT_DEF,
 	DEC_BINARY,
 	DEC_SNES,
-	DEC_MGD,
-	DEC_SMD,
+	DEC_MD,
 	DEC_LNX,
 	DEC_N64,
 	DEC_NES
@@ -59,7 +58,10 @@ std::string hash_file(HashFunc * hf, std::ifstream& file, std::streampos start);
 std::string hash_nes(HashFunc * hf, std::ifstream& file);
 
 // Helper function that hashes a file in blocks applying mod function to each block.
-std::string hash_block(HashFunc * hf, std::ifstream& file, unsigned int bs, void (*mod)(char*, unsigned int));
+std::string hash_block(HashFunc * hf, std::ifstream& file, unsigned int bs, void (*mod)(char*, unsigned int), std::streampos start);
+
+// Helper function that hashes MD, using ROM header to determine encoding.
+std::string hash_md(HashFunc * hf, std::ifstream& file, std::string ext);
 
 // Helper function that hashes N64, using ROM header to determine encoding.
 std::string hash_n64(HashFunc * hf, std::ifstream& file);
