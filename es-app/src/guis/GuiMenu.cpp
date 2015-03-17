@@ -98,10 +98,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
                         // Overclock choice 
 			auto overclock_choice = std::make_shared< OptionListComponent<std::string> >(window, "OVERCLOCK", false);
                         std::string currentOverclock = Settings::getInstance()->getString("Overclock");
-                        overclock_choice->add("EXTREM", "extrem", currentOverclock == "extrem");
-                        overclock_choice->add("TURBO", "turbo", currentOverclock == "turbo");
-                        overclock_choice->add("HIGH", "high", currentOverclock == "high");
-                        overclock_choice->add("NONE", "none", currentOverclock == "none");
+                        overclock_choice->add("EXTREM (???Mhz)", "extrem", currentOverclock == "extrem");
+                        overclock_choice->add("TURBO (1000Mhz)", "turbo", currentOverclock == "turbo");
+                        overclock_choice->add("HIGH (950Mhz)", "high", currentOverclock == "high");
+                        overclock_choice->add("NONE (700Mhz)", "none", currentOverclock == "none");
                         s->addWithLabel("OVERCLOCK", overclock_choice);
                         
                         // overscan
