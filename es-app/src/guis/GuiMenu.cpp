@@ -485,7 +485,9 @@ void GuiMenu::createConfigInput(){
 //                gpio_select->setState(Settings::getInstance()->getBool("GpioControllers"));
 //                s->addWithLabel("GPIO CONTROLLERS", gpio_select);
 
-                // Here we go; for each player
+                // Here we go; for each player                    
+                std::list<int> alreadyTaken = std::list<int>();
+
                 std::vector<std::shared_ptr<OptionListComponent<std::string>>> options;
                 for (int player = 0; player < 4; player++) {
                     std::stringstream sstm;
@@ -497,7 +499,6 @@ void GuiMenu::createConfigInput(){
                     
                     // Checking if a setting has been saved, else setting to default
                     std::string configuratedName = Settings::getInstance()->getString(confName);
-                    std::list<int> alreadyTaken = std::list<int>();
                     
                     bool found = false;
                     // For each available and configured input
@@ -521,7 +522,9 @@ void GuiMenu::createConfigInput(){
                             int deviceID = config->getDeviceId();
                             // Si la manette est configurée, qu'elle correspond a la configuration, et qu'elle n'est pas 
                             // deja selectionnée on l'ajoute en séléctionnée
-                            if(foundFromConfig && ! (std::find(alreadyTaken.begin(), alreadyTaken.end(), deviceID) != alreadyTaken.end())) {
+                            if(foundFromConfig 
+                                    && std::find(alreadyTaken.begin(), alreadyTaken.end(), deviceID) == alreadyTaken.end()
+                                    && !found) {
                                 found = true;
                                 alreadyTaken.push_back(deviceID);
                                 LOG(LogWarning) << "adding entry for player"<<player << " (selected): " << config->getDeviceName() << "  " << config->getDeviceGUIDString();
