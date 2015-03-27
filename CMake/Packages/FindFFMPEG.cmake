@@ -1,4 +1,4 @@
-# - Try to find ffmpeg libraries (libavcodec, libavformat and libavutil)
+# - Try to find ffmpeg libraries (libavcodec, libavformat, libavutil, and swscale)
 # Once done this will define
 #
 #  FFMPEG_FOUND - system has ffmpeg or libav
@@ -7,10 +7,12 @@
 #  FFMPEG_LIBAVCODEC
 #  FFMPEG_LIBAVFORMAT
 #  FFMPEG_LIBAVUTIL
+#  FFMPEG_SWSCALE
 #
 #  Copyright (c) 2008 Andreas Schneider <mail@cynapses.org>
 #  Modified for other libraries by Lasse Kärkkäinen <tronic>
 #  Modified for Hedgewars by Stepik777
+#  Modified to add swscale for EmulationStation by Aloshi
 #
 #  Redistribution and use is allowed according to the terms of the New
 #  BSD license.
@@ -27,6 +29,7 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIR)
     pkg_check_modules(_FFMPEG_AVCODEC libavcodec)
     pkg_check_modules(_FFMPEG_AVFORMAT libavformat)
     pkg_check_modules(_FFMPEG_AVUTIL libavutil)
+    pkg_check_modules(_FFMPEG_AVUTIL libswscale)
   endif (PKG_CONFIG_FOUND)
 
   find_path(FFMPEG_AVCODEC_INCLUDE_DIR
@@ -50,6 +53,11 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIR)
     PATHS ${_FFMPEG_AVUTIL_LIBRARY_DIRS} /usr/lib /usr/local/lib /opt/local/lib /sw/lib
   )
 
+  find_library(FFMPEG_LIBSWSCALE
+    NAMES swscale
+    PATHS ${_FFMPEG_SWSCALE_LIBRARY_DIRS} /usr/lib /usr/local/lib /opt/local/lib /sw/lib
+  )
+
   if (FFMPEG_LIBAVCODEC AND FFMPEG_LIBAVFORMAT)
     set(FFMPEG_FOUND TRUE)
   endif()
@@ -61,6 +69,7 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIR)
       ${FFMPEG_LIBAVCODEC}
       ${FFMPEG_LIBAVFORMAT}
       ${FFMPEG_LIBAVUTIL}
+      ${FFMPEG_LIBSWSCALE}
     )
 
   endif (FFMPEG_FOUND)
@@ -71,7 +80,7 @@ else (FFMPEG_LIBRARIES AND FFMPEG_INCLUDE_DIR)
     endif (NOT FFMPEG_FIND_QUIETLY)
   else (FFMPEG_FOUND)
     if (FFMPEG_FIND_REQUIRED)
-      message(FATAL_ERROR "Could not find libavcodec or libavformat or libavutil")
+      message(FATAL_ERROR "Could not find libavcodec or libavformat or libavutil or libswscale")
     endif (FFMPEG_FIND_REQUIRED)
   endif (FFMPEG_FOUND)
 
