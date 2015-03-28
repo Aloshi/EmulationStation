@@ -74,7 +74,7 @@ void HelpComponent::updateGrid()
 		auto icon = std::make_shared<ImageComponent>(mWindow);
 		icon->setImage(getIconTexture(it->first));
 		icon->setColorShift(mStyle.iconColor);
-		icon->setResize(0, height);
+		icon->setResize(Eigen::Vector2f(0, height));
 		icons.push_back(icon);
 
 		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(it->second), font, mStyle.textColor);

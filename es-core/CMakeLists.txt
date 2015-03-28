@@ -34,6 +34,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/IList.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageGridComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/MediaComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/MenuComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/OptionListComponent.h
@@ -54,6 +55,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
+	#${CMAKE_CURRENT_SOURCE_DIR}/src/resources/VideoResource.h
 
 	# Embedded assets (needed by ResourceManager)
 	${emulationstation-all_SOURCE_DIR}/data/Resources.h
@@ -89,6 +91,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/MediaComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/MenuComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ScrollableContainer.cpp
@@ -108,6 +111,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
+	#${CMAKE_CURRENT_SOURCE_DIR}/src/resources/VideoResource.cpp
 )
 
 set(EMBEDDED_ASSET_SOURCES
