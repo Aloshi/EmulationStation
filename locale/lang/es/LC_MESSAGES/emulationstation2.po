@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0RC1 SPANISH po\n"
 "POT-Creation-Date: 2014-09-20 12:00-0500\n"
-"PO-Revision-Date: 2015-03-29 17:02+0100\n"
+"PO-Revision-Date: 2015-03-30 18:18+0100\n"
 "Last-Translator: Antonio López Abad <mrpengo@gmail.com>\n"
 "Language-Team: SPANISH\n"
 "MIME-Version: 1.0\n"
@@ -223,7 +223,7 @@ msgid "SELECT"
 msgstr "SELECCIONAR"
 
 msgid "CHOOSE"
-msgstr "ELEGIR"
+msgstr "CAMBIAR"
 
 msgid "BACK"
 msgstr "VOLVER"
@@ -477,7 +477,7 @@ msgid " SELECTED"
 msgstr " SELECCIONADOS"
 
 msgid "accept result"
-msgstr "aceptar"
+msgstr "aceptar resultado"
 
 msgid "stop (progress saved)"
 msgstr "parar (progreso guardado)"
@@ -490,7 +490,7 @@ msgstr "JUEGO"
 
 # PLURAL FOR GAME(S)
 msgid "S"
-msgstr "X"
+msgstr "S"
 
 msgid " OF "
 msgstr " DE "
