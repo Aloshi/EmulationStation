@@ -54,9 +54,9 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 		}
 
 		int incDir = 0;
-		if(config->isMappedTo("up", input) || config->isMappedTo("pageup", input))
+		if(config->isMappedTo("up", input) || config->isMappedTo("leftbottom", input))
 			incDir = 1;
-		else if(config->isMappedTo("down", input) || config->isMappedTo("pagedown", input))
+		else if(config->isMappedTo("down", input) || config->isMappedTo("rightbottom", input))
 			incDir = -1;
 
 		if(incDir != 0)
