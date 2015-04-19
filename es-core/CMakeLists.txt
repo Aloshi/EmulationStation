@@ -121,6 +121,11 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/frame_png.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
 
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_thumb_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_x_svg.cpp
