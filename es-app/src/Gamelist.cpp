@@ -114,6 +114,14 @@ void parseGamelist(SystemData* system)
 		{
 			fs::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
 
+			if (!Settings::getInstance()->getBool("ParseGamelistOnly")) {
+				if (!boost::filesystem::exists(path))
+				{
+					LOG(LogWarning) << "File \"" << path << "\" does not exist! Ignoring.";
+					continue;
+				}
+			}
+
 			FileData* file = findOrCreateFile(system, path, type);
 			if(!file)
 			{
