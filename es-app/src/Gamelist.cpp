@@ -113,12 +113,6 @@ void parseGamelist(SystemData* system)
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
 			fs::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
-			
-			if(!boost::filesystem::exists(path))
-			{
-				LOG(LogWarning) << "File \"" << path << "\" does not exist! Ignoring.";
-				continue;
-			}
 
 			FileData* file = findOrCreateFile(system, path, type);
 			if(!file)
