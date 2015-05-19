@@ -204,6 +204,8 @@ void updateGamelist(SystemData* system)
 		{
 			const char* tag = ((*fit)->getType() == GAME) ? "game" : "folder";
 
+			bool existing = false;
+
 			// check if the file already exists in the XML
 			// if it does, remove it before adding
 			for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
@@ -217,16 +219,17 @@ void updateGamelist(SystemData* system)
 
 				fs::path nodePath = resolvePath(pathNode.text().get(), system->getStartPath(), true);
 				fs::path gamePath((*fit)->getPath());
-				if(nodePath == gamePath || (fs::exists(nodePath) && fs::exists(gamePath) && fs::equivalent(nodePath, gamePath)))
+				if(nodePath == gamePath || fs::equivalent(nodePath, gamePath))
 				{
 					// found it
-					root.remove_child(fileNode);
+					existing = true;
 					break;
 				}
 			}
 
-			// it was either removed or never existed to begin with; either way, we can add it now
-			addFileDataNode(root, *fit, tag, system);
+			if (!existing) {
+				addFileDataNode(root, *fit, tag, system);
+			}
 
 			++fit;
 		}
