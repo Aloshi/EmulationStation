@@ -8,49 +8,49 @@
 # Tested on: Raspberry pi with libcec compiled from soure
 
 onright() {
- 	echo 'right button pressed'
+    echo 'right button pressed'
 }
 onleft() {
-	echo 'left button pressed'
+    echo 'left button pressed'
 }
 ondown() {
-	echo 'down button pressed'
+    echo 'down button pressed'
 }
 onup() {
-	echo 'up button pressed'
+    echo 'up button pressed'
 }
 onselect() {
-	echo 'select button pressed'
+    echo 'select button pressed'
 }
 onplay() {
-	echo 'play button pressed'
+    echo 'play button pressed'
 }
 onpause() {
-	echo 'pause button pressed'
+    echo 'pause button pressed'
 }
 onforward() {
-	echo 'forward button pressed'
+    echo 'forward button pressed'
 }
 onbackward() {
-	echo 'back button pressed'
+    echo 'back button pressed'
 }
 
 filter() {
-	perl -nle 'BEGIN{$|=1} /key pressed: (.*) \(.*\)/ && print $1'
+    perl -nle 'BEGIN{$|=1} /key pressed: (.*) \(.*\)/ && print $1'
 }
 
 echo as | cec-client | filter | \
 while read cmd; do
-	case "$cmd" in
-		right) onright;;
-		left) onleft;;
-		down) ondown;;
-		up) onup;;
-		select) onselect;;
-		play) onplay;;
-		pause) onpause;;
-		forward) onforward;;
-		backward) onbackward;;
-		*) echo "unrecognized button ($cmd)";;
-	esac
+    case "$cmd" in
+        right) onright;;
+        left) onleft;;
+        down) ondown;;
+        up) onup;;
+        select) onselect;;
+        play) onplay;;
+        pause) onpause;;
+        forward) onforward;;
+        backward) onbackward;;
+        *) echo "unrecognized button ($cmd)";;
+    esac
 done
