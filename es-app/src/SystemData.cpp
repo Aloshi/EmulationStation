@@ -18,7 +18,7 @@ std::vector<SystemData*> SystemData::sSystemVector;
 namespace fs = boost::filesystem;
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder)
+	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder, bool directLaunch)
 {
 	mName = name;
 	mFullName = fullName;
@@ -35,6 +35,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mLaunchCommand = command;
 	mPlatformIds = platformIds;
 	mThemeFolder = themeFolder;
+
+	mDirectLaunch = directLaunch;
 
 	mRootFolder = new FileData(FOLDER, mStartPath, this);
 	mRootFolder->metadata.set("name", mFullName);
@@ -106,7 +108,12 @@ std::string escapePath(const boost::filesystem::path& path)
 
 void SystemData::launchGame(Window* window, FileData* game)
 {
-	LOG(LogInfo) << "Attempting to launch game...";
+	if ( game )
+	{
+		LOG(LogInfo) << "Attempting to launch game...";
+	}else{
+		LOG(LogInfo) << "Attempting to launch command...";
+	}
 
 	AudioManager::getInstance()->deinit();
 	VolumeControl::getInstance()->deinit();
@@ -114,13 +121,16 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 	std::string command = mLaunchCommand;
 
-	const std::string rom = escapePath(game->getPath());
-	const std::string basename = game->getPath().stem().string();
-	const std::string rom_raw = fs::path(game->getPath()).make_preferred().string();
+	if ( game )
+	{
+		const std::string rom = escapePath(game->getPath());
+		const std::string basename = game->getPath().stem().string();
+		const std::string rom_raw = fs::path(game->getPath()).make_preferred().string();
 
-	command = strreplace(command, "%ROM%", rom);
-	command = strreplace(command, "%BASENAME%", basename);
-	command = strreplace(command, "%ROM_RAW%", rom_raw);
+		command = strreplace(command, "%ROM%", rom);
+		command = strreplace(command, "%BASENAME%", basename);
+		command = strreplace(command, "%ROM_RAW%", rom_raw);
+	}
 
 	LOG(LogInfo) << "	" << command;
 	std::cout << "==============================================\n";
@@ -137,13 +147,16 @@ void SystemData::launchGame(Window* window, FileData* game)
 	AudioManager::getInstance()->init();
 	window->normalizeNextUpdate();
 
-	//update number of times the game has been launched
-	int timesPlayed = game->metadata.getInt("playcount") + 1;
-	game->metadata.set("playcount", std::to_string(static_cast<long long>(timesPlayed)));
+	if ( game )
+	{
+		//update number of times the game has been launched
+		int timesPlayed = game->metadata.getInt("playcount") + 1;
+		game->metadata.set("playcount", std::to_string(static_cast<long long>(timesPlayed)));
 
-	//update last played time
-	boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
-	game->metadata.setTime("lastplayed", time);
+		//update last played time
+		boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
+		game->metadata.setTime("lastplayed", time);
+	}
 }
 
 void SystemData::populateFolder(FileData* folder)
@@ -263,11 +276,13 @@ bool SystemData::loadConfig()
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
 		std::string name, fullname, path, cmd, themeFolder;
+		bool directLaunch;
 		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
 		fullname = system.child("fullname").text().get();
 		path = system.child("path").text().get();
+		directLaunch = ( strcmp( system.child("directlaunch").text().get(), "true" ) == 0);
 
 		// convert extensions list from a string into a vector of strings
 		std::vector<std::string> extensions = readList(system.child("extension").text().get());
@@ -301,10 +316,17 @@ bool SystemData::loadConfig()
 		// theme folder
 		themeFolder = system.child("theme").text().as_string(name.c_str());
 
-		//validate
-		if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
+		//validate game system
+		if( (name.empty() || path.empty() || extensions.empty() || cmd.empty() ) && directLaunch == false )
 		{
 			LOG(LogError) << "System \"" << name << "\" is missing name, path, extension, or command!";
+			continue;
+		}
+		
+		//validate direct launch item
+		if( (name.empty() || cmd.empty() ) && directLaunch == true )
+		{
+			LOG(LogError) << "Direct Launch item \"" << name << "\" is missing name or command!";
 			continue;
 		}
 
@@ -312,7 +334,7 @@ bool SystemData::loadConfig()
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
+		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder, directLaunch);
 		if(newSys->getRootFolder()->getChildren().size() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
@@ -363,6 +385,10 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		<!-- The theme to load from the current theme set.  See THEMES.md for more information.\n"
 			"		This tag is optional. If not set, it will default to the value of <name>. -->\n"
 			"		<theme>nes</theme>\n"
+			"\n"
+			"		<!-- Specifies if the item is a direct launch item and won't show it's game list but instead\n"
+				"	will launch the command given. If set to true, every tag except for name and command is optional -->\n"
+				"	<directlaunch>false</directlaunch>\n"
 			"	</system>\n"
 			"</systemList>\n";
 
