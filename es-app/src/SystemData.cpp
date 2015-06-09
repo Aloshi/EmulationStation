@@ -387,8 +387,8 @@ void SystemData::writeExampleConfig(const std::string& path)
 			"		<theme>nes</theme>\n"
 			"\n"
 			"		<!-- Specifies if the item is a direct launch item and won't show it's game list but instead\n"
-				"	will launch the command given. If set to true, every tag except for name and command is optional -->\n"
-				"	<directlaunch>false</directlaunch>\n"
+			"		will launch the command given. If set to true, every tag except for name and command is optional -->\n"
+			"		<directlaunch>false</directlaunch>\n"
 			"	</system>\n"
 			"</systemList>\n";
 
