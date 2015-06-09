@@ -72,7 +72,15 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getNext());
+	
+	// skip systems that don't have a game list, this will always end since it is called
+	// from a system with a game list and the iterator is cyclic
+	do
+	{
+		system = system->getNext();
+	} while ( system->getDirectLaunch() );
+	
+	goToGameList(system);
 }
 
 void ViewController::goToPrevGameList()
@@ -80,7 +88,15 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getPrev());
+	
+	// skip systems that don't have a game list, this will always end since it is called
+	// from a system with a game list and the iterator is cyclic
+	do
+	{
+		system = system->getPrev();
+	} while ( system->getDirectLaunch() );
+	
+	goToGameList(system);
 }
 
 void ViewController::goToGameList(SystemData* system)

@@ -161,6 +161,12 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 void SystemData::populateFolder(FileData* folder)
 {
+	if (mDirectLaunch)
+	{
+		LOG(LogInfo) << "System " << mName << " is a direct launch item, not building game lists.";
+		return;
+	}
+
 	const fs::path& folderPath = folder->getPath();
 	if(!fs::is_directory(folderPath))
 	{
@@ -330,12 +336,15 @@ bool SystemData::loadConfig()
 			continue;
 		}
 
-		//convert path to generic directory seperators
-		boost::filesystem::path genericPath(path);
-		path = genericPath.generic_string();
+		if (!directLaunch)
+		{
+			//convert path to generic directory seperators
+			boost::filesystem::path genericPath(path);
+			path = genericPath.generic_string();
+		}
 
 		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder, directLaunch);
-		if(newSys->getRootFolder()->getChildren().size() == 0)
+		if(newSys->getRootFolder()->getChildren().size() == 0 && !directLaunch)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
 			delete newSys;
