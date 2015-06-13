@@ -1,6 +1,10 @@
 #ifndef _INPUTMANAGER_H_
 #define _INPUTMANAGER_H_
 
+#define UNUSED(x) UNUSED_ ## x __attribute__((unused))
+
+#include <cectypes.h>
+#include <cec.h>
 #include <SDL.h>
 #include <vector>
 #include <map>
@@ -24,6 +28,16 @@ private:
 	std::map<SDL_JoystickID, SDL_Joystick*> mJoysticks;
 	std::map<SDL_JoystickID, InputConfig*> mInputConfigs;
 	InputConfig* mKeyboardInputConfig;
+	InputConfig* mCECInputConfig;
+
+	std::string gStrPort;
+	CEC::ICECAdapter* gParser;
+	CEC::ICECCallbacks gCallbacks;
+	CEC::libcec_configuration gConfig;
+	Uint32 CecEventType;
+
+	static int CecKeyPress(void*, CEC::cec_keypress);
+	static int CecAlert(void *cbParam, const CEC::libcec_alert type, const CEC::libcec_parameter param);
 
 	std::map<SDL_JoystickID, int*> mPrevAxisValues;
 
@@ -47,6 +61,7 @@ public:
 	int getNumJoysticks();
 	int getButtonCountByDevice(int deviceId);
 	int getNumConfiguredDevices();
+	Uint32 getCecEventType();
 
 	std::string getDeviceGUIDString(int deviceId);
 
