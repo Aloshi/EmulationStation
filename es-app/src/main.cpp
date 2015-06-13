@@ -289,29 +289,35 @@ int main(int argc, char* argv[])
 
 	int lastTime = SDL_GetTicks();
 	bool running = true;
+	Uint32 CecEventType = InputManager::getInstance()->getCecEventType();
 
 	while(running)
 	{
 		SDL_Event event;
 		while(SDL_PollEvent(&event))
 		{
-			switch(event.type)
+			if(CecEventType != ((Uint32)-1) && event.type == CecEventType)
 			{
-				case SDL_JOYHATMOTION:
-				case SDL_JOYBUTTONDOWN:
-				case SDL_JOYBUTTONUP:
-				case SDL_KEYDOWN:
-				case SDL_KEYUP:
-				case SDL_JOYAXISMOTION:
-				case SDL_TEXTINPUT:
-				case SDL_TEXTEDITING:
-				case SDL_JOYDEVICEADDED:
-				case SDL_JOYDEVICEREMOVED:
-					InputManager::getInstance()->parseEvent(event, &window);
-					break;
-				case SDL_QUIT:
-					running = false;
-					break;
+				InputManager::getInstance()->parseEvent(event, &window);
+			}else{
+				switch(event.type)
+				{
+					case SDL_JOYHATMOTION:
+					case SDL_JOYBUTTONDOWN:
+					case SDL_JOYBUTTONUP:
+					case SDL_KEYDOWN:
+					case SDL_KEYUP:
+					case SDL_JOYAXISMOTION:
+					case SDL_TEXTINPUT:
+					case SDL_TEXTEDITING:
+					case SDL_JOYDEVICEADDED:
+					case SDL_JOYDEVICEREMOVED:
+						InputManager::getInstance()->parseEvent(event, &window);
+						break;
+					case SDL_QUIT:
+						running = false;
+						break;
+				}
 			}
 		}
 
