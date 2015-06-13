@@ -175,7 +175,7 @@ void InputManager::init()
 			// init video on targets that need this
 			gParser->InitVideoStandalone();
 
-			LOG(LogInfo) << "CEC Parser created - libCEC version " << gParser->ToString((CEC::cec_server_version)gConfig.serverVersion);
+			LOG(LogInfo) << "Initialized libCEC version " << gParser->ToString((CEC::cec_server_version)gConfig.serverVersion);
 
 			CEC::cec_adapter devices[10];
 			uint8_t iDevicesFound = gParser->FindAdapters(devices, 10, NULL);
@@ -184,8 +184,7 @@ void InputManager::init()
 				LOG(LogInfo) << "No CEC devices found";
 				UnloadLibCec(gParser);
 			}else{
-				LOG(LogInfo) << std::endl << " path:     " << devices[0].path << std::endl <<
-					" com port: " << devices[0].comm << std::endl << std::endl;
+				LOG(LogInfo) << "Added CEC device " << devices[0].path << " (com port: " << devices[0].comm << ")";
 				gStrPort = devices[0].comm;
 			}
 
