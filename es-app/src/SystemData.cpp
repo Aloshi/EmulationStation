@@ -111,13 +111,9 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 	AudioManager::getInstance()->deinit();
 	VolumeControl::getInstance()->deinit();
-        
-        LOG(LogInfo) << "Attempting to configure emulator...";
-        if(InputManager::getInstance()->configureEmulators(this->mName)){
-            LOG(LogInfo) << "Emulator configuration OK";
-        }else {
-            LOG(LogInfo) << "Emulator configuration error";
-        }
+
+    std::string controlersConfig = InputManager::getInstance()->configureEmulators();
+	LOG(LogInfo) << "Controllers config : " << controlersConfig;
 	window->deinit();
 
 
@@ -129,6 +125,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 	const std::string rom_raw = fs::path(game->getPath()).make_preferred().string();
 
 	command = strreplace(command, "%ROM%", rom);
+	command = strreplace(command, "%CONTROLERSCONFIG%", rom);
 	command = strreplace(command, "%BASENAME%", basename);
 	command = strreplace(command, "%ROM_RAW%", rom_raw);
 

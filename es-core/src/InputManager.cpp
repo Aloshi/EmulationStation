@@ -396,9 +396,9 @@ std::string InputManager::getDeviceGUIDString(int deviceId)
 	return std::string(guid);
 }
 
-bool InputManager::configureEmulators(const std::string& systemName) {
+std::string InputManager::configureEmulators() {
     std::stringstream command;
-    command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
+    // command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
     // 1 recuperer les configurated
     
     
@@ -458,14 +458,14 @@ bool InputManager::configureEmulators(const std::string& systemName) {
         }
 
         if(playerInputConfig != NULL){
-            command << " " << playerInputConfig->getDeviceGUIDString() << " " <<  playerInputConfig->getDeviceIndex() <<  " \"" <<  playerInputConfig->getDeviceName() << "\"";
-        }else {
+            command << "-p" << player+1 << "index " <<  playerInputConfig->getDeviceIndex() << " -p" << player+1 << "guid " << playerInputConfig->getDeviceGUIDString() << " p" << player+1 << "name " <<  " \"" <<  playerInputConfig->getDeviceName() << "\"";
+        }/*else {
             command << " " << "DEFAULT" << " -1 DEFAULTDONOTFINDMEINCOMMAND";
-        }
+        }*/
         
     }
         //LOG(LogInfo) << "I have for "<< "INPUT P" << player << " a configname : " << playerConfigName;
-    command << " \"" << systemName << "\"" ;
+    //command << " \"" << systemName << "\"" ;
     LOG(LogInfo) << "Configure emulators command : " << command.str().c_str();
-    return system(command.str().c_str()) == 0;
+    return command.str();
 }
