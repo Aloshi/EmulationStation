@@ -62,5 +62,5 @@ private:
 	std::shared_ptr<Font> mFont;
 	bool mUppercase;
 
-	bool mSizeSet;
+	bool mAutoSize;
 };

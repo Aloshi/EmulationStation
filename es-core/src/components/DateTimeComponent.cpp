@@ -6,7 +6,7 @@
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
-	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT)), mUppercase(false), mSizeSet(false)
+	mColor(0x777777FF), mFont(Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT)), mUppercase(false), mAutoSize(true)
 {
 	updateTextCache();
 }
@@ -54,9 +54,9 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 		}
 
 		int incDir = 0;
-		if(config->isMappedTo("up", input))
+		if(config->isMappedTo("up", input) || config->isMappedTo("pageup", input))
 			incDir = 1;
-		else if(config->isMappedTo("down", input))
+		else if(config->isMappedTo("down", input) || config->isMappedTo("pagedown", input))
 			incDir = -1;
 
 		if(incDir != 0)
@@ -253,8 +253,14 @@ void DateTimeComponent::updateTextCache()
 	std::shared_ptr<Font> font = getFont();
 	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
 
-	if(!mSizeSet)
+	if(mAutoSize)
+	{
 		mSize = mTextCache->metrics.size;
+
+		mAutoSize = false;
+		if(getParent())
+			getParent()->onSizeChanged();
+	}
 
 	//set up cursor positions
 	mCursorBoxes.clear();
@@ -298,7 +304,7 @@ void DateTimeComponent::setFont(std::shared_ptr<Font> font)
 
 void DateTimeComponent::onSizeChanged()
 {
-	mSizeSet = true;
+	mAutoSize = false;
 	updateTextCache();
 }
 
@@ -310,13 +316,19 @@ void DateTimeComponent::setUppercase(bool uppercase)
 
 void DateTimeComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
-	GuiComponent::applyTheme(theme, view, element, properties);
-
-	using namespace ThemeFlags;
-
 	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "datetime");
 	if(!elem)
 		return;
+
+	// We set mAutoSize BEFORE calling GuiComponent::applyTheme because it calls
+	// setSize(), which will call updateTextCache(), which will reset mSize if 
+	// mAutoSize == true, ignoring the theme's value.
+	if(properties & ThemeFlags::SIZE)
+		mAutoSize = !elem->has("size");
+
+	GuiComponent::applyTheme(theme, view, element, properties);
+
+	using namespace ThemeFlags;
 
 	if(properties & COLOR && elem->has("color"))
 		setColor(elem->get<unsigned int>("color"));
