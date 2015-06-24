@@ -24,8 +24,11 @@ public:
 
 	virtual bool input(InputConfig* config, Input input) override;
 
+	virtual inline void updateInfoPanel() override {}
+
+	virtual inline void populateList(const std::vector<FileData*>& files) override {}
+
 protected:
-	virtual void populateList(const std::vector<FileData*>& files) = 0;
 	virtual void launch(FileData* game) = 0;
 
 	TextComponent mHeaderText;
@@ -35,4 +38,7 @@ protected:
 	ThemeExtras mThemeExtras;
 
 	std::stack<FileData*> mCursorStack;
+	
+private:
+   bool mFavoriteChange;
 };

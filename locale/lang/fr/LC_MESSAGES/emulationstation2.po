@@ -398,3 +398,17 @@ msgstr " SCRAPPÉS !"
 
 msgid " SKIPPED."
 msgstr " PASSÉS."
+
+# FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "FAVORIS SEULEMENT"
+
+msgid "toggle favorite"
+msgstr "switcher favoris"
+
+msgid "favorite"
+msgstr "favoris"
+
+msgid "enter favorite"
+msgstr "entrer favoris"
+

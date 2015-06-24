@@ -52,6 +52,7 @@ Some metadata is also marked as "statistic" - these are kept track of by ES and 
 * `players` - integer, the number of players the game supports.
 * `playcount` - statistic, integer, the number of times this game has been played
 * `lastplayed` - statistic, datetime, the last date and time this game was played.
+* `favorite` - string, yes / no is this a favorite.
 
 
 #### `<folder>`
@@ -85,3 +86,4 @@ Things to be Aware Of
 * If at least one game in a system has an image specified, ES will use the detailed view for that system (which displays metadata alongside the game list).
 
 * If you want to write your own scraper, the built-in scraping system is actually pretty extendable if you can get past the ugly function declarations and your instinctual fear of C++.  Check out `src/scrapers/GamesDBScraper.cpp` for an example (it's less than a hundred lines of actual code).  An offline scraper is also possible (though you'll have to subclass `ScraperRequest`).  I hope to write a more complete guide on how to do this in the future.
+

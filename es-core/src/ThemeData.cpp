@@ -87,7 +87,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 namespace fs = boost::filesystem;
 
 #define MINIMUM_THEME_FORMAT_VERSION 3
-#define CURRENT_THEME_FORMAT_VERSION 3
+#define CURRENT_THEME_FORMAT_VERSION 4
 
 // helper
 unsigned int getHexColor(const char* str)
@@ -473,4 +473,9 @@ fs::path ThemeData::getThemeFromCurrentSet(const std::string& system)
 	}
 
 	return set->second.getThemePath(system);
+}
+
+bool ThemeData::getHasFavoritesInTheme()
+{
+	return (mVersion >= CURRENT_THEME_FORMAT_VERSION);
 }

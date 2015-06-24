@@ -59,6 +59,7 @@ void Settings::setDefaults()
 	mBoolMap["IgnoreGamelist"] = false;
 	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
+	mBoolMap["FavoritesOnly"] = false;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
