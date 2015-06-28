@@ -48,7 +48,7 @@ set(ES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/LaunchAnimation.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/animations/MoveCameraAnimation.h
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/RetroboxSystem.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/RecalboxSystem.h
 )
 
 set(ES_SOURCES
@@ -96,7 +96,7 @@ set(ES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/SystemView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/ViewController.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/RetroboxSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/RecalboxSystem.cpp
 )
 
 #-------------------------------------------------------------------------------

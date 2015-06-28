@@ -15,7 +15,7 @@
 #include "Log.h"
 #include "Window.h"
 #include "EmulationStation.h"
-#include "RetroboxSystem.h"
+#include "RecalboxSystem.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include "VolumeControl.h"
@@ -23,7 +23,7 @@
 #include <boost/locale.hpp>
 #include "resources/Font.h"
 #include "NetworkThread.h"
-#include "RetroboxSystem.h"
+#include "RecalboxSystem.h"
 
 
 
@@ -297,23 +297,36 @@ int main(int argc, char* argv[])
 				SDL_PushEvent(quit);
 			}));
 	}
-        if(Settings::getInstance()->getBool("KodiStartup")){
-            RetroboxSystem::getInstance()->launchKodi(&window);
-        }
-        
-        // UPDATED VERSION MESSAGE
-        if(RetroboxSystem::getInstance()->needToShowVersionMessage()){
-             window.pushGui(new GuiMsgBox(&window,
-			RetroboxSystem::getInstance()->getVersionMessage(),
-			"OK", [] { 
-                            RetroboxSystem::getInstance()->versionMessageDisplayed();
-                        },"",nullptr,"",nullptr, ALIGN_LEFT));
-        }
-        
-        // UPDATE CHECK THREAD
-        if(Settings::getInstance()->getBool("CheckUpdates")){
-            NetworkThread * nthread = new NetworkThread(&window);
-        }
+
+	// Setting in settings for better performance
+	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.enabled")) == 0){
+		Settings::getInstance()->setBool("kodi.enabled", true);
+	}
+	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.atstartup")) == 0){
+		Settings::getInstance()->setBool("kodi.atstartup", true);
+	}
+	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.xbutton")) == 0){
+		Settings::getInstance()->setBool("kodi.xbutton", true);
+	}
+
+
+	if(Settings::getInstance()->getBool("kodi.enabled") &&Settings::getInstance()->getBool("kodi.atstartup")){
+		RecalboxSystem::getInstance()->launchKodi(&window);
+	}
+
+	// UPDATED VERSION MESSAGE
+	if(RecalboxSystem::getInstance()->needToShowVersionMessage()){
+		 window.pushGui(new GuiMsgBox(&window,
+		RecalboxSystem::getInstance()->getVersionMessage(),
+		"OK", [] {
+						RecalboxSystem::getInstance()->versionMessageDisplayed();
+					},"",nullptr,"",nullptr, ALIGN_LEFT));
+	}
+
+	// UPDATE CHECK THREAD
+	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("updates.enabled"))){
+		NetworkThread * nthread = new NetworkThread(&window);
+	}
 
 	//run the command line scraper then quit
 	if(scrape_cmdline)

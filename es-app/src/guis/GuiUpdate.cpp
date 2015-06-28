@@ -6,7 +6,7 @@
 #include <string>
 #include "Log.h"
 #include "Settings.h"
-#include "RetroboxSystem.h"
+#include "RecalboxSystem.h"
 
 
 GuiUpdate::GuiUpdate(Window* window) : GuiComponent(window), mBusyAnim(window)
@@ -111,7 +111,7 @@ void GuiUpdate::update(int deltaTime) {
 
 void GuiUpdate::threadUpdate() 
 {
-    bool updateOk = RetroboxSystem::getInstance()->updateSystem();
+    bool updateOk = RecalboxSystem::getInstance()->updateSystem();
     if(updateOk){
         this->onUpdateOk();
     }else {
@@ -121,8 +121,8 @@ void GuiUpdate::threadUpdate()
 
 void GuiUpdate::threadPing() 
 {
-        if(RetroboxSystem::getInstance()->ping()){
-            if(RetroboxSystem::getInstance()->canUpdate()){
+        if(RecalboxSystem::getInstance()->ping()){
+            if(RecalboxSystem::getInstance()->canUpdate()){
                 this->onUpdateAvailable();
             }else {
                 this->onNoUpdateAvailable();

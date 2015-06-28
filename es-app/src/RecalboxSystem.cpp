@@ -5,7 +5,7 @@
  * Created on 29 novembre 2014, 03:15
  */
 
-#include "RetroboxSystem.h"
+#include "RecalboxSystem.h"
 #include <stdlib.h>
 #include <sys/statvfs.h>
 #include <sstream>
@@ -18,19 +18,19 @@
 #include "AudioManager.h"
 #include "VolumeControl.h"
 
-RetroboxSystem::RetroboxSystem() {
+RecalboxSystem::RecalboxSystem() {
 }
 
-RetroboxSystem * RetroboxSystem::instance = NULL;
+RecalboxSystem *RecalboxSystem::instance = NULL;
 
-RetroboxSystem * RetroboxSystem::getInstance() {
-    if (RetroboxSystem::instance == NULL) {
-        RetroboxSystem::instance = new RetroboxSystem();
+RecalboxSystem *RecalboxSystem::getInstance() {
+    if (RecalboxSystem::instance == NULL) {
+        RecalboxSystem::instance = new RecalboxSystem();
     }
-    return RetroboxSystem::instance;
+    return RecalboxSystem::instance;
 }
 
-unsigned long RetroboxSystem::getFreeSpaceGB(std::string mountpoint) {
+unsigned long RecalboxSystem::getFreeSpaceGB(std::string mountpoint) {
     struct statvfs fiData;
     const char * fnPath = mountpoint.c_str();
     int free = 0;
@@ -40,7 +40,7 @@ unsigned long RetroboxSystem::getFreeSpaceGB(std::string mountpoint) {
     return free;
 }
 
-std::string RetroboxSystem::getFreeSpaceInfo() {
+std::string RecalboxSystem::getFreeSpaceInfo() {
     struct statvfs fiData;
     std::string sharePart = Settings::getInstance()->getString("SharePartition");
     if(sharePart.size() > 0){
@@ -62,7 +62,7 @@ std::string RetroboxSystem::getFreeSpaceInfo() {
     }
 }
 
-bool RetroboxSystem::isFreeSpaceLimit() {
+bool RecalboxSystem::isFreeSpaceLimit() {
     std::string sharePart = Settings::getInstance()->getString("SharePartition");
     if(sharePart.size() > 0){
         return getFreeSpaceGB(sharePart) < 2;
@@ -72,7 +72,7 @@ bool RetroboxSystem::isFreeSpaceLimit() {
     
 }
 
-std::string RetroboxSystem::getVersion() {
+std::string RecalboxSystem::getVersion() {
     std::string version = Settings::getInstance()->getString("VersionFile");
     if (version.size() > 0) {
         std::ifstream ifs(version);
@@ -86,7 +86,7 @@ std::string RetroboxSystem::getVersion() {
     return "";
 }
 
-bool RetroboxSystem::needToShowVersionMessage() {
+bool RecalboxSystem::needToShowVersionMessage() {
     std::string versionFile = Settings::getInstance()->getString("LastVersionFile");
     if (versionFile.size() > 0) {
         std::ifstream lvifs(versionFile);
@@ -102,7 +102,7 @@ bool RetroboxSystem::needToShowVersionMessage() {
     return true;
 }
 
-bool RetroboxSystem::versionMessageDisplayed() {
+bool RecalboxSystem::versionMessageDisplayed() {
     std::string versionFile = Settings::getInstance()->getString("LastVersionFile");
     std::string currentVersion = getVersion();
     std::ostringstream oss;
@@ -114,7 +114,7 @@ bool RetroboxSystem::versionMessageDisplayed() {
         }
 }
 
-std::string RetroboxSystem::getVersionMessage(){
+std::string RecalboxSystem::getVersionMessage(){
     std::string versionMessageFile = Settings::getInstance()->getString("VersionMessage");
         if (versionMessageFile.size() > 0) {
         std::ifstream ifs(versionMessageFile);
@@ -129,7 +129,7 @@ std::string RetroboxSystem::getVersionMessage(){
 
 }
 
-bool RetroboxSystem::setAudioOutputDevice(std::string device) {
+bool RecalboxSystem::setAudioOutputDevice(std::string device) {
     int commandValue = -1;
     int returnValue = false;
     
@@ -161,7 +161,7 @@ bool RetroboxSystem::setAudioOutputDevice(std::string device) {
 
 
 
-bool RetroboxSystem::setOverscan(bool enable){
+bool RecalboxSystem::setOverscan(bool enable){
    
     std::ostringstream oss;
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "overscan";
@@ -181,7 +181,7 @@ bool RetroboxSystem::setOverscan(bool enable){
     }
       
 }
-bool RetroboxSystem::setOverclock(std::string mode){
+bool RecalboxSystem::setOverclock(std::string mode){
     if(mode != ""){
         std::ostringstream oss;
         oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
@@ -199,26 +199,7 @@ bool RetroboxSystem::setOverclock(std::string mode){
 }
 
 
-bool RetroboxSystem::setGPIOControllers(bool enable){
-    std::ostringstream oss;
-    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "gpiocontrollers";
-    if(enable){
-        oss << " " << "enable";
-    }else {
-        oss << " " << "disable";
-    }
-    std::string command = oss.str();
-    LOG(LogInfo) << "Launching " << command;
-    if(system(command.c_str())){
-        LOG(LogWarning) << "Error executing " << command;
-        return false;
-    }else {
-        LOG(LogInfo) << "Overscan set to : " << enable;
-        return true;
-    }
-}
-
-bool RetroboxSystem::updateSystem(){
+bool RecalboxSystem::updateSystem(){
     std::string updatecommand = Settings::getInstance()->getString("UpdateCommand");
     if(updatecommand.size() > 0){
 	int exitcode = system(updatecommand.c_str());
@@ -227,14 +208,14 @@ bool RetroboxSystem::updateSystem(){
     return false;
 }
 
-bool RetroboxSystem::ping(){
+bool RecalboxSystem::ping(){
     std::string updateserver = Settings::getInstance()->getString("UpdateServer");
     std::string s("ping -c 1 " + updateserver);
     int exitcode = system(s.c_str());
     return exitcode == 0;
 }
 
-bool RetroboxSystem::canUpdate(){
+bool RecalboxSystem::canUpdate(){
     std::ostringstream oss;
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "canupdate";
     std::string command = oss.str();
@@ -248,7 +229,7 @@ bool RetroboxSystem::canUpdate(){
     }
 }
     
-bool RetroboxSystem::launchKodi(Window * window){
+bool RecalboxSystem::launchKodi(Window * window){
     
     LOG(LogInfo) << "Attempting to launch kodi...";
 
@@ -270,7 +251,7 @@ bool RetroboxSystem::launchKodi(Window * window){
 
 }
 
-bool RetroboxSystem::enableWifi(std::string ssid, std::string key){
+bool RecalboxSystem::enableWifi(std::string ssid, std::string key){
     std::ostringstream oss;
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
             << "wifi" << " " 
@@ -287,11 +268,51 @@ bool RetroboxSystem::enableWifi(std::string ssid, std::string key){
     }
 }
 
-bool RetroboxSystem::disableWifi(){
+bool RecalboxSystem::disableWifi(){
     std::ostringstream oss;
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
             << "wifi" << " " 
             << "disable";
+    std::string command = oss.str();
+    LOG(LogInfo) << "Launching " << command;
+    if(system(command.c_str()) == 0){
+        LOG(LogInfo) << "Wifi disabled ";
+        return true;
+    }else {
+        LOG(LogInfo) << "Cannot disable wifi ";
+        return false;
+    }
+}
+
+
+
+std::string RecalboxSystem::getRecalboxConfig(std::string key) {
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxConfigScript") << " "
+    << " -command load "
+    << " -key " << key;
+    std::string command = oss.str();
+    LOG(LogInfo) << "Launching " << command;
+
+    FILE* pipe = popen(command.c_str(), "r");
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while(!feof(pipe)) {
+        if(fgets(buffer, 128, pipe) != NULL)
+            result += buffer;
+    }
+    pclose(pipe);
+
+    return result;
+}
+
+bool RecalboxSystem::setRecalboxConfig(std::string key, std::string value) {
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxConfigScript") << " "
+    << " -command save"
+    << " -key " << key
+    << " -value " << value;
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
     if(system(command.c_str()) == 0){

@@ -11,11 +11,11 @@
 #include "Window.h"
 
 
-class RetroboxSystem {
+class RecalboxSystem {
 public:
     
     
-    static RetroboxSystem * getInstance();
+    static RecalboxSystem * getInstance();
 
     unsigned long getFreeSpaceGB(std::string mountpoint);
     std::string getFreeSpaceInfo();
@@ -24,7 +24,6 @@ public:
     bool setAudioOutputDevice(std::string device);
     bool setOverscan(bool enable);
     bool setOverclock(std::string mode);
-    bool setGPIOControllers(bool enable);
     bool versionMessageDisplayed();
     bool needToShowVersionMessage();
     std::string getVersionMessage();
@@ -34,12 +33,13 @@ public:
     bool launchKodi(Window * window);
     bool enableWifi(std::string ssid, std::string key);
     bool disableWifi();
-
+    std::string getRecalboxConfig(std::string key);
+    bool setRecalboxConfig(std::string key, std::string value);
 
 
 private:
-    static RetroboxSystem * instance;
-    RetroboxSystem();
+    static RecalboxSystem * instance;
+    RecalboxSystem();
 
 };
 
