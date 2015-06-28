@@ -380,12 +380,8 @@ msgstr "stop (progrès sauvegardé)"
 msgid "search"
 msgstr "rechercher"
 
-msgid "GAME"
-msgstr "JEU"
-
-# PLURAL FOR GAME(S)
-msgid "S"
-msgstr "X"
+msgid "GAMES"
+msgstr "JEUX"
 
 msgid " OF "
 msgstr " SUR "

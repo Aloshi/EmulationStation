@@ -368,12 +368,9 @@ msgstr "Parar (Progresso salvo)"
 msgid "search"
 msgstr "Procurar"
 
-msgid "GAME"
-msgstr "JOGO"
+msgid "GAMES"
+msgstr "JOGOS"
 
-# PLURAL FOR GAME(S)
-msgid "S"
-msgstr "S"
 
 msgid " OF "
 msgstr " DE "
