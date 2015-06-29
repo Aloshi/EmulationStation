@@ -318,7 +318,7 @@ int main(int argc, char* argv[])
 	}
 
 	// UPDATE CHECK THREAD
-	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("updates.enabled"))){
+	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("updates.enabled")) == 0){
 		NetworkThread * nthread = new NetworkThread(&window);
 	}
 
