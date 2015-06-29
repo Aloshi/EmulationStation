@@ -74,7 +74,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// UI SETTINGS >
 	// CONFIGURE INPUT >
 	// QUIT >
-        if(Settings::getInstance()->getBool("kodi.enabled")){
+        if(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.enabled") == "1"){
             addEntry("KODI MEDIA CENTER", 0x777777FF, true,
                     [this] {
                         Window* window = mWindow;
@@ -180,7 +180,6 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
             s->addSaveFunc([baseEnabled, baseSSID, baseKEY, enable_wifi, window] {
                 bool wifienabled = enable_wifi->getState();
-                LOG(LogWarning) << "XXX enabled : " <<wifienabled;
                 RecalboxSystem::getInstance()->setRecalboxConfig("wifi.enabled", wifienabled ? "1" : "0");
                 std::string newSSID = RecalboxSystem::getInstance()->getRecalboxConfig("wifi.ssid");
                 std::string newKey = RecalboxSystem::getInstance()->getRecalboxConfig("wifi.key");
@@ -259,7 +258,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			sounds_enabled->setState(!(RecalboxSystem::getInstance()->getRecalboxConfig("audio.bgmusic") == "0"));
 			s->addWithLabel("ENABLE SOUNDS", sounds_enabled);
 			s->addSaveFunc([sounds_enabled] {
-                            RecalboxSystem::getInstance()->setRecalboxConfig("audio.bgmusic", sounds_enabled ? "1" : "0");
+                            RecalboxSystem::getInstance()->setRecalboxConfig("audio.bgmusic", sounds_enabled->getState() ? "1" : "0");
                             if(!sounds_enabled->getState())
                                 AudioManager::getInstance()->stopMusic();
                         });

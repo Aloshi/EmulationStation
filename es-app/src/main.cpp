@@ -299,18 +299,12 @@ int main(int argc, char* argv[])
 	}
 
 	// Setting in settings for better performance
-	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.enabled")) == 0){
-		Settings::getInstance()->setBool("kodi.enabled", true);
-	}
-	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.atstartup")) == 0){
-		Settings::getInstance()->setBool("kodi.atstartup", true);
-	}
-	if(std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.xbutton")) == 0){
-		Settings::getInstance()->setBool("kodi.xbutton", true);
-	}
+	Settings::getInstance()->setBool("kodi.enabled", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.enabled")) == 0);
+	Settings::getInstance()->setBool("kodi.atstartup", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.atstartup")) == 0);
+	Settings::getInstance()->setBool("kodi.xbutton", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.xbutton")) == 0);
 
 
-	if(Settings::getInstance()->getBool("kodi.enabled") &&Settings::getInstance()->getBool("kodi.atstartup")){
+	if(Settings::getInstance()->getBool("kodi.enabled") && Settings::getInstance()->getBool("kodi.atstartup")){
 		RecalboxSystem::getInstance()->launchKodi(&window);
 	}
 

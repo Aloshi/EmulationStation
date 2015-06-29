@@ -398,7 +398,6 @@ std::string InputManager::getDeviceGUIDString(int deviceId)
 
 std::string InputManager::configureEmulators() {
     std::stringstream command;
-    // command << Settings::getInstance()->getString("GenerateInputConfigScript") << " ";
     // 1 recuperer les configurated
     
     
