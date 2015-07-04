@@ -136,10 +136,10 @@ void GuiScraperMulti::finish()
 	{
 		ss << gettext("NO GAMES WERE SCRAPED.");
 	}else{
-		ss << mTotalSuccessful << " " << gettext("GAME") << ((mTotalSuccessful > 1) ? gettext("S") : "") << gettext(" SUCCESSFULLY SCRAPED!");
+		ss << mTotalSuccessful << " " << gettext("GAMES") << gettext(" SUCCESSFULLY SCRAPED!");
 
 		if(mTotalSkipped > 0)
-			ss << "\n" << mTotalSkipped << " " << gettext("GAME") << ((mTotalSkipped > 1) ? gettext("S") : "") << gettext(" SKIPPED.");
+			ss << "\n" << mTotalSkipped << " " << gettext("GAMES") << gettext(" SKIPPED.");
 	}
 
 	mWindow->pushGui(new GuiMsgBox(mWindow, ss.str(), 

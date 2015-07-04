@@ -41,9 +41,52 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 
 	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
 
+	bool hasFavorites = false;
+
+	if (Settings::getInstance()->getBool("FavoritesOnly"))
+	{
+		for (auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					hasFavorites = true;
+					break;
+				}
+			}
+		}
+	}
+
+	// The TextListComponent would be able to insert at a specific position,
+	// but the cost of this operation could be seriously huge.
+	// This naive implemention of doing a first pass in the list is used instead.
+	if(! Settings::getInstance()->getBool("FavoritesOnly")){
+		for(auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->metadata.get("favorite").compare("yes") == 0)
+			{
+				mList.add("☆ " + (*it)->getName(), *it, ((*it)->getType() == FOLDER)); // FIXME Folder as favorite ?
+			}
+		}
+	}
+
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		if (Settings::getInstance()->getBool("FavoritesOnly") && hasFavorites)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				}
+			}
+		}
+		else
+		{
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		}
 	}
 }
 

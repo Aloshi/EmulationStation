@@ -1,18 +1,19 @@
 #include "views/gamelist/DetailedGameListView.h"
 #include "views/ViewController.h"
 #include "Window.h"
+#include "Settings.h"
 #include "animations/LambdaAnimation.h"
 
-DetailedGameListView::DetailedGameListView(Window* window, FileData* root) : 
+DetailedGameListView::DetailedGameListView(Window* window, FileData* root, SystemData* system) : 
 	BasicGameListView(window, root), 
 	mDescContainer(window), mDescription(window), 
-	mImage(window),
+	mImage(window), mSystem(system), 
 
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window), 
-	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window),
+	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window), mLblFavorite(window),
 
 	mRating(window), mReleaseDate(window), mDeveloper(window), mPublisher(window), 
-	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window)
+	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window), mFavorite(window)
 {
 	//mHeaderImage.setPosition(mSize.x() * 0.25f, 0);
 
@@ -55,6 +56,12 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mLblPlayCount.setText("Times played: ");
 	addChild(&mLblPlayCount);
 	addChild(&mPlayCount);
+	if (system->getHasFavorites())
+	{
+		mLblFavorite.setText("Favorite: ");
+		addChild(&mLblFavorite);
+		addChild(&mFavorite);
+	}
 
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2*padding), mSize.y() - mDescContainer.getPosition().y());
@@ -80,29 +87,62 @@ void DetailedGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& them
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
-	assert(labels.size() == 8);
-	const char* lblElements[8] = {
-		"md_lbl_rating", "md_lbl_releasedate", "md_lbl_developer", "md_lbl_publisher", 
-		"md_lbl_genre", "md_lbl_players", "md_lbl_lastplayed", "md_lbl_playcount"
-	};
 
-	for(unsigned int i = 0; i < labels.size(); i++)
+	if (mSystem->getHasFavorites())
 	{
-		labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
-	}
+		assert(labels.size() == 9);
+		const char* lblElements[9] = {
+			"md_lbl_rating", "md_lbl_releasedate", "md_lbl_developer", "md_lbl_publisher",
+			"md_lbl_genre", "md_lbl_players", "md_lbl_lastplayed", "md_lbl_playcount", "md_lbl_favorite"
+		};
 
+		for (unsigned int i = 0; i < labels.size(); i++)
+		{
+			labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
+		}
+	}
+	else
+	{
+		assert(labels.size() == 8);
+		const char* lblElements[8] = {
+			"md_lbl_rating", "md_lbl_releasedate", "md_lbl_developer", "md_lbl_publisher", 
+			"md_lbl_genre", "md_lbl_players", "md_lbl_lastplayed", "md_lbl_playcount"
+		};
+
+		for(unsigned int i = 0; i < labels.size(); i++)
+		{
+			labels[i]->applyTheme(theme, getName(), lblElements[i], ALL);
+		}
+	}
 
 	initMDValues();
 	std::vector<GuiComponent*> values = getMDValues();
-	assert(values.size() == 8);
-	const char* valElements[8] = {
-		"md_rating", "md_releasedate", "md_developer", "md_publisher", 
-		"md_genre", "md_players", "md_lastplayed", "md_playcount"
-	};
 
-	for(unsigned int i = 0; i < values.size(); i++)
+	if (mSystem->getHasFavorites())
 	{
-		values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
+		assert(values.size() == 9);
+		const char* valElements[9] = {
+			"md_rating", "md_releasedate", "md_developer", "md_publisher",
+			"md_genre", "md_players", "md_lastplayed", "md_playcount", "md_favorite"
+		};
+
+		for (unsigned int i = 0; i < values.size(); i++)
+		{
+			values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
+		}
+	}
+	else
+	{
+		assert(values.size() == 8);
+		const char* valElements[8] = {
+			"md_rating", "md_releasedate", "md_developer", "md_publisher",
+			"md_genre", "md_players", "md_lastplayed", "md_playcount"
+		};
+
+		for (unsigned int i = 0; i < values.size(); i++)
+		{
+			values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
+		}
 	}
 
 	mDescContainer.applyTheme(theme, getName(), "md_description", POSITION | ThemeFlags::SIZE);
@@ -158,6 +198,7 @@ void DetailedGameListView::initMDValues()
 	mPlayers.setFont(defaultFont);
 	mLastPlayed.setFont(defaultFont);
 	mPlayCount.setFont(defaultFont);
+	mFavorite.setFont(defaultFont);
 
 	float bottom = 0.0f;
 
@@ -202,6 +243,7 @@ void DetailedGameListView::updateInfoPanel()
 			mPlayers.setValue(file->metadata.get("players"));
 			mLastPlayed.setValue(file->metadata.get("lastplayed"));
 			mPlayCount.setValue(file->metadata.get("playcount"));
+			mFavorite.setValue(file->metadata.get("favorite"));
 		}
 		
 		fadingOut = false;
@@ -252,6 +294,10 @@ std::vector<TextComponent*> DetailedGameListView::getMDLabels()
 	ret.push_back(&mLblPlayers);
 	ret.push_back(&mLblLastPlayed);
 	ret.push_back(&mLblPlayCount);
+	if (mSystem->getHasFavorites())
+	{
+		ret.push_back(&mLblFavorite);
+	}
 	return ret;
 }
 
@@ -266,5 +312,29 @@ std::vector<GuiComponent*> DetailedGameListView::getMDValues()
 	ret.push_back(&mPlayers);
 	ret.push_back(&mLastPlayed);
 	ret.push_back(&mPlayCount);
+	if (mSystem->getHasFavorites())
+	{
+		ret.push_back(&mFavorite);
+	}
 	return ret;
 }
+
+std::vector<HelpPrompt> DetailedGameListView::getHelpPrompts()
+{
+	std::vector<HelpPrompt> prompts;
+
+	if (Settings::getInstance()->getBool("QuickSystemSelect"))
+	{
+		prompts.push_back(HelpPrompt("left/right", "system"));
+	}
+	prompts.push_back(HelpPrompt("up/down", "choose"));
+	prompts.push_back(HelpPrompt("a", "launch"));
+	prompts.push_back(HelpPrompt("b", "back"));
+	if (mSystem->getHasFavorites())
+	{
+		prompts.push_back(HelpPrompt("y", "toggle favorite"));
+	}
+	prompts.push_back(HelpPrompt("select", "options"));
+	return prompts;
+}
+

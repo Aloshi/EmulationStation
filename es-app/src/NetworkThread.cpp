@@ -6,7 +6,7 @@
  */
 
 #include "NetworkThread.h"
-#include "RetroboxSystem.h"
+#include "RecalboxSystem.h"
 #include "guis/GuiMsgBox.h"
 
 
@@ -32,8 +32,8 @@ void NetworkThread::run(){
             boost::this_thread::sleep(boost::posix_time::hours(1));
         }
 
-        if(RetroboxSystem::getInstance()->canUpdate()){
-            if(RetroboxSystem::getInstance()->canUpdate()){
+        if(RecalboxSystem::getInstance()->canUpdate()){
+            if(RecalboxSystem::getInstance()->canUpdate()){
                 mWindow->displayMessage("AN UPDATE IS AVAILABLE FOR YOUR RECALBOX");
                 mRunning = false;
             }

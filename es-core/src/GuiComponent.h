@@ -90,6 +90,8 @@ public:
 	
 	virtual HelpStyle getHelpStyle();
 
+	virtual inline void setScrollDir(int dir) {}
+
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;
 	void updateSelf(int deltaTime); // updates animations

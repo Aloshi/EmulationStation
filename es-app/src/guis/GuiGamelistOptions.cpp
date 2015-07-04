@@ -1,7 +1,10 @@
 #include "GuiGamelistOptions.h"
 #include "GuiMetaDataEd.h"
+#include "Settings.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
+#include "components/SwitchComponent.h"
+#include "guis/GuiSettings.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
 	mSystem(system), 
@@ -10,12 +13,13 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	addChild(&mMenu);
 
 	// jump to letter
-	char curChar = getGamelist()->getCursor()->getName()[0];
+	char curChar = toupper(getGamelist()->getCursor()->getName()[0]);
+	if(curChar < 'A' || curChar > 'Z')
+		curChar = 'A';
+
 	mJumpToLetterList = std::make_shared<LetterList>(mWindow, "JUMP TO LETTER", false);
 	for(char c = 'A'; c <= 'Z'; c++)
-	{
 		mJumpToLetterList->add(std::string(1, c), c, c == curChar);
-	}
 
 	ComponentListRow row;
 	row.addElement(std::make_shared<TextComponent>(mWindow, "JUMP TO LETTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
@@ -44,6 +48,11 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 	mMenu.addWithLabel("SORT GAMES BY", mListSort);
 
+	auto favorite_only = std::make_shared<SwitchComponent>(mWindow);
+	favorite_only->setState(Settings::getInstance()->getBool("FavoritesOnly"));
+	mMenu.addWithLabel("FAVORITES ONLY", favorite_only);
+	addSaveFunc([favorite_only] { Settings::getInstance()->setBool("FavoritesOnly", favorite_only->getState()); });
+
 	// edit game metadata
 	row.elements.clear();
 	row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
@@ -54,6 +63,8 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	// center the menu
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	mMenu.setPosition((mSize.x() - mMenu.getSize().x()) / 2, (mSize.y() - mMenu.getSize().y()) / 2);
+
+	mFavoriteState = Settings::getInstance()->getBool("FavoritesOnly");
 }
 
 GuiGamelistOptions::~GuiGamelistOptions()
@@ -64,6 +75,12 @@ GuiGamelistOptions::~GuiGamelistOptions()
 
 	// notify that the root folder was sorted
 	getGamelist()->onFileChanged(root, FILE_SORTED);
+
+	if (Settings::getInstance()->getBool("FavoritesOnly") != mFavoriteState)
+	{
+		ViewController::get()->setAllInvalidGamesList(getGamelist()->getCursor()->getSystem());
+		ViewController::get()->reloadGameListView(getGamelist()->getCursor()->getSystem());
+	}
 }
 
 void GuiGamelistOptions::openMetaDataEd()
@@ -121,6 +138,7 @@ bool GuiGamelistOptions::input(InputConfig* config, Input input)
 {
 	if((config->isMappedTo("b", input) || config->isMappedTo("select", input)) && input.value)
 	{
+		save();
 		delete this;
 		return true;
 	}
@@ -138,4 +156,15 @@ std::vector<HelpPrompt> GuiGamelistOptions::getHelpPrompts()
 IGameListView* GuiGamelistOptions::getGamelist()
 {
 	return ViewController::get()->getGameListView(mSystem).get();
+}
+
+void GuiGamelistOptions::save()
+{
+	if (!mSaveFuncs.size())
+		return;
+
+	for (auto it = mSaveFuncs.begin(); it != mSaveFuncs.end(); it++)
+		(*it)();
+
+	Settings::getInstance()->saveFile();
 }

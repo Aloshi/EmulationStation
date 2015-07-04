@@ -182,30 +182,34 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}, (int)(infoStartOpacity * 150));
 
 	unsigned int gameCount = getSelected()->getGameCount();
+	unsigned int favoritesCount = getSelected()->getFavoritesCount();
 
 	// also change the text after we've fully faded out
-	setAnimation(infoFadeOut, 0, [this, gameCount] {
+	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
 		std::stringstream ss;
-		
-		// only display a game count if there are at least 2 games
-		if(gameCount > 1)
-			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
 
-		mSystemInfo.setText(ss.str()); 
+		// only display a game count if there are at least 2 games
+		if (gameCount > 1)
+		{
+			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
+		}
+
+		else if (favoritesCount > 1)
+		{
+			ss << ", " << favoritesCount << boost::locale::gettext(" FAVORITES");
+		}
+
+		mSystemInfo.setText(ss.str());
 	}, false, 1);
 
-	// only display a game count if there are at least 2 games
-	if(gameCount > 1)
+	Animation* infoFadeIn = new LambdaAnimation(
+		[this](float t)
 	{
-		Animation* infoFadeIn = new LambdaAnimation(
-			[this](float t)
-		{
-			mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
-		}, 300);
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+	}, 300);
 
-		// wait 600ms to fade in
-		setAnimation(infoFadeIn, 2000, nullptr, false, 2);
-	}
+	// wait ms to fade in
+	setAnimation(infoFadeIn, 800, nullptr, false, 2);
 
 	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
 	if(endPos == mCamOffset && endPos == mExtrasCamOffset)
