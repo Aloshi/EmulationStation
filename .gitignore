@@ -33,3 +33,6 @@ Makefile
 
 .idea/
 *.iml
+
+#KDE
+.directory
