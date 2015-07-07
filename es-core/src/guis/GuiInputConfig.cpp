@@ -67,17 +67,13 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 	mList = std::make_shared<ComponentList>(mWindow);
 	mGrid.setEntry(mList, Vector2i(0, 5), true, true);
-	int nbAxis = InputManager::getInstance()->getAxisCountByDevice(target->getDeviceId());
-	int nbButtons = InputManager::getInstance()->getButtonCountByDevice(target->getDeviceId());
+	bool hasAxis = InputManager::getInstance()->getAxisCountByDevice(target->getDeviceId()) > 0;
 	int inputRowIndex = 0;
 	for(int i = 0; i < inputCount; i++)
 	{
-		if(inputTypes[i] == AXIS && --nbAxis <= 0){
+		if(inputTypes[i] == AXIS && !hasAxis){
 			continue;
 		}
-		/*if(inputTypes[i] == BTN && --nbButtons <= 0 && inputSkippable[i] == true){
-			continue;
-		}*/
 		ComponentListRow row;
 		// icon
 		auto icon = std::make_shared<ImageComponent>(mWindow);
