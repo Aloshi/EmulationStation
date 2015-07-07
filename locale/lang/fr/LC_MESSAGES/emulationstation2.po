@@ -403,8 +403,6 @@ msgstr " PASSÉS."
 msgid "FAVORITES ONLY"
 msgstr "FAVORIS SEULEMENT"
 
-msgid "toggle favorite"
-msgstr "switcher favoris"
 
 msgid "favorite"
 msgstr "favoris"
