@@ -173,7 +173,13 @@ int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 	else
 		return SDL_JoystickNumButtons(mJoysticks[id]);
 }
-
+int InputManager::getAxisCountByDevice(SDL_JoystickID id)
+{
+	if(id == DEVICE_KEYBOARD)
+		return 0; //it's zero, okay.
+	else
+		return SDL_JoystickNumAxes(mJoysticks[id]);
+}
 InputConfig* InputManager::getInputConfigByDevice(int device)
 {
 	if(device == DEVICE_KEYBOARD)
