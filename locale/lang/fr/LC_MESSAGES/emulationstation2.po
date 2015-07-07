@@ -404,8 +404,8 @@ msgid "FAVORITES ONLY"
 msgstr "FAVORIS SEULEMENT"
 
 
-msgid "favorite"
-msgstr "favoris"
+msgid "FAVORITE"
+msgstr "FAVORIS"
 
 msgid "enter favorite"
 msgstr "entrer favoris"
