@@ -255,8 +255,8 @@ bool RecalboxSystem::enableWifi(std::string ssid, std::string key){
     std::ostringstream oss;
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
             << "wifi" << " " 
-            << "enable" << " " 
-            << ssid << " " << key;
+            << "enable" << " \""
+            << ssid << "\" \"" << key << "\"";
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
     if(system(command.c_str()) == 0){
