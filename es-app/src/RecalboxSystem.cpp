@@ -323,3 +323,18 @@ bool RecalboxSystem::setRecalboxConfig(std::string key, std::string value) {
         return false;
     }
 }
+
+
+bool RecalboxSystem::reboot(){
+    SDL_Event* quit = new SDL_Event();
+    quit->type = SDL_QUIT;
+    SDL_PushEvent(quit);
+    return system("touch /tmp/reboot.please") == 0;
+}
+
+bool RecalboxSystem::shutdown(){
+    SDL_Event* quit = new SDL_Event();
+    quit->type = SDL_QUIT;
+    SDL_PushEvent(quit);
+    return system("touch /tmp/shutdown.please") == 0;
+}

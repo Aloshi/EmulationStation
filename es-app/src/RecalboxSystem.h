@@ -35,6 +35,8 @@ public:
     bool disableWifi();
     std::string getRecalboxConfig(std::string key);
     bool setRecalboxConfig(std::string key, std::string value);
+    bool reboot();
+    bool shutdown();
 
 
 private:
