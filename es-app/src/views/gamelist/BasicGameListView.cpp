@@ -64,7 +64,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	if(! Settings::getInstance()->getBool("FavoritesOnly")){
 		for(auto it = files.begin(); it != files.end(); it++)
 		{
-			if ((*it)->metadata.get("favorite").compare("yes") == 0)
+			if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("yes") == 0)
 			{
 				mList.add("\uF006 " + (*it)->getName(), *it, ((*it)->getType() == FOLDER)); // FIXME Folder as favorite ?
 			}
