@@ -302,8 +302,7 @@ int main(int argc, char* argv[])
 	Settings::getInstance()->setBool("kodi.enabled", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.enabled")) == 0);
 	Settings::getInstance()->setBool("kodi.atstartup", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.atstartup")) == 0);
 	Settings::getInstance()->setBool("kodi.xbutton", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.xbutton")) == 0);
-	//Settings::getInstance()->setBool("audio.bgmusic", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("audio.bgmusic")) == 0);
-	Settings::getInstance()->setBool("audio.bgmusic", trues);
+	Settings::getInstance()->setBool("audio.bgmusic", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("audio.bgmusic")) == 0);
 
 
 	if(Settings::getInstance()->getBool("kodi.enabled") && Settings::getInstance()->getBool("kodi.atstartup")){
