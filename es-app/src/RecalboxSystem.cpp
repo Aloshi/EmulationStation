@@ -316,25 +316,27 @@ bool RecalboxSystem::setRecalboxConfig(std::string key, std::string value) {
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
     if(system(command.c_str()) == 0){
-        LOG(LogInfo) << "Wifi disabled ";
+        LOG(LogInfo) << key << " saved in recalbox.conf";
         return true;
     }else {
-        LOG(LogInfo) << "Cannot disable wifi ";
+        LOG(LogInfo) << "Cannot save "<< key << " in recalbox.conf";
         return false;
     }
 }
 
 
 bool RecalboxSystem::reboot(){
+    bool success = system("touch /tmp/reboot.please") == 0;
     SDL_Event* quit = new SDL_Event();
     quit->type = SDL_QUIT;
     SDL_PushEvent(quit);
-    return system("touch /tmp/reboot.please") == 0;
+    return success;
 }
 
 bool RecalboxSystem::shutdown(){
+    bool success = system("touch /tmp/shutdown.please") == 0;
     SDL_Event* quit = new SDL_Event();
     quit->type = SDL_QUIT;
     SDL_PushEvent(quit);
-    return system("touch /tmp/shutdown.please") == 0;
+    return success;
 }

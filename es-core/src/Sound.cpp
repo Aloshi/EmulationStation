@@ -78,9 +78,7 @@ void Sound::play()
 {
 	if(mSampleData == NULL)
 		return;
-
-	if(!Settings::getInstance()->getBool("EnableSounds"))
-		return;
+	
 
 	if (!playing)
 	{

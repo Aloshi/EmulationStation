@@ -259,6 +259,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("ENABLE SOUNDS", sounds_enabled);
 			s->addSaveFunc([sounds_enabled] {
                             RecalboxSystem::getInstance()->setRecalboxConfig("audio.bgmusic", sounds_enabled->getState() ? "1" : "0");
+							Settings::getInstance()->setBool("audio.bgmusic",sounds_enabled->getState());
                             if(!sounds_enabled->getState())
                                 AudioManager::getInstance()->stopMusic();
                         });
