@@ -185,13 +185,29 @@ void SystemData::populateFolder(FileData* folder)
 		//fyi, folders *can* also match the extension and be added as games - this is mostly just to support higan
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
 
+        //We'll ignore any filenames starting with a period.
+        //
+        //Generally a good idea on unix-ish systems, but especially important on OS X when files are stored
+        //on a filesystem (e.g. network share) which does not have native support for HFS+ metadata.
+        //
+        //In that situation, OS X puts ._SomeFile clutter all over the place.
+         
+        std::string prefix = ".";
+        
 		isGame = false;
-		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
+		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end() &&
+           filePath.filename().string().compare(0, prefix.length(), prefix) != 0)
 		{
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), this);
 			folder->addChild(newGame);
 			isGame = true;
 		}
+        
+
+        if (filePath.filename().string().compare(0, prefix.length(), prefix) == 0) {
+            std::cout << filePath.filename().string();
+            isGame = false;
+        }
 
 		//add directories that also do not match an extension as folders
 		if(!isGame && fs::is_directory(filePath))
