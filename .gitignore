@@ -33,3 +33,4 @@ Makefile
 
 .idea/
 *.iml
+*.txt.user*

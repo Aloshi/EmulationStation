@@ -242,7 +242,7 @@ public:
 		if(selected.size() == 1){
                     return selected.at(0);
                 }else {
-                    return NULL;
+                    return T();
                 }
 	}
         
@@ -267,6 +267,10 @@ public:
 
 		mEntries.push_back(e);
 		onSelectedChanged();
+	}
+
+	inline void setSelectedChangedCallback(const std::function<void(const T&)>& callback) {
+		mSelectedChangedCallback = callback;
 	}
 
 private:
@@ -315,6 +319,10 @@ private:
 				}
 			}
 		}
+
+		if (mSelectedChangedCallback) {
+			mSelectedChangedCallback(mEntries.at(getSelectedId()).object);
+		}
 	}
 
 	std::vector<HelpPrompt> getHelpPrompts() override
@@ -335,4 +343,5 @@ private:
 	ImageComponent mRightArrow;
 
 	std::vector<OptionListData> mEntries;
+	std::function<void(const T&)> mSelectedChangedCallback;
 };

@@ -39,7 +39,9 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
 
-	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
+	const FileData* root = getRoot();
+	const SystemData* systemData = root->getSystem();
+	mHeaderText.setText(systemData ? systemData->getFullName() : root->getCleanName());
 
 	bool hasFavorites = false;
 
