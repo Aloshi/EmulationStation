@@ -410,3 +410,40 @@ msgstr "FAVORIS"
 msgid "enter favorite"
 msgstr "entrer favoris"
 
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "MISES A JOUR"
+
+msgid "AUTO UPDATES"
+msgstr "MISES A JOUR AUTO"
+
+msgid "START UPDATE"
+msgstr "LANCER LA MISE A JOUR"
+
+msgid "KODI SETTINGS"
+msgstr "OPTIONS KODI"
+
+msgid "ENABLE KODI"
+msgstr "ACTIVER KODI"
+
+msgid "KODI AT START"
+msgstr "AUTO DEMARRAGE DE KODI"
+
+msgid "START KODI WITH X"
+msgstr "X POUR LANCER KODI"
+
+msgid "GAMES SETTINGS"
+msgstr "OPTIONS DES JEUX"
+
+msgid "REWIND"
+msgstr "REMBOBINAGE"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "OPTIONS MANETTES"
+
+msgid "FRONTEND MUSIC"
+msgstr "MUSIQUE DE FOND"
+
+msgid "HOSTNAME"
+msgstr "NOM SUR LE RESEAU"
+
