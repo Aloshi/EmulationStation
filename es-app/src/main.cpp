@@ -308,7 +308,7 @@ int main(int argc, char* argv[])
 	if(Settings::getInstance()->getBool("kodi.enabled") && Settings::getInstance()->getBool("kodi.atstartup")){
 		RecalboxSystem::getInstance()->launchKodi(&window);
 	}
-
+	RecalboxSystem::getInstance()->getIpAdress();
 	// UPDATED VERSION MESSAGE
 	if(RecalboxSystem::getInstance()->needToShowVersionMessage()){
 		 window.pushGui(new GuiMsgBox(&window,

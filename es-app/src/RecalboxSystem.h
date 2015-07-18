@@ -37,6 +37,7 @@ public:
     bool setRecalboxConfig(std::string key, std::string value);
     bool reboot();
     bool shutdown();
+    std::string getIpAdress();
 
 
 private:

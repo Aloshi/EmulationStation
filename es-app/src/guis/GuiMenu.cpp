@@ -424,6 +424,9 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
                  auto s = new GuiSettings(mWindow, "NETWORK SETTINGS");
 
+                 auto ip = std::make_shared<TextComponent>(mWindow, RecalboxSystem::getInstance()->getIpAdress(),
+                                                                Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+                 s->addWithLabel("IP ADDRESS", ip);
                  // Hostname
                  createInputTextRow(s, "HOSTNAME", "system.hostname", false);
 

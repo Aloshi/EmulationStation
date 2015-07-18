@@ -18,6 +18,14 @@
 #include "AudioManager.h"
 #include "VolumeControl.h"
 
+#include <stdio.h>
+#include <sys/types.h>
+#include <ifaddrs.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <arpa/inet.h>
+
+
 RecalboxSystem::RecalboxSystem() {
 }
 
@@ -32,7 +40,7 @@ RecalboxSystem *RecalboxSystem::getInstance() {
 
 unsigned long RecalboxSystem::getFreeSpaceGB(std::string mountpoint) {
     struct statvfs fiData;
-    const char * fnPath = mountpoint.c_str();
+    const char *fnPath = mountpoint.c_str();
     int free = 0;
     if ((statvfs(fnPath, &fiData)) >= 0) {
         free = (fiData.f_bfree * fiData.f_bsize) / (1024 * 1024 * 1024);
@@ -43,8 +51,8 @@ unsigned long RecalboxSystem::getFreeSpaceGB(std::string mountpoint) {
 std::string RecalboxSystem::getFreeSpaceInfo() {
     struct statvfs fiData;
     std::string sharePart = Settings::getInstance()->getString("SharePartition");
-    if(sharePart.size() > 0){
-        const char * fnPath = sharePart.c_str();
+    if (sharePart.size() > 0) {
+        const char *fnPath = sharePart.c_str();
         if ((statvfs(fnPath, &fiData)) < 0) {
             return "";
         } else {
@@ -64,12 +72,12 @@ std::string RecalboxSystem::getFreeSpaceInfo() {
 
 bool RecalboxSystem::isFreeSpaceLimit() {
     std::string sharePart = Settings::getInstance()->getString("SharePartition");
-    if(sharePart.size() > 0){
+    if (sharePart.size() > 0) {
         return getFreeSpaceGB(sharePart) < 2;
     } else {
         return "ERROR";
     }
-    
+
 }
 
 std::string RecalboxSystem::getVersion() {
@@ -79,7 +87,7 @@ std::string RecalboxSystem::getVersion() {
 
         if (ifs.good()) {
             std::string contents;
-            std::getline(ifs,contents);
+            std::getline(ifs, contents);
             return contents;
         }
     }
@@ -92,9 +100,9 @@ bool RecalboxSystem::needToShowVersionMessage() {
         std::ifstream lvifs(versionFile);
         if (lvifs.good()) {
             std::string lastVersion;
-            std::getline(lvifs,lastVersion);
+            std::getline(lvifs, lastVersion);
             std::string currentVersion = getVersion();
-            if(lastVersion == currentVersion){
+            if (lastVersion == currentVersion) {
                 return false;
             }
         }
@@ -107,21 +115,21 @@ bool RecalboxSystem::versionMessageDisplayed() {
     std::string currentVersion = getVersion();
     std::ostringstream oss;
     oss << "echo " << currentVersion << " > " << versionFile;
-    if(system(oss.str().c_str())){
-            LOG(LogWarning) << "Error executing " << oss.str().c_str();
-        }else {
-            LOG(LogInfo) << "Version message displayed ok";
-        }
+    if (system(oss.str().c_str())) {
+        LOG(LogWarning) << "Error executing " << oss.str().c_str();
+    } else {
+        LOG(LogInfo) << "Version message displayed ok";
+    }
 }
 
-std::string RecalboxSystem::getVersionMessage(){
+std::string RecalboxSystem::getVersionMessage() {
     std::string versionMessageFile = Settings::getInstance()->getString("VersionMessage");
-        if (versionMessageFile.size() > 0) {
+    if (versionMessageFile.size() > 0) {
         std::ifstream ifs(versionMessageFile);
 
-        if (ifs.good()) {            
+        if (ifs.good()) {
             std::string contents((std::istreambuf_iterator<char>(ifs)),
-                 std::istreambuf_iterator<char>());
+                                 std::istreambuf_iterator<char>());
             return contents;
         }
     }
@@ -132,105 +140,105 @@ std::string RecalboxSystem::getVersionMessage(){
 bool RecalboxSystem::setAudioOutputDevice(std::string device) {
     int commandValue = -1;
     int returnValue = false;
-    
-    if(device == "auto"){
+
+    if (device == "auto") {
         commandValue = 0;
-    }else if(device == "jack"){
+    } else if (device == "jack") {
         commandValue = 1;
-    }else if(device == "hdmi"){            
+    } else if (device == "hdmi") {
         commandValue = 2;
-    }else {
+    } else {
         LOG(LogWarning) << "Unable to find audio output device to use !";
     }
-    
-    if(commandValue != -1){
+
+    if (commandValue != -1) {
         std::ostringstream oss;
         oss << "amixer cset numid=3 " << commandValue;
         std::string command = oss.str();
         LOG(LogInfo) << "Launching " << command;
-        if(system(command.c_str())){
+        if (system(command.c_str())) {
             LOG(LogWarning) << "Error executing " << command;
             returnValue = false;
-        }else {
+        } else {
             LOG(LogInfo) << "Audio output device set to : " << device;
             returnValue = true;
         }
-      }
+    }
     return returnValue;
 }
 
 
+bool RecalboxSystem::setOverscan(bool enable) {
 
-bool RecalboxSystem::setOverscan(bool enable){
-   
     std::ostringstream oss;
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "overscan";
-    if(enable){
+    if (enable) {
         oss << " " << "enable";
-    }else {
+    } else {
         oss << " " << "disable";
     }
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
-    if(system(command.c_str())){
+    if (system(command.c_str())) {
         LOG(LogWarning) << "Error executing " << command;
         return false;
-    }else {
+    } else {
         LOG(LogInfo) << "Overscan set to : " << enable;
         return true;
     }
-      
+
 }
-bool RecalboxSystem::setOverclock(std::string mode){
-    if(mode != ""){
+
+bool RecalboxSystem::setOverclock(std::string mode) {
+    if (mode != "") {
         std::ostringstream oss;
-        oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
-                << "overclock" << " " << mode;
+        oss << Settings::getInstance()->getString("RecalboxSettingScript") << " "
+        << "overclock" << " " << mode;
         std::string command = oss.str();
         LOG(LogInfo) << "Launching " << command;
-        if(system(command.c_str())){
+        if (system(command.c_str())) {
             LOG(LogWarning) << "Error executing " << command;
             return false;
-        }else {
+        } else {
             LOG(LogInfo) << "Overclocking set to " << mode;
             return true;
         }
-      }
+    }
 }
 
 
-bool RecalboxSystem::updateSystem(){
+bool RecalboxSystem::updateSystem() {
     std::string updatecommand = Settings::getInstance()->getString("UpdateCommand");
-    if(updatecommand.size() > 0){
-	int exitcode = system(updatecommand.c_str());
+    if (updatecommand.size() > 0) {
+        int exitcode = system(updatecommand.c_str());
         return exitcode == 0;
     }
     return false;
 }
 
-bool RecalboxSystem::ping(){
+bool RecalboxSystem::ping() {
     std::string updateserver = Settings::getInstance()->getString("UpdateServer");
     std::string s("ping -c 1 " + updateserver);
     int exitcode = system(s.c_str());
     return exitcode == 0;
 }
 
-bool RecalboxSystem::canUpdate(){
+bool RecalboxSystem::canUpdate() {
     std::ostringstream oss;
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "canupdate";
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
-    if(system(command.c_str()) == 0){
+    if (system(command.c_str()) == 0) {
         LOG(LogInfo) << "Can update ";
         return true;
-    }else {
+    } else {
         LOG(LogInfo) << "Cannot update ";
         return false;
     }
 }
-    
-bool RecalboxSystem::launchKodi(Window * window){
-    
+
+bool RecalboxSystem::launchKodi(Window *window) {
+
     LOG(LogInfo) << "Attempting to launch kodi...";
 
 
@@ -246,44 +254,43 @@ bool RecalboxSystem::launchKodi(Window * window){
     VolumeControl::getInstance()->init();
     AudioManager::getInstance()->resumeMusic();
     window->normalizeNextUpdate();
-    
+
     return exitCode == 0;
 
 }
 
-bool RecalboxSystem::enableWifi(std::string ssid, std::string key){
+bool RecalboxSystem::enableWifi(std::string ssid, std::string key) {
     std::ostringstream oss;
-    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
-            << "wifi" << " " 
-            << "enable" << " \""
-            << ssid << "\" \"" << key << "\"";
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " "
+    << "wifi" << " "
+    << "enable" << " \""
+    << ssid << "\" \"" << key << "\"";
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
-    if(system(command.c_str()) == 0){
+    if (system(command.c_str()) == 0) {
         LOG(LogInfo) << "Wifi enabled ";
         return true;
-    }else {
+    } else {
         LOG(LogInfo) << "Cannot enable wifi ";
         return false;
     }
 }
 
-bool RecalboxSystem::disableWifi(){
+bool RecalboxSystem::disableWifi() {
     std::ostringstream oss;
-    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " 
-            << "wifi" << " " 
-            << "disable";
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " "
+    << "wifi" << " "
+    << "disable";
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
-    if(system(command.c_str()) == 0){
+    if (system(command.c_str()) == 0) {
         LOG(LogInfo) << "Wifi disabled ";
         return true;
-    }else {
+    } else {
         LOG(LogInfo) << "Cannot disable wifi ";
         return false;
     }
 }
-
 
 
 std::string RecalboxSystem::getRecalboxConfig(std::string key) {
@@ -294,12 +301,12 @@ std::string RecalboxSystem::getRecalboxConfig(std::string key) {
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
 
-    FILE* pipe = popen(command.c_str(), "r");
+    FILE *pipe = popen(command.c_str(), "r");
     if (!pipe) return "ERROR";
     char buffer[128];
     std::string result = "";
-    while(!feof(pipe)) {
-        if(fgets(buffer, 128, pipe) != NULL)
+    while (!feof(pipe)) {
+        if (fgets(buffer, 128, pipe) != NULL)
             result += buffer;
     }
     pclose(pipe);
@@ -315,28 +322,73 @@ bool RecalboxSystem::setRecalboxConfig(std::string key, std::string value) {
     << " -value " << value;
     std::string command = oss.str();
     LOG(LogInfo) << "Launching " << command;
-    if(system(command.c_str()) == 0){
+    if (system(command.c_str()) == 0) {
         LOG(LogInfo) << key << " saved in recalbox.conf";
         return true;
-    }else {
-        LOG(LogInfo) << "Cannot save "<< key << " in recalbox.conf";
+    } else {
+        LOG(LogInfo) << "Cannot save " << key << " in recalbox.conf";
         return false;
     }
 }
 
 
-bool RecalboxSystem::reboot(){
+bool RecalboxSystem::reboot() {
     bool success = system("touch /tmp/reboot.please") == 0;
-    SDL_Event* quit = new SDL_Event();
+    SDL_Event *quit = new SDL_Event();
     quit->type = SDL_QUIT;
     SDL_PushEvent(quit);
     return success;
 }
 
-bool RecalboxSystem::shutdown(){
+bool RecalboxSystem::shutdown() {
     bool success = system("touch /tmp/shutdown.please") == 0;
-    SDL_Event* quit = new SDL_Event();
+    SDL_Event *quit = new SDL_Event();
     quit->type = SDL_QUIT;
     SDL_PushEvent(quit);
     return success;
+}
+
+std::string RecalboxSystem::getIpAdress() {
+    struct ifaddrs *ifAddrStruct = NULL;
+    struct ifaddrs *ifa = NULL;
+    void *tmpAddrPtr = NULL;
+
+    std::string result = "not found";
+    getifaddrs(&ifAddrStruct);
+
+    for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+        if (!ifa->ifa_addr) {
+            continue;
+        }
+        if (ifa->ifa_addr->sa_family == AF_INET) { // check it is IP4
+            // is a valid IP4 Address
+            tmpAddrPtr = &((struct sockaddr_in *) ifa->ifa_addr)->sin_addr;
+            char addressBuffer[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
+            printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+            if (std::string(ifa->ifa_name).find("eth") != std::string::npos || std::string(ifa->ifa_name).find("wlan") != std::string::npos) {
+                result = std::string(addressBuffer);
+            }
+        }
+    }
+    // Seeking for ipv6 if no IPV4
+    if (result.compare("not found") == 0) {
+        for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+            if (!ifa->ifa_addr) {
+                continue;
+            }
+            if (ifa->ifa_addr->sa_family == AF_INET6) { // check it is IP6
+                // is a valid IP6 Address
+                tmpAddrPtr = &((struct sockaddr_in6 *) ifa->ifa_addr)->sin6_addr;
+                char addressBuffer[INET6_ADDRSTRLEN];
+                inet_ntop(AF_INET6, tmpAddrPtr, addressBuffer, INET6_ADDRSTRLEN);
+                printf("%s IP Address %s\n", ifa->ifa_name, addressBuffer);
+                if (std::string(ifa->ifa_name).find("eth") != std::string::npos || std::string(ifa->ifa_name).find("wlan") != std::string::npos) {
+                    return std::string(addressBuffer);
+                }
+            }
+        }
+    }
+    if (ifAddrStruct != NULL) freeifaddrs(ifAddrStruct);
+    return result;
 }
