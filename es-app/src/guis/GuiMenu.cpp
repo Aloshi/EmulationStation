@@ -423,7 +423,9 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  Window *window = mWindow;
 
                  auto s = new GuiSettings(mWindow, "NETWORK SETTINGS");
-
+                 auto status = std::make_shared<TextComponent>(mWindow, RecalboxSystem::getInstance()->ping() ? "CONNECTED" : "NOT CONNECTED",
+                                                           Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+                 s->addWithLabel("STATUS", status);
                  auto ip = std::make_shared<TextComponent>(mWindow, RecalboxSystem::getInstance()->getIpAdress(),
                                                                 Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
                  s->addWithLabel("IP ADDRESS", ip);

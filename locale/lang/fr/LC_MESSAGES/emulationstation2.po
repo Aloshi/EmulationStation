@@ -447,3 +447,8 @@ msgstr "MUSIQUE DE FOND"
 msgid "HOSTNAME"
 msgstr "NOM SUR LE RESEAU"
 
+msgid "CONNECTED"
+msgstr "CONNECTÉ"
+
+msgid "NOT CONNECTED"
+msgstr "DÉCONNECTÉ"

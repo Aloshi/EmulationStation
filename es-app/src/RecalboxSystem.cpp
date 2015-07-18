@@ -353,7 +353,7 @@ std::string RecalboxSystem::getIpAdress() {
     struct ifaddrs *ifa = NULL;
     void *tmpAddrPtr = NULL;
 
-    std::string result = "not found";
+    std::string result = "not connected";
     getifaddrs(&ifAddrStruct);
 
     for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
@@ -372,7 +372,7 @@ std::string RecalboxSystem::getIpAdress() {
         }
     }
     // Seeking for ipv6 if no IPV4
-    if (result.compare("not found") == 0) {
+    if (result.compare("not connected") == 0) {
         for (ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
             if (!ifa->ifa_addr) {
                 continue;
