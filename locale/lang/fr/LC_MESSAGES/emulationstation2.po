@@ -452,3 +452,6 @@ msgstr "CONNECTÉ"
 
 msgid "NOT CONNECTED"
 msgstr "DÉCONNECTÉ"
+
+msgid "LOADING..."
+msgstr "CHARGEMENT..."
