@@ -447,7 +447,6 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  s->addSaveFunc([baseEnabled, baseSSID, baseKEY, enable_wifi, window] {
                      bool wifienabled = enable_wifi->getState();
                      RecalboxSystem::getInstance()->setRecalboxConfig("wifi.enabled", wifienabled ? "1" : "0");
-                     RecalboxSystem::getInstance()->setRecalboxConfig("system.hostname", wifienabled ? "1" : "0");
                      std::string newSSID = RecalboxSystem::getInstance()->getRecalboxConfig("wifi.ssid");
                      std::string newKey = RecalboxSystem::getInstance()->getRecalboxConfig("wifi.key");
                      if (wifienabled) {
