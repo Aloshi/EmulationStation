@@ -15,6 +15,7 @@
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiUpdate.h"
+#include "guis/GuiRomsManager.h"
 #include "views/ViewController.h"
 #include "AudioManager.h"
 
@@ -88,6 +89,11 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                                                                                              "Shutdown terminated with non-zero result!";
                  });
     }
+    if (Settings::getInstance()->getBool("RomsManager")) {
+		addEntry("ROMS MANAGER", 0x777777FF, true, [this] {
+			mWindow->pushGui(new GuiRomsManager(mWindow));
+		});
+	}
     addEntry("SYSTEM SETTINGS", 0x777777FF, true,
              [this] {
                  Window *window = mWindow;
