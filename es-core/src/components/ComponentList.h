@@ -16,12 +16,16 @@ struct ComponentListElement
 struct ComponentListRow
 {
 	std::vector<ComponentListElement> elements;
+	std::string name;
 
 	// The input handler is called when the user enters any input while this row is highlighted (including up/down).
 	// Return false to let the list try to use it or true if the input has been consumed.
 	// If no input handler is supplied (input_handler == nullptr), the default behavior is to forward the input to 
 	// the rightmost element in the currently selected row.
 	std::function<bool(InputConfig*, Input)> input_handler;
+
+	ComponentListRow(const std::string& n = std::string()) : name(n)
+	{}
 	
 	inline void addElement(const std::shared_ptr<GuiComponent>& component, bool resize_width, bool invert_when_selected = true)
 	{
@@ -47,7 +51,7 @@ class ComponentList : public IList<ComponentListRow, void*>
 public:
 	ComponentList(Window* window);
 
-	void addRow(const ComponentListRow& row, bool setCursorHere = false);
+	void addRow(const ComponentListRow& row, bool setCursorHere = false, bool updateGeometry = true);
 
 	void textInput(const char* text) override;
 	bool input(InputConfig* config, Input input) override;

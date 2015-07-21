@@ -11,10 +11,10 @@ ComponentList::ComponentList(Window* window) : IList<ComponentListRow, void*>(wi
 	mFocused = false;
 }
 
-void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere)
+void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere, bool updateGeometry)
 {
 	IList<ComponentListRow, void*>::Entry e;
-	e.name = "";
+	e.name = row.name;
 	e.object = NULL;
 	e.data = row;
 
@@ -23,8 +23,10 @@ void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere)
 	for(auto it = mEntries.back().data.elements.begin(); it != mEntries.back().data.elements.end(); it++)
 		addChild(it->component.get());
 
-	updateElementSize(mEntries.back().data);
-	updateElementPosition(mEntries.back().data);
+	if (updateGeometry) {
+		updateElementSize(mEntries.back().data);
+		updateElementPosition(mEntries.back().data);
+	}
 
 	if(setCursorHere)
 	{
