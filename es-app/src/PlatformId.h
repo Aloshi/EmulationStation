@@ -25,7 +25,7 @@ namespace PlatformIds
 		COLECOVISION,
 		COMMODORE_64,
 		INTELLIVISION,
-		MAC_OS,
+        MACOS,
 		XBOX,
 		XBOX_360,
 		MSX,

@@ -210,13 +210,14 @@ int main(int argc, char* argv[])
 	//always close the log on exit
 	atexit(&onExit);
 
+    Renderer::init(0, 0);
 	Window window;
 	ViewController::init(&window);
 	window.pushGui(ViewController::get());
 
 	if(!scrape_cmdline)
 	{
-		if(!window.init(width, height))
+        if(!window.init(width, height, false))
 		{
 			LOG(LogError) << "Window failed to initialize!";
 			return 1;
