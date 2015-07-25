@@ -26,7 +26,7 @@ namespace PlatformIds
 		COMMODORE_64,
 		FAMILY_COMPUTER_DISK_SYSTEM,
 		INTELLIVISION,
-		MAC_OS,
+        MACOS,
 		XBOX,
 		XBOX_360,
 		MSX,

@@ -5,7 +5,7 @@
 #include <string>
 #include <Eigen/Dense>
 #include "platform.h"
-#include GLHEADER
+#include "platform_gl.h"
 
 // An OpenGL texture.
 // Automatically recreates the texture with renderer deinit/reinit.

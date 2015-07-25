@@ -117,9 +117,13 @@ bool RecalboxSystem::versionMessageDisplayed() {
     oss << "echo " << currentVersion << " > " << versionFile;
     if (system(oss.str().c_str())) {
         LOG(LogWarning) << "Error executing " << oss.str().c_str();
+        return false;
     } else {
         LOG(LogInfo) << "Version message displayed ok";
+        return true;
     }
+
+    return false;
 }
 
 std::string RecalboxSystem::getVersionMessage() {
@@ -204,6 +208,8 @@ bool RecalboxSystem::setOverclock(std::string mode) {
             return true;
         }
     }
+
+    return false;
 }
 
 
