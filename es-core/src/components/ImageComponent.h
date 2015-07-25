@@ -2,7 +2,7 @@
 #define _IMAGECOMPONENT_H_
 
 #include "platform.h"
-#include GLHEADER
+#include "platform_gl.h"
 
 #include "GuiComponent.h"
 #include <string>
@@ -16,7 +16,7 @@ public:
 	virtual ~ImageComponent();
 
 	//Loads the image at the given filepath. Will tile if tile is true (retrieves texture as tiling, creates vertices accordingly).
-	void setImage(std::string path, bool tile = false);
+    void setImage(const std::string& path, bool tile = false);
 	//Loads an image from memory.
 	void setImage(const char* image, size_t length, bool tile = false);
 	//Use an already existing texture.

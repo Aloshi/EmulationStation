@@ -165,8 +165,9 @@ void InputConfig::loadFromXML(pugi::xml_node node)
 		int id = input.attribute("id").as_int();
 		int value = input.attribute("value").as_int();
 
-		if(value == 0)
+        if(value == 0) {
 			LOG(LogWarning) << "WARNING: InputConfig value is 0 for " << type << " " << id << "!\n";
+        }
 
 		mNameMap[toLower(name)] = Input(mDeviceId, typeEnum, id, value, true);
 	}

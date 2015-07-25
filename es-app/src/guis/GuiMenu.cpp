@@ -85,8 +85,9 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  [this] {
                      Window *window = mWindow;
 
-                     if (!RecalboxSystem::getInstance()->launchKodi(window)) LOG(LogWarning) <<
-                                                                                             "Shutdown terminated with non-zero result!";
+                     if (!RecalboxSystem::getInstance()->launchKodi(window)) {
+                         LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+                     }
                  });
     }
     if (Settings::getInstance()->getBool("RomsManager")) {
@@ -228,7 +229,9 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                          window->pushGui(
                                  new GuiMsgBox(window, "THE SYSTEM WILL NOW REBOOT", "OK",
                                                [] {
-                                                   if (runRestartCommand() != 0) LOG(LogWarning) << "Reboot terminated with non-zero result!";
+                                                   if (runRestartCommand() != 0) {
+                                                       LOG(LogWarning) << "Reboot terminated with non-zero result!";
+                                                   }
                                                })
                          );
                      }
@@ -531,8 +534,9 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  row.makeAcceptInputHandler([window] {
                      window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
                                                    [] {
-                                                       if (RecalboxSystem::getInstance()->reboot() != 0) LOG(LogWarning)
-                                                           << "Restart terminated with non-zero result!";
+                                                       if (RecalboxSystem::getInstance()->reboot() != 0)  {
+                                                           LOG(LogWarning) << "Restart terminated with non-zero result!";
+                                                       }
                                                    }, "NO", nullptr));
                  });
                  row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM),
@@ -543,9 +547,10 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  row.makeAcceptInputHandler([window] {
                      window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
                                                    [] {
-                                                       if (RecalboxSystem::getInstance()->shutdown() != 0) LOG(
-                                                               LogWarning) <<
+                                                       if (RecalboxSystem::getInstance()->shutdown() != 0)  {
+                                                           LOG(LogWarning) <<
                                                                            "Shutdown terminated with non-zero result!";
+                                                       }
                                                    }, "NO", nullptr));
                  });
                  row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM),

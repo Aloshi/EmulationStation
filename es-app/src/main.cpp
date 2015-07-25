@@ -165,8 +165,9 @@ int setLocale(char * argv1)
   	char abs_exe_path[PATH_MAX];
   	char *p;
 
-  	if(!(p = strrchr(argv1, '/')))
+    if(!(p = strrchr(argv1, '/'))) {
     		getcwd(abs_exe_path, sizeof(abs_exe_path));
+    }
   	else
   	{
     		*p = '\0';
@@ -196,7 +197,7 @@ int setLocale(char * argv1)
     	std::locale::global(gen(""));
     	std::cout.imbue(std::locale());
         LOG(LogInfo) << "Locals set...";
-
+    return 0;
 }
 
 int main(int argc, char* argv[])
@@ -257,13 +258,14 @@ int main(int argc, char* argv[])
 	// Set locale
 	setLocale(argv[0]);
 
+    Renderer::init(0, 0);
 	Window window;
 	ViewController::init(&window);
 	window.pushGui(ViewController::get());
 
 	if(!scrape_cmdline)
-	{
-		if(!window.init(width, height))
+    {
+        if(!window.init(width, height, false))
 		{
 			LOG(LogError) << "Window failed to initialize!";
 			return 1;
