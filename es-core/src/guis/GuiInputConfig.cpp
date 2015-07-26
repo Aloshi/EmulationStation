@@ -18,9 +18,9 @@ static const int inputCount = 19;
 static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "Joystick1Up" , "Joystick1Left", "Joystick2Up" , "Joystick2Left", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "L2", "R2", "HotKey" };
 static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,         true,             true,      false,  false,  true,   true, false,    false,     true,      true, true, true,  false};
 static const int inputTypes[inputCount] = {     HAT,     HAT,   HAT,    HAT ,        AXIS,             AXIS,          AXIS,            AXIS,       BTN,    BTN,   BTN,   BTN,    BTN,    BTN,        BTN,      BTN,     BTN,  BTN,  BTN};
-static const char* inputDispName[inputCount] = { boost::locale::gettext("UP").c_str(), boost::locale::gettext("DOWN").c_str(), boost::locale::gettext("LEFT").c_str(), boost::locale::gettext("RIGHT").c_str(),
-												 boost::locale::gettext("JOYSTICK 1 UP").c_str(), boost::locale::gettext("JOYSTICK 1 LEFT").c_str(),boost::locale::gettext("JOYSTICK 2 UP").c_str(), boost::locale::gettext("JOYSTICK 2 LEFT").c_str(),
-                                                    "A", "B", "X", "Y", "START", "SELECT ", boost::locale::gettext("PAGE UP").c_str(), boost::locale::gettext("PAGE DOWN").c_str(),  "L2", "R2", boost::locale::gettext("HOTKEY").c_str() };
+static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"),
+												 gettext("JOYSTICK 1 UP"), gettext("JOYSTICK 1 LEFT"),gettext("JOYSTICK 2 UP"), gettext("JOYSTICK 2 LEFT"),
+                                                    "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", gettext("HOTKEY") };
 static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", ":/help/joystick_left.svg", ":/help/joystick_right.svg", ":/help/joystick_left.svg", ":/help/joystick_right.svg",
 											 ":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg",
 											":/help/button_l.svg", ":/help/button_r.svg", ":/help/button_l2.svg", ":/help/button_r2.svg", ":/help/button_hotkey.svg" };
@@ -212,7 +212,7 @@ void GuiInputConfig::update(int deltaTime)
 				// crossed the second boundary, update text
 				const auto& text = mMappings.at(mHeldInputRowIndex);
 				std::stringstream ss;
-				ss << boost::locale::gettext("HOLD FOR ") << HOLD_TO_SKIP_MS/1000 - curSec << boost::locale::gettext("S TO SKIP");
+				ss << gettext("HOLD FOR ") << HOLD_TO_SKIP_MS/1000 - curSec << gettext("S TO SKIP");
 				text->setText(ss.str());
 				text->setColor(0x777777FF);
 			}
