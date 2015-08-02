@@ -14,16 +14,16 @@ using namespace boost::locale;
 static const int AXIS = 0;
 static const int BTN = 1;
 static const int HAT = 2;
-static const int inputCount = 19;
-static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "Joystick1Up" , "Joystick1Left", "Joystick2Up" , "Joystick2Left", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "L2", "R2", "HotKey" };
-static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,         true,             true,      false,  false,  true,   true, false,    false,     true,      true, true, true,  false};
-static const int inputTypes[inputCount] = {     HAT,     HAT,   HAT,    HAT ,        AXIS,             AXIS,          AXIS,            AXIS,       BTN,    BTN,   BTN,   BTN,    BTN,    BTN,        BTN,      BTN,     BTN,  BTN,  BTN};
+static const int inputCount = 21;
+static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "Joystick1Up" , "Joystick1Left", "Joystick2Up" , "Joystick2Left", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "L2", "R2", "L3", "R3", "HotKey" };
+static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,         true,             true,      false,  false,  true,   true, false,    false,     true,      true, true, true, true, true,  false};
+static const int inputTypes[inputCount] = {     HAT,     HAT,   HAT,    HAT ,        AXIS,             AXIS,          AXIS,            AXIS,       BTN,    BTN,   BTN,   BTN,    BTN,    BTN,        BTN,      BTN,     BTN,  BTN, BTN,  BTN,  BTN};
 static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"),
 												 gettext("JOYSTICK 1 UP"), gettext("JOYSTICK 1 LEFT"),gettext("JOYSTICK 2 UP"), gettext("JOYSTICK 2 LEFT"),
-                                                    "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", gettext("HOTKEY") };
-static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", ":/help/joystick_left.svg", ":/help/joystick_right.svg", ":/help/joystick_left.svg", ":/help/joystick_right.svg",
+                                                    "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", "L3", "R3",gettext("HOTKEY") };
+static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg",
 											 ":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg",
-											":/help/button_l.svg", ":/help/button_r.svg", ":/help/button_l2.svg", ":/help/button_r2.svg", ":/help/button_hotkey.svg" };
+											":/help/button_l.svg", ":/help/button_r.svg", ":/help/button_l2.svg", ":/help/button_r2.svg",":/help/button_l3.svg", ":/help/button_r3.svg", ":/help/button_hotkey.svg" };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.

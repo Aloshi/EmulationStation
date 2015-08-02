@@ -30,6 +30,8 @@ CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
 Makefile
+CPackConfig.cmake
+CPackSourceConfig.cmake
 
 .idea/
 *.iml
