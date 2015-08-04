@@ -40,6 +40,10 @@ public:
     std::string getIpAdress();
 
 
+    std::vector<std::string> * scanBluetooth();
+
+    bool pairBluetooth(std::string &basic_string);
+
 private:
     static RecalboxSystem * instance;
     RecalboxSystem();

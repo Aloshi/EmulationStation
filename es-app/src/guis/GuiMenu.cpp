@@ -3,6 +3,8 @@
 #include <string>
 #include <sstream>
 
+#include <functional>
+
 #include "EmulationStation.h"
 #include "guis/GuiMenu.h"
 #include "Window.h"
@@ -30,6 +32,7 @@
 #include "scrapers/TheArchiveScraper.h"
 
 #include "guis/GuiTextEditPopup.h"
+#include "GuiLoading.h"
 
 void GuiMenu::createInputTextRow(GuiSettings *gui, const char *title, const char *settingsID, bool password) {
     // LABEL
@@ -609,6 +612,63 @@ void GuiMenu::createConfigInput() {
 
     row.addElement(
             std::make_shared<TextComponent>(window, "CONFIGURE A CONTROLLER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF),
+            true);
+    s->addRow(row);
+
+
+    row.elements.clear();
+
+    std::function<void(void*)> showControllerList = [window, this, s](void * controllers){
+        std::function<void(void*)> deletePairGui = [window](void * pairedPointer){
+            bool paired = *((bool*)pairedPointer);
+            window->pushGui(new GuiMsgBox(window, paired ? "CONTROLLER PAIRED" : "UNABLE TO PAIR CONTROLLER", "OK"));
+        };
+        if(controllers == NULL){
+            window->pushGui(new GuiMsgBox(window, "AN ERROR OCCURED", "OK"));
+        }else {
+            std::vector<std::string>* resolvedControllers = ((std::vector<std::string>*)controllers);
+            if(resolvedControllers->size() == 0){
+                window->pushGui(new GuiMsgBox(window, "NO CONTROLLERS FOUND", "OK"));
+            }else {
+                GuiSettings * pairGui = new GuiSettings(window, "PAIR A CONTROLLER");
+
+                for(std::vector<std::string>::iterator controllerString = ((std::vector<std::string>*)controllers)->begin(); controllerString != ((std::vector<std::string>*)controllers)->end(); ++controllerString) {
+
+                    ComponentListRow controllerRow;
+                    std::function<void()> pairController = [this,window,pairGui,controllerString,deletePairGui] {
+                        window->pushGui(new GuiLoading(window, [controllerString] {
+                            bool paired = RecalboxSystem::getInstance()->pairBluetooth(*controllerString);
+
+                            return (void*)new bool(true);
+                        }, deletePairGui));
+
+                    };
+                    controllerRow.makeAcceptInputHandler(pairController);
+                    auto update = std::make_shared<TextComponent>(window, *controllerString,
+                                                                  Font::get(FONT_SIZE_MEDIUM),
+                                                                  0x777777FF);
+                    auto bracket = makeArrow(window);
+                    controllerRow.addElement(update, true);
+                    controllerRow.addElement(bracket, false);
+                    pairGui->addRow(controllerRow);
+                }
+                window->pushGui(pairGui);
+            }
+        }
+
+    };
+
+    row.makeAcceptInputHandler([window, this, s, showControllerList] {
+
+        window->pushGui(new GuiLoading(window, [] {
+            auto s =  RecalboxSystem::getInstance()->scanBluetooth();
+            return (void *)s;
+        }, showControllerList));
+    });
+
+
+    row.addElement(
+            std::make_shared<TextComponent>(window, "PAIR A BLUETOOTH CONTROLLER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF),
             true);
     s->addRow(row);
 
