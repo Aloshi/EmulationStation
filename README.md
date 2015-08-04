@@ -51,6 +51,19 @@ cmake .
 make
 ```
 
+**On Fedora:** 
+All of this be easily installed with dnf/yum:
+```bash
+dnf install -y cmake SDL2 SDL-devel boost-system boost-filesystem boost-date-time boost-locale boost-devel freeimage freeimage-devel freetype freetype-devel eigen3-devel libcurl libcurl-devel texlive-droid.noarch
+```
+
+Then, generate and build the Makefile with CMake:
+```bash
+cd YourEmulationStationDirectory
+cmake .
+make
+```
+
 **On the Raspberry Pi:**
 
 Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
