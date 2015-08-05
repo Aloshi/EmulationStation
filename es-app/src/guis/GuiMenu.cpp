@@ -630,7 +630,7 @@ void GuiMenu::createConfigInput() {
             if(resolvedControllers->size() == 0){
                 window->pushGui(new GuiMsgBox(window, "NO CONTROLLERS FOUND", "OK"));
             }else {
-                GuiSettings * pairGui = new GuiSettings(window, "PAIR A CONTROLLER");
+                GuiSettings * pairGui = new GuiSettings(window, "PAIR A BLUETOOTH CONTROLLER");
 
                 for(std::vector<std::string>::iterator controllerString = ((std::vector<std::string>*)controllers)->begin(); controllerString != ((std::vector<std::string>*)controllers)->end(); ++controllerString) {
 
