@@ -258,7 +258,7 @@ int main(int argc, char* argv[])
 	// Set locale
 	setLocale(argv[0]);
 
-    Renderer::init(0, 0);
+    Renderer::init(width, height);
 	Window window;
 	ViewController::init(&window);
 	window.pushGui(ViewController::get());
