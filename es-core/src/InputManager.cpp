@@ -294,8 +294,8 @@ bool InputManager::loadInputConfig(InputConfig* config)
 		return false;
 
 	pugi::xml_node configNode = root.find_child_by_attribute("inputConfig", "deviceGUID", config->getDeviceGUIDString().c_str());
-	if(!configNode)
-		configNode = root.find_child_by_attribute("inputConfig", "deviceName", config->getDeviceName().c_str());
+	//if(!configNode)
+	//	configNode = root.find_child_by_attribute("inputConfig", "deviceName", config->getDeviceName().c_str());
 	if(!configNode)
 		return false;
 
@@ -347,9 +347,9 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 				pugi::xml_node oldEntry = root.find_child_by_attribute("inputConfig", "deviceGUID", config->getDeviceGUIDString().c_str());
 				if(oldEntry)
 					root.remove_child(oldEntry);
-				oldEntry = root.find_child_by_attribute("inputConfig", "deviceName", config->getDeviceName().c_str());
-				if(oldEntry)
-					root.remove_child(oldEntry);
+				//oldEntry = root.find_child_by_attribute("inputConfig", "deviceName", config->getDeviceName().c_str());
+				//if(oldEntry)
+				//	root.remove_child(oldEntry);
 			}
 		}
 	}
