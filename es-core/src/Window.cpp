@@ -9,6 +9,9 @@
 #include "components/ImageComponent.h"
 #include "guis/GuiMsgBox.h"
 #include "RecalboxSystem.h"
+#include <boost/locale.hpp>
+
+using namespace boost::locale;
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
@@ -64,13 +67,15 @@ GuiComponent* Window::peekGui()
 	return mGuiStack.back();
 }
 
-bool Window::init(unsigned int width, unsigned int height)
+bool Window::init(unsigned int width, unsigned int height, bool initRenderer)
 {
-	if(!Renderer::init(width, height))
-	{
-		LOG(LogError) << "Renderer failed to initialize!";
-		return false;
-	}
+    if (initRenderer) {
+        if(!Renderer::init(width, height))
+        {
+            LOG(LogError) << "Renderer failed to initialize!";
+            return false;
+        }
+    }
 
 	InputManager::getInstance()->init();
 
@@ -136,8 +141,9 @@ void Window::input(InputConfig* config, Input input)
                 Window * window = this;
                 this->pushGui(new GuiMsgBox(this, "DO YOU WANT TO START KODI MEDIA CENTER ?", "YES", 
 				[window, this] { 
-                                    if( ! RecalboxSystem::getInstance()->launchKodi(window))
-						LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+                                    if( ! RecalboxSystem::getInstance()->launchKodi(window)) {
+                                        LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+                                    }
                                     launchKodi = false;
 				}, "NO", [this] {
                                     launchKodi = false;
@@ -263,8 +269,8 @@ void Window::renderLoadingScreen()
 	splash.render(trans);
 
 	auto& font = mDefaultFonts.at(1);
-	TextCache* cache = font->buildTextCache("LOADING...", 0, 0, 0x656565FF);
-	trans = trans.translate(Eigen::Vector3f(round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f), 
+	TextCache* cache = font->buildTextCache(gettext("LOADING..."), 0, 0, 0x656565FF);
+	trans = trans.translate(Eigen::Vector3f(round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f),
 		round(Renderer::getScreenHeight() * 0.835f), 0.0f));
 	Renderer::setMatrix(trans);
 	font->renderTextCache(cache);
@@ -300,8 +306,8 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 				// yes, it has!
 
 				// can we combine? (dpad only)
-				if((it->first == "up/down" && addPrompts.at(mappedTo->second).first == "left/right") ||
-					(it->first == "left/right" && addPrompts.at(mappedTo->second).first == "up/down"))
+                if((strcmp(it->first, "up/down") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "left/right") == 0) ||
+                    (strcmp(it->first, "left/right") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "up/down") == 0))
 				{
 					// yes!
 					addPrompts.at(mappedTo->second).first = "up/down/left/right";

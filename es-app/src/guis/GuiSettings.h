@@ -19,8 +19,10 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	std::vector<HelpPrompt> getHelpPrompts() override;
 
+	inline MenuComponent *getMenu() const { return &mMenu; }
+
 private:
         bool doSave = true;
-	MenuComponent mMenu;
+	mutable MenuComponent mMenu;
 	std::vector< std::function<void()> > mSaveFuncs;
 };

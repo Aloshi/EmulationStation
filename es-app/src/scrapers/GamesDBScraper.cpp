@@ -25,7 +25,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(COLECOVISION, "Colecovision")
 	(COMMODORE_64, "Commodore 64")
 	(INTELLIVISION, "Intellivision")
-	(MAC_OS, "Mac OS")
+	(MACOS, "Mac OS")
 	(XBOX, "Microsoft Xbox")
 	(XBOX_360, "Microsoft Xbox 360")
 	// missing MSX

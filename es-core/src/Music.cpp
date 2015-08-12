@@ -73,18 +73,17 @@ void Music::deinitMusic()
 
 void Music::play()
 {
-
-        if(music == NULL)
+    if(music == NULL)
 		return;
-	if(!Settings::getInstance()->getBool("EnableSounds"))
+	if(!Settings::getInstance()->getBool("audio.bgmusic"))
 		return;
 	if (!playing)
 	{
 		playing = true;
 	}
-        LOG(LogError) << "playing";
-        if(Mix_FadeInMusic(music, -1, 1000) == -1){
-            LOG(LogError) << "Mix_PlayMusic: " << Mix_GetError();
-        }else {
-        }
+    LOG(LogInfo) << "playing";
+    if(Mix_FadeInMusic(music, -1, 1000) == -1){
+        LOG(LogInfo) << "Mix_PlayMusic: " << Mix_GetError();
+    }else {
+    }
 }

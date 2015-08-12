@@ -11,6 +11,7 @@
 #include "guis/GuiMsgBox.h"
 #include <boost/locale.hpp>
 
+using namespace boost::locale;
 using namespace Eigen;
 
 GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults) : 

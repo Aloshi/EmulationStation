@@ -39,7 +39,9 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
 
-	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
+	const FileData* root = getRoot();
+	const SystemData* systemData = root->getSystem();
+	mHeaderText.setText(systemData ? systemData->getFullName() : root->getCleanName());
 
 	bool hasFavorites = false;
 
@@ -64,9 +66,9 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	if(! Settings::getInstance()->getBool("FavoritesOnly")){
 		for(auto it = files.begin(); it != files.end(); it++)
 		{
-			if ((*it)->metadata.get("favorite").compare("yes") == 0)
+			if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("yes") == 0)
 			{
-				mList.add("☆ " + (*it)->getName(), *it, ((*it)->getType() == FOLDER)); // FIXME Folder as favorite ?
+				mList.add("\uF006 " + (*it)->getName(), *it, ((*it)->getType() == FOLDER)); // FIXME Folder as favorite ?
 			}
 		}
 	}
@@ -138,6 +140,7 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("y", "favorite"));
 	prompts.push_back(HelpPrompt("select", "options"));
 	return prompts;
 }

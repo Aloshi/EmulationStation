@@ -49,6 +49,8 @@ public:
 
 	int getNumJoysticks();
 	int getButtonCountByDevice(int deviceId);
+	int getAxisCountByDevice(int deviceId);
+
 	int getNumConfiguredDevices();
 
 	std::string getDeviceGUIDString(int deviceId);

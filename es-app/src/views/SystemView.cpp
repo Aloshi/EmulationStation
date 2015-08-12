@@ -160,11 +160,11 @@ void SystemView::onCursorChanged(const CursorState& state)
 	// it's one of these...
 
 	float endPos = target; // directly
-	float dist = abs(endPos - startPos);
+    float dist = std::abs(endPos - startPos);
 	
-	if(abs(target + posMax - startPos) < dist)
+    if(std::abs(target + posMax - startPos) < dist)
 		endPos = target + posMax; // loop around the end (0 -> max)
-	if(abs(target - posMax - startPos) < dist)
+    if(std::abs(target - posMax - startPos) < dist)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
 	

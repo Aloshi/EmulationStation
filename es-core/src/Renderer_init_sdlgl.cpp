@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include <iostream>
 #include "platform.h"
-#include GLHEADER
+#include "platform_gl.h"
 #include "resources/Font.h"
 #include <SDL.h>
 #include "Log.h"
@@ -104,8 +104,9 @@ namespace Renderer
 			// SDL_GL_SetSwapInterval returns 0 on success, -1 on error.
 			// if vsync is requested, try late swap tearing; if that doesn't work, try normal vsync
 			// if that doesn't work, report an error
-			if(SDL_GL_SetSwapInterval(-1) != 0 && SDL_GL_SetSwapInterval(1) != 0)
+            if(SDL_GL_SetSwapInterval(-1) != 0 && SDL_GL_SetSwapInterval(1) != 0) {
 				LOG(LogWarning) << "Tried to enable vsync, but failed! (" << SDL_GetError() << ")";
+            }
 		}
 
 		//hide mouse cursor

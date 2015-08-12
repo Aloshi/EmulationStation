@@ -1,3 +1,4 @@
+
 # Compiled Object files
 *.slo
 *.lo
@@ -30,9 +31,9 @@ CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
 Makefile
+CPackConfig.cmake
+CPackSourceConfig.cmake
 
 .idea/
 *.iml
-
-#KDE
-.directory
+*.txt.user*

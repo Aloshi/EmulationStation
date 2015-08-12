@@ -24,7 +24,8 @@ std::vector<const char *> settings_dont_save = boost::assign::list_of
         ("kodi.atstartup")
         ("wifi.enabled")
         ("wifi.ssid")
-        ("kodi.key");
+        ("wifi.key")
+        ("audio.bgmusic");
 
 Settings::Settings() {
     setDefaults();
@@ -56,7 +57,7 @@ void Settings::setDefaults() {
     mBoolMap["VSync"] = true;
 #endif
 
-    mBoolMap["EnableSounds"] = true;
+    mBoolMap["audio.bgmusic"] = true;
     mBoolMap["ShowHelpPrompts"] = true;
     mBoolMap["ScrapeRatings"] = true;
     mBoolMap["IgnoreGamelist"] = false;
@@ -94,7 +95,6 @@ void Settings::setDefaults() {
     mStringMap["INPUT P2"] = "DEFAULT";
     mStringMap["INPUT P3"] = "DEFAULT";
     mStringMap["INPUT P4"] = "DEFAULT";
-    mStringMap["AudioOutputDevice"] = "auto";
     mStringMap["Overclock"] = "none";
     mStringMap["RecalboxSettingScript"] = "/recalbox/scripts/recalbox-config.sh";
     mStringMap["RecalboxConfigScript"] = "";

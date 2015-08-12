@@ -83,6 +83,14 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O3")  #-s = strip binary
 endif()
 
+if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
+    #set up compiler flags
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O3") #support C++11 for std::, optimize
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O3")  #-s = strip binary
+
+    #set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+endif()
+
 if(${GLSystem} MATCHES "Desktop OpenGL")
     add_definitions(-DUSE_OPENGL_DESKTOP)
 else()
@@ -94,15 +102,17 @@ add_definitions(-DEIGEN_DONT_ALIGN)
 #-------------------------------------------------------------------------------
 #add include directories
 set(COMMON_INCLUDE_DIRS
+    # OSX seems to have a conflicting platform.h somewhere and fails to find
+    # getHomePath, so let use our includes paths first.
+    ${CMAKE_CURRENT_SOURCE_DIR}/external
+    ${CMAKE_CURRENT_SOURCE_DIR}/es-app/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
     ${FREETYPE_INCLUDE_DIRS}
     ${FreeImage_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/external
-    ${CMAKE_CURRENT_SOURCE_DIR}/es-app/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
 
 )
 

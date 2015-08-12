@@ -173,7 +173,13 @@ int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 	else
 		return SDL_JoystickNumButtons(mJoysticks[id]);
 }
-
+int InputManager::getAxisCountByDevice(SDL_JoystickID id)
+{
+	if(id == DEVICE_KEYBOARD)
+		return 0; //it's zero, okay.
+	else
+		return SDL_JoystickNumAxes(mJoysticks[id]);
+}
 InputConfig* InputManager::getInputConfigByDevice(int device)
 {
 	if(device == DEVICE_KEYBOARD)
@@ -245,20 +251,24 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 		break;
 
 	case SDL_JOYDEVICEADDED:
-            if(! getInputConfigByDevice(ev.jdevice.which)){
-                //addJoystickByDeviceIndex(ev.jdevice.which); // ev.jdevice.which is a device index
-                LOG(LogInfo) << "Reinitialize because of SDL_JOYDEVADDED unknown";
-		//addAllJoysticks();
-                this->init();
-            }
-            return true;
+#if defined(__APPLE__)
+        addJoystickByDeviceIndex(ev.jdevice.which); // ev.jdevice.which is a device index
+#else
+        if(! getInputConfigByDevice(ev.jdevice.which)){
+            LOG(LogInfo) << "Reinitialize because of SDL_JOYDEVADDED unknown";
+            this->init();
+        }
+#endif
+        return true;
 
 	case SDL_JOYDEVICEREMOVED:
-		//removeJoystickByJoystickID(ev.jdevice.which); // ev.jdevice.which is an SDL_JoystickID (instance ID)
-                LOG(LogInfo) << "Reinitialize because of SDL_JOYDEVICEREMOVED";
-
-                this->init();
-                return false;
+#if defined(__APPLE__)
+        removeJoystickByJoystickID(ev.jdevice.which); // ev.jdevice.which is an SDL_JoystickID (instance ID)
+#else
+        LOG(LogInfo) << "Reinitialize because of SDL_JOYDEVICEREMOVED";
+        this->init();
+#endif
+        return false;
 	}
 
 	return false;
@@ -457,7 +467,7 @@ std::string InputManager::configureEmulators() {
         }
 
         if(playerInputConfig != NULL){
-            command << "-p" << player+1 << "index " <<  playerInputConfig->getDeviceIndex() << " -p" << player+1 << "guid " << playerInputConfig->getDeviceGUIDString() << " -p" << player+1 << "name \"" <<  playerInputConfig->getDeviceName() << "\"";
+            command << "-p" << player+1 << "index " <<  playerInputConfig->getDeviceIndex() << " -p" << player+1 << "guid " << playerInputConfig->getDeviceGUIDString() << " -p" << player+1 << "name \"" <<  playerInputConfig->getDeviceName() << "\" ";
         }/*else {
             command << " " << "DEFAULT" << " -1 DEFAULTDONOTFINDMEINCOMMAND";
         }*/

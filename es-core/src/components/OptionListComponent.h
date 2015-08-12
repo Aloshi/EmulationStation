@@ -11,6 +11,8 @@
 #include "Log.h"
 #include <boost/locale.hpp>
 
+using namespace boost::locale;
+
 
 //Used to display a list of options.
 //Can select one or multiple options.
@@ -171,8 +173,9 @@ public:
 		mLeftArrow.setResize(0, mText.getFont()->getLetterHeight());
 		mRightArrow.setResize(0, mText.getFont()->getLetterHeight());
 
-		if(mSize.x() < (mLeftArrow.getSize().x() + mRightArrow.getSize().x()))
+        if(mSize.x() < (mLeftArrow.getSize().x() + mRightArrow.getSize().x())) {
 			LOG(LogWarning) << "OptionListComponent too narrow!";
+        }
 
 		mText.setSize(mSize.x() - mLeftArrow.getSize().x() - mRightArrow.getSize().x(), mText.getFont()->getHeight());
 
@@ -242,7 +245,7 @@ public:
 		if(selected.size() == 1){
                     return selected.at(0);
                 }else {
-                    return NULL;
+                    return T();
                 }
 	}
         
@@ -267,6 +270,10 @@ public:
 
 		mEntries.push_back(e);
 		onSelectedChanged();
+	}
+
+	inline void setSelectedChangedCallback(const std::function<void(const T&)>& callback) {
+		mSelectedChangedCallback = callback;
 	}
 
 private:
@@ -315,6 +322,10 @@ private:
 				}
 			}
 		}
+
+		if (mSelectedChangedCallback) {
+			mSelectedChangedCallback(mEntries.at(getSelectedId()).object);
+		}
 	}
 
 	std::vector<HelpPrompt> getHelpPrompts() override
@@ -335,4 +346,5 @@ private:
 	ImageComponent mRightArrow;
 
 	std::vector<OptionListData> mEntries;
+	std::function<void(const T&)> mSelectedChangedCallback;
 };
