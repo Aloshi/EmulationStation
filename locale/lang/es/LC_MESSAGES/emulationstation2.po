@@ -267,11 +267,7 @@ msgid "INPUT P4"
 msgstr "MANDO J4"
 
 msgid "NOGAMEERRORMESSAGE"
-msgstr ""
-"¡NO SE HAN ENCONTRADO JUEGOS EN EL SISTEMA !\n"
-"POR FAVOR, SIGUE LAS INSTRUCCIONES PARA AÑADIRLOS.\n"
-"\n"
-"VISÍTANOS EN RECALBOX.FR PARA OBTENER MÁS INFORMACIÓN"
+msgstr "¡NO SE HAN ENCONTRADO JUEGOS EN EL SISTEMA !\nPOR FAVOR, SIGUE LAS INSTRUCCIONES PARA AÑADIRLOS.\n\nVISÍTANOS EN RECALBOX.FR PARA OBTENER MÁS INFORMACIÓN"
 
 msgid "LANGUAGE"
 msgstr "IDIOMA"
@@ -407,12 +403,55 @@ msgstr " IGNORADOS."
 msgid "FAVORITES ONLY"
 msgstr "SOLO FAVORITOS"
 
-msgid "toggle favorite"
-msgstr "activar favoritos"
 
-msgid "favorite"
-msgstr "favorito"
+msgid "FAVORITE"
+msgstr "FAVORITO"
 
 msgid "enter favorite"
 msgstr "añadir favorito"
 
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "ACTUALIZACIONES"
+
+msgid "AUTO UPDATES"
+msgstr "ACTUALIZACIONES AUTOMÁTICAS"
+
+msgid "START UPDATE"
+msgstr "EMPEZAR LA ACTUALIZACIÓN"
+
+msgid "KODI SETTINGS"
+msgstr "COFIGURACIÓN DE KODI"
+
+msgid "ENABLE KODI"
+msgstr "ACTIVAR KODI"
+
+msgid "KODI AT START"
+msgstr "LANZAR KODI AL ARRANCAR"
+
+msgid "START KODI WITH X"
+msgstr "PULSAR X PARA LANZAR KODI"
+
+msgid "GAMES SETTINGS"
+msgstr "CONFIGURACIÓN DE JUEGO"
+
+msgid "REWIND"
+msgstr "REBOBINAR"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "CONFIGURACIÓN DE MANDOS"
+
+msgid "FRONTEND MUSIC"
+msgstr "MÚSICA DE FONDO"
+
+msgid "HOSTNAME"
+msgstr "NOMBRE DE EQUIPO"
+
+msgid "CONNECTED"
+msgstr "CONECTADO"
+
+msgid "NOT CONNECTED"
+msgstr "NO CONECTADO"
+
+msgid "LOADING..."
+msgstr "CARGANDO..."
