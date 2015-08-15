@@ -2,46 +2,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0RC1 SPANISH po\n"
 "POT-Creation-Date: 2014-09-20 12:00-0500\n"
-"PO-Revision-Date: 2015-03-30 18:18+0100\n"
+"PO-Revision-Date: 2015-08-12 13:00+0100\n"
 "Last-Translator: Antonio López Abad <mrpengo@gmail.com>\n"
 "Language-Team: SPANISH\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
 "Language: es\n"
 
 msgid "MAIN MENU"
 msgstr "MENÚ PRINCIPAL"
-
 msgid "YES"
 msgstr "SÍ"
-
 msgid "NO"
 msgstr "NO"
 
 #: es-app/src/views/gamelist/DetailedGameListView.cpp
 msgid "Rating: "
 msgstr "Puntuación: "
-
 msgid "Released: "
 msgstr "Publicado:"
-
 msgid "Developer: "
 msgstr "Desarrollador : "
-
 msgid "Publisher: "
 msgstr "Editor : "
-
 msgid "Genre: "
 msgstr "Género:"
-
 msgid "Players: "
 msgstr "Jugadores : "
-
 msgid "Last played: "
 msgstr "Última partida : "
-
 msgid "Times played: "
 msgstr "Veces jugado : "
 
@@ -49,149 +39,106 @@ msgstr "Veces jugado : "
 msgid "enter game name"
 msgstr "nombre del juego"
 
+
 msgid "NAME"
 msgstr "NOMBRE"
-
 msgid "ENTER DESCRIPTION"
 msgstr "INTRODUCE LA DESCRIPCIÓN"
-
 msgid "ENTER PATH TO IMAGE"
 msgstr "INTRODUCE LA RUTA A LA IMAGEN"
-
 msgid "THUMBNAIL"
 msgstr "MINIATURA"
-
 msgid "ENTER PATH TO THUMBNAIL"
 msgstr "INTRODUCE LA RUTA A LA MINIATURA"
-
 msgid "RATING"
 msgstr "CALIFICACIÓN"
-
 msgid "ENTER SCORE"
 msgstr "INTRODUCE LA CALIFICACIÓN"
-
 msgid "RELEASE DATE"
 msgstr "FECHA DE LANZAMIENTO"
-
 msgid "ENTER RELEASE DATE"
 msgstr "INTRODUCE LA FECHA DE LANZAMIENTO"
-
 msgid "DEVELOPER"
 msgstr "DESARROLADOR"
-
 msgid "ENTER GAME DEVELOPER"
 msgstr "INTRODUCE EL NOMBRE DEL DESARROLLADOR"
-
 msgid "PUBLISHER"
 msgstr "EDITOR"
-
 msgid "ENTER GAME PUBLISHER"
 msgstr "INTRODUCE EL NOMBRE DEL EDITOR"
-
 msgid "GENRE"
 msgstr "GÉNERO"
-
 msgid "ENTER GAME GENRE"
 msgstr "INTRODUCE EL GÉNERO"
-
 msgid "PLAYERS"
 msgstr "JUGADORES"
-
 msgid "ENTER NUMBER OF PLAYERS"
 msgstr "INTRODUCE EL NÚMERO DE JUGADORES"
-
 msgid "PLAY COUNT"
 msgstr "Nº DE PARTIDAS"
-
 msgid "ENTER NUMBER OF TIMES PLAYED"
 msgstr "INTRODUCE EL NÚMERO DE PARTIDAS JUGADAS"
 
 #: es-app/src/guis/GuiMenu.cpp
 msgid "SCRAPE FROM"
 msgstr "OBTENER DATOS DE"
-
 msgid "SCRAPE RATINGS"
 msgstr "OBTENER CALIFICACIONES"
-
 msgid "SOUND SETTINGS"
 msgstr "CONFIGURACIÓN DE AUDIO"
-
 msgid "SYSTEM VOLUME"
 msgstr "VOLUMEN DEL SISTEMA"
-
 msgid "ENABLE SOUNDS"
 msgstr "ACTIVAR SONIDOS"
-
 msgid "UI SETTINGS"
 msgstr "CONFIGURACIÓN DE LA INTERFAZ"
-
 msgid "SCREENSAVER AFTER"
 msgstr "SALVAPANTALLAS A LOS"
-
 msgid "TRANSITION STYLE"
 msgstr "TIPO DE TRANSICIÓN"
-
 msgid "SCREENSAVER BEHAVIOR"
 msgstr "COMPORTAMIENTO DEL SALVAPANTALLAS"
-
 msgid "SHOW FRAMERATE"
 msgstr "MOSTRAR LA TASA DE REFRESCO"
-
 msgid "ON-SCREEN HELP"
 msgstr "AYUDA EN PANTALLA"
-
 msgid "QUICK SYSTEM SELECT"
 msgstr "SELECCIÓN RÁPIDA DE SISTEMA"
-
 msgid "THEME SET"
 msgstr "TEMA"
-
 msgid "CONFIGURE INPUT"
 msgstr "CONFIGURACIÓN DE CONTROLES"
-
 msgid "QUIT"
 msgstr "SALIR"
-
 msgid "REALLY RESTART?"
 msgstr "¿REINICIAR?"
-
 msgid "RESTART SYSTEM"
 msgstr "REINICIAR EL SISTEMA"
-
 msgid "REALLY SHUTDOWN?"
 msgstr "¿APAGAR?"
-
 msgid "SHUTDOWN SYSTEM"
 msgstr "APAGAR EL SISTEMA"
-
 msgid "REALLY QUIT?"
 msgstr "¿SALIR?"
-
 msgid "QUIT EMULATIONSTATION"
 msgstr "SALIR DE EMULATIONSTATION"
+
 
 #: es-app/src/guis/GuiScraperStart.cpp
 msgid "SCRAPE NOW"
 msgstr "OBTENER DATOS"
-
 msgid "USER DECIDES ON CONFLICTS"
 msgstr "DECIDIR EN CASO DE CONFLICTO"
-
 msgid "SYSTEMS"
 msgstr "SISTEMAS"
-
 msgid "FILTER"
 msgstr "FILTRO"
-
 msgid "SCRAPE THESE GAMES"
 msgstr "OBTENER DATOS DE ESTOS JUEGOS"
-
 msgid "SCRAPE THESE SYSTEMS"
 msgstr "OBTENER DATOS DE ESTOS SISTEMAS"
-
 msgid "SELECT ALL"
 msgstr "TODOS"
-
 msgid "SELECT NONE"
 msgstr "NINGUNO"
 
@@ -203,55 +150,40 @@ msgstr "OBTENCIÓN DE DATOS EN CURSO"
 msgid "NO GAMES FOUND - SKIP"
 msgstr "NO SE ENCONTRARON JUEGOS - SALTAR"
 
+
 #: Buttons
 msgid "close"
 msgstr "cerrar"
-
 msgid "select"
 msgstr "seleccionar"
-
 msgid "choose"
 msgstr "elegir"
-
 msgid "back"
 msgstr "volver"
-
 msgid "CLOSE"
 msgstr "CERRAR"
-
 msgid "SELECT"
 msgstr "SELECCIONAR"
-
 msgid "CHOOSE"
 msgstr "CAMBIAR"
-
 msgid "BACK"
 msgstr "VOLVER"
-
 msgid "LAUNCH"
 msgstr "LANZAR"
-
 msgid "SYSTEM"
 msgstr "SISTEMA"
-
 msgid "INPUT"
 msgstr "EDITAR"
-
 msgid "SKIP"
 msgstr "SALTAR"
-
 msgid "CHANGE"
 msgstr "CAMBIAR"
-
 msgid "SAVE"
 msgstr "GUARDAR"
-
 msgid "CANCEL"
 msgstr "CANCELAR"
-
 msgid "DELETE"
 msgstr "BORRAR"
-
 msgid "GO BACK"
 msgstr "VOLVER"
 
@@ -262,57 +194,44 @@ msgstr " JUEGOS DISPONIBLES"
 #: es-app/src/guis/GuiGamelistOptions.cpp
 msgid "JUMP TO LETTER"
 msgstr "IR A LA LETRA"
-
 msgid "SORT GAMES BY"
 msgstr "ORDENAR LOS JUEGOS POR"
-
 msgid "EDIT THIS GAME'S METADATA"
 msgstr "EDITAR LOS DATOS DE ESTE JUEGO"
+
 
 #: es-app/src/guis/GuiMetaDataEd.cpp
 msgid "EDIT METADATA"
 msgstr "EDITAR LOS DATOS"
 
 msgid " GAMEPAD"
-msgstr " CONTROLADOR"
-
+msgstr " MANDO"
 msgid " DETECTED"
 msgstr " DETECTADO"
-
 msgid "WELCOME"
 msgstr "BIENVENIDO"
-
 msgid "NO GAMEPADS DETECTED"
-msgstr "NO SE DETECTARON CONTROLADORES"
-
+msgstr "NO SE DETECTARON MANDOS"
 msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "MANTÉN PULSADO UN BOTÓN DEL CONTROLADOR PARA CONFIGURARLO"
-
+msgstr "MANTÉN PULSADO UN BOTÓN DEL MANDO PARA CONFIGURARLO"
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "PULSA F4 PARA SALIR EN CUALQUIER MOMENTO"
-
 msgid "PRESS ESC TO CANCEL."
 msgstr "PULSA ESC PARA CANCELAR"
 
 #: es-core/src/guis/GuiInputConfig.cpp
 msgid "CONFIGURING"
 msgstr "CONFIGURANDO"
-
 msgid "UP"
 msgstr "ARRIBA"
-
 msgid "DOWN"
 msgstr "ABAJO"
-
 msgid "LEFT"
 msgstr "IZQUIERDA"
-
 msgid "RIGHT"
 msgstr "DERECHA"
-
 msgid "PAGE UP"
 msgstr "L1 (AV. PÁG)"
-
 msgid "PAGE DOWN"
 msgstr "R1 (RE. PÁG)"
 
@@ -320,52 +239,42 @@ msgid "SAVE CHANGES?"
 msgstr "¿GUARDAR LOS CAMBIOS?"
 
 #: es-app/src/guis/GuiUpdate.cpp
+
 msgid "WORKING..."
 msgstr "EN CURSO..."
-
 msgid "UPDATE"
 msgstr "ACTUALIZAR"
-
 msgid "REALLY UPDATE?"
 msgstr "¿QUIERES ACTUALIZAR EL SISTEMA?"
-
 msgid "NETWORK CONNECTION NEEDED"
 msgstr "SE NECESITA UNA CONEXIÓN DE RED"
-
 msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
 msgstr "ACTUALIZACIÓN FINALIZADA. EL SISTEMA VA A REINICIARSE"
-
 msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
 msgstr "ACTUALIZACIÓN FALLIDA. EL SISTEMA VA A REINICIARSE"
 
+
 # GUIMENU
 msgid "CONFIGURE A CONTROLLER"
-msgstr "CONFIGURAR UN CONTROLADOR"
-
+msgstr "CONFIGURAR UN MANDO"
 msgid "INPUT P1"
-msgstr "CONTROLADOR J1"
-
+msgstr "MANDO J1"
 msgid "INPUT P2"
-msgstr "CONTROLADOR J2"
-
+msgstr "MANDO J2"
 msgid "INPUT P3"
-msgstr "CONTROLADOR J3"
-
+msgstr "MANDO J3"
 msgid "INPUT P4"
-msgstr "CONTROLADOR J4"
+msgstr "MANDO J4"
 
 msgid "NOGAMEERRORMESSAGE"
-msgstr ""
-"¡NO SE HAN ENCONTRADO JUEGOS EN EL SISTEMA !\n"
-"POR FAVOR, SIGUE LAS INSTRUCCIONES PARA AÑADIRLOS.\n"
-"\n"
-"VISÍTANOS EN RECALBOX.FR PARA OBTENER MÁS INFORMACIÓN"
+msgstr "¡NO SE HAN ENCONTRADO JUEGOS EN EL SISTEMA !\nPOR FAVOR, SIGUE LAS INSTRUCCIONES PARA AÑADIRLOS.\n\nVISÍTANOS EN RECALBOX.FR PARA OBTENER MÁS INFORMACIÓN"
 
 msgid "LANGUAGE"
 msgstr "IDIOMA"
 
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "EL SISTEMA VA A REINICIARSE"
+
 
 msgid "SYSTEM SETTINGS"
 msgstr "CONFIGURACIÓN DEL SISTEMA"
@@ -383,10 +292,10 @@ msgid "SMOOTH GAMES"
 msgstr "SUAVIZAR LOS JUEGOS"
 
 msgid "GPIO CONTROLLERS"
-msgstr "CONTROLADORES GPIO"
+msgstr "MANDOS GPIO"
 
 msgid "GPIO CONTROLLERS ARE NOW ON"
-msgstr "LOS CONTROLADORES GPIO ESTÁN ACTIVADOS"
+msgstr "LOS MANDOS GPIO ESTÁN ACTIVADOS"
 
 msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
 msgstr "HAY UNA ACTUALIZACIÓN DISPONIBLE PARA TU RECALBOX"
@@ -421,51 +330,35 @@ msgstr "RELACIÓN DE ASPECTO"
 # Config controllers missing translation
 msgid "PRESS ANYTHING"
 msgstr "PULSA CUALQUIER BOTÓN"
-
 msgid "-NOT DEFINED-"
 msgstr "-SIN CONFIGURAR-"
-
 msgid "ALREADY TAKEN"
 msgstr "EN USO"
-
 msgid "HOLD FOR "
 msgstr "MANTEN PARA"
-
 msgid "S TO SKIP"
 msgstr "S PARA SALTAR"
-
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr "MANTEN CUALQUIER BOTÓN PARA SALTAR"
-
 msgid "JOYSTICK 1 UP"
 msgstr "JOYSTICK 1 ARRIBA"
-
 msgid "JOYSTICK 1 LEFT"
 msgstr "JOYSTICK 1 IZQUIERDA"
-
 msgid "JOYSTICK 2 UP"
 msgstr "JOYSTICK 2 ARRIBA"
-
 msgid "JOYSTICK 2 LEFT"
 msgstr "JOYSTICK 2 IZQUIERDA"
 
 msgid "I18NMESSAGECONTROLLERS"
-msgstr ""
-"VAS A CONFIGURAR UN CONTROLADOR. SI SOLO TIENES UN JOYSTICK CONFIGURA LAS "
-"DIRECCIONES E IGNORA LAS CONFIGURACIÓN DE JOYSTICK MANTENIENDO UN BOTÓN. SI "
-"NO TIENES UN BOTÓN ESPECIAL PARA LA HOTKEY UTILIZA EL SELECT. IGNORA LOS "
-"BOTONES QUE NO EXISTAN EN TU CONTROLADOR MANTENIENDO UNA TECLA PULSADA."
+msgstr "VAS A CONFIGURAR UN MANDO. SI SOLO TIENES UN JOYSTICK CONFIGURA LAS DIRECCIONES E IGNORA LAS CONFIGURACIÓN DE JOYSTICK MANTENIENDO UN BOTÓN. SI NO TIENES UN BOTÓN ESPECIAL PARA LA HOTKEY UTILIZA EL SELECT. IGNORA LOS BOTONES QUE NO EXISTAN EN TU MANDO MANTENIENDO UNA TECLA PULSADA."
 
 # TEXT EDITING
 msgid "EDIT"
 msgstr "EDITAR"
-
 msgid "STOP EDITING"
 msgstr "DEJAR DE EDITAR"
-
 msgid "MOVE CURSOR"
 msgstr "MOVER EL CURSOR"
-
 msgid "DISCARD CHANGES"
 msgstr "DESCARTAR LOS CAMBIOS"
 
@@ -494,7 +387,6 @@ msgstr "buscar"
 msgid "GAMES"
 msgstr "JUEGOS"
 
-
 msgid " OF "
 msgstr " DE "
 
@@ -506,3 +398,60 @@ msgstr " OBTENIDOS!"
 
 msgid " SKIPPED."
 msgstr " IGNORADOS."
+
+# FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "SOLO FAVORITOS"
+
+
+msgid "FAVORITE"
+msgstr "FAVORITO"
+
+msgid "enter favorite"
+msgstr "añadir favorito"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "ACTUALIZACIONES"
+
+msgid "AUTO UPDATES"
+msgstr "ACTUALIZACIONES AUTOMÁTICAS"
+
+msgid "START UPDATE"
+msgstr "EMPEZAR LA ACTUALIZACIÓN"
+
+msgid "KODI SETTINGS"
+msgstr "COFIGURACIÓN DE KODI"
+
+msgid "ENABLE KODI"
+msgstr "ACTIVAR KODI"
+
+msgid "KODI AT START"
+msgstr "LANZAR KODI AL ARRANCAR"
+
+msgid "START KODI WITH X"
+msgstr "PULSAR X PARA LANZAR KODI"
+
+msgid "GAMES SETTINGS"
+msgstr "CONFIGURACIÓN DE JUEGO"
+
+msgid "REWIND"
+msgstr "REBOBINAR"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "CONFIGURACIÓN DE MANDOS"
+
+msgid "FRONTEND MUSIC"
+msgstr "MÚSICA DE FONDO"
+
+msgid "HOSTNAME"
+msgstr "NOMBRE DE EQUIPO"
+
+msgid "CONNECTED"
+msgstr "CONECTADO"
+
+msgid "NOT CONNECTED"
+msgstr "NO CONECTADO"
+
+msgid "LOADING..."
+msgstr "CARGANDO..."
