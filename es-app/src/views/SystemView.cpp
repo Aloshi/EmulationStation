@@ -144,22 +144,21 @@ void SystemView::onCursorChanged(const CursorState& state)
 	updateHelpPrompts();
 
 	float startPos = mCamOffset;
+	float endPos = (float)mCursor;
 
 	float posMax = (float)mEntries.size();
-	float target = (float)mCursor;
 
-	// what's the shortest way to get to our target?
-	// it's one of these...
+	if ((mScrollVelocity < 0) && (endPos > startPos)) {
+		// We are scrolling left, but the destination is to our right.
+		// => Loop around the start.
+		endPos -= posMax;
+	}
+	else if ((mScrollVelocity > 0) && (endPos < startPos)) {
+		// We are scrolling right, but the destination is to our left.
+		// => Loop around the end.
+		endPos += posMax;
+	}
 
-	float endPos = target; // directly
-	float dist = abs(endPos - startPos);
-	
-	if(abs(target + posMax - startPos) < dist)
-		endPos = target + posMax; // loop around the end (0 -> max)
-	if(abs(target - posMax - startPos) < dist)
-		endPos = target - posMax; // loop around the start (max - 1 -> -1)
-
-	
 	// animate mSystemInfo's opacity (fade out, wait, fade back in)
 
 	cancelAnimation(1);
