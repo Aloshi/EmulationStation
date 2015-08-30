@@ -64,6 +64,8 @@ public:
 	// Load or re-load theme.
 	void loadTheme();
 
+	unsigned int sortId;
+
 private:
 	std::string mName;
 	std::string mFullName;

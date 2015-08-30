@@ -132,7 +132,11 @@ void GuiFastSelect::updateGameListSort()
 {
 	const FileData::SortType& sort = FileSorts::SortTypes.at(mSortId);
 
-	FileData* root = mGameList->getCursor()->getSystem()->getRootFolder();
+	SystemData* system = mGameList->getCursor()->getSystem();
+	FileData* root = system->getRootFolder();
+
+	system->sortId = mSortId; // update system sort setting
+
 	root->sort(sort); // will also recursively sort children
 
 	// notify that the root folder was sorted
