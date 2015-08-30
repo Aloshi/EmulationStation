@@ -42,10 +42,12 @@ namespace FileSorts
 		//only games have rating metadata
 		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
 		{
-			return file1->metadata.getFloat("rating") < file2->metadata.getFloat("rating");
+			float r1 = file1->metadata.getFloat("rating"), r2 = file2->metadata.getFloat("rating");
+			if (r1 != r2)
+				return r1 < r2;
 		}
 
-		return false;
+		return compareFileName(file1, file2);
 	}
 
 	bool compareTimesPlayed(const FileData* file1, const FileData* file2)
@@ -53,10 +55,12 @@ namespace FileSorts
 		//only games have playcount metadata
 		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
 		{
-			return (file1)->metadata.getInt("playcount") < (file2)->metadata.getInt("playcount");
+			int pc1 = (file1)->metadata.getInt("playcount"), pc2 = (file2)->metadata.getInt("playcount");
+			if(pc1 != pc2)
+				return pc1 < pc2;
 		}
 
-		return false;
+		return compareFileName(file1, file2);
 	}
 
 	bool compareLastPlayed(const FileData* file1, const FileData* file2)
