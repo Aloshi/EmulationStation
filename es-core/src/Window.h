@@ -64,5 +64,5 @@ private:
 
 	bool mRenderedHelpPrompts;
         
-        bool launchKodi;
+	bool launchKodi;
 };

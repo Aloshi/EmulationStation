@@ -14,7 +14,7 @@
 using namespace boost::locale;
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
-	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
+	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0), launchKodi(false)
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
