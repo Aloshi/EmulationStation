@@ -268,15 +268,32 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  smoothing_enabled->setState(RecalboxConf::getInstance()->get("global.smooth") == "1");
                  s->addWithLabel("SMOOTH GAMES", smoothing_enabled);
 
-                 // smoothing
+
+                 // rewind
                  auto rewind_enabled = std::make_shared<SwitchComponent>(mWindow);
                  rewind_enabled->setState(RecalboxConf::getInstance()->get("global.rewind") == "1");
                  s->addWithLabel("REWIND", rewind_enabled);
 
-                 s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled] {
+
+                 // Shaders preset
+
+                 auto shaders_choices = std::make_shared<OptionListComponent<std::string> >(mWindow, "SHADERS SET", false);
+                 std::string currentShader = RecalboxConf::getInstance()->get("global.shaderset");
+                 if (currentShader.empty()) {
+                     currentShader = std::string("nano");
+                 }
+
+                 shaders_choices->add("NONE", "none", currentShader == "none");
+                 shaders_choices->add("SCANLINES", "scanlines", currentShader == "scanlines");
+                 shaders_choices->add("RETRO", "retro", currentShader == "retro");
+                 s->addWithLabel("SHADERS SET", shaders_choices);
+
+
+                 s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled, shaders_choices] {
                      RecalboxConf::getInstance()->set("global.smooth", smoothing_enabled->getState() ? "1" : "0");
                      RecalboxConf::getInstance()->set("global.ratio", ratio_choice->getSelected());
                      RecalboxConf::getInstance()->set("global.rewind", rewind_enabled->getState() ? "1" : "0");
+                     RecalboxConf::getInstance()->set("global.shaderset", shaders_choices->getSelected());
                      RecalboxConf::getInstance()->saveRecalboxConf();
                  });
                  mWindow->pushGui(s);
