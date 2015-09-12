@@ -3,6 +3,7 @@
 #include "Settings.h"
 #include "ThemeData.h"
 #include "AudioManager.h"
+#include "RecalboxConf.h"
 
 std::map< std::string, std::shared_ptr<Music> > Music::sMap;
 
@@ -75,7 +76,7 @@ void Music::play()
 {
     if(music == NULL)
 		return;
-	if(!Settings::getInstance()->getBool("audio.bgmusic"))
+	if(!(RecalboxConf::getInstance()->get("audio.bgmusic") == "1"))
 		return;
 	if (!playing)
 	{

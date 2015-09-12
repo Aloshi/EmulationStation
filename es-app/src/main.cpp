@@ -21,6 +21,8 @@
 #include "VolumeControl.h"
 #include <sstream>
 #include <boost/locale.hpp>
+#include <boost/algorithm/string.hpp>
+#include <RecalboxConf.h>
 #include "resources/Font.h"
 #include "NetworkThread.h"
 #include "RecalboxSystem.h"
@@ -300,14 +302,15 @@ int main(int argc, char* argv[])
 			}));
 	}
 
+	RecalboxConf* recalboxConf = RecalboxConf::getInstance();
 	// Recalbox config in settings for better performance
-	Settings::getInstance()->setBool("kodi.enabled", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.enabled")) == 0);
+	/*Settings::getInstance()->setBool("kodi.enabled", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.enabled")) == 0);
 	Settings::getInstance()->setBool("kodi.atstartup", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.atstartup")) == 0);
 	Settings::getInstance()->setBool("kodi.xbutton", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("kodi.xbutton")) == 0);
 	Settings::getInstance()->setBool("audio.bgmusic", std::string("1").compare(RecalboxSystem::getInstance()->getRecalboxConfig("audio.bgmusic")) == 0);
+	*/
 
-
-	if(Settings::getInstance()->getBool("kodi.enabled") && Settings::getInstance()->getBool("kodi.atstartup")){
+	if(boost::equal(recalboxConf->get("kodi.enabled"),"1") && boost::equal(recalboxConf->get("kodi.atstartup"), "1")){
 		RecalboxSystem::getInstance()->launchKodi(&window);
 	}
 	RecalboxSystem::getInstance()->getIpAdress();

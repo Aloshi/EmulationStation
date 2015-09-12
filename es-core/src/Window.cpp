@@ -9,6 +9,7 @@
 #include "components/ImageComponent.h"
 #include "guis/GuiMsgBox.h"
 #include "RecalboxSystem.h"
+#include "RecalboxConf.h"
 #include <boost/locale.hpp>
 
 using namespace boost::locale;
@@ -136,7 +137,7 @@ void Window::input(InputConfig* config, Input input)
 	}
 	else
 	{
-            if(config->isMappedTo("x", input) && input.value && !launchKodi && Settings::getInstance()->getBool("kodi.enabled") && Settings::getInstance()->getBool("kodi.xbutton")){
+            if(config->isMappedTo("x", input) && input.value && !launchKodi && RecalboxConf::getInstance()->get("kodi.enabled") == "1" && RecalboxConf::getInstance()->get("kodi.xbutton") == "1"){
                 launchKodi = true;
                 Window * window = this;
                 this->pushGui(new GuiMsgBox(this, "DO YOU WANT TO START KODI MEDIA CENTER ?", "YES", 

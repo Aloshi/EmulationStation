@@ -18,14 +18,7 @@ std::vector<const char *> settings_dont_save = boost::assign::list_of
         ("Windowed")
         ("VSync")
         ("HideConsole")
-        ("IgnoreGamelist")
-        ("kodi.enabled")
-        ("kodi.xbutton")
-        ("kodi.atstartup")
-        ("wifi.enabled")
-        ("wifi.ssid")
-        ("wifi.key")
-        ("audio.bgmusic");
+        ("IgnoreGamelist");
 
 Settings::Settings() {
     setDefaults();
@@ -57,7 +50,6 @@ void Settings::setDefaults() {
     mBoolMap["VSync"] = true;
 #endif
 
-    mBoolMap["audio.bgmusic"] = true;
     mBoolMap["ShowHelpPrompts"] = true;
     mBoolMap["ScrapeRatings"] = true;
     mBoolMap["IgnoreGamelist"] = false;
@@ -71,11 +63,6 @@ void Settings::setDefaults() {
 
 
     mBoolMap["Overscan"] = false;
-
-    mBoolMap["kodi.enabled"] = true;
-    mBoolMap["kodi.atstartup"] = false;
-    mBoolMap["kodi.xbutton"] = true;
-
 
     mIntMap["ScreenSaverTime"] = 5 * 60 * 1000; // 5 minutes
     mIntMap["ScraperResizeWidth"] = 400;
