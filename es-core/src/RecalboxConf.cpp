@@ -1,7 +1,3 @@
-//
-// Created by matthieu on 12/09/15.
-//
-
 #include "RecalboxConf.h"
 #include <iostream>
 #include <fstream>
@@ -36,7 +32,6 @@ bool RecalboxConf::loadRecalboxConf() {
             std::cout << "read line " << line << "\n";
             if (boost::regex_match(line, lineInfo, validLine)) {
                 confMap[std::string(lineInfo["key"])] = std::string(lineInfo["val"]);
-                std::cout << "found value : " << std::string(lineInfo["key"]) << "=" << std::string(lineInfo["val"]) << "\n";
             }
         }
         recalboxConf.close();
@@ -81,6 +76,10 @@ bool RecalboxConf::saveRecalboxConf() {
         }
     }
     std::ofstream fileout(recalboxConfFileTmp); //Temporary file
+    if (!fileout) {
+        LOG(LogError) << "Unable to open for saving :  " << recalboxConfFileTmp << "\n";
+        return false;
+    }
     for (int i = 0; i < fileLines.size(); i++) {
         fileout << fileLines[i] << "\n";
     }
@@ -95,7 +94,7 @@ bool RecalboxConf::saveRecalboxConf() {
 
     remove(recalboxConfFileTmp.c_str());
 
-    return 0;
+    return true;
 }
 
 std::string RecalboxConf::get(const std::string &name) {
