@@ -303,7 +303,7 @@ int main(int argc, char* argv[])
 	}
 
 	RecalboxConf* recalboxConf = RecalboxConf::getInstance();
-	if(boost::equal(recalboxConf->get("kodi.enabled"),"1") && boost::equal(recalboxConf->get("kodi.atstartup"), "1")){
+	if(recalboxConf->get("kodi.enabled") == "1" && recalboxConf->get("kodi.atstartup") == "1"){
 		RecalboxSystem::getInstance()->launchKodi(&window);
 	}
 	RecalboxSystem::getInstance()->getIpAdress();
