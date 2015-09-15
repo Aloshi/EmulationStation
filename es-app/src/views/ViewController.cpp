@@ -1,3 +1,4 @@
+#include <RecalboxConf.h>
 #include "views/ViewController.h"
 #include "Log.h"
 #include "SystemData.h"
@@ -324,7 +325,7 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 
 	// open menu
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if(config->isMappedTo("start", input) && input.value != 0 && RecalboxConf::getInstance()->get("system.es.menu") != "none" )
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));
@@ -477,7 +478,9 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 		return prompts;
 	
 	prompts = mCurrentView->getHelpPrompts();
-	prompts.push_back(HelpPrompt("start", "menu"));
+	if(RecalboxConf::getInstance()->get("system.es.menu") != "none"){
+		prompts.push_back(HelpPrompt("start", "menu"));
+	}
 
 	return prompts;
 }
