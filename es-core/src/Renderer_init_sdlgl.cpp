@@ -36,6 +36,9 @@ namespace Renderer
 			return false;
 		}
 
+		//hide mouse cursor early
+		initialCursorState = SDL_ShowCursor(0) == 1;
+
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -107,9 +110,6 @@ namespace Renderer
 			if(SDL_GL_SetSwapInterval(-1) != 0 && SDL_GL_SetSwapInterval(1) != 0)
 				LOG(LogWarning) << "Tried to enable vsync, but failed! (" << SDL_GetError() << ")";
 		}
-
-		//hide mouse cursor
-		initialCursorState = SDL_ShowCursor(0) == 1;
 
 		return true;
 	}
