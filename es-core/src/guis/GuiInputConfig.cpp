@@ -130,7 +130,7 @@ static const char* inputIcon[inputCount] =
 
 using namespace Eigen;
 
-#define HOLD_TO_SKIP_MS 2500
+#define HOLD_TO_SKIP_MS 1000
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback) : GuiComponent(window), 
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 7)), 
