@@ -4,52 +4,13 @@
 #include "Log.h"
 
 std::vector<std::shared_ptr<Sound>> AudioManager::sSoundVector;
-SDL_AudioSpec AudioManager::sAudioFormat;
+std::vector<std::shared_ptr<Music>> AudioManager::sMusicVector;
+
+
 std::shared_ptr<AudioManager> AudioManager::sInstance;
 
 
-void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
-{
-	bool stillPlaying = false;
-
-	//initialize the buffer to "silence"
-	SDL_memset(stream, 0, len);
-
-	//iterate through all our samples
-	std::vector<std::shared_ptr<Sound>>::const_iterator soundIt = sSoundVector.cbegin();
-	while (soundIt != sSoundVector.cend())
-	{
-		std::shared_ptr<Sound> sound = *soundIt;
-		if(sound->isPlaying())
-		{
-			//calculate rest length of current sample
-			Uint32 restLength = (sound->getLength() - sound->getPosition());
-			if (restLength > (Uint32)len) {
-				//if stream length is smaller than smaple lenght, clip it
-				restLength = len;
-			}
-			//mix sample into stream
-			SDL_MixAudio(stream, &(sound->getData()[sound->getPosition()]), restLength, SDL_MIX_MAXVOLUME);
-			if (sound->getPosition() + restLength < sound->getLength())
-			{
-				//sample hasn't ended yet
-				stillPlaying = true;
-			}
-			//set new sound position. if this is at or beyond the end of the sample, it will stop automatically
-			sound->setPosition(sound->getPosition() + restLength);
-		}
-		//advance to next sound
-		++soundIt;
-	}
-
-	//we have processed all samples. check if some will still be playing
-	if (!stillPlaying) {
-		//no. pause audio till a Sound::play() wakes us up
-		SDL_PauseAudio(1);
-	}
-}
-
-AudioManager::AudioManager()
+AudioManager::AudioManager(): currentMusic(NULL), running(0)
 {
 	init();
 }
@@ -70,48 +31,73 @@ std::shared_ptr<AudioManager> & AudioManager::getInstance()
 
 void AudioManager::init()
 {
+    if(running == 0){
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0)
 	{
 		LOG(LogError) << "Error initializing SDL audio!\n" << SDL_GetError();
 		return;
 	}
 
-	//stop playing all Sounds
-	for(unsigned int i = 0; i < sSoundVector.size(); i++)
-	{
-		if(sSoundVector.at(i)->isPlaying())
-		{
-			sSoundVector[i]->stop();
-		}
-	}
-
-	//Set up format and callback. Play 16-bit stereo audio at 44.1Khz
-	sAudioFormat.freq = 44100;
-	sAudioFormat.format = AUDIO_S16;
-	sAudioFormat.channels = 2;
-	sAudioFormat.samples = 1024;
-	sAudioFormat.callback = mixAudio;
-	sAudioFormat.userdata = NULL;
-
 	//Open the audio device and pause
-	if (SDL_OpenAudio(&sAudioFormat, NULL) < 0) {
-		LOG(LogError) << "AudioManager Error - Unable to open SDL audio: " << SDL_GetError() << std::endl;
-	}
+        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 4096 ) < 0 ){
+		LOG(LogError) << "MUSIC Error - Unable to open SDLMixer audio: " << SDL_GetError() << std::endl;
+	}else {
+                LOG(LogInfo) << "SDL AUDIO Initialized";
+                running = 1;
+        }
+    }
 }
 
 void AudioManager::deinit()
 {
 	//stop all playback
-	stop();
+	//stop();
 	//completely tear down SDL audio. else SDL hogs audio resources and emulators might fail to start...
-	SDL_CloseAudio();
+        LOG(LogInfo) << "Shutting down SDL AUDIO";
+
+	Mix_HaltMusic();
+        Mix_CloseAudio();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+        running = 0;
+}
+
+void AudioManager::stopMusic()
+{
+       Mix_FadeOutMusic(1000);
+       Mix_HaltMusic();
+       currentMusic = NULL;
+}
+
+void AudioManager::startMusic(const std::shared_ptr<ThemeData>& theme)
+{
+    std::shared_ptr<Music> bgsound = Music::getFromTheme(theme,"system", "bgsound");
+    if(bgsound){
+         stopMusic();
+         bgsound->play();
+         currentMusic = bgsound;
+    }else {
+        LOG(LogError) << "NO SOUND FOUND";
+        stopMusic();
+    }
+}
+
+void AudioManager::resumeMusic(){
+    this->init();
+    if(currentMusic != NULL){
+        currentMusic->play();
+    }
 }
 
 void AudioManager::registerSound(std::shared_ptr<Sound> & sound)
 {
 	getInstance();
 	sSoundVector.push_back(sound);
+}
+
+void AudioManager::registerMusic(std::shared_ptr<Music> & music)
+{
+	getInstance();
+	sMusicVector.push_back(music);
 }
 
 void AudioManager::unregisterSound(std::shared_ptr<Sound> & sound)
@@ -129,12 +115,27 @@ void AudioManager::unregisterSound(std::shared_ptr<Sound> & sound)
 	LOG(LogError) << "AudioManager Error - tried to unregister a sound that wasn't registered!";
 }
 
+void AudioManager::unregisterMusic(std::shared_ptr<Music> & music)
+{
+	getInstance();
+	for(unsigned int i = 0; i < sMusicVector.size(); i++)
+	{
+		if(sMusicVector.at(i) == music)
+		{
+			//sMusicVector[i]->stop();
+			sMusicVector.erase(sMusicVector.begin() + i);
+			return;
+		}
+	}
+	LOG(LogError) << "AudioManager Error - tried to unregister a music that wasn't registered!";
+}
+
 void AudioManager::play()
 {
 	getInstance();
 
 	//unpause audio, the mixer will figure out if samples need to be played...
-	SDL_PauseAudio(0);
+	//SDL_PauseAudio(0);
 }
 
 void AudioManager::stop()
@@ -147,6 +148,9 @@ void AudioManager::stop()
 			sSoundVector[i]->stop();
 		}
 	}
+        //stop playing all Musics
+
+        
 	//pause audio
-	SDL_PauseAudio(1);
+	//SDL_PauseAudio(1);
 }

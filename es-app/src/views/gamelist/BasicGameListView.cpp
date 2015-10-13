@@ -39,11 +39,56 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
 
-	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
+	const FileData* root = getRoot();
+	const SystemData* systemData = root->getSystem();
+	mHeaderText.setText(systemData ? systemData->getFullName() : root->getCleanName());
+
+	bool hasFavorites = false;
+
+	if (Settings::getInstance()->getBool("FavoritesOnly"))
+	{
+		for (auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					hasFavorites = true;
+					break;
+				}
+			}
+		}
+	}
+
+	// The TextListComponent would be able to insert at a specific position,
+	// but the cost of this operation could be seriously huge.
+	// This naive implemention of doing a first pass in the list is used instead.
+	if(! Settings::getInstance()->getBool("FavoritesOnly")){
+		for(auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("yes") == 0)
+			{
+				mList.add("\uF006 " + (*it)->getName(), *it, ((*it)->getType() == FOLDER)); // FIXME Folder as favorite ?
+			}
+		}
+	}
 
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		if (Settings::getInstance()->getBool("FavoritesOnly") && hasFavorites)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				}
+			}
+		}
+		else
+		{
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		}
 	}
 }
 
@@ -95,6 +140,7 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("y", "favorite"));
 	prompts.push_back(HelpPrompt("select", "options"));
 	return prompts;
 }

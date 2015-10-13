@@ -147,6 +147,48 @@ public:
 
 		return false;
 	}
+
+	bool setSelectedName(const std::string& name)
+	{
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		{
+			if((*it).name == name)
+			{
+				mCursor = it - mEntries.begin();
+				onCursorChanged(CURSOR_STOPPED);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool changeCursorName(const UserData& obj, const std::string& name)
+	{
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		{
+			if((*it).object == obj)
+			{
+				(*it).name = name;
+				(*it).data.textCache.reset();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool changeCursorName(int cursor, const std::string& name)
+	{
+		if (cursor >= mEntries.size()) {
+			return false;
+		}
+
+		auto& entry = mEntries.at(cursor);
+		entry.name = name;
+		entry.data.textCache.reset();
+		return true;
+	}
 	
 	// entry management
 	void add(const Entry& e)
@@ -169,6 +211,9 @@ public:
 	}
 
 	inline int size() const { return mEntries.size(); }
+
+	inline bool isEmpty() const { return mEntries.empty(); }
+	inline int getCursor() const { return mCursor; }
 
 protected:
 	void remove(typename std::vector<Entry>::iterator& it)

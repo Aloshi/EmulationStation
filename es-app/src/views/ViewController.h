@@ -23,6 +23,8 @@ public:
 	void reloadGameListView(IGameListView* gamelist, bool reloadTheme = false);
 	inline void reloadGameListView(SystemData* system, bool reloadTheme = false) { reloadGameListView(getGameListView(system).get(), reloadTheme); }
 	void reloadAll(); // Reload everything with a theme.  Used when the "ThemeSet" setting changes.
+	void setInvalidGamesList(SystemData* system);
+	void setAllInvalidGamesList(SystemData* systemExclude);
 
 	// Navigation.
 	void goToNextGameList();
@@ -32,6 +34,8 @@ public:
 	void goToStart();
 
 	void onFileChanged(FileData* file, FileChangeType change);
+
+	void updateFavorite(SystemData* system, FileData* file);
 
 	// Plays a nice launch effect and launches the game at the end of it.
 	// Once the game terminates, plays a return effect.
@@ -78,10 +82,13 @@ private:
 	std::shared_ptr<GuiComponent> mCurrentView;
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
 	std::shared_ptr<SystemView> mSystemListView;
+
+	std::map<SystemData*, bool> mInvalidGameList;
 	
 	Eigen::Affine3f mCamera;
 	float mFadeOpacity;
 	bool mLockInput;
+	bool mFavoritesOnly;
 
 	State mState;
 };

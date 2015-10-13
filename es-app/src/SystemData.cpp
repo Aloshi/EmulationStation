@@ -12,6 +12,7 @@
 #include <iostream>
 #include "Settings.h"
 #include "FileSorts.h"
+#include "Util.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -22,13 +23,16 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 {
 	mName = name;
 	mFullName = fullName;
-	mStartPath = startPath;
+	mStartPath = getExpandedPath(startPath);
 
-	//expand home symbol if the startpath contains ~
-	if(mStartPath[0] == '~')
+	// make it absolute if needed
 	{
-		mStartPath.erase(0, 1);
-		mStartPath.insert(0, getHomePath());
+		const std::string defaultRomsPath = getExpandedPath(Settings::getInstance()->getString("DefaultRomsPath"));
+
+		if (!defaultRomsPath.empty())
+		{
+			mStartPath = fs::absolute(mStartPath, defaultRomsPath).generic_string();
+		}
 	}
 
 	mSearchExtensions = extensions;
@@ -108,10 +112,16 @@ void SystemData::launchGame(Window* window, FileData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
+
 	AudioManager::getInstance()->deinit();
 	VolumeControl::getInstance()->deinit();
+
+    std::string controlersConfig = InputManager::getInstance()->configureEmulators();
+	LOG(LogInfo) << "Controllers config : " << controlersConfig;
 	window->deinit();
 
+
+        
 	std::string command = mLaunchCommand;
 
 	const std::string rom = escapePath(game->getPath());
@@ -119,6 +129,8 @@ void SystemData::launchGame(Window* window, FileData* game)
 	const std::string rom_raw = fs::path(game->getPath()).make_preferred().string();
 
 	command = strreplace(command, "%ROM%", rom);
+	command = strreplace(command, "%CONTROLLERSCONFIG%", controlersConfig);
+	command = strreplace(command, "%SYSTEM%", this->mName);
 	command = strreplace(command, "%BASENAME%", basename);
 	command = strreplace(command, "%ROM_RAW%", rom_raw);
 
@@ -134,7 +146,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 	window->init();
 	VolumeControl::getInstance()->init();
-	AudioManager::getInstance()->init();
+	AudioManager::getInstance()->resumeMusic();
 	window->normalizeNextUpdate();
 
 	//update number of times the game has been launched
@@ -148,64 +160,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 
 void SystemData::populateFolder(FileData* folder)
 {
-	const fs::path& folderPath = folder->getPath();
-	if(!fs::is_directory(folderPath))
-	{
-		LOG(LogWarning) << "Error - folder with path \"" << folderPath << "\" is not a directory!";
-		return;
-	}
-
-	const std::string folderStr = folderPath.generic_string();
-
-	//make sure that this isn't a symlink to a thing we already have
-	if(fs::is_symlink(folderPath))
-	{
-		//if this symlink resolves to somewhere that's at the beginning of our path, it's gonna recurse
-		if(folderStr.find(fs::canonical(folderPath).generic_string()) == 0)
-		{
-			LOG(LogWarning) << "Skipping infinitely recursive symlink \"" << folderPath << "\"";
-			return;
-		}
-	}
-
-	fs::path filePath;
-	std::string extension;
-	bool isGame;
-	for(fs::directory_iterator end, dir(folderPath); dir != end; ++dir)
-	{
-		filePath = (*dir).path();
-
-		if(filePath.stem().empty())
-			continue;
-
-		//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
-		//we first get the extension of the file itself:
-		extension = filePath.extension().string();
-		
-		//fyi, folders *can* also match the extension and be added as games - this is mostly just to support higan
-		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
-
-		isGame = false;
-		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
-		{
-			FileData* newGame = new FileData(GAME, filePath.generic_string(), this);
-			folder->addChild(newGame);
-			isGame = true;
-		}
-
-		//add directories that also do not match an extension as folders
-		if(!isGame && fs::is_directory(filePath))
-		{
-			FileData* newFolder = new FileData(FOLDER, filePath.generic_string(), this);
-			populateFolder(newFolder);
-
-			//ignore folders that do not contain games
-			if(newFolder->getChildren().size() == 0)
-				delete newFolder;
-			else
-				folder->addChild(newFolder);
-		}
-	}
+	FileData::populateRecursiveFolder(folder, mSearchExtensions, this);
 }
 
 std::vector<std::string> readList(const std::string& str, const char* delims = " \t\r\n,")
@@ -431,6 +386,11 @@ unsigned int SystemData::getGameCount() const
 	return mRootFolder->getFilesRecursive(GAME).size();
 }
 
+unsigned int SystemData::getFavoritesCount() const
+{
+	return mRootFolder->getFavoritesRecursive(GAME).size();
+}
+
 void SystemData::loadTheme()
 {
 	mTheme = std::make_shared<ThemeData>();
@@ -443,6 +403,7 @@ void SystemData::loadTheme()
 	try
 	{
 		mTheme->loadFile(path);
+		mHasFavorites = mTheme->getHasFavoritesInTheme();
 	} catch(ThemeException& e)
 	{
 		LOG(LogError) << e.what();

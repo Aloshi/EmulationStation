@@ -10,6 +10,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Log.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/Music.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/platform.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.h
@@ -68,6 +69,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/Music.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/platform.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_draw_gl.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_sdlgl.cpp
@@ -111,7 +113,7 @@ set(CORE_SOURCES
 )
 
 set(EMBEDDED_ASSET_SOURCES
-	${emulationstation-all_SOURCE_DIR}/data/ResourceUtil.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/ResourceUtil.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/splash_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/window_icon_256_png.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/button_png.cpp
@@ -127,8 +129,13 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_y_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l2_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r2_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l3_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r3_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_hotkey_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
@@ -136,9 +143,13 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_updown_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_leftright_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_all_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_joystick_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_joystick_up_svg.cpp
+
 
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/fontawesome_webfont_ttf.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/arrow_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/option_arrow_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/checkbox_checked_svg.cpp

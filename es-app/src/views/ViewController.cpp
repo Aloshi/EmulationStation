@@ -12,6 +12,9 @@
 #include "animations/MoveCameraAnimation.h"
 #include "animations/LambdaAnimation.h"
 
+#include "AudioManager.h"
+
+
 ViewController* ViewController::sInstance = NULL;
 
 ViewController* ViewController::get()
@@ -30,6 +33,7 @@ ViewController::ViewController(Window* window)
 	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
 	mState.viewing = NOTHING;
+	mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
 }
 
 ViewController::~ViewController()
@@ -60,10 +64,9 @@ void ViewController::goToSystemView(SystemData* system)
 
 	auto systemList = getSystemListView();
 	systemList->setPosition(getSystemId(system) * (float)Renderer::getScreenWidth(), systemList->getPosition().y());
-
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
-
+        
 	playViewTransition();
 }
 
@@ -72,6 +75,8 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
+        AudioManager::getInstance()->startMusic(system->getNext()->getTheme());
+        
 	goToGameList(system->getNext());
 }
 
@@ -80,6 +85,8 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
+        AudioManager::getInstance()->startMusic(system->getPrev()->getTheme());
+
 	goToGameList(system->getPrev());
 }
 
@@ -96,11 +103,68 @@ void ViewController::goToGameList(SystemData* system)
 		mCamera.translation().x() -= offX;
 	}
 
+	if (mInvalidGameList[system] == true)
+	{
+		updateFavorite(system, getGameListView(system).get()->getCursor());
+		if (mFavoritesOnly != Settings::getInstance()->getBool("FavoritesOnly"))
+		{
+			reloadGameListView(system);
+			mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
+		}
+		mInvalidGameList[system] = false;
+	}
+
 	mState.viewing = GAME_LIST;
 	mState.system = system;
 
 	mCurrentView = getGameListView(system);
 	playViewTransition();
+}
+
+void ViewController::updateFavorite(SystemData* system, FileData* file)
+{
+	IGameListView* view = getGameListView(system).get();
+	if (Settings::getInstance()->getBool("FavoritesOnly"))
+	{
+		const std::vector<FileData*>& files = system->getRootFolder()->getChildren();
+		view->populateList(files);
+		int pos = std::find(files.begin(), files.end(), file) - files.begin();
+		bool found = false;
+		for (auto it = files.begin() + pos; it != files.end(); it++)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				{
+					view->setCursor(*it);
+					found = true;
+					break;
+				}
+			}
+		}
+
+		if (!found)
+		{
+			for (auto it = files.begin() + pos; it != files.begin(); it--)
+			{
+				if ((*it)->getType() == GAME)
+				{
+					if ((*it)->metadata.get("favorite").compare("yes") == 0)
+					{
+						view->setCursor(*it);
+						break;
+					}
+				}
+			}
+		}
+
+		if (!found)
+		{
+			view->setCursor(*(files.begin() + pos));
+		}
+	}
+
+	view->updateInfoPanel();
 }
 
 void ViewController::playViewTransition()
@@ -221,7 +285,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	}
 		
 	if(detailed)
-		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder(), system));
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 		
@@ -237,6 +301,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	addChild(view.get());
 
 	mGameListViews[system] = view;
+	mInvalidGameList[system] = false;
 	return view;
 }
 
@@ -380,6 +445,29 @@ void ViewController::reloadAll()
 	}
 
 	updateHelpPrompts();
+}
+
+void ViewController::setInvalidGamesList(SystemData* system)
+{
+	for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	{
+		if (system == (it->first))
+		{
+			mInvalidGameList[it->first] = true;
+			break;
+		}
+	}
+}
+
+void ViewController::setAllInvalidGamesList(SystemData* systemExclude)
+{
+	for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	{
+		if (systemExclude != (it->first))
+		{
+			mInvalidGameList[it->first] = true;
+		}
+	}
 }
 
 std::vector<HelpPrompt> ViewController::getHelpPrompts()

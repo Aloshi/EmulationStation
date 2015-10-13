@@ -2,7 +2,7 @@
 
 #include <string>
 #include "platform.h"
-#include GLHEADER
+#include "platform_gl.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <Eigen/Dense>

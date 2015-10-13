@@ -1,7 +1,7 @@
 #include "resources/TextureResource.h"
 #include "Log.h"
 #include "platform.h"
-#include GLHEADER
+#include "platform_gl.h"
 #include "ImageIO.h"
 #include "Renderer.h"
 #include "Util.h"
@@ -115,8 +115,9 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 	auto foundTexture = sTextureMap.find(key);
 	if(foundTexture != sTextureMap.end())
 	{
-		if(!foundTexture->second.expired())
+        if(!foundTexture->second.expired()) {
 			return foundTexture->second.lock();
+        }
 	}
 
 	// need to create it

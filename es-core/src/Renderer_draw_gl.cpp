@@ -1,6 +1,6 @@
 #include "platform.h"
 #include "Renderer.h"
-#include GLHEADER
+#include "platform_gl.h"
 #include <iostream>
 #include "resources/Font.h"
 #include <boost/filesystem.hpp>

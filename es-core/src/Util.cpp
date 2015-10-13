@@ -73,6 +73,20 @@ std::string getCanonicalPath(const std::string& path)
 	return boost::filesystem::canonical(path).generic_string();
 }
 
+std::string getExpandedPath(const std::string& str)
+{
+	std::string path = str;
+
+	//expand home symbol if the startpath contains ~
+	if (!path.empty() && path[0] == '~')
+	{
+		path.erase(0, 1);
+		path.insert(0, getHomePath());
+	}
+
+	return path;
+}
+
 // expands "./my/path.sfc" to "[relativeTo]/my/path.sfc"
 // if allowHome is true, also expands "~/my/path.sfc" to "/home/pi/my/path.sfc"
 fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allowHome)

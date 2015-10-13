@@ -1,3 +1,4 @@
+#include <boost/locale.hpp>
 #include "guis/GuiInputConfig.h"
 #include "Window.h"
 #include "Log.h"
@@ -6,21 +7,30 @@
 #include "components/MenuComponent.h"
 #include "components/ButtonComponent.h"
 #include "Util.h"
+#include "InputManager.h"
 
-static const int inputCount = 10;
-static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown" };
-static const bool inputSkippable[inputCount] = { false, false, false, false, false, false, false, false, true, true };
-static const char* inputDispName[inputCount] = { "UP", "DOWN", "LEFT", "RIGHT", "A", "B", "START", "SELECT", "PAGE UP", "PAGE DOWN" };
-static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
-											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
-											":/help/button_l.svg", ":/help/button_r.svg" };
+using namespace boost::locale;
+
+static const int AXIS = 0;
+static const int BTN = 1;
+static const int HAT = 2;
+static const int inputCount = 21;
+static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "Joystick1Up" , "Joystick1Left", "Joystick2Up" , "Joystick2Left", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "L2", "R2", "L3", "R3", "HotKey" };
+static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,         true,             true,      false,  false,  true,   true, false,    false,     true,      true, true, true, true, true,  false};
+static const int inputTypes[inputCount] = {     HAT,     HAT,   HAT,    HAT ,        AXIS,             AXIS,          AXIS,            AXIS,       BTN,    BTN,   BTN,   BTN,    BTN,    BTN,        BTN,      BTN,     BTN,  BTN, BTN,  BTN,  BTN};
+static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"),
+												 gettext("JOYSTICK 1 UP"), gettext("JOYSTICK 1 LEFT"),gettext("JOYSTICK 2 UP"), gettext("JOYSTICK 2 LEFT"),
+                                                    "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", "L3", "R3",gettext("HOTKEY") };
+static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg",
+											 ":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg",
+											":/help/button_l.svg", ":/help/button_r.svg", ":/help/button_l2.svg", ":/help/button_r2.svg",":/help/button_l3.svg", ":/help/button_r3.svg", ":/help/button_hotkey.svg" };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.
 
 using namespace Eigen;
 
-#define HOLD_TO_SKIP_MS 5000
+#define HOLD_TO_SKIP_MS 2000
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback) : GuiComponent(window), 
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 7)), 
@@ -58,10 +68,14 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 	mList = std::make_shared<ComponentList>(mWindow);
 	mGrid.setEntry(mList, Vector2i(0, 5), true, true);
+	bool hasAxis = InputManager::getInstance()->getAxisCountByDevice(target->getDeviceId()) > 0;
+	int inputRowIndex = 0;
 	for(int i = 0; i < inputCount; i++)
 	{
+		if(inputTypes[i] == AXIS && !hasAxis){
+			continue;
+		}
 		ComponentListRow row;
-		
 		// icon
 		auto icon = std::make_shared<ImageComponent>(mWindow);
 		icon->setImage(inputIcon[i]);
@@ -82,7 +96,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		row.addElement(mapping, true);
 		mMappings.push_back(mapping);
 
-		row.input_handler = [this, i, mapping](InputConfig* config, Input input) -> bool
+		row.input_handler = [this, i, inputRowIndex, mapping](InputConfig* config, Input input) -> bool
 		{
 			// ignore input not from our target device
 			if(config != mTargetConfig)
@@ -114,6 +128,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 				mHoldingInput = true;
 				mHeldInput = input;
 				mHeldTime = 0;
+				mHeldInputRowIndex = inputRowIndex;
 				mHeldInputId = i;
 
 				return true;
@@ -125,7 +140,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 				mHoldingInput = false;
 
-				if(assign(mHeldInput, i))
+				if(assign(mHeldInput, i, inputRowIndex))
 					rowDone(); // if successful, move cursor/stop configuring - if not, we'll just try again
 
 				return true;
@@ -133,6 +148,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		};
 
 		mList->addRow(row);
+		inputRowIndex++;
 	}
 
 	// only show "HOLD TO SKIP" if this input is skippable
@@ -186,7 +202,7 @@ void GuiInputConfig::update(int deltaTime)
 
 		if(mHeldTime >= HOLD_TO_SKIP_MS)
 		{
-			setNotDefined(mMappings.at(mHeldInputId));
+			setNotDefined(mMappings.at(mHeldInputRowIndex));
 			clearAssignment(mHeldInputId);
 			mHoldingInput = false;
 			rowDone();
@@ -194,9 +210,9 @@ void GuiInputConfig::update(int deltaTime)
 			if(prevSec != curSec)
 			{
 				// crossed the second boundary, update text
-				const auto& text = mMappings.at(mHeldInputId);
+				const auto& text = mMappings.at(mHeldInputRowIndex);
 				std::stringstream ss;
-				ss << "HOLD FOR " << HOLD_TO_SKIP_MS/1000 - curSec << "S TO SKIP";
+				ss << gettext("HOLD FOR ") << HOLD_TO_SKIP_MS/1000 - curSec << gettext("S TO SKIP");
 				text->setText(ss.str());
 				text->setColor(0x777777FF);
 			}
@@ -250,19 +266,20 @@ void GuiInputConfig::error(const std::shared_ptr<TextComponent>& text, const std
 	text->setColor(0x656565FF);
 }
 
-bool GuiInputConfig::assign(Input input, int inputId)
+bool GuiInputConfig::assign(Input input, int inputId, int inputIndex)
 {
 	// input is from InputConfig* mTargetConfig
 
 	// if this input is mapped to something other than "nothing" or the current row, error
 	// (if it's the same as what it was before, allow it)
+        if(std::string("HotKey").compare(inputName[inputId]) != 0)
 	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(inputName[inputId], input))
 	{
-		error(mMappings.at(inputId), "Already mapped!");
+		error(mMappings.at(inputIndex), "Already mapped!");
 		return false;
 	}
 
-	setAssignedTo(mMappings.at(inputId), input);
+	setAssignedTo(mMappings.at(inputIndex), input);
 	
 	input.configured = true;
 	mTargetConfig->mapInput(inputName[inputId], input);

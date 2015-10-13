@@ -21,24 +21,31 @@ public:
 
 	void onSizeChanged() override;
 
-	inline void addRow(const ComponentListRow& row, bool setCursorHere = false) { mList->addRow(row, setCursorHere); updateSize(); }
+	inline void addRow(const ComponentListRow& row, bool setCursorHere = false, bool updateGeometry = true) { mList->addRow(row, setCursorHere, updateGeometry); if (updateGeometry) updateSize(); }
 
-	inline void addWithLabel(const std::string& label, const std::shared_ptr<GuiComponent>& comp, bool setCursorHere = false, bool invert_when_selected = true)
+	inline void addWithLabel(const std::string& label, const std::shared_ptr<GuiComponent>& comp, bool setCursorHere = false, bool invert_when_selected = true, const std::function<void()>& acceptCallback = nullptr)
 	{
 		ComponentListRow row;
 		row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(comp, false, invert_when_selected);
+		if (acceptCallback) {
+			row.makeAcceptInputHandler(acceptCallback);
+		}
 		addRow(row, setCursorHere);
 	}
 
 	void addButton(const std::string& label, const std::string& helpText, const std::function<void()>& callback);
 
-	void setTitle(const char* title, const std::shared_ptr<Font>& font);
+	void setTitle(const char* title, const std::shared_ptr<Font>& font = Font::get(FONT_SIZE_LARGE));
 
 	inline void setCursorToList() { mGrid.setCursorTo(mList); }
 	inline void setCursorToButtons() { assert(mButtonGrid); mGrid.setCursorTo(mButtonGrid); }
+	inline void clear() { mList->clear(); }
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
+
+protected:
+	inline ComponentList* getList() const { return mList.get(); }
 
 private:
 	void updateSize();

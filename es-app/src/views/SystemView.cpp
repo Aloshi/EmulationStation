@@ -8,6 +8,9 @@
 #include "SystemData.h"
 #include "Settings.h"
 #include "Util.h"
+#include <boost/locale.hpp>
+#include "ThemeData.h"
+#include "AudioManager.h"
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
@@ -84,6 +87,8 @@ void SystemView::populate()
 
 void SystemView::goToSystem(SystemData* system, bool animate)
 {
+
+        
 	setCursor(system);
 
 	if(!animate)
@@ -138,6 +143,11 @@ void SystemView::update(int deltaTime)
 
 void SystemView::onCursorChanged(const CursorState& state)
 {
+    
+        if(lastSystem != getSelected()){
+                lastSystem = getSelected();
+                AudioManager::getInstance()->startMusic(getSelected()->getTheme());
+        }
 	// update help style
 	updateHelpPrompts();
 
@@ -150,11 +160,11 @@ void SystemView::onCursorChanged(const CursorState& state)
 	// it's one of these...
 
 	float endPos = target; // directly
-	float dist = abs(endPos - startPos);
+    float dist = std::abs(endPos - startPos);
 	
-	if(abs(target + posMax - startPos) < dist)
+    if(std::abs(target + posMax - startPos) < dist)
 		endPos = target + posMax; // loop around the end (0 -> max)
-	if(abs(target - posMax - startPos) < dist)
+    if(std::abs(target - posMax - startPos) < dist)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
 	
@@ -172,30 +182,34 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}, (int)(infoStartOpacity * 150));
 
 	unsigned int gameCount = getSelected()->getGameCount();
+	unsigned int favoritesCount = getSelected()->getFavoritesCount();
 
 	// also change the text after we've fully faded out
-	setAnimation(infoFadeOut, 0, [this, gameCount] {
+	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
 		std::stringstream ss;
-		
-		// only display a game count if there are at least 2 games
-		if(gameCount > 1)
-			ss << gameCount << " GAMES AVAILABLE";
 
-		mSystemInfo.setText(ss.str()); 
+		// only display a game count if there are at least 2 games
+		if (gameCount > 1)
+		{
+			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
+		}
+
+		else if (favoritesCount > 1)
+		{
+			ss << ", " << favoritesCount << boost::locale::gettext(" FAVORITES");
+		}
+
+		mSystemInfo.setText(ss.str());
 	}, false, 1);
 
-	// only display a game count if there are at least 2 games
-	if(gameCount > 1)
+	Animation* infoFadeIn = new LambdaAnimation(
+		[this](float t)
 	{
-		Animation* infoFadeIn = new LambdaAnimation(
-			[this](float t)
-		{
-			mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
-		}, 300);
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+	}, 300);
 
-		// wait 600ms to fade in
-		setAnimation(infoFadeIn, 2000, nullptr, false, 2);
-	}
+	// wait ms to fade in
+	setAnimation(infoFadeIn, 800, nullptr, false, 2);
 
 	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
 	if(endPos == mCamOffset && endPos == mExtrasCamOffset)
@@ -247,6 +261,8 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}
 
 	setAnimation(anim, 0, nullptr, false, 0);
+
+
 }
 
 void SystemView::render(const Eigen::Affine3f& parentTrans)

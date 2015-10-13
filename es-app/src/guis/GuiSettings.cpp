@@ -15,7 +15,7 @@ GuiSettings::GuiSettings(Window* window, const char* title) : GuiComponent(windo
 
 GuiSettings::~GuiSettings()
 {
-	save();
+	if(doSave) save();
 }
 
 void GuiSettings::save()

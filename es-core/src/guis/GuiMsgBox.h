@@ -3,6 +3,7 @@
 #include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
 #include "components/ComponentGrid.h"
+#include "resources/Font.h"
 
 class TextComponent;
 class ButtonComponent;
@@ -13,7 +14,8 @@ public:
 	GuiMsgBox(Window* window, const std::string& text, 
 		const std::string& name1 = "OK", const std::function<void()>& func1 = nullptr,
 		const std::string& name2 = "", const std::function<void()>& func2 = nullptr, 
-		const std::string& name3 = "", const std::function<void()>& func3 = nullptr);
+		const std::string& name3 = "", const std::function<void()>& func3 = nullptr,
+                Alignment align = ALIGN_CENTER);
 
 	bool input(InputConfig* config, Input input) override;
 	void onSizeChanged() override;

@@ -7,10 +7,12 @@
 
 #include "GamesDBScraper.h"
 #include "TheArchiveScraper.h"
+#include "MamedbScraper.h"
 
 const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
 	("TheGamesDB", &thegamesdb_generate_scraper_requests)
-	("TheArchive", &thearchive_generate_scraper_requests);
+	("TheArchive", &thearchive_generate_scraper_requests)
+	("Mamedb", &mamedb_generate_scraper_requests);
 
 std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params)
 {
@@ -262,8 +264,9 @@ bool resizeImage(const std::string& path, int maxWidth, int maxHeight)
 	bool saved = FreeImage_Save(format, imageRescaled, path.c_str());
 	FreeImage_Unload(imageRescaled);
 
-	if(!saved)
+    if(!saved) {
 		LOG(LogError) << "Failed to save resized image!";
+    }
 
 	return saved;
 }

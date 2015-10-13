@@ -1,0 +1,473 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation 2.0RC1 FRENCH po\n"
+"POT-Creation-Date: 2014-09-20 12:00-0500\n"
+"PO-Revision-Date: 2014-09-20 15:00-0500\n"
+"Last-Translator: digitalLumberjack <digitalLumberjack@gmail.com>\n"
+"Language-Team: FRENCH\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "MAIN MENU"
+msgstr "MENU PRINCIPAL"
+msgid "YES"
+msgstr "OUI"
+msgid "NO"
+msgstr "NON"
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp
+msgid "Rating: "
+msgstr "Note : "
+msgid "Released: "
+msgstr "Sortie : "
+msgid "Developer: "
+msgstr "Developpeur : "
+msgid "Publisher: "
+msgstr "Editeur : "
+msgid "Genre: "
+msgstr "Genre : "
+msgid "Players: "
+msgstr "Joueurs : "
+msgid "Last played: "
+msgstr "Dernier jeu : "
+msgid "Times played: "
+msgstr "Nb jeux : "
+
+#: es-app/src/MetaData.cpp
+msgid "enter game name"
+msgstr "nom du jeu"
+
+
+msgid "NAME" 
+msgstr "NOM"
+msgid "ENTER DESCRIPTION"
+msgstr "ENTREZ DESCRIPTION"
+msgid "ENTER PATH TO IMAGE"
+msgstr "ENTREZ LE CHEMIN DE L'IMAGE"
+msgid "THUMBNAIL"
+msgstr "MINIATURE"
+msgid "ENTER PATH TO THUMBNAIL"
+msgstr "ENTREZ LE CHEMIN DE LA MINIATURE"
+msgid "RATING"
+msgstr "NOTE"
+msgid "ENTER SCORE"
+msgstr "ENTREZ LA NOTE"
+msgid "RELEASE DATE"
+msgstr "DATE DE SORTIE"
+msgid "ENTER RELEASE DATE"
+msgstr "ENTREZ DATE DE SORTIE"
+msgid "DEVELOPER"
+msgstr "DEVELOPPEUR"
+msgid "ENTER GAME DEVELOPER"
+msgstr "ENTREZ LE NOM DU DEVELOPPEUR"
+msgid "PUBLISHER"
+msgstr "EDITEUR"
+msgid "ENTER GAME PUBLISHER"
+msgstr "ENTREZ LE NOM DE L'EDITEUR"
+msgid "GENRE"
+msgstr "GENRE"
+msgid "ENTER GAME GENRE"
+msgstr "ENTREZ LE GENRE"
+msgid "PLAYERS"
+msgstr "JOUEURS"
+msgid "ENTER NUMBER OF PLAYERS"
+msgstr "ENTREZ LE NOMBRE DE JOUEURS"
+msgid "PLAY COUNT"
+msgstr "NB JEUX"
+msgid "ENTER NUMBER OF TIMES PLAYED"
+msgstr "ENTREZ LE NOMBRE DE FOIS JOUEES"
+
+#: es-app/src/guis/GuiMenu.cpp
+msgid "SCRAPE FROM"
+msgstr "SCRAPPER DEPUIS"
+msgid "SCRAPE RATINGS"
+msgstr "SCRAPPER LES NOTES"
+msgid "SOUND SETTINGS"
+msgstr "OPTIONS DU SON"
+msgid "SYSTEM VOLUME"
+msgstr "VOLUME DU SYSTEME"
+msgid "ENABLE SOUNDS"
+msgstr "ACTIVER LES SONS"
+msgid "UI SETTINGS"
+msgstr "OPTIONS DE L'INTERFACE"
+msgid "SCREENSAVER AFTER"
+msgstr "ECRAN DE VEILLE APRES"
+msgid "TRANSITION STYLE"
+msgstr "STYLE DE LA TRANSITION"
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "COMPORTEMENT DE L'ECRAN DE VEILLE"
+msgid "SHOW FRAMERATE"
+msgstr "AFFICHER LE FRAMERATE"
+msgid "ON-SCREEN HELP"
+msgstr "AFFICHAGE DE L'AIDE"
+msgid "QUICK SYSTEM SELECT"
+msgstr "SELECTION RAPIDE DU SYSTEME"
+msgid "THEME SET"
+msgstr "THEME"
+msgid "CONFIGURE INPUT"
+msgstr "CONFIGURER LES MANETTES"
+msgid "QUIT"
+msgstr "QUITTER"
+msgid "REALLY RESTART?"
+msgstr "REDEMARRER ?"
+msgid "RESTART SYSTEM"
+msgstr "REDEMARRER"
+msgid "REALLY SHUTDOWN?"
+msgstr "ETEINDRE ?"
+msgid "SHUTDOWN SYSTEM"
+msgstr "ETEINDRE"
+msgid "REALLY QUIT?"
+msgstr "QUITTER ?"
+msgid "QUIT EMULATIONSTATION"
+msgstr "QUITTER EMULATIONSTATION"
+
+
+#: es-app/src/guis/GuiScraperStart.cpp
+msgid "SCRAPE NOW"
+msgstr "SCRAPE"
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "CHOISIR SI CONFLIT"
+msgid "SYSTEMS"
+msgstr "SYSTEMES"
+msgid "FILTER"
+msgstr "FILTRE"
+msgid "SCRAPE THESE GAMES"
+msgstr "SCRAPPER CES JEUX"
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "SCRAPPER CES SYSTEMES"
+msgid "SELECT ALL"
+msgstr "TOUT SELECTIONNER"
+msgid "SELECT NONE"
+msgstr "AUCUN"
+
+#: es-app/src/guis/GuiScraperMulti.cpp"
+msgid "SCRAPING IN PROGRESS"
+msgstr "SCRAPING EN COURS"
+
+#: es-app/src/components/ScraperSearchComponent.cpp
+msgid "NO GAMES FOUND - SKIP"
+msgstr "AUCUN JEU CORRESPONDANT - PASSER"
+
+
+#: Buttons
+msgid "close"
+msgstr "fermer"
+msgid "select"
+msgstr "selectionner"
+msgid "choose"
+msgstr "selectionner"
+msgid "back"
+msgstr "retour"
+msgid "CLOSE"
+msgstr "FERMER"
+msgid "SELECT"
+msgstr "SELECTIONNER"
+msgid "CHOOSE"
+msgstr "NAVIGUER"
+msgid "BACK"
+msgstr "RETOUR"
+msgid "LAUNCH"
+msgstr "LANCER"
+msgid "SYSTEM"
+msgstr "SYSTEME"
+msgid "INPUT"
+msgstr "EDITER"
+msgid "SKIP"
+msgstr "PASSER"
+msgid "CHANGE"
+msgstr "MODIFIER"
+msgid "SAVE"
+msgstr "SAUVEGARDER"
+msgid "CANCEL"
+msgstr "ANNULER"
+msgid "DELETE"
+msgstr "SUPPRIMER"
+msgid "GO BACK"
+msgstr "RETOUR"
+
+#: es-app/src/views/SystemView.cpp
+msgid " GAMES AVAILABLE"
+msgstr " JEUX DISPONIBLES"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp
+msgid "JUMP TO LETTER"
+msgstr "ALLER A LA LETTRE"
+msgid "SORT GAMES BY"
+msgstr "TRIER LES JEUX PAR"
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "EDITER LES DONNEES DU JEU"
+
+
+#: es-app/src/guis/GuiMetaDataEd.cpp
+msgid "EDIT METADATA"
+msgstr "EDITER LES DONNEES"
+
+msgid " GAMEPAD"
+msgstr " MANETTE"
+msgid " DETECTED"
+msgstr " DETECTEE"
+msgid "WELCOME"
+msgstr "BIENVENUE"
+msgid "NO GAMEPADS DETECTED"
+msgstr "AUCUNE MANETTE DETECTEE"
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "MAINTENEZ UN BOUTON SUR LA MANETTE POUR LA CONFIGURER"
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "APPUYEZ SUR F4 POUR QUITTER A TOUT MOMENT"
+msgid "PRESS ESC TO CANCEL."
+msgstr "APPUYEZ SUR ECHAP POUR ANNULER"
+
+#: es-core/src/guis/GuiInputConfig.cpp
+msgid "CONFIGURING"
+msgstr "CONFIGURATION"
+msgid "UP"
+msgstr "HAUT"
+msgid "DOWN"
+msgstr "BAS"
+msgid "LEFT"
+msgstr "GAUCHE"
+msgid "RIGHT"
+msgstr "DROITE"
+msgid "PAGE UP"
+msgstr "L1 (PAGE PRECEDENTE)"
+msgid "PAGE DOWN"
+msgstr "R1 (PAGE SUIVANTE)"
+
+msgid "SAVE CHANGES?"
+msgstr "SAUVEGARDER ?"
+
+#: es-app/src/guis/GuiUpdate.cpp
+
+msgid "WORKING..."
+msgstr "EN COURS..."
+msgid "UPDATE"
+msgstr "METTRE A JOUR LE SYSTEME"
+msgid "REALLY UPDATE?"
+msgstr "METTRE A JOUR LE SYSTEME ?"
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "VEUILLEZ BRANCHER UN CABLE RESEAU"
+msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+msgstr "MISE A JOUR EFFECTUEE, REDEMARRAGE EN COURS"
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "ECHEC DE LA MISE A JOUR"
+
+
+#GUIMENU
+msgid "CONFIGURE A CONTROLLER"
+msgstr "CONFIGURER UNE MANETTE"
+msgid "INPUT P1"
+msgstr "MANETTE J1"
+msgid "INPUT P2"
+msgstr "MANETTE J2"
+msgid "INPUT P3"
+msgstr "MANETTE J3"
+msgid "INPUT P4"
+msgstr "MANETTE J4"
+
+msgid "NOGAMEERRORMESSAGE"
+msgstr "AUCUN JEU N'A ETE TROUVE SUR LE SYSTEME !\nVEUILLEZ AJOUTER DES JEUX EN SUIVANT LES INSTRUCTIONS DE LA NOTICE.\n\nRENDEZ-VOUS SUR RECALBOX.FR POUR PLUS D'INFORMATIONS"
+
+msgid "LANGUAGE"
+msgstr "LANGUE"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "LE SYSTEME VA REDEMARRER"
+
+
+msgid "SYSTEM SETTINGS"
+msgstr "OPTIONS SYSTEME"
+
+msgid "VERSION"
+msgstr "VERSION"
+
+msgid "STORAGE"
+msgstr "STOCKAGE"
+
+msgid "OUTPUT DEVICE"
+msgstr "SORTIE AUDIO"
+
+msgid "SMOOTH GAMES"
+msgstr "LISSER LES JEUX"
+
+msgid "GPIO CONTROLLERS"
+msgstr "MANETTES SUR GPIO"
+
+msgid "GPIO CONTROLLERS ARE NOW ON"
+msgstr "LES MANETTES SUR GPIO SONT ACTIVES"
+
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "UNE MISE A JOUR EST DISPONIBLE POUR VOTRE RECALBOX"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "AUCUNE MISE A JOUR DISPONIBLE"
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "VOULEZ-VOUS LANCER LE MEDIA CENTER KODI ?"
+
+msgid "ENABLE WIFI"
+msgstr "ACTIVER LE WIFI"
+
+msgid "NETWORK SETTINGS"
+msgstr "OPTIONS RESEAU"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI ACTIVÉ"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "ERREUR DE CONFIGURATION WIFI"
+
+msgid "WIFI KEY"
+msgstr "CLÉ WIFI"
+
+msgid "WIFI SSID"
+msgstr "SSID WIFI"
+
+msgid "GAME RATIO"
+msgstr "FORMAT JEUX"
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "APPUYEZ SUR UN BOUTON"
+msgid "-NOT DEFINED-"
+msgstr "-NON CONFIGURÉ-"
+msgid "ALREADY TAKEN"
+msgstr "DÉJÀ PRIS"
+msgid "HOLD FOR "
+msgstr "APPUYEZ PENDANT"
+msgid "S TO SKIP"
+msgstr "S POUR PASSER"
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "RESTER APPUYÉ SUR UN BOUTTON POUR PASSER"
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 HAUT"
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 GAUCHE"
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 HAUT"
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 GAUCHE"
+
+msgid "I18NMESSAGECONTROLLERS"
+msgstr "VOUS ALLEZ CONFIGURER UNE MANETTE. SI VOUS N'AVEZ QU'UN JOYSTICK OU JUSTE UNE CROIX DIRECTIONNELLE, CONFIGUREZ SEULEMENT LES DIRECTIONS ET PASSEZ LES JOYSTICKS EN RESTANT APPUYÉ SUR UN BOUTON. SI VOUS N'AVEZ PAS DE BOUTON SPECIAL POUR HOTKEY, UTILISEZ SELECT. IGNOREZ UN BOUTON QUE VOTRE MANETTE N'A PAS EN RESTANT APPUYÉ SUR UN BOUTTON DEJA CONFIGURÉ."
+
+#TEXT EDITING
+msgid "EDIT"
+msgstr "EDITER"
+msgid "STOP EDITING"
+msgstr "ARRETER EDITION"
+msgid "MOVE CURSOR"
+msgstr "BOUGER LE CURSEUR"
+msgid "DISCARD CHANGES"
+msgstr "ANNULER MODIFICATIONS"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "Seulement images manquantes"
+
+msgid "All Games"
+msgstr "Tous les jeux"
+
+msgid "accept"
+msgstr "ACCEPTER"
+
+msgid " SELECTED"
+msgstr " SÉLECTIONNÉS"
+
+msgid "accept result"
+msgstr "accepter"
+
+msgid "stop (progress saved)"
+msgstr "stop (progrès sauvegardé)"
+
+msgid "search"
+msgstr "rechercher"
+
+msgid "GAMES"
+msgstr "JEUX"
+
+msgid " OF "
+msgstr " SUR "
+
+msgid "NO GAMES WERE SCRAPED."
+msgstr "AUCUN JEU SCRAPPÉ"
+
+msgid " SUCCESSFULLY SCRAPED!"
+msgstr " SCRAPPÉS !"
+
+msgid " SKIPPED."
+msgstr " PASSÉS."
+
+# FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "FAVORIS SEULEMENT"
+
+
+msgid "FAVORITE"
+msgstr "FAVORIS"
+
+msgid "enter favorite"
+msgstr "entrer favoris"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "MISES A JOUR"
+
+msgid "AUTO UPDATES"
+msgstr "MISES A JOUR AUTO"
+
+msgid "START UPDATE"
+msgstr "LANCER LA MISE A JOUR"
+
+msgid "KODI SETTINGS"
+msgstr "OPTIONS KODI"
+
+msgid "ENABLE KODI"
+msgstr "ACTIVER KODI"
+
+msgid "KODI AT START"
+msgstr "AUTO DEMARRAGE DE KODI"
+
+msgid "START KODI WITH X"
+msgstr "X POUR LANCER KODI"
+
+msgid "GAMES SETTINGS"
+msgstr "OPTIONS DES JEUX"
+
+msgid "REWIND"
+msgstr "REMBOBINAGE"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "OPTIONS MANETTES"
+
+msgid "FRONTEND MUSIC"
+msgstr "MUSIQUE DE FOND"
+
+msgid "HOSTNAME"
+msgstr "NOM SUR LE RESEAU"
+
+msgid "CONNECTED"
+msgstr "CONNECTÉ"
+
+msgid "NOT CONNECTED"
+msgstr "DÉCONNECTÉ"
+
+msgid "LOADING..."
+msgstr "CHARGEMENT..."
+
+# Bluetooth
+msgid "CONTROLLER PAIRED"
+msgstr "MANETTE ASSOCIÉE"
+
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "IMPOSSIBLE D'ASSOCIER LA MANETTE"
+
+msgid "AN ERROR OCCURED"
+msgstr "UNE ERREUR EST SURVENUE"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "AUCUNE MANETTE DÉTÉCTÉE"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "ASSOCIER UNE MANETTE BLUETOOTH"

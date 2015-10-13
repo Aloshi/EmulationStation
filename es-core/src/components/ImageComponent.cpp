@@ -105,7 +105,7 @@ void ImageComponent::onSizeChanged()
 	updateVertices();
 }
 
-void ImageComponent::setImage(std::string path, bool tile)
+void ImageComponent::setImage(const std::string& path, bool tile)
 {
 	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
 		mTexture.reset();
