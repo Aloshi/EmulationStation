@@ -1,0 +1,473 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation 2.0RC1 BASQUE po\n"
+"POT-Creation-Date: 2015-10-12 12:00-0500\n"
+"PO-Revision-Date: 2015-08-14 13:00+0100\n"
+"Last-Translator: Xabier Calvo <xabi.calvo@gmail.com>\n"
+"Language-Team: BASQUE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: eu\n"
+
+msgid "MAIN MENU"
+msgstr "MENU NAGUSIA"
+msgid "YES"
+msgstr "BAI"
+msgid "NO"
+msgstr "EZ"
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp
+msgid "Rating: "
+msgstr "Puntuazioa: "
+msgid "Released: "
+msgstr "Argitaratua:"
+msgid "Developer: "
+msgstr "Garatzailea : "
+msgid "Publisher: "
+msgstr "Editorea : "
+msgid "Genre: "
+msgstr "Generoa:"
+msgid "Players: "
+msgstr "Jokalariak : "
+msgid "Last played: "
+msgstr "Azken partida : "
+msgid "Times played: "
+msgstr "Alditan jokatua : "
+
+#: es-app/src/MetaData.cpp
+msgid "enter game name"
+msgstr "jokoarean izena"
+
+
+msgid "NAME"
+msgstr "IZENA"
+msgid "ENTER DESCRIPTION"
+msgstr "SARTU DESKRIPZIOA"
+msgid "ENTER PATH TO IMAGE"
+msgstr "SARTU IRUDIRA BIDEA"
+msgid "THUMBNAIL"
+msgstr "IRUDI TXIKIA"
+msgid "ENTER PATH TO THUMBNAIL"
+msgstr "SARTU IRUDI TXIKIRA BIDEA"
+msgid "RATING"
+msgstr "KALIFIKAZIOA"
+msgid "ENTER SCORE"
+msgstr "SARTU KALIFIKAZIOA"
+msgid "RELEASE DATE"
+msgstr "ARGITARATZE DATA"
+msgid "ENTER RELEASE DATE"
+msgstr "SARTU ARGITARATZE DATA"
+msgid "DEVELOPER"
+msgstr "GARATZAILEA"
+msgid "ENTER GAME DEVELOPER"
+msgstr "SARTU GARATZAILEAREN IZENA"
+msgid "PUBLISHER"
+msgstr "EDITOREA"
+msgid "ENTER GAME PUBLISHER"
+msgstr "SARTU EDITOREAREN IZENA"
+msgid "GENRE"
+msgstr "GENEROA"
+msgid "ENTER GAME GENRE"
+msgstr "SARTU GENEROA"
+msgid "PLAYERS"
+msgstr "JOKALARIAK"
+msgid "ENTER NUMBER OF PLAYERS"
+msgstr "SARTU JOKALARI KOPURUA"
+msgid "PLAY COUNT"
+msgstr "PARTIDA KOPURUA"
+msgid "ENTER NUMBER OF TIMES PLAYED"
+msgstr "SARTU JOKATUTAKO PARTIDEN KOPURUA"
+
+#: es-app/src/guis/GuiMenu.cpp
+msgid "SCRAPE FROM"
+msgstr "LORTU DATUAK HEMENDIK:"
+msgid "SCRAPE RATINGS"
+msgstr "LORTU KALIFIKAZIOAK"
+msgid "SOUND SETTINGS"
+msgstr "SOINU EZARPENAK"
+msgid "SYSTEM VOLUME"
+msgstr "SISTEMAREN BOLUMENA"
+msgid "ENABLE SOUNDS"
+msgstr "SOINUA AKTIBATU"
+msgid "UI SETTINGS"
+msgstr "INTERFAZEAREN EZARPENAK"
+msgid "SCREENSAVER AFTER"
+msgstr "PANTAILA BABESLEA ZENBAT SEGUNDU ONDOREN:"
+msgid "TRANSITION STYLE"
+msgstr "TRANTSIZIO MOTA"
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "PANTAILA BABESLEAREN PORTAERA"
+msgid "SHOW FRAMERATE"
+msgstr "ERAKUTSI FRAMERATEA"
+msgid "ON-SCREEN HELP"
+msgstr "LAGUNTZA PANTAILAN"
+msgid "QUICK SYSTEM SELECT"
+msgstr "SISTEMA AUKERATZE AZKARRA"
+msgid "THEME SET"
+msgstr "GAIA"
+msgid "CONFIGURE INPUT"
+msgstr "KONTROLEN KONFIGURAZIOA"
+msgid "QUIT"
+msgstr "IRTEN"
+msgid "REALLY RESTART?"
+msgstr "BERRABIARAZI?"
+msgid "RESTART SYSTEM"
+msgstr "SISTEMA BERRABIARAZI"
+msgid "REALLY SHUTDOWN?"
+msgstr "ITZALI?"
+msgid "SHUTDOWN SYSTEM"
+msgstr "ITZALI SISTEMA"
+msgid "REALLY QUIT?"
+msgstr "IRTEN?"
+msgid "QUIT EMULATIONSTATION"
+msgstr "EMULATIONSTATION-etik IRTEN"
+
+
+#: es-app/src/guis/GuiScraperStart.cpp
+msgid "SCRAPE NOW"
+msgstr "DATUAK LORTU"
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "ERABILTZAILEAK ERABAKI GATAZKETAN"
+msgid "SYSTEMS"
+msgstr "SISTEMAK"
+msgid "FILTER"
+msgstr "IRAGAZKIAK"
+msgid "SCRAPE THESE GAMES"
+msgstr "JOKU HAUEN DATUAK LORTU"
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "SISTEMA HAUEN DATUAK LORTU"
+msgid "SELECT ALL"
+msgstr "DENAK"
+msgid "SELECT NONE"
+msgstr "BAT ERE EZ"
+
+#: es-app/src/guis/GuiScraperMulti.cpp"
+msgid "SCRAPING IN PROGRESS"
+msgstr "DATUAK LORTZEN"
+
+#: es-app/src/components/ScraperSearchComponent.cpp
+msgid "NO GAMES FOUND - SKIP"
+msgstr "EZ DIRA JOKUAK AURKITU - TXANDAPASA"
+
+
+#: Buttons
+msgid "close"
+msgstr "itxi"
+msgid "select"
+msgstr "aukeratu"
+msgid "choose"
+msgstr "hautatu"
+msgid "back"
+msgstr "atzera"
+msgid "CLOSE"
+msgstr "ITXI"
+msgid "SELECT"
+msgstr "AUKERATU"
+msgid "CHOOSE"
+msgstr "HAUTATU"
+msgid "BACK"
+msgstr "ATZERA"
+msgid "LAUNCH"
+msgstr "ABIARAZI"
+msgid "SYSTEM"
+msgstr "SISTEMA"
+msgid "INPUT"
+msgstr "EDITATU"
+msgid "SKIP"
+msgstr "TXANDAPASA"
+msgid "CHANGE"
+msgstr "ALDATU"
+msgid "SAVE"
+msgstr "GORDE"
+msgid "CANCEL"
+msgstr "EZEZTATU"
+msgid "DELETE"
+msgstr "EZABATU"
+msgid "GO BACK"
+msgstr "ATZERA EGIN"
+
+#: es-app/src/views/SystemView.cpp
+msgid " GAMES AVAILABLE"
+msgstr " JOKU ERABILGARRIAK"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp
+msgid "JUMP TO LETTER"
+msgstr "LETRARA JOAN"
+msgid "SORT GAMES BY"
+msgstr "JOKUAN ORDENATU:"
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "JOKU HONEN DATUAK EDITATU"
+
+
+#: es-app/src/guis/GuiMetaDataEd.cpp
+msgid "EDIT METADATA"
+msgstr "DATUAK EDITATU"
+
+msgid " GAMEPAD"
+msgstr " AGINTEA"
+msgid " DETECTED"
+msgstr " DETEKTATUA"
+msgid "WELCOME"
+msgstr "ONGI ETORRI"
+msgid "NO GAMEPADS DETECTED"
+msgstr "EZ DA AGINTERIK DETEKTATU"
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "BOTOI BAT SAKATUA MANTENDU AGINTEAN KONFIGURATZEKO."
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "F4 SAKATU EDOZEIN UNETAN IRTETZEKO."
+msgid "PRESS ESC TO CANCEL."
+msgstr "ESC SAKATU EZEZTATZEKO"
+
+#: es-core/src/guis/GuiInputConfig.cpp
+msgid "CONFIGURING"
+msgstr "KONFIGURATZEN"
+msgid "UP"
+msgstr "GORA"
+msgid "DOWN"
+msgstr "BEHERA"
+msgid "LEFT"
+msgstr "EZKERRA"
+msgid "RIGHT"
+msgstr "ESKUINA"
+msgid "PAGE UP"
+msgstr "L1 (HUR. ORRIA)"
+msgid "PAGE DOWN"
+msgstr "R1 (AUR. ORRIA)"
+
+msgid "SAVE CHANGES?"
+msgstr "ALDAKETAK GORDE?"
+
+#: es-app/src/guis/GuiUpdate.cpp
+
+msgid "WORKING..."
+msgstr "LANEAN..."
+msgid "UPDATE"
+msgstr "EGUNERATU"
+msgid "REALLY UPDATE?"
+msgstr "ZIUR EGUNERATU NAHI DUZULA?"
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "SARE KONEXIO BAT BEHARREZKOA DA"
+msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+msgstr "EGUNERAKETA AMAITUTA. SISTEMA BERRABIARAZIKO DA ORAIN"
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "EGUNERAKETAK HUTS EGIN DU. SISTEMA BERRABIARAZIKO DA ORAIN"
+
+
+# GUIMENU
+msgid "CONFIGURE A CONTROLLER"
+msgstr "AGINTE BAT KONFIGURATU"
+msgid "INPUT P1"
+msgstr "J1 AGINTEA"
+msgid "INPUT P2"
+msgstr "J2 AGINTEA"
+msgid "INPUT P3"
+msgstr "J3 AGINTEA"
+msgid "INPUT P4"
+msgstr "J4 AGINTEA"
+
+msgid "NOGAMEERRORMESSAGE"
+msgstr "EZ DA JOKORIK AURKITU SISTEMAN !\nMESEDEZ, JARRAITU ARGIBIDEAK JOKOAK GEHITZEKO.\n\nRECALBOX.COM-EN BISITA GAITZAZU INFORMAZIO GEHIAGO ESKURATZEKO"
+
+msgid "LANGUAGE"
+msgstr "HIZKUNTZA"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "SISTEMA BERRABIARAZIKO DA"
+
+
+msgid "SYSTEM SETTINGS"
+msgstr "SISTEMAREN KONFIGURAZIOA"
+
+msgid "VERSION"
+msgstr "BERTSIOA"
+
+msgid "STORAGE"
+msgstr "MEMORIA"
+
+msgid "OUTPUT DEVICE"
+msgstr "SOINU IRTEERA"
+
+msgid "SMOOTH GAMES"
+msgstr "JOKUAK LEUNDU"
+
+msgid "GPIO CONTROLLERS"
+msgstr "GPIO AGINTEAK"
+
+msgid "GPIO CONTROLLERS ARE NOW ON"
+msgstr "GPIO AGINTEAK AKTIBATUTA DAUDE"
+
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "ZURE RECALBOX-arentzat EGUNERAKETA BAT DAGO"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "EZ DAGO EGUNERAKETARIK ERABILGARRI"
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "KODI MULTIMEDIA GUNEA ABIARAZI NAHI DUZU?"
+
+msgid "ENABLE WIFI"
+msgstr "WIFI-a AKTIBATU"
+
+msgid "NETWORK SETTINGS"
+msgstr "SARE KONFIGURAZIOA"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI-a AKTIBATUTA"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "WIFI KONFIGURAZIO ERROREA"
+
+msgid "WIFI KEY"
+msgstr "WIFI GAKOA"
+
+msgid "WIFI SSID"
+msgstr "WIFI SSID-a"
+
+msgid "GAME RATIO"
+msgstr "JOKOAREN RATIOA"
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "EDOZEIN BOTOI SAKATU"
+msgid "-NOT DEFINED-"
+msgstr "-KONFIGURATU GABE-"
+msgid "ALREADY TAKEN"
+msgstr "ERABILITA"
+msgid "HOLD FOR "
+msgstr "MANTENDU HONETARAKO:"
+msgid "S TO SKIP"
+msgstr "S TXANDAPASARAKO"
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "MANTENDU EDOZEIN BOTOI TXANDAPASARAKO"
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 GORA"
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 EZKERRA"
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 GORA"
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 EZKERRA"
+
+msgid "I18NMESSAGECONTROLLERS"
+msgstr "AGINTE BAT KONFIGURATZERA ZOAZ. JOYSTICK BAT SOILIK BADUZU NORABIDEAK KONFIGURATU ETA AHAZTU BESTE KONFIGURAZIOA BOTO BAT SAKATU ETA MANTENDUZ. EZ BADUZU BOTOI BEREZIRIK HOTKEY-arentzat ERABILI EZAZU SELECT BOTOIA. ZURE AGINTEAN EXISTITZEN EZ DIREN BOTOIEI EZ EGIN KASURIK BOTOI BAT SAKATU ETA MANTENDUZ."
+
+# TEXT EDITING
+msgid "EDIT"
+msgstr "EDITATU"
+msgid "STOP EDITING"
+msgstr "EDITATZEZ UTZI"
+msgid "MOVE CURSOR"
+msgstr "KURTSOREA MUGITU"
+msgid "DISCARD CHANGES"
+msgstr "ALDAKETAK BAZTERTU"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "Falta diren irudiak bakarrik"
+
+msgid "All Games"
+msgstr "Joko guztiak"
+
+msgid "accept"
+msgstr "Onartu"
+
+msgid " SELECTED"
+msgstr " AUKERATUAK"
+
+msgid "accept result"
+msgstr "erantzuna onartu"
+
+msgid "stop (progress saved)"
+msgstr "gelditu (orain artekoa gordeta)"
+
+msgid "search"
+msgstr "bilatu"
+
+msgid "GAMES"
+msgstr "JOKOAK"
+
+msgid " OF "
+msgstr " NOREN: "
+
+msgid "NO GAMES WERE SCRAPED."
+msgstr "EZ DA INONGO JOKOREN DATURIK LORTU."
+
+msgid " SUCCESSFULLY SCRAPED!"
+msgstr " LORTUAK!"
+
+msgid " SKIPPED."
+msgstr " TXANDAPASA EGINDA."
+
+# FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "GOGOKOAK SOILIK"
+
+
+msgid "FAVORITE"
+msgstr "GOGOKOA"
+
+msgid "enter favorite"
+msgstr "gogokoa gehitu"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "EGUNERAKETAK"
+
+msgid "AUTO UPDATES"
+msgstr "EGUNERAKETA AUTOMATIKOAK"
+
+msgid "START UPDATE"
+msgstr "EGUNERAKETA HASI"
+
+msgid "KODI SETTINGS"
+msgstr "KODI-ren KONFIGURAZIOA"
+
+msgid "ENABLE KODI"
+msgstr "KODI AKTIBATU"
+
+msgid "KODI AT START"
+msgstr "HASI KODI ABIARAZTEAN"
+
+msgid "START KODI WITH X"
+msgstr "X SAKATU KODI ABIARAZTEKO"
+
+msgid "GAMES SETTINGS"
+msgstr "JOKOEN KONFIGURAZIOAK"
+
+msgid "REWIND"
+msgstr "ATZERA ERAMAN"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "AGINTEEN KONFIGURAZIOAK"
+
+msgid "FRONTEND MUSIC"
+msgstr "ATZEKO MUSIKA"
+
+msgid "HOSTNAME"
+msgstr "GAILUAREN IZENA"
+
+msgid "CONNECTED"
+msgstr "KONEKTATUTA"
+
+msgid "NOT CONNECTED"
+msgstr "KONEKTATU GABE"
+
+msgid "LOADING..."
+msgstr "KARGATZEN..."
+
+# Bluetooth
+msgid "CONTROLLER PAIRED"
+msgstr "AGINTEA PAREKATUA"
+
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "AGINTEA PAREKATZEA EZINEZKOA"
+
+msgid "AN ERROR OCCURED"
+msgstr "ERRORE BAT GERTATU DA"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "EZ DA AGINTERIK DETEKTATU"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "BLUETOOTH AGINTE BAT PAREKATU"
