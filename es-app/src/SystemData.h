@@ -66,6 +66,9 @@ public:
 	// Load or re-load theme.
 	void loadTheme();
 
+	// refresh the roms files
+	void refreshRootFolder();
+	
 private:
 	std::string mName;
 	std::string mFullName;

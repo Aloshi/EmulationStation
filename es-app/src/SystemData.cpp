@@ -410,3 +410,9 @@ void SystemData::loadTheme()
 		mTheme = std::make_shared<ThemeData>(); // reset to empty
 	}
 }
+
+void SystemData::refreshRootFolder() {
+  mRootFolder->clear();
+  populateFolder(mRootFolder);
+  mRootFolder->sort(FileSorts::SortTypes.at(0));
+}

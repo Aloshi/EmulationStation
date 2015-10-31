@@ -1,4 +1,5 @@
 #include <RecalboxConf.h>
+#include <RecalboxSystem.h>
 #include "views/ViewController.h"
 #include "Log.h"
 #include "SystemData.h"
@@ -67,7 +68,7 @@ void ViewController::goToSystemView(SystemData* system)
 	systemList->setPosition(getSystemId(system) * (float)Renderer::getScreenWidth(), systemList->getPosition().y());
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
-        
+
 	playViewTransition();
 }
 
@@ -77,7 +78,7 @@ void ViewController::goToNextGameList()
 	SystemData* system = getState().getSystem();
 	assert(system);
         AudioManager::getInstance()->startMusic(system->getNext()->getTheme());
-        
+
 	goToGameList(system->getNext());
 }
 
@@ -171,7 +172,7 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 void ViewController::playViewTransition()
 {
 	Eigen::Vector3f target(Eigen::Vector3f::Identity());
-	if(mCurrentView) 
+	if(mCurrentView)
 		target = mCurrentView->getPosition();
 
 	// no need to animate, we're not going anywhere (probably goToNextGamelist() or goToPrevGamelist() when there's only 1 system)
@@ -252,7 +253,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 		});
 	}else{
 		// move camera to zoom in on center + fade out, launch game, come back in
-		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game] 
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game]
 		{
 			game->getSystem()->launchGame(mWindow, game);
 			mCamera = origCamera;
@@ -284,12 +285,12 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 			break;
 		}
 	}
-		
+
 	if(detailed)
 		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder(), system));
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
-		
+
 	// uncomment for experimental "image grid" view
 	//view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
 
@@ -332,6 +333,40 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 	}
 
+	if(config->isMappedTo("select", input) && input.value != 0)
+	{
+		auto s = new GuiSettings(mWindow, "QUIT");
+
+		Window *window = mWindow;
+		ComponentListRow row;
+		row.makeAcceptInputHandler([window] {
+			window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
+										  [] {
+											  if (RecalboxSystem::getInstance()->reboot() != 0)  {
+												  LOG(LogWarning) << "Restart terminated with non-zero result!";
+											  }
+										  }, "NO", nullptr));
+		});
+		row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+													   0x777777FF), true);
+		s->addRow(row);
+
+		row.elements.clear();
+		row.makeAcceptInputHandler([window] {
+			window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
+										  [] {
+											  if (RecalboxSystem::getInstance()->shutdown() != 0)  {
+												  LOG(LogWarning) <<
+																  "Shutdown terminated with non-zero result!";
+											  }
+										  }, "NO", nullptr));
+		});
+		row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+													   0x777777FF), true);
+		s->addRow(row);
+		mWindow->pushGui(s);
+	}
+
 	if(mCurrentView)
 		return mCurrentView->input(config, input);
 
@@ -358,7 +393,7 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 	// draw systemview
 	getSystemListView()->render(trans);
-	
+
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -476,7 +511,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 	if(!mCurrentView)
 		return prompts;
-	
+
 	prompts = mCurrentView->getHelpPrompts();
 	if(RecalboxConf::getInstance()->get("system.es.menu") != "none"){
 		prompts.push_back(HelpPrompt("start", "menu"));

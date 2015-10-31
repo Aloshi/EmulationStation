@@ -277,7 +277,6 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  rewind_enabled->setState(RecalboxConf::getInstance()->get("global.rewind") == "1");
                  s->addWithLabel("REWIND", rewind_enabled);
 
-
                  // Shaders preset
 
                  auto shaders_choices = std::make_shared<OptionListComponent<std::string> >(mWindow, "SHADERS SET", false);
@@ -299,6 +298,34 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                      RecalboxConf::getInstance()->set("global.shaderset", shaders_choices->getSelected());
                      RecalboxConf::getInstance()->saveRecalboxConf();
                  });
+                 // reread game list
+                 ComponentListRow row;
+                 Window *window = mWindow;
+		 
+                 /*row.makeAcceptInputHandler([window] {
+                     window->pushGui(new GuiMsgBox(window, "REALLY UPDATE GAMES LISTS ?", "YES",
+                                                   [] {
+						     // todo : add something nice to display here, in case it takes time ?
+						     for(auto i = SystemData::sSystemVector.begin(); i != SystemData::sSystemVector.end(); i++)
+						       {
+							 (*i)->refreshRootFolder();
+						       }
+
+						     // not sure that all must be reloaded (games lists, lists counters, what else ?)
+						     ViewController::get()->reloadAll();
+						   }, "NO", nullptr));
+                 });
+                 row.addElement(std::make_shared<TextComponent>(window, "UPDATE GAMES LISTS", Font::get(FONT_SIZE_MEDIUM),
+                                                                0x777777FF), true);
+                 s->addRow(row);
+		 
+		 
+                 s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled] {
+                     RecalboxSystem::getInstance()->setRecalboxConfig("global.smooth", smoothing_enabled->getState() ? "1" : "0");
+                     RecalboxSystem::getInstance()->setRecalboxConfig("global.ratio", ratio_choice->getSelected());
+                     RecalboxSystem::getInstance()->setRecalboxConfig("global.rewind", rewind_enabled->getState() ? "1" : "0");
+
+                 });*/
                  mWindow->pushGui(s);
              });
 
