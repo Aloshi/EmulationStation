@@ -269,11 +269,11 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  rewind_enabled->setState(RecalboxSystem::getInstance()->getRecalboxConfig("global.rewind") == "1");
                  s->addWithLabel("REWIND", rewind_enabled);
 
-		 // reread game list
-		 ComponentListRow row;
-		 Window *window = mWindow;
+                 // reread game list
+                 ComponentListRow row;
+                 Window *window = mWindow;
 		 
-                 row.makeAcceptInputHandler([window] {
+                 /*row.makeAcceptInputHandler([window] {
                      window->pushGui(new GuiMsgBox(window, "REALLY UPDATE GAMES LISTS ?", "YES",
                                                    [] {
 						     // todo : add something nice to display here, in case it takes time ?
@@ -296,7 +296,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                      RecalboxSystem::getInstance()->setRecalboxConfig("global.ratio", ratio_choice->getSelected());
                      RecalboxSystem::getInstance()->setRecalboxConfig("global.rewind", rewind_enabled->getState() ? "1" : "0");
 
-                 });
+                 });*/
                  mWindow->pushGui(s);
              });
 
