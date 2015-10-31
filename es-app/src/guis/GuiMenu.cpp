@@ -269,6 +269,28 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  rewind_enabled->setState(RecalboxSystem::getInstance()->getRecalboxConfig("global.rewind") == "1");
                  s->addWithLabel("REWIND", rewind_enabled);
 
+		 // reread game list
+		 ComponentListRow row;
+		 Window *window = mWindow;
+		 
+                 row.makeAcceptInputHandler([window] {
+                     window->pushGui(new GuiMsgBox(window, "REALLY UPDATE GAMES LISTS ?", "YES",
+                                                   [] {
+						     // todo : add something nice to display here, in case it takes time ?
+						     for(auto i = SystemData::sSystemVector.begin(); i != SystemData::sSystemVector.end(); i++)
+						       {
+							 (*i)->refreshRootFolder();
+						       }
+
+						     // not sure that all must be reloaded (games lists, lists counters, what else ?)
+						     ViewController::get()->reloadAll();
+						   }, "NO", nullptr));
+                 });
+                 row.addElement(std::make_shared<TextComponent>(window, "UPDATE GAMES LISTS", Font::get(FONT_SIZE_MEDIUM),
+                                                                0x777777FF), true);
+                 s->addRow(row);
+		 
+		 
                  s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled] {
                      RecalboxSystem::getInstance()->setRecalboxConfig("global.smooth", smoothing_enabled->getState() ? "1" : "0");
                      RecalboxSystem::getInstance()->setRecalboxConfig("global.ratio", ratio_choice->getSelected());
