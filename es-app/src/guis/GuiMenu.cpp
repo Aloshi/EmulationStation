@@ -273,7 +273,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  ComponentListRow row;
                  Window *window = mWindow;
 		 
-                 /*row.makeAcceptInputHandler([window] {
+                 row.makeAcceptInputHandler([window] {
                      window->pushGui(new GuiMsgBox(window, "REALLY UPDATE GAMES LISTS ?", "YES",
                                                    [] {
 						     // todo : add something nice to display here, in case it takes time ?
@@ -281,9 +281,8 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
 						       {
 							 (*i)->refreshRootFolder();
 						       }
-
 						     // not sure that all must be reloaded (games lists, lists counters, what else ?)
-						     ViewController::get()->reloadAll();
+						     ViewController::get()->reloadGamesLists();
 						   }, "NO", nullptr));
                  });
                  row.addElement(std::make_shared<TextComponent>(window, "UPDATE GAMES LISTS", Font::get(FONT_SIZE_MEDIUM),
@@ -296,7 +295,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                      RecalboxSystem::getInstance()->setRecalboxConfig("global.ratio", ratio_choice->getSelected());
                      RecalboxSystem::getInstance()->setRecalboxConfig("global.rewind", rewind_enabled->getState() ? "1" : "0");
 
-                 });*/
+                 });
                  mWindow->pushGui(s);
              });
 
