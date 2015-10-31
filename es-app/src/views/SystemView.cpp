@@ -9,6 +9,10 @@
 #include "Settings.h"
 #include "Util.h"
 #include <boost/locale.hpp>
+#include <guis/GuiMsgBox.h>
+#include <RecalboxSystem.h>
+#include <components/ComponentList.h>
+#include <guis/GuiSettings.h>
 #include "ThemeData.h"
 #include "AudioManager.h"
 
@@ -127,6 +131,40 @@ bool SystemView::input(InputConfig* config, Input input)
 			ViewController::get()->goToGameList(getSelected());
 			return true;
 		}
+		if(config->isMappedTo("select", input))
+		{
+			auto s = new GuiSettings(mWindow, "QUIT");
+
+			Window *window = mWindow;
+			ComponentListRow row;
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
+											  [] {
+												  if (RecalboxSystem::getInstance()->reboot() != 0)  {
+													  LOG(LogWarning) << "Restart terminated with non-zero result!";
+												  }
+											  }, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+														   0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
+											  [] {
+												  if (RecalboxSystem::getInstance()->shutdown() != 0)  {
+													  LOG(LogWarning) <<
+																	  "Shutdown terminated with non-zero result!";
+												  }
+											  }, "NO", nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+														   0x777777FF), true);
+			s->addRow(row);
+			mWindow->pushGui(s);
+		}
+
 	}else{
 		if(config->isMappedTo("left", input) || config->isMappedTo("right", input))
 			listInput(0);
