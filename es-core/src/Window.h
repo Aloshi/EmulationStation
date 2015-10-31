@@ -38,9 +38,12 @@ public:
 	void renderHelpPromptsEarly(); // used to render HelpPrompts before a fade
 	void setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpStyle& style);
 
+	void renderShutdownScreen();
+
 private:
 	void onSleep();
 	void onWake();
+	void renderWaitingScreen(const std::string& text);
 
 	HelpComponent* mHelp;
 	ImageComponent* mBackgroundOverlay;

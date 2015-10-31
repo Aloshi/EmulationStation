@@ -10,9 +10,7 @@
 #include "guis/GuiMsgBox.h"
 #include "RecalboxSystem.h"
 #include "RecalboxConf.h"
-#include <boost/locale.hpp>
 
-using namespace boost::locale;
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0), launchKodi(false)
@@ -257,7 +255,7 @@ void Window::setAllowSleep(bool sleep)
 	mAllowSleep = sleep;
 }
 
-void Window::renderLoadingScreen()
+void Window::renderWaitingScreen(const std::string& text)
 {
 	Eigen::Affine3f trans = Eigen::Affine3f::Identity();
 	Renderer::setMatrix(trans);
@@ -270,14 +268,18 @@ void Window::renderLoadingScreen()
 	splash.render(trans);
 
 	auto& font = mDefaultFonts.at(1);
-	TextCache* cache = font->buildTextCache(gettext("LOADING..."), 0, 0, 0x656565FF);
+	TextCache* cache = font->buildTextCache(gettext(text.c_str()), 0, 0, 0x656565FF);
 	trans = trans.translate(Eigen::Vector3f(round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f),
-		round(Renderer::getScreenHeight() * 0.835f), 0.0f));
+											round(Renderer::getScreenHeight() * 0.835f), 0.0f));
 	Renderer::setMatrix(trans);
 	font->renderTextCache(cache);
 	delete cache;
 
 	Renderer::swapBuffers();
+}
+void Window::renderLoadingScreen()
+{
+	renderWaitingScreen("LOADING...");
 }
 
 void Window::renderHelpPromptsEarly()
@@ -365,5 +367,10 @@ void Window::onSleep()
 
 void Window::onWake()
 {
+
+}
+
+void Window::renderShutdownScreen() {
+	renderWaitingScreen("PLEASE WAIT...");
 
 }

@@ -404,10 +404,10 @@ int main(int argc, char* argv[])
 
 	while(window.peekGui() != ViewController::get())
 		delete window.peekGui();
-	window.deinit();
 
+	window.renderShutdownScreen();
 	SystemData::deleteSystems();
-
+	window.deinit();
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
 	return 0;
