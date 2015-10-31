@@ -127,6 +127,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  language_choice->add("Español", "es_ES", language == "es_ES");
                  language_choice->add("Deutsch", "de_DE", language == "de_DE");
                  language_choice->add("Italiano", "it_IT", language == "it_IT");
+                 language_choice->add("Basque", "eu_ES", language == "eu_ES");
 
                  s->addWithLabel("LANGUAGE", language_choice);
 
