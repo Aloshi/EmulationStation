@@ -333,40 +333,6 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(config->isMappedTo("select", input) && input.value != 0)
-	{
-		auto s = new GuiSettings(mWindow, "QUIT");
-
-		Window *window = mWindow;
-		ComponentListRow row;
-		row.makeAcceptInputHandler([window] {
-			window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
-										  [] {
-											  if (RecalboxSystem::getInstance()->reboot() != 0)  {
-												  LOG(LogWarning) << "Restart terminated with non-zero result!";
-											  }
-										  }, "NO", nullptr));
-		});
-		row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM),
-													   0x777777FF), true);
-		s->addRow(row);
-
-		row.elements.clear();
-		row.makeAcceptInputHandler([window] {
-			window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
-										  [] {
-											  if (RecalboxSystem::getInstance()->shutdown() != 0)  {
-												  LOG(LogWarning) <<
-																  "Shutdown terminated with non-zero result!";
-											  }
-										  }, "NO", nullptr));
-		});
-		row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM),
-													   0x777777FF), true);
-		s->addRow(row);
-		mWindow->pushGui(s);
-	}
-
 	if(mCurrentView)
 		return mCurrentView->input(config, input);
 
