@@ -448,6 +448,22 @@ void ViewController::reloadAll()
 	updateHelpPrompts();
 }
 
+void ViewController::reloadGamesLists()
+{
+	mGameListViews.clear();
+
+	if(mState.viewing == GAME_LIST)
+	{
+		mCurrentView = getGameListView(mState.getSystem());
+	}else if(mState.viewing == SYSTEM_SELECT)
+	{
+		mSystemListView->goToSystem(mState.getSystem(), false);
+		mCurrentView = mSystemListView;
+	}else{
+		goToSystemView(SystemData::sSystemVector.front());
+	}
+}
+
 void ViewController::setInvalidGamesList(SystemData* system)
 {
 	for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)

@@ -23,6 +23,7 @@ public:
 	void reloadGameListView(IGameListView* gamelist, bool reloadTheme = false);
 	inline void reloadGameListView(SystemData* system, bool reloadTheme = false) { reloadGameListView(getGameListView(system).get(), reloadTheme); }
 	void reloadAll(); // Reload everything with a theme.  Used when the "ThemeSet" setting changes.
+	void reloadGamesLists();
 	void setInvalidGamesList(SystemData* system);
 	void setAllInvalidGamesList(SystemData* systemExclude);
 
