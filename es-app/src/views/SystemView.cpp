@@ -13,6 +13,7 @@
 #include <RecalboxSystem.h>
 #include <components/ComponentList.h>
 #include <guis/GuiSettings.h>
+#include <RecalboxConf.h>
 #include "ThemeData.h"
 #include "AudioManager.h"
 
@@ -131,7 +132,7 @@ bool SystemView::input(InputConfig* config, Input input)
 			ViewController::get()->goToGameList(getSelected());
 			return true;
 		}
-		if(config->isMappedTo("select", input))
+		if(config->isMappedTo("select", input) && RecalboxConf::getInstance()->get("system.es.menu") != "none")
 		{
 			auto s = new GuiSettings(mWindow, "QUIT");
 
