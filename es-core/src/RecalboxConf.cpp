@@ -29,7 +29,6 @@ bool RecalboxConf::loadRecalboxConf() {
     if (recalboxConf && recalboxConf.is_open()) {
         while (std::getline(recalboxConf, line)) {
             boost::smatch lineInfo;
-            std::cout << "read line " << line << "\n";
             if (boost::regex_match(line, lineInfo, validLine)) {
                 confMap[std::string(lineInfo["key"])] = std::string(lineInfo["val"]);
             }
