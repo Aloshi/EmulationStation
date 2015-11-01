@@ -316,7 +316,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  });
                  row.addElement(std::make_shared<TextComponent>(window, "UPDATE GAMES LISTS", Font::get(FONT_SIZE_MEDIUM),
                                                                 0x777777FF), true);
-                 s->addRow(row);
+                 //s->addRow(row);
 		 
 		 
                  s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled] {
