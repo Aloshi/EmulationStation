@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0RC1 TURKISH po\n"
 "POT-Creation-Date: 2014-09-20 12:00-0500\n"
-"PO-Revision-Date: 2015-11-10 22:37+0200\n"
+"PO-Revision-Date: 2015-11-13 16:57+0200\n"
 "Last-Translator: Ibrahim Gungor <igungor@gmail.com>\n"
 "Language-Team: TURKISH\n"
 "MIME-Version: 1.0\n"
@@ -46,65 +46,71 @@ msgid "Times played: "
 msgstr "Oynanma sayısı: "
 
 #: es-app/src/MetaData.cpp
-msgid "enter game name"
-msgstr "oyun adı girin"
+msgid "ENTER GAME NAME"
+msgstr "OYUN ADI"
 
 msgid "NAME"
 msgstr "İSİM"
 
+msgid "DESCRIPTION"
+msgstr "AÇIKLAMA"
+
 msgid "ENTER DESCRIPTION"
-msgstr "AÇIKLAMA GİRİN"
+msgstr "AÇIKLAMA"
+
+msgid "IMAGE"
+msgstr "RESİM"
 
 msgid "ENTER PATH TO IMAGE"
-msgstr "RESİM DOSYASININ KONUMUNU"
+msgstr "KONUM"
 
 msgid "THUMBNAIL"
 msgstr "ÖNİZLEME"
 
 msgid "ENTER PATH TO THUMBNAIL"
-msgstr "ÖNİZLEME DOSYASININ KONUMU"
+msgstr "KONUM"
 
 msgid "RATING"
 msgstr "PUAN"
 
 msgid "ENTER SCORE"
-msgstr "SKOR GİRİN"
+msgstr "SKOR"
 
 msgid "RELEASE DATE"
 msgstr "YAYINLANMA TARİHİ"
 
 msgid "ENTER RELEASE DATE"
-msgstr "YAYINLANMA TARİHİ GİRİN"
+msgstr "YAYIN TARİHİ"
 
 msgid "DEVELOPER"
 msgstr "GELİŞTİRİCİ"
 
 msgid "ENTER GAME DEVELOPER"
-msgstr "GELİŞTİRİCİ GİRİN"
+msgstr "GELİŞTİRİCİ"
 
 msgid "PUBLISHER"
 msgstr "YAYINCI"
 
 msgid "ENTER GAME PUBLISHER"
-msgstr "YAYINCI GİRİN"
+msgstr "YAYINCI"
 
 msgid "GENRE"
 msgstr "TÜR"
 
 msgid "ENTER GAME GENRE"
-msgstr "TÜR GİRİN"
+msgstr "TÜR"
 
 msgid "PLAYERS"
 msgstr "OYUNCU SAYISI"
 
 msgid "ENTER NUMBER OF PLAYERS"
-msgstr "OYUNCU SAYISI GİRİN"
+msgstr "OYUNCU SAYISI"
 
 msgid "PLAY COUNT"
 msgstr "OYNANMA SAYISI"
 
 msgid "ENTER NUMBER OF TIMES PLAYED"
-msgstr "KAÇ KEZ OYNANDIĞINI GİRİN"
+msgstr "KAÇ KEZ OYNANDI?"
 
 #: es-app/src/guis/GuiMenu.cpp
 msgid "SCRAPE FROM"
@@ -356,6 +362,8 @@ msgstr "GİRDİ P4"
 
 msgid "NOGAMEERRORMESSAGE"
 msgstr ""
+"KURULU BİR SİSTEM BULUNAMASI!\n"
+"SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
 
 msgid "LANGUAGE"
 msgstr "DİL"
@@ -446,7 +454,7 @@ msgid "JOYSTICK 2 LEFT"
 msgstr "JOYSTICK 2 SOL"
 
 msgid "I18NMESSAGECONTROLLERS"
-msgstr ""
+msgstr "JOYSTICK YAPILANDIRIRKEN AYARLAMAK İSTEMEDİGİNİZ TUŞLAR İÇİN HERHANGİ GİR TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAMAYA YARAYAN BİR TUŞTUR. HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
 
 # TEXT EDITING
 msgid "EDIT"
@@ -505,8 +513,8 @@ msgstr "SADECE FAVORİLER"
 msgid "FAVORITE"
 msgstr "FAVORİ"
 
-msgid "enter favorite"
-msgstr "favori girin"
+msgid "ENTER FAVORITE"
+msgstr "FAVORI"
 
 # NEW SETTINGS ORGANIZATION
 msgid "UPDATES"
@@ -600,3 +608,15 @@ msgstr "SEÇENEKLER"
 
 msgid "START"
 msgstr "BAŞLAT"
+
+msgid "unknown"
+msgstr "bilinmiyor"
+
+msgid "OK"
+msgstr "TAMAM"
+
+msgid "yes"
+msgstr "evet"
+
+msgid "no"
+msgstr "hayır"
