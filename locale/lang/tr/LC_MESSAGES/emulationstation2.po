@@ -62,13 +62,13 @@ msgid "IMAGE"
 msgstr "RESİM"
 
 msgid "ENTER PATH TO IMAGE"
-msgstr "KONUM"
+msgstr "RESMİN KONUMU"
 
 msgid "THUMBNAIL"
 msgstr "ÖNİZLEME"
 
 msgid "ENTER PATH TO THUMBNAIL"
-msgstr "KONUM"
+msgstr "ÖNİZLEMENİN KONUMU"
 
 msgid "RATING"
 msgstr "PUAN"
@@ -514,7 +514,7 @@ msgid "FAVORITE"
 msgstr "FAVORİ"
 
 msgid "ENTER FAVORITE"
-msgstr "FAVORI"
+msgstr "FAVORİ"
 
 # NEW SETTINGS ORGANIZATION
 msgid "UPDATES"
