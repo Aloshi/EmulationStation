@@ -457,7 +457,7 @@ msgid "JOYSTICK 2 LEFT"
 msgstr "JOYSTICK 2 SOL"
 
 msgid "I18NMESSAGECONTROLLERS"
-msgstr "JOYSTICK YAPILANDIRIRKEN AYARLAMAK İSTEMEDİGİNİZ TUŞLAR İÇİN HERHANGİ GİR TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAMAYA YARAYAN BİR TUŞTUR. HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
+msgstr "JOYSTICK YAPILANDIRIRKEN AYARLAMAK İSTEMEDİĞİNİZ TUŞLAR İÇİN HERHANGİ GİR TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAYAN BİR TUŞTUR. HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
 
 # TEXT EDITING
 msgid "EDIT"
@@ -473,26 +473,29 @@ msgid "DISCARD CHANGES"
 msgstr "DEĞİŞİKLİKLERİ KAYDETME"
 
 # MISSING SCRAPPER TRANSLATIONS
-msgid "Only missing image"
-msgstr "Sadece olmayan resimler"
+msgid "ONLY MISSING IMAGE"
+msgstr "SADECE RESMİ OLMAYANLAR"
 
-msgid "All Games"
-msgstr "Tüm Oyunlar"
+msgid "ALL GAMES"
+msgstr "TÜM OYUNLAR"
 
-msgid "accept"
-msgstr "kabul et"
+msgid "ACCEPT"
+msgstr "KABUL ET"
 
 msgid " SELECTED"
 msgstr " TANESİ SEÇİLİ"
 
-msgid "accept result"
-msgstr "kabul et"
+msgid "SELECTED"
+msgstr "TANESİ SEÇİLİ"
+
+msgid "ACCEPT RESULT"
+msgstr "KABUL ET"
 
 msgid "stop (progress saved)"
 msgstr "dur"
 
-msgid "search"
-msgstr "ara"
+msgid "SEARCH"
+msgstr "ARA"
 
 msgid "GAMES"
 msgstr "OYUNLAR"
@@ -560,7 +563,7 @@ msgid "CONNECTED"
 msgstr "BAĞLI"
 
 msgid "NOT CONNECTED"
-msgstr "BAĞLI DEGIL"
+msgstr "BAĞLI DEĞİL"
 
 msgid "LOADING..."
 msgstr "YÜKLENİYOR..."
@@ -603,7 +606,7 @@ msgstr "ÖNTANIMLI"
 msgid "UPDATE GAMES LISTS"
 msgstr "OYUN LİSTESİNİ GÜNCELLE"
 
-msgid "REALLY UPDATE GAMES LISTS"
+msgid "REALLY UPDATE GAMES LISTS ?"
 msgstr "OYUN LİSTESİ GÜNCELLENSİN Mİ?"
 
 msgid "MENU"
@@ -618,6 +621,9 @@ msgstr "BAŞLAT"
 msgid "unknown"
 msgstr "bilinmiyor"
 
+msgid "ok"
+msgstr "tamam"
+
 msgid "OK"
 msgstr "TAMAM"
 
@@ -626,3 +632,12 @@ msgstr "evet"
 
 msgid "no"
 msgstr "hayır"
+
+msgid "SEARCH FOR"
+msgstr "ARAMA YAP"
+
+msgid "FADE"
+msgstr "KAYBOL"
+
+msgid "SLIDE"
+msgstr "KAYDIR"
