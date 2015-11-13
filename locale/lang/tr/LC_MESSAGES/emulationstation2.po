@@ -265,6 +265,9 @@ msgstr "GERİ DÖN"
 msgid " GAMES AVAILABLE"
 msgstr " OYUN"
 
+msgid " GAME AVAILABLE"
+msgstr " OYUN"
+
 #: es-app/src/guis/GuiGamelistOptions.cpp
 msgid "JUMP TO LETTER"
 msgstr "ŞU HARFE GİT"
@@ -599,6 +602,9 @@ msgstr "ÖNTANIMLI"
 
 msgid "UPDATE GAMES LISTS"
 msgstr "OYUN LİSTESİNİ GÜNCELLE"
+
+msgid "REALLY UPDATE GAMES LISTS"
+msgstr "OYUN LİSTESİ GÜNCELLENSİN Mİ?"
 
 msgid "MENU"
 msgstr "MENÜ"
