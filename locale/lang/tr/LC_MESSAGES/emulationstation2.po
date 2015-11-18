@@ -1,0 +1,643 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation 2.0RC1 TURKISH po\n"
+"POT-Creation-Date: 2014-09-20 12:00-0500\n"
+"PO-Revision-Date: 2015-11-13 16:57+0200\n"
+"Last-Translator: Ibrahim Gungor <igungor@gmail.com>\n"
+"Language-Team: TURKISH\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
+"X-Generator: Poedit 1.8.5\n"
+
+msgid "MAIN MENU"
+msgstr "ANA MENÜ"
+
+msgid "YES"
+msgstr "EVET"
+
+msgid "NO"
+msgstr "HAYIR"
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp
+msgid "Rating: "
+msgstr "Skor: "
+
+msgid "Released: "
+msgstr "Yayınlanma tarihi:"
+
+msgid "Developer: "
+msgstr "Geliştirici: "
+
+msgid "Publisher: "
+msgstr "Yayıncı: "
+
+msgid "Genre: "
+msgstr "Tür: "
+
+msgid "Players: "
+msgstr "Oyuncu sayısı:"
+
+msgid "Last played: "
+msgstr "Son oynanan: "
+
+msgid "Times played: "
+msgstr "Oynanma sayısı: "
+
+#: es-app/src/MetaData.cpp
+msgid "ENTER GAME NAME"
+msgstr "OYUN ADI"
+
+msgid "NAME"
+msgstr "İSİM"
+
+msgid "DESCRIPTION"
+msgstr "AÇIKLAMA"
+
+msgid "ENTER DESCRIPTION"
+msgstr "AÇIKLAMA"
+
+msgid "IMAGE"
+msgstr "RESİM"
+
+msgid "ENTER PATH TO IMAGE"
+msgstr "RESMİN KONUMU"
+
+msgid "THUMBNAIL"
+msgstr "ÖNİZLEME"
+
+msgid "ENTER PATH TO THUMBNAIL"
+msgstr "ÖNİZLEMENİN KONUMU"
+
+msgid "RATING"
+msgstr "PUAN"
+
+msgid "ENTER SCORE"
+msgstr "SKOR"
+
+msgid "RELEASE DATE"
+msgstr "YAYINLANMA TARİHİ"
+
+msgid "ENTER RELEASE DATE"
+msgstr "YAYIN TARİHİ"
+
+msgid "DEVELOPER"
+msgstr "GELİŞTİRİCİ"
+
+msgid "ENTER GAME DEVELOPER"
+msgstr "GELİŞTİRİCİ"
+
+msgid "PUBLISHER"
+msgstr "YAYINCI"
+
+msgid "ENTER GAME PUBLISHER"
+msgstr "YAYINCI"
+
+msgid "GENRE"
+msgstr "TÜR"
+
+msgid "ENTER GAME GENRE"
+msgstr "TÜR"
+
+msgid "PLAYERS"
+msgstr "OYUNCU SAYISI"
+
+msgid "ENTER NUMBER OF PLAYERS"
+msgstr "OYUNCU SAYISI"
+
+msgid "PLAY COUNT"
+msgstr "OYNANMA SAYISI"
+
+msgid "ENTER NUMBER OF TIMES PLAYED"
+msgstr "KAÇ KEZ OYNANDI?"
+
+#: es-app/src/guis/GuiMenu.cpp
+msgid "SCRAPE FROM"
+msgstr "ŞURADAN ÇEK"
+
+msgid "SCRAPE RATINGS"
+msgstr "PUANLARI ÇEK"
+
+msgid "SOUND SETTINGS"
+msgstr "SES AYARLARI"
+
+msgid "SYSTEM VOLUME"
+msgstr "SİSTEM SESİ"
+
+msgid "ENABLE SOUNDS"
+msgstr "SESİ ETKİNLEŞTİR"
+
+msgid "UI SETTINGS"
+msgstr "ARABİRİM AYARLARI"
+
+msgid "SCREENSAVER AFTER"
+msgstr "EKRAN KORUYUCU"
+
+msgid "TRANSITION STYLE"
+msgstr "GEÇİŞ STİLİ"
+
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "EKRAN KORUYUCU DAVRANIŞI"
+
+msgid "SHOW FRAMERATE"
+msgstr "FRAMERATE GÖSTER"
+
+msgid "ON-SCREEN HELP"
+msgstr "YARDIMI GÖSTER"
+
+msgid "QUICK SYSTEM SELECT"
+msgstr "HIZLI SİSTEM SEÇİMİ"
+
+msgid "THEME SET"
+msgstr "TEMA"
+
+msgid "CONFIGURE INPUT"
+msgstr "GİRDİ YAPILANDIR"
+
+msgid "QUIT"
+msgstr "ÇIKIŞ"
+
+msgid "REALLY RESTART?"
+msgstr "YENİDEN BAŞLAT"
+
+msgid "RESTART SYSTEM"
+msgstr "YENİDEN BAŞLAT"
+
+msgid "REALLY SHUTDOWN?"
+msgstr "KAPAT"
+
+msgid "SHUTDOWN SYSTEM"
+msgstr "KAPAT"
+
+msgid "REALLY QUIT?"
+msgstr "ÇIK"
+
+msgid "QUIT EMULATIONSTATION"
+msgstr "ARABİRİMDEN ÇIK"
+
+#: es-app/src/guis/GuiScraperStart.cpp
+msgid "SCRAPE NOW"
+msgstr "ŞİMDİ ÇEK"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "ÇAKIŞMALARDA KULLANICI KARAR VERSİN"
+
+msgid "SYSTEMS"
+msgstr "SİSTEMLER"
+
+msgid "FILTER"
+msgstr "FİLTRE"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "ŞU OYUNLARI ÇEK"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "ŞU SİSTEMLERİ ÇEK"
+
+msgid "SELECT ALL"
+msgstr "TÜMÜ"
+
+msgid "SELECT NONE"
+msgstr "HİÇBİRİ"
+
+#: es-app/src/guis/GuiScraperMulti.cpp"
+msgid "SCRAPING IN PROGRESS"
+msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
+
+#: es-app/src/components/ScraperSearchComponent.cpp
+msgid "NO GAMES FOUND - SKIP"
+msgstr "OYUN BULUNAMADI"
+
+#: Buttons
+msgid "close"
+msgstr "kapat"
+
+msgid "select"
+msgstr "değiştir"
+
+msgid "choose"
+msgstr "seç"
+
+msgid "back"
+msgstr "geri"
+
+msgid "CLOSE"
+msgstr "KAPAT"
+
+msgid "SELECT"
+msgstr "SEÇ"
+
+msgid "CHOOSE"
+msgstr "DEĞİŞTİR"
+
+msgid "BACK"
+msgstr "GERİ"
+
+msgid "LAUNCH"
+msgstr "BAŞLAT"
+
+msgid "SYSTEM"
+msgstr "SİSTEM"
+
+msgid "INPUT"
+msgstr "GİRDİ"
+
+msgid "SKIP"
+msgstr "GEÇ"
+
+msgid "CHANGE"
+msgstr "DEĞİŞTİR"
+
+msgid "SAVE"
+msgstr "KAYDET"
+
+msgid "CANCEL"
+msgstr "İPTAL"
+
+msgid "DELETE"
+msgstr "SİL"
+
+msgid "GO BACK"
+msgstr "GERİ DÖN"
+
+#: es-app/src/views/SystemView.cpp
+msgid " GAMES AVAILABLE"
+msgstr " OYUN"
+
+msgid " GAME AVAILABLE"
+msgstr " OYUN"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp
+msgid "JUMP TO LETTER"
+msgstr "ŞU HARFE GİT"
+
+msgid "SORT GAMES BY"
+msgstr "SIRALAMA KRİTERİ"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "OYUN BİLGİLERİNİ DÜZENLE"
+
+#: es-app/src/guis/GuiMetaDataEd.cpp
+msgid "EDIT METADATA"
+msgstr "DÜZENLE"
+
+msgid " GAMEPAD"
+msgstr " GAMEPAD"
+
+msgid " DETECTED"
+msgstr " ALGILANDI"
+
+msgid "WELCOME"
+msgstr "HOŞGELDİN"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "GAMEPAD BULUNAMADI"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "CİHAZI YAPILANDIRMAK İÇİN BİR TUŞA BASILI TUT"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "ÇIKMAK İÇİN F4 TUŞUNA BAŞ"
+
+msgid "PRESS ESC TO CANCEL."
+msgstr "İPTAL İÇİN ESC TUŞUNA BAS"
+
+#: es-core/src/guis/GuiInputConfig.cpp
+msgid "CONFIGURING"
+msgstr "YAPILANDIRILIYOR"
+
+msgid "UP"
+msgstr "YUKARI"
+
+msgid "DOWN"
+msgstr "AŞAĞI"
+
+msgid "LEFT"
+msgstr "SOL"
+
+msgid "RIGHT"
+msgstr "SAĞ"
+
+msgid "PAGE UP"
+msgstr "PAGE UP"
+
+msgid "PAGE DOWN"
+msgstr "PAGE DOWN"
+
+msgid "SAVE CHANGES?"
+msgstr "DEĞİŞİKLİKLERİ KAYDET?"
+
+#: es-app/src/guis/GuiUpdate.cpp
+msgid "WORKING..."
+msgstr "DEVAM EDİYOR..."
+
+msgid "UPDATE"
+msgstr "GÜNCELLE"
+
+msgid "REALLY UPDATE?"
+msgstr "GÜNCELLE?"
+
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "AĞ BAĞLANTISI GEREKİYOR"
+
+msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME TAMAMLANDI, SİSTEM YENİDEN BAŞLATILIYOR"
+
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME BAŞARISIZ, SİSTEM YENİDEN BAŞLATILIYOR"
+
+# GUIMENU
+msgid "CONFIGURE A CONTROLLER"
+msgstr "JOYSTICK YAPILANDIR"
+
+msgid "INPUT P1"
+msgstr "GİRDİ P1"
+
+msgid "INPUT P2"
+msgstr "GİRDİ P2"
+
+msgid "INPUT P3"
+msgstr "GİRDİ P3"
+
+msgid "INPUT P4"
+msgstr "GİRDİ P4"
+
+msgid "NOGAMEERRORMESSAGE"
+msgstr ""
+"KURULU BİR SİSTEM BULUNAMADI!\n"
+"SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
+
+msgid "LANGUAGE"
+msgstr "DİL"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "SİSTEM YENIDEN BAŞLATILIYOR"
+
+msgid "SYSTEM SETTINGS"
+msgstr "SİSTEM AYARLARI"
+
+msgid "VERSION"
+msgstr "SÜRÜM"
+
+msgid "STORAGE"
+msgstr "DEPO"
+
+msgid "OUTPUT DEVICE"
+msgstr "ÇIKTI AYGITI"
+
+msgid "SMOOTH GAMES"
+msgstr "OYUNLARI SMOOTH GÖSTER"
+
+msgid "GPIO CONTROLLERS"
+msgstr "GPIO KUMANDASI"
+
+msgid "GPIO CONTROLLERS ARE NOW ON"
+msgstr "GPIO KUMANDASI ETKİN"
+
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "SİSTEMİNİZE AİT GÜNCELLEME MEVCUT"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "YENİ GÜNCELLEME YOK"
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "KODI SUNUCUSU BAŞLATILSIN MI?"
+
+msgid "ENABLE WIFI"
+msgstr "WIFI ETKİNLEŞTİR"
+
+msgid "NETWORK SETTINGS"
+msgstr "AĞ AYARLARI"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI ETKİN"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "WIFI YAPILANDIRMA HATASI"
+
+msgid "WIFI KEY"
+msgstr "WIFI ANAHTARI"
+
+msgid "WIFI SSID"
+msgstr "WIFI SSID"
+
+msgid "GAME RATIO"
+msgstr "GÖRÜNTÜ ORANI"
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "HERHANGİ BİR TUŞA BASIN"
+
+msgid "-NOT DEFINED-"
+msgstr "-TANIMLI DEĞİL-"
+
+msgid "ALREADY TAKEN"
+msgstr "ÖNCEDEN TANIMLANMIŞ"
+
+msgid "HOLD FOR "
+msgstr "GEÇMEK İÇİN"
+
+msgid "S TO SKIP"
+msgstr "SANİYE BASILI TUTUN"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "GEÇMEK İÇİN BİR TUŞA BASILI TUTUN"
+
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 YUKARI"
+
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 SOL"
+
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 YUKARI"
+
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 SOL"
+
+msgid "I18NMESSAGECONTROLLERS"
+msgstr "JOYSTICK YAPILANDIRIRKEN AYARLAMAK İSTEMEDİĞİNİZ TUŞLAR İÇİN HERHANGİ GİR TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAYAN BİR TUŞTUR. HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
+
+# TEXT EDITING
+msgid "EDIT"
+msgstr "DÜZENLE"
+
+msgid "STOP EDITING"
+msgstr "DÜZENLEMEKTEN VAZGEÇ"
+
+msgid "MOVE CURSOR"
+msgstr "İMLECİ OYNAT"
+
+msgid "DISCARD CHANGES"
+msgstr "DEĞİŞİKLİKLERİ KAYDETME"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "ONLY MISSING IMAGE"
+msgstr "SADECE RESMİ OLMAYANLAR"
+
+msgid "ALL GAMES"
+msgstr "TÜM OYUNLAR"
+
+msgid "ACCEPT"
+msgstr "KABUL ET"
+
+msgid " SELECTED"
+msgstr " TANESİ SEÇİLİ"
+
+msgid "SELECTED"
+msgstr "TANESİ SEÇİLİ"
+
+msgid "ACCEPT RESULT"
+msgstr "KABUL ET"
+
+msgid "stop (progress saved)"
+msgstr "dur"
+
+msgid "SEARCH"
+msgstr "ARA"
+
+msgid "GAMES"
+msgstr "OYUNLAR"
+
+msgid " OF "
+msgstr " "
+
+msgid "NO GAMES WERE SCRAPED."
+msgstr "HİÇBİR OYUN ÇEKİLMEDİ."
+
+msgid " SUCCESSFULLY SCRAPED!"
+msgstr "BAŞARIYLA ÇEKİLDİ!"
+
+msgid " SKIPPED."
+msgstr "ATLANDI."
+
+#  FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "SADECE FAVORİLER"
+
+msgid "FAVORITE"
+msgstr "FAVORİ"
+
+msgid "ENTER FAVORITE"
+msgstr "FAVORİ"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "GÜNCELLEMELER"
+
+msgid "AUTO UPDATES"
+msgstr "OTOMATİK GÜNCELLEME"
+
+msgid "START UPDATE"
+msgstr "GÜNCELLE"
+
+msgid "KODI SETTINGS"
+msgstr "KODI AYARLARI"
+
+msgid "ENABLE KODI"
+msgstr "KODIYI ETKİNLEŞTİR"
+
+msgid "KODI AT START"
+msgstr "KODI ACILIŞTA BAŞLASIN"
+
+msgid "START KODI WITH X"
+msgstr "KODI X İLE BAŞLASIN"
+
+msgid "GAMES SETTINGS"
+msgstr "OYUN AYARLARI"
+
+msgid "REWIND"
+msgstr "GERİ SAR"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "KUMANDA AYARLARI"
+
+msgid "FRONTEND MUSIC"
+msgstr "ARABİRİM MÜZİĞİ"
+
+msgid "HOSTNAME"
+msgstr "SİSTEM ADI"
+
+msgid "CONNECTED"
+msgstr "BAĞLI"
+
+msgid "NOT CONNECTED"
+msgstr "BAĞLI DEĞİL"
+
+msgid "LOADING..."
+msgstr "YÜKLENİYOR..."
+
+# Bluetooth
+msgid "CONTROLLER PAIRED"
+msgstr "KUMANDA EŞLEŞTİRİLDİ"
+
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "KUMANDA EŞLEŞTİRİLEMEDİ"
+
+msgid "AN ERROR OCCURED"
+msgstr "BİR HATA OLUŞTU"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "KUMANDA BULUNAMADI"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "BLUETOOTH KUMANDA EŞLEŞTİR"
+
+msgid "PLEASE WAIT..."
+msgstr "LÜTFEN BEKLEYİN..."
+
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+"BU İŞLEM BİR DOSYA SİLECEK!\n"
+"EMİN MİSİNİZ?"
+
+msgid "IP ADDRESS"
+msgstr "IP ADRESİ"
+
+msgid "STATUS"
+msgstr "DURUM"
+
+msgid "DEFAULT"
+msgstr "ÖNTANIMLI"
+
+msgid "UPDATE GAMES LISTS"
+msgstr "OYUN LİSTESİNİ GÜNCELLE"
+
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "OYUN LİSTESİ GÜNCELLENSİN Mİ?"
+
+msgid "MENU"
+msgstr "MENÜ"
+
+msgid "OPTIONS"
+msgstr "SEÇENEKLER"
+
+msgid "START"
+msgstr "BAŞLAT"
+
+msgid "unknown"
+msgstr "bilinmiyor"
+
+msgid "ok"
+msgstr "tamam"
+
+msgid "OK"
+msgstr "TAMAM"
+
+msgid "yes"
+msgstr "evet"
+
+msgid "no"
+msgstr "hayır"
+
+msgid "SEARCH FOR"
+msgstr "ARAMA YAP"
+
+msgid "FADE"
+msgstr "KAYBOL"
+
+msgid "SLIDE"
+msgstr "KAYDIR"
