@@ -123,6 +123,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  language_choice->add("Italiano", "it_IT", language == "it_IT");
                  language_choice->add("Basque", "eu_ES", language == "eu_ES");
                  language_choice->add("Türkçe", "tr_TR", language == "tr_TR");
+                 language_choice->add("Chinese", "zh_CN", language == "zh_CN");
 
                  s->addWithLabel("LANGUAGE", language_choice);
 
