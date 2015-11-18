@@ -225,14 +225,17 @@ void SystemView::onCursorChanged(const CursorState& state)
 	// also change the text after we've fully faded out
 	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
 		std::stringstream ss;
-
+ 		if (gameCount == 1)
+		{
+			ss << "1" << boost::locale::gettext(" GAME AVAILABLE");
+		}
 		// only display a game count if there are at least 2 games
-		if (gameCount > 1)
+		else
 		{
 			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
 		}
 
-		else if (favoritesCount > 1)
+		if (favoritesCount > 1)
 		{
 			ss << ", " << favoritesCount << boost::locale::gettext(" FAVORITES");
 		}
