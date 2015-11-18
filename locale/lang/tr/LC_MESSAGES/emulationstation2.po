@@ -209,6 +209,27 @@ msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
 msgid "NO GAMES FOUND - SKIP"
 msgstr "OYUN BULUNAMADI"
 
+msgid "RATING:"
+msgstr "PUAN:"
+
+msgid "RELEASED:"
+msgstr "TARİH:"
+
+msgid "DEVELOPER:"
+msgstr "GELİŞTİRİCİ:"
+
+msgid "PUBLISHER:"
+msgstr "YAYINCI:"
+
+msgid "GENRE:"
+msgstr "TÜR:"
+
+msgid "PLAYERS:"
+msgstr "OYUNCU:"
+
+msgid "STOP"
+msgstr "DUR"
+
 #: Buttons
 msgid "close"
 msgstr "kapat"
@@ -500,8 +521,11 @@ msgstr "ARA"
 msgid "GAMES"
 msgstr "OYUNLAR"
 
+msgid "GAME"
+msgstr "OYUN:"
+
 msgid " OF "
-msgstr " "
+msgstr " | TOPLAM: "
 
 msgid "NO GAMES WERE SCRAPED."
 msgstr "HİÇBİR OYUN ÇEKİLMEDİ."
@@ -539,7 +563,7 @@ msgid "ENABLE KODI"
 msgstr "KODIYI ETKİNLEŞTİR"
 
 msgid "KODI AT START"
-msgstr "KODI ACILIŞTA BAŞLASIN"
+msgstr "KODI AÇILIŞTA BAŞLASIN"
 
 msgid "START KODI WITH X"
 msgstr "KODI X İLE BAŞLASIN"
