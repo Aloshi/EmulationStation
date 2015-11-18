@@ -1,0 +1,622 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation 2.0.1A zh_CN po\n"
+"POT-Creation-Date: 2014-09-20 12:00-0500\n"
+"PO-Revision-Date: 2015-09-01 10:59+0800\n"
+"Last-Translator: ShiKeYu <shikeyu@tom.com>\n"
+"Language-Team: CHINESE <shikeyu@tom.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.8.4\n"
+
+msgid "MAIN MENU"
+msgstr "主菜单"
+
+msgid "YES"
+msgstr "是"
+
+msgid "NO"
+msgstr "否"
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp
+msgid "Rating: "
+msgstr "评分："
+
+msgid "Released: "
+msgstr "发布："
+
+msgid "Developer: "
+msgstr "开发商："
+
+msgid "Publisher: "
+msgstr "发行者："
+
+msgid "Genre: "
+msgstr "种类："
+
+msgid "Players: "
+msgstr "玩家数："
+
+msgid "Last played: "
+msgstr "最近游戏："
+
+msgid "Times played: "
+msgstr "运行次数："
+
+msgid "FAVORITE: "
+msgstr "收藏："
+
+#: es-app/src/MetaData.cpp
+msgid "enter game name"
+msgstr "输入游戏名称"
+
+msgid "NAME"
+msgstr "名称"
+
+msgid "ENTER DESCRIPTION"
+msgstr "输入描述"
+
+msgid "ENTER PATH TO IMAGE"
+msgstr "输入图像路径"
+
+msgid "DESCRIPTION"
+msgstr "描述"
+
+msgid "IMAGE"
+msgstr "图像"
+
+msgid "unknown"
+msgstr "未知"
+
+msgid "SCRAPE"
+msgstr "搜刮"
+
+msgid "THUMBNAIL"
+msgstr "缩略图"
+
+msgid "ENTER PATH TO THUMBNAIL"
+msgstr "输入缩览图路径"
+
+msgid "RATING"
+msgstr "评分："
+
+msgid "ENTER SCORE"
+msgstr "输入分数"
+
+msgid "RELEASE DATE"
+msgstr "发布日期。"
+
+msgid "ENTER RELEASE DATE"
+msgstr "输入发布日期"
+
+msgid "DEVELOPER"
+msgstr "开发商"
+
+msgid "ENTER GAME DEVELOPER"
+msgstr "输入游戏开发商"
+
+msgid "PUBLISHER"
+msgstr "发行者"
+
+msgid "ENTER GAME PUBLISHER"
+msgstr "输入游戏发行商"
+
+msgid "GENRE"
+msgstr "种类"
+
+msgid "ENTER GAME GENRE"
+msgstr "输入游戏种类"
+
+msgid "PLAYERS"
+msgstr "玩家数 :"
+
+msgid "ENTER NUMBER OF PLAYERS"
+msgstr "输入游戏支持的玩家数"
+
+msgid "PLAY COUNT"
+msgstr "运行计数"
+
+msgid "ENTER NUMBER OF TIMES PLAYED"
+msgstr "输入以运行的次数"
+
+#: es-app/src/guis/GuiMenu.cpp
+msgid "SCRAPE FROM"
+msgstr "数据搜刮来源"
+
+msgid "SCRAPE RATINGS"
+msgstr "搜刮评级"
+
+msgid "SOUND SETTINGS"
+msgstr "声音设置"
+
+msgid "SYSTEM VOLUME"
+msgstr "系统音量"
+
+msgid "ENABLE SOUNDS"
+msgstr "启用声音"
+
+msgid "UI SETTINGS"
+msgstr "用户界面设置"
+
+msgid "SCREENSAVER AFTER"
+msgstr "屏幕保护延时"
+
+msgid "TRANSITION STYLE"
+msgstr "过渡样式"
+
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "屏幕保护效果"
+
+msgid "SHOW FRAMERATE"
+msgstr "显示帧率"
+
+msgid "ON-SCREEN HELP"
+msgstr "显示帮助"
+
+msgid "QUICK SYSTEM SELECT"
+msgstr "快速系统选择"
+
+msgid "THEME SET"
+msgstr "主题设置"
+
+msgid "CONFIGURE INPUT"
+msgstr "输入设置"
+
+msgid "QUIT"
+msgstr "退出"
+
+msgid "REALLY RESTART?"
+msgstr "真的重新启动吗?"
+
+msgid "RESTART SYSTEM"
+msgstr "重新启动系统"
+
+msgid "REALLY SHUTDOWN?"
+msgstr "真的要关机吗?"
+
+msgid "SHUTDOWN SYSTEM"
+msgstr "关闭系统"
+
+msgid "REALLY QUIT?"
+msgstr "真的要退出吗?"
+
+msgid "QUIT EMULATIONSTATION"
+msgstr "退出 EMULATIONSTATION"
+
+#: es-app/src/guis/GuiScraperStart.cpp
+msgid "SCRAPE NOW"
+msgstr "开始搜刮"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "数据冲突时人工干预"
+
+msgid "SYSTEMS"
+msgstr "系统"
+
+msgid "FILTER"
+msgstr "过滤"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "搜刮这些游戏"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "搜刮这些系统"
+
+msgid "SELECT ALL"
+msgstr "选择所有"
+
+msgid "SELECT NONE"
+msgstr "都不选择"
+
+msgid "START"
+msgstr "开始"
+
+msgid "STOP"
+msgstr "停止"
+
+#: es-app/src/guis/GuiScraperMulti.cpp"
+msgid "SCRAPING IN PROGRESS"
+msgstr "正在进行搜刮"
+
+#: es-app/src/components/ScraperSearchComponent.cpp
+msgid "NO GAMES FOUND - SKIP"
+msgstr "没有发现对应数据 - 跳过"
+
+#: Buttons
+msgid "close"
+msgstr "关闭"
+
+msgid "select"
+msgstr "选择"
+
+msgid "choose"
+msgstr "浏览"
+
+msgid "back"
+msgstr "返回"
+
+msgid "CLOSE"
+msgstr "关闭"
+
+msgid "SELECT"
+msgstr "选择"
+
+msgid "MENU"
+msgstr "菜单"
+
+msgid "OPTIONS"
+msgstr "选项"
+
+msgid "KODI MEDIA CENTER"
+msgstr "KODI 媒体中心"
+
+msgid "OVERCLOCK"
+msgstr "超频"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "连接一个蓝牙控制器"
+
+msgid "OVERSCAN"
+msgstr "过扫描"
+
+msgid "STATUS"
+msgstr "当前状态"
+
+msgid "IP ADDRESS"
+msgstr "IP 地址"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "SCRAPER"
+msgstr "数据搜刮"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "没有找到控制器"
+
+msgid "CHOOSE"
+msgstr "浏览"
+
+msgid "BACK"
+msgstr "返回"
+
+msgid "LAUNCH"
+msgstr "运行"
+
+msgid "SYSTEM"
+msgstr "游戏系统"
+
+msgid "INPUT"
+msgstr "输入名称"
+
+msgid "SEARCH FOR"
+msgstr "以何标题搜索"
+
+msgid "SKIP"
+msgstr "跳过"
+
+msgid "CHANGE"
+msgstr "改变"
+
+msgid "SAVE"
+msgstr "保存"
+
+msgid "CANCEL"
+msgstr "取消"
+
+msgid "DELETE"
+msgstr "删除"
+
+msgid "GO BACK"
+msgstr "返回"
+
+#: es-app/src/views/SystemView.cpp
+msgid " GAMES AVAILABLE"
+msgstr " 个可用的游戏"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp
+msgid "JUMP TO LETTER"
+msgstr "按字母跳转"
+
+msgid "SORT GAMES BY"
+msgstr "游戏排序方式"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "编辑此游戏的数据"
+
+#: es-app/src/guis/GuiMetaDataEd.cpp
+msgid "EDIT METADATA"
+msgstr "编辑数据"
+
+msgid " GAMEPAD"
+msgstr "游戏手柄"
+
+msgid " DETECTED"
+msgstr "检测"
+
+msgid "WELCOME"
+msgstr "欢迎"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "没有检测到游戏手柄"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "按住您的设备上的按钮 A 来配置它。"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "按 F4 在任何时候退出。"
+
+msgid "PRESS ESC TO CANCEL."
+msgstr "按 ESC 键取消"
+
+#: es-core/src/guis/GuiInputConfig.cpp
+msgid "CONFIGURING"
+msgstr "配置"
+
+msgid "UP"
+msgstr "上"
+
+msgid "DOWN"
+msgstr "下"
+
+msgid "LEFT"
+msgstr "左"
+
+msgid "RIGHT"
+msgstr "右"
+
+msgid "PAGE UP"
+msgstr "L1 "
+
+msgid "PAGE DOWN"
+msgstr "R1 "
+
+msgid "SAVE CHANGES?"
+msgstr "保存更改吗?"
+
+#: es-app/src/guis/GuiUpdate.cpp
+msgid "WORKING..."
+msgstr "进行中..."
+
+msgid "UPDATE"
+msgstr "更新"
+
+msgid "REALLY UPDATE?"
+msgstr "确定进行更新吗?"
+
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "必须连接到互联网"
+
+msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+msgstr "更新完成，系统将重新启动"
+
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "更新失败，系统将重新启动"
+
+# GUIMENU
+msgid "CONFIGURE A CONTROLLER"
+msgstr "设置一个控制器"
+
+msgid "INPUT P1"
+msgstr "P1 输入"
+
+msgid "INPUT P2"
+msgstr "P2 输入"
+
+msgid "INPUT P3"
+msgstr "P3 输入"
+
+msgid "INPUT P4"
+msgstr "P4 输入"
+
+msgid "NOGAMEERRORMESSAGE"
+msgstr ""
+"无法找到任何游戏！\n"
+"请在系统设置文件中检查相关游戏目录的设置，\n"
+"并确保在这些游戏目录中至少有一个游戏。\n"
+"访问 RECALBOX.COM 获取更多信息。"
+
+msgid "LANGUAGE"
+msgstr "语言"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "系统将重新启动"
+
+msgid "SYSTEM SETTINGS"
+msgstr "系统设置"
+
+msgid "VERSION"
+msgstr "版本"
+
+msgid "STORAGE"
+msgstr "空间使用"
+
+msgid "OUTPUT DEVICE"
+msgstr "輸出裝置"
+
+msgid "SMOOTH GAMES"
+msgstr "平顺游戏画面"
+
+msgid "GPIO CONTROLLERS"
+msgstr "GPIO 控制器"
+
+msgid "GPIO CONTROLLERS ARE NOW ON"
+msgstr "GPIO 控制器现在打开了"
+
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "您的 RECALBOX 有更新可提供"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "没有可用的更新"
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "你想开始 KODI 媒体中心吗?"
+
+msgid "ENABLE WIFI"
+msgstr "开启无线网络"
+
+msgid "NETWORK SETTINGS"
+msgstr "网络设置"
+
+msgid "WIFI ENABLED"
+msgstr "无线网络启用"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "无线网络配置错误"
+
+msgid "WIFI KEY"
+msgstr "无线网络密钥"
+
+msgid "WIFI SSID"
+msgstr "无线 SSID"
+
+msgid "GAME RATIO"
+msgstr "游戏显示比例"
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "按对应按键"
+
+msgid "-NOT DEFINED-"
+msgstr "-未定义-"
+
+msgid "ALREADY TAKEN"
+msgstr "已经采取了"
+
+msgid "HOLD FOR "
+msgstr "等待"
+
+msgid "S TO SKIP"
+msgstr "S 为跳过"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "按任意键跳过"
+
+msgid "JOYSTICK 1 UP"
+msgstr "摇杆 1 上"
+
+msgid "JOYSTICK 1 LEFT"
+msgstr "摇杆 1 左"
+
+msgid "JOYSTICK 2 UP"
+msgstr "摇杆 2 上"
+
+msgid "JOYSTICK 2 LEFT"
+msgstr "摇杆 2 左"
+
+msgid "I18NMESSAGECONTROLLERS"
+msgstr ""
+"您将要进行控制器的设置。如果您的手柄仅有\n"
+"一个摇杆，设置方向键后按住A键跳过摇杆设置。\n"
+"如果您没有多余的键作为“热键”，请选择SELECT键。\n"
+"按住A键可跳过您没有的那些按键设置。"
+
+# TEXT EDITING
+msgid "EDIT"
+msgstr "编辑数据"
+
+msgid "STOP EDITING"
+msgstr "停止编辑"
+
+msgid "MOVE CURSOR"
+msgstr "移动光标"
+
+msgid "DISCARD CHANGES"
+msgstr "放弃更改"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "仅是缺少图片的"
+
+msgid "All Games"
+msgstr "所有游戏"
+
+msgid "accept"
+msgstr "接受"
+
+msgid " SELECTED"
+msgstr "已选择"
+
+msgid "accept result"
+msgstr "接受结果"
+
+msgid "stop (progress saved)"
+msgstr "停止 (进度会保存)"
+
+msgid "SEARCH"
+msgstr "搜索"
+
+msgid "GAMES"
+msgstr "游戏"
+
+msgid " OF "
+msgstr " 关于 "
+
+msgid "NO GAMES WERE SCRAPED."
+msgstr "没有搜刮到游戏数据。"
+
+msgid " SUCCESSFULLY SCRAPED!"
+msgstr " 搜刮数据成功!"
+
+msgid " SKIPPED."
+msgstr " 已跳过."
+
+#  FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "仅限于收藏项"
+
+msgid "FAVORITE"
+msgstr "收藏"
+
+msgid "enter favorite"
+msgstr "作为收藏"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "更新"
+
+msgid "AUTO UPDATES"
+msgstr "自动更新"
+
+msgid "START UPDATE"
+msgstr "开始更新"
+
+msgid "KODI SETTINGS"
+msgstr "KODI 设置"
+
+msgid "ENABLE KODI"
+msgstr "启用 KODI"
+
+msgid "KODI AT START"
+msgstr "自动启动 KODI "
+
+msgid "START KODI WITH X"
+msgstr "按 X 键启动 KODI"
+
+msgid "GAMES SETTINGS"
+msgstr "游戏设置"
+
+msgid "REWIND"
+msgstr "回退功能"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "控制器设置"
+
+msgid "FRONTEND MUSIC"
+msgstr "前端音乐"
+
+msgid "HOSTNAME"
+msgstr "主机名"
+
+msgid "CONNECTED"
+msgstr "CONNECTED"
+
+msgid "NOT CONNECTED"
+msgstr "没有连接"
+
+msgid "LOADING..."
+msgstr "载入中......"

@@ -293,12 +293,41 @@ bool InputManager::loadInputConfig(InputConfig* config)
 	if(!root)
 		return false;
 
-	pugi::xml_node configNode = root.find_child_by_attribute("inputConfig", "deviceGUID", config->getDeviceGUIDString().c_str());
-	//if(!configNode)
-	//	configNode = root.find_child_by_attribute("inputConfig", "deviceName", config->getDeviceName().c_str());
+	// looking for a device having the same guid and name, or if not, one with the same guid or in last chance, one with the same name
+	pugi::xml_node configNode(NULL);
+
+	bool found_guid = false;
+	bool found_exact = false;
+	for (pugi::xml_node item = root.child("inputConfig"); item; item = item.next_sibling("inputConfig")) {
+	  // check the guid
+	  if(strcmp(config->getDeviceGUIDString().c_str(), item.attribute("deviceGUID").value()) == 0) {
+	    // found a correct guid
+	    found_guid = true; // no more need to check the name only
+	    configNode = item;
+	    
+	    if(strcmp(config->getDeviceName().c_str(), item.attribute("deviceName").value()) == 0) {
+	      // found the exact device
+	      found_exact = true;
+	      configNode = item;
+	      break;
+	    }
+	  }
+
+	  // check for a name if no guid is found
+	  if(found_guid == false) {
+	    if(strcmp(config->getDeviceName().c_str(), item.attribute("deviceName").value()) == 0) {
+	      configNode = item;
+	    }
+	  }
+	}
+	    
 	if(!configNode)
 		return false;
 
+	if(found_exact == false) {
+	  LOG(LogInfo) << "Approximative device found using guid=" << configNode.attribute("deviceGUID").value() << " name=" << configNode.attribute("deviceName").value() << ")";
+	}
+	  
 	config->loadFromXML(configNode);
 	return true;
 }
@@ -344,7 +373,15 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 			pugi::xml_node root = doc.child("inputList");
 			if(root)
 			{
-				pugi::xml_node oldEntry = root.find_child_by_attribute("inputConfig", "deviceGUID", config->getDeviceGUIDString().c_str());
+				pugi::xml_node oldEntry(NULL);
+				for (pugi::xml_node item = root.child("inputConfig"); item; item = item.next_sibling("inputConfig")) {
+				  if(strcmp(config->getDeviceGUIDString().c_str(), item.attribute("deviceGUID").value()) == 0 &&
+				     strcmp(config->getDeviceName().c_str(),       item.attribute("deviceName").value()) == 0) {
+				    oldEntry = item;
+				    break;
+				  }
+				}
+
 				if(oldEntry)
 					root.remove_child(oldEntry);
 				//oldEntry = root.find_child_by_attribute("inputConfig", "deviceName", config->getDeviceName().c_str());
