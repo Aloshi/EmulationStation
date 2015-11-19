@@ -98,9 +98,9 @@ void saveMap(pugi::xml_node &node, std::map<K, V> &map, const char *type) {
         if (std::find(settings_dont_save.begin(), settings_dont_save.end(), iter->first) != settings_dont_save.end())
             continue;
 
-        pugi::xml_node node = node.append_child(type);
-        node.append_attribute("name").set_value(iter->first.c_str());
-        node.append_attribute("value").set_value(iter->second);
+        pugi::xml_node parent_node = node.append_child(type);
+        parent_node.append_attribute("name").set_value(iter->first.c_str());
+        parent_node.append_attribute("value").set_value(iter->second);
     }
 }
 
