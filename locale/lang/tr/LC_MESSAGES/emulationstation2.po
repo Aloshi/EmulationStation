@@ -22,28 +22,28 @@ msgstr "HAYIR"
 
 #: es-app/src/views/gamelist/DetailedGameListView.cpp
 msgid "Rating: "
-msgstr "Skor: "
+msgstr "PUAN: "
 
 msgid "Released: "
-msgstr "Yayınlanma tarihi:"
+msgstr "TARİH: "
 
 msgid "Developer: "
-msgstr "Geliştirici: "
+msgstr "GELİŞTİRİCİ: "
 
 msgid "Publisher: "
-msgstr "Yayıncı: "
+msgstr "YAYINCI: "
 
 msgid "Genre: "
-msgstr "Tür: "
+msgstr "TÜR: "
 
 msgid "Players: "
-msgstr "Oyuncu sayısı:"
+msgstr "OYUNCU: "
 
 msgid "Last played: "
-msgstr "Son oynanan: "
+msgstr "EN SON: "
 
 msgid "Times played: "
-msgstr "Oynanma sayısı: "
+msgstr "KAÇ KEZ: "
 
 #: es-app/src/MetaData.cpp
 msgid "ENTER GAME NAME"
@@ -77,7 +77,7 @@ msgid "ENTER SCORE"
 msgstr "SKOR"
 
 msgid "RELEASE DATE"
-msgstr "YAYINLANMA TARİHİ"
+msgstr "TARİH"
 
 msgid "ENTER RELEASE DATE"
 msgstr "YAYIN TARİHİ"
@@ -101,7 +101,7 @@ msgid "ENTER GAME GENRE"
 msgstr "TÜR"
 
 msgid "PLAYERS"
-msgstr "OYUNCU SAYISI"
+msgstr "OYUNCU"
 
 msgid "ENTER NUMBER OF PLAYERS"
 msgstr "OYUNCU SAYISI"
@@ -208,6 +208,27 @@ msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
 #: es-app/src/components/ScraperSearchComponent.cpp
 msgid "NO GAMES FOUND - SKIP"
 msgstr "OYUN BULUNAMADI"
+
+msgid "RATING:"
+msgstr "PUAN:"
+
+msgid "RELEASED:"
+msgstr "TARİH:"
+
+msgid "DEVELOPER:"
+msgstr "GELİŞTİRİCİ:"
+
+msgid "PUBLISHER:"
+msgstr "YAYINCI:"
+
+msgid "GENRE:"
+msgstr "TÜR:"
+
+msgid "PLAYERS:"
+msgstr "OYUNCU:"
+
+msgid "STOP"
+msgstr "DUR"
 
 #: Buttons
 msgid "close"
@@ -500,8 +521,11 @@ msgstr "ARA"
 msgid "GAMES"
 msgstr "OYUNLAR"
 
+msgid "GAME"
+msgstr "OYUN:"
+
 msgid " OF "
-msgstr " "
+msgstr " | TOPLAM: "
 
 msgid "NO GAMES WERE SCRAPED."
 msgstr "HİÇBİR OYUN ÇEKİLMEDİ."
@@ -539,7 +563,7 @@ msgid "ENABLE KODI"
 msgstr "KODIYI ETKİNLEŞTİR"
 
 msgid "KODI AT START"
-msgstr "KODI ACILIŞTA BAŞLASIN"
+msgstr "KODI AÇILIŞTA BAŞLASIN"
 
 msgid "START KODI WITH X"
 msgstr "KODI X İLE BAŞLASIN"
