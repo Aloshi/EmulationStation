@@ -147,8 +147,7 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_joystick_up_svg.cpp
 
 
-    ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/ubuntu_condensed_ttf.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/fontawesome_webfont_ttf.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/arrow_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/option_arrow_svg.cpp
