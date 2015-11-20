@@ -40,5 +40,6 @@ protected:
 	std::stack<FileData*> mCursorStack;
 	
 private:
-   bool mFavoriteChange;
+	bool mFavoriteChange;
+	bool mKidGameChange;
 };

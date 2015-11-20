@@ -5,15 +5,18 @@
 #include "ThemeData.h"
 #include "SystemData.h"
 #include "Settings.h"
+#include "Log.h"
+
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
 {
+	//LOG(LogDebug) << "BasicGameListView::BasicGameListView()";
 	mList.setSize(mSize.x(), mSize.y() * 0.8f);
 	mList.setPosition(0, mSize.y() * 0.2f);
 	addChild(&mList);
 
-	populateList(root->getChildren());
+	populateList(root->getChildren(true));  // This returns a filtered list based on UImode
 }
 
 void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
@@ -37,44 +40,28 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
+	if (files.size() > 0) {
+		LOG(LogDebug) << "BasicGameListView::populateList(): system = " << files.at(0)->getSystem()->getFullName();
+	}
 	mList.clear();
 
+	// TODO: how to handle empty lists??
+
+	// file list can be empty if direct launch item (@@ do we still have those?)
+	if (files.size()==0) {
+		return;
+	}
+	
 	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
-
-	bool hasFavorites = false;
-
-	if (Settings::getInstance()->getBool("FavoritesOnly"))
-	{
-		for (auto it = files.begin(); it != files.end(); it++)
+	for (auto it = files.begin(); it != files.end(); it++) {
+		if ((*it)->getType() == GAME)
 		{
-			if ((*it)->getType() == GAME)
-			{
-				if ((*it)->metadata.get("favorite").compare("yes") == 0)
-				{
-					hasFavorites = true;
-					break;
-				}
-			}
+			mList.add((*it)->getName(), *it, 0);
+		} else { // its a folder!
+			mList.add((*it)->getName(), *it, 1);
 		}
 	}
-
-	for(auto it = files.begin(); it != files.end(); it++)
-	{
-		if (Settings::getInstance()->getBool("FavoritesOnly") && hasFavorites)
-		{
-			if ((*it)->getType() == GAME)
-			{
-				if ((*it)->metadata.get("favorite").compare("yes") == 0)
-				{
-					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
-				}
-			}
-		}
-		else
-		{
-			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
-		}
-	}
+	LOG(LogDebug)<< "BasicGameListView::populateList(): added " << mList.size() << " items. END";
 }
 
 FileData* BasicGameListView::getCursor()
@@ -86,7 +73,7 @@ void BasicGameListView::setCursor(FileData* cursor)
 {
 	if(!mList.setCursor(cursor))
 	{
-		populateList(cursor->getParent()->getChildren());
+		populateList(cursor->getParent()->getChildren(true));
 		mList.setCursor(cursor);
 
 		// update our cursor stack in case our cursor just got set to some folder we weren't in before
@@ -121,7 +108,7 @@ void BasicGameListView::remove(FileData *game)
 	boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
 	if (getCursor() == game)                     // Select next element in list, or prev if none
 	{
-		std::vector<FileData*> siblings = game->getParent()->getChildren();
+		std::vector<FileData*> siblings = game->getParent()->getChildren(true);
 		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
 		auto gamePos = std::distance(siblings.begin(), gameIter);
 		if (gameIter != siblings.end())

@@ -148,6 +148,7 @@ std::vector<std::string> InputConfig::getMappedTo(Input input)
 
 void InputConfig::loadFromXML(pugi::xml_node node)
 {
+	LOG(LogDebug) << "InputConfig::loadFromXML()";
 	clear();
 
 	for(pugi::xml_node input = node.child("input"); input; input = input.next_sibling("input"))
@@ -169,6 +170,7 @@ void InputConfig::loadFromXML(pugi::xml_node node)
 			LOG(LogWarning) << "WARNING: InputConfig value is 0 for " << type << " " << id << "!\n";
 
 		mNameMap[toLower(name)] = Input(mDeviceId, typeEnum, id, value, true);
+		LOG(LogDebug) << "    mDeviceID = "<< mDeviceId <<", TypeEnum = " << typeEnum << ", id = " << id << ", value = " << value ;
 	}
 }
 

@@ -33,6 +33,7 @@ ViewController::ViewController(Window* window)
 {
 	mState.viewing = NOTHING;
 	mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
+	mKidGamesOnly = Settings::getInstance()->getString("UIMode") == "Kid";
 }
 
 ViewController::~ViewController()
@@ -81,7 +82,14 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getNext());
+
+	// skip systems that don't have a game list, this will always end since it is called
+	// from a system with a game list and the iterator is cyclic
+	do {
+		system = system->getNext();
+	} while ( system->getGameCount(true) == 0 );
+	
+	goToGameList(system);
 }
 
 void ViewController::goToPrevGameList()
@@ -89,7 +97,14 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getPrev());
+
+	// skip systems that don't have a game list, this will always end since it is called
+	// from a system with a game list and the iterator is cyclic
+	do {
+		system = system->getPrev();
+	} while ( system->getGameCount(true) == 0 );
+	
+	goToGameList(system);
 }
 
 void ViewController::goToGameList(SystemData* system)
@@ -107,11 +122,16 @@ void ViewController::goToGameList(SystemData* system)
 
 	if (mInvalidGameList[system] == true)
 	{
-		updateFavorite(system, getGameListView(system).get()->getCursor());
-		if (mFavoritesOnly != Settings::getInstance()->getBool("FavoritesOnly"))
+		updateView(system, getGameListView(system).get()->getCursor());
+		//updateFavorite(system, getGameListView(system).get()->getCursor());
+		//updateKidGame(system, getGameListView(system).get()->getCursor());
+		
+		if ((mFavoritesOnly != Settings::getInstance()->getBool("FavoritesOnly")) ||
+			(mKidGamesOnly != (Settings::getInstance()->getString("UIMode") == "Kid")))
 		{
 			reloadGameListView(system);
 			mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
+			mKidGamesOnly = Settings::getInstance()->getString("UIMode") == "Kid";
 		}
 		mInvalidGameList[system] = false;
 	}
@@ -131,12 +151,27 @@ void ViewController::goToGameList(SystemData* system)
 	playViewTransition();
 }
 
+void ViewController::goToRandomGame()
+{
+	LOG(LogDebug) << "ViewController::goToRandomGame()";
+	
+	goToGameList(mState.system->getRandom());
+	
+	FileData* selected = mState.system->getRootFolder()->getRandom();
+	
+	IGameListView* view = getGameListView(mState.system).get();
+	view->setCursor(selected);
+
+	//mCurrentView.get()->setCursor(selected);
+	LOG(LogDebug) << "ViewController::goToRandomGame: done.";
+}
+/*
 void ViewController::updateFavorite(SystemData* system, FileData* file)
 {
 	IGameListView* view = getGameListView(system).get();
 	if (Settings::getInstance()->getBool("FavoritesOnly"))
 	{
-		const std::vector<FileData*>& files = system->getRootFolder()->getChildren();
+		const std::vector<FileData*>& files = system->getRootFolder()->getChildren(true);
 		view->populateList(files);
 		int pos = std::find(files.begin(), files.end(), file) - files.begin();
 		bool found = false;
@@ -144,7 +179,7 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 		{
 			if ((*it)->getType() == GAME)
 			{
-				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				if ((*it)->metadata.get("favorite").compare("true") == 0)
 				{
 					view->setCursor(*it);
 					found = true;
@@ -159,7 +194,7 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 			{
 				if ((*it)->getType() == GAME)
 				{
-					if ((*it)->metadata.get("favorite").compare("yes") == 0)
+					if ((*it)->metadata.get("favorite").compare("true") == 0)
 					{
 						view->setCursor(*it);
 						break;
@@ -176,6 +211,66 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 
 	view->updateInfoPanel();
 }
+
+// presumably, this function tries to shift the focus to the next (or previous) kidgame, when the display
+// mode demands it. This should be solved by reducing the total view/list to contain only valid items.
+void ViewController::updateKidGame(SystemData* system, FileData* file)
+{
+	IGameListView* view = getGameListView(system).get();
+	if (Settings::getInstance()->getString("UIMode") == "Kid")  // if we are in kidsmode
+	{
+		const std::vector<FileData*>& files = system->getRootFolder()->getChildren(true);
+		view->populateList(files);																// populate a new view 
+		int pos = std::find(files.begin(), files.end(), file) - files.begin();					// save current position in that view
+		bool found = false;							
+		for (auto it = files.begin() + pos; it != files.end(); it++)							//try to find another kidgame
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("kidgame").compare("true") == 0)
+				{
+					view->setCursor(*it);														// and set the cursor to that one
+					found = true;
+					break;
+				}
+			}
+		}
+
+		if (!found)
+		{
+			for (auto it = files.begin() + pos; it != files.begin(); it--)
+			{
+				if ((*it)->getType() == GAME)
+				{
+					if ((*it)->metadata.get("kidgame").compare("true") == 0)
+					{
+						view->setCursor(*it);
+						break;
+					}
+				}
+			}
+		}
+
+		if (!found)
+		{
+			view->setCursor(*(files.begin() + pos));
+		}
+	}
+
+	view->updateInfoPanel(); //update metadata display
+}
+ ***/
+
+// Update the view after a viewing mode change has occured (fav only, or hide files, or kids only)
+void ViewController::updateView(SystemData* system, FileData* file)
+{
+	IGameListView* view = getGameListView(system).get();
+	const std::vector<FileData*>& files = system->getRootFolder()->getChildren(true);
+	view->populateList(files);	
+	view->setCursor(*(files.begin())); 
+	view->updateInfoPanel(); 
+}
+
 
 void ViewController::playViewTransition()
 {
@@ -289,9 +384,9 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	bool themeHasVideoView = system->getTheme()->hasView("video");
 
 	//decide type
+	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER, false);
 	bool detailed = false;
 	bool video	  = false;
-	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
 		if(themeHasVideoView && !(*it)->getVideoPath().empty())
@@ -314,7 +409,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
-		
+
 	// uncomment for experimental "image grid" view
 	//view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
 

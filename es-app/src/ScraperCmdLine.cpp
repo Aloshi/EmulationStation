@@ -65,7 +65,7 @@ int run_scraper_cmdline()
 		out << "Will scrape all platforms.\n";
 		for(auto i = SystemData::sSystemVector.begin(); i != SystemData::sSystemVector.end(); i++)
 		{
-			out << "   " << (*i)->getName() << " (" << (*i)->getGameCount() << " games)\n";
+			out << "   " << (*i)->getName() << " (" << (*i)->getGameCount(false) << " games)\n";
 			systems.push_back(*i);
 		}
 
@@ -83,7 +83,7 @@ int run_scraper_cmdline()
 				else
 					out << "   ";
 
-				out << "\"" << (*i)->getName() << "\" (" << (*i)->getGameCount() << " games)\n";
+				out << "\"" << (*i)->getName() << "\" (" << (*i)->getGameCount(false) << " games)\n";
 			}
 
 			std::getline(std::cin, sys_name);

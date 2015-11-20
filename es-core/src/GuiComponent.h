@@ -42,9 +42,9 @@ public:
 	virtual void onPositionChanged() {};
 
 	Eigen::Vector2f getSize() const;
-    void setSize(const Eigen::Vector2f& size);
-    void setSize(float w, float h);
-    virtual void onSizeChanged() {};
+	void setSize(const Eigen::Vector2f& size);
+	void setSize(float w, float h);
+	virtual void onSizeChanged() {};
 	
 	void setParent(GuiComponent* parent);
 	GuiComponent* getParent() const;

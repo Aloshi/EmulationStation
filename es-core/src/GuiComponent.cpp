@@ -95,14 +95,14 @@ Eigen::Vector2f GuiComponent::getSize() const
 
 void GuiComponent::setSize(const Eigen::Vector2f& size)
 {
-    mSize = size;
-    onSizeChanged();
+	mSize = size;
+	onSizeChanged();
 }
 
 void GuiComponent::setSize(float w, float h)
 {
 	mSize << w, h;
-    onSizeChanged();
+	onSizeChanged();
 }
 
 //Children stuff.
@@ -186,6 +186,7 @@ const Eigen::Affine3f& GuiComponent::getTransform()
 
 void GuiComponent::setValue(const std::string& value)
 {
+	LOG(LogDebug)<< "GuiComponent::setValue(), this is an empty function, use overrides instead!";
 }
 
 std::string GuiComponent::getValue() const

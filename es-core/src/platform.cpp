@@ -5,9 +5,17 @@
 #include <iostream>
 #include <fcntl.h>
 
-#ifdef WIN32
+#if defined(WIN32)
 #include <codecvt>
+#include <windows.h>
+#include <shlobj.h>
+#include <io.h>
+#elif defined(__linux__)
+#include <unistd.h>
+#include <sys/reboot.h>
 #endif
+
+
 
 std::string getHomePath()
 {

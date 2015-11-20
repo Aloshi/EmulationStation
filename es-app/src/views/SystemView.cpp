@@ -23,60 +23,70 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 
 void SystemView::populate()
 {
+	LOG(LogDebug) << "SystemView::populate()";
+	LOG(LogDebug) << "    Settings.UIMode  = " << Settings::getInstance()->getString("UIMode");
+	LOG(LogDebug) << "    Settings.FavoritesOnly  = " << Settings::getInstance()->getBool("FavoritesOnly");
+	
 	mEntries.clear();
-
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
-		const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
+		LOG(LogDebug) << "System = " << (*it)->getName();
 
-		if(mViewNeedsReload)
-			getViewElements(theme);
+		if ((*it)->getGameCount(true) > 0) {
+			LOG(LogDebug) << (*it)->getGameCount(true) << " games found, populating.";
 
-		Entry e;
-		e.name = (*it)->getName();
-		e.object = *it;
+			if (mViewNeedsReload)
+				getViewElements(theme);
 
-		// make logo
-		if(theme->getElement("system", "logo", "image"))
-		{
-			ImageComponent* logo = new ImageComponent(mWindow);
-			logo->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x(), mCarousel.logoSize.y()));
-			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logo->setPosition((mCarousel.logoSize.x() - logo->getSize().x()) / 2,
-				(mCarousel.logoSize.y() - logo->getSize().y()) / 2); // center
-			e.data.logo = std::shared_ptr<GuiComponent>(logo);
+			const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
 
-			ImageComponent* logoSelected = new ImageComponent(mWindow);
-			logoSelected->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x() * mCarousel.logoScale, mCarousel.logoSize.y() * mCarousel.logoScale));
-			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
-			logoSelected->setPosition((mCarousel.logoSize.x() - logoSelected->getSize().x()) / 2,
-				(mCarousel.logoSize.y() - logoSelected->getSize().y()) / 2); // center
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
-			
-		}else{
-			// no logo in theme; use text
-			TextComponent* text = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get(FONT_SIZE_LARGE), 
-				0x000000FF, 
-				ALIGN_CENTER);
-			text->setSize(mCarousel.logoSize);
-			e.data.logo = std::shared_ptr<GuiComponent>(text);
+			Entry e;
+			e.name = (*it)->getName();
+			e.object = *it;
 
-			TextComponent* textSelected = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get((int)(FONT_SIZE_LARGE * 1.5)),
-				0x000000FF, 
-				ALIGN_CENTER);
-			textSelected->setSize(mCarousel.logoSize);
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
+			// make logo
+			if (theme->getElement("system", "logo", "image"))
+			{
+				ImageComponent* logo = new ImageComponent(mWindow);
+				logo->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x(), mCarousel.logoSize.y()));
+				logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+				logo->setPosition((mCarousel.logoSize.x() - logo->getSize().x()) / 2,
+					(mCarousel.logoSize.y() - logo->getSize().y()) / 2); // center
+				e.data.logo = std::shared_ptr<GuiComponent>(logo);
+
+				ImageComponent* logoSelected = new ImageComponent(mWindow);
+				logoSelected->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x() * mCarousel.logoScale, mCarousel.logoSize.y() * mCarousel.logoScale));
+				logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
+				logoSelected->setPosition((mCarousel.logoSize.x() - logoSelected->getSize().x()) / 2,
+					(mCarousel.logoSize.y() - logoSelected->getSize().y()) / 2); // center
+				e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
+
+			}
+			else {
+				// no logo in theme; use text
+				TextComponent* text = new TextComponent(mWindow,
+					(*it)->getName(),
+					Font::get(FONT_SIZE_LARGE),
+					0x000000FF,
+					ALIGN_CENTER);
+				text->setSize(mCarousel.logoSize);
+				e.data.logo = std::shared_ptr<GuiComponent>(text);
+
+				TextComponent* textSelected = new TextComponent(mWindow,
+					(*it)->getName(),
+					Font::get((int)(FONT_SIZE_LARGE * 1.5)),
+					0x000000FF,
+					ALIGN_CENTER);
+				textSelected->setSize(mCarousel.logoSize);
+				e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
+			}
+
+			// make background extras
+			e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
+			e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
+
+			this->add(e);
 		}
-
-		// make background extras
-		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
-		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
-
-		this->add(e);
 	}
 }
 
@@ -96,6 +106,7 @@ bool SystemView::input(InputConfig* config, Input input)
 		{
 			LOG(LogInfo) << " Reloading all";
 			ViewController::get()->reloadAll();
+
 			return true;
 		}
 
@@ -186,11 +197,9 @@ void SystemView::onCursorChanged(const CursorState& state)
 		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
 	}, (int)(infoStartOpacity * 150));
 
-	unsigned int gameCount = getSelected()->getGameCount();
-	unsigned int favoritesCount = getSelected()->getFavoritesCount();
-
 	// also change the text after we've fully faded out
-	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
+	setAnimation(infoFadeOut, 0, [this] {
+		unsigned int gameCount = getSelected()->getGameCount(true);
 		std::stringstream ss;
 
 		if (getSelected()->getName() == "retropie")

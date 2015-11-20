@@ -53,6 +53,7 @@ Some metadata is also marked as "statistic" - these are kept track of by ES and 
 * `playcount` - statistic, integer, the number of times this game has been played
 * `lastplayed` - statistic, datetime, the last date and time this game was played.
 * `favorite` - string, yes / no is this a favorite.
+* `kidgame` - string, yes / no, is this a kid-friendly game?
 
 
 #### `<folder>`

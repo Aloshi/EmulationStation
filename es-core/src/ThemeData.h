@@ -148,6 +148,7 @@ public:
 	static boost::filesystem::path getThemeFromCurrentSet(const std::string& system);
 
 	bool getHasFavoritesInTheme();
+	bool getHasKidGamesInTheme();
 
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;

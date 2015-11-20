@@ -2,6 +2,9 @@
 #include "resources/ResourceManager.h"
 #include "platform.h"
 
+
+#include <fstream>
+
 namespace fs = boost::filesystem;
 
 std::string strToUpper(const char* from)
@@ -25,12 +28,20 @@ std::string strToUpper(const std::string& str)
 	return strToUpper(str.c_str());
 }
 
-
 #if defined(_WIN32) && _MSC_VER < 1800
 float round(float num)
 {
 	return (float)((int)(num + 0.5f));
 }
+#endif
+
+#if _MSC_VER >= 1700
+FILE iob[] = {*stdin, *stdout, *stderr };
+FILE * __iob_func(void)
+{
+	return iob;
+}
+#endif
 #endif
 
 Eigen::Affine3f& roundMatrix(Eigen::Affine3f& mat)

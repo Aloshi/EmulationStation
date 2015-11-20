@@ -107,6 +107,7 @@ void ComponentList::onCursorChanged(const CursorState& state)
 {
 	// update the selector bar position
 	// in the future this might be animated
+	
 	mSelectorBarOffset = 0;
 	for(int i = 0; i < mCursor; i++)
 	{

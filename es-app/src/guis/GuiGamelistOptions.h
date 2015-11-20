@@ -21,6 +21,8 @@ public:
 private:
 	void openMetaDataEd();
 	void jumpToLetter();
+	void SurpriseMe();
+	
 	
 	MenuComponent mMenu;
 
@@ -28,13 +30,15 @@ private:
 
 	typedef OptionListComponent<char> LetterList;
 	std::shared_ptr<LetterList> mJumpToLetterList;
-
+	
 	typedef OptionListComponent<const FileData::SortType*> SortList;
 	std::shared_ptr<SortList> mListSort;
 
 	std::shared_ptr<SwitchComponent> mFavoriteOption;
+	bool mFavoriteStateChanged;
 
-	bool mFavoriteState;
+	typedef OptionListComponent<std::string> SurpriseEnums;
+	std::shared_ptr<SurpriseEnums> mSurpriseModes;
 	
 	SystemData* mSystem;
 	IGameListView* getGamelist();

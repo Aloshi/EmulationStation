@@ -530,3 +530,8 @@ bool ThemeData::getHasFavoritesInTheme()
 {
 	return (mVersion >= CURRENT_THEME_FORMAT_VERSION);
 }
+
+bool ThemeData::getHasKidGamesInTheme()
+{
+	return (mVersion >= CURRENT_THEME_FORMAT_VERSION);
+}

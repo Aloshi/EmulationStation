@@ -141,7 +141,7 @@ void GuiFastSelect::updateGameListSort()
 
 void GuiFastSelect::updateGameListCursor()
 {
-	const std::vector<FileData*>& list = mGameList->getCursor()->getParent()->getChildren();
+	const std::vector<FileData*>& list = mGameList->getCursor()->getParent()->getChildren(true);
 
 	// only skip by letter when the sort mode is alphabetical
 	const FileData::SortType& sort = FileSorts::SortTypes.at(mSortId);

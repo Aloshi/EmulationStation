@@ -262,6 +262,9 @@ Which is equivalent to:
     	<text name="md_lbl_favorite">
     		<color>48474D</color>
     	</text>
+    	<text name="md_lbl_kidgame">
+    		<color>48474D</color>
+    	</text>
     </view>
 </theme>
 ```

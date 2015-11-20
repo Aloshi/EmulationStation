@@ -309,9 +309,10 @@ void TextListComponent<T>::onCursorChanged(const CursorState& state)
 {
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
-
 	if(mCursorChangedCallback)
+	{
 		mCursorChangedCallback(state);
+	}
 }
 
 template <typename T>

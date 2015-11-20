@@ -5,7 +5,7 @@
 #define PROGRAM_VERSION_MAJOR       2
 #define PROGRAM_VERSION_MINOR        1
 #define PROGRAM_VERSION_MAINTENANCE  6
-#define PROGRAM_VERSION_STRING "2.1.6rp"
+#define PROGRAM_VERSION_STRING "2.1.6rp_Kid_Kiosk_UI_Favorites"
 
 #define PROGRAM_BUILT_STRING __DATE__ " - " __TIME__
 

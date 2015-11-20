@@ -22,8 +22,9 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mVisible(true), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
 	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0.0f), mFading(false)
+
 {
 	updateColors();
 }
@@ -173,6 +174,18 @@ void ImageComponent::setOpacity(unsigned char opacity)
 	updateColors();
 }
 
+void ImageComponent::setValue(std::string valuestr) // takes value = "true" or "false"
+{
+	if(valuestr == "true")
+	{
+		mVisible = true;
+	} else if (valuestr == "false")
+	{
+		mVisible = false;
+	}
+	return;
+}
+	
 void ImageComponent::updateVertices()
 {
 	if(!mTexture || !mTexture->isInitialized())
@@ -239,7 +252,7 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
 	Renderer::setMatrix(trans);
 	
-	if(mTexture && mOpacity > 0)
+	if(mTexture && mOpacity > 0 && mVisible)
 	{
 		if(mTexture->isInitialized())
 		{
@@ -333,7 +346,7 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	{
 		return;
 	}
-
+	
 	Eigen::Vector2f scale = getParent() ? getParent()->getSize() : Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 	
 	if(properties & POSITION && elem->has("pos"))
