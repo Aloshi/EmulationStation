@@ -464,30 +464,52 @@ std::string InputManager::configureEmulators() {
         // enlever des disponibles 
     std::map<int, InputConfig*> playerJoysticks;
 
+	// First loop, search for GUID + NAME. High Priority
     for (int player = 0; player < 4; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player+1;
-        std::string confName = sstm.str();
+		std::string confName = sstm.str()+"NAME";
+		std::string confGuid = sstm.str()+"GUID";
 
-        std::string playerConfigName = Settings::getInstance()->getString(confName);
+		std::string playerConfigName = Settings::getInstance()->getString(confName);
+		std::string playerConfigGuid = Settings::getInstance()->getString(confGuid);
 
         for (std::list<InputConfig *>::iterator it1=availableConfigured.begin(); it1!=availableConfigured.end(); ++it1)
         {
             InputConfig * config = *it1;
-            //LOG(LogInfo) << "I am checking for an input named "<< config->getDeviceName() << " this configured ? "<<config->isConfigured();
-            //if(!config->isConfigured()) continue;
-            bool ifound = playerConfigName.compare(config->getDeviceName()) == 0;
-            //LOG(LogInfo) << "I was checking for an input named "<< playerConfigName << " and i compared to "
-            //            << config->getDeviceName();
-            if(ifound){
-                availableConfigured.erase(it1);
-                playerJoysticks[player] = config;
-                LOG(LogInfo) << "Saved "<< config->getDeviceName() << " for player " << player;
-                break;
-            }
+			bool nameFound = playerConfigName.compare(config->getDeviceName()) == 0;
+			bool guidfound = playerConfigGuid.compare(config->getDeviceGUIDString()) == 0;
+
+			if(nameFound && guidfound) {
+					availableConfigured.erase(it1);
+					playerJoysticks[player] = config;
+					LOG(LogInfo) << "Saved " << config->getDeviceName() << " for player " << player;
+					break;
+			}
         }
     }
-    
+	// Second loop, search for NAME. Low Priority
+	for (int player = 0; player < 4; player++) {
+		std::stringstream sstm;
+		sstm << "INPUT P" << player+1;
+		std::string confName = sstm.str()+"NAME";
+
+		std::string playerConfigName = Settings::getInstance()->getString(confName);
+
+		for (std::list<InputConfig *>::iterator it1=availableConfigured.begin(); it1!=availableConfigured.end(); ++it1)
+		{
+			InputConfig * config = *it1;
+			bool nameFound = playerConfigName.compare(config->getDeviceName()) == 0;
+			if(nameFound) {
+					availableConfigured.erase(it1);
+					playerJoysticks[player] = config;
+					LOG(LogInfo) << "Found " << config->getDeviceName() << " for player " << player;
+					break;
+			}
+		}
+	}
+
+    // Last loop, search for free controllers for remaining players.
     for (int player = 0; player < 4; player++) {
         InputConfig * playerInputConfig = playerJoysticks[player];
         // si aucune config a été trouvé pour le joueur, on essaie de lui filer un libre

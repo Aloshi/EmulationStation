@@ -739,18 +739,20 @@ void GuiMenu::createConfigInput() {
     // Here we go; for each player
     std::list<int> alreadyTaken = std::list<int>();
 
-    std::vector<std::shared_ptr<OptionListComponent<std::string>>> options;
+    std::vector<std::shared_ptr<OptionListComponent<InputConfig*>>> options;
     for (int player = 0; player < 4; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player + 1;
-        std::string confName = sstm.str();
+        std::string confName = sstm.str()+"NAME";
+        std::string confGuid = sstm.str()+"GUID";
 
-        auto inputOptionList = std::make_shared<OptionListComponent<std::string> >(mWindow, confName, false);
+        LOG(LogInfo) <<player+1 <<" " << confName << " "<< confGuid;
+        auto inputOptionList = std::make_shared<OptionListComponent<InputConfig*> >(mWindow, sstm.str(), false);
         options.push_back(inputOptionList);
 
         // Checking if a setting has been saved, else setting to default
         std::string configuratedName = Settings::getInstance()->getString(confName);
-
+        std::string configuratedGuid = Settings::getInstance()->getString(confGuid);
         bool found = false;
         // For each available and configured input
         for (auto it = 0; it < InputManager::getInstance()->getNumJoysticks(); it++) {
@@ -770,7 +772,7 @@ void GuiMenu::createConfigInput() {
                 std::string displayName = dispNameSS.str();
 
 
-                bool foundFromConfig = configuratedName == config->getDeviceName();
+                bool foundFromConfig = configuratedName == config->getDeviceName() && configuratedGuid == config->getDeviceGUIDString();
                 int deviceID = config->getDeviceId();
                 // Si la manette est configurée, qu'elle correspond a la configuration, et qu'elle n'est pas
                 // deja selectionnée on l'ajoute en séléctionnée
@@ -781,33 +783,33 @@ void GuiMenu::createConfigInput() {
                     alreadyTaken.push_back(deviceID);
                     LOG(LogWarning) << "adding entry for player" << player << " (selected): " <<
                                     config->getDeviceName() << "  " << config->getDeviceGUIDString();
-                    inputOptionList->add(displayName, config->getDeviceName(), true);
+                    inputOptionList->add(displayName, config, true);
                 } else {
                     LOG(LogWarning) << "adding entry for player" << player << " (not selected): " <<
                                     config->getDeviceName() << "  " << config->getDeviceGUIDString();
-                    inputOptionList->add(displayName, config->getDeviceName(), false);
+                    inputOptionList->add(displayName, config, false);
                 }
             }
         }
         if (configuratedName.compare("") == 0 || !found) {
             LOG(LogWarning) << "adding default entry for player " << player << "(selected : true)";
-            inputOptionList->add("DEFAULT", "", true);
+            inputOptionList->add("DEFAULT", NULL, true);
         } else {
             LOG(LogWarning) << "adding default entry for player" << player << "(selected : false)";
-            inputOptionList->add("DEFAULT", "", false);
+            inputOptionList->add("DEFAULT", NULL, false);
         }
 
         // ADD default config
 
         // Populate controllers list
-        s->addWithLabel(confName, inputOptionList);
-
+        s->addWithLabel(sstm.str(), inputOptionList);
     }
     s->addSaveFunc([this, options, window] {
         for (int player = 0; player < 4; player++) {
             std::stringstream sstm;
             sstm << "INPUT P" << player + 1;
-            std::string confName = sstm.str();
+            std::string confName = sstm.str()+"NAME";
+            std::string confGuid = sstm.str()+"GUID";
 
             auto input_p1 = options.at(player);
             std::string name;
@@ -816,11 +818,13 @@ void GuiMenu::createConfigInput() {
             if (selectedName.compare("DEFAULT") == 0) {
                 name = "DEFAULT";
                 Settings::getInstance()->setString(confName, name);
+                Settings::getInstance()->setString(confGuid, "");
             } else {
                 LOG(LogWarning) << "Found the selected controller ! : name in list  = " << selectedName;
-                LOG(LogWarning) << "Found the selected controller ! : guid  = " << input_p1->getSelected();
+                LOG(LogWarning) << "Found the selected controller ! : guid  = " << input_p1->getSelected()->getDeviceGUIDString();
 
-                Settings::getInstance()->setString(confName, input_p1->getSelected());
+                Settings::getInstance()->setString(confName, input_p1->getSelected()->getDeviceName());
+                Settings::getInstance()->setString(confGuid, input_p1->getSelected()->getDeviceGUIDString());
             }
         }
 
