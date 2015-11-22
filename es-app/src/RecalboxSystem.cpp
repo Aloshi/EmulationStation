@@ -252,10 +252,11 @@ bool RecalboxSystem::launchKodi(Window *window) {
     AudioManager::getInstance()->deinit();
     VolumeControl::getInstance()->deinit();
 
-    window->deinit();
-
     std::string commandline = InputManager::getInstance()->configureEmulators();
     std::string command = "configgen -system kodi -rom '' "+commandline;
+    
+    window->deinit();
+
     int exitCode = system(command.c_str());
 
     window->init();
