@@ -6,6 +6,9 @@ namespace FileSorts
 		FileData::SortType(&compareFileName, true, "filename, ascending"),
 		FileData::SortType(&compareFileName, false, "filename, descending"),
 
+		FileData::SortType(&compareName, true, "name, ascending"),
+		FileData::SortType(&compareName, false, "name, descending"),
+
 		FileData::SortType(&compareRating, true, "rating, ascending"),
 		FileData::SortType(&compareRating, false, "rating, descending"),
 
@@ -65,6 +68,17 @@ namespace FileSorts
 		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
 		{
 			return (file1)->metadata.getTime("lastplayed") < (file2)->metadata.getTime("lastplayed");
+		}
+
+		return false;
+	}
+
+	bool compareName(const FileData* file1, const FileData* file2)
+	{
+		//only games have name metadata
+		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
+		{
+			return (file1)->metadata.get("name") < (file2)->metadata.get("name");
 		}
 
 		return false;
