@@ -17,6 +17,7 @@
 
 #include "AudioManager.h"
 #include "VolumeControl.h"
+#include "InputManager.h"
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -251,9 +252,11 @@ bool RecalboxSystem::launchKodi(Window *window) {
     AudioManager::getInstance()->deinit();
     VolumeControl::getInstance()->deinit();
 
+    std::string commandline = InputManager::getInstance()->configureEmulators();
+    std::string command = "configgen -system kodi -rom '' "+commandline;
+    
     window->deinit();
 
-    std::string command = "/recalbox/scripts/kodilauncher.sh";
     int exitCode = system(command.c_str());
 
     window->init();
