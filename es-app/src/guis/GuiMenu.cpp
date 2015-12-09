@@ -29,7 +29,6 @@
 #include "components/MenuComponent.h"
 #include "VolumeControl.h"
 #include "scrapers/GamesDBScraper.h"
-#include "scrapers/TheArchiveScraper.h"
 
 #include "guis/GuiTextEditPopup.h"
 #include "GuiLoading.h"
