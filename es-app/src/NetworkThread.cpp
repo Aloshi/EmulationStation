@@ -7,6 +7,7 @@
 
 #include "NetworkThread.h"
 #include "RecalboxSystem.h"
+#include "RecalboxConfig.h"
 #include "guis/GuiMsgBox.h"
 
 
