@@ -12,24 +12,22 @@ class ThemeData;
 class IGameListView : public GuiComponent
 {
 public:
-	IGameListView(Window* window, FileData* root) : GuiComponent(window), mRoot(root)
+	IGameListView(Window* window, const FileData& root) : GuiComponent(window), mRoot(root)
 		{ setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight()); }
 
 	virtual ~IGameListView() {}
 
-	// Called when a new file is added, a file is removed, a file's metadata changes, or a file's children are sorted.
-	// NOTE: FILE_SORTED is only reported for the topmost FileData, where the sort started.
-	//       Since sorts are recursive, that FileData's children probably changed too.
-	virtual void onFileChanged(FileData* file, FileChangeType change) = 0;
-	
+	virtual void onFilesChanged() = 0;
+	virtual void onMetaDataChanged(const FileData& file) = 0;
+
 	// Called whenever the theme changes.
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) = 0;
 
 	void setTheme(const std::shared_ptr<ThemeData>& theme);
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
-	virtual FileData* getCursor() = 0;
-	virtual void setCursor(FileData*) = 0;
+	virtual const FileData& getCursor() = 0;
+	virtual void setCursor(const FileData& file) = 0;
 
 	virtual bool input(InputConfig* config, Input input) override;
 
@@ -37,6 +35,6 @@ public:
 
 	virtual HelpStyle getHelpStyle() override;
 protected:
-	FileData* mRoot;
+	FileData mRoot;
 	std::shared_ptr<ThemeData> mTheme;
 };

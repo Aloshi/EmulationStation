@@ -4,6 +4,7 @@
 #include "platform.h"
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
+#include <boost/lexical_cast.hpp>
 
 Settings* Settings::sInstance = NULL;
 
@@ -67,11 +68,14 @@ void Settings::setDefaults()
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
+	mIntMap["SortTypeIndex"] = 0;
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
+
+	mTimeMap["LastXMLImportTime"] = (std::time_t)0;
 }
 
 template <typename K, typename V>
@@ -85,7 +89,7 @@ void saveMap(pugi::xml_document& doc, std::map<K, V>& map, const char* type)
 
 		pugi::xml_node node = doc.append_child(type);
 		node.append_attribute("name").set_value(iter->first.c_str());
-		node.append_attribute("value").set_value(iter->second);
+		node.append_attribute("value").set_value(boost::lexical_cast<std::string>(iter->second).c_str());
 	}
 }
 
@@ -98,6 +102,7 @@ void Settings::saveFile()
 	saveMap<std::string, bool>(doc, mBoolMap, "bool");
 	saveMap<std::string, int>(doc, mIntMap, "int");
 	saveMap<std::string, float>(doc, mFloatMap, "float");
+	saveMap<std::string, std::time_t>(doc, mTimeMap, "time");
 
 	//saveMap<std::string, std::string>(doc, mStringMap, "string");
 	for(auto iter = mStringMap.begin(); iter != mStringMap.end(); iter++)
@@ -131,6 +136,8 @@ void Settings::loadFile()
 		setInt(node.attribute("name").as_string(), node.attribute("value").as_int());
 	for(pugi::xml_node node = doc.child("float"); node; node = node.next_sibling("float"))
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
+	for(pugi::xml_node node = doc.child("time"); node; node = node.next_sibling("time"))
+		setTime(node.attribute("name").as_string(), node.attribute("value").as_int());
 	for(pugi::xml_node node = doc.child("string"); node; node = node.next_sibling("string"))
 		setString(node.attribute("name").as_string(), node.attribute("value").as_string());
 }
@@ -153,3 +160,4 @@ SETTINGS_GETSET(bool, mBoolMap, getBool, setBool);
 SETTINGS_GETSET(int, mIntMap, getInt, setInt);
 SETTINGS_GETSET(float, mFloatMap, getFloat, setFloat);
 SETTINGS_GETSET(const std::string&, mStringMap, getString, setString);
+SETTINGS_GETSET(std::time_t, mTimeMap, getTime, setTime);

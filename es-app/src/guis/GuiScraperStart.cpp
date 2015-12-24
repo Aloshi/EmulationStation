@@ -2,6 +2,7 @@
 #include "guis/GuiScraperMulti.h"
 #include "guis/GuiMsgBox.h"
 #include "views/ViewController.h"
+#include "SystemManager.h"
 
 #include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
@@ -15,14 +16,14 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	// add filters (with first one selected)
 	mFilters = std::make_shared< OptionListComponent<GameFilterFunc> >(mWindow, "SCRAPE THESE GAMES", false);
 	mFilters->add("All Games", 
-		[](SystemData*, FileData*) -> bool { return true; }, false);
+		[](SystemData*, const FileData&) -> bool { return true; }, false);
 	mFilters->add("Only missing image", 
-		[](SystemData*, FileData* g) -> bool { return g->metadata.get("image").empty(); }, true);
+		[](SystemData*, const FileData& g) -> bool { return g.get_metadata().get("image").empty(); }, true);
 	mMenu.addWithLabel("Filter", mFilters);
 
 	//add systems (all with a platformid specified selected)
 	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, "SCRAPE THESE SYSTEMS", true);
-	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	for(auto it = SystemManager::getInstance()->getSystems().begin(); it != SystemManager::getInstance()->getSystems().end(); it++)
 	{
 		if(!(*it)->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
 			mSystems->add((*it)->getFullName(), *it, !(*it)->getPlatformIds().empty());
@@ -77,15 +78,12 @@ std::queue<ScraperSearchParams> GuiScraperStart::getSearches(std::vector<SystemD
 	std::queue<ScraperSearchParams> queue;
 	for(auto sys = systems.begin(); sys != systems.end(); sys++)
 	{
-		std::vector<FileData*> games = (*sys)->getRootFolder()->getFilesRecursive(GAME);
+		std::vector<FileData> games = (*sys)->getRootFolder().getChildrenRecursive(false);
 		for(auto game = games.begin(); game != games.end(); game++)
 		{
 			if(selector((*sys), (*game)))
 			{
-				ScraperSearchParams search;
-				search.game = *game;
-				search.system = *sys;
-				
+				ScraperSearchParams search(*sys, *game);
 				queue.push(search);
 			}
 		}
