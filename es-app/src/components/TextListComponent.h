@@ -156,6 +156,10 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	int listCutoff = startEntry + screenCount;
 	if(listCutoff > size())
 		listCutoff = size();
+        
+        // clip the full text list 
+        Renderer::pushClipRect(Eigen::Vector2i((int)(trans.translation().x()), (int)trans.translation().y()), 
+		Eigen::Vector2i((int)(mSize.x()), (int)mSize.y()));
 
 	// draw selector bar
 	if(startEntry < listCutoff)
@@ -217,7 +221,10 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		y += entrySize;
 	}
 
+	//pop margin clip
 	Renderer::popClipRect();
+        //pop full list clip
+        Renderer::popClipRect();
 
 	listRenderTitleOverlay(trans);
 
