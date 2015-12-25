@@ -44,8 +44,8 @@ MetaDataListType fileTypeToMetaDataType(FileType type)
 }
 
 std::vector<FileSort> sFileSorts = boost::assign::list_of
-	(FileSort("Alphabetical, asc", "ORDER BY name"))
-	(FileSort("Alphabetical, desc", "ORDER BY name DESC"));
+	(FileSort("Alphabetical, asc", "ORDER BY LOWER(name)"))
+	(FileSort("Alphabetical, desc", "ORDER BY LOWER(name) DESC"));
 
 const std::vector<FileSort>& getFileSorts()
 {
@@ -595,7 +595,7 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	if(sortType)
 		ss << sortType->sql;
 	else
-		ss << "ORDER BY name";
+		ss << "ORDER BY LOWER(name)";
 
 	std::string query = ss.str();
 	SQLPreparedStmt stmt(mDB, query);
