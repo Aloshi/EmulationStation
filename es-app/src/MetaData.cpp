@@ -19,10 +19,10 @@ MetaDataDecl gameDecls[] = {
 
 // because of how the GamelistDB is set up, this must be a subset of gameDecls
 MetaDataDecl folderDecls[] = { 
-	{"name",		MD_STRING,				"", 	false}, 
-	{"desc",		MD_MULTILINE_STRING,	"", 	false},
-	{"image",		MD_IMAGE_PATH,			"", 	false},
-	{"thumbnail",	MD_IMAGE_PATH,			"", 	false},
+	{"name",		MD_STRING,				"", 				false,		"name",					"enter game name"}, 
+	{"desc",		MD_MULTILINE_STRING,	"", 				false,		"description",			"enter description"},
+	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
+	{"thumbnail",	MD_IMAGE_PATH,			"", 				false,		"thumbnail",			"enter path to thumbnail"},
 };
 
 std::map< MetaDataListType, std::vector<MetaDataDecl> > MDD_map = boost::assign::map_list_of

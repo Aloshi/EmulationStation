@@ -550,7 +550,8 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO files VALUES (?1, ?2, ?3, ?4, ";
 
-	auto& mdd = metadata.getMDD();
+	//auto& mdd = metadata.getMDD();
+	const std::vector<MetaDataDecl>& mdd = getMDDMap().at(GAME_METADATA);
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
 		ss << "?" << i + RESERVED_COLUMNS + 1;
