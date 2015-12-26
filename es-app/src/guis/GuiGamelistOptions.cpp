@@ -125,11 +125,21 @@ void GuiGamelistOptions::jumpToLetter()
 
 bool GuiGamelistOptions::input(InputConfig* config, Input input)
 {
-	if((config->isMappedTo("b", input) || config->isMappedTo("select", input)) && input.value)
+	if((config->isMappedTo("b", input)) && input.value)
 	{
 		delete this;
 		return true;
 	}
+	
+	if((config->isMappedTo("select", input) || config->isMappedTo("start",input)) && input.value != 0)
+	{
+		// close everything
+		Window* window = mWindow;
+		while(window->peekGui() && window->peekGui() != ViewController::get())
+			delete window->peekGui();
+		return true;
+	}
+	
 
 	return mMenu.input(config, input);
 }
@@ -137,7 +147,8 @@ bool GuiGamelistOptions::input(InputConfig* config, Input input)
 std::vector<HelpPrompt> GuiGamelistOptions::getHelpPrompts()
 {
 	auto prompts = mMenu.getHelpPrompts();
-	prompts.push_back(HelpPrompt("b", "close"));
+	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("select", "close"));
 	return prompts;
 }
 

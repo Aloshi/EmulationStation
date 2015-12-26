@@ -21,10 +21,11 @@
 #include "scrapers/GamesDBScraper.h"
 #include "scrapers/TheArchiveScraper.h"
 
-GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
+GuiMenu::GuiMenu(Window* window, SystemData* system) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window), mSystem(system)
 {
 	// MAIN MENU
 
+	// [LIST OPTIONS >]
 	// SCRAPER >
 	// SOUND SETTINGS >
 	// UI SETTINGS >
@@ -32,6 +33,14 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// QUIT >
 
 	// [version]
+
+	if (system) {
+		addEntry("LIST OPTIONS", 0x777777FF, true,
+			[this] {
+			auto s = new GuiGamelistOptions(mWindow,mSystem);
+			mWindow->pushGui(s);
+		});
+	};
 
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 
@@ -277,7 +286,7 @@ bool GuiMenu::input(InputConfig* config, Input input)
 	if(GuiComponent::input(config, input))
 		return true;
 
-	if((config->isMappedTo("b", input) || config->isMappedTo("start", input)) && input.value != 0)
+	if((config->isMappedTo("b", input) || config->isMappedTo("start", input) || config->isMappedTo("select", input)) && input.value != 0)
 	{
 		delete this;
 		return true;
@@ -291,6 +300,6 @@ std::vector<HelpPrompt> GuiMenu::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "select"));
-	prompts.push_back(HelpPrompt("start", "close"));
+	prompts.push_back(HelpPrompt("select", "close"));
 	return prompts;
 }

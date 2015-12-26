@@ -63,7 +63,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 {
 	if(input.value != 0)
 	{
-		if(config->isMappedTo("a", input))
+		if(config->isMappedTo("a", input) || config->isMappedTo("start", input))
 		{
 			FileData cursor = getCursor();
 			if(cursor.getType() == GAME)

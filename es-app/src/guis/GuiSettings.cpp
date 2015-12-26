@@ -37,7 +37,7 @@ bool GuiSettings::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if((config->isMappedTo("select", input) || config->isMappedTo("start",input)) && input.value != 0)
 	{
 		// close everything
 		Window* window = mWindow;
@@ -54,7 +54,7 @@ std::vector<HelpPrompt> GuiSettings::getHelpPrompts()
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
 
 	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("start", "close"));
+	prompts.push_back(HelpPrompt("select", "close"));
 
 	return prompts;
 }
