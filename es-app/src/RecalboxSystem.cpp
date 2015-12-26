@@ -1,6 +1,6 @@
-/* 
- * File:   RetroboxSystem.cpp
- * Author: matthieu
+/*
+ * File:   RecalboxSystem.cpp
+ * Author: digitallumberjack
  * 
  * Created on 29 novembre 2014, 03:15
  */
