@@ -10,7 +10,8 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	mMenu(window, "OPTIONS")
 {
 	addChild(&mMenu);
-
+	ComponentListRow row;
+/*
 	// jump to letter
 	char curChar = toupper(getGamelist()->getCursor().getName()[0]);
 	if(curChar < 'A' || curChar > 'Z') // in the case of unicode characters, pretend it's an A
@@ -20,7 +21,6 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	for(char c = 'A'; c <= 'Z'; c++)
 		mJumpToLetterList->add(std::string(1, c), c, c == curChar);
 
-	ComponentListRow row;
 	row.addElement(std::make_shared<TextComponent>(mWindow, "JUMP TO LETTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	row.addElement(mJumpToLetterList, false);
 	row.input_handler = [&](InputConfig* config, Input input) {
@@ -36,6 +36,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		return false;
 	};
 	mMenu.addRow(row);
+*/
 
 	// sort list by
 	mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);

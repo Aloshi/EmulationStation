@@ -215,7 +215,6 @@ void ComponentList::render(const Eigen::Affine3f& parentTrans)
 		// need a function that goes roughly 0x777777 -> 0xFFFFFF
 		// and 0xFFFFFF -> 0x777777
 		// (1 - dst) + 0x77
-	std::cout << mCursor << std::endl;
 		const float selectedRowHeight = getRowHeight(mEntries.at(mCursor).data);
 		Renderer::drawRect(0.0f, mSelectorBarOffset, mSize.x(), selectedRowHeight, 0xFFFFFFFF,
 			GL_ONE_MINUS_DST_COLOR, GL_ZERO);
