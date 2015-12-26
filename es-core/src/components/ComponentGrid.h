@@ -114,6 +114,6 @@ private:
 
 	std::vector<GridEntry> mCells;
 
-	void onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i to);
+	void onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i to, Eigen::Vector2i dir);
 	Eigen::Vector2i mCursor;
 };

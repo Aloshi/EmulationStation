@@ -54,6 +54,21 @@ void ComponentList::onFocusGained()
 	mFocused = true;
 }
 
+void ComponentList::onFocusGained(FocusGainDirection dir)
+{
+	if (dir == FOCUS_GAIN_UP) 
+	{
+		mCursor = size() - 1;
+		onCursorChanged(CURSOR_STOPPED);
+	}
+	if (dir == FOCUS_GAIN_DOWN)
+	{
+		mCursor = 0;
+		onCursorChanged(CURSOR_STOPPED);
+	}
+	mFocused = true;
+}
+
 bool ComponentList::input(InputConfig* config, Input input)
 {
 	if(size() == 0)
@@ -200,7 +215,7 @@ void ComponentList::render(const Eigen::Affine3f& parentTrans)
 		// need a function that goes roughly 0x777777 -> 0xFFFFFF
 		// and 0xFFFFFF -> 0x777777
 		// (1 - dst) + 0x77
-	
+	std::cout << mCursor << std::endl;
 		const float selectedRowHeight = getRowHeight(mEntries.at(mCursor).data);
 		Renderer::drawRect(0.0f, mSelectorBarOffset, mSize.x(), selectedRowHeight, 0xFFFFFFFF,
 			GL_ONE_MINUS_DST_COLOR, GL_ZERO);

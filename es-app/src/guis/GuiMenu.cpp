@@ -244,10 +244,12 @@ GuiMenu::GuiMenu(Window* window, SystemData* system) : GuiComponent(window), mMe
 			mWindow->pushGui(s);
 	});
 
+	mMenu.addButton("BACK", "go back", [this] { delete this; });
+
 	mVersion.setFont(Font::get(FONT_SIZE_SMALL));
 	mVersion.setColor(0xC6C6C6FF);
-	mVersion.setText("EMULATIONSTATION V" + strToUpper(PROGRAM_VERSION_STRING));
-	mVersion.setAlignment(ALIGN_CENTER);
+	mVersion.setText("EMULATIONSTATION V" + strToUpper(PROGRAM_VERSION_STRING) + "  ");
+	mVersion.setAlignment(ALIGN_RIGHT);
 
 	addChild(&mMenu);
 	addChild(&mVersion);

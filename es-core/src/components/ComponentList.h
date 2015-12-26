@@ -57,6 +57,7 @@ public:
 
 	void onSizeChanged() override;
 	void onFocusGained() override;
+	void onFocusGained(FocusGainDirection dir) override;
 	void onFocusLost() override;
 
 	bool moveCursor(int amt);

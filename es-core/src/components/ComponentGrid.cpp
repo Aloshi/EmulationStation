@@ -98,7 +98,7 @@ void ComponentGrid::setEntry(const std::shared_ptr<GuiComponent>& comp, const Ei
 	{
 		auto origCursor = mCursor;
 		mCursor = pos;
-		onCursorMoved(origCursor, mCursor);
+		onCursorMoved(origCursor, mCursor, Eigen::Vector2i(0,0));
 	}
 
 	updateCellComponent(mCells.back());
@@ -264,7 +264,7 @@ void ComponentGrid::resetCursor()
 		{
 			Eigen::Vector2i origCursor = mCursor;
 			mCursor = it->pos;
-			onCursorMoved(origCursor, mCursor);
+			onCursorMoved(origCursor, mCursor, Eigen::Vector2i(0,0));
 			break;
 		}
 	}
@@ -273,6 +273,7 @@ void ComponentGrid::resetCursor()
 bool ComponentGrid::moveCursor(Eigen::Vector2i dir)
 {
 	assert(dir.x() || dir.y());
+	assert(!(dir.x() && dir.y()));
 
 	const Eigen::Vector2i origCursor = mCursor;
 
@@ -283,6 +284,8 @@ bool ComponentGrid::moveCursor(Eigen::Vector2i dir)
 	while(mCursor.x() >= 0 && mCursor.y() >= 0 && mCursor.x() < mGridSize.x() && mCursor.y() < mGridSize.y())
 	{
 		mCursor = mCursor + dir;
+                mCursor(0) = (mCursor(0) + mGridSize.x()) % mGridSize.x();
+                mCursor(1) = (mCursor(1) + mGridSize.y()) % mGridSize.y();
 
 		Eigen::Vector2i curDirPos = mCursor;
 
@@ -294,9 +297,13 @@ bool ComponentGrid::moveCursor(Eigen::Vector2i dir)
 			cursorEntry = getCellAt(mCursor);
 			if(cursorEntry && cursorEntry->canFocus && cursorEntry != currentCursorEntry)
 			{
-				onCursorMoved(origCursor, mCursor);
+				onCursorMoved(origCursor, mCursor, dir);
 				return true;
 			}
+			if (cursorEntry == currentCursorEntry)
+                        {
+                          return false;
+                        }
 
 			mCursor += searchAxis;
 		}
@@ -309,9 +316,13 @@ bool ComponentGrid::moveCursor(Eigen::Vector2i dir)
 			cursorEntry = getCellAt(mCursor);
 			if(cursorEntry && cursorEntry->canFocus && cursorEntry != currentCursorEntry)
 			{
-				onCursorMoved(origCursor, mCursor);
+				onCursorMoved(origCursor, mCursor, dir);
 				return true;
 			}
+			if (cursorEntry == currentCursorEntry)
+                        {
+                          return false;
+                        }
 
 			mCursor -= searchAxis;
 		}
@@ -389,15 +400,24 @@ void ComponentGrid::textInput(const char* text)
 		selectedEntry->component->textInput(text);
 }
 
-void ComponentGrid::onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i to)
+void ComponentGrid::onCursorMoved(Eigen::Vector2i from, Eigen::Vector2i to, Eigen::Vector2i dir)
 {
 	GridEntry* cell = getCellAt(from);
 	if(cell)
 		cell->component->onFocusLost();
 
 	cell = getCellAt(to);
+        FocusGainDirection gainDir = FOCUS_GAIN_UNKNOWN;
+        if(!dir.x() && dir.y() > 0)
+          gainDir = FOCUS_GAIN_DOWN;
+        if(!dir.x() && dir.y() < 0)
+          gainDir = FOCUS_GAIN_UP;
+        if(!dir.y() && dir.x() < 0)
+          gainDir = FOCUS_GAIN_LEFT;
+        if(!dir.y() && dir.x() > 0)
+          gainDir = FOCUS_GAIN_RIGHT;
 	if(cell)
-		cell->component->onFocusGained();
+		cell->component->onFocusGained(gainDir);
 
 	updateHelpPrompts();
 }
@@ -410,7 +430,7 @@ void ComponentGrid::setCursorTo(const std::shared_ptr<GuiComponent>& comp)
 		{
 			Eigen::Vector2i oldCursor = mCursor;
 			mCursor = it->pos;
-			onCursorMoved(oldCursor, mCursor);
+			onCursorMoved(oldCursor, mCursor, Eigen::Vector2i(0,0));
 			return;
 		}
 	}

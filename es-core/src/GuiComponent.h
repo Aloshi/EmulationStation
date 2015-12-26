@@ -13,6 +13,15 @@ class Font;
 
 typedef std::pair<const char*, const char*> HelpPrompt;
 
+enum FocusGainDirection
+{
+	FOCUS_GAIN_DOWN,
+	FOCUS_GAIN_UP,
+	FOCUS_GAIN_LEFT,
+	FOCUS_GAIN_RIGHT,
+	FOCUS_GAIN_UNKNOWN,
+};
+
 class GuiComponent
 {
 public:
@@ -77,6 +86,7 @@ public:
 
 	virtual void onFocusGained() {};
 	virtual void onFocusLost() {};
+	virtual void onFocusGained(FocusGainDirection dir) { onFocusGained(); };
 
 	// Default implementation just handles <pos> and <size> tags as normalized float pairs.
 	// You probably want to keep this behavior for any derived classes as well as add your own.
