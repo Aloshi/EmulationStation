@@ -24,6 +24,7 @@ if(EXISTS "/opt/vc/include/bcm_host.h")
 else()
     MESSAGE("bcm_host.h not found")
 endif()
+add_definitions(-DRPI_VERSION=${RPI_VERSION})
 
 #-------------------------------------------------------------------------------
 #check if we're running on olinuxino

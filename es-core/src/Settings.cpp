@@ -43,10 +43,10 @@ void Settings::setDefaults() {
     mBoolMap["Windowed"] = false;
 
 #ifdef _RPI_
-	// don't enable VSync by default on the Pi, since it already 
+	// don't enable VSync by default on the Pi, since it already
 	// has trouble trying to render things at 60fps in certain menus
 	mBoolMap["VSync"] = false;
-#else
+    #else
     mBoolMap["VSync"] = true;
 #endif
 
@@ -82,11 +82,12 @@ void Settings::setDefaults() {
     mStringMap["INPUT P2"] = "DEFAULT";
     mStringMap["INPUT P3"] = "DEFAULT";
     mStringMap["INPUT P4"] = "DEFAULT";
-#ifdef _RPI1_
+#ifdef RPI_VERSION
+    #if RPI_VERSION == 1
     mStringMap["Overclock"] = "none";
-#endif
-#ifdef _RPI2_
+    #else
     mStringMap["Overclock"] = "none-rpi2";
+    #endif
 #endif
     mStringMap["RecalboxSettingScript"] = "/recalbox/scripts/recalbox-config.sh";
     mStringMap["RecalboxConfigScript"] = "";

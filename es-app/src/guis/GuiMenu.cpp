@@ -135,17 +135,18 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  // Overclock choice
                  auto overclock_choice = std::make_shared<OptionListComponent<std::string> >(window, "OVERCLOCK",
                                                                                              false);
-#ifdef _RPI1_
+#ifdef RPI_VERSION
+    #if RPI_VERSION == 1
                  std::string currentOverclock = Settings::getInstance()->getString("Overclock");
                  overclock_choice->add("EXTREM (1100Mhz)", "extrem", currentOverclock == "extrem");
                  overclock_choice->add("TURBO (1000Mhz)", "turbo", currentOverclock == "turbo");
                  overclock_choice->add("HIGH (950Mhz)", "high", currentOverclock == "high");
                  overclock_choice->add("NONE (700Mhz)", "none", currentOverclock == "none");
-#endif
-#ifdef _RPI2_
+    #else
                  std::string currentOverclock = Settings::getInstance()->getString("Overclock-rpi2");
                  overclock_choice->add("RPI2 (1050Mhz)", "rpi2", currentOverclock == "rpi2");
                  overclock_choice->add("NONE (900Mhz)", "none-rpi2", currentOverclock == "none-rpi2");
+    #endif
 #endif
                  s->addWithLabel("OVERCLOCK", overclock_choice);
 
