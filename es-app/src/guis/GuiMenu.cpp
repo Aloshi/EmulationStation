@@ -21,26 +21,18 @@
 #include "scrapers/GamesDBScraper.h"
 #include "scrapers/TheArchiveScraper.h"
 
-GuiMenu::GuiMenu(Window* window, SystemData* system) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window), mSystem(system)
+GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "SETTINGS"), mVersion(window)
 {
-	// MAIN MENU
+	// SETTINGS MENU
 
-	// [LIST OPTIONS >]
-	// SCRAPER >
-	// SOUND SETTINGS >
-	// UI SETTINGS >
-	// CONFIGURE INPUT >
-	// QUIT >
+	// SCRAPER
+	// SOUND
+	// UI
+	// CONFIGURE INPUT
 
 	// [version]
 
-	if (system) {
-		addEntry("LIST OPTIONS", 0x777777FF, true,
-			[this] {
-			auto s = new GuiGamelistOptions(mWindow,mSystem);
-			mWindow->pushGui(s);
-		});
-	};
+	
 
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
 
@@ -99,12 +91,6 @@ GuiMenu::GuiMenu(Window* window, SystemData* system) : GuiComponent(window), mMe
 		[this] {
 			auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
 
-			// volume
-			auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
-			volume->setValue((float)VolumeControl::getInstance()->getVolume());
-			s->addWithLabel("SYSTEM VOLUME", volume);
-			s->addSaveFunc([volume] { VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); });
-			
 			// disable sounds
 			auto sounds_enabled = std::make_shared<SwitchComponent>(mWindow);
 			sounds_enabled->setState(Settings::getInstance()->getBool("EnableSounds"));
@@ -198,51 +184,7 @@ GuiMenu::GuiMenu(Window* window, SystemData* system) : GuiComponent(window), mMe
 			mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
 	});
 
-	addEntry("QUIT", 0x777777FF, true, 
-		[this] {
-			auto s = new GuiSettings(mWindow, "QUIT");
-			
-			Window* window = mWindow;
 
-			ComponentListRow row;
-			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES", 
-				[] { 
-					if(runRestartCommand() != 0)
-						LOG(LogWarning) << "Restart terminated with non-zero result!";
-				}, "NO", nullptr));
-			});
-			row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-			s->addRow(row);
-
-			row.elements.clear();
-			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES", 
-				[] { 
-					if(runShutdownCommand() != 0)
-						LOG(LogWarning) << "Shutdown terminated with non-zero result!";
-				}, "NO", nullptr));
-			});
-			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-			s->addRow(row);
-
-			if(Settings::getInstance()->getBool("ShowExit"))
-			{
-				row.elements.clear();
-				row.makeAcceptInputHandler([window] {
-					window->pushGui(new GuiMsgBox(window, "REALLY QUIT?", "YES", 
-					[] { 
-						SDL_Event ev;
-						ev.type = SDL_QUIT;
-						SDL_PushEvent(&ev);
-					}, "NO", nullptr));
-				});
-				row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-				s->addRow(row);
-			}
-
-			mWindow->pushGui(s);
-	});
 
 	mMenu.addButton("BACK", "go back", [this] { delete this; });
 

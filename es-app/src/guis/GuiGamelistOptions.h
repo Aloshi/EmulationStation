@@ -2,6 +2,7 @@
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
 #include "components/OptionListComponent.h"
+#include "components/SliderComponent.h"
 #include "GamelistDB.h"
 
 class IGameListView;
@@ -16,6 +17,7 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
+	void addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func);
 	void openMetaDataEd();
 	void jumpToLetter();
 	
@@ -26,6 +28,8 @@ private:
 
 	typedef OptionListComponent<int> SortList;
 	std::shared_ptr<SortList> mListSort;
+        
+	std::shared_ptr<SliderComponent> mVolume;
 	
 	SystemData* mSystem;
 	IGameListView* getGamelist();

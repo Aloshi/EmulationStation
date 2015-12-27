@@ -7,6 +7,7 @@
 #include "views/gamelist/DetailedGameListView.h"
 #include "views/gamelist/GridGameListView.h"
 #include "guis/GuiMenu.h"
+#include "guis/GuiGamelistOptions.h"
 #include "guis/GuiMsgBox.h"
 #include "animations/LaunchAnimation.h"
 #include "animations/MoveCameraAnimation.h"
@@ -273,9 +274,9 @@ bool ViewController::input(InputConfig* config, Input input)
 		// open menu
 		if(mState.viewing == GAME_LIST) 
 		{
-			mWindow->pushGui(new GuiMenu(mWindow, mState.system));
+			mWindow->pushGui(new GuiGamelistOptions(mWindow, mState.system));
 		} else {
-			mWindow->pushGui(new GuiMenu(mWindow, nullptr));
+			mWindow->pushGui(new GuiGamelistOptions(mWindow, nullptr));
 		}
 		return true;
 	}
