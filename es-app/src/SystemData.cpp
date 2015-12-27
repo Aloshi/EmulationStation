@@ -2,6 +2,7 @@
 #include "Gamelist.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include <utility>
 #include <stdlib.h>
 #include <SDL_joystick.h>
 #include "Renderer.h"
@@ -18,12 +19,15 @@ std::vector<SystemData*> SystemData::sSystemVector;
 
 namespace fs = boost::filesystem;
 
-SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder)
+SystemData::SystemData(std::string name, std::string fullName, std::string startPath,
+                           std::vector<std::string> extensions, std::string command,
+                           std::vector<PlatformIds::PlatformId> platformIds, std::string themeFolder,
+                           std::map<std::string, std::vector<std::string>*>* emulators)
 {
 	mName = name;
 	mFullName = fullName;
 	mStartPath = getExpandedPath(startPath);
+	mEmulators = emulators;
 
 	// make it absolute if needed
 	{
@@ -267,7 +271,26 @@ bool SystemData::loadConfig()
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
+		// emulators and cores
+		std::map<std::string, std::vector<std::string>*> * systemEmulators = new std::map<std::string, std::vector<std::string>*>();
+		pugi::xml_node emulatorsNode = system.child("emulators");
+		for(pugi::xml_node emuNode = emulatorsNode.child("emulator"); emuNode; emuNode = emuNode.next_sibling("emulator")) {
+			std::string emulatorName = emuNode.attribute("name").as_string();
+			(*systemEmulators)[emulatorName] = new std::vector<std::string>();
+			pugi::xml_node coresNode = emuNode.child("cores");
+			for (pugi::xml_node coreNode = coresNode.child("core"); coreNode; coreNode = coreNode.next_sibling("core")) {
+				std::string corename = coreNode.text().as_string();
+				(*systemEmulators)[emulatorName]->push_back(corename);
+			}
+		}
+
+
+		SystemData* newSys = new SystemData(name,
+											fullname,
+											path, extensions,
+											cmd, platformIds,
+											themeFolder,
+											systemEmulators);
 		if(newSys->getRootFolder()->getChildren().size() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
@@ -416,3 +439,8 @@ void SystemData::refreshRootFolder() {
   populateFolder(mRootFolder);
   mRootFolder->sort(FileSorts::SortTypes.at(0));
 }
+
+std::map<std::string, std::vector<std::string>*>* SystemData::getEmulators() {
+	return mEmulators;
+}
+

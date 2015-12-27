@@ -11,8 +11,10 @@
 class SystemData
 {
 public:
-	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-		const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder);
+	SystemData(std::string name, std::string fullName, std::string startPath,
+                               std::vector<std::string> extensions, std::string command,
+                               std::vector<PlatformIds::PlatformId> platformIds, std::string themeFolder,
+                               std::map<std::string, std::vector<std::string>*>* map);
 	~SystemData();
 
 	inline FileData* getRootFolder() const { return mRootFolder; };
@@ -68,7 +70,9 @@ public:
 
 	// refresh the roms files
 	void refreshRootFolder();
-	
+
+
+	std::map<std::string, std::vector<std::string> *> * getEmulators();
 private:
 	std::string mName;
 	std::string mFullName;
@@ -84,4 +88,5 @@ private:
 	void populateFolder(FileData* folder);
 
 	FileData* mRootFolder;
+	std::map<std::string, std::vector<std::string> *> *mEmulators;
 };

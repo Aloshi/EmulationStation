@@ -50,6 +50,7 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
 		metadata.set("name", getCleanName());
+	metadata.set("system", system->getName());
 }
 
 FileData::~FileData()

@@ -95,6 +95,7 @@ void Settings::setDefaults() {
     mStringMap["RecalboxConfigScript"] = "";
     mStringMap["LastVersionFile"] = "/root/update.done";
     mStringMap["VersionMessage"] = "/recalbox/recalbox.msg";
+    mStringMap["Manifest"] = "/home/matthieu/dev/recalbox-3.3.X/recalbox-manager/project/MANIFEST.XML";
 
 
 }
