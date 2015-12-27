@@ -82,7 +82,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 	addEntry("SETTINGS", 0x777777FF, true,
 		[this] {
-		auto s = new GuiMenu(mWindow);
+		auto s = new GuiMenu(mWindow, mSystem);
 		mWindow->pushGui(s);
 	});
 	addEntry("QUIT", 0x777777FF, true, 

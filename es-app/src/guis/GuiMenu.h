@@ -3,11 +3,12 @@
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
 #include <functional>
+#include "GamelistDB.h"
 
 class GuiMenu : public GuiComponent
 {
 public:
-	GuiMenu(Window* window);
+	GuiMenu(Window* window, SystemData* system);
 
 	bool input(InputConfig* config, Input input) override;
 	void onSizeChanged() override;
@@ -18,4 +19,5 @@ private:
 
 	MenuComponent mMenu;
 	TextComponent mVersion;
+	SystemData*   mSystem;
 };

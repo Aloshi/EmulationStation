@@ -45,7 +45,13 @@ MetaDataListType fileTypeToMetaDataType(FileType type)
 
 std::vector<FileSort> sFileSorts = boost::assign::list_of
 	(FileSort("Alphabetical, asc", "ORDER BY LOWER(name)"))
-	(FileSort("Alphabetical, desc", "ORDER BY LOWER(name) DESC"));
+	(FileSort("Alphabetical, desc", "ORDER BY LOWER(name) DESC"))
+	(FileSort("Rating, asc", "ORDER BY rating"))
+	(FileSort("Rating, desc", "ORDER BY rating DESC"))
+	(FileSort("Release, asc", "ORDER BY releasedate"))
+	(FileSort("Release, desc", "ORDER BY releasedate DESC"))
+	(FileSort("Last Played, asc", "ORDER BY lastplayed"))
+	(FileSort("Last Played, desc", "ORDER BY lastplayed DESC"));
 
 const std::vector<FileSort>& getFileSorts()
 {
@@ -490,7 +496,7 @@ void GamelistDB::updateExists(const SystemData* system)
 
 	SQLTransaction transaction(mDB);
 
-	// for each game, check if its file exists - if it doesn't remove it from the DB
+	// for each game, check if its file exists
 	while(readStmt.step() != SQLITE_DONE)
 	{
 		const char* path = (const char*)sqlite3_column_text(readStmt, 0);
@@ -518,6 +524,19 @@ void GamelistDB::updateExists(const FileData& file)
 	sqlite3_bind_text(stmt, 2, file.getFileID().c_str(), file.getFileID().size(), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 3, file.getSystem()->getName().c_str(), file.getSystem()->getName().size(), SQLITE_STATIC);
 	stmt.step_expected(SQLITE_DONE);
+}
+
+//Remove rows where the fileexists flag is not set.
+//No check to verify the truth of that flag is performed.
+void GamelistDB::removeNonexisting(const SystemData* system)
+{
+	const std::string& relativeTo = system->getStartPath();
+	SQLPreparedStmt deleteStmt(mDB, "DELETE FROM files WHERE systemid = ?1 AND fileexists = '0'");
+	sqlite3_bind_text(deleteStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
+
+	SQLTransaction transaction(mDB);
+	deleteStmt.step_expected(SQLITE_DONE);
+	transaction.commit();
 }
 
 MetaDataMap GamelistDB::getFileData(const std::string& fileID, const std::string& systemID) const
@@ -550,7 +569,6 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO files VALUES (?1, ?2, ?3, ?4, ";
 
-	//auto& mdd = metadata.getMDD();
 	const std::vector<MetaDataDecl>& mdd = getMDDMap().at(GAME_METADATA);
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
@@ -669,7 +687,7 @@ void GamelistDB::importXML(const SystemData* system, const std::string& xml_path
 					
 					// if it's a time/date, convert it into the SQLite format
 					if(iter->type == MD_TIME || iter->type == MD_DATE)
-						value = ptime_to_string(string_to_ptime(value, LEGACY_TIME_STRING_FORMAT), SQLITE_TIME_STRING_FORMAT);
+						value = ptime_to_string(string_to_ptime(value, LEGACY_TIME_STRING_FORMAT), LEGACY_TIME_STRING_FORMAT);
 
 					mdl.set(iter->key, value);
 				}
@@ -723,7 +741,7 @@ void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path
 					// convert from SQLite time format to legacy gamelist.xml time format
 					if(it->type == MD_TIME || it->type == MD_DATE)
 					{
-						temp = ptime_to_string(string_to_ptime(value, SQLITE_TIME_STRING_FORMAT), LEGACY_TIME_STRING_FORMAT);
+						temp = ptime_to_string(string_to_ptime(value, LEGACY_TIME_STRING_FORMAT), LEGACY_TIME_STRING_FORMAT);
 						value = temp.c_str();
 					}
 					break;

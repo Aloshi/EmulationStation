@@ -136,19 +136,25 @@ void SystemManager::loadConfig()
 			path = path.erase(path.size() - 1);
 
 		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
-		mDatabase.addMissingFiles(newSys);
-		mDatabase.updateExists(newSys);
 
 		if(newSys->getGameCount() == 0)
 		{
-			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
-			delete newSys;
+			LOG(LogWarning) << "System \"" << name << "\" has no games! Running file system scan.";
+			mDatabase.addMissingFiles(newSys);
+			if(newSys->getGameCount() == 0)
+			{
+				LOG(LogWarning) << "System \"" << name << "\" still has no games! Ignoring it.";
+			
+				delete newSys;
+			}else{
+				mSystems.push_back(newSys);
+			}
+
 		}else{
 			mSystems.push_back(newSys);
 		}
 	}
 
-	updateDatabase();
 }
 
 void SystemManager::writeExampleConfig(const fs::path& path)

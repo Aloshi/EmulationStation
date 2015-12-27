@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
+#include "guis/GuiRefreshDatabase.h"
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
 #include "views/ViewController.h"
@@ -21,7 +22,7 @@
 #include "scrapers/GamesDBScraper.h"
 #include "scrapers/TheArchiveScraper.h"
 
-GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "SETTINGS"), mVersion(window)
+GuiMenu::GuiMenu(Window* window,SystemData* system) : GuiComponent(window), mMenu(window, "SETTINGS"), mVersion(window), mSystem(system)
 {
 	// SETTINGS MENU
 
@@ -34,7 +35,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "SETTINGS
 
 	
 
-	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
+	auto openScrapeNow = [this] { 
+		mWindow->pushGui(new GuiScraperStart(mWindow));
+	};
+	auto openRefreshDatabase = [this] { 
+		mWindow->pushGui(new GuiRefreshDatabase(mWindow,mSystem));
+	};
 
 	auto importXMLAndClose = [this] {
 		SystemManager::getInstance()->importGamelistXML(false);
@@ -43,8 +49,9 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "SETTINGS
 		while(windowCopy->peekGui() != ViewController::get())
 			delete windowCopy->peekGui();
 	};
+
 	addEntry("SCRAPER", 0x777777FF, true, 
-		[this, openScrapeNow, importXMLAndClose] { 
+		[this, openScrapeNow] { 
 			auto s = new GuiSettings(mWindow, "SCRAPER");
 
 			// scrape from
@@ -71,6 +78,22 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "SETTINGS
 			auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPE NOW", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 			auto bracket = makeArrow(mWindow);
 			row.addElement(scrape_now, true);
+			row.addElement(bracket, false);
+			s->addRow(row);
+
+			mWindow->pushGui(s);
+	});
+	addEntry("UPDATE DATABASE", 0x777777FF, true, 
+		[this, openRefreshDatabase, importXMLAndClose] { 
+			auto s = new GuiSettings(mWindow, "UPDATE DATABASE");
+
+			// scan filesystem
+			ComponentListRow row;
+			row.makeAcceptInputHandler(openRefreshDatabase);
+
+			auto scan_files = std::make_shared<TextComponent>(mWindow, "SCAN FILE SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+			auto bracket = makeArrow(mWindow);
+			row.addElement(scan_files, true);
 			row.addElement(bracket, false);
 			s->addRow(row);
 
