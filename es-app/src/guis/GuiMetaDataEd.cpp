@@ -227,8 +227,7 @@ void GuiMetaDataEd::save() {
             mMetaData->set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
         else {
             std::shared_ptr<GuiComponent> ed = mEditors.at(i);
-            std::shared_ptr<OptionListComponent<std::string>> list = std::static_pointer_cast<OptionListComponent<std::string>>(
-                    ed);
+            std::shared_ptr<OptionListComponent<std::string>> list = std::static_pointer_cast<OptionListComponent<std::string>>(ed);
             mMetaData->set(mMetaDataDecl.at(i).key, list->getSelected());
         }
     }

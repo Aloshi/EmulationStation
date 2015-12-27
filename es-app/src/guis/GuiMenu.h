@@ -2,7 +2,10 @@
 
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
+#include "components/OptionListComponent.h"
 #include <functional>
+#include <Window.h>
+#include <SystemData.h>
 #include "guis/GuiSettings.h"
 
 class GuiMenu : public GuiComponent
@@ -20,4 +23,10 @@ private:
 	void createInputTextRow(GuiSettings * gui, const char* title, const char* settingsID, bool password);
 	MenuComponent mMenu;
 	TextComponent mVersion;
+
+
+	std::shared_ptr<OptionListComponent<std::string>> createRatioOptionList(Window *window,
+                                                                        std::string configname) const;
+
+	void popSystemConfigurationGui(SystemData *systemData, std::string previouslySelectedEmulator) const;
 };
