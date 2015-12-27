@@ -2,11 +2,15 @@
 #include "components/TextComponent.h"
 #include "Log.h"
 #include "Util.h"
+#include <strings.h>
 
 namespace fs = boost::filesystem;
 
+// WARN : statistic metadata must be last in list !
 MetaDataDecl gameDecls[] = { 
 	// key,			type,					default,			statistic,	name in GuiMetaDataEd,	prompt in GuiMetaDataEd
+	{"emulator",	MD_LIST,				"default",			false,		"emulator",				"enter emulator"},
+	{"core",		MD_LIST,				"default",			false,		"core",					"enter core"},
 	{"name",		MD_STRING,				"", 				false,		"name",					"enter game name"}, 
 	{"desc",		MD_MULTILINE_STRING,	"", 				false,		"description",			"enter description"},
 	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
@@ -17,10 +21,13 @@ MetaDataDecl gameDecls[] = {
 	{"publisher",	MD_STRING,				"unknown",			false,		"publisher",			"enter game publisher"},
 	{"genre",		MD_STRING,				"unknown",			false,		"genre",				"enter game genre"},
 	{"players",		MD_INT,					"1",				false,		"players",				"enter number of players"},
+	{"favorite",	MD_STRING,				"no",				false,		"favorite",				"enter favorite"},
+	{"region",		MD_STRING,				"",					false,		"region",				"enter region"},
+	{"romtype",		MD_STRING,				"Original",			false,		"romtype",				"enter romtype"},
 	{"playcount",	MD_INT,					"0",				true,		"play count",			"enter number of times played"},
-	{"lastplayed",	MD_TIME,				"0", 				true,		"last played",			"enter last played date"},
-	{"favorite",	MD_STRING,				"no",				false,		"favorite",				"enter favorite"}
+	{"lastplayed",	MD_TIME,				"0", 				true,		"last played",			"enter last played date"}
 };
+
 const std::vector<MetaDataDecl> gameMDD(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0]));
 
 MetaDataDecl folderDecls[] = { 
@@ -133,4 +140,23 @@ float MetaDataList::getFloat(const std::string& key) const
 boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
 {
 	return string_to_ptime(get(key), "%Y%m%dT%H%M%S%F%q");
+}
+
+void MetaDataList::merge(const MetaDataList& other) {
+	const std::vector<MetaDataDecl> &mdd = getMDD();
+
+	for (auto otherIter = other.mMap.begin(); otherIter != other.mMap.end(); otherIter++) {
+		bool mustMerge = true;
+		// Check if default value, if so continue
+		for (auto mddIter = mdd.begin(); mddIter != mdd.end(); mddIter++) {
+			if(mddIter->key == otherIter->first){
+				if(otherIter->second == mddIter->defaultValue || mddIter->isStatistic){
+					mustMerge = false;
+				}
+			}
+		}
+		if(mustMerge){
+			this->set(otherIter->first, otherIter->second);
+		}
+	}
 }

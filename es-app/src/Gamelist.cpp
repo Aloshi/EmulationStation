@@ -134,6 +134,7 @@ void parseGamelist(SystemData* system)
 			//make sure name gets set if one didn't exist
 			if(file->metadata.get("name").empty())
 				file->metadata.set("name", defaultName);
+			file->metadata.set("system", system->getName());
 		}
 	}
 }
