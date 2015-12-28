@@ -63,6 +63,9 @@ public:
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);
 
+	//Return the total_changes value from sqlite. Allows basic UI awareness.
+	int totalChanges();
+
 private:
 	void openDB(const char* path);
 	void createMissingTables(); // will do nothing if a "files" table already exists

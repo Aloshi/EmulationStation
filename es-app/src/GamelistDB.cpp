@@ -490,7 +490,7 @@ void GamelistDB::updateExists(const SystemData* system)
 {
 	const std::string& relativeTo = system->getStartPath();
 
-	SQLPreparedStmt readStmt(mDB, "SELECT fileid FROM files WHERE systemid = ?1");
+	SQLPreparedStmt readStmt(mDB, "SELECT fileid,fileexists FROM files WHERE systemid = ?1");
 	sqlite3_bind_text(readStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 	
 	SQLPreparedStmt updateStmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
@@ -502,16 +502,17 @@ void GamelistDB::updateExists(const SystemData* system)
 	while(readStmt.step() != SQLITE_DONE)
 	{
 		const char* path = (const char*)sqlite3_column_text(readStmt, 0);
+		bool existsOld = sqlite3_column_int(readStmt, 1) > 0;
 
-		bool exists = false;
+		bool existsNew = false;
 		if(path && path[0] == '.') // it's relative
-			exists = fs::exists(relativeTo + "/" + path);
+			existsNew = fs::exists(relativeTo + "/" + path);
 		else
-			exists = fs::exists(path);
+			existsNew = fs::exists(path);
 
 		sqlite3_bind_text(updateStmt, 2, path, strlen(path), SQLITE_STATIC);
-		sqlite3_bind_int(updateStmt, 1, exists);
-		updateStmt.step_expected(SQLITE_DONE);
+		sqlite3_bind_int(updateStmt, 1, existsNew);
+		if(existsNew != existsOld) updateStmt.step_expected(SQLITE_DONE);
 		updateStmt.reset();
 	}
 
@@ -760,4 +761,9 @@ void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path
 	}
 
 	doc.save_file(xml_path.c_str());
+}
+
+int GamelistDB::totalChanges()
+{
+	return sqlite3_total_changes(mDB);
 }

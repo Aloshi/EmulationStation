@@ -48,7 +48,7 @@ void GuiRefreshDatabase::pressedStart()
 	if(!mCheckExists->getState() && mRemoveNonexisting->getState() )
 	{
 		mWindow->pushGui(new GuiMsgBox(mWindow, 
-			strToUpper("Warning: Attempting to remove entries without first updating whether they exist.\nContinue anyway?"), 
+			strToUpper("Warning: The remove action will not be performed since the check is not being performed.\nContinue anyway?"), 
 			"YES", std::bind(&GuiRefreshDatabase::start, this), 
 			"NO", nullptr));
 		return;
@@ -61,7 +61,7 @@ void GuiRefreshDatabase::start()
 {
 	bool addFiles = mAddFiles->getState();
 	bool checkExists = mCheckExists->getState();
-	bool removeNonexisting = mRemoveNonexisting->getState();
+	bool removeNonexisting = checkExists && mRemoveNonexisting->getState();
 	std::vector<SystemData*> systems = mSystems->getSelectedObjects();
 
 	if((!addFiles && !checkExists && !removeNonexisting) || systems.empty())
@@ -70,6 +70,7 @@ void GuiRefreshDatabase::start()
 			"NOTHING TO BE DONE.\nSELECT AT LEAST ONE ACTION AND AT LEAST ONE SYSTEM."));
 	}else{
 		auto databaseptr = &SystemManager::getInstance()->database();
+		int start = databaseptr->totalChanges();
 		for(auto sys = systems.begin(); sys != systems.end(); sys++)
 		{
 			if(addFiles) databaseptr->addMissingFiles(*sys);
@@ -77,6 +78,9 @@ void GuiRefreshDatabase::start()
 			if(removeNonexisting) databaseptr->removeNonexisting(*sys);
 			ViewController::get()->getGameListView(*sys).get()->onFilesChanged();
 		}
+		int updates = databaseptr->totalChanges() - start;
+		mWindow->pushGui(new GuiMsgBox(mWindow,
+			"NUMBER OF DATABASE CHANGES: " + std::to_string(updates)));
 		delete this;
 	}
 }
