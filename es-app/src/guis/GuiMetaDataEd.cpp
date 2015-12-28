@@ -83,7 +83,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file,
 				row.addElement(ed, false);
 
 				auto spacer = std::make_shared<GuiComponent>(mWindow);
-				spacer->setSize(Renderer::getScreenWidth() * 0.0025f, 0);
+				spacer->setSize(Renderer::getScreenWidth() * 0.025f, 0);
 				row.addElement(spacer, false);
 
 				// pass input to the actual DateTimeComponent instead of the spacer
