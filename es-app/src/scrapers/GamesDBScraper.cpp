@@ -61,7 +61,8 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(TURBOGRAFX_16, "TurboGrafx 16")
 	(WONDERSWAN, "WonderSwan")
 	(WONDERSWAN_COLOR, "WonderSwan Color")
-	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
+	(ZX_SPECTRUM, "Sinclair ZX Spectrum")
+	(VIRTUAL_BOY, "Nintendo Virtual Boy");
 
 
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
