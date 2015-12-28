@@ -105,18 +105,21 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					mFavoriteChange = true;
 					MetaDataList* md = &cursor->metadata;
 					std::string value = md->get("favorite");
-					if (value.compare("no") == 0)
+
+					bool removeFavorite = false;
+					if (value.compare("false") == 0)
 					{
-						md->set("favorite", "yes");
+						md->set("favorite", "true");
 					}
 					else
 					{
-						md->set("favorite", "no");
+						md->set("favorite", "false");
+						removeFavorite = true;
 					}
 
-					FileData* cursor = getCursor();
+					int cursorPlace = getCursorIndex();
 					populateList(cursor->getParent()->getChildren());
-					setCursor(cursor);
+					setCursorIndex(cursorPlace + (removeFavorite ? -1 : 1));
 					updateInfoPanel();
 				}
 			}

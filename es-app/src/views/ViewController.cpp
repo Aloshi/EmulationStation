@@ -136,7 +136,7 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 		{
 			if ((*it)->getType() == GAME)
 			{
-				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				if ((*it)->metadata.get("favorite").compare("true") == 0)
 				{
 					view->setCursor(*it);
 					found = true;
@@ -151,7 +151,7 @@ void ViewController::updateFavorite(SystemData* system, FileData* file)
 			{
 				if ((*it)->getType() == GAME)
 				{
-					if ((*it)->metadata.get("favorite").compare("yes") == 0)
+					if ((*it)->metadata.get("favorite").compare("true") == 0)
 					{
 						view->setCursor(*it);
 						break;

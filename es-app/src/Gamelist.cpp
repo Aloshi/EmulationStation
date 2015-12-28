@@ -135,6 +135,10 @@ void parseGamelist(SystemData* system)
 			if(file->metadata.get("name").empty())
 				file->metadata.set("name", defaultName);
 			file->metadata.set("system", system->getName());
+
+			if(file->metadata.get("hidden").compare("true") == 0){
+				file->getParent()->removeChild(file);
+			}
 		}
 	}
 }

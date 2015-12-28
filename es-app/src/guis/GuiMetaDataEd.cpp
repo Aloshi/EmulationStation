@@ -8,6 +8,7 @@
 #include "guis/GuiMsgBox.h"
 #include <boost/filesystem.hpp>
 #include <RecalboxConf.h>
+#include <components/SwitchComponent.h>
 
 #include "components/TextEditComponent.h"
 #include "components/DateTimeComponent.h"
@@ -94,6 +95,13 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
             }
             case MD_TIME: {
                 ed = std::make_shared<DateTimeComponent>(window, DateTimeComponent::DISP_RELATIVE_TO_NOW);
+                row.addElement(ed, false);
+                break;
+            }
+            case MD_BOOL: {
+                auto switchComp = std::make_shared<SwitchComponent>(mWindow);
+                switchComp->setState(mMetaData->get(iter->key) == "true");
+                ed = switchComp;
                 row.addElement(ed, false);
                 break;
             }

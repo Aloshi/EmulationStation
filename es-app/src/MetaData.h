@@ -12,6 +12,7 @@ enum MetaDataType
 	//generic types
 	MD_STRING,
 	MD_INT,
+	MD_BOOL,
 	MD_FLOAT,
 
 	//specialized types

@@ -58,3 +58,7 @@ std::vector<HelpPrompt> SwitchComponent::getHelpPrompts()
 	prompts.push_back(HelpPrompt("a", "change"));
 	return prompts;
 }
+
+std::string SwitchComponent::getValue() const {
+	return mState ? "true" : "false";
+}
