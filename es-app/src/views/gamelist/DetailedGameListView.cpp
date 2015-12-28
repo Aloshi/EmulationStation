@@ -195,6 +195,7 @@ void DetailedGameListView::updateInfoPanel()
 
 		if(file->getType() == GAME)
 		{
+			mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 			mRating.setValue(metadata.get("rating"));
 			mReleaseDate.setValue(metadata.get("releasedate"));
 			mDeveloper.setValue(metadata.get("developer"));
@@ -203,6 +204,16 @@ void DetailedGameListView::updateInfoPanel()
 			mPlayers.setValue(metadata.get("players"));
 			mLastPlayed.setValue(metadata.get("lastplayed"));
 			mPlayCount.setValue(metadata.get("playcount"));
+		}else{
+			mLastPlayed.setDisplayMode(DateTimeComponent::DISP_DATE_TIME);
+			mRating.setValue("");
+			mReleaseDate.setValue("");
+			mDeveloper.setValue("");
+			mPublisher.setValue("");
+			mGenre.setValue("");
+			mPlayers.setValue("");
+			mLastPlayed.setValue("");
+			mPlayCount.setValue("");
 		}
 		
 		fadingOut = false;
