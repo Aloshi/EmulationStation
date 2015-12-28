@@ -47,6 +47,7 @@ public:
 	void addMissingFiles(const SystemData* system);
 	void updateExists(const SystemData* system);
 	void updateExists(const FileData& file); // update the fileexists flag for a particular file
+	void removeEntry(const FileData& file);
 	void removeNonexisting(const SystemData* system);
 	
 	// returns all metadata for a given fileID

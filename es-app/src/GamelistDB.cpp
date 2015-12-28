@@ -529,6 +529,15 @@ void GamelistDB::updateExists(const FileData& file)
 	stmt.step_expected(SQLITE_DONE);
 }
 
+void GamelistDB::removeEntry(const FileData& file)
+{
+	SQLPreparedStmt stmt(mDB, "DELETE FROM files WHERE fileid = ?1 AND systemid = ?2");
+	bool exists = fs::exists(fileIDToPath(file.getFileID(), file.getSystem()));
+	sqlite3_bind_text(stmt, 1, file.getFileID().c_str(), file.getFileID().size(), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 2, file.getSystem()->getName().c_str(), file.getSystem()->getName().size(), SQLITE_STATIC);
+	stmt.step_expected(SQLITE_DONE);
+}
+
 //Remove rows where the fileexists flag is not set.
 //No check to verify the truth of that flag is performed.
 void GamelistDB::removeNonexisting(const SystemData* system)

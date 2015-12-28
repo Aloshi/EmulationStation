@@ -172,12 +172,17 @@ void GuiGamelistOptions::openMetaDataEd()
 	// open metadata editor
 	const FileData& file = getGamelist()->getCursor();
 	ScraperSearchParams p(file.getSystem(), file);
+	auto deleteFunc = [this, file] {
+		boost::filesystem::remove(file.getPath()); // actually delete the file on the filesystem
+		SystemManager::getInstance()->database().removeEntry(file); // update the database
+		getGamelist()->onFilesChanged(); // tell the view
+	};
+        auto removeFunc = [this, file] {
+		SystemManager::getInstance()->database().removeEntry(file); // update the database
+		getGamelist()->onFilesChanged(); // tell the view
+	};
 	mWindow->pushGui(new GuiMetaDataEd(mWindow, file, 
-		std::bind(&IGameListView::onMetaDataChanged, getGamelist(), file), [this, file] { 
-			boost::filesystem::remove(file.getPath()); // actually delete the file on the filesystem
-			SystemManager::getInstance()->database().updateExists(file); // update the database
-			getGamelist()->onFilesChanged(); // tell the view
-	}));
+		std::bind(&IGameListView::onMetaDataChanged, getGamelist(), file), deleteFunc, removeFunc));
 }
 
 void GuiGamelistOptions::jumpToLetter()
