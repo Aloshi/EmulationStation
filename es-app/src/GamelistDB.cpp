@@ -589,7 +589,12 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
 		const std::string& val = metadata.get(mdd.at(i).key);
-		sqlite3_bind_text(stmt, i + RESERVED_COLUMNS + 1, val.c_str(), val.size(), SQLITE_STATIC);
+		if((mdd.at(i).type == MD_TIME || mdd.at(i).type == MD_DATE) && (val == "not-a-date-time" || val.empty()))
+		{
+			sqlite3_bind_null(stmt, i + RESERVED_COLUMNS + 1);
+		}else{
+			sqlite3_bind_text(stmt, i + RESERVED_COLUMNS + 1, val.c_str(), val.size(), SQLITE_STATIC);
+		}
 	}
 
 	stmt.step_expected(SQLITE_DONE);
