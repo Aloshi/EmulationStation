@@ -22,7 +22,7 @@
 #include "scrapers/GamesDBScraper.h"
 #include "scrapers/TheArchiveScraper.h"
 
-GuiMenu::GuiMenu(Window* window,SystemData* system) : GuiComponent(window), mMenu(window, "SETTINGS"), mVersion(window), mSystem(system)
+GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "SETTINGS"), mVersion(window)
 {
 	// SETTINGS MENU
 
@@ -39,7 +39,7 @@ GuiMenu::GuiMenu(Window* window,SystemData* system) : GuiComponent(window), mMen
 		mWindow->pushGui(new GuiScraperStart(mWindow));
 	};
 	auto openRefreshDatabase = [this] { 
-		mWindow->pushGui(new GuiRefreshDatabase(mWindow,mSystem));
+		mWindow->pushGui(new GuiRefreshDatabase(mWindow));
 	};
 
 	auto importXMLAndClose = [this] {
@@ -50,41 +50,9 @@ GuiMenu::GuiMenu(Window* window,SystemData* system) : GuiComponent(window), mMen
 			delete windowCopy->peekGui();
 	};
 
-	addEntry("SCRAPER", 0x777777FF, true, 
-		[this, openScrapeNow] { 
-			auto s = new GuiSettings(mWindow, "SCRAPER");
 
-			// scrape from
-			auto scraper_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "SCRAPE FROM", false);
-			std::vector<std::string> scrapers = getScraperList();
-			for(auto it = scrapers.begin(); it != scrapers.end(); it++)
-				scraper_list->add(*it, *it, *it == Settings::getInstance()->getString("Scraper"));
-
-			s->addWithLabel("SCRAPE FROM", scraper_list);
-			s->addSaveFunc([scraper_list] { Settings::getInstance()->setString("Scraper", scraper_list->getSelected()); });
-
-			// scrape ratings
-			auto scrape_ratings = std::make_shared<SwitchComponent>(mWindow);
-			scrape_ratings->setState(Settings::getInstance()->getBool("ScrapeRatings"));
-			s->addWithLabel("SCRAPE RATINGS", scrape_ratings);
-			s->addSaveFunc([scrape_ratings] { Settings::getInstance()->setBool("ScrapeRatings", scrape_ratings->getState()); });
-
-			// scrape now
-			ComponentListRow row;
-			std::function<void()> openAndSave = openScrapeNow;
-			openAndSave = [s, openAndSave] { s->save(); openAndSave(); };
-			row.makeAcceptInputHandler(openAndSave);
-
-			auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPE NOW", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-			auto bracket = makeArrow(mWindow);
-			row.addElement(scrape_now, true);
-			row.addElement(bracket, false);
-			s->addRow(row);
-
-			mWindow->pushGui(s);
-	});
-	addEntry("UPDATE DATABASE", 0x777777FF, true, 
-		[this, openRefreshDatabase, importXMLAndClose] { 
+	addEntry("DATABASE", 0x777777FF, true, 
+		[this, openRefreshDatabase, importXMLAndClose, openScrapeNow] { 
 			auto s = new GuiSettings(mWindow, "UPDATE DATABASE");
 
 			// scan filesystem
@@ -97,14 +65,52 @@ GuiMenu::GuiMenu(Window* window,SystemData* system) : GuiComponent(window), mMen
 			row.addElement(bracket, false);
 			s->addRow(row);
 
+                        // open scraper
+                        row.elements.clear();
+                        row.makeAcceptInputHandler([this, openScrapeNow] { 
+				auto s = new GuiSettings(mWindow, "SCRAPER");
+
+				// scrape from
+				auto scraper_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "SCRAPE FROM", false);
+				std::vector<std::string> scrapers = getScraperList();
+				for(auto it = scrapers.begin(); it != scrapers.end(); it++)
+					scraper_list->add(*it, *it, *it == Settings::getInstance()->getString("Scraper"));
+
+				s->addWithLabel("SCRAPE FROM", scraper_list);
+				s->addSaveFunc([scraper_list] { Settings::getInstance()->setString("Scraper", scraper_list->getSelected()); });
+
+				// scrape ratings
+				auto scrape_ratings = std::make_shared<SwitchComponent>(mWindow);
+				scrape_ratings->setState(Settings::getInstance()->getBool("ScrapeRatings"));
+				s->addWithLabel("SCRAPE RATINGS", scrape_ratings);
+				s->addSaveFunc([scrape_ratings] { Settings::getInstance()->setBool("ScrapeRatings", scrape_ratings->getState()); });
+
+				// scrape now
+				ComponentListRow row;
+				std::function<void()> openAndSave = openScrapeNow;
+				openAndSave = [s, openAndSave] { s->save(); openAndSave(); };
+				row.makeAcceptInputHandler(openAndSave);
+
+				auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPE NOW", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+				auto bracket = makeArrow(mWindow);
+				row.addElement(scrape_now, true);
+				row.addElement(bracket, false);
+				s->addRow(row);
+
+				mWindow->pushGui(s);
+			});
+                        auto run_scanner = std::make_shared<TextComponent>(mWindow, "SCRAPER",Font::get(FONT_SIZE_MEDIUM), 0x777777FF); 
+			bracket = makeArrow(mWindow);
+			row.addElement(run_scanner, true);
+			row.addElement(bracket, false);
+			s->addRow(row);
+
 			// import XML
 			row.elements.clear();
-			row.makeAcceptInputHandler(importXMLAndClose);
+			row.makeAcceptInputHandler(importXMLAndClose); 	
 
 			auto import_xml = std::make_shared<TextComponent>(mWindow, "IMPORT FROM XML", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-			bracket = makeArrow(mWindow);
 			row.addElement(import_xml, true);
-			row.addElement(bracket, false);
 			s->addRow(row);
 
 			mWindow->pushGui(s);
@@ -253,9 +259,18 @@ bool GuiMenu::input(InputConfig* config, Input input)
 	if(GuiComponent::input(config, input))
 		return true;
 
-	if((config->isMappedTo("b", input) || config->isMappedTo("start", input) || config->isMappedTo("select", input)) && input.value != 0)
+	if((config->isMappedTo("b", input)) && input.value)
 	{
 		delete this;
+		return true;
+	}
+	
+	if((config->isMappedTo("select", input) || config->isMappedTo("start",input)) && input.value != 0)
+	{
+		// close everything
+		Window* window = mWindow;
+		while(window->peekGui() && window->peekGui() != ViewController::get())
+			delete window->peekGui();
 		return true;
 	}
 

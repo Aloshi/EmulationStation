@@ -7,7 +7,7 @@
 #include "components/OptionListComponent.h"
 #include "components/SwitchComponent.h"
 
-GuiRefreshDatabase::GuiRefreshDatabase(Window* window, SystemData* system) : GuiComponent(window),
+GuiRefreshDatabase::GuiRefreshDatabase(Window* window) : GuiComponent(window),
 	mMenu(window, "REFRESH DATA BASE")
 {
 	addChild(&mMenu);
@@ -15,6 +15,7 @@ GuiRefreshDatabase::GuiRefreshDatabase(Window* window, SystemData* system) : Gui
 
 	//add systems (If we are on a system, do it alone. Otherwise, do all)
 	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, "SCAN THESE SYSTEMS", true);
+        SystemData* system = ViewController::get()->getSystem();
 	for(auto it = SystemManager::getInstance()->getSystems().begin(); it != SystemManager::getInstance()->getSystems().end(); it++)
 	{
 		if(!(*it)->hasPlatformId(PlatformIds::PLATFORM_IGNORE))

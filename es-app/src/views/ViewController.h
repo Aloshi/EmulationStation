@@ -63,6 +63,10 @@ public:
 	};
 
 	inline const State& getState() const { return mState; }
+	SystemData* getSystem() const { 
+		if(mState.viewing != GAME_LIST) return nullptr; 
+		return mState.getSystem();
+        }
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 	virtual HelpStyle getHelpStyle() override;

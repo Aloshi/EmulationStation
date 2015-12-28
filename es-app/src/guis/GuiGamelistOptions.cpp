@@ -29,7 +29,17 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	mVolume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
 	mVolume->setValue((float)VolumeControl::getInstance()->getVolume());
 	mMenu.addWithLabel("SYSTEM VOLUME", mVolume);
+	// sort list by
+	mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
 
+	const std::vector<FileSort>& sorts = getFileSorts();
+	for(unsigned int i = 0; i < sorts.size(); i++)
+	{
+		const FileSort& sort = sorts.at(i);
+		mListSort->add(sort.description, i, i == Settings::getInstance()->getInt("SortTypeIndex"));
+	}
+
+	mMenu.addWithLabel("SORT GAMES BY", mListSort);
 	if (system)
 	{
 
@@ -60,17 +70,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		mMenu.addRow(row);
 */
 
-		// sort list by
-		mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
 
-		const std::vector<FileSort>& sorts = getFileSorts();
-		for(unsigned int i = 0; i < sorts.size(); i++)
-		{
-			const FileSort& sort = sorts.at(i);
-			mListSort->add(sort.description, i, i == Settings::getInstance()->getInt("SortTypeIndex"));
-		}
-
-		mMenu.addWithLabel("SORT GAMES BY", mListSort);
 
 		// edit game metadata
 		row.elements.clear();
@@ -82,7 +82,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 	addEntry("SETTINGS", 0x777777FF, true,
 		[this] {
-		auto s = new GuiMenu(mWindow, mSystem);
+		auto s = new GuiMenu(mWindow);
 		mWindow->pushGui(s);
 	});
 	addEntry("QUIT", 0x777777FF, true, 

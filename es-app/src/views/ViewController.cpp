@@ -274,7 +274,7 @@ bool ViewController::input(InputConfig* config, Input input)
 		// open menu
 		if(mState.viewing == GAME_LIST) 
 		{
-			mWindow->pushGui(new GuiGamelistOptions(mWindow, mState.system));
+			mWindow->pushGui(new GuiGamelistOptions(mWindow, mState.getSystem()));
 		} else {
 			mWindow->pushGui(new GuiGamelistOptions(mWindow, nullptr));
 		}

@@ -16,7 +16,7 @@ class SwitchComponent;
 class GuiRefreshDatabase : public GuiComponent
 {
 public:
-	GuiRefreshDatabase(Window* window, SystemData* system);
+	GuiRefreshDatabase(Window* window);
 
 	bool input(InputConfig* config, Input input) override;
 
