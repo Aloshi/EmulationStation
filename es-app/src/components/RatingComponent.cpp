@@ -129,7 +129,7 @@ bool RatingComponent::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
-		mValue += 1.f / NUM_RATING_STARS;
+		mValue += 1.f / (NUM_RATING_STARS * 2);
 		if(mValue > 1.0f)
 			mValue = 0.0f;
 
