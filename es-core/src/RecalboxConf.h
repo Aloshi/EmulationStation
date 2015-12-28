@@ -19,6 +19,7 @@ public:
     bool saveRecalboxConf();
 
     std::string get(const std::string &name);
+    std::string get(const std::string &name, const std::string &defaut);
 
     void set(const std::string &name, const std::string &value);
 
@@ -27,6 +28,7 @@ public:
     static RecalboxConf *getInstance();
 private:
     std::map<std::string, std::string> confMap;
+
 };
 
 

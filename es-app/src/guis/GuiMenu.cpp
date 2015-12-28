@@ -754,13 +754,12 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
     systemConfiguration->addWithLabel("GAME RATIO", ratio_choice);
     // smoothing
     auto smoothing_enabled = std::make_shared<SwitchComponent>(mWindow);
-    smoothing_enabled->setState(
-            RecalboxConf::getInstance()->get(systemData->getName() + ".smooth") == "1");
+    smoothing_enabled->setState(RecalboxConf::getInstance()->get(systemData->getName() + ".smooth", RecalboxConf::getInstance()->get("global.smooth")) == "1");
     systemConfiguration->addWithLabel("SMOOTH GAMES", smoothing_enabled);
     // rewind
     auto rewind_enabled = std::make_shared<SwitchComponent>(mWindow);
     rewind_enabled->setState(
-            RecalboxConf::getInstance()->get(systemData->getName() + ".rewind") == "1");
+            RecalboxConf::getInstance()->get(systemData->getName() + ".rewind", RecalboxConf::getInstance()->get("global.rewind")) == "1");
     systemConfiguration->addWithLabel("REWIND", rewind_enabled);
 
 
