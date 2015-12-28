@@ -44,16 +44,18 @@ MetaDataListType fileTypeToMetaDataType(FileType type)
 }
 
 std::vector<FileSort> sFileSorts = boost::assign::list_of
-	(FileSort("Alphabetical, asc", "ORDER BY LOWER(name)"))
-	(FileSort("Alphabetical, desc", "ORDER BY LOWER(name) DESC"))
-	(FileSort("Rating, asc", "ORDER BY rating, LOWER(name)"))
-	(FileSort("Rating, desc", "ORDER BY rating DESC, LOWER(name)"))
-	(FileSort("Release, asc", "ORDER BY releasedate IS NULL, releasedate, LOWER(name)"))
-	(FileSort("Release, desc", "ORDER BY releasedate DESC, LOWER(name)"))
-	(FileSort("Last Played, asc", "ORDER BY lastplayed IS NULL, lastplayed, LOWER(name)"))
-	(FileSort("Last Played, desc", "ORDER BY lastplayed DESC, LOWER(name)"))
-	(FileSort("Times Played, asc", "ORDER BY playcount, LOWER(name)"))
-	(FileSort("Times Played, desc", "ORDER BY playcount DESC, LOWER(name)"));
+	(FileSort("Alphabetical", "ORDER BY LOWER(name)"))
+	(FileSort("Reverse Alphabetical", "ORDER BY LOWER(name) DESC"))
+	(FileSort("Highest Rating", "ORDER BY rating DESC, LOWER(name)"))
+	(FileSort("Lowest Rating", "ORDER BY rating, LOWER(name)"))
+	(FileSort("Lowest Rating (Non-zero)", "ORDER BY case when rating = 0 then 1 else 0 end, rating, LOWER(name)"))
+	(FileSort("Chronological", "ORDER BY releasedate IS NULL, releasedate, LOWER(name)"))
+	(FileSort("Reverse Chronological", "ORDER BY releasedate DESC, LOWER(name)"))
+	(FileSort("Played Recently", "ORDER BY lastplayed DESC, LOWER(name)"))
+	(FileSort("Played Long Ago", "ORDER BY lastplayed IS NULL, lastplayed, LOWER(name)"))
+	(FileSort("Most Played", "ORDER BY playcount DESC, LOWER(name)"))
+	(FileSort("Least Played", "ORDER BY playcount, LOWER(name)"))
+	(FileSort("Least Played (Non-zero)", "ORDER BY case when playcount = 0 then 1 else 0 end, playcount, LOWER(name)"));
 
 const std::vector<FileSort>& getFileSorts()
 {
