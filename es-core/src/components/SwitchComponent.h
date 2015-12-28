@@ -16,6 +16,7 @@ public:
 
 	bool getState() const;
 	void setState(bool state);
+	std::string getValue()  const override;
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 

@@ -52,7 +52,7 @@ Some metadata is also marked as "statistic" - these are kept track of by ES and 
 * `players` - integer, the number of players the game supports.
 * `playcount` - statistic, integer, the number of times this game has been played
 * `lastplayed` - statistic, datetime, the last date and time this game was played.
-* `favorite` - string, yes / no is this a favorite.
+* `favorite` - bool, true / false is this a favorite.
 
 
 #### `<folder>`

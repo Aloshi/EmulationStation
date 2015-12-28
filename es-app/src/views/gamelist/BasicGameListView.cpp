@@ -43,7 +43,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	const SystemData* systemData = root->getSystem();
 	mHeaderText.setText(systemData ? systemData->getFullName() : root->getCleanName());
 
-	bool hasFavorites = false;
+	bool favoritesOnly = false;
 
 	if (Settings::getInstance()->getBool("FavoritesOnly"))
 	{
@@ -51,9 +51,9 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 		{
 			if ((*it)->getType() == GAME)
 			{
-				if ((*it)->metadata.get("favorite").compare("yes") == 0)
+				if ((*it)->metadata.get("favorite").compare("true") == 0)
 				{
-					hasFavorites = true;
+					favoritesOnly = true;
 					break;
 				}
 			}
@@ -66,7 +66,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	if(! Settings::getInstance()->getBool("FavoritesOnly")){
 		for(auto it = files.begin(); it != files.end(); it++)
 		{
-			if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("yes") == 0)
+			if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("true") == 0)
 			{
 				mList.add("\uF006 " + (*it)->getName(), *it, ((*it)->getType() == FOLDER)); // FIXME Folder as favorite ?
 			}
@@ -75,19 +75,22 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		if (Settings::getInstance()->getBool("FavoritesOnly") && hasFavorites)
+		if (favoritesOnly)
 		{
 			if ((*it)->getType() == GAME)
 			{
-				if ((*it)->metadata.get("favorite").compare("yes") == 0)
-				{
-					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				if ((*it)->metadata.get("hidden").compare("yes") != 0) {
+					if ((*it)->metadata.get("favorite").compare("true") == 0) {
+						mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+					}
 				}
 			}
 		}
 		else
 		{
-			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+			if ((*it)->metadata.get("hidden").compare("true") != 0){
+				mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+			}
 		}
 	}
 }
@@ -95,6 +98,13 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 FileData* BasicGameListView::getCursor()
 {
 	return mList.getSelected();
+}
+void BasicGameListView::setCursorIndex(int cursor){
+	mList.setCursorIndex(cursor);
+}
+
+int BasicGameListView::getCursorIndex(){
+	return mList.getCursorIndex();
 }
 
 void BasicGameListView::setCursor(FileData* cursor)

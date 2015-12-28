@@ -21,9 +21,10 @@ MetaDataDecl gameDecls[] = {
 	{"publisher",	MD_STRING,				"unknown",			false,		"publisher",			"enter game publisher"},
 	{"genre",		MD_STRING,				"unknown",			false,		"genre",				"enter game genre"},
 	{"players",		MD_INT,					"1",				false,		"players",				"enter number of players"},
-	{"favorite",	MD_STRING,				"no",				false,		"favorite",				"enter favorite"},
+	{"favorite",	MD_BOOL,				"false",			false,		"favorite",				"enter favorite"},
 	{"region",		MD_STRING,				"",					false,		"region",				"enter region"},
 	{"romtype",		MD_STRING,				"Original",			false,		"romtype",				"enter romtype"},
+	{"hidden",		MD_BOOL,				"false",			false,		"hidden",				"set hidden"},
 	{"playcount",	MD_INT,					"0",				true,		"play count",			"enter number of times played"},
 	{"lastplayed",	MD_TIME,				"0", 				true,		"last played",			"enter last played date"}
 };

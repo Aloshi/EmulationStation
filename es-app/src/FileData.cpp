@@ -105,7 +105,7 @@ std::vector<FileData*> FileData::getFavoritesRecursive(unsigned int typeMask) co
 
 	for (auto it = files.begin(); it != files.end(); it++)
 	{
-		if ((*it)->metadata.get("favorite").compare("yes") == 0)
+		if ((*it)->metadata.get("favorite").compare("true") == 0)
 		{
 			out.push_back(*it);
 		}
