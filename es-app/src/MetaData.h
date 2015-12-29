@@ -90,12 +90,12 @@ private:
 template<>
 inline boost::posix_time::ptime MetaDataMap::get(const char* key) const
 {
-	return string_to_ptime(mMap.at(key), LEGACY_TIME_STRING_FORMAT);
+	return string_to_ptime(mMap.at(key), SQLITE_TIME_STRING_FORMAT);
 }
 
 template<>
 inline void MetaDataMap::set(const char* key, const boost::posix_time::ptime& time)
 {
-	mMap[key] = boost::posix_time::to_iso_string(time);
+	mMap[key] = ptime_to_string(time, SQLITE_TIME_STRING_FORMAT);
 }
 

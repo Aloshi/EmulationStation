@@ -774,7 +774,7 @@ void GamelistDB::importXML(const SystemData* system, const std::string& xml_path
 					
 					// if it's a time/date, convert it into the SQLite format
 					if(iter->type == MD_TIME || iter->type == MD_DATE)
-						value = ptime_to_string(string_to_ptime(value, LEGACY_TIME_STRING_FORMAT), LEGACY_TIME_STRING_FORMAT);
+						value = ptime_to_string(string_to_ptime(value, LEGACY_TIME_STRING_FORMAT), SQLITE_TIME_STRING_FORMAT);
 
 					mdl.set(iter->key, value);
 				}
@@ -828,7 +828,7 @@ void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path
 					// convert from SQLite time format to legacy gamelist.xml time format
 					if(it->type == MD_TIME || it->type == MD_DATE)
 					{
-						temp = ptime_to_string(string_to_ptime(value, LEGACY_TIME_STRING_FORMAT), LEGACY_TIME_STRING_FORMAT);
+						temp = ptime_to_string(string_to_ptime(value, SQLITE_TIME_STRING_FORMAT), LEGACY_TIME_STRING_FORMAT);
 						value = temp.c_str();
 					}
 					break;
