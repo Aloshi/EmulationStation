@@ -46,18 +46,18 @@ MetaDataListType fileTypeToMetaDataType(FileType type)
 }
 
 std::vector<FileSort> sFileSorts = boost::assign::list_of
-	(FileSort("Alphabetical", "ORDER BY LOWER(name)"))
-	(FileSort("Reverse Alphabetical", "ORDER BY LOWER(name) DESC"))
-	(FileSort("Highest Rating", "ORDER BY rating DESC, LOWER(name)"))
-	(FileSort("Lowest Rating", "ORDER BY rating, LOWER(name)"))
+	(FileSort("Alphabetical", "LOWER(name)"))
+	(FileSort("Reverse Alphabetical", "LOWER(name) DESC"))
+	(FileSort("Highest Rating", "rating DESC, LOWER(name)"))
+	(FileSort("Lowest Rating", "rating, LOWER(name)"))
 	(FileSort("Lowest Rating (Non-zero)", "ORDER BY case when rating = 0 then 1 else 0 end, rating, LOWER(name)"))
-	(FileSort("Chronological", "ORDER BY releasedate IS NULL, releasedate, LOWER(name)"))
-	(FileSort("Reverse Chronological", "ORDER BY releasedate DESC, LOWER(name)"))
-	(FileSort("Played Recently", "ORDER BY lastplayed DESC, LOWER(name)"))
-	(FileSort("Played Long Ago", "ORDER BY lastplayed IS NULL, lastplayed, LOWER(name)"))
-	(FileSort("Most Played", "ORDER BY playcount DESC, LOWER(name)"))
-	(FileSort("Least Played", "ORDER BY playcount, LOWER(name)"))
-	(FileSort("Least Played (Non-zero)", "ORDER BY case when playcount = 0 then 1 else 0 end, playcount, LOWER(name)"));
+	(FileSort("Chronological", "releasedate IS NULL, releasedate, LOWER(name)"))
+	(FileSort("Reverse Chronological", "releasedate DESC, LOWER(name)"))
+	(FileSort("Played Recently", "lastplayed DESC, LOWER(name)"))
+	(FileSort("Played Long Ago", "lastplayed IS NULL, lastplayed, LOWER(name)"))
+	(FileSort("Most Played", "playcount DESC, LOWER(name)"))
+	(FileSort("Least Played", "playcount, LOWER(name)"))
+	(FileSort("Least Played (Non-zero)", "case when playcount = 0 then 1 else 0 end, playcount, LOWER(name)"));
 
 const std::vector<FileSort>& getFileSorts()
 {
@@ -552,7 +552,6 @@ void GamelistDB::removeEntry(const FileData& file)
 //No check to verify the truth of that flag is performed.
 void GamelistDB::removeNonexisting(const SystemData* system)
 {
-	const std::string& relativeTo = system->getStartPath();
 	SQLPreparedStmt deleteStmt(mDB, "DELETE FROM files WHERE systemid = ?1 AND fileexists = '0'");
 	sqlite3_bind_text(deleteStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 
@@ -622,8 +621,50 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	stmt.step_expected(SQLITE_DONE);
 }
 
+
+std::vector<std::string> GamelistDB::getFileTags(const std::string& fileID, const std::string& systemID) const
+{
+	SQLPreparedStmt stmt(mDB, "SELECT tag FROM tagtable WHERE fileid = ?1 AND systemid = ?2");
+	sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+
+	std::vector<std::string> tags;
+
+	while(stmt.step() != SQLITE_DONE)
+	{
+		tags.push_back((const char*)sqlite3_column_text(stmt,0));
+	}
+
+	return tags;
+}
+
+
+void GamelistDB::setFileTag(const std::string& fileID, const std::string& systemID, const std::string& tagID, bool value)
+{
+	if(value)
+        {
+		SQLPreparedStmt stmt(mDB, "INSERT OR IGNORE INTO tagtable VALUES ( ?1, ?2, ?3 )");
+		sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 3, tagID.c_str(), tagID.size(), SQLITE_STATIC);
+
+		SQLTransaction transaction(mDB);
+		stmt.step_expected(SQLITE_DONE);
+		transaction.commit();
+        }else{
+		SQLPreparedStmt stmt(mDB, "DELETE FROM tagtable where fileid = ?1 AND systemid = ?2 AND tag = ?3");
+		sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 3, tagID.c_str(), tagID.size(), SQLITE_STATIC);
+
+		SQLTransaction transaction(mDB);
+		stmt.step_expected(SQLITE_DONE);
+		transaction.commit();
+        }
+}
+
 std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, SystemData* system, 
-	bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType)
+	bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType)
 {
 	const std::string& systemID = system->getName();
 	std::vector<FileData> children;
@@ -636,12 +677,14 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 		ss << "AND indir(fileid, ?2) ";
 
 	if(!includeFolders)
-		ss << "AND NOT filetype = " << FileType::FOLDER << " ";
+		ss << "AND NOT filetype not in ( " << FileType::FOLDER << "," << FileType::FILTER << ") ";
 
+	ss << " ORDER BY ";
+        if(foldersFirst) ss << "CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
 	if(sortType)
 		ss << sortType->sql;
 	else
-		ss << "ORDER BY LOWER(name)";
+		ss << "LOWER(name)";
 
 	std::string query = ss.str();
 	SQLPreparedStmt stmt(mDB, query);
@@ -660,7 +703,7 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 }
 
 std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID, SystemData* system, 
-	bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType)
+	bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType)
 {
 	const std::string& systemID = system->getName();
 	std::vector<FileData> children;
@@ -696,10 +739,12 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 	if(!includeFolders)
 		ss << "AND NOT filetype = " << FileType::FOLDER << " ";
 
+	ss << " ORDER BY ";
+        if(foldersFirst) ss << "CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
 	if(sortType)
 		ss << sortType->sql;
 	else
-		ss << "ORDER BY LOWER(name)";
+		ss << "LOWER(name)";
 
 	std::string query = ss.str();
 	try

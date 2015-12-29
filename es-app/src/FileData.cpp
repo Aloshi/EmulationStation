@@ -124,6 +124,6 @@ std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const 
 		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
 
 	if(mType == FILTER)
-		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, false, includeFolders, sort);
-	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, sort);
+		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, false, includeFolders, true, sort);
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, true, sort);
 }

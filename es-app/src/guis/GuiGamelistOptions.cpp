@@ -199,7 +199,7 @@ void GuiGamelistOptions::openFilterAddStart()
 	auto updateVal = [this, file](const std::string& filterid) { 
           this->openFilterAdd(file,filterid);
         };
-	mWindow->pushGui(new GuiTextEditPopup(mWindow, "ENTER UNIQUE FILTER ID", "", updateVal, false));
+	mWindow->pushGui(new GuiTextEditPopup(mWindow, "ENTER FILTER'S FILE NAME", "", updateVal, false));
 	
 
 	

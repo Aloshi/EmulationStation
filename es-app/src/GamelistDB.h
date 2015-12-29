@@ -52,14 +52,18 @@ public:
 	
 	// returns all metadata for a given fileID
 	MetaDataMap getFileData(const std::string& fileID, const std::string& systemID) const;
+	// tags are a separate notion from meta data
+	std::vector<std::string> getFileTags(const std::string& fileID, const std::string& systemID) const;
 
 	// Sets all metadata for a given fileID (overwrites existing data).
 	void setFileData(const std::string& fileID, const std::string& systemID, FileType type, const MetaDataMap& metadata);
+	// If value is true, add the tag. If the value is false, remove it.
+	void setFileTag(const std::string& fileID, const std::string& systemID, const std::string& tagID, bool value);
 
 	// returns either all immediate children (immediateChildrenOnly) OR 
 	// all children, children of children, etc. of file ID (immedateChildrenOnly = false)
 	std::vector<FileData> getChildrenOf(const std::string& fileID, SystemData* system, 
-		bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType = NULL);
+		bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType = NULL);
 
 	// reads and runs a filter from the database.
 	// filters support a filesystem like hierarchy reusing a lot of the code
@@ -67,7 +71,7 @@ public:
 	// A filters are opaque to getting children.
 	//(You'll need to call this again to get "grandchildren")
 	std::vector<FileData> getChildrenOfFilter(const std::string& fileID, SystemData* system, 
-		bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType = NULL);
+		bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType = NULL);
 
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);

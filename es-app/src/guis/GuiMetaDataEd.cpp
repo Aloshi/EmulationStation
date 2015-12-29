@@ -12,6 +12,8 @@
 #include "components/DateTimeComponent.h"
 #include "components/RatingComponent.h"
 #include "guis/GuiTextEditPopup.h"
+#include "SystemManager.h"
+
 
 using namespace Eigen;
 
@@ -128,6 +130,30 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file,
 		ed->setValue(mMetaData.get(iter->key));
 		mEditors.push_back(ed);
 	}
+	auto addTagFunc= [this, file](const std::string& tag)  { 
+		SystemManager::getInstance()->database().setFileTag(file.getFileID(),file.getSystemID(),tag,true);
+	};
+	auto removeTagFunc= [this, file](const std::string& tag)  { 
+		SystemManager::getInstance()->database().setFileTag(file.getFileID(),file.getSystemID(),tag,false);
+	};
+	ComponentListRow row;
+	row.makeAcceptInputHandler([this, file, addTagFunc] {
+		mWindow->pushGui(new GuiTextEditPopup(mWindow, "ENTER NEW TAG", "", addTagFunc, false));
+	});
+	auto addTag = std::make_shared<TextComponent>(mWindow, "ADD TAG",Font::get(FONT_SIZE_MEDIUM), 0x777777FF); 
+	auto bracket = makeArrow(mWindow);
+	row.addElement(addTag, true);
+	row.addElement(bracket, false);
+	mList->addRow(row);
+	row.elements.clear();
+	row.makeAcceptInputHandler([this, file, removeTagFunc] {
+		mWindow->pushGui(new GuiTextEditPopup(mWindow, "ENTER TAG TO REMOVE", "", removeTagFunc, false));
+	});
+	auto removeTag = std::make_shared<TextComponent>(mWindow, "REMOVE TAG",Font::get(FONT_SIZE_MEDIUM), 0x777777FF); 
+	bracket = makeArrow(mWindow);
+	row.addElement(removeTag, true);
+	row.addElement(bracket, false);
+	mList->addRow(row);
 
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 
