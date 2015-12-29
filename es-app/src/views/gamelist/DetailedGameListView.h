@@ -19,6 +19,7 @@ public:
 
 protected:
 	virtual void launch(FileData& game) override;
+	virtual void populateList(const std::vector<FileData>& files) override;
 
 private:
 	void updateInfoPanel();

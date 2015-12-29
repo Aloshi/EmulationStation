@@ -266,6 +266,11 @@ void DetailedGameListView::onMetaDataChanged(const FileData& file)
 	ISimpleGameListView::onMetaDataChanged(file);
 }
 
+void DetailedGameListView::populateList(const std::vector<FileData>& files)
+{
+	BasicGameListView::populateList(files);
+	updateInfoPanel();
+}
 std::vector<TextComponent*> DetailedGameListView::getMDLabels()
 {
 	std::vector<TextComponent*> ret;
