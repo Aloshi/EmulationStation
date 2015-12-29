@@ -3,6 +3,7 @@
 #include "components/MenuComponent.h"
 #include "components/OptionListComponent.h"
 #include "components/SliderComponent.h"
+#include "components/SwitchComponent.h"
 #include "GamelistDB.h"
 
 class IGameListView;
@@ -32,6 +33,7 @@ private:
 	std::shared_ptr<SortList> mListSort;
         
 	std::shared_ptr<SliderComponent> mVolume;
+        std::shared_ptr<SwitchComponent> mFoldersFirst;
 	
 	SystemData* mSystem;
 	IGameListView* getGamelist();

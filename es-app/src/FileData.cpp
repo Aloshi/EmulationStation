@@ -112,10 +112,12 @@ std::vector<FileData> FileData::getChildren(const FileSort* sort) const
 	if(sort == NULL)
 		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
 
+	bool foldersFirst = Settings::getInstance()->getBool("SortFoldersFirst");
+
 	if(mType == FILTER)
 		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, true, true, true, sort);
 
-	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true, true, sort);
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true, foldersFirst, sort);
 }
 
 std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const FileSort* sort) const
@@ -123,7 +125,9 @@ std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const 
 	if(sort == NULL)
 		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
 
+	bool foldersFirst = Settings::getInstance()->getBool("SortFoldersFirst");
+
 	if(mType == FILTER)
 		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, false, includeFolders, true, sort);
-	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, true, sort);
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, foldersFirst, sort);
 }

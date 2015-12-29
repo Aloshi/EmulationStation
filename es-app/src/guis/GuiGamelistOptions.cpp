@@ -41,6 +41,9 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	}
 
 	mMenu.addWithLabel("SORT GAMES BY", mListSort);
+	mFoldersFirst = std::make_shared<SwitchComponent>(mWindow);
+	mFoldersFirst->setState(Settings::getInstance()->getBool("SortFoldersFirst"));
+	mMenu.addWithLabel("SORT FOLDERS FIRST", mFoldersFirst);
 	if (system)
 	{
 
@@ -149,9 +152,12 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 GuiGamelistOptions::~GuiGamelistOptions()
 {
 	// apply sort if it changed
-	if(mSystem && mListSort->getSelected() != Settings::getInstance()->getInt("SortTypeIndex"))
+	bool dirty = mListSort->getSelected() != Settings::getInstance()->getInt("SortTypeIndex");
+	dirty = dirty || (mFoldersFirst->getState() != Settings::getInstance()->getBool("SortFoldersFirst"));
+	if(dirty)
 	{
 		Settings::getInstance()->setInt("SortTypeIndex", mListSort->getSelected());
+		Settings::getInstance()->setBool("SortFoldersFirst", mFoldersFirst->getState());
 		ViewController::get()->onFilesChanged(NULL);
 	}
 	VolumeControl::getInstance()->setVolume((int)round(mVolume->getValue()));
