@@ -140,7 +140,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file,
         if (mRemoveFunc)
         {
 		auto removeAndClose = [&] { mRemoveFunc(); delete this; };
-		auto removeBtnFunc = [this, removeAndClose] { mWindow->pushGui(new GuiMsgBox(mWindow, "THIS WILL REMOVE THIS ENTRY FROM THE DATABASE, BUT WILL LEAVE THE FILE ON THE FILE SYSTEM\nARE YOU SURE?", "YES", removeAndClose, "NO", nullptr)); };
+		auto removeBtnFunc = [this, removeAndClose] { mWindow->pushGui(new GuiMsgBox(mWindow, "THIS WILL REMOVE THIS ENTRY FROM THE DATABASE, BUT WILL LEAVE THE FILE ON THE FILE SYSTEM.\nARE YOU SURE?", "YES", removeAndClose, "NO", nullptr)); };
 		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "REMOVE", "remove", removeBtnFunc));
 	}
 	if(mDeleteFunc)

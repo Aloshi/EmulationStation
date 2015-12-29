@@ -30,7 +30,7 @@ MetaDataDecl filterDecls[] = {
 	{"desc",		MD_MULTILINE_STRING,	"", 				false,		"description",			"enter description"},
 	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
 	{"thumbnail",	MD_IMAGE_PATH,			"", 				false,		"thumbnail",			"enter path to thumbnail"},
-        {"genre",	MD_STRING,			"", 				false,		"query",			"enter the query constraints"},
+        {"genre",	MD_STRING,			"", 				false,		"query",			"enter query"},
 };
 
 std::map< MetaDataListType, std::vector<MetaDataDecl> > MDD_map = boost::assign::map_list_of
