@@ -36,7 +36,8 @@ struct MetaDataDecl
 enum MetaDataListType
 {
 	GAME_METADATA,
-	FOLDER_METADATA
+	FOLDER_METADATA,
+        FILTER_METADATA,
 };
 
 const std::map< MetaDataListType, std::vector<MetaDataDecl> >& getMDDMap();

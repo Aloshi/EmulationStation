@@ -24,12 +24,22 @@ MetaDataDecl folderDecls[] = {
 	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
 	{"thumbnail",	MD_IMAGE_PATH,			"", 				false,		"thumbnail",			"enter path to thumbnail"},
 };
+// because of that subset constraint, note the abuse of the genre field
+MetaDataDecl filterDecls[] = { 
+	{"name",		MD_STRING,				"", 				false,		"name",					"enter game name"}, 
+	{"desc",		MD_MULTILINE_STRING,	"", 				false,		"description",			"enter description"},
+	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
+	{"thumbnail",	MD_IMAGE_PATH,			"", 				false,		"thumbnail",			"enter path to thumbnail"},
+        {"genre",	MD_STRING,			"", 				false,		"query",			"enter the query constraints"},
+};
 
 std::map< MetaDataListType, std::vector<MetaDataDecl> > MDD_map = boost::assign::map_list_of
 	(GAME_METADATA, 
 		std::vector<MetaDataDecl>(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0])))
 	(FOLDER_METADATA, 
-		std::vector<MetaDataDecl>(folderDecls, folderDecls + sizeof(folderDecls) / sizeof(folderDecls[0])));
+		std::vector<MetaDataDecl>(folderDecls, folderDecls + sizeof(folderDecls) / sizeof(folderDecls[0])))
+	(FILTER_METADATA, 
+		std::vector<MetaDataDecl>(filterDecls, filterDecls + sizeof(filterDecls) / sizeof(filterDecls[0])));
 const std::map<MetaDataListType, std::vector<MetaDataDecl> >& getMDDMap()
 {
 	return MDD_map;

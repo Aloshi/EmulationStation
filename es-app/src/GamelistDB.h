@@ -61,6 +61,14 @@ public:
 	std::vector<FileData> getChildrenOf(const std::string& fileID, SystemData* system, 
 		bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType = NULL);
 
+	// reads and runs a filter from the database.
+	// filters support a filesystem like hierarchy reusing a lot of the code
+	// from getChildrenOf().
+	// A filters are opaque to getting children.
+	//(You'll need to call this again to get "grandchildren")
+	std::vector<FileData> getChildrenOfFilter(const std::string& fileID, SystemData* system, 
+		bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType = NULL);
+
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);
 

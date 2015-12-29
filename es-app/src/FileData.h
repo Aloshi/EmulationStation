@@ -11,7 +11,8 @@ struct FileSort;
 enum FileType
 {
 	GAME = 1,
-	FOLDER = 2
+	FOLDER = 2,
+        FILTER = 3
 };
 
 // Used for loading/saving gamelist.xml.

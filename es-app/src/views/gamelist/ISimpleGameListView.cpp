@@ -71,14 +71,15 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				Sound::getFromTheme(getTheme(), getName(), "launch")->play();
 				launch(cursor);
 			}else{
-				// it's a folder
-				if(cursor.getChildren().size() > 0)
+				// it's a folder or filter
+				auto children = cursor.getChildren();
+				if(children.size() > 0)
 				{
 					mCursorStack.push(cursor);
-					populateList(cursor.getChildren());
+					populateList(children);
 				}
 			}
-				
+
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{

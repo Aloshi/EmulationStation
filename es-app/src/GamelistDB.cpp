@@ -37,6 +37,8 @@ MetaDataListType fileTypeToMetaDataType(FileType type)
 		return GAME_METADATA;
 	case FOLDER:
 		return FOLDER_METADATA;
+        case FILTER:
+                return FILTER_METADATA;
 	}
 
 	assert(false);
@@ -492,7 +494,7 @@ void GamelistDB::updateExists(const SystemData* system)
 {
 	const std::string& relativeTo = system->getStartPath();
 
-	SQLPreparedStmt readStmt(mDB, "SELECT fileid,fileexists FROM files WHERE systemid = ?1");
+	SQLPreparedStmt readStmt(mDB, "SELECT fileid,fileexists,filtetype FROM files WHERE systemid = ?1");
 	sqlite3_bind_text(readStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 	
 	SQLPreparedStmt updateStmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
@@ -525,6 +527,7 @@ void GamelistDB::updateExists(const FileData& file)
 {
 	SQLPreparedStmt stmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
 	bool exists = fs::exists(fileIDToPath(file.getFileID(), file.getSystem()));
+        if(file.getType() == FILTER) exists = true;
 	sqlite3_bind_int(stmt, 1, exists);
 	sqlite3_bind_text(stmt, 2, file.getFileID().c_str(), file.getFileID().size(), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 3, file.getSystem()->getName().c_str(), file.getSystem()->getName().size(), SQLITE_STATIC);
@@ -621,7 +624,7 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	std::vector<FileData> children;
 
 	std::stringstream ss;
-	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1 AND fileexists = 1 ";
+	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1";
 	if(immediateChildrenOnly)
 		ss << "AND inimmediatedir(fileid, ?2) ";
 	else
@@ -647,6 +650,71 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 		FileType filetype = (FileType)sqlite3_column_int(stmt, 2);
 		children.push_back(FileData(fileid, system, filetype, name ? name : ""));
 	}
+
+	return children;
+}
+
+std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID, SystemData* system, 
+	bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType)
+{
+	const std::string& systemID = system->getName();
+	std::vector<FileData> children;
+        //Unfortunate round trip, since the metadata is maintained at the UI level.
+        //Also note the abuse of the genre column.
+        SQLPreparedStmt readStmt(mDB, "SELECT genre FROM files WHERE fileid = ?1 AND systemid = ?2 and filetype = 3");
+	sqlite3_bind_text(readStmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+	sqlite3_bind_text(readStmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+
+        std::string query_additions;
+        while(readStmt.step() != SQLITE_DONE)
+	{
+		query_additions = std::string((const char*)sqlite3_column_text(readStmt, 0));
+	}
+
+	std::stringstream ss;
+	//Use the indir logic to support filters having subfilters
+	//A subfilter may return more entries than the parent!
+	//The user can handle making sure subfilters make subsets.
+	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1 AND ((";
+	if(immediateChildrenOnly)
+		ss << "inimmediatedir(fileid, ?2) ";
+	else
+		ss << "indir(fileid, ?2) ";
+
+	ss << ")";
+
+	if(!query_additions.empty())
+		ss << " OR (" << query_additions << ")";
+
+	ss << ")";
+
+	if(!includeFolders)
+		ss << "AND NOT filetype = " << FileType::FOLDER << " ";
+
+	if(sortType)
+		ss << sortType->sql;
+	else
+		ss << "ORDER BY LOWER(name)";
+
+	std::string query = ss.str();
+	try
+	{
+		SQLPreparedStmt stmt(mDB, query);
+
+		sqlite3_bind_text(stmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC); // systemid
+		sqlite3_bind_text(stmt, 2, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+
+		while(stmt.step() != SQLITE_DONE)
+		{
+			const char* fileid = (const char*)sqlite3_column_text(stmt, 0);
+			const char* name = (const char*)sqlite3_column_text(stmt, 1);
+			FileType filetype = (FileType)sqlite3_column_int(stmt, 2);
+			children.push_back(FileData(fileid, system, filetype, name ? name : ""));
+		}
+	}catch(...){
+		//statement failed, likely to do to syntax in the filter.
+		//we'll just return the empty children vector.
+        }
 
 	return children;
 }
