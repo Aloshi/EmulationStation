@@ -14,6 +14,8 @@
 #include "Settings.h"
 #include "FileSorts.h"
 #include "Util.h"
+#include <boost/thread.hpp>
+#include <boost/asio/io_service.hpp>
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -186,10 +188,101 @@ std::vector<std::string> readList(const std::string& str, const char* delims = "
 	return ret;
 }
 
+void createSystem(pugi::xml_node * systemsNode,std::vector<SystemData*> * systems, int index ){
+	std::string name, fullname, path, cmd, themeFolder;
+	PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
+
+	int myIndex = 0;
+	pugi::xml_node * system;
+	for(pugi::xml_node systemIn = systemsNode->child("system"); systemIn; systemIn = systemIn.next_sibling("system"))
+	{
+		if(myIndex >= index) {
+			system = &(systemIn);
+			break;
+		}
+		myIndex++;
+	}
+	name = system->child("name").text().get();
+	fullname = system->child("fullname").text().get();
+	path = system->child("path").text().get();
+
+	// convert extensions list from a string into a vector of strings
+	std::vector<std::string> extensions = readList(system->child("extension").text().get());
+
+	cmd = system->child("command").text().get();
+
+	// platform id list
+	const char* platformList = system->child("platform").text().get();
+	std::vector<std::string> platformStrs = readList(platformList);
+	std::vector<PlatformIds::PlatformId> platformIds;
+	for(auto it = platformStrs.begin(); it != platformStrs.end(); it++)
+	{
+		const char* str = it->c_str();
+		PlatformIds::PlatformId platformId = PlatformIds::getPlatformId(str);
+
+		if(platformId == PlatformIds::PLATFORM_IGNORE)
+		{
+			// when platform is ignore, do not allow other platforms
+			platformIds.clear();
+			platformIds.push_back(platformId);
+			break;
+		}
+
+		// if there appears to be an actual platform ID supplied but it didn't match the list, warn
+		if(str != NULL && str[0] != '\0' && platformId == PlatformIds::PLATFORM_UNKNOWN)
+		LOG(LogWarning) << "  Unknown platform for system \"" << name << "\" (platform \"" << str << "\" from list \"" << platformList << "\")";
+		else if(platformId != PlatformIds::PLATFORM_UNKNOWN)
+			platformIds.push_back(platformId);
+	}
+
+	// theme folder
+	themeFolder = system->child("theme").text().as_string(name.c_str());
+
+	//validate
+	if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
+	{
+		LOG(LogError) << "System \"" << name << "\" is missing name, path, extension, or command!";
+		return;
+	}
+
+	//convert path to generic directory seperators
+	boost::filesystem::path genericPath(path);
+	path = genericPath.generic_string();
+
+	// emulators and cores
+	std::map<std::string, std::vector<std::string>*> * systemEmulators = new std::map<std::string, std::vector<std::string>*>();
+	pugi::xml_node emulatorsNode = system->child("emulators");
+	for(pugi::xml_node emuNode = emulatorsNode.child("emulator"); emuNode; emuNode = emuNode.next_sibling("emulator")) {
+		std::string emulatorName = emuNode.attribute("name").as_string();
+		(*systemEmulators)[emulatorName] = new std::vector<std::string>();
+		pugi::xml_node coresNode = emuNode.child("cores");
+		for (pugi::xml_node coreNode = coresNode.child("core"); coreNode; coreNode = coreNode.next_sibling("core")) {
+			std::string corename = coreNode.text().as_string();
+			(*systemEmulators)[emulatorName]->push_back(corename);
+		}
+	}
+
+
+	SystemData* newSys = new SystemData(name,
+										fullname,
+										path, extensions,
+										cmd, platformIds,
+										themeFolder,
+										systemEmulators);
+	if(newSys->getRootFolder()->getChildren().size() == 0)
+	{
+		LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
+		delete newSys;
+	}else{
+		systems->push_back(newSys);
+	}
+}
+
 //creates systems from information located in a config file
 bool SystemData::loadConfig()
 {
 	deleteSystems();
+
 
 	std::string path = getConfigPath(false);
 
@@ -220,90 +313,27 @@ bool SystemData::loadConfig()
 		LOG(LogError) << "es_systems.cfg is missing the <systemList> tag!";
 		return false;
 	}
-
+	boost::asio::io_service ioService;
+	boost::thread_group threadpool;
+	boost::asio::io_service::work work(ioService);
+	std::vector<boost::thread *> threads;
+	for (int i = 0; i < 4; i++) {
+		threadpool.create_thread(
+				boost::bind(&boost::asio::io_service::run, &ioService)
+		);
+	}
+	int index = 0;
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
-		std::string name, fullname, path, cmd, themeFolder;
-		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
-		name = system.child("name").text().get();
-		fullname = system.child("fullname").text().get();
-		path = system.child("path").text().get();
-
-		// convert extensions list from a string into a vector of strings
-		std::vector<std::string> extensions = readList(system.child("extension").text().get());
-
-		cmd = system.child("command").text().get();
-
-		// platform id list
-		const char* platformList = system.child("platform").text().get();
-		std::vector<std::string> platformStrs = readList(platformList);
-		std::vector<PlatformIds::PlatformId> platformIds;
-		for(auto it = platformStrs.begin(); it != platformStrs.end(); it++)
-		{
-			const char* str = it->c_str();
-			PlatformIds::PlatformId platformId = PlatformIds::getPlatformId(str);
-			
-			if(platformId == PlatformIds::PLATFORM_IGNORE)
-			{
-				// when platform is ignore, do not allow other platforms
-				platformIds.clear();
-				platformIds.push_back(platformId);
-				break;
-			}
-
-			// if there appears to be an actual platform ID supplied but it didn't match the list, warn
-			if(str != NULL && str[0] != '\0' && platformId == PlatformIds::PLATFORM_UNKNOWN)
-				LOG(LogWarning) << "  Unknown platform for system \"" << name << "\" (platform \"" << str << "\" from list \"" << platformList << "\")";
-			else if(platformId != PlatformIds::PLATFORM_UNKNOWN)
-				platformIds.push_back(platformId);
-		}
-
-		// theme folder
-		themeFolder = system.child("theme").text().as_string(name.c_str());
-
-		//validate
-		if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
-		{
-			LOG(LogError) << "System \"" << name << "\" is missing name, path, extension, or command!";
-			continue;
-		}
-
-		//convert path to generic directory seperators
-		boost::filesystem::path genericPath(path);
-		path = genericPath.generic_string();
-
-		// emulators and cores
-		std::map<std::string, std::vector<std::string>*> * systemEmulators = new std::map<std::string, std::vector<std::string>*>();
-		pugi::xml_node emulatorsNode = system.child("emulators");
-		for(pugi::xml_node emuNode = emulatorsNode.child("emulator"); emuNode; emuNode = emuNode.next_sibling("emulator")) {
-			std::string emulatorName = emuNode.attribute("name").as_string();
-			(*systemEmulators)[emulatorName] = new std::vector<std::string>();
-			pugi::xml_node coresNode = emuNode.child("cores");
-			for (pugi::xml_node coreNode = coresNode.child("core"); coreNode; coreNode = coreNode.next_sibling("core")) {
-				std::string corename = coreNode.text().as_string();
-				(*systemEmulators)[emulatorName]->push_back(corename);
-			}
-		}
-
-
-		SystemData* newSys = new SystemData(name,
-											fullname,
-											path, extensions,
-											cmd, platformIds,
-											themeFolder,
-											systemEmulators);
-		if(newSys->getRootFolder()->getChildren().size() == 0)
-		{
-			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
-			delete newSys;
-		}else{
-			sSystemVector.push_back(newSys);
-		}
+		ioService.post(boost::bind(createSystem, &systemList, &sSystemVector, index++));
 	}
-
+	ioService.stop();
+	threadpool.join_all();
 	return true;
 }
+
+
 
 void SystemData::writeExampleConfig(const std::string& path)
 {
@@ -351,13 +381,28 @@ void SystemData::writeExampleConfig(const std::string& path)
 	LOG(LogError) << "Example config written!  Go read it at \"" << path << "\"!";
 }
 
+void deleteFun(SystemData * system){
+	delete system;
+}
 void SystemData::deleteSystems()
 {
-	for(unsigned int i = 0; i < sSystemVector.size(); i++)
-	{
-		delete sSystemVector.at(i);
+	if(sSystemVector.size()) {
+		boost::asio::io_service ioService;
+		boost::thread_group threadpool;
+		boost::asio::io_service::work work(ioService);
+		std::vector<boost::thread *> threads;
+		for (int i = 0; i < 4; i++) {
+			threadpool.create_thread(
+					boost::bind(&boost::asio::io_service::run, &ioService)
+			);
+		}
+		for (unsigned int i = 0; i < sSystemVector.size(); i++) {
+			ioService.post(boost::bind(deleteFun, sSystemVector.at(i)));
+		}
+		ioService.stop();
+		threadpool.join_all();
+		sSystemVector.clear();
 	}
-	sSystemVector.clear();
 }
 
 std::string SystemData::getConfigPath(bool forWrite)
