@@ -16,6 +16,7 @@
 #include "Util.h"
 #include <boost/thread.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/make_shared.hpp>
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -188,7 +189,7 @@ std::vector<std::string> readList(const std::string& str, const char* delims = "
 	return ret;
 }
 
-void createSystem(pugi::xml_node * systemsNode,std::vector<SystemData*> * systems, int index ){
+SystemData * createSystem(pugi::xml_node * systemsNode, int index ){
 	std::string name, fullname, path, cmd, themeFolder;
 	PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
@@ -242,7 +243,7 @@ void createSystem(pugi::xml_node * systemsNode,std::vector<SystemData*> * system
 	if(name.empty() || path.empty() || extensions.empty() || cmd.empty())
 	{
 		LOG(LogError) << "System \"" << name << "\" is missing name, path, extension, or command!";
-		return;
+		return NULL;
 	}
 
 	//convert path to generic directory seperators
@@ -273,8 +274,10 @@ void createSystem(pugi::xml_node * systemsNode,std::vector<SystemData*> * system
 	{
 		LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
 		delete newSys;
+		return NULL;
 	}else{
-		systems->push_back(newSys);
+		LOG(LogWarning) << "Adding \"" << name << "\" in system list.";
+		return newSys;
 	}
 }
 
@@ -282,8 +285,6 @@ void createSystem(pugi::xml_node * systemsNode,std::vector<SystemData*> * system
 bool SystemData::loadConfig()
 {
 	deleteSystems();
-
-
 	std::string path = getConfigPath(false);
 
 	LOG(LogInfo) << "Loading system config file " << path << "...";
@@ -313,6 +314,8 @@ bool SystemData::loadConfig()
 		LOG(LogError) << "es_systems.cfg is missing the <systemList> tag!";
 		return false;
 	}
+
+	// THE CREATION OF EACH SYSTEM
 	boost::asio::io_service ioService;
 	boost::thread_group threadpool;
 	boost::asio::io_service::work work(ioService);
@@ -322,11 +325,25 @@ bool SystemData::loadConfig()
 				boost::bind(&boost::asio::io_service::run, &ioService)
 		);
 	}
+
 	int index = 0;
+	std::vector<boost::unique_future<SystemData*>> pending_data;
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
+		LOG(LogInfo) << "creating thread for system " << system.child("name").text().get();
+		typedef boost::packaged_task<SystemData*> task_t;
+		boost::shared_ptr<task_t> task = boost::make_shared<task_t>(
+				boost::bind(&createSystem, &systemList, index++));
+		boost::unique_future<SystemData*> fut = task->get_future();
+		pending_data.push_back(std::move(fut));
+		ioService.post(boost::bind(&task_t::operator(), task));
+	}
+	boost::wait_for_all(pending_data.begin(), pending_data.end());
 
-		ioService.post(boost::bind(createSystem, &systemList, &sSystemVector, index++));
+	for(auto pending = pending_data.begin(); pending != pending_data.end(); pending ++){
+		SystemData * result = pending->get();
+		if(result != NULL)
+			sSystemVector.push_back(result);
 	}
 	ioService.stop();
 	threadpool.join_all();
