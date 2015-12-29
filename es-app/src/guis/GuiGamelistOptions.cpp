@@ -180,7 +180,7 @@ void GuiGamelistOptions::addEntry(const char* name, unsigned int color, bool add
 void GuiGamelistOptions::openMetaDataEd()
 {
 	// open metadata editor
-        if(!getGamelist()->validCursor) return;
+        if(!getGamelist()->validCursor()) return;
 	const FileData& file = getGamelist()->getCursor();
 	ScraperSearchParams p(file.getSystem(), file);
 	auto deleteFunc = [this, file] {
