@@ -15,6 +15,7 @@
 #include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
 #include "components/MenuComponent.h"
+#include "guis/GuiTextEditPopup.h"
 #include "VolumeControl.h"
 #include "SystemManager.h"
 #include "Settings.h"
@@ -77,6 +78,12 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(makeArrow(mWindow), false);
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
+		mMenu.addRow(row); 
+		// add a filter entry to our current list
+		row.elements.clear();
+		row.addElement(std::make_shared<TextComponent>(mWindow, "ADD FILTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.addElement(makeArrow(mWindow), false);
+		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openFilterAddStart, this));
 		mMenu.addRow(row);
 	} //End Gamelist Specific entries
 
@@ -185,6 +192,32 @@ void GuiGamelistOptions::openMetaDataEd()
 		std::bind(&IGameListView::onMetaDataChanged, getGamelist(), file), deleteFunc, removeFunc));
 }
 
+void GuiGamelistOptions::openFilterAddStart()
+{
+	// open a dialog to add a filter
+	const FileData& file = getGamelist()->getParentCursor();
+	auto updateVal = [this, file](const std::string& filterid) { 
+          this->openFilterAdd(file,filterid);
+        };
+	mWindow->pushGui(new GuiTextEditPopup(mWindow, "ENTER UNIQUE FILTER ID", "", updateVal, false));
+	
+
+	
+}
+
+void GuiGamelistOptions::openFilterAdd(const FileData& fileParent, const std::string &filterid)
+{
+        if(filterid.empty()) return;
+        FileData filter(fileParent.getFileID() + "/" + filterid, fileParent.getSystemID(), FILTER);
+        MetaDataMap emptyfiltermetadata(FILTER_METADATA);
+        filter.set_metadata(emptyfiltermetadata);
+	auto deleteFunc = [this, filter] {
+		SystemManager::getInstance()->database().removeEntry(filter); // update the database
+		getGamelist()->onFilesChanged(); // tell the view
+	};
+	mWindow->pushGui(new GuiMetaDataEd(mWindow, filter, 
+		std::bind(&IGameListView::onMetaDataChanged, getGamelist(), filter), deleteFunc, nullptr));
+}
 void GuiGamelistOptions::jumpToLetter()
 {
 	char letter = mJumpToLetterList->getSelected();

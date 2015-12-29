@@ -52,6 +52,11 @@ const FileData& BasicGameListView::getCursor()
 	return mList.getSelected();
 }
 
+const FileData& BasicGameListView::getParentCursor()
+{
+	return mCursorStack.top();
+}
+
 void BasicGameListView::setCursor(const FileData& cursor)
 {
 	if(!mList.setCursor(cursor))

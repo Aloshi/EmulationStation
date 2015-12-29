@@ -31,6 +31,4 @@ protected:
 	ImageComponent mBackground;
 	
 	ThemeExtras mThemeExtras;
-
-	std::stack<FileData> mCursorStack;
 };

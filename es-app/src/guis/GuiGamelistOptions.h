@@ -19,6 +19,8 @@ public:
 private:
 	void addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func);
 	void openMetaDataEd();
+	void openFilterAddStart();
+	void openFilterAdd(const FileData& file, const std::string &filterid);
 	void jumpToLetter();
 	
 	MenuComponent mMenu;

@@ -17,6 +17,7 @@ public:
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme);
 
 	virtual const FileData& getCursor() override;
+	virtual const FileData& getParentCursor() override;
 	virtual void setCursor(const FileData& file) override;
 
 	virtual const char* getName() const override { return "basic"; }
