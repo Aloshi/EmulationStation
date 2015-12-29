@@ -171,7 +171,7 @@ void DateTimeComponent::setValue(const std::string& val)
 
 std::string DateTimeComponent::getValue() const
 {
-	return boost::posix_time::to_iso_string(mTime);
+	return ptime_to_string(mTime, SQLITE_TIME_STRING_FORMAT);
 }
 
 DateTimeComponent::DisplayMode DateTimeComponent::getCurrentDisplayMode() const
