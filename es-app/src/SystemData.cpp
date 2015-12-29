@@ -8,6 +8,7 @@
 #include "VolumeControl.h"
 #include "Log.h"
 #include "InputManager.h"
+#include "SystemManager.h"
 #include <iostream>
 #include "Settings.h"
 
@@ -169,14 +170,7 @@ void SystemData::loadTheme()
 
 bool SystemData::hasFileWithImage() const
 {
-	if (mName.empty()) return true;
-	// TODO: optimize this with an SQL query
-	std::vector<FileData> files = getRootFolder().getChildrenRecursive(true);
-	for(auto it = files.begin(); it != files.end(); it++)
-	{
-		if(!it->get_metadata().get<std::string>("image").empty())
-			return true;
-	}
+	if (mName.empty()) return true; //(all systems combined) TODO: Make this be a query as well.
 
-	return false;
+	return SystemManager::getInstance()->database().systemHasFileWithImage(this);
 }

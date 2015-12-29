@@ -73,6 +73,7 @@ public:
 	std::vector<FileData> getChildrenOfFilter(const std::string& fileID, SystemData* system, 
 		bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType = NULL);
 
+	bool systemHasFileWithImage(const SystemData* system);
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);
 

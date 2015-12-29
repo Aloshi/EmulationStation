@@ -507,7 +507,7 @@ void GamelistDB::updateExists(const SystemData* system)
 {
 	const std::string& relativeTo = system->getStartPath();
 
-	SQLPreparedStmt readStmt(mDB, "SELECT fileid,fileexists,filtetype FROM files WHERE systemid = ?1");
+	SQLPreparedStmt readStmt(mDB, "SELECT fileid,fileexists,filetype FROM files WHERE systemid = ?1");
 	sqlite3_bind_text(readStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 	
 	SQLPreparedStmt updateStmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
@@ -782,7 +782,15 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 
 	return children;
 }
+bool GamelistDB::systemHasFileWithImage(const SystemData* system)
+{
+	const std::string& systemID = system->getName();
+	SQLPreparedStmt readStmt(mDB, "SELECT EXISTS(SELECT 1 from files where image is not null and image <> '' and systemid = ?1)");
+	sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
 
+	readStmt.step_expected(SQLITE_ROW);
+	return sqlite3_column_int(readStmt,0);
+}
 void GamelistDB::importXML(const SystemData* system, const std::string& xml_path)
 {
 	LOG(LogInfo) << "Appending gamelist.xml file \"" << xml_path << "\" to database (system: " << system->getName() << ")...";
