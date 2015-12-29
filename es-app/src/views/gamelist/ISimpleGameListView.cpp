@@ -84,7 +84,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{
-			if(mCursorStack.top() != mRoot)
+			if(mCursorStack.size() > 1)
 			{
 				FileData old_cursor = mCursorStack.top();
 				mCursorStack.pop();
