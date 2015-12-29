@@ -59,8 +59,10 @@ void SystemView::populate()
 			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
 		}else{
 			// no logo in theme; use text
+			std::string name = (*it)->getName();
+			if(name.empty()) name = "all";
 			TextComponent* text = new TextComponent(mWindow, 
-				(*it)->getName(), 
+				name, 
 				Font::get(FONT_SIZE_LARGE), 
 				0x000000FF, 
 				ALIGN_CENTER);
@@ -68,7 +70,7 @@ void SystemView::populate()
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 
 			TextComponent* textSelected = new TextComponent(mWindow, 
-				(*it)->getName(), 
+				name, 
 				Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)), 
 				0x000000FF, 
 				ALIGN_CENTER);

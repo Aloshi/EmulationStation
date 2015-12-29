@@ -169,6 +169,7 @@ void SystemData::loadTheme()
 
 bool SystemData::hasFileWithImage() const
 {
+	if (mName.empty()) return true;
 	// TODO: optimize this with an SQL query
 	std::vector<FileData> files = getRootFolder().getChildrenRecursive(true);
 	for(auto it = files.begin(); it != files.end(); it++)

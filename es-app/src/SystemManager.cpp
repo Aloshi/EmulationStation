@@ -154,6 +154,15 @@ void SystemManager::loadConfig()
 			mSystems.push_back(newSys);
 		}
 	}
+	if(Settings::getInstance()->getBool("MakeCombinedSystem"))
+	{
+		std::vector<std::string> no_exts;
+		std::vector<PlatformIds::PlatformId> ignored;
+		ignored.push_back(PlatformIds::PLATFORM_IGNORE);
+                SystemData* combined = new SystemData("","All","",no_exts,"",ignored,"all");
+		mSystems.push_back(combined);
+		mDatabase.addMissingFiles(combined);
+        }
 
 }
 
