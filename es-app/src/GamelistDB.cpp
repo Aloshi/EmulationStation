@@ -670,7 +670,7 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	std::vector<FileData> children;
 
 	std::stringstream ss;
-	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1";
+	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1 ";
 	if(immediateChildrenOnly)
 		ss << "AND inimmediatedir(fileid, ?2) ";
 	else
