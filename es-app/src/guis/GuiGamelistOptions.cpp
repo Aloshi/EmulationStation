@@ -74,11 +74,14 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 
 		// edit game metadata
+		if(getGamelist()->validCursor())
+		{
 		row.elements.clear();
-		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS ENTRY'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(makeArrow(mWindow), false);
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 		mMenu.addRow(row); 
+		}
 		// add a filter entry to our current list
 		row.elements.clear();
 		row.addElement(std::make_shared<TextComponent>(mWindow, "ADD FILTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
@@ -177,6 +180,7 @@ void GuiGamelistOptions::addEntry(const char* name, unsigned int color, bool add
 void GuiGamelistOptions::openMetaDataEd()
 {
 	// open metadata editor
+        if(!getGamelist()->validCursor) return;
 	const FileData& file = getGamelist()->getCursor();
 	ScraperSearchParams p(file.getSystem(), file);
 	auto deleteFunc = [this, file] {

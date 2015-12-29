@@ -48,6 +48,7 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 // but this shouldn't happen very often so we'll just always repopulate
 void ISimpleGameListView::onFilesChanged()
 {
+        if(!validCursor()) { populateList(mCursorStack.top().getChildren()); return;};
 	FileData cursor = getCursor();
 	FileData parent = mCursorStack.top();
 	populateList(parent.getChildren());
@@ -63,7 +64,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 {
 	if(input.value != 0)
 	{
-		if(config->isMappedTo("a", input) || config->isMappedTo("start", input))
+		if(validCursor() && config->isMappedTo("a", input) || config->isMappedTo("start", input))
 		{
 			FileData cursor = getCursor();
 			if(cursor.getType() == GAME)
@@ -73,11 +74,11 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}else{
 				// it's a folder or filter
 				auto children = cursor.getChildren();
-				if(children.size() > 0)
-				{
+				//if(children.size() > 0)
+				//{
 					mCursorStack.push(cursor);
 					populateList(children);
-				}
+				//}
 			}
 
 			return true;

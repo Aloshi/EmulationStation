@@ -27,7 +27,9 @@ public:
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
 	virtual const FileData& getCursor() = 0;
+	virtual const bool validCursor() = 0;
 	virtual const FileData& getParentCursor() = 0;
+	virtual const bool validParentCursor() = 0;
 	virtual void setCursor(const FileData& file) = 0;
 
 	virtual bool input(InputConfig* config, Input input) override;
