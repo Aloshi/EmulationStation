@@ -675,7 +675,7 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 	//Use the indir logic to support filters having subfilters
 	//A subfilter may return more entries than the parent!
 	//The user can handle making sure subfilters make subsets.
-	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1 AND ((";
+	ss << "SELECT fileid, name, filetype, CAST(strftime(\"%Y\",releasedate) as INTEGER) as year FROM files WHERE systemid = ?1 AND ((";
 	if(immediateChildrenOnly)
 		ss << "inimmediatedir(fileid, ?2) ";
 	else
