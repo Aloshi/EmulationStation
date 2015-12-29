@@ -301,6 +301,11 @@ void GamelistDB::createMissingTables()
 
 	if(sqlite3_exec(mDB, ss.str().c_str(), NULL, NULL, NULL))
 		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
+
+	if(sqlite3_exec(mDB, "CREATE TABLE tagtable (fileid VARCHAR(255) NOT NULL, systemid VARCHAR(255) NOT NULL, tag VARCHAR(255) NOT NULL, PRIMARY KEY (fileid, systemid, tag), FOREIGN KEY(fileid,systemid) REFERENCES files(fileid,systemid));", NULL, NULL, NULL)
+		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
+	if(sqlite3_exec(mDB, "CREATE VIEW tags (tag) as select tag from tagtable where tagtable.fileid = files.fileid and tagtable.systemid = files.systemid;", NULL, NULL, NULL)
+		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
 }
 
 // returns a vector of all columns in a particular table
