@@ -9,3 +9,5 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Emulator and core switch in metadata
 - hidden metadata
 - Favorite selection now let cursor on the current game
+- Reload gamelist feature
+- Multithreaded list loading and writing
