@@ -238,7 +238,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 
 		if (favoritesCount > 1)
 		{
-			ss << ", " << favoritesCount << boost::locale::gettext(" FAVORITES");
+			ss << ", " << favoritesCount << " " << boost::locale::gettext("FAVORITES");
 		}
 
 		mSystemInfo.setText(ss.str());

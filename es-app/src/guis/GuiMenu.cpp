@@ -340,22 +340,28 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  ComponentListRow row;
                  Window *window = mWindow;
 
-                 row.makeAcceptInputHandler([window] {
+                 row.makeAcceptInputHandler([this,window] {
                      window->pushGui(new GuiMsgBox(window, "REALLY UPDATE GAMES LISTS ?", "YES",
-                                                   [] {
-                                                       // todo : add something nice to display here, in case it takes time ?
-                                                       for (auto i = SystemData::sSystemVector.begin();
-                                                            i != SystemData::sSystemVector.end(); i++) {
-                                                           (*i)->refreshRootFolder();
+                                                   [this,window] {
+                                                       ViewController::get()->goToStart();
+                                                       window->renderShutdownScreen();
+                                                       delete ViewController::get();
+                                                       SystemData::deleteSystems();
+                                                       SystemData::loadConfig();
+                                                       GuiComponent* gui;
+                                                       while((gui = window->peekGui()) != NULL){
+                                                           window->removeGui(gui);
+                                                           delete gui;
                                                        }
-                                                       // not sure that all must be reloaded (games lists, lists counters, what else ?)
-                                                       ViewController::get()->reloadGamesLists();
+                                                       ViewController::init(window);
+                                                       ViewController::get()->reloadAll();
+                                                       window->pushGui(ViewController::get());
                                                    }, "NO", nullptr));
                  });
                  row.addElement(
                          std::make_shared<TextComponent>(window, "UPDATE GAMES LISTS", Font::get(FONT_SIZE_MEDIUM),
                                                          0x777777FF), true);
-                 //s->addRow(row);
+                 s->addRow(row);
 
 
                  s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled] {

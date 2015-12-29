@@ -12,6 +12,13 @@
 #include "Settings.h"
 #include "RecalboxSystem.h"
 
+GuiLoading::GuiLoading(Window *window, const std::function<void*()> &mFunc) : GuiComponent(window), mBusyAnim(window), mFunc(mFunc),mFunc2(NULL) {
+    setSize((float) Renderer::getScreenWidth(), (float) Renderer::getScreenHeight());
+    mRunning = true;
+    mHandle = new boost::thread(boost::bind(&GuiLoading::threadLoading, this));
+    mBusyAnim.setSize(mSize);
+}
+
 GuiLoading::GuiLoading(Window *window, const std::function<void*()> &mFunc, const std::function<void(void *)> &mFunc2) : GuiComponent(window), mBusyAnim(window), mFunc(mFunc),mFunc2(mFunc2) {
     setSize((float) Renderer::getScreenWidth(), (float) Renderer::getScreenHeight());
     mRunning = true;
@@ -50,7 +57,8 @@ void GuiLoading::update(int deltaTime) {
     mBusyAnim.update(deltaTime);
 
     if (!mRunning) {
-        mFunc2(result);
+        if(mFunc2 != NULL)
+            mFunc2(result);
         delete this;
     }
 }

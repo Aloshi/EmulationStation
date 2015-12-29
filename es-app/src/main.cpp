@@ -330,13 +330,13 @@ int main(int argc, char* argv[])
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
         
-        // Initialize audio manager
-        VolumeControl::getInstance()->init();
-        AudioManager::getInstance()->init();
+	// Initialize audio manager
+	VolumeControl::getInstance()->init();
+	AudioManager::getInstance()->init();
         
 	// preload what we can right away instead of waiting for the user to select it
 	// this makes for no delays when accessing content, but a longer startup time
-	ViewController::get()->preload();
+	//ViewController::get()->preload();
 
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
