@@ -74,6 +74,7 @@ public:
 		bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType = NULL);
 
 	bool systemHasFileWithImage(const SystemData* system);
+	int getSystemFileCount(const SystemData* system);
 	void importXML(const SystemData* system, const std::string& xml_path);
 	void exportXML(const SystemData* system, const std::string& xml_path);
 

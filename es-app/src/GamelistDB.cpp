@@ -785,8 +785,24 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 bool GamelistDB::systemHasFileWithImage(const SystemData* system)
 {
 	const std::string& systemID = system->getName();
-	SQLPreparedStmt readStmt(mDB, "SELECT EXISTS(SELECT 1 from files where image is not null and image <> '' and systemid = ?1)");
-	sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+	std::stringstream ss;
+	ss << "SELECT EXISTS(SELECT 1 FROM files WHERE image IS NOT NULL AND image <> ''";
+	if(!systemID.empty()) ss << " AND systemid = ?1";
+	ss << ")";
+	SQLPreparedStmt readStmt(mDB, ss.str());
+	if(!systemID.empty()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+
+	readStmt.step_expected(SQLITE_ROW);
+	return sqlite3_column_int(readStmt,0);
+}
+int GamelistDB::getSystemFileCount(const SystemData* system)
+{
+	const std::string& systemID = system->getName();
+	std::stringstream ss;
+	ss << "SELECT COUNT(1) FROM files WHERE filetype = 1";
+	if(!systemID.empty()) ss << " AND systemid = ?1";
+	SQLPreparedStmt readStmt(mDB, ss.str());
+	if(!systemID.empty()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
 
 	readStmt.step_expected(SQLITE_ROW);
 	return sqlite3_column_int(readStmt,0);

@@ -146,7 +146,7 @@ std::string SystemData::getThemePath() const
 
 unsigned int SystemData::getGameCount() const
 {
-	return getRootFolder().getChildrenRecursive(false).size();
+	return SystemManager::getInstance()->database().getSystemFileCount(this);
 }
 
 void SystemData::loadTheme()
@@ -170,7 +170,5 @@ void SystemData::loadTheme()
 
 bool SystemData::hasFileWithImage() const
 {
-	if (mName.empty()) return true; //(all systems combined) TODO: Make this be a query as well.
-
 	return SystemManager::getInstance()->database().systemHasFileWithImage(this);
 }
