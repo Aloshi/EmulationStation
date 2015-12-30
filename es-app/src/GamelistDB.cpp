@@ -51,7 +51,7 @@ std::vector<FileSort> sFileSorts = boost::assign::list_of
 	(FileSort("Reverse Alphabetical", "LOWER(name) DESC"))
 	(FileSort("Highest Rating", "rating DESC, LOWER(name)"))
 	(FileSort("Lowest Rating", "rating, LOWER(name)"))
-	(FileSort("Lowest Rating (Non-zero)", "ORDER BY case when rating = 0 then 1 else 0 end, rating, LOWER(name)"))
+	(FileSort("Lowest Rating (Non-zero)", "case when rating = 0 then 1 else 0 end, rating, LOWER(name)"))
 	(FileSort("Chronological", "releasedate IS NULL, releasedate, LOWER(name)"))
 	(FileSort("Reverse Chronological", "releasedate DESC, LOWER(name)"))
 	(FileSort("Played Recently", "lastplayed DESC, LOWER(name)"))
