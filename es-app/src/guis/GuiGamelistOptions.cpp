@@ -220,6 +220,7 @@ void GuiGamelistOptions::openFilterAdd(const FileData& fileParent, const std::st
         if(filterid.empty()) return;
         FileData filter(fileParent.getFileID() + "/" + filterid, fileParent.getSystemID(), FILTER);
         MetaDataMap emptyfiltermetadata(FILTER_METADATA);
+        emptyfiltermetadata.set("name",filterid);
         filter.set_metadata(emptyfiltermetadata);
 	auto deleteFunc = [this, filter] {
 		SystemManager::getInstance()->database().removeEntry(filter); // update the database
