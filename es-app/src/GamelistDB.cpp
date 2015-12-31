@@ -58,7 +58,8 @@ std::vector<FileSort> sFileSorts = boost::assign::list_of
 	(FileSort("Played Long Ago", "lastplayed IS NULL, lastplayed, LOWER(name)"))
 	(FileSort("Most Played", "playcount DESC, LOWER(name)"))
 	(FileSort("Least Played", "playcount, LOWER(name)"))
-	(FileSort("Least Played (Non-zero)", "case when playcount = 0 then 1 else 0 end, playcount, LOWER(name)"));
+	(FileSort("Least Played (Non-zero)", "case when playcount = 0 then 1 else 0 end, playcount, LOWER(name)"))
+	(FileSort("Random", "RANDOM()"));
 
 const std::vector<FileSort>& getFileSorts()
 {
