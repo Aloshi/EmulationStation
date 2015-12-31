@@ -26,12 +26,14 @@ TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
 void TextEditComponent::onFocusGained()
 {
 	mFocused = true;
+	if(mAutoEdit) startEditing();
 	mBox.setImagePath(":/textinput_ninepatch_active.png");
 }
 
 void TextEditComponent::onFocusLost()
 {
 	mFocused = false;
+	if(mEditing) stopEditing();
 	mBox.setImagePath(":/textinput_ninepatch.png");
 }
 
@@ -127,10 +129,16 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 
 		if(config->isMappedTo("up", input))
 		{
-			// TODO
+			if(!isMultiline())
+			{
+				return false;
+			}
 		}else if(config->isMappedTo("down", input))
 		{
-			// TODO
+			if(!isMultiline())
+			{
+				return false;
+			}
 		}else if(config->isMappedTo("left", input) || config->isMappedTo("right", input))
 		{
 			mCursorRepeatDir = config->isMappedTo("left", input) ? -1 : 1;

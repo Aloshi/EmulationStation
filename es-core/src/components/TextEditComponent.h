@@ -25,6 +25,8 @@ public:
 	void setValue(const std::string& val) override;
 	std::string getValue() const override;
 
+	void setAutoEdit(const bool value) { mAutoEdit = value; };
+
 	inline bool isEditing() const { return mEditing; };
 	inline const std::shared_ptr<Font>& getFont() const { return mFont; }
 
@@ -49,6 +51,7 @@ private:
 	std::string mText;
 	bool mFocused;
 	bool mEditing;
+	bool mAutoEdit = false; //Start editing upon focus
 	int mCursor; // cursor position in characters
 
 	int mCursorRepeatTimer;
