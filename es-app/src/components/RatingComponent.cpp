@@ -25,12 +25,14 @@ void RatingComponent::setValue(const std::string& value)
 		else if(mValue < 0.0f)
 			mValue = 0.0f;
 	}
+	mValueGiven = value;
 
 	updateVertices();
 }
 
 std::string RatingComponent::getValue() const
 {
+	if (!mValueGiven.empty()) return mValueGiven; //We didn't change anything, so avoid introducing rounding
 	// do not use std::to_string here as it will use the current locale
 	// and that sometimes encodes decimals as commas
 	std::stringstream ss;
@@ -132,6 +134,7 @@ bool RatingComponent::input(InputConfig* config, Input input)
 		mValue += 1.f / (NUM_RATING_STARS * 2);
 		if(mValue > 1.0f)
 			mValue = 0.0f;
+		mValueGiven.clear(); //invalidate the cached value;
 
 		updateVertices();
 	}
