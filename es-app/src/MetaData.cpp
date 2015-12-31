@@ -50,12 +50,23 @@ const std::map<MetaDataListType, std::vector<MetaDataDecl> >& getMDDMap()
 MetaDataMap::MetaDataMap(MetaDataListType type)
 	: mType(type)
 {
+	setDefaults();
+}
+MetaDataMap::MetaDataMap(MetaDataListType type, bool init)
+	: mType(type)
+{
+	if(init) setDefaults();
+}
+
+void MetaDataMap::setDefaults()
+{
 	//To enforce that subset constraint above, we intialize the map to have
 	//all the defaults of the gameDecls, with our specific defaults overriding.
 	const std::vector<MetaDataDecl>& mddGame = getMDDMap().at(GAME_METADATA);
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 	for(auto iter = mddGame.begin(); iter != mddGame.end(); iter++)
 		set(iter->key, iter->defaultValue); 
+	if(mType == GAME_METADATA) return;
 	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
 		set(iter->key, iter->defaultValue);
 }

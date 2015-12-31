@@ -19,6 +19,8 @@ enum FileType
 const char* fileTypeToString(FileType type);
 FileType stringToFileType(const char* str);
 
+MetaDataListType fileTypeToMetaDataType(FileType type);
+
 // Remove (.*) and [.*] from str
 std::string removeParenthesis(const std::string& str);
 
@@ -57,4 +59,6 @@ private:
 	FileType mType;
 
 	mutable std::string mNameCache;
+	mutable MetaDataMap mMetaDataCache;
+	mutable bool mValidMetaDataCache = false;
 };

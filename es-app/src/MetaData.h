@@ -47,6 +47,7 @@ class MetaDataMap
 {
 public:
 	MetaDataMap(MetaDataListType type);
+	MetaDataMap(MetaDataListType type, bool initialize);
 
 	inline MetaDataListType getType() const { return mType; }
 	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDMap().at(getType()); }
@@ -81,6 +82,8 @@ public:
 	{
 		set<T>(key.c_str(), value);
 	}
+
+	void setDefaults();
 
 private:
 	MetaDataListType mType;

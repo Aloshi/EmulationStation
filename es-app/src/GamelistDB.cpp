@@ -30,21 +30,7 @@ fs::path fileIDToPath(const std::string& fileID, const SystemData* system)
 	return resolvePath(fileID, system->getStartPath(), true);
 }
 
-MetaDataListType fileTypeToMetaDataType(FileType type)
-{
-	switch(type)
-	{
-	case GAME:
-		return GAME_METADATA;
-	case FOLDER:
-		return FOLDER_METADATA;
-	case FILTER:
-		return FILTER_METADATA;
-	}
 
-	assert(false);
-	return GAME_METADATA;
-}
 
 std::vector<FileSort> sFileSorts = boost::assign::list_of
 	(FileSort("Alphabetical", "LOWER(name)"))
