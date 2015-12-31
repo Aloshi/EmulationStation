@@ -1,3 +1,4 @@
+#include <Log.h>
 #include "views/gamelist/ISimpleGameListView.h"
 #include "ThemeData.h"
 #include "SystemData.h"
@@ -49,8 +50,9 @@ void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 	// we could be tricky here to be efficient;
 	// but this shouldn't happen very often so we'll just always repopulate
 	FileData* cursor = getCursor();
-	populateList(cursor->getParent()->getChildren());
-	setCursor(cursor);
+	int index = getCursorIndex();
+	populateList(getRoot()->getChildren());
+	setCursorIndex(index);
 }
 
 bool ISimpleGameListView::input(InputConfig* config, Input input)
@@ -78,7 +80,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 		{
 			if(mCursorStack.size())
 			{
-				populateList(mCursorStack.top()->getParent()->getChildren());
+				populateList(getRoot()->getChildren());
 				setCursor(mCursorStack.top());
 				mCursorStack.pop();
 				//Sound::getFromTheme(getTheme(), getName(), "back")->play();
@@ -87,18 +89,18 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 
 				if (mFavoriteChange)
 				{
-					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					ViewController::get()->setInvalidGamesList(getRoot()->getSystem());
 					mFavoriteChange = false;
 				}
 
-				ViewController::get()->goToSystemView(getCursor()->getSystem());
+				ViewController::get()->goToSystemView(getRoot()->getSystem());
 			}
 
 			return true;
 		}else if (config->isMappedTo("y", input))
 		{
 			FileData* cursor = getCursor();
-			if (cursor->getSystem()->getHasFavorites())
+			if (!ViewController::get()->getState().getSystem()->isFavorite() && cursor->getSystem()->getHasFavorites())
 			{
 				if (cursor->getType() == GAME)
 				{
@@ -110,10 +112,14 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					if (value.compare("false") == 0)
 					{
 						md->set("favorite", "true");
+						SystemData::getFavoriteSystem()->getRootFolder()->addAlreadyExisitingChild(cursor);
+						ViewController::get()->getSystemListView()->populate();
 					}
 					else
 					{
 						md->set("favorite", "false");
+						SystemData::getFavoriteSystem()->getRootFolder()->removeAlreadyExisitingChild(cursor);
+						ViewController::get()->getSystemListView()->populate();
 						removeFavorite = true;
 					}
 
@@ -121,6 +127,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					populateList(cursor->getParent()->getChildren());
 					setCursorIndex(cursorPlace + (removeFavorite ? -1 : 1));
 					updateInfoPanel();
+					ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
 				}
 			}
 		}else if(config->isMappedTo("right", input))

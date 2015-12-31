@@ -42,6 +42,9 @@ void SystemView::populate()
 
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
+		if((*it)->getRootFolder()->getChildren().size() == 0){
+			continue;
+		}
 		const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
 
 		Entry e;
@@ -236,7 +239,11 @@ void SystemView::onCursorChanged(const CursorState& state)
 			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
 		}
 
-		if (favoritesCount > 1)
+		if (favoritesCount == 1)
+		{
+			ss << ", 1 " << boost::locale::gettext("FAVORITE");
+		}
+		else if (favoritesCount > 1)
 		{
 			ss << ", " << favoritesCount << " " << boost::locale::gettext("FAVORITES");
 		}

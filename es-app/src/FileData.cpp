@@ -134,6 +134,28 @@ void FileData::addChild(FileData* file)
 	file->mParent = this;
 }
 
+void FileData::addAlreadyExisitingChild(FileData* file)
+{
+	assert(mType == FOLDER);
+	mChildren.push_back(file);
+}
+
+
+void FileData::removeAlreadyExisitingChild(FileData* file)
+{
+	assert(mType == FOLDER);
+	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	{
+		if(*it == file)
+		{
+			mChildren.erase(it);
+			return;
+		}
+	}
+	// File somehow wasn't in our children.
+	assert(false);
+}
+
 void FileData::removeChild(FileData* file)
 {
 	assert(mType == FOLDER);

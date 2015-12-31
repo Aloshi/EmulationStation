@@ -148,7 +148,7 @@ public:
 	// returns true if successful (select is in our list), false if not
 	bool setCursor(const UserData& obj)
 	{
-		for(auto it = mEntries.end()-1; it != mEntries.begin(); it--)
+		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
 		{
 			if((*it).object == obj)
 			{
@@ -211,13 +211,18 @@ public:
 
 	bool remove(const UserData& obj)
 	{
+		int index = 0;
 		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
 		{
 			if((*it).object == obj)
 			{
 				remove(it);
+				if(mCursor > index){
+					mCursor = mCursor -1;
+				}
 				return true;
 			}
+			index++;
 		}
 
 		return false;

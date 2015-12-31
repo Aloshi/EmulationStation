@@ -11,3 +11,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Favorite selection now let cursor on the current game
 - Reload gamelist feature
 - Multithreaded list loading and writing
+- Added favorite system
