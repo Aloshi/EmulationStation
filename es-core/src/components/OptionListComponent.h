@@ -249,7 +249,7 @@ public:
                 }
 	}
         
-        std::string getSelectedName()
+	std::string getSelectedName()
 	{
                 assert(mMultiSelect == false);
                 for(unsigned int i = 0; i < mEntries.size(); i++)
@@ -267,6 +267,8 @@ public:
 		e.name = name;
 		e.object = obj;
 		e.selected = selected;
+		if(selected)
+			firstSelected = obj;
 
 		mEntries.push_back(e);
 		onSelectedChanged();
@@ -274,6 +276,10 @@ public:
 
 	inline void setSelectedChangedCallback(const std::function<void(const T&)>& callback) {
 		mSelectedChangedCallback = callback;
+	}
+
+	bool changed(){
+		return firstSelected != getSelected();
 	}
 
 
@@ -342,6 +348,7 @@ private:
 	bool mMultiSelect;
 
 	std::string mName;
+	T firstSelected;
 	TextComponent mText;
 	ImageComponent mLeftArrow;
 	ImageComponent mRightArrow;

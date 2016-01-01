@@ -1,3 +1,4 @@
+#include <Log.h>
 #include "SwitchComponent.h"
 #include "Renderer.h"
 #include "resources/Font.h"
@@ -44,6 +45,7 @@ bool SwitchComponent::getState() const
 void SwitchComponent::setState(bool state)
 {
 	mState = state;
+	mInitialState = mState;
 	onStateChanged();
 }
 
@@ -61,4 +63,8 @@ std::vector<HelpPrompt> SwitchComponent::getHelpPrompts()
 
 std::string SwitchComponent::getValue() const {
 	return mState ? "true" : "false";
+}
+
+bool SwitchComponent::changed() {
+	return mInitialState != mState;
 }

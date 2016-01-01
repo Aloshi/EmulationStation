@@ -181,7 +181,7 @@ int setLocale(char * argv1)
 	boost::locale::localization_backend_manager my = boost::locale::localization_backend_manager::global(); 
 	// Get global backend
 
-    	my.select("std"); 
+    	my.select("std");
 	boost::locale::localization_backend_manager::global(my);
     	// set this backend globally
 

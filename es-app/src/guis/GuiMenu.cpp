@@ -287,7 +287,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                                                                                             false);
                  std::string currentShader = RecalboxConf::getInstance()->get("global.shaderset");
                  if (currentShader.empty()) {
-                     currentShader = std::string("nano");
+                     currentShader = std::string("none");
                  }
 
                  shaders_choices->add("NONE", "none", currentShader == "none");
@@ -297,9 +297,10 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
                  // Custom config for systems
                  {
-                     ComponentListRow row;
-                     std::function<void()> openGuiD = [this] {
 
+                     ComponentListRow row;
+                     std::function<void()> openGuiD = [this, s] {
+                         s->save();
                          GuiSettings *configuration = new GuiSettings(mWindow, "ADVANCED");
                          // For each activated system
                          std::vector<SystemData *> systems = SystemData::sSystemVector;
@@ -365,15 +366,6 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                                                          0x777777FF), true);
                  s->addRow(row);
 
-
-                 s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled] {
-                     RecalboxSystem::getInstance()->setRecalboxConfig("global.smooth",
-                                                                      smoothing_enabled->getState() ? "1" : "0");
-                     RecalboxSystem::getInstance()->setRecalboxConfig("global.ratio", ratio_choice->getSelected());
-                     RecalboxSystem::getInstance()->setRecalboxConfig("global.rewind",
-                                                                      rewind_enabled->getState() ? "1" : "0");
-
-                 });
                  mWindow->pushGui(s);
              }
 
@@ -733,7 +725,7 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
         selected = selected || found;
         emu_choice->add(curEmulatorName, curEmulatorName, found);
     }
-    emu_choice->add("default", "default", !selected);
+    emu_choice->add("DEFAULT", "default", !selected);
     emu_choice->setSelectedChangedCallback([this, systemConfiguration, systemData](std::string s) {
         popSystemConfigurationGui(systemData, s);
         delete systemConfiguration;
@@ -753,7 +745,7 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
             }
         }
     }
-    core_choice->add("default", "default", !selected);
+    core_choice->add("DEFAULT", "default", !selected);
     systemConfiguration->addWithLabel("core", core_choice);
 
 
@@ -773,13 +765,24 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
 
     systemConfiguration->addSaveFunc(
             [systemData, smoothing_enabled, rewind_enabled, ratio_choice, emu_choice, core_choice] {
-                RecalboxConf::getInstance()->set(systemData->getName() + ".ratio", ratio_choice->getSelected());
-                RecalboxConf::getInstance()->set(systemData->getName() + ".rewind",
-                                                 rewind_enabled->getState() ? "1" : "0");
-                RecalboxConf::getInstance()->set(systemData->getName() + ".smooth",
-                                                 smoothing_enabled->getState() ? "1" : "0");
-                RecalboxConf::getInstance()->set(systemData->getName() + ".emulator", emu_choice->getSelected());
-                RecalboxConf::getInstance()->set(systemData->getName() + ".core", core_choice->getSelected());
+                if(ratio_choice->changed()){
+                    RecalboxConf::getInstance()->set(systemData->getName() + ".ratio",
+                                                     ratio_choice->getSelected());
+                }
+                if(rewind_enabled->changed()) {
+                    RecalboxConf::getInstance()->set(systemData->getName() + ".rewind",
+                                                     rewind_enabled->getState() ? "1" : "0");
+                }
+                if(smoothing_enabled->changed()){
+                    RecalboxConf::getInstance()->set(systemData->getName() + ".smooth",
+                                                     smoothing_enabled->getState() ? "1" : "0");
+                }
+                if(emu_choice->changed()) {
+                    RecalboxConf::getInstance()->set(systemData->getName() + ".emulator", emu_choice->getSelected());
+                }
+                if(core_choice->changed()){
+                    RecalboxConf::getInstance()->set(systemData->getName() + ".core", core_choice->getSelected());
+                }
                 RecalboxConf::getInstance()->saveRecalboxConf();
             });
     mWindow->pushGui(systemConfiguration);
