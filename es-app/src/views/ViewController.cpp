@@ -77,9 +77,13 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-        AudioManager::getInstance()->startMusic(system->getNext()->getTheme());
+	SystemData* next = system->getNext();
+	while(next->getRootFolder()->getChildren().size() == 0) {
+		next = next->getNext();
+	}
+	AudioManager::getInstance()->startMusic(system->getNext()->getTheme());
 
-	goToGameList(system->getNext());
+	goToGameList(next);
 }
 
 void ViewController::goToPrevGameList()
@@ -87,9 +91,12 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-        AudioManager::getInstance()->startMusic(system->getPrev()->getTheme());
-
-	goToGameList(system->getPrev());
+	SystemData* prev = system->getPrev();
+	while(prev->getRootFolder()->getChildren().size() == 0) {
+		prev = prev->getPrev();
+	}
+	AudioManager::getInstance()->startMusic(prev->getTheme());
+	goToGameList(prev);
 }
 
 void ViewController::goToGameList(SystemData* system)
@@ -107,11 +114,14 @@ void ViewController::goToGameList(SystemData* system)
 
 	if (mInvalidGameList[system] == true)
 	{
-		updateFavorite(system, getGameListView(system).get()->getCursor());
-		if (mFavoritesOnly != Settings::getInstance()->getBool("FavoritesOnly"))
-		{
+		if(!system->isFavorite()) {
+			updateFavorite(system, getGameListView(system).get()->getCursor());
+			if (mFavoritesOnly != Settings::getInstance()->getBool("FavoritesOnly")) {
+				reloadGameListView(system);
+				mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
+			}
+		}else {
 			reloadGameListView(system);
-			mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
 		}
 		mInvalidGameList[system] = false;
 	}
@@ -399,15 +409,21 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 		{
 			bool isCurrent = (mCurrentView == it->second);
 			SystemData* system = it->first;
-			FileData* cursor = view->getCursor();
+			FileData * cursor = NULL;
+			if(system->getGameCount() != 0) {
+				cursor = view->getCursor();
+			}
 			mGameListViews.erase(it);
 
 			if(reloadTheme)
 				system->loadTheme();
 
 			std::shared_ptr<IGameListView> newView = getGameListView(system);
-			newView->setCursor(cursor);
-
+			if(system->getGameCount() > 1) {
+				newView->setCursor(cursor);
+			}else if(system->getGameCount() == 1){
+				newView->setCursor(system->getRootFolder()->getChildren().at(0));
+			}
 			if(isCurrent)
 				mCurrentView = newView;
 

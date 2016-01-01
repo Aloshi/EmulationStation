@@ -46,10 +46,13 @@ public:
 
 	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
 	std::vector<FileData*> getFavoritesRecursive(unsigned int typeMask) const;
-
 	void changePath(const boost::filesystem::path& path);
 	void addChild(FileData* file); // Error if mType != FOLDER
 	void removeChild(FileData* file); //Error if mType != FOLDER
+
+	void addAlreadyExisitingChild(FileData *file);
+	void removeAlreadyExisitingChild(FileData *file);
+
 	void clear();
 	void lazyPopulate(const std::vector<std::string>& searchExtensions = std::vector<std::string>(), SystemData* systemData = nullptr);
 
@@ -81,4 +84,5 @@ private:
 	SystemData* mSystem;
 	FileData* mParent;
 	std::vector<FileData*> mChildren;
+
 };

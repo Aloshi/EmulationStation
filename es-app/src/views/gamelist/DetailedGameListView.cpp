@@ -330,8 +330,10 @@ std::vector<HelpPrompt> DetailedGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("y", "favorite"));
-	prompts.push_back(HelpPrompt("select", "options"));
+	if(getRoot()->getSystem() != SystemData::getFavoriteSystem()) {
+		prompts.push_back(HelpPrompt("y", "favorite"));
+		prompts.push_back(HelpPrompt("select", "options"));
+	}
 	return prompts;
 }
 

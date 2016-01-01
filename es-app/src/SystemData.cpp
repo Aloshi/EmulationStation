@@ -57,7 +57,34 @@ SystemData::SystemData(std::string name, std::string fullName, std::string start
 		parseGamelist(this);
 
 	mRootFolder->sort(FileSorts::SortTypes.at(0));
+	mIsFavorite = false;
+	loadTheme();
+}
 
+SystemData::SystemData(std::string name, std::string fullName, std::string command,
+					   std::string themeFolder, std::vector<SystemData*>* systems)
+{
+	mName = name;
+	mFullName = fullName;
+	mStartPath = "";
+
+	mLaunchCommand = command;
+	mThemeFolder = themeFolder;
+
+	mRootFolder = new FileData(FOLDER, mStartPath, this);
+	mRootFolder->metadata.set("name", mFullName);
+
+	for(auto system = systems->begin(); system != systems->end(); system ++){
+		std::vector<FileData*> favorites = (*system)->getFavorites();
+		for(auto favorite = favorites.begin(); favorite != favorites.end(); favorite++){
+			mRootFolder->addAlreadyExisitingChild((*favorite));
+		}
+	}
+
+	if(mRootFolder->getChildren().size())
+		mRootFolder->sort(FileSorts::SortTypes.at(0));
+	mIsFavorite = true;
+	mPlatformIds.push_back(PlatformIds::PLATFORM_IGNORE);
 	loadTheme();
 }
 
@@ -347,6 +374,23 @@ bool SystemData::loadConfig()
 	}
 	ioService.stop();
 	threadpool.join_all();
+
+	// Favorite system
+	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system")) {
+
+		std::string name = system.child("name").text().get();
+		std::string fullname = system.child("fullname").text().get();
+		std::string cmd = system.child("command").text().get();
+		std::string themeFolder = system.child("theme").text().as_string(name.c_str());
+
+		if (name == "favorites") {
+			LOG(LogInfo) << "creating favorite system";
+			SystemData *newSys = new SystemData("favorites", fullname, cmd, themeFolder, &sSystemVector);
+			sSystemVector.push_back(newSys);
+		}
+	}
+
+
 	return true;
 }
 
@@ -398,12 +442,14 @@ void SystemData::writeExampleConfig(const std::string& path)
 	LOG(LogError) << "Example config written!  Go read it at \"" << path << "\"!";
 }
 
-void deleteFun(SystemData * system){
+bool deleteSystem(SystemData * system){
 	delete system;
 }
+
 void SystemData::deleteSystems()
 {
 	if(sSystemVector.size()) {
+		// THE CREATION OF EACH SYSTEM
 		boost::asio::io_service ioService;
 		boost::thread_group threadpool;
 		boost::asio::io_service::work work(ioService);
@@ -413,9 +459,21 @@ void SystemData::deleteSystems()
 					boost::bind(&boost::asio::io_service::run, &ioService)
 			);
 		}
+
+		std::vector<boost::unique_future<bool>> pending_data;
 		for (unsigned int i = 0; i < sSystemVector.size(); i++) {
-			ioService.post(boost::bind(deleteFun, sSystemVector.at(i)));
+			if(!(sSystemVector.at(i))->isFavorite()) {
+				typedef boost::packaged_task<bool> task_t;
+				boost::shared_ptr<task_t> task = boost::make_shared<task_t>(
+						boost::bind(&deleteSystem, sSystemVector.at(i)));
+				boost::unique_future<bool> fut = task->get_future();
+				pending_data.push_back(std::move(fut));
+				ioService.post(boost::bind(&task_t::operator(), task));
+			}
 		}
+
+		boost::wait_for_all(pending_data.begin(), pending_data.end());
+
 		ioService.stop();
 		threadpool.join_all();
 		sSystemVector.clear();
@@ -506,5 +564,14 @@ void SystemData::refreshRootFolder() {
 
 std::map<std::string, std::vector<std::string>*>* SystemData::getEmulators() {
 	return mEmulators;
+}
+
+SystemData* SystemData::getFavoriteSystem() {
+	for(auto system = sSystemVector.begin(); system != sSystemVector.end(); system ++){
+		if((*system)->isFavorite()){
+			return (*system);
+		}
+	}
+	return NULL;
 }
 

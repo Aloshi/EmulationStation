@@ -15,6 +15,8 @@ public:
                                std::vector<std::string> extensions, std::string command,
                                std::vector<PlatformIds::PlatformId> platformIds, std::string themeFolder,
                                std::map<std::string, std::vector<std::string>*>* map);
+	SystemData(std::string name, std::string fullName, std::string command,
+			   std::string themeFolder, std::vector<SystemData*>* systems);
 	~SystemData();
 
 	inline FileData* getRootFolder() const { return mRootFolder; };
@@ -24,6 +26,8 @@ public:
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
 	inline bool getHasFavorites() const { return mHasFavorites; }
+	inline bool isFavorite() const { return mIsFavorite; }
+	inline std::vector<FileData*> getFavorites() const { return mRootFolder->getFavoritesRecursive(GAME); }
 
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mPlatformIds; }
 	inline bool hasPlatformId(PlatformIds::PlatformId id) { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
@@ -45,6 +49,7 @@ public:
 	static std::string getConfigPath(bool forWrite); // if forWrite, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 
 	static std::vector<SystemData*> sSystemVector;
+	static SystemData *getFavoriteSystem();
 
 	inline std::vector<SystemData*>::const_iterator getIterator() const { return std::find(sSystemVector.begin(), sSystemVector.end(), this); };
 	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.rbegin(), sSystemVector.rend(), this); };
@@ -84,6 +89,7 @@ private:
 	std::shared_ptr<ThemeData> mTheme;
 
 	bool mHasFavorites;
+	bool mIsFavorite;
 
 	void populateFolder(FileData* folder);
 

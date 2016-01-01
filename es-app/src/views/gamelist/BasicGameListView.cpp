@@ -25,6 +25,8 @@ void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 {
+	ISimpleGameListView::onFileChanged(file, change);
+
 	if(change == FILE_METADATA_CHANGED)
 	{
 		// might switch to a detailed view
@@ -32,7 +34,6 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 		return;
 	}
 
-	ISimpleGameListView::onFileChanged(file, change);
 }
 
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
@@ -45,7 +46,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 
 	bool favoritesOnly = false;
 
-	if (Settings::getInstance()->getBool("FavoritesOnly"))
+	if (Settings::getInstance()->getBool("FavoritesOnly") && !systemData->isFavorite())
 	{
 		for (auto it = files.begin(); it != files.end(); it++)
 		{
@@ -63,7 +64,7 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 	// The TextListComponent would be able to insert at a specific position,
 	// but the cost of this operation could be seriously huge.
 	// This naive implemention of doing a first pass in the list is used instead.
-	if(! Settings::getInstance()->getBool("FavoritesOnly")){
+	if(!Settings::getInstance()->getBool("FavoritesOnly") || systemData->isFavorite()){
 		for(auto it = files.begin(); it != files.end(); it++)
 		{
 			if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("true") == 0)
@@ -73,24 +74,29 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 		}
 	}
 
-	for(auto it = files.begin(); it != files.end(); it++)
+	// Do not show double names in favorite system.
+	if(!systemData->isFavorite())
 	{
-		if (favoritesOnly)
-		{
-			if ((*it)->getType() == GAME)
-			{
-				if ((*it)->metadata.get("hidden").compare("yes") != 0) {
-					if ((*it)->metadata.get("favorite").compare("true") == 0) {
-						mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		for (auto it = files.begin(); it != files.end(); it++) {
+			if (favoritesOnly) {
+				if ((*it)->getType() == GAME) {
+					if ((*it)->metadata.get("hidden").compare("yes") != 0) {
+						if ((*it)->metadata.get("favorite").compare("true") == 0) {
+							mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+						}
 					}
 				}
 			}
-		}
-		else
-		{
-			if ((*it)->metadata.get("hidden").compare("true") != 0){
-				mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+			else {
+				if ((*it)->metadata.get("hidden").compare("true") != 0) {
+					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				}
 			}
+		}
+	}
+	if(files.size() == 0){
+		while(!mCursorStack.empty()){
+			mCursorStack.pop();
 		}
 	}
 }
@@ -99,6 +105,7 @@ FileData* BasicGameListView::getCursor()
 {
 	return mList.getSelected();
 }
+
 void BasicGameListView::setCursorIndex(int cursor){
 	mList.setCursorIndex(cursor);
 }
@@ -111,7 +118,7 @@ void BasicGameListView::setCursor(FileData* cursor)
 {
 	if(!mList.setCursor(cursor))
 	{
-		populateList(cursor->getParent()->getChildren());
+		populateList(mRoot->getChildren());
 		mList.setCursor(cursor);
 
 		// update our cursor stack in case our cursor just got set to some folder we weren't in before
@@ -150,7 +157,9 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("y", "favorite"));
-	prompts.push_back(HelpPrompt("select", "options"));
+	if(getRoot()->getSystem() != SystemData::getFavoriteSystem()) {
+		prompts.push_back(HelpPrompt("y", "favorite"));
+		prompts.push_back(HelpPrompt("select", "options"));
+	}
 	return prompts;
 }
