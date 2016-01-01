@@ -53,6 +53,29 @@ void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 	int index = getCursorIndex();
 	populateList(getRoot()->getChildren());
 	setCursorIndex(index);
+
+	/* Favorite */
+	if(file->getType() == GAME){
+		SystemData * favoriteSystem = SystemData::getFavoriteSystem();
+		bool isFavorite = file->metadata.get("favorite") == "true";
+		bool foundInFavorite = false;
+		for(auto gameInFavorite = favoriteSystem->getRootFolder()->getChildren().begin();
+			gameInFavorite != favoriteSystem->getRootFolder()->getChildren().end();
+			gameInFavorite ++){
+				if((*gameInFavorite) == file){
+					if(!isFavorite){
+						favoriteSystem->getRootFolder()->removeAlreadyExisitingChild(file);
+						ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
+					}
+					foundInFavorite = true;
+					break;
+				}
+		}
+		if(!foundInFavorite && isFavorite){
+			favoriteSystem->getRootFolder()->addAlreadyExisitingChild(file);
+			ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
+		}
+	}
 }
 
 bool ISimpleGameListView::input(InputConfig* config, Input input)
