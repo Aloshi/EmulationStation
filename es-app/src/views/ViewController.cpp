@@ -65,7 +65,7 @@ void ViewController::goToSystemView(SystemData* system)
 
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
-
+	mFadeOpacity = 0;
 	playViewTransition();
 }
 
@@ -102,17 +102,18 @@ void ViewController::goToGameList(SystemData* system, int velocity)
 	mState.system = system;
 
 	mCurrentView = getGameListView(system);
-        //If needed, wrap around before scrolling.
-        if(velocity < 0 && mCurrentView->getPosition().x() > -mCamera.translation().x())
-        {
-          float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
-          mCamera *= Eigen::Translation3f(-sceneWidth,0,0);
-        }
-        if(velocity > 0 && mCurrentView->getPosition().x() < -mCamera.translation().x())
-        {
-          float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
-          mCamera *= Eigen::Translation3f(sceneWidth,0,0);
-        }
+	//If needed, wrap around before scrolling.
+	if(velocity < 0 && mCurrentView->getPosition().x() > -mCamera.translation().x())
+	{
+		float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+		mCamera *= Eigen::Translation3f(-sceneWidth,0,0);
+	}
+	if(velocity > 0 && mCurrentView->getPosition().x() < -mCamera.translation().x())
+	{
+		float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+		mCamera *= Eigen::Translation3f(sceneWidth,0,0);
+	}
+	mFadeOpacity = 0;
 	playViewTransition();
 }
 

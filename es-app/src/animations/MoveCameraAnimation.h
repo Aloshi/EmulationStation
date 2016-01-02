@@ -11,6 +11,7 @@ public:
 
 	void apply(float t) override
 	{
+		cameraOut = Eigen::Affine3f::Identity();
 		// cubic ease out
 		t -= 1;
 		cameraOut.translation() = -lerp<Eigen::Vector3f>(-mCameraStart.translation(), mTarget, t*t*t + 1);
