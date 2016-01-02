@@ -74,7 +74,7 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(SystemManager::getInstance()->getNext(system));
+	goToGameList(SystemManager::getInstance()->getNext(system), 1);
 }
 
 void ViewController::goToPrevGameList()
@@ -82,10 +82,10 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(SystemManager::getInstance()->getPrev(system));
+	goToGameList(SystemManager::getInstance()->getPrev(system), -1);
 }
 
-void ViewController::goToGameList(SystemData* system)
+void ViewController::goToGameList(SystemData* system, int velocity)
 {
 	if(mState.viewing == SYSTEM_SELECT)
 	{
@@ -102,6 +102,17 @@ void ViewController::goToGameList(SystemData* system)
 	mState.system = system;
 
 	mCurrentView = getGameListView(system);
+        //If needed, wrap around before scrolling.
+        if(velocity < 0 && mCurrentView->getPosition().x() > -mCamera.translation().x())
+        {
+          float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+          mCamera *= Eigen::Translation3f(-sceneWidth,0,0);
+        }
+        if(velocity > 0 && mCurrentView->getPosition().x() < -mCamera.translation().x())
+        {
+          float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+          mCamera *= Eigen::Translation3f(sceneWidth,0,0);
+        }
 	playViewTransition();
 }
 
@@ -307,7 +318,31 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 	// draw systemview
 	getSystemListView()->render(trans);
-	
+	Eigen::Affine3f wrapTrans;
+	Eigen::Vector3f wrapStart;
+	Eigen::Vector3f wrapEnd;
+	bool wrapped = false;
+
+	float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+	if(viewStart.x() < 0)
+	{
+		wrapped = true;
+		wrapTrans = trans * Eigen::Translation3f(-sceneWidth,0,0);
+	}
+	if(viewEnd.x() > sceneWidth)
+	{
+		wrapped = true;
+		wrapTrans = trans * Eigen::Translation3f(sceneWidth,0,0);
+	}
+
+	if(wrapped)
+	{
+		wrapStart = wrapTrans.inverse().translation();
+		wrapEnd = wrapTrans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
+	}
+
+
+
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -318,6 +353,9 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 		if(guiEnd.x() >= viewStart.x() && guiEnd.y() >= viewStart.y() &&
 			guiStart.x() <= viewEnd.x() && guiStart.y() <= viewEnd.y())
 				it->second->render(trans);
+		if(wrapped && guiEnd.x() >= wrapStart.x() && guiEnd.y() >= wrapStart.y() &&
+			guiStart.x() <= wrapEnd.x() && guiStart.y() <= wrapEnd.y())
+				it->second->render(wrapTrans);
 	}
 
 	if(mWindow->peekGui() == this)

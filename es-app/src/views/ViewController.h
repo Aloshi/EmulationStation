@@ -27,7 +27,7 @@ public:
 	// Navigation.
 	void goToNextGameList();
 	void goToPrevGameList();
-	void goToGameList(SystemData* system);
+	void goToGameList(SystemData* system, int velocity = 0);
 	void goToSystemView(SystemData* system);
 	void goToStart();
 
