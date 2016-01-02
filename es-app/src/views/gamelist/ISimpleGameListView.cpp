@@ -59,6 +59,11 @@ void ISimpleGameListView::onMetaDataChanged(const FileData& file)
 {
 	onFilesChanged();
 }
+void ISimpleGameListView::onStatisticsChanged(const FileData& file)
+{
+	return;
+}
+
 
 bool ISimpleGameListView::input(InputConfig* config, Input input)
 {
@@ -66,7 +71,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 	{
 		if(validCursor() && config->isMappedTo("a", input) || config->isMappedTo("start", input))
 		{
-			FileData cursor = getCursor();
+			const FileData& cursor = getCursor();
 			if(cursor.getType() == GAME)
 			{
 				Sound::getFromTheme(getTheme(), getName(), "launch")->play();

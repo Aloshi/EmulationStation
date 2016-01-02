@@ -37,7 +37,7 @@ public:
 	inline bool operator!=(const FileData& rhs) const { return !(*this == rhs); }
 
 	MetaDataMap get_metadata() const;
-	void set_metadata(const MetaDataMap& metadata);
+	void set_metadata(const MetaDataMap& metadata) const;
 
 	const std::string& getName() const;
 	FileType getType() const;

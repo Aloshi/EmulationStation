@@ -31,7 +31,7 @@ public:
 	unsigned int getGameCount() const;
 	bool hasFileWithImage() const;
 
-	void launchGame(Window* window, FileData game) const;
+	void launchGame(Window* window, const FileData& game) const;
 
 	// Load or re-load theme.
 	void loadTheme();

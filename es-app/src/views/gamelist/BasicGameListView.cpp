@@ -75,7 +75,7 @@ void BasicGameListView::setCursor(const FileData& cursor)
 	}
 }
 
-void BasicGameListView::launch(FileData& game)
+void BasicGameListView::launch(const FileData& game)
 {
 	ViewController::get()->launch(game);
 }

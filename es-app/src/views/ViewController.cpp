@@ -187,8 +187,14 @@ void ViewController::onMetaDataChanged(SystemData* system, const FileData& file)
 	if(it != mGameListViews.end())
 		it->second->onMetaDataChanged(file);
 }
+void ViewController::onStatisticsChanged(SystemData* system, const FileData& file)
+{
+	auto it = mGameListViews.find(system);
+	if(it != mGameListViews.end())
+		it->second->onStatisticsChanged(file);
+}
 
-void ViewController::launch(FileData& game, Eigen::Vector3f center)
+void ViewController::launch(const FileData& game, Eigen::Vector3f center)
 {
 	if(game.getType() != GAME)
 	{
@@ -211,22 +217,22 @@ void ViewController::launch(FileData& game, Eigen::Vector3f center)
 			//mFadeOpacity = lerp<float>(0.0f, 1.0f, t*t*t + 1);
 			mFadeOpacity = lerp<float>(0.0f, 1.0f, t);
 		};
-		setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this, game, fadeFunc]
+		setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this, &game, fadeFunc]
 		{
 			game.getSystem()->launchGame(mWindow, game);
 			mLockInput = false;
 			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, nullptr, true);
-			this->onMetaDataChanged(game.getSystem(), game);
+			this->onStatisticsChanged(game.getSystem(), game);
 		});
 	}else{
 		// move camera to zoom in on center + fade out, launch game, come back in
-		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game] 
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, &game] 
 		{
 			game.getSystem()->launchGame(mWindow, game);
 			mCamera = origCamera;
 			mLockInput = false;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, nullptr, true);
-			this->onMetaDataChanged(game.getSystem(), game);
+			this->onStatisticsChanged(game.getSystem(), game);
 		});
 	}
 }

@@ -24,14 +24,16 @@ MetaDataDecl folderDecls[] = {
 	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
 	{"thumbnail",	MD_IMAGE_PATH,			"", 				false,		"thumbnail",			"enter path to thumbnail"},
 };
-// because of that subset constraint, note the abuse of the genre field
-// It is marked as MD_MULTILINE_STRING instead of MD_STRING. This appears to be ok.
+// because of that subset constraint, note the abuse of the fields!
+// Some are marked as MD_MULTILINE_STRING instead of MD_STRING. This appears to be ok.
 MetaDataDecl filterDecls[] = { 
 	{"name",		MD_STRING,				"Filter", 				false,		"name",					"enter filter name"}, 
 	{"desc",		MD_MULTILINE_STRING,	"", 				false,		"description",			"enter description"},
 	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
 	{"thumbnail",	MD_IMAGE_PATH,			"", 				false,		"thumbnail",			"enter path to thumbnail"},
         {"genre",	MD_MULTILINE_STRING,			"rating > .6 AND playcount > 0", 				false,		"query",			"enter query"},
+	{"developer",	MD_STRING,				"",			false,		"order by",			"enter columns to order by"},
+	{"players",		MD_INT,					"0",				false,		"limit",				"enter limit on results"}
 };
 
 std::map< MetaDataListType, std::vector<MetaDataDecl> > MDD_map = boost::assign::map_list_of

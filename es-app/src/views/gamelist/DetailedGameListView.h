@@ -14,11 +14,12 @@ public:
 
 	virtual void onFilesChanged() override;
 	virtual void onMetaDataChanged(const FileData& file) override;
+	virtual void onStatisticsChanged(const FileData& file) override;
 
 	virtual const char* getName() const override { return "detailed"; }
 
 protected:
-	virtual void launch(FileData& game) override;
+	virtual void launch(const FileData& game) override;
 	virtual void populateList(const std::vector<FileData>& files) override;
 
 private:

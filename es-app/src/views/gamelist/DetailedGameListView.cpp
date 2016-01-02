@@ -244,13 +244,14 @@ void DetailedGameListView::updateInfoPanel()
 	}
 }
 
-void DetailedGameListView::launch(FileData& game)
+void DetailedGameListView::launch(const FileData& game)
 {
 	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
 	if(mImage.hasImage())
 		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
 
 	ViewController::get()->launch(game, target);
+	updateInfoPanel();
 }
 
 // we know we won't be recreated as a new type of gamelist,
@@ -264,6 +265,10 @@ void DetailedGameListView::onFilesChanged()
 void DetailedGameListView::onMetaDataChanged(const FileData& file)
 {
 	ISimpleGameListView::onMetaDataChanged(file);
+}
+void DetailedGameListView::onStatisticsChanged(const FileData& file)
+{
+	updateInfoPanel();
 }
 
 void DetailedGameListView::populateList(const std::vector<FileData>& files)

@@ -675,7 +675,7 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 		ss << "AND NOT filetype in ( " << FileType::FOLDER << "," << FileType::FILTER << ") ";
 
 	ss << " ORDER BY ";
-	if(foldersFirst) ss << "CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
+	if(includeFolders && foldersFirst) ss << "CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
 	if(sortType)
 		ss << sortType->sql;
 	else
@@ -700,43 +700,29 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 }
 
 std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID, SystemData* system, 
-	bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType)
+	 bool matchFolders, const std::string& filter_matches, int limit, bool foldersFirst, const FileSort* sortType)
 {
 	const std::string& systemID = system->getName();
 	std::vector<FileData> children;
-	//Unfortunate round trip, since the metadata is maintained at the UI level.
-	//Also note the abuse of the genre column.
-	SQLPreparedStmt readStmt(mDB, "SELECT genre FROM files WHERE fileid = ?1 AND systemid = ?2 and filetype = 3");
-	sqlite3_bind_text(readStmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
-	sqlite3_bind_text(readStmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
-
-	std::string query_additions;
-	while(readStmt.step() != SQLITE_DONE)
-	{
-		query_additions = std::string((const char*)sqlite3_column_text(readStmt, 0));
-	}
 
 	std::stringstream ss;
 	//Use the indir logic to support filters having subfilters
 	//A subfilter may return more entries than the parent!
 	//The user can handle making sure subfilters make subsets.
 	ss << "SELECT fileid, systemid, name, filetype, CAST(strftime(\"%Y\",releasedate) as INTEGER) as year FROM files WHERE ";
-	if(!systemID.empty()) ss << "systemid = ?1 AND ";
-	ss <<"((";
-	if(immediateChildrenOnly)
-		ss << "inimmediatedir(fileid, ?2) ";
-	else
-		ss << "indir(fileid, ?2) ";
+	if(!systemID.empty()) 
+		ss << "systemid = ?1 AND ";
+	//BUG: A metasystem filter might have spurious children inimmediatedir!
+	ss << "( inimmediatedir(fileid, ?2) ";
 
+	if(!filter_matches.empty())
+        {
+		ss << " OR ((" << filter_matches << ")";
+		if(!matchFolders)
+			ss << "AND filetype is " << FileType::GAME;
+		ss << ")";
+	}
 	ss << ")";
-
-	if(!query_additions.empty())
-		ss << " OR ((" << query_additions << ") AND filetype = 1)";
-
-	ss << ")";
-
-	if(!includeFolders)
-		ss << "AND NOT filetype in ( " << FileType::FOLDER << "," << FileType::FILTER << ") ";
 
 	ss << " ORDER BY ";
 	if(foldersFirst) ss << "CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
@@ -744,14 +730,19 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 		ss << sortType->sql;
 	else
 		ss << "LOWER(name)";
+	if(limit > 0)
+		ss << " LIMIT ?3";
 
 	std::string query = ss.str();
+        LOG(LogDebug) << "(" << fileID << ","<<systemID<<") " << query << std::endl;
 	try
 	{
 		SQLPreparedStmt stmt(mDB, query);
 
 		sqlite3_bind_text(stmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC); // systemid
 		sqlite3_bind_text(stmt, 2, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+		if(limit > 0)
+			sqlite3_bind_int(stmt, 3, limit);
 
 		while(stmt.step() != SQLITE_DONE)
 		{

@@ -120,7 +120,7 @@ MetaDataMap FileData::get_metadata() const
 	return mMetaDataCache;
 }
 
-void FileData::set_metadata(const MetaDataMap& metadata)
+void FileData::set_metadata(const MetaDataMap& metadata) const
 {
 	// The database round trip might alter some values.
 	// Setting metadata should be fairly infrequent, so this should be fine.
@@ -136,7 +136,18 @@ std::vector<FileData> FileData::getChildren(const FileSort* sort) const
 	bool foldersFirst = Settings::getInstance()->getBool("SortFoldersFirst");
 
 	if(mType == FILTER)
-		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, true, true, true, sort);
+	{
+		MetaDataMap metadata = get_metadata();
+		//Sorry about abusing columns for other purposes.
+		std::string filter_matches = mMetaDataCache.get("genre");
+		int limit = mMetaDataCache.get<int>("players");
+		//TODO: Let a filter also specify ability to match filters/folders
+		std::string orderby = mMetaDataCache.get("developer");
+		FileSort filterSort("Filter given sort",orderby.c_str());
+		if(!orderby.empty())
+			sort = &filterSort;
+		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, false, filter_matches, limit, foldersFirst, sort);
+	}
 
 	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true, foldersFirst, sort);
 }
@@ -149,6 +160,6 @@ std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const 
 	bool foldersFirst = Settings::getInstance()->getBool("SortFoldersFirst");
 
 	if(mType == FILTER)
-		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, false, includeFolders, true, sort);
+		return getChildren(sort);
 	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, foldersFirst, sort);
 }

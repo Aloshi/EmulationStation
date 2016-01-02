@@ -71,7 +71,7 @@ public:
 	// A filters are opaque to getting children.
 	//(You'll need to call this again to get "grandchildren")
 	std::vector<FileData> getChildrenOfFilter(const std::string& fileID, SystemData* system, 
-		bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType = NULL);
+	 bool matchFolders, const std::string& filter_matches, int limit, bool foldersFirst, const FileSort* sortType);
 
 	bool systemHasFileWithImage(const SystemData* system);
 	int getSystemFileCount(const SystemData* system);

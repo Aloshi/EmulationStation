@@ -19,6 +19,7 @@ public:
 
 	virtual void onFilesChanged() = 0;
 	virtual void onMetaDataChanged(const FileData& file) = 0;
+	virtual void onStatisticsChanged(const FileData& file) = 0;
 
 	// Called whenever the theme changes.
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) = 0;

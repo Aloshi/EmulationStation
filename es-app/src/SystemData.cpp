@@ -84,7 +84,7 @@ std::string escapePath(const boost::filesystem::path& path)
 #endif
 }
 
-void SystemData::launchGame(Window* window, FileData game) const
+void SystemData::launchGame(Window* window, const FileData& game) const
 {
 	LOG(LogInfo) << "Attempting to launch game...";
 
@@ -127,6 +127,7 @@ void SystemData::launchGame(Window* window, FileData game) const
 	metadata.set("lastplayed", time);
 
 	game.set_metadata(metadata);
+
 }
 
 std::string SystemData::getThemePath() const
