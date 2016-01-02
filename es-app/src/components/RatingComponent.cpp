@@ -132,8 +132,11 @@ bool RatingComponent::input(InputConfig* config, Input input)
 	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		mValue += 1.f / (NUM_RATING_STARS * 2);
-		if(mValue > 1.0f)
+		if(mValue > (1.0f + .5f/(NUM_RATING_STARS * 2)))
 			mValue = 0.0f;
+		if(mValue > 1.0f && mValue < (1.0f + .6f/(NUM_RATING_STARS * 2)))
+			mValue = 1.0f;
+
 		mValueGiven.clear(); //invalidate the cached value;
 
 		updateVertices();
@@ -171,6 +174,6 @@ void RatingComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const 
 std::vector<HelpPrompt> RatingComponent::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("a", "add star"));
+	prompts.push_back(HelpPrompt("a", "add half star"));
 	return prompts;
 }
