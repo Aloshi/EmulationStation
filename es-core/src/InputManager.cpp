@@ -524,7 +524,21 @@ std::string InputManager::configureEmulators() {
                 break;
             }
         }
+    }
 
+    // in case of hole (player 1 missing, but player 4 set, fill the holes with last players joysticks)
+    for (int player = 0; player < 4; player++) {
+      if(playerJoysticks[player] == NULL){
+	for (int repplayer = 4; repplayer > player; repplayer--) {
+	  if(playerJoysticks[player] == NULL && playerJoysticks[repplayer] != NULL){
+	    playerJoysticks[player] = playerJoysticks[repplayer];
+	  }
+	}
+      }
+    }
+
+    for (int player = 0; player < 4; player++) {
+        InputConfig * playerInputConfig = playerJoysticks[player];
         if(playerInputConfig != NULL){
             command << "-p" << player+1 << "index " <<  playerInputConfig->getDeviceIndex() << " -p" << player+1 << "guid " << playerInputConfig->getDeviceGUIDString() << " -p" << player+1 << "name \"" <<  playerInputConfig->getDeviceName() << "\" ";
         }/*else {
