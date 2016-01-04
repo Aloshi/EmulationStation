@@ -75,22 +75,56 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 */
 
 
+		addEntry("EDIT", 0x777777FF, true,
+			[this] {
+				auto s = new GuiSettings(mWindow, "EDIT");
+				ComponentListRow row;
 
-		// edit game metadata
-		if(getGamelist()->validCursor())
-		{
-		row.elements.clear();
-		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS ENTRY'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-		row.addElement(makeArrow(mWindow), false);
-		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
-		mMenu.addRow(row); 
-		}
-		// add a filter entry to our current list
-		row.elements.clear();
-		row.addElement(std::make_shared<TextComponent>(mWindow, "ADD FILTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-		row.addElement(makeArrow(mWindow), false);
-		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openFilterAddStart, this));
-		mMenu.addRow(row);
+				// edit game metadata
+				if(getGamelist()->validCursor())
+				{
+                                  const FileData& file = getGamelist()->getCursor();
+				row.elements.clear();
+				row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS ENTRY'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+				row.addElement(makeArrow(mWindow), false);
+				row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
+				s->addRow(row);
+
+
+				row.elements.clear();
+				auto addTagFunc= [this, &file](const std::string& tag)  { 
+				SystemManager::getInstance()->database().setFileTag(file.getFileID(),file.getSystemID(),tag,true);
+				};
+				auto removeTagFunc= [this, &file](const std::string& tag)  { 
+				SystemManager::getInstance()->database().setFileTag(file.getFileID(),file.getSystemID(),tag,false);
+				};
+	
+				row.makeAcceptInputHandler([this, &file, addTagFunc] {
+				mWindow->pushGui(new GuiTextEditPopup(mWindow, "ENTER NEW TAG", "", addTagFunc, false));
+				});
+				auto addTag = std::make_shared<TextComponent>(mWindow, "ADD TAG",Font::get(FONT_SIZE_MEDIUM), 0x777777FF); 
+				auto bracket = makeArrow(mWindow);
+				row.addElement(addTag, true);
+				row.addElement(bracket, false);
+				s->addRow(row);
+				row.elements.clear();
+				row.makeAcceptInputHandler([this, &file, removeTagFunc] {
+				mWindow->pushGui(new GuiTextEditPopup(mWindow, "ENTER TAG TO REMOVE", "", removeTagFunc, false));
+				});
+				auto removeTag = std::make_shared<TextComponent>(mWindow, "REMOVE TAG",Font::get(FONT_SIZE_MEDIUM), 0x777777FF); 
+				bracket = makeArrow(mWindow);
+				row.addElement(removeTag, true);
+				row.addElement(bracket, false);
+				s->addRow(row);
+				}
+				// add a filter entry to our current list
+				row.elements.clear();
+				row.addElement(std::make_shared<TextComponent>(mWindow, "ADD FILTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+				row.addElement(makeArrow(mWindow), false);
+				row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openFilterAddStart, this));
+				s->addRow(row);
+				mWindow->pushGui(s);
+		});
 	} //End Gamelist Specific entries
 
 	addEntry("SETTINGS", 0x777777FF, true,
