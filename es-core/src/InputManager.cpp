@@ -511,16 +511,15 @@ std::string InputManager::configureEmulators() {
 
     // Last loop, search for free controllers for remaining players.
     for (int player = 0; player < 4; player++) {
-        InputConfig * playerInputConfig = playerJoysticks[player];
         // si aucune config a été trouvé pour le joueur, on essaie de lui filer un libre
-        if(playerInputConfig == NULL){
+        if(playerJoysticks[player] == NULL){
             LOG(LogInfo) << "No config for player " << player;
 
             for (std::list<InputConfig *>::iterator it1=availableConfigured.begin(); it1!=availableConfigured.end(); ++it1)
             {
-                playerInputConfig = *it1;
+                playerJoysticks[player] = *it1;
                 availableConfigured.erase(it1);
-                LOG(LogInfo) << "So i set "<< playerInputConfig->getDeviceName() << " for player " << player;
+                LOG(LogInfo) << "So i set "<< playerJoysticks[player]->getDeviceName() << " for player " << player;
                 break;
             }
         }
@@ -529,16 +528,17 @@ std::string InputManager::configureEmulators() {
     // in case of hole (player 1 missing, but player 4 set, fill the holes with last players joysticks)
     for (int player = 0; player < 4; player++) {
       if(playerJoysticks[player] == NULL){
-	for (int repplayer = 4; repplayer > player; repplayer--) {
-	  if(playerJoysticks[player] == NULL && playerJoysticks[repplayer] != NULL){
-	    playerJoysticks[player] = playerJoysticks[repplayer];
-	  }
-	}
+    	for (int repplayer = 4; repplayer > player; repplayer--) {
+    	  if(playerJoysticks[player] == NULL && playerJoysticks[repplayer] != NULL){
+    	    playerJoysticks[player]    = playerJoysticks[repplayer];
+	    playerJoysticks[repplayer] = NULL;
+    	  }
+    	}
       }
     }
 
     for (int player = 0; player < 4; player++) {
-        InputConfig * playerInputConfig = playerJoysticks[player];
+      InputConfig * playerInputConfig = playerJoysticks[player];
         if(playerInputConfig != NULL){
             command << "-p" << player+1 << "index " <<  playerInputConfig->getDeviceIndex() << " -p" << player+1 << "guid " << playerInputConfig->getDeviceGUIDString() << " -p" << player+1 << "name \"" <<  playerInputConfig->getDeviceName() << "\" ";
         }/*else {
