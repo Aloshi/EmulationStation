@@ -33,8 +33,6 @@ public:
     bool launchKodi(Window * window);
     bool enableWifi(std::string ssid, std::string key);
     bool disableWifi();
-    std::string getRecalboxConfig(std::string key);
-    bool setRecalboxConfig(std::string key, std::string value);
     bool reboot();
     bool shutdown();
     std::string getIpAdress();

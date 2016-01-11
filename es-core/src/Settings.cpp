@@ -18,7 +18,15 @@ std::vector<const char *> settings_dont_save = boost::assign::list_of
         ("Windowed")
         ("VSync")
         ("HideConsole")
-        ("IgnoreGamelist");
+        ("IgnoreGamelist")
+        ("UpdateCommand")
+        ("UpdateServer")
+        ("VersionFile")
+        ("SharePartition")
+        ("RecalboxSettingScript")
+        ("RecalboxConfigScript")
+        ("LastVersionFile")
+        ("VersionMessage");
 
 Settings::Settings() {
     setDefaults();
@@ -73,10 +81,6 @@ void Settings::setDefaults() {
     mStringMap["ThemeSet"] = "";
     mStringMap["ScreenSaverBehavior"] = "dim";
     mStringMap["Scraper"] = "TheGamesDB";
-    mStringMap["UpdateCommand"] = "";
-    mStringMap["UpdateServer"] = "";
-    mStringMap["VersionFile"] = "";
-    mStringMap["SharePartition"] = "";
     mStringMap["Lang"] = "en_US";
     mStringMap["INPUT P1"] = "DEFAULT";
     mStringMap["INPUT P2"] = "DEFAULT";
@@ -91,12 +95,13 @@ void Settings::setDefaults() {
 #else
     mStringMap["Overclock"] = "none";
 #endif
+    mStringMap["UpdateCommand"] = "/recalbox/scripts/recalbox-upgrade.sh";
+    mStringMap["UpdateServer"] = "recalbox.com";
+    mStringMap["VersionFile"] = "/recalbox/recalbox.version";
+    mStringMap["SharePartition"] = "/recalbox/share/";
     mStringMap["RecalboxSettingScript"] = "/recalbox/scripts/recalbox-config.sh";
-    mStringMap["RecalboxConfigScript"] = "";
     mStringMap["LastVersionFile"] = "/root/update.done";
     mStringMap["VersionMessage"] = "/recalbox/recalbox.msg";
-    mStringMap["Manifest"] = "/home/matthieu/dev/recalbox-3.3.X/recalbox-manager/project/MANIFEST.XML";
-
 
 }
 

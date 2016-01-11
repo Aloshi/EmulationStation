@@ -302,44 +302,6 @@ bool RecalboxSystem::disableWifi() {
 }
 
 
-std::string RecalboxSystem::getRecalboxConfig(std::string key) {
-    std::ostringstream oss;
-    oss << Settings::getInstance()->getString("RecalboxConfigScript") << " "
-    << " -command load "
-    << " -key " << key;
-    std::string command = oss.str();
-    LOG(LogInfo) << "Launching " << command;
-
-    FILE *pipe = popen(command.c_str(), "r");
-    if (!pipe) return "ERROR";
-    char buffer[128];
-    std::string result = "";
-    while (!feof(pipe)) {
-        if (fgets(buffer, 128, pipe) != NULL)
-            result += buffer;
-    }
-    pclose(pipe);
-
-    return result;
-}
-
-bool RecalboxSystem::setRecalboxConfig(std::string key, std::string value) {
-    std::ostringstream oss;
-    oss << Settings::getInstance()->getString("RecalboxConfigScript") << " "
-    << " -command save"
-    << " -key " << key
-    << " -value " << value;
-    std::string command = oss.str();
-    LOG(LogInfo) << "Launching " << command;
-    if (system(command.c_str()) == 0) {
-        LOG(LogInfo) << key << " saved in recalbox.conf";
-        return true;
-    } else {
-        LOG(LogInfo) << "Cannot save " << key << " in recalbox.conf";
-        return false;
-    }
-}
-
 
 bool RecalboxSystem::reboot() {
     bool success = system("touch /tmp/reboot.please") == 0;
