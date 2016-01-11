@@ -312,7 +312,7 @@ int main(int argc, char* argv[])
 		 window.pushGui(new GuiMsgBox(&window,
 		RecalboxSystem::getInstance()->getVersionMessage(),
 		"OK", [] {
-						RecalboxSystem::getInstance()->versionMessageDisplayed();
+					 RecalboxSystem::getInstance()->updateLastVersionFile();
 					},"",nullptr,"",nullptr, ALIGN_LEFT));
 	}
 

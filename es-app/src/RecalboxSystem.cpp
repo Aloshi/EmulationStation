@@ -96,6 +96,7 @@ std::string RecalboxSystem::getVersion() {
 }
 
 bool RecalboxSystem::needToShowVersionMessage() {
+    createLastVersionFileIfNotExisting();
     std::string versionFile = Settings::getInstance()->getString("LastVersionFile");
     if (versionFile.size() > 0) {
         std::ifstream lvifs(versionFile);
@@ -111,7 +112,19 @@ bool RecalboxSystem::needToShowVersionMessage() {
     return true;
 }
 
-bool RecalboxSystem::versionMessageDisplayed() {
+bool RecalboxSystem::createLastVersionFileIfNotExisting() {
+    std::string versionFile = Settings::getInstance()->getString("LastVersionFile");
+
+    FILE *file;
+    if (file = fopen(versionFile.c_str(), "r"))
+    {
+        fclose(file);
+        return true;
+    }
+    return updateLastVersionFile();
+}
+
+bool RecalboxSystem::updateLastVersionFile() {
     std::string versionFile = Settings::getInstance()->getString("LastVersionFile");
     std::string currentVersion = getVersion();
     std::ostringstream oss;
@@ -120,11 +133,9 @@ bool RecalboxSystem::versionMessageDisplayed() {
         LOG(LogWarning) << "Error executing " << oss.str().c_str();
         return false;
     } else {
-        LOG(LogInfo) << "Version message displayed ok";
+        LOG(LogError) << "Last version file updated";
         return true;
     }
-
-    return false;
 }
 
 std::string RecalboxSystem::getVersionMessage() {

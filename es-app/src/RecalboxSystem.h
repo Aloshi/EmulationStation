@@ -24,7 +24,8 @@ public:
     bool setAudioOutputDevice(std::string device);
     bool setOverscan(bool enable);
     bool setOverclock(std::string mode);
-    bool versionMessageDisplayed();
+    bool createLastVersionFileIfNotExisting();
+    bool updateLastVersionFile();
     bool needToShowVersionMessage();
     std::string getVersionMessage();
     bool updateSystem();
