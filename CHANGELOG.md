@@ -12,3 +12,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Reload gamelist feature
 - Multithreaded list loading and writing
 - Added favorite system
+- Switched a and b buttons functions
