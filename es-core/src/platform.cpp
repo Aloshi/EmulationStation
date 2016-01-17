@@ -1,7 +1,9 @@
 #include "platform.h"
 #include <stdlib.h>
 #include <boost/filesystem.hpp>
+#include <SDL.h>
 #include <iostream>
+#include <fcntl.h>
 
 #ifdef WIN32
 #include <codecvt>
@@ -69,4 +71,20 @@ int runSystemCommand(const std::string& cmd_utf8)
 #else
 	return system(cmd_utf8.c_str());
 #endif
+}
+
+int quitES(const std::string& filename)
+{
+	touch(filename);
+	SDL_Event* quit = new SDL_Event();
+	quit->type = SDL_QUIT;
+	SDL_PushEvent(quit);
+	return 0;
+}
+
+void touch(const std::string& filename)
+{
+	int fd = open(filename.c_str(), O_CREAT|O_WRONLY, 0644);
+	if (fd >= 0)
+		close(fd);
 }
