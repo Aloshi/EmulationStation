@@ -77,7 +77,7 @@ bool GuiMsgBox::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(mAcceleratorFunc && config->isMappedTo("b", input) && input.value != 0)
+	if(mAcceleratorFunc && config->isMappedTo("a", input) && input.value != 0)
 	{
 		mAcceleratorFunc();
 		return true;

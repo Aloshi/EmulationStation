@@ -103,14 +103,14 @@ bool FileSystemSelectorComponent::input(InputConfig* config, Input input)
 	const fs::path path = selectedFilePath();
 	const fe::Type type = filePathType(path);
 
-	if (config->isMappedTo("a", input) && input.value) { // cd in
+	if (config->isMappedTo("b", input) && input.value) { // cd in
 		if (!path.empty()) {
 			setCurrentPath(path);
 		}
 
 		return true;
 	}
-	else if (config->isMappedTo("b", input) && input.value) { // cd up
+	else if (config->isMappedTo("a", input) && input.value) { // cd up
 		switch (m_mode) {
 			case fssc::FilesShowFolders:
 			case fssc::FoldersShowFiles:
@@ -167,11 +167,11 @@ std::vector<HelpPrompt> FileSystemSelectorComponent::getHelpPrompts()
 
 	if (m_mode != fssc::FilesHideFolders) {
 		if (type & fssc::FolderInternal) {
-			prompts.push_back(HelpPrompt("a", "cd in"));
+			prompts.push_back(HelpPrompt("b", "cd in"));
 		}
 
 		if (m_currentPath != m_currentPath.root_path()) {
-			prompts.push_back(HelpPrompt("b", "cd up"));
+			prompts.push_back(HelpPrompt("a", "cd up"));
 		}
 	}
 

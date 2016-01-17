@@ -36,7 +36,7 @@ struct ComponentListRow
 	inline void makeAcceptInputHandler(const std::function<void()>& func)
 	{
 		input_handler = [func](InputConfig* config, Input input) -> bool {
-			if(config->isMappedTo("a", input) && input.value != 0)
+			if(config->isMappedTo("b", input) && input.value != 0)
 			{
 				func();
 				return true;

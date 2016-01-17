@@ -64,7 +64,7 @@ std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
 	prompts.push_back(HelpPrompt("up/down/left/right", "scroll"));
-	prompts.push_back(HelpPrompt("a", "launch"));
-	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("b", "launch"));
+	prompts.push_back(HelpPrompt("a", "back"));
 	return prompts;
 }

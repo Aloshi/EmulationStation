@@ -129,7 +129,7 @@ bool SystemView::input(InputConfig* config, Input input)
 			listInput(1);
 			return true;
 		}
-		if(config->isMappedTo("a", input))
+		if(config->isMappedTo("b", input))
 		{
 			stopScrolling();
 			ViewController::get()->goToGameList(getSelected());
@@ -398,7 +398,7 @@ std::vector<HelpPrompt> SystemView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
 	prompts.push_back(HelpPrompt("left/right", "choose"));
-	prompts.push_back(HelpPrompt("a", "select"));
+	prompts.push_back(HelpPrompt("b", "select"));
 	return prompts;
 }
 

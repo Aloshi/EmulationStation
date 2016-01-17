@@ -125,10 +125,10 @@ public:
 		prompts.push_back(HelpPrompt("up/down", "move"));
 
 		if (fs::is_directory(getCursor()->getPath())) {
-			prompts.push_back(HelpPrompt("a", "cd in"));
+			prompts.push_back(HelpPrompt("b", "cd in"));
 		}
 
-		prompts.push_back(HelpPrompt("b", "cd up / back"));
+		prompts.push_back(HelpPrompt("a", "cd up / back"));
 		return prompts;
 	}
 
@@ -137,7 +137,7 @@ public:
 			return BasicGameListView::input(config, input);
 		}
 		else if (input.value != 0) {
-			if (config->isMappedTo("a", input)) {
+			if (config->isMappedTo("b", input)) {
 				FileData* cursor = getCursor();
 
 				if (cursor->getType() == FOLDER) {
@@ -150,7 +150,7 @@ public:
 					populateList(cursor->getChildren());
 				}
 			}
-			else if (config->isMappedTo("b", input)) {
+			else if (config->isMappedTo("a", input)) {
 				if (mCursorStack.size()) {
 					populateList(mCursorStack.top()->getParent()->getChildren());
 					setCursor(mCursorStack.top());
@@ -291,7 +291,7 @@ bool GuiRomsManager::input(InputConfig* config, Input input)
 		showCurrentPlatformRomsManager();
 		return true;
 	}
-	else if (config->isMappedTo("b", input) && input.value != 0) {
+	else if (config->isMappedTo("a", input) && input.value != 0) {
 		delete this;
 		return true;
 	}
@@ -303,8 +303,8 @@ std::vector<HelpPrompt> GuiRomsManager::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = MenuComponent::getHelpPrompts();
 	prompts.push_back(HelpPrompt("x", "manage platform roms"));
-	prompts.push_back(HelpPrompt("a", "edit"));
-	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("b", "edit"));
+	prompts.push_back(HelpPrompt("a", "back"));
 	return prompts;
 }
 
