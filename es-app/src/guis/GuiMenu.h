@@ -8,10 +8,23 @@
 #include <SystemData.h>
 #include "guis/GuiSettings.h"
 
+class StrInputConfig
+{
+ public:
+  StrInputConfig(std::string ideviceName, std::string ideviceGUIDString) {
+    deviceName = ideviceName;
+    deviceGUIDString = ideviceGUIDString;
+  }
+
+  std::string deviceName;
+  std::string deviceGUIDString;
+};
+
 class GuiMenu : public GuiComponent
 {
 public:
 	GuiMenu(Window* window);
+	~GuiMenu();
 
 	bool input(InputConfig* config, Input input) override;
 	void onSizeChanged() override;
@@ -29,4 +42,7 @@ private:
                                                                         std::string configname) const;
 
 	void popSystemConfigurationGui(SystemData *systemData, std::string previouslySelectedEmulator) const;
+
+	std::vector<StrInputConfig*> mLoadedInput; // used to keep information about loaded devices in case there are unpluged between device window load and save
+	void clearLoadedInput();
 };

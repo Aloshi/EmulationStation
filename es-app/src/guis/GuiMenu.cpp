@@ -702,6 +702,10 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
     setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.15f);
 }
 
+GuiMenu::~GuiMenu() {
+  clearLoadedInput();
+}
+
 void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string previouslySelectedEmulator) const {
     // The system configuration
     GuiSettings *systemConfiguration = new GuiSettings(mWindow,
@@ -878,7 +882,10 @@ void GuiMenu::createConfigInput() {
     // Here we go; for each player
     std::list<int> alreadyTaken = std::list<int>();
 
-    std::vector<std::shared_ptr<OptionListComponent<InputConfig *>>> options;
+    // clear the current loaded inputs
+    clearLoadedInput();
+    
+    std::vector<std::shared_ptr<OptionListComponent<StrInputConfig *>>> options;
     for (int player = 0; player < 4; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player + 1;
@@ -886,7 +893,7 @@ void GuiMenu::createConfigInput() {
         std::string confGuid = sstm.str() + "GUID";
 
         LOG(LogInfo) << player + 1 << " " << confName << " " << confGuid;
-        auto inputOptionList = std::make_shared<OptionListComponent<InputConfig *> >(mWindow, sstm.str(), false);
+        auto inputOptionList = std::make_shared<OptionListComponent<StrInputConfig *> >(mWindow, sstm.str(), false);
         options.push_back(inputOptionList);
 
         // Checking if a setting has been saved, else setting to default
@@ -916,6 +923,9 @@ void GuiMenu::createConfigInput() {
                 int deviceID = config->getDeviceId();
                 // Si la manette est configurée, qu'elle correspond a la configuration, et qu'elle n'est pas
                 // deja selectionnée on l'ajoute en séléctionnée
+		StrInputConfig* newInputConfig = new StrInputConfig(config->getDeviceName(), config->getDeviceGUIDString());
+		mLoadedInput.push_back(newInputConfig);
+
                 if (foundFromConfig
                     && std::find(alreadyTaken.begin(), alreadyTaken.end(), deviceID) == alreadyTaken.end()
                     && !found) {
@@ -923,11 +933,11 @@ void GuiMenu::createConfigInput() {
                     alreadyTaken.push_back(deviceID);
                     LOG(LogWarning) << "adding entry for player" << player << " (selected): " <<
                                     config->getDeviceName() << "  " << config->getDeviceGUIDString();
-                    inputOptionList->add(displayName, config, true);
+                    inputOptionList->add(displayName, newInputConfig, true);
                 } else {
                     LOG(LogWarning) << "adding entry for player" << player << " (not selected): " <<
                                     config->getDeviceName() << "  " << config->getDeviceGUIDString();
-                    inputOptionList->add(displayName, config, false);
+                    inputOptionList->add(displayName, newInputConfig, false);
                 }
             }
         }
@@ -962,10 +972,10 @@ void GuiMenu::createConfigInput() {
             } else {
                 LOG(LogWarning) << "Found the selected controller ! : name in list  = " << selectedName;
                 LOG(LogWarning) << "Found the selected controller ! : guid  = " <<
-                                input_p1->getSelected()->getDeviceGUIDString();
+                                input_p1->getSelected()->deviceGUIDString;
 
-                Settings::getInstance()->setString(confName, input_p1->getSelected()->getDeviceName());
-                Settings::getInstance()->setString(confGuid, input_p1->getSelected()->getDeviceGUIDString());
+                Settings::getInstance()->setString(confName, input_p1->getSelected()->deviceName);
+                Settings::getInstance()->setString(confGuid, input_p1->getSelected()->deviceGUIDString);
             }
         }
 
@@ -1034,4 +1044,11 @@ std::shared_ptr<OptionListComponent<std::string>> GuiMenu::createRatioOptionList
     ratio_choice->add("16/9", "16/9", currentRatio == "16/9");
 
     return ratio_choice;
+}
+
+void GuiMenu::clearLoadedInput() {
+  for(int i=0; i<mLoadedInput.size(); i++) {
+    delete mLoadedInput[i];
+  }
+  mLoadedInput.clear();
 }
