@@ -25,6 +25,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <boost/algorithm/string/replace.hpp>
 
 
 RecalboxSystem::RecalboxSystem() {
@@ -281,6 +282,8 @@ bool RecalboxSystem::launchKodi(Window *window) {
 
 bool RecalboxSystem::enableWifi(std::string ssid, std::string key) {
     std::ostringstream oss;
+    boost::replace_all(ssid, "\"", "\\\"");
+    boost::replace_all(key, "\"", "\\\"");
     oss << Settings::getInstance()->getString("RecalboxSettingScript") << " "
     << "wifi" << " "
     << "enable" << " \""
