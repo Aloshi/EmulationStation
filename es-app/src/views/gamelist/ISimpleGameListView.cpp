@@ -59,6 +59,7 @@ void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 		SystemData * favoriteSystem = SystemData::getFavoriteSystem();
 		bool isFavorite = file->metadata.get("favorite") == "true";
 		bool foundInFavorite = false;
+		/* Removing favortie case : */
 		for(auto gameInFavorite = favoriteSystem->getRootFolder()->getChildren().begin();
 			gameInFavorite != favoriteSystem->getRootFolder()->getChildren().end();
 			gameInFavorite ++){
@@ -66,14 +67,17 @@ void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 					if(!isFavorite){
 						favoriteSystem->getRootFolder()->removeAlreadyExisitingChild(file);
 						ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
+						ViewController::get()->getSystemListView()->manageFavorite();
 					}
 					foundInFavorite = true;
 					break;
 				}
 		}
+		/* Adding favorite case : */
 		if(!foundInFavorite && isFavorite){
 			favoriteSystem->getRootFolder()->addAlreadyExisitingChild(file);
 			ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
+			ViewController::get()->getSystemListView()->manageFavorite();
 		}
 	}
 }
@@ -132,25 +136,24 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					std::string value = md->get("favorite");
 
 					bool removeFavorite = false;
+					SystemData *favoriteSystem = SystemData::getFavoriteSystem();
 					if (value.compare("false") == 0)
 					{
 						md->set("favorite", "true");
-						SystemData::getFavoriteSystem()->getRootFolder()->addAlreadyExisitingChild(cursor);
-						ViewController::get()->getSystemListView()->populate();
+						favoriteSystem->getRootFolder()->addAlreadyExisitingChild(cursor);
 					}
 					else
 					{
 						md->set("favorite", "false");
-						SystemData::getFavoriteSystem()->getRootFolder()->removeAlreadyExisitingChild(cursor);
-						ViewController::get()->getSystemListView()->populate();
+						favoriteSystem->getRootFolder()->removeAlreadyExisitingChild(cursor);
 						removeFavorite = true;
 					}
-
+					ViewController::get()->setInvalidGamesList(favoriteSystem);
+					ViewController::get()->getSystemListView()->manageFavorite();
 					int cursorPlace = getCursorIndex();
 					populateList(cursor->getParent()->getChildren());
 					setCursorIndex(cursorPlace + (removeFavorite ? -1 : 1));
 					updateInfoPanel();
-					ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
 				}
 			}
 		}else if(config->isMappedTo("right", input))
