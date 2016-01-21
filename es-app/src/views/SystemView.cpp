@@ -36,60 +36,63 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 	populate();
 }
 
+void SystemView::addSystem(SystemData * it){
+	if((it)->getRootFolder()->getChildren().size() == 0){
+		return;
+	}
+	const std::shared_ptr<ThemeData>& theme = (it)->getTheme();
+
+	Entry e;
+	e.name = (it)->getName();
+	e.object = it;
+
+	// make logo
+	if(theme->getElement("system", "logo", "image"))
+	{
+		ImageComponent* logo = new ImageComponent(mWindow);
+		logo->setMaxSize(Eigen::Vector2f(logoSize().x(), logoSize().y()));
+		logo->applyTheme((it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+		logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // center
+		e.data.logo = std::shared_ptr<GuiComponent>(logo);
+
+		ImageComponent* logoSelected = new ImageComponent(mWindow);
+		logoSelected->setMaxSize(Eigen::Vector2f(logoSize().x() * SELECTED_SCALE, logoSize().y() * SELECTED_SCALE * 0.70f));
+		logoSelected->applyTheme((it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+		logoSelected->setPosition((logoSize().x() - logoSelected->getSize().x()) / 2,
+								  (logoSize().y() - logoSelected->getSize().y()) / 2); // center
+		e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
+	}else{
+		// no logo in theme; use text
+		TextComponent* text = new TextComponent(mWindow,
+												(it)->getName(),
+												Font::get(FONT_SIZE_LARGE),
+												0x000000FF,
+												ALIGN_CENTER);
+		text->setSize(logoSize());
+		e.data.logo = std::shared_ptr<GuiComponent>(text);
+
+		TextComponent* textSelected = new TextComponent(mWindow,
+														(it)->getName(),
+														Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)),
+														0x000000FF,
+														ALIGN_CENTER);
+		textSelected->setSize(logoSize());
+		e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
+	}
+
+	// make background extras
+	e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
+	e.data.backgroundExtras->setExtras(ThemeData::makeExtras((it)->getTheme(), "system", mWindow));
+
+	this->add(e);
+}
 void SystemView::populate()
 {
 	mEntries.clear();
 
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
-		if((*it)->getRootFolder()->getChildren().size() == 0){
-			continue;
-		}
-		const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
-
-		Entry e;
-		e.name = (*it)->getName();
-		e.object = *it;
-
-		// make logo
-		if(theme->getElement("system", "logo", "image"))
-		{
-			ImageComponent* logo = new ImageComponent(mWindow);
-			logo->setMaxSize(Eigen::Vector2f(logoSize().x(), logoSize().y()));
-			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // center
-			e.data.logo = std::shared_ptr<GuiComponent>(logo);
-
-			ImageComponent* logoSelected = new ImageComponent(mWindow);
-			logoSelected->setMaxSize(Eigen::Vector2f(logoSize().x() * SELECTED_SCALE, logoSize().y() * SELECTED_SCALE * 0.70f));
-			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logoSelected->setPosition((logoSize().x() - logoSelected->getSize().x()) / 2, 
-				(logoSize().y() - logoSelected->getSize().y()) / 2); // center
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
-		}else{
-			// no logo in theme; use text
-			TextComponent* text = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get(FONT_SIZE_LARGE), 
-				0x000000FF, 
-				ALIGN_CENTER);
-			text->setSize(logoSize());
-			e.data.logo = std::shared_ptr<GuiComponent>(text);
-
-			TextComponent* textSelected = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)), 
-				0x000000FF, 
-				ALIGN_CENTER);
-			textSelected->setSize(logoSize());
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
-		}
-
-		// make background extras
-		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
-		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
-
-		this->add(e);
+		addSystem((*it));
 	}
 }
 
@@ -394,6 +397,7 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 	mSystemInfo.render(trans);
 }
 
+
 std::vector<HelpPrompt> SystemView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
@@ -407,4 +411,30 @@ HelpStyle SystemView::getHelpStyle()
 	HelpStyle style;
 	style.applyTheme(mEntries.at(mCursor).object->getTheme(), "system");
 	return style;
+}
+
+void SystemView::removeFavoriteSystem(){
+	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		if(it->object->isFavorite()){
+			mEntries.erase(it);
+			break;
+		}
+}
+
+void SystemView::manageFavorite(){
+	bool hasFavorite = false;
+	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		if(it->object->isFavorite()){
+			hasFavorite = true;
+		}
+	SystemData *favorite = SystemData::getFavoriteSystem();
+	if(hasFavorite) {
+		if (favorite->getFavoritesCount() == 0) {
+			removeFavoriteSystem();
+		}
+	}else {
+		if (favorite->getFavoritesCount() > 0) {
+			addSystem(favorite);
+		}
+	}
 }
