@@ -43,6 +43,12 @@ public:
 
     bool pairBluetooth(std::string &basic_string);
 
+    std::vector<std::string> getAvailableStorageDevices();
+
+    std::string getCurrentStorage();
+
+    bool setStorage(std::string basic_string);
+
 private:
     static RecalboxSystem * instance;
     RecalboxSystem();
