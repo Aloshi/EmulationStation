@@ -404,3 +404,50 @@ bool RecalboxSystem::pairBluetooth(std::string &controller) {
     int exitcode = system(oss.str().c_str());
     return exitcode == 0;
 }
+
+std::vector<std::string> RecalboxSystem::getAvailableStorageDevices() {
+
+    std::vector<std::string> res;
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "storage list";
+    FILE *pipe = popen(oss.str().c_str(), "r");
+    char line[1024];
+
+    if (pipe == NULL) {
+        return res;
+    }
+
+    while (fgets(line, 1024, pipe)) {
+        strtok(line, "\n");
+        res.push_back(std::string(line));
+    }
+    pclose(pipe);
+
+    return res;
+}
+
+std::string RecalboxSystem::getCurrentStorage() {
+
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "storage current";
+    FILE *pipe = popen(oss.str().c_str(), "r");
+    char line[1024];
+
+    if (pipe == NULL) {
+        return "";
+    }
+
+    if(fgets(line, 1024, pipe)){
+        strtok(line, "\n");
+        pclose(pipe);
+        return std::string(line);
+    }
+    return "INTERNAL";
+}
+
+bool RecalboxSystem::setStorage(std::string selected) {
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "storage" << " " << selected;
+    int exitcode = system(oss.str().c_str());
+    return exitcode == 0;
+}

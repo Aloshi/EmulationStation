@@ -79,10 +79,15 @@ void GuiMenu::createInputTextRow(GuiSettings *gui, const char *title, const char
 GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window) {
     // MAIN MENU
 
-    // SCRAPER >
-    // SOUND SETTINGS >
+    // KODI >
+    // ROM MANAGER >
+    // SYSTEM >
+    // GAMES >
+    // CONTROLLERS >
     // UI SETTINGS >
-    // CONFIGURE INPUT >
+    // SOUND SETTINGS >
+    // NETWORK >
+    // SCRAPER >
     // QUIT >
     if (RecalboxConf::getInstance()->get("kodi.enabled") == "1") {
         addEntry("KODI MEDIA CENTER", 0x777777FF, true,
@@ -115,7 +120,19 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                                                                   RecalboxSystem::getInstance()->getFreeSpaceInfo(),
                                                                   Font::get(FONT_SIZE_MEDIUM),
                                                                   warning ? 0xFF0000FF : 0x777777FF);
-                     s->addWithLabel("STORAGE", space);
+                     s->addWithLabel("SPACE LEFT", space);
+
+                     std::vector<std::string> availableStorage = RecalboxSystem::getInstance()->getAvailableStorageDevices();
+                     std::string selectedStorage = RecalboxSystem::getInstance()->getCurrentStorage();
+
+                     // Storage device
+                     auto optionsStorage = std::make_shared<OptionListComponent<std::string> >(window, "STORAGE DEVICE",
+                                                                                                false);
+                     for(auto it = availableStorage.begin(); it != availableStorage.end(); it++){
+                         optionsStorage->add((*it), (*it), selectedStorage == (*it));
+                     }
+                     s->addWithLabel("STORAGE DEVICE", optionsStorage);
+
 
                      // language choice
                      auto language_choice = std::make_shared<OptionListComponent<std::string> >(window, "LANGUAGE",
@@ -234,8 +251,12 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                      }
 
 
-                     s->addSaveFunc([overclock_choice, window, language_choice, language] {
+                     s->addSaveFunc([overclock_choice, window, language_choice, language, optionsStorage, selectedStorage] {
                          bool reboot = false;
+                         if (optionsStorage->changed()) {
+                             RecalboxSystem::getInstance()->setStorage(optionsStorage->getSelectedName());
+                             reboot = true;
+                         }
 
                          if (Settings::getInstance()->getString("Overclock") != overclock_choice->getSelected()) {
                              Settings::getInstance()->setString("Overclock", overclock_choice->getSelected());
@@ -251,11 +272,11 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                          if (reboot) {
                              window->pushGui(
                                      new GuiMsgBox(window, "THE SYSTEM WILL NOW REBOOT", "OK",
-                                                   [] {
-                                                       if (runRestartCommand() != 0) {
-                                                           LOG(LogWarning) << "Reboot terminated with non-zero result!";
-                                                       }
-                                                   })
+                                           [window] {
+                                               if (runRestartCommand() != 0) {
+                                                   LOG(LogWarning) << "Reboot terminated with non-zero result!";
+                                               }
+                                           })
                              );
                          }
 
