@@ -123,9 +123,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 	command = strreplace(command, "%ROM_RAW%", rom_raw);
 
 	LOG(LogInfo) << "	" << command;
-	std::cout << "==============================================\n";
 	int exitCode = runSystemCommand(command);
-	std::cout << "==============================================\n";
 
 	if(exitCode != 0)
 	{
