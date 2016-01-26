@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <string>
 #include <sstream>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 #include <functional>
 
@@ -129,7 +132,17 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                      auto optionsStorage = std::make_shared<OptionListComponent<std::string> >(window, "STORAGE DEVICE",
                                                                                                 false);
                      for(auto it = availableStorage.begin(); it != availableStorage.end(); it++){
-                         optionsStorage->add((*it), (*it), selectedStorage == (*it));
+                         if((*it) != "RAM"){
+                             if (boost::starts_with((*it), "DEV")){
+                                 std::vector<std::string> tokens;
+                                 boost::split( tokens, (*it), boost::is_any_of(" ") );
+                                 if(tokens.size()>= 3){
+                                     optionsStorage->add(tokens.at(1), (*it), selectedStorage == std::string("DEV "+tokens.at(1)));
+                                 }
+                             } else {
+                                 optionsStorage->add((*it), (*it), selectedStorage == (*it));
+                             }
+                         }
                      }
                      s->addWithLabel("STORAGE DEVICE", optionsStorage);
 
@@ -254,7 +267,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                      s->addSaveFunc([overclock_choice, window, language_choice, language, optionsStorage, selectedStorage] {
                          bool reboot = false;
                          if (optionsStorage->changed()) {
-                             RecalboxSystem::getInstance()->setStorage(optionsStorage->getSelectedName());
+                             RecalboxSystem::getInstance()->setStorage(optionsStorage->getSelected());
                              reboot = true;
                          }
 
