@@ -9,6 +9,7 @@
 #include "views/gamelist/DetailedGameListView.h"
 #include "views/gamelist/GridGameListView.h"
 #include "guis/GuiMenu.h"
+#include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
 #include "animations/LaunchAnimation.h"
 #include "animations/MoveCameraAnimation.h"
@@ -334,6 +335,14 @@ bool ViewController::input(InputConfig* config, Input input)
 {
 	if(mLockInput)
 		return true;
+
+	/* if we receive a button pressure for a non configured joystick, suggest the joystick configuration */
+        if(config->isConfigured() == false) {
+	  if(input.type == TYPE_BUTTON) {
+	    mWindow->pushGui(new GuiDetectDevice(mWindow, false, NULL));
+	    return true;
+	  }
+        }
 
 	// open menu
 	if(config->isMappedTo("start", input) && input.value != 0 && RecalboxConf::getInstance()->get("system.es.menu") != "none" )
