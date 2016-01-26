@@ -44,7 +44,7 @@ GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun, const std::funct
 	mMsg1 = std::make_shared<TextComponent>(mWindow, boost::locale::gettext("HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."), Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mMsg1, Vector2i(0, 2), false, true);
 
-	const char* msg2str = firstRun ? boost::locale::gettext("PRESS F4 TO QUIT AT ANY TIME.").c_str() : boost::locale::gettext("PRESS ESC TO CANCEL.").c_str();
+	const char* msg2str = firstRun ? boost::locale::gettext("PRESS F4 TO QUIT AT ANY TIME.").c_str() : boost::locale::gettext("PRESS ESC OR THE HOTKEY TO CANCEL.").c_str();
 	mMsg2 = std::make_shared<TextComponent>(mWindow, msg2str, Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mMsg2, Vector2i(0, 3), false, true);
 
@@ -71,7 +71,8 @@ void GuiDetectDevice::onSizeChanged()
 
 bool GuiDetectDevice::input(InputConfig* config, Input input)
 {
-	if(!mFirstRun && input.device == DEVICE_KEYBOARD && input.type == TYPE_KEY && input.value && input.id == SDLK_ESCAPE)
+	if(!mFirstRun && (input.device == DEVICE_KEYBOARD && input.type == TYPE_KEY && input.value && input.id == SDLK_ESCAPE) ||
+	                 (input.device != DEVICE_KEYBOARD && config->isMappedTo("hotkey", input)))
 	{
 		// cancel configuring
 		delete this;
