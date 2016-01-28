@@ -77,7 +77,8 @@ bool GuiMsgBox::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(mAcceleratorFunc && config->isMappedTo("a", input) && input.value != 0)
+	/* when it's not configured, allow to remove the message box too to allow the configdevice window a chance */
+	if(mAcceleratorFunc && ((config->isMappedTo("a", input) && input.value != 0) || (config->isConfigured() == false && input.type == TYPE_BUTTON)))
 	{
 		mAcceleratorFunc();
 		return true;
