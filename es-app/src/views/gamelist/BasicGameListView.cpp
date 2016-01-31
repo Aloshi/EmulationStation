@@ -86,6 +86,28 @@ void BasicGameListView::launch(FileData* game)
 	ViewController::get()->launch(game);
 }
 
+void BasicGameListView::remove(FileData *game)
+{
+	boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
+	if (getCursor() == game)                     // Select next element in list, or prev if none
+	{
+		std::vector<FileData*> siblings = game->getParent()->getChildren();
+		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
+		auto gamePos = std::distance(siblings.begin(), gameIter);
+		if (gameIter != siblings.end())
+		{
+			if ((gamePos + 1) < siblings.size())
+			{
+				setCursor(siblings.at(gamePos + 1));
+			} else if ((gamePos - 1) > 0) {
+				setCursor(siblings.at(gamePos - 1));
+			}
+		}
+	}
+	delete game;                                 // remove before repopulating (removes from parent)
+	onFileChanged(game, FILE_REMOVED);           // update the view, with game removed
+}
+
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
