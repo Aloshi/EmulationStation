@@ -5,10 +5,10 @@ msgstr ""
 "PO-Revision-Date: 2015-11-13 16:57+0200\n"
 "Last-Translator: Ibrahim Gungor <igungor@gmail.com>\n"
 "Language-Team: TURKISH\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.5\n"
 
 msgid "MAIN MENU"
@@ -46,20 +46,14 @@ msgid "Times played: "
 msgstr "KAÇ KEZ: "
 
 #: es-app/src/MetaData.cpp
-msgid "ENTER GAME NAME"
-msgstr "OYUN ADI"
+msgid "enter game name"
+msgstr ""
 
 msgid "NAME"
 msgstr "İSİM"
 
-msgid "DESCRIPTION"
-msgstr "AÇIKLAMA"
-
 msgid "ENTER DESCRIPTION"
 msgstr "AÇIKLAMA"
-
-msgid "IMAGE"
-msgstr "RESİM"
 
 msgid "ENTER PATH TO IMAGE"
 msgstr "RESMİN KONUMU"
@@ -209,27 +203,6 @@ msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
 msgid "NO GAMES FOUND - SKIP"
 msgstr "OYUN BULUNAMADI"
 
-msgid "RATING:"
-msgstr "PUAN:"
-
-msgid "RELEASED:"
-msgstr "TARİH:"
-
-msgid "DEVELOPER:"
-msgstr "GELİŞTİRİCİ:"
-
-msgid "PUBLISHER:"
-msgstr "YAYINCI:"
-
-msgid "GENRE:"
-msgstr "TÜR:"
-
-msgid "PLAYERS:"
-msgstr "OYUNCU:"
-
-msgid "STOP"
-msgstr "DUR"
-
 #: Buttons
 msgid "close"
 msgstr "kapat"
@@ -286,9 +259,6 @@ msgstr "GERİ DÖN"
 msgid " GAMES AVAILABLE"
 msgstr " OYUN"
 
-msgid " GAME AVAILABLE"
-msgstr " OYUN"
-
 #: es-app/src/guis/GuiGamelistOptions.cpp
 msgid "JUMP TO LETTER"
 msgstr "ŞU HARFE GİT"
@@ -321,7 +291,8 @@ msgstr "CİHAZI YAPILANDIRMAK İÇİN BİR TUŞA BASILI TUT"
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "ÇIKMAK İÇİN F4 TUŞUNA BAŞ"
 
-msgid "PRESS ESC TO CANCEL."
+#, fuzzy
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
 msgstr "İPTAL İÇİN ESC TUŞUNA BAS"
 
 #: es-core/src/guis/GuiInputConfig.cpp
@@ -387,7 +358,8 @@ msgstr "GİRDİ P4"
 msgid "NOGAMEERRORMESSAGE"
 msgstr ""
 "KURULU BİR SİSTEM BULUNAMADI!\n"
-"SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
+"SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN "
+"KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
 
 msgid "LANGUAGE"
 msgstr "DİL"
@@ -478,7 +450,11 @@ msgid "JOYSTICK 2 LEFT"
 msgstr "JOYSTICK 2 SOL"
 
 msgid "I18NMESSAGECONTROLLERS"
-msgstr "JOYSTICK YAPILANDIRIRKEN AYARLAMAK İSTEMEDİĞİNİZ TUŞLAR İÇİN HERHANGİ GİR TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAYAN BİR TUŞTUR. HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
+msgstr ""
+"JOYSTICK YAPILANDIRIRKEN AYARLAMAK İSTEMEDİĞİNİZ TUŞLAR İÇİN HERHANGİ GİR "
+"TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI "
+"TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAYAN BİR TUŞTUR. "
+"HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
 
 # TEXT EDITING
 msgid "EDIT"
@@ -494,35 +470,29 @@ msgid "DISCARD CHANGES"
 msgstr "DEĞİŞİKLİKLERİ KAYDETME"
 
 # MISSING SCRAPPER TRANSLATIONS
-msgid "ONLY MISSING IMAGE"
-msgstr "SADECE RESMİ OLMAYANLAR"
+msgid "Only missing image"
+msgstr ""
 
-msgid "ALL GAMES"
-msgstr "TÜM OYUNLAR"
+msgid "All Games"
+msgstr ""
 
-msgid "ACCEPT"
-msgstr "KABUL ET"
+msgid "accept"
+msgstr ""
 
 msgid " SELECTED"
 msgstr " TANESİ SEÇİLİ"
 
-msgid "SELECTED"
-msgstr "TANESİ SEÇİLİ"
-
-msgid "ACCEPT RESULT"
-msgstr "KABUL ET"
+msgid "accept result"
+msgstr ""
 
 msgid "stop (progress saved)"
 msgstr "dur"
 
-msgid "SEARCH"
-msgstr "ARA"
+msgid "search"
+msgstr ""
 
 msgid "GAMES"
 msgstr "OYUNLAR"
-
-msgid "GAME"
-msgstr "OYUN:"
 
 msgid " OF "
 msgstr " | TOPLAM: "
@@ -543,8 +513,8 @@ msgstr "SADECE FAVORİLER"
 msgid "FAVORITE"
 msgstr "FAVORİ"
 
-msgid "ENTER FAVORITE"
-msgstr "FAVORİ"
+msgid "enter favorite"
+msgstr ""
 
 # NEW SETTINGS ORGANIZATION
 msgid "UPDATES"
@@ -618,14 +588,8 @@ msgstr ""
 "BU İŞLEM BİR DOSYA SİLECEK!\n"
 "EMİN MİSİNİZ?"
 
-msgid "IP ADDRESS"
-msgstr "IP ADRESİ"
-
-msgid "STATUS"
-msgstr "DURUM"
-
-msgid "DEFAULT"
-msgstr "ÖNTANIMLI"
+msgid " GAME AVAILABLE"
+msgstr " OYUN"
 
 msgid "UPDATE GAMES LISTS"
 msgstr "OYUN LİSTESİNİ GÜNCELLE"
@@ -633,35 +597,121 @@ msgstr "OYUN LİSTESİNİ GÜNCELLE"
 msgid "REALLY UPDATE GAMES LISTS ?"
 msgstr "OYUN LİSTESİ GÜNCELLENSİN Mİ?"
 
-msgid "MENU"
-msgstr "MENÜ"
+msgid "EMULATOR"
+msgstr ""
 
-msgid "OPTIONS"
-msgstr "SEÇENEKLER"
+#, fuzzy
+msgid "FAVORITES"
+msgstr "FAVORİ"
 
-msgid "START"
-msgstr "BAŞLAT"
+msgid "HIDDEN"
+msgstr ""
 
-msgid "unknown"
-msgstr "bilinmiyor"
+#, fuzzy
+msgid "ENTER REGION"
+msgstr "SKOR"
 
-msgid "ok"
-msgstr "tamam"
+#, fuzzy
+msgid "ENTER ROMTYPE"
+msgstr "SKOR"
 
-msgid "OK"
-msgstr "TAMAM"
+#, fuzzy
+msgid "STORAGE DEVICE"
+msgstr "DEPO"
 
-msgid "yes"
-msgstr "evet"
+#~ msgid "ENTER GAME NAME"
+#~ msgstr "OYUN ADI"
 
-msgid "no"
-msgstr "hayır"
+#~ msgid "DESCRIPTION"
+#~ msgstr "AÇIKLAMA"
 
-msgid "SEARCH FOR"
-msgstr "ARAMA YAP"
+#~ msgid "IMAGE"
+#~ msgstr "RESİM"
 
-msgid "FADE"
-msgstr "KAYBOL"
+#~ msgid "RATING:"
+#~ msgstr "PUAN:"
 
-msgid "SLIDE"
-msgstr "KAYDIR"
+#~ msgid "RELEASED:"
+#~ msgstr "TARİH:"
+
+#~ msgid "DEVELOPER:"
+#~ msgstr "GELİŞTİRİCİ:"
+
+#~ msgid "PUBLISHER:"
+#~ msgstr "YAYINCI:"
+
+#~ msgid "GENRE:"
+#~ msgstr "TÜR:"
+
+#~ msgid "PLAYERS:"
+#~ msgstr "OYUNCU:"
+
+#~ msgid "STOP"
+#~ msgstr "DUR"
+
+# MISSING SCRAPPER TRANSLATIONS
+#~ msgid "ONLY MISSING IMAGE"
+#~ msgstr "SADECE RESMİ OLMAYANLAR"
+
+#~ msgid "ALL GAMES"
+#~ msgstr "TÜM OYUNLAR"
+
+#~ msgid "ACCEPT"
+#~ msgstr "KABUL ET"
+
+#~ msgid "SELECTED"
+#~ msgstr "TANESİ SEÇİLİ"
+
+#~ msgid "ACCEPT RESULT"
+#~ msgstr "KABUL ET"
+
+#~ msgid "SEARCH"
+#~ msgstr "ARA"
+
+#~ msgid "GAME"
+#~ msgstr "OYUN:"
+
+#~ msgid "ENTER FAVORITE"
+#~ msgstr "FAVORİ"
+
+#~ msgid "IP ADDRESS"
+#~ msgstr "IP ADRESİ"
+
+#~ msgid "STATUS"
+#~ msgstr "DURUM"
+
+#~ msgid "DEFAULT"
+#~ msgstr "ÖNTANIMLI"
+
+#~ msgid "MENU"
+#~ msgstr "MENÜ"
+
+#~ msgid "OPTIONS"
+#~ msgstr "SEÇENEKLER"
+
+#~ msgid "START"
+#~ msgstr "BAŞLAT"
+
+#~ msgid "unknown"
+#~ msgstr "bilinmiyor"
+
+#~ msgid "ok"
+#~ msgstr "tamam"
+
+#~ msgid "OK"
+#~ msgstr "TAMAM"
+
+#~ msgid "yes"
+#~ msgstr "evet"
+
+#~ msgid "no"
+#~ msgstr "hayır"
+
+#~ msgid "SEARCH FOR"
+#~ msgstr "ARAMA YAP"
+
+#~ msgid "FADE"
+#~ msgstr "KAYBOL"
+
+#~ msgid "SLIDE"
+#~ msgstr "KAYDIR"

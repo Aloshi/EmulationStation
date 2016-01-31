@@ -6,32 +6,42 @@ msgstr ""
 "PO-Revision-Date: 2015-02-03 15:00-0500\n"
 "Last-Translator: nonatz <nonatz@web.de>\n"
 "Language-Team: GERMAN\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "MAIN MENU"
 msgstr "HAUPTMENÜ"
+
 msgid "YES"
 msgstr "JA"
+
 msgid "NO"
 msgstr "NEIN"
 
 #: es-app/src/views/gamelist/DetailedGameListView.cpp
 msgid "Rating: "
 msgstr "Bewertung: "
+
 msgid "Released: "
 msgstr "Veröffentlicht: "
+
 msgid "Developer: "
 msgstr "Entwickler: "
+
 msgid "Publisher: "
 msgstr "Publisher: "
+
 msgid "Genre: "
 msgstr "Genre: "
+
 msgid "Players: "
 msgstr "Spieler: "
+
 msgid "Last played: "
 msgstr "Zuletzt gespielt: "
+
 msgid "Times played: "
 msgstr "Gespielt: "
 
@@ -39,110 +49,149 @@ msgstr "Gespielt: "
 msgid "enter game name"
 msgstr "Spielnamen eingeben"
 
-
-msgid "NAME" 
+msgid "NAME"
 msgstr "NAME"
-msgid "ENTER GAME NAME"
-msgstr "SPIELNAMEN EINGEBEN"
-msgid "DESCRIPTION"
-msgstr "BESCHREIBUNG"
+
 msgid "ENTER DESCRIPTION"
 msgstr "BESCHREIBUNG EINGEBEN"
+
 msgid "ENTER PATH TO IMAGE"
 msgstr "PFAD FÜR BILD ANGEBEN"
+
 msgid "THUMBNAIL"
 msgstr "VORSCHAUBILD"
+
 msgid "ENTER PATH TO THUMBNAIL"
 msgstr "PFAD FÜR VORSCHAUBILD ANGEBEN"
+
 msgid "RATING"
 msgstr "BEWERTUNG"
+
 msgid "ENTER SCORE"
 msgstr "BEWERTUNG EINGEBEN"
+
 msgid "RELEASE DATE"
 msgstr "VERÖFFENTLICHUNG"
+
 msgid "ENTER RELEASE DATE"
 msgstr "VERÖFFENTLICHUNG EINGEBEN"
+
 msgid "DEVELOPER"
 msgstr "ENTWICKLER"
+
 msgid "ENTER GAME DEVELOPER"
 msgstr "SPIELENTWICKLER EINGEBEN"
+
 msgid "PUBLISHER"
 msgstr "PUBLISHER"
+
 msgid "ENTER GAME PUBLISHER"
 msgstr "SPIELPUBLISHER EINGEBEN"
+
 msgid "GENRE"
 msgstr "GENRE"
+
 msgid "ENTER GAME GENRE"
 msgstr "SPIELGENRE EINGEBEN"
+
 msgid "PLAYERS"
 msgstr "SPIELER"
+
 msgid "ENTER NUMBER OF PLAYERS"
 msgstr "SPIELERANZAHL EINGEBEN"
+
 msgid "PLAY COUNT"
 msgstr "GESPIELT (ANZAHL)"
+
 msgid "ENTER NUMBER OF TIMES PLAYED"
 msgstr "WIE OFT GESPIELT EINGEBEN"
 
 #: es-app/src/guis/GuiMenu.cpp
 msgid "SCRAPE FROM"
 msgstr "SCRAPEN VON"
+
 msgid "SCRAPE RATINGS"
 msgstr "BEWERTUNGEN SCRAPEN"
+
 msgid "SOUND SETTINGS"
 msgstr "SOUND-EINSTELLUNGEN"
+
 msgid "SYSTEM VOLUME"
 msgstr "SYSTEMLAUTSTÄRKE"
+
 msgid "ENABLE SOUNDS"
 msgstr "SOUNDS AKTIVIEREN"
+
 msgid "UI SETTINGS"
 msgstr "BENUTZEROBERFLÄCHEN-EINSTELLUNGEN"
+
 msgid "SCREENSAVER AFTER"
 msgstr "BILDSCHIRMSCHONER NACH"
+
 msgid "TRANSITION STYLE"
 msgstr "ÜBERGANGSSTIL"
+
 msgid "SCREENSAVER BEHAVIOR"
 msgstr "BILDSCHIRMSCHONER-EINSTELLUNGEN"
+
 msgid "SHOW FRAMERATE"
 msgstr "BILDRATE ANZEIGEN"
+
 msgid "ON-SCREEN HELP"
 msgstr "BILDSCHIRM-HILFE"
+
 msgid "QUICK SYSTEM SELECT"
 msgstr "SYSTEM-SCHNELLAUSWAHL"
+
 msgid "THEME SET"
 msgstr "THEME"
+
 msgid "CONFIGURE INPUT"
 msgstr "EINGABE KONFIGURIEREN"
+
 msgid "QUIT"
 msgstr "BEENDEN"
+
 msgid "REALLY RESTART?"
 msgstr "WIRKLICH NEU STARTEN?"
+
 msgid "RESTART SYSTEM"
 msgstr "SYSTEM NEU STARTEN"
+
 msgid "REALLY SHUTDOWN?"
 msgstr "WIRKLICH HERUNTERFAHREN?"
+
 msgid "SHUTDOWN SYSTEM"
 msgstr "SYSTEM HERUNTERFAHREN"
+
 msgid "REALLY QUIT?"
 msgstr "WIRKLICH BEENDEN?"
+
 msgid "QUIT EMULATIONSTATION"
 msgstr "EMULATIONSTATION BEENDEN"
-
 
 #: es-app/src/guis/GuiScraperStart.cpp
 msgid "SCRAPE NOW"
 msgstr "SCRAPEN"
+
 msgid "USER DECIDES ON CONFLICTS"
 msgstr "BENUTZER ENTSCHEIDET SELBST BEI KONFLIKTEN"
+
 msgid "SYSTEMS"
 msgstr "SYSTEME"
+
 msgid "FILTER"
 msgstr "FILTER"
+
 msgid "SCRAPE THESE GAMES"
 msgstr "DIESE SPIELE SCRAPEN"
+
 msgid "SCRAPE THESE SYSTEMS"
 msgstr "DIESE SYSTEME SCRAPEN"
+
 msgid "SELECT ALL"
 msgstr "ALLES AUSWÄHLEN"
+
 msgid "SELECT NONE"
 msgstr "AUSWAHL AUFHEBEN"
 
@@ -154,42 +203,55 @@ msgstr "SCRAPING WIRD DURCHGEFÜHRT"
 msgid "NO GAMES FOUND - SKIP"
 msgstr "KEINE SPIELE GEFUNDEN - ÜBERSPRINGEN"
 
-
 #: Buttons
 msgid "close"
 msgstr "schliessen"
+
 msgid "select"
 msgstr "auswahl"
+
 msgid "choose"
 msgstr "wechseln"
+
 msgid "back"
 msgstr "zurück"
+
 msgid "CLOSE"
 msgstr "SCHLIESSEN"
+
 msgid "SELECT"
 msgstr "AUSWAHL"
+
 msgid "CHOOSE"
 msgstr "WECHSELN"
+
 msgid "BACK"
 msgstr "ZURÜCK"
-msgid "MENU"
-msgstr "MENÜ"
+
 msgid "LAUNCH"
 msgstr "START"
+
 msgid "SYSTEM"
 msgstr "SYSTEM"
+
 msgid "INPUT"
 msgstr "EINGABE"
+
 msgid "SKIP"
 msgstr "ÜBERSPRINGEN"
+
 msgid "CHANGE"
 msgstr "ÄNDERN"
+
 msgid "SAVE"
 msgstr "SPEICHERN"
+
 msgid "CANCEL"
 msgstr "ABBRECHEN"
+
 msgid "DELETE"
 msgstr "LÖSCHEN"
+
 msgid "GO BACK"
 msgstr "ZURÜCK"
 
@@ -200,11 +262,12 @@ msgstr " VERFÜGBARE SPIELE"
 #: es-app/src/guis/GuiGamelistOptions.cpp
 msgid "JUMP TO LETTER"
 msgstr "SPRING ZU BUCHSTABE"
+
 msgid "SORT GAMES BY"
 msgstr "SPIELE SORTIEREN NACH"
+
 msgid "EDIT THIS GAME'S METADATA"
 msgstr "METADATEN DES SPIELS BEARBEITEN"
-
 
 #: es-app/src/guis/GuiMetaDataEd.cpp
 msgid "EDIT METADATA"
@@ -212,32 +275,45 @@ msgstr "METADATEN BEARBEITEN"
 
 msgid " GAMEPAD"
 msgstr " CONTROLLER"
+
 msgid " DETECTED"
 msgstr " GEFUNDEN"
+
 msgid "WELCOME"
 msgstr "WILLKOMMEN"
+
 msgid "NO GAMEPADS DETECTED"
 msgstr "KEINE CONTROLLER GEFUNDEN"
+
 msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
 msgstr "EINE TASTE AM GERÄT GEDRÜCKT HALTEN, UM ES ZU KONFIGURIEREN."
+
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "F4 DRÜCKEN, UM JEDERZEIT ZU SCHLIESSEN."
-msgid "PRESS ESC TO CANCEL."
+
+#, fuzzy
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
 msgstr "ESC DRÜCKEN ZUM ABBRECHEN."
 
 #: es-core/src/guis/GuiInputConfig.cpp
 msgid "CONFIGURING"
 msgstr "KONFIGURIEREN"
+
 msgid "UP"
 msgstr "HOCH"
+
 msgid "DOWN"
 msgstr "RUNTER"
+
 msgid "LEFT"
 msgstr "LINKS"
+
 msgid "RIGHT"
 msgstr "RECHTS"
+
 msgid "PAGE UP"
 msgstr "L1 (SEITE HOCH)"
+
 msgid "PAGE DOWN"
 msgstr "R1 (SEITE RUNTER)"
 
@@ -245,42 +321,50 @@ msgid "SAVE CHANGES?"
 msgstr "ÄNDERUNGEN SPEICHERN?"
 
 #: es-app/src/guis/GuiUpdate.cpp
-
 msgid "WORKING..."
 msgstr "ARBEITE..."
+
 msgid "UPDATE"
 msgstr "SYSTEM AKTUALISIEREN"
+
 msgid "REALLY UPDATE?"
 msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
+
 msgid "NETWORK CONNECTION NEEDED"
 msgstr "NETZWERKVERBINDUNG BENÖTIGT"
+
 msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
 msgstr "AKTUALISIERUNG ERFOLGREICH, SYSTEM WIRD NEU GESTARTET"
+
 msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
 msgstr "AKTUALISIERUNG GESCHEITERT, DAS SYSTEM WIR NEU GESTARTET"
 
-
-#GUIMENU
+# GUIMENU
 msgid "CONFIGURE A CONTROLLER"
 msgstr "EINEN CONTROLLER KONFIGURIEREN"
+
 msgid "INPUT P1"
 msgstr "EINGABE SPIELER 1"
+
 msgid "INPUT P2"
 msgstr "EINGABE SPIELER 2"
+
 msgid "INPUT P3"
 msgstr "EINGABE SPIELER 3"
+
 msgid "INPUT P4"
 msgstr "EINGABE SPIELER 4"
 
 msgid "NOGAMEERRORMESSAGE"
-msgstr "KEIN SPIEL GEFUNDEN! UM SPIELE HINZUZUFÜGEN, BITTE DER ANLEITUNG FOLGEN. WEITERE INFORMATIONEN UNTER www.recalbox.com"
+msgstr ""
+"KEIN SPIEL GEFUNDEN! UM SPIELE HINZUZUFÜGEN, BITTE DER ANLEITUNG FOLGEN. "
+"WEITERE INFORMATIONEN UNTER www.recalbox.com"
 
 msgid "LANGUAGE"
 msgstr "SPRACHE"
 
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "DAS SYSTEM WIRD JETZT NEU GESTARTET"
-
 
 msgid "SYSTEM SETTINGS"
 msgstr "SYSTEM-EINSTELLUNGEN"
@@ -303,39 +387,98 @@ msgstr "GPIO CONTROLLER"
 msgid "GPIO CONTROLLERS ARE NOW ON"
 msgstr "GPIO CONTROLLER SIND JETZT AKTIVIERT"
 
-#update 3.2.0
-
+# update 3.2.0
 msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
 msgstr "EIN UPDATE FÜR DEINE RECALBOX IST VERFÜGBAR"
+
 msgid "NO UPDATE AVAILABLE"
 msgstr "KEIN UPDATE VERFÜGBAR"
-msgid "DO YOU WANT TO START KODI MEDIA CENTER?"
+
+#, fuzzy
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
 msgstr "MÖCHTEN SIE KODI MEDIA CENTER STARTEN?"
+
 msgid "ENABLE WIFI"
 msgstr "W-LAN AKTIVIEREN"
+
 msgid "NETWORK SETTINGS"
 msgstr "NETZWERK-EINSTELLUNGEN"
-msgid "WIFI SSID"
-msgstr "W-LAN NAME (SSID)"
+
+#, fuzzy
+msgid "WIFI ENABLED"
+msgstr "KODI AKTIVIEREN"
+
+# GUIMENU
+#, fuzzy
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "EINEN CONTROLLER KONFIGURIEREN"
+
 msgid "WIFI KEY"
 msgstr "W-LAN SCHLÜSSEL (PASSWORT)"
 
+msgid "WIFI SSID"
+msgstr "W-LAN NAME (SSID)"
+
+msgid "GAME RATIO"
+msgstr ""
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr ""
+
+msgid "-NOT DEFINED-"
+msgstr ""
+
+msgid "ALREADY TAKEN"
+msgstr ""
+
+msgid "HOLD FOR "
+msgstr ""
+
+#, fuzzy
+msgid "S TO SKIP"
+msgstr "ÜBERSPRINGEN"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr ""
+
+msgid "JOYSTICK 1 UP"
+msgstr ""
+
+msgid "JOYSTICK 1 LEFT"
+msgstr ""
+
+msgid "JOYSTICK 2 UP"
+msgstr ""
+
+msgid "JOYSTICK 2 LEFT"
+msgstr ""
+
 msgid "I18NMESSAGECONTROLLERS"
-msgstr "EIN CONTROLLER MUSS KONFIGURIERT WERDEN. WENN NUR EIN JOYSTICK VORHANDEN IST, DIE RICHTUNGEN KONFIGURIEREN UND DIE CONTROLLER-KONFIGURATION DURCH GEDRÜCKT HALTEN EINES BUTTONS ÜBERSPRINGEN. WENN KEIN SPEZIELLER BUTTON FÜR DEN HOTKEY VORHANDEN IST, DEN SELECT BUTTON WÄHLEN. BUTTONS DIE NICHT VORHANDEN SIND, KÖNNEN EINFACH DURCH GEDRÜCKT HALTEN EINES BUTTONS ÜBERSPRUNGEN WERDEN."
+msgstr ""
+"EIN CONTROLLER MUSS KONFIGURIERT WERDEN. WENN NUR EIN JOYSTICK VORHANDEN "
+"IST, DIE RICHTUNGEN KONFIGURIEREN UND DIE CONTROLLER-KONFIGURATION DURCH "
+"GEDRÜCKT HALTEN EINES BUTTONS ÜBERSPRINGEN. WENN KEIN SPEZIELLER BUTTON FÜR "
+"DEN HOTKEY VORHANDEN IST, DEN SELECT BUTTON WÄHLEN. BUTTONS DIE NICHT "
+"VORHANDEN SIND, KÖNNEN EINFACH DURCH GEDRÜCKT HALTEN EINES BUTTONS "
+"ÜBERSPRUNGEN WERDEN."
 
-
-#TEXT EDITING
+# TEXT EDITING
 msgid "EDIT"
 msgstr "BEARBEITEN"
+
 msgid "STOP EDITING"
 msgstr "BEARBEITEN ABBRECHEN"
+
 msgid "MOVE CURSOR"
 msgstr "CURSOR BEWEGEN"
+
 msgid "DISCARD CHANGES"
 msgstr "ÄNDERUNGEN VERWERFEN"
 
 # MISSING SCRAPPER TRANSLATIONS
-msgid "Only missing images"
+#, fuzzy
+msgid "Only missing image"
 msgstr "Nur fehlende Bilder"
 
 msgid "All Games"
@@ -374,7 +517,6 @@ msgstr " ÜBERSPRUNGEN."
 # FAVORITES
 msgid "FAVORITES ONLY"
 msgstr "NUR FAVORITEN"
-
 
 msgid "FAVORITE"
 msgstr "FAVORIT"
@@ -443,3 +585,54 @@ msgstr "KEIN CONTROLLER GEFUNDEN"
 
 msgid "PAIR A BLUETOOTH CONTROLLER"
 msgstr "EINEN BLUETOOTH CONTROLLER VERBINDEN"
+
+#, fuzzy
+msgid "PLEASE WAIT..."
+msgstr "VERÖFFENTLICHUNG"
+
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+
+#, fuzzy
+msgid " GAME AVAILABLE"
+msgstr " VERFÜGBARE SPIELE"
+
+msgid "UPDATE GAMES LISTS"
+msgstr ""
+
+#, fuzzy
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
+
+msgid "EMULATOR"
+msgstr ""
+
+#, fuzzy
+msgid "FAVORITES"
+msgstr "FAVORIT"
+
+msgid "HIDDEN"
+msgstr ""
+
+#, fuzzy
+msgid "ENTER REGION"
+msgstr "BEWERTUNG EINGEBEN"
+
+#, fuzzy
+msgid "ENTER ROMTYPE"
+msgstr "BEWERTUNG EINGEBEN"
+
+#, fuzzy
+msgid "STORAGE DEVICE"
+msgstr "SPEICHER"
+
+#~ msgid "ENTER GAME NAME"
+#~ msgstr "SPIELNAMEN EINGEBEN"
+
+#~ msgid "DESCRIPTION"
+#~ msgstr "BESCHREIBUNG"
+
+#~ msgid "MENU"
+#~ msgstr "MENÜ"
