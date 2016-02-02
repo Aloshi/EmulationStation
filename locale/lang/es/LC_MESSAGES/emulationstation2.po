@@ -620,3 +620,6 @@ msgstr "INTRODUCE LA CALIFICACIÓN"
 #, fuzzy
 msgid "STORAGE DEVICE"
 msgstr "ALMACENAMIENTO"
+
+msgid "AUTO SAVE/LOAD"
+msgstr ""

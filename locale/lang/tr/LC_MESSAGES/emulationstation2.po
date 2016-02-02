@@ -619,6 +619,9 @@ msgstr "SKOR"
 msgid "STORAGE DEVICE"
 msgstr "DEPO"
 
+msgid "AUTO SAVE/LOAD"
+msgstr ""
+
 #~ msgid "ENTER GAME NAME"
 #~ msgstr "OYUN ADI"
 

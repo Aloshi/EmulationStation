@@ -617,3 +617,5 @@ msgstr "ENTRER ROMTYPE"
 msgid "STORAGE DEVICE"
 msgstr "MEDIA DE STOCKAGE"
 
+msgid "AUTO SAVE/LOAD"
+msgstr ""

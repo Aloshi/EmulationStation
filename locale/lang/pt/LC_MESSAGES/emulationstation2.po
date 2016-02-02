@@ -620,3 +620,6 @@ msgstr "DIGITE A PONTUAÇÃO"
 #, fuzzy
 msgid "STORAGE DEVICE"
 msgstr "ARMAZENAMENTO"
+
+msgid "AUTO SAVE/LOAD"
+msgstr ""
