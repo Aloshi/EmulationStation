@@ -311,11 +311,15 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  smoothing_enabled->setState(RecalboxConf::getInstance()->get("global.smooth") == "1");
                  s->addWithLabel("SMOOTH GAMES", smoothing_enabled);
 
-
                  // rewind
                  auto rewind_enabled = std::make_shared<SwitchComponent>(mWindow);
                  rewind_enabled->setState(RecalboxConf::getInstance()->get("global.rewind") == "1");
                  s->addWithLabel("REWIND", rewind_enabled);
+
+                 // autosave/load
+                 auto autosave_enabled = std::make_shared<SwitchComponent>(mWindow);
+                 autosave_enabled->setState(RecalboxConf::getInstance()->get("global.autosave") == "1");
+                 s->addWithLabel("AUTO SAVE/LOAD", autosave_enabled);
 
                  // Shaders preset
 
@@ -368,11 +372,12 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                      row.addElement(bracket, false);
                      s->addRow(row);
                  }
-                 s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled, shaders_choices] {
+                 s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled, shaders_choices, autosave_enabled] {
                      RecalboxConf::getInstance()->set("global.smooth", smoothing_enabled->getState() ? "1" : "0");
                      RecalboxConf::getInstance()->set("global.ratio", ratio_choice->getSelected());
                      RecalboxConf::getInstance()->set("global.rewind", rewind_enabled->getState() ? "1" : "0");
                      RecalboxConf::getInstance()->set("global.shaderset", shaders_choices->getSelected());
+                     RecalboxConf::getInstance()->set("global.autosave", autosave_enabled->getState() ? "1" : "0");
                      RecalboxConf::getInstance()->saveRecalboxConf();
                  });
                  // reread game list
@@ -801,10 +806,15 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
     rewind_enabled->setState(
             RecalboxConf::getInstance()->get(systemData->getName() + ".rewind", RecalboxConf::getInstance()->get("global.rewind")) == "1");
     systemConfiguration->addWithLabel("REWIND", rewind_enabled);
+    // autosave
+    auto autosave_enabled = std::make_shared<SwitchComponent>(mWindow);
+    autosave_enabled->setState(
+            RecalboxConf::getInstance()->get(systemData->getName() + ".autosave", RecalboxConf::getInstance()->get("global.autosave")) == "1");
+    systemConfiguration->addWithLabel("AUTO SAVE/LOAD", autosave_enabled);
 
 
     systemConfiguration->addSaveFunc(
-            [systemData, smoothing_enabled, rewind_enabled, ratio_choice, emu_choice, core_choice] {
+            [systemData, smoothing_enabled, rewind_enabled, ratio_choice, emu_choice, core_choice, autosave_enabled] {
                 if(ratio_choice->changed()){
                     RecalboxConf::getInstance()->set(systemData->getName() + ".ratio",
                                                      ratio_choice->getSelected());
@@ -822,6 +832,10 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
                 }
                 if(core_choice->changed()){
                     RecalboxConf::getInstance()->set(systemData->getName() + ".core", core_choice->getSelected());
+                }
+                if(autosave_enabled->changed()) {
+                    RecalboxConf::getInstance()->set(systemData->getName() + ".autosave",
+                                                     autosave_enabled->getState() ? "1" : "0");
                 }
                 RecalboxConf::getInstance()->saveRecalboxConf();
             });

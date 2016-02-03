@@ -629,3 +629,6 @@ msgstr "INSERISCI PUNTEGGIO"
 #, fuzzy
 msgid "STORAGE DEVICE"
 msgstr "UNITA'"
+
+msgid "AUTO SAVE/LOAD"
+msgstr ""

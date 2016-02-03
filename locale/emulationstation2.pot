@@ -599,3 +599,6 @@ msgstr ""
 
 msgid "STORAGE DEVICE"
 msgstr ""
+
+msgid "AUTO SAVE/LOAD"
+msgstr ""

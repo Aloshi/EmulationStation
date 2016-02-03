@@ -623,6 +623,9 @@ msgstr "输入分数"
 msgid "STORAGE DEVICE"
 msgstr "空间使用"
 
+msgid "AUTO SAVE/LOAD"
+msgstr ""
+
 #~ msgid "FAVORITE: "
 #~ msgstr "收藏："
 

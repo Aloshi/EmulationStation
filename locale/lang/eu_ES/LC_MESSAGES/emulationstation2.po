@@ -620,3 +620,6 @@ msgstr "SARTU KALIFIKAZIOA"
 #, fuzzy
 msgid "STORAGE DEVICE"
 msgstr "MEMORIA"
+
+msgid "AUTO SAVE/LOAD"
+msgstr ""

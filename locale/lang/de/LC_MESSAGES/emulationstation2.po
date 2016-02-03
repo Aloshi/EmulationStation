@@ -628,6 +628,9 @@ msgstr "BEWERTUNG EINGEBEN"
 msgid "STORAGE DEVICE"
 msgstr "SPEICHER"
 
+msgid "AUTO SAVE/LOAD"
+msgstr ""
+
 #~ msgid "ENTER GAME NAME"
 #~ msgstr "SPIELNAMEN EINGEBEN"
 
