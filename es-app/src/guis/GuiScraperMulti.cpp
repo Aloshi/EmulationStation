@@ -135,7 +135,12 @@ void GuiScraperMulti::finish()
 	std::stringstream ss;
 	if(mTotalSuccessful == 0)
 	{
-		ss << gettext("NO GAMES WERE SCRAPED.");
+		ss << gettext("WE CAN'T FIND ANY SYSTEMS!\n"
+			      "CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+			      "YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+			      "\n"
+			      "VISIT RECALBOX.FR FOR MORE INFORMATION."
+			      );
 	}else{
 		ss << mTotalSuccessful << " " << gettext("GAMES") << gettext(" SUCCESSFULLY SCRAPED!");
 
