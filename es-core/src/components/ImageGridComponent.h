@@ -21,8 +21,10 @@ protected:
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
 	using IList<ImageGridData, T>::mCursor;
-	using IList<ImageGridData, T>::Entry;
-	using IList<ImageGridData, T>::mWindow;
+#ifndef __APPLE__
+    using IList<ImageGridData, T>::Entry;
+#endif
+    using IList<ImageGridData, T>::mWindow;
 
 public:
 	using IList<ImageGridData, T>::size;

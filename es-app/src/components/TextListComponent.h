@@ -31,8 +31,10 @@ protected:
 	using IList<TextListData, T>::getTransform;
 	using IList<TextListData, T>::mSize;
 	using IList<TextListData, T>::mCursor;
+#ifndef __APPLE__
 	using IList<TextListData, T>::Entry;
-
+#endif
+    
 public:
 	using IList<TextListData, T>::size;
 	using IList<TextListData, T>::isScrolling;
