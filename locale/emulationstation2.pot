@@ -424,12 +424,6 @@ msgstr ""
 msgid "ALREADY TAKEN"
 msgstr ""
 
-msgid "HOLD FOR "
-msgstr ""
-
-msgid "S TO SKIP"
-msgstr ""
-
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr ""
 
@@ -492,9 +486,6 @@ msgid "GAMES"
 msgstr ""
 
 msgid " OF "
-msgstr ""
-
-msgid " SUCCESSFULLY SCRAPED!"
 msgstr ""
 
 msgid " SKIPPED."
@@ -608,4 +599,62 @@ msgid "STORAGE DEVICE"
 msgstr ""
 
 msgid "AUTO SAVE/LOAD"
+msgstr ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:150
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:154
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/views/SystemView.cpp:238
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-core/src/guis/GuiInputConfig.cpp:216
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-core/src/guis/GuiDetectDevice.cpp:39
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:108
+#, c-format
+msgid "GAME %i OF %i"
+msgstr ""
+
+#: es-core/src/guis/GuiInputConfig.cpp:24
+msgid "HOTKEY"
 msgstr ""

@@ -1,4 +1,4 @@
-#include <boost/locale.hpp>
+#include "Locale.h"
 #include "guis/GuiInputConfig.h"
 #include "Window.h"
 #include "Log.h"
@@ -7,6 +7,7 @@
 #include "components/MenuComponent.h"
 #include "components/ButtonComponent.h"
 #include "Util.h"
+#include "Locale.h"
 #include "InputManager.h"
 
 using namespace boost::locale;
@@ -18,9 +19,6 @@ static const int inputCount = 21;
 static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "Joystick1Up" , "Joystick1Left", "Joystick2Up" , "Joystick2Left", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "L2", "R2", "L3", "R3", "HotKey" };
 static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,         true,             true,      false,  false,  true,   true, false,    false,     true,      true, true, true, true, true,  false};
 static const int inputTypes[inputCount] = {     HAT,     HAT,   HAT,    HAT ,        AXIS,             AXIS,          AXIS,            AXIS,       BTN,    BTN,   BTN,   BTN,    BTN,    BTN,        BTN,      BTN,     BTN,  BTN, BTN,  BTN,  BTN};
-static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"),
-												 gettext("JOYSTICK 1 UP"), gettext("JOYSTICK 1 LEFT"),gettext("JOYSTICK 2 UP"), gettext("JOYSTICK 2 LEFT"),
-                                                    "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", "L3", "R3",gettext("HOTKEY") };
 static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg",
 											 ":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg",
 											":/help/button_l.svg", ":/help/button_r.svg", ":/help/button_l2.svg", ":/help/button_r2.svg",":/help/button_l3.svg", ":/help/button_r3.svg", ":/help/button_hotkey.svg" };
@@ -37,6 +35,10 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	mTargetConfig(target), mHoldingInput(false)
 {
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId() << " (" << target->getDeviceName() << ").";
+
+	std::string inputDispName[inputCount] = { _("UP"), _("DOWN"), _("LEFT"), _("RIGHT"),
+						  _("JOYSTICK 1 UP"), _("JOYSTICK 1 LEFT"), _("JOYSTICK 2 UP"), _("JOYSTICK 2 LEFT"),
+						  "A", "B", "X", "Y", "START", "SELECT ", _("PAGE UP"), _("PAGE DOWN"),  "L2", "R2", "L3", "R3", _("HOTKEY") };
 
 	if(reconfigureAll)
 		target->clear();
@@ -211,9 +213,9 @@ void GuiInputConfig::update(int deltaTime)
 			{
 				// crossed the second boundary, update text
 				const auto& text = mMappings.at(mHeldInputRowIndex);
-				std::stringstream ss;
-				ss << gettext("HOLD FOR ") << HOLD_TO_SKIP_MS/1000 - curSec << gettext("S TO SKIP");
-				text->setText(ss.str());
+				char strbuf[256];
+				snprintf(strbuf, 256, _n("HOLD FOR %iS TO SKIP", "HOLD FOR %iS TO SKIP", HOLD_TO_SKIP_MS/1000 - curSec).c_str(), HOLD_TO_SKIP_MS/1000 - curSec);
+				text->setText(strbuf);
 				text->setColor(0x777777FF);
 			}
 		}

@@ -10,6 +10,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputConfig.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Log.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/Locale.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Music.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/platform.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer.h
