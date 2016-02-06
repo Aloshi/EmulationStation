@@ -80,6 +80,7 @@ Complete Raspberry Pi build instructions at [emulationstation.org](http://emulat
 **On MacOS**
 
 [HomeBrew] (http://brew.sh/)
+
 [XCode Dev Tools] (http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)
 
 ```bash
@@ -93,6 +94,8 @@ cd YourEmulationStationDirectory
 cmake .
 make
 chmod +x emulationstation
+
+```
 
 Configuring
 ===========
