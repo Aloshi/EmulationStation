@@ -850,7 +850,12 @@ void GuiMenu::createConfigInput() {
 
     ComponentListRow row;
     row.makeAcceptInputHandler([window, this, s] {
-        window->pushGui(new GuiMsgBox(window, "I18NMESSAGECONTROLLERS", "OK",
+        window->pushGui(new GuiMsgBox(window,
+				      "YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+				      "CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+				      "IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+				      "ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+				      "SNES CONTROLLER.", "OK",
                                       [window, this, s] {
                                           window->pushGui(new GuiDetectDevice(window, false, [this, s] {
                                               s->setSave(false);
