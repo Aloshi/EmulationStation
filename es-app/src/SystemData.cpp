@@ -23,6 +23,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mName = name;
 	mFullName = fullName;
 	mStartPath = startPath;
+	sortId = 0; /* This may be updated before sorting by stored gamelist data */
 
 	//expand home symbol if the startpath contains ~
 	if(mStartPath[0] == '~')
@@ -45,7 +46,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
 		parseGamelist(this);
 
-	mRootFolder->sort(FileSorts::SortTypes.at(0));
+	mRootFolder->sort(FileSorts::SortTypes.at(sortId));
 
 	loadTheme();
 }
@@ -60,7 +61,6 @@ SystemData::~SystemData()
 
 	delete mRootFolder;
 }
-
 
 std::string strreplace(std::string str, const std::string& replace, const std::string& with)
 {
@@ -319,7 +319,7 @@ bool SystemData::loadConfig()
 			continue;
 		}
 
-		//convert path to generic directory seperators
+		//convert path to generic directory separators
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 

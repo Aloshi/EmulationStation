@@ -15,7 +15,9 @@ Eigen::Affine3f roundMatrix(const Eigen::Affine3f& mat);
 Eigen::Vector3f roundVector(const Eigen::Vector3f& vec);
 Eigen::Vector2f roundVector(const Eigen::Vector2f& vec);
 
+#if _MSC_VER < 1800
 float round(float num);
+#endif /* _MSC_VER */
 
 std::string getCanonicalPath(const std::string& str);
 

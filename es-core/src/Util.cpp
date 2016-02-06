@@ -33,6 +33,14 @@ float round(float num)
 }
 #endif
 
+#if _MSC_VER >= 1700
+FILE iob[] = {*stdin, *stdout, *stderr };
+FILE * __iob_func(void)
+{
+	return iob;
+}
+#endif
+
 Eigen::Affine3f& roundMatrix(Eigen::Affine3f& mat)
 {
 	mat.translation()[0] = round(mat.translation()[0]);
