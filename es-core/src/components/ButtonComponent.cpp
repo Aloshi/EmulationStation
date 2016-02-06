@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "Util.h"
 #include "Log.h"
-#include <boost/locale.hpp>
+#include "Locale.h"
 
 ButtonComponent::ButtonComponent(Window* window, const std::string& text, const std::string& helpText, const std::function<void()>& func) : GuiComponent(window),
 	mBox(window, ":/button.png"),

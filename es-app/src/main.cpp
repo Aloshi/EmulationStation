@@ -20,7 +20,7 @@
 #include "ScraperCmdLine.h"
 #include "VolumeControl.h"
 #include <sstream>
-#include <boost/locale.hpp>
+#include "Locale.h"
 #include <boost/algorithm/string.hpp>
 #include <RecalboxConf.h>
 #include "resources/Font.h"

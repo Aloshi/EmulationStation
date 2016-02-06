@@ -1,7 +1,6 @@
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Emulationstation 2.0RC1 FRENCH po\n"
+"Project-Id-Version: Emulationstation\n"
 "POT-Creation-Date: 2014-09-20 12:00-0500\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
 "Last-Translator: digitalLumberjack <digitalLumberjack@gmail.com>\n"
@@ -10,6 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
 
 msgid "MAIN MENU"
 msgstr "MENU PRINCIPAL"
@@ -433,12 +433,6 @@ msgstr "-NON CONFIGURÉ-"
 msgid "ALREADY TAKEN"
 msgstr "DÉJÀ PRIS"
 
-msgid "HOLD FOR "
-msgstr "APPUYEZ PENDANT"
-
-msgid "S TO SKIP"
-msgstr "S POUR PASSER"
-
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr "RESTER APPUYÉ SUR UN BOUTTON POUR PASSER"
 
@@ -508,9 +502,6 @@ msgstr "JEUX"
 
 msgid " OF "
 msgstr " SUR "
-
-msgid " SUCCESSFULLY SCRAPED!"
-msgstr " SCRAPPÉS !"
 
 msgid " SKIPPED."
 msgstr " PASSÉS."
@@ -627,21 +618,60 @@ msgstr "MEDIA DE STOCKAGE"
 msgid "AUTO SAVE/LOAD"
 msgstr "SAUVEGARDE/CHARGEMENT AUTOMATIQUE"
 
-#~ msgid "NOGAMEERRORMESSAGE"
-#~ msgstr ""
-#~ "AUCUN JEU N'A ETE TROUVE SUR LE SYSTEME !\n"
-#~ "VEUILLEZ AJOUTER DES JEUX EN SUIVANT LES INSTRUCTIONS DE LA NOTICE.\n"
-#~ "\n"
-#~ "RENDEZ-VOUS SUR RECALBOX.FR POUR PLUS D'INFORMATIONS"
+#: es-app/src/guis/GuiScraperMulti.cpp:150
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] "%i JEU  SCRAPPÉ !"
+msgstr[1] "%i JEUX  SCRAPPÉS !"
 
-#~ msgid "I18NMESSAGECONTROLLERS"
-#~ msgstr ""
-#~ "VOUS ALLEZ CONFIGURER UNE MANETTE. SI VOUS N'AVEZ QU'UN JOYSTICK OU JUSTE "
-#~ "UNE CROIX DIRECTIONNELLE, CONFIGUREZ SEULEMENT LES DIRECTIONS ET PASSEZ "
-#~ "LES JOYSTICKS EN RESTANT APPUYÉ SUR UN BOUTON. SI VOUS N'AVEZ PAS DE "
-#~ "BOUTON SPECIAL POUR HOTKEY, UTILISEZ SELECT. IGNOREZ UN BOUTON QUE VOTRE "
-#~ "MANETTE N'A PAS EN RESTANT APPUYÉ SUR UN BOUTTON DEJA CONFIGURÉ. LES NOMS "
-#~ "DES BOUTONS SONT BASÉS SUR LA SUPER NINTENDO"
+#: es-app/src/guis/GuiScraperMulti.cpp:154
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] "%i JEU PASSÉ."
+msgstr[1] "%i  JEUX PASSÉS."
 
-#~ msgid "NO GAMES WERE SCRAPED."
-#~ msgstr "AUCUN JEU SCRAPPÉ"
+#: es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] "%i JEU DISPONIBLE"
+msgstr[1] "%i JEUX DISPONIBLES"
+
+#: es-app/src/views/SystemView.cpp:238
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] "%i FAVORI"
+msgstr[1] "%i FAVORIS"
+
+#: es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] "%i SÉLECTIONNÉ"
+msgstr[1] "%i SÉLECTIONNÉS"
+
+#: es-core/src/guis/GuiInputConfig.cpp:216
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] "APPUYEZ PENDANT %iS POUR PASSER"
+msgstr[1] "APPUYEZ PENDANT %iS POUR PASSER"
+
+#: es-core/src/guis/GuiDetectDevice.cpp:39
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i MANETTE DÉTECTÉE"
+msgstr[1] "%i MANETTES DÉTECTÉES"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:108
+#, c-format
+msgid "GAME %i OF %i"
+msgstr "JEU %i DE %i"
+
+#: es-core/src/guis/GuiInputConfig.cpp:24
+msgid "HOTKEY"
+msgstr "HOTKEY"

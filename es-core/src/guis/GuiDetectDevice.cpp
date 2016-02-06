@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 #include "Util.h"
-#include <boost/locale.hpp>
+#include "Locale.h"
 
 #define HOLD_TIME 1000
 
@@ -33,18 +33,21 @@ GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun, const std::funct
 	std::stringstream deviceInfo;
 	int numDevices = InputManager::getInstance()->getNumJoysticks();
 	
-	if(numDevices > 0)
-		deviceInfo << numDevices << boost::locale::translate(" GAMEPAD") << (numDevices > 1 ? "S" : "") << boost::locale::translate(" DETECTED");
+	if(numDevices > 0) {
+	  char strbuf[256];
+	  snprintf(strbuf, 256, _n("%i GAMEPAD DETECTED", "%i GAMEPADS DETECTED", numDevices).c_str(), numDevices);
+	  deviceInfo << strbuf;
+	}
 	else
-		deviceInfo << boost::locale::translate("NO GAMEPADS DETECTED");
+		deviceInfo << _("NO GAMEPADS DETECTED");
 	mDeviceInfo = std::make_shared<TextComponent>(mWindow, deviceInfo.str(), Font::get(FONT_SIZE_SMALL), 0x999999FF, ALIGN_CENTER);
 	mGrid.setEntry(mDeviceInfo, Vector2i(0, 1), false, true);
 
 	// message
-	mMsg1 = std::make_shared<TextComponent>(mWindow, boost::locale::gettext("HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."), Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
+	mMsg1 = std::make_shared<TextComponent>(mWindow, _("HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."), Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mMsg1, Vector2i(0, 2), false, true);
 
-	const char* msg2str = firstRun ? boost::locale::gettext("PRESS F4 TO QUIT AT ANY TIME.").c_str() : boost::locale::gettext("PRESS ESC OR THE HOTKEY TO CANCEL.").c_str();
+	const char* msg2str = firstRun ? _("PRESS F4 TO QUIT AT ANY TIME.").c_str() : _("PRESS ESC OR THE HOTKEY TO CANCEL.").c_str();
 	mMsg2 = std::make_shared<TextComponent>(mWindow, msg2str, Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mMsg2, Vector2i(0, 3), false, true);
 

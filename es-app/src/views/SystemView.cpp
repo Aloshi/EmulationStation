@@ -8,7 +8,6 @@
 #include "SystemData.h"
 #include "Settings.h"
 #include "Util.h"
-#include <boost/locale.hpp>
 #include <guis/GuiMsgBox.h>
 #include <RecalboxSystem.h>
 #include <components/ComponentList.h>
@@ -16,6 +15,7 @@
 #include <RecalboxConf.h>
 #include "ThemeData.h"
 #include "AudioManager.h"
+#include "Locale.h"
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
@@ -231,27 +231,11 @@ void SystemView::onCursorChanged(const CursorState& state)
 
 	// also change the text after we've fully faded out
 	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
-		std::stringstream ss;
- 		if (gameCount == 1)
-		{
-			ss << "1" << boost::locale::gettext(" GAME AVAILABLE");
-		}
-		// only display a game count if there are at least 2 games
-		else
-		{
-			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
-		}
-
-		if (favoritesCount == 1)
-		{
-			ss << ", 1 " << boost::locale::gettext("FAVORITE");
-		}
-		else if (favoritesCount > 1)
-		{
-			ss << ", " << favoritesCount << " " << boost::locale::gettext("FAVORITES");
-		}
-
-		mSystemInfo.setText(ss.str());
+		char strbuf[256];
+		snprintf(strbuf, 256,
+			 (_n("%i GAME AVAILABLE", "%i GAMES AVAILABLE", gameCount) + ", " +
+			  _n("%i FAVORITE", "%i FAVORITES", favoritesCount)).c_str(), gameCount, favoritesCount);
+		mSystemInfo.setText(strbuf);
 	}, false, 1);
 
 	Animation* infoFadeIn = new LambdaAnimation(
