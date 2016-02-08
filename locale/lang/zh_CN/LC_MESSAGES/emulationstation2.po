@@ -630,7 +630,7 @@ msgstr "游戏设置"
 
 #, fuzzy
 msgid "USERNAME"
-msgstr "名称"
+msgstr ""
 
 msgid "PASSWORD"
 msgstr ""

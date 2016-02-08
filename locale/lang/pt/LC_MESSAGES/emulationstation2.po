@@ -629,7 +629,7 @@ msgstr "OPÇÕES DE JOGOS"
 
 #, fuzzy
 msgid "USERNAME"
-msgstr "NOME"
+msgstr ""
 
 msgid "PASSWORD"
 msgstr ""

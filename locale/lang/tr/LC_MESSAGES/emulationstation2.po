@@ -627,7 +627,7 @@ msgstr "OYUN AYARLARI"
 
 #, fuzzy
 msgid "USERNAME"
-msgstr "İSİM"
+msgstr ""
 
 msgid "PASSWORD"
 msgstr ""

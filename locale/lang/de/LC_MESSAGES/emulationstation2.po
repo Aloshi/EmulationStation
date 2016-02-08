@@ -635,7 +635,7 @@ msgstr "SPIEL-EINSTELLUNGEN"
 
 #, fuzzy
 msgid "USERNAME"
-msgstr "NAME"
+msgstr ""
 
 msgid "PASSWORD"
 msgstr ""

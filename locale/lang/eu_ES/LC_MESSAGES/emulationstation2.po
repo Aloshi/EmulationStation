@@ -629,7 +629,7 @@ msgstr "JOKOEN KONFIGURAZIOAK"
 
 #, fuzzy
 msgid "USERNAME"
-msgstr "IZENA"
+msgstr ""
 
 msgid "PASSWORD"
 msgstr ""
