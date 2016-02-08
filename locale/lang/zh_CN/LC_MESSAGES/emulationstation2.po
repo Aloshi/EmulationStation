@@ -1,4 +1,3 @@
-
 msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0.1A zh_CN po\n"
@@ -6,10 +5,10 @@ msgstr ""
 "PO-Revision-Date: 2015-09-01 10:59+0800\n"
 "Last-Translator: ShiKeYu <shikeyu@tom.com>\n"
 "Language-Team: CHINESE <shikeyu@tom.com>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.8.4\n"
 
@@ -47,9 +46,6 @@ msgstr "最近游戏："
 msgid "Times played: "
 msgstr "运行次数："
 
-msgid "FAVORITE: "
-msgstr "收藏："
-
 #: es-app/src/MetaData.cpp
 msgid "enter game name"
 msgstr "输入游戏名称"
@@ -62,18 +58,6 @@ msgstr "输入描述"
 
 msgid "ENTER PATH TO IMAGE"
 msgstr "输入图像路径"
-
-msgid "DESCRIPTION"
-msgstr "描述"
-
-msgid "IMAGE"
-msgstr "图像"
-
-msgid "unknown"
-msgstr "未知"
-
-msgid "SCRAPE"
-msgstr "搜刮"
 
 msgid "THUMBNAIL"
 msgstr "缩略图"
@@ -212,12 +196,6 @@ msgstr "选择所有"
 msgid "SELECT NONE"
 msgstr "都不选择"
 
-msgid "START"
-msgstr "开始"
-
-msgid "STOP"
-msgstr "停止"
-
 #: es-app/src/guis/GuiScraperMulti.cpp"
 msgid "SCRAPING IN PROGRESS"
 msgstr "正在进行搜刮"
@@ -245,39 +223,6 @@ msgstr "关闭"
 msgid "SELECT"
 msgstr "选择"
 
-msgid "MENU"
-msgstr "菜单"
-
-msgid "OPTIONS"
-msgstr "选项"
-
-msgid "KODI MEDIA CENTER"
-msgstr "KODI 媒体中心"
-
-msgid "OVERCLOCK"
-msgstr "超频"
-
-msgid "PAIR A BLUETOOTH CONTROLLER"
-msgstr "连接一个蓝牙控制器"
-
-msgid "OVERSCAN"
-msgstr "过扫描"
-
-msgid "STATUS"
-msgstr "当前状态"
-
-msgid "IP ADDRESS"
-msgstr "IP 地址"
-
-msgid "OK"
-msgstr "确定"
-
-msgid "SCRAPER"
-msgstr "数据搜刮"
-
-msgid "NO CONTROLLERS FOUND"
-msgstr "没有找到控制器"
-
 msgid "CHOOSE"
 msgstr "浏览"
 
@@ -292,9 +237,6 @@ msgstr "游戏系统"
 
 msgid "INPUT"
 msgstr "输入名称"
-
-msgid "SEARCH FOR"
-msgstr "以何标题搜索"
 
 msgid "SKIP"
 msgstr "跳过"
@@ -350,7 +292,8 @@ msgstr "按住您的设备上的按钮 A 来配置它。"
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "按 F4 在任何时候退出。"
 
-msgid "PRESS ESC TO CANCEL."
+#, fuzzy
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
 msgstr "按 ESC 键取消"
 
 #: es-core/src/guis/GuiInputConfig.cpp
@@ -413,7 +356,12 @@ msgstr "P3 输入"
 msgid "INPUT P4"
 msgstr "P4 输入"
 
-msgid "NOGAMEERRORMESSAGE"
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
 msgstr ""
 "无法找到任何游戏！\n"
 "请在系统设置文件中检查相关游戏目录的设置，\n"
@@ -487,12 +435,6 @@ msgstr "-未定义-"
 msgid "ALREADY TAKEN"
 msgstr "已经采取了"
 
-msgid "HOLD FOR "
-msgstr "等待"
-
-msgid "S TO SKIP"
-msgstr "S 为跳过"
-
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr "按任意键跳过"
 
@@ -508,7 +450,12 @@ msgstr "摇杆 2 上"
 msgid "JOYSTICK 2 LEFT"
 msgstr "摇杆 2 左"
 
-msgid "I18NMESSAGECONTROLLERS"
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
 msgstr ""
 "您将要进行控制器的设置。如果您的手柄仅有\n"
 "一个摇杆，设置方向键后按住A键跳过摇杆设置。\n"
@@ -547,20 +494,14 @@ msgstr "接受结果"
 msgid "stop (progress saved)"
 msgstr "停止 (进度会保存)"
 
-msgid "SEARCH"
-msgstr "搜索"
+msgid "search"
+msgstr ""
 
 msgid "GAMES"
 msgstr "游戏"
 
 msgid " OF "
 msgstr " 关于 "
-
-msgid "NO GAMES WERE SCRAPED."
-msgstr "没有搜刮到游戏数据。"
-
-msgid " SUCCESSFULLY SCRAPED!"
-msgstr " 搜刮数据成功!"
 
 msgid " SKIPPED."
 msgstr " 已跳过."
@@ -620,3 +561,196 @@ msgstr "没有连接"
 
 msgid "LOADING..."
 msgstr "载入中......"
+
+#, fuzzy
+msgid "CONTROLLER PAIRED"
+msgstr "没有找到控制器"
+
+#, fuzzy
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "连接一个蓝牙控制器"
+
+msgid "AN ERROR OCCURED"
+msgstr ""
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "没有找到控制器"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "连接一个蓝牙控制器"
+
+#, fuzzy
+msgid "PLEASE WAIT..."
+msgstr "发布日期。"
+
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+
+#, fuzzy
+msgid " GAME AVAILABLE"
+msgstr " 个可用的游戏"
+
+msgid "UPDATE GAMES LISTS"
+msgstr ""
+
+#, fuzzy
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "确定进行更新吗?"
+
+msgid "EMULATOR"
+msgstr ""
+
+#, fuzzy
+msgid "FAVORITES"
+msgstr "收藏"
+
+msgid "HIDDEN"
+msgstr ""
+
+#, fuzzy
+msgid "ENTER REGION"
+msgstr "输入分数"
+
+#, fuzzy
+msgid "ENTER ROMTYPE"
+msgstr "输入分数"
+
+#, fuzzy
+msgid "STORAGE DEVICE"
+msgstr "空间使用"
+
+msgid "AUTO SAVE/LOAD"
+msgstr ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:150
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:154
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] ""
+
+#: es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] ""
+
+#: es-app/src/views/SystemView.cpp:238
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] ""
+
+#: es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] ""
+
+#: es-core/src/guis/GuiInputConfig.cpp:216
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] ""
+
+#: es-core/src/guis/GuiDetectDevice.cpp:39
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:108
+#, c-format
+msgid "GAME %i OF %i"
+msgstr ""
+
+#: es-core/src/guis/GuiInputConfig.cpp:24
+msgid "HOTKEY"
+msgstr ""
+
+#~ msgid "HOLD FOR "
+#~ msgstr "等待"
+
+#~ msgid "S TO SKIP"
+#~ msgstr "S 为跳过"
+
+#~ msgid " SUCCESSFULLY SCRAPED!"
+#~ msgstr " 搜刮数据成功!"
+
+#~ msgid "NOGAMEERRORMESSAGE"
+#~ msgstr ""
+#~ "无法找到任何游戏！\n"
+#~ "请在系统设置文件中检查相关游戏目录的设置，\n"
+#~ "并确保在这些游戏目录中至少有一个游戏。\n"
+#~ "访问 RECALBOX.COM 获取更多信息。"
+
+#~ msgid "I18NMESSAGECONTROLLERS"
+#~ msgstr ""
+#~ "您将要进行控制器的设置。如果您的手柄仅有\n"
+#~ "一个摇杆，设置方向键后按住A键跳过摇杆设置。\n"
+#~ "如果您没有多余的键作为“热键”，请选择SELECT键。\n"
+#~ "按住A键可跳过您没有的那些按键设置。"
+
+#~ msgid "NO GAMES WERE SCRAPED."
+#~ msgstr "没有搜刮到游戏数据。"
+
+#~ msgid "FAVORITE: "
+#~ msgstr "收藏："
+
+#~ msgid "DESCRIPTION"
+#~ msgstr "描述"
+
+#~ msgid "IMAGE"
+#~ msgstr "图像"
+
+#~ msgid "unknown"
+#~ msgstr "未知"
+
+#~ msgid "SCRAPE"
+#~ msgstr "搜刮"
+
+#~ msgid "START"
+#~ msgstr "开始"
+
+#~ msgid "STOP"
+#~ msgstr "停止"
+
+#~ msgid "MENU"
+#~ msgstr "菜单"
+
+#~ msgid "OPTIONS"
+#~ msgstr "选项"
+
+#~ msgid "KODI MEDIA CENTER"
+#~ msgstr "KODI 媒体中心"
+
+#~ msgid "OVERCLOCK"
+#~ msgstr "超频"
+
+#~ msgid "OVERSCAN"
+#~ msgstr "过扫描"
+
+#~ msgid "STATUS"
+#~ msgstr "当前状态"
+
+#~ msgid "IP ADDRESS"
+#~ msgstr "IP 地址"
+
+#~ msgid "OK"
+#~ msgstr "确定"
+
+#~ msgid "SCRAPER"
+#~ msgstr "数据搜刮"
+
+#~ msgid "SEARCH FOR"
+#~ msgstr "以何标题搜索"
+
+#~ msgid "SEARCH"
+#~ msgstr "搜索"

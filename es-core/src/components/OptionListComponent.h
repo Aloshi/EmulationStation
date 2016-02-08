@@ -9,7 +9,7 @@
 #include "components/MenuComponent.h"
 #include <sstream>
 #include "Log.h"
-#include <boost/locale.hpp>
+#include "Locale.h"
 
 using namespace boost::locale;
 
@@ -307,9 +307,10 @@ private:
 		if(mMultiSelect)
 		{
 			// display # selected
-			std::stringstream ss;
-			ss << getSelectedObjects().size() << gettext(" SELECTED");
-			mText.setText(ss.str());
+		  	char strbuf[256];
+			int x = getSelectedObjects().size();
+		  	snprintf(strbuf, 256, _n("%i SELECTED", "%i SELECTED", x).c_str(), x);
+			mText.setText(strbuf);
 			mText.setSize(0, mText.getSize().y());
 			setSize(mText.getSize().x() + mRightArrow.getSize().x() + 24, mText.getSize().y());
 			if(mParent) // hack since theres no "on child size changed" callback atm...

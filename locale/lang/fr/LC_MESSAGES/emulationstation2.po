@@ -1,37 +1,47 @@
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Emulationstation 2.0RC1 FRENCH po\n"
+"Project-Id-Version: Emulationstation\n"
 "POT-Creation-Date: 2014-09-20 12:00-0500\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
 "Last-Translator: digitalLumberjack <digitalLumberjack@gmail.com>\n"
 "Language-Team: FRENCH\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
 
 msgid "MAIN MENU"
 msgstr "MENU PRINCIPAL"
+
 msgid "YES"
 msgstr "OUI"
+
 msgid "NO"
 msgstr "NON"
 
 #: es-app/src/views/gamelist/DetailedGameListView.cpp
 msgid "Rating: "
 msgstr "Note : "
+
 msgid "Released: "
 msgstr "Sortie : "
+
 msgid "Developer: "
 msgstr "Developpeur : "
+
 msgid "Publisher: "
 msgstr "Editeur : "
+
 msgid "Genre: "
 msgstr "Genre : "
+
 msgid "Players: "
 msgstr "Joueurs : "
+
 msgid "Last played: "
 msgstr "Dernier jeu : "
+
 msgid "Times played: "
 msgstr "Nb jeux : "
 
@@ -39,106 +49,149 @@ msgstr "Nb jeux : "
 msgid "enter game name"
 msgstr "nom du jeu"
 
-
-msgid "NAME" 
+msgid "NAME"
 msgstr "NOM"
+
 msgid "ENTER DESCRIPTION"
 msgstr "ENTREZ DESCRIPTION"
+
 msgid "ENTER PATH TO IMAGE"
 msgstr "ENTREZ LE CHEMIN DE L'IMAGE"
+
 msgid "THUMBNAIL"
 msgstr "MINIATURE"
+
 msgid "ENTER PATH TO THUMBNAIL"
 msgstr "ENTREZ LE CHEMIN DE LA MINIATURE"
+
 msgid "RATING"
 msgstr "NOTE"
+
 msgid "ENTER SCORE"
 msgstr "ENTREZ LA NOTE"
+
 msgid "RELEASE DATE"
 msgstr "DATE DE SORTIE"
+
 msgid "ENTER RELEASE DATE"
 msgstr "ENTREZ DATE DE SORTIE"
+
 msgid "DEVELOPER"
 msgstr "DEVELOPPEUR"
+
 msgid "ENTER GAME DEVELOPER"
 msgstr "ENTREZ LE NOM DU DEVELOPPEUR"
+
 msgid "PUBLISHER"
 msgstr "EDITEUR"
+
 msgid "ENTER GAME PUBLISHER"
 msgstr "ENTREZ LE NOM DE L'EDITEUR"
+
 msgid "GENRE"
 msgstr "GENRE"
+
 msgid "ENTER GAME GENRE"
 msgstr "ENTREZ LE GENRE"
+
 msgid "PLAYERS"
 msgstr "JOUEURS"
+
 msgid "ENTER NUMBER OF PLAYERS"
 msgstr "ENTREZ LE NOMBRE DE JOUEURS"
+
 msgid "PLAY COUNT"
 msgstr "NB JEUX"
+
 msgid "ENTER NUMBER OF TIMES PLAYED"
 msgstr "ENTREZ LE NOMBRE DE FOIS JOUEES"
 
 #: es-app/src/guis/GuiMenu.cpp
 msgid "SCRAPE FROM"
 msgstr "SCRAPPER DEPUIS"
+
 msgid "SCRAPE RATINGS"
 msgstr "SCRAPPER LES NOTES"
+
 msgid "SOUND SETTINGS"
 msgstr "OPTIONS DU SON"
+
 msgid "SYSTEM VOLUME"
 msgstr "VOLUME DU SYSTEME"
+
 msgid "ENABLE SOUNDS"
 msgstr "ACTIVER LES SONS"
+
 msgid "UI SETTINGS"
 msgstr "OPTIONS DE L'INTERFACE"
+
 msgid "SCREENSAVER AFTER"
 msgstr "ECRAN DE VEILLE APRES"
+
 msgid "TRANSITION STYLE"
 msgstr "STYLE DE LA TRANSITION"
+
 msgid "SCREENSAVER BEHAVIOR"
 msgstr "COMPORTEMENT DE L'ECRAN DE VEILLE"
+
 msgid "SHOW FRAMERATE"
 msgstr "AFFICHER LE FRAMERATE"
+
 msgid "ON-SCREEN HELP"
 msgstr "AFFICHAGE DE L'AIDE"
+
 msgid "QUICK SYSTEM SELECT"
 msgstr "SELECTION RAPIDE DU SYSTEME"
+
 msgid "THEME SET"
 msgstr "THEME"
+
 msgid "CONFIGURE INPUT"
 msgstr "CONFIGURER LES MANETTES"
+
 msgid "QUIT"
 msgstr "QUITTER"
+
 msgid "REALLY RESTART?"
 msgstr "REDEMARRER ?"
+
 msgid "RESTART SYSTEM"
 msgstr "REDEMARRER"
+
 msgid "REALLY SHUTDOWN?"
 msgstr "ETEINDRE ?"
+
 msgid "SHUTDOWN SYSTEM"
 msgstr "ETEINDRE"
+
 msgid "REALLY QUIT?"
 msgstr "QUITTER ?"
+
 msgid "QUIT EMULATIONSTATION"
 msgstr "QUITTER EMULATIONSTATION"
-
 
 #: es-app/src/guis/GuiScraperStart.cpp
 msgid "SCRAPE NOW"
 msgstr "SCRAPE"
+
 msgid "USER DECIDES ON CONFLICTS"
 msgstr "CHOISIR SI CONFLIT"
+
 msgid "SYSTEMS"
 msgstr "SYSTEMES"
+
 msgid "FILTER"
 msgstr "FILTRE"
+
 msgid "SCRAPE THESE GAMES"
 msgstr "SCRAPPER CES JEUX"
+
 msgid "SCRAPE THESE SYSTEMS"
 msgstr "SCRAPPER CES SYSTEMES"
+
 msgid "SELECT ALL"
 msgstr "TOUT SELECTIONNER"
+
 msgid "SELECT NONE"
 msgstr "AUCUN"
 
@@ -150,40 +203,55 @@ msgstr "SCRAPING EN COURS"
 msgid "NO GAMES FOUND - SKIP"
 msgstr "AUCUN JEU CORRESPONDANT - PASSER"
 
-
 #: Buttons
 msgid "close"
 msgstr "fermer"
+
 msgid "select"
 msgstr "selectionner"
+
 msgid "choose"
 msgstr "selectionner"
+
 msgid "back"
 msgstr "retour"
+
 msgid "CLOSE"
 msgstr "FERMER"
+
 msgid "SELECT"
 msgstr "SELECTIONNER"
+
 msgid "CHOOSE"
 msgstr "NAVIGUER"
+
 msgid "BACK"
 msgstr "RETOUR"
+
 msgid "LAUNCH"
 msgstr "LANCER"
+
 msgid "SYSTEM"
 msgstr "SYSTEME"
+
 msgid "INPUT"
 msgstr "EDITER"
+
 msgid "SKIP"
 msgstr "PASSER"
+
 msgid "CHANGE"
 msgstr "MODIFIER"
+
 msgid "SAVE"
 msgstr "SAUVEGARDER"
+
 msgid "CANCEL"
 msgstr "ANNULER"
+
 msgid "DELETE"
 msgstr "SUPPRIMER"
+
 msgid "GO BACK"
 msgstr "RETOUR"
 
@@ -194,11 +262,12 @@ msgstr " JEUX DISPONIBLES"
 #: es-app/src/guis/GuiGamelistOptions.cpp
 msgid "JUMP TO LETTER"
 msgstr "ALLER A LA LETTRE"
+
 msgid "SORT GAMES BY"
 msgstr "TRIER LES JEUX PAR"
+
 msgid "EDIT THIS GAME'S METADATA"
 msgstr "EDITER LES DONNEES DU JEU"
-
 
 #: es-app/src/guis/GuiMetaDataEd.cpp
 msgid "EDIT METADATA"
@@ -206,32 +275,44 @@ msgstr "EDITER LES DONNEES"
 
 msgid " GAMEPAD"
 msgstr " MANETTE"
+
 msgid " DETECTED"
 msgstr " DETECTEE"
+
 msgid "WELCOME"
 msgstr "BIENVENUE"
+
 msgid "NO GAMEPADS DETECTED"
 msgstr "AUCUNE MANETTE DETECTEE"
+
 msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
 msgstr "MAINTENEZ UN BOUTON SUR LA MANETTE POUR LA CONFIGURER"
+
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "APPUYEZ SUR F4 POUR QUITTER A TOUT MOMENT"
+
 msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
 msgstr "APPUYEZ SUR ECHAP OU LA TOUCHE HOTKEY POUR ANNULER"
 
 #: es-core/src/guis/GuiInputConfig.cpp
 msgid "CONFIGURING"
 msgstr "CONFIGURATION"
+
 msgid "UP"
 msgstr "HAUT"
+
 msgid "DOWN"
 msgstr "BAS"
+
 msgid "LEFT"
 msgstr "GAUCHE"
+
 msgid "RIGHT"
 msgstr "DROITE"
+
 msgid "PAGE UP"
 msgstr "L1 (PAGE PRECEDENTE)"
+
 msgid "PAGE DOWN"
 msgstr "R1 (PAGE SUIVANTE)"
 
@@ -239,42 +320,57 @@ msgid "SAVE CHANGES?"
 msgstr "SAUVEGARDER ?"
 
 #: es-app/src/guis/GuiUpdate.cpp
-
 msgid "WORKING..."
 msgstr "EN COURS..."
+
 msgid "UPDATE"
 msgstr "METTRE A JOUR LE SYSTEME"
+
 msgid "REALLY UPDATE?"
 msgstr "METTRE A JOUR LE SYSTEME ?"
+
 msgid "NETWORK CONNECTION NEEDED"
 msgstr "VEUILLEZ BRANCHER UN CABLE RESEAU"
+
 msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
 msgstr "MISE A JOUR EFFECTUEE, REDEMARRAGE EN COURS"
+
 msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
 msgstr "ECHEC DE LA MISE A JOUR"
 
-
-#GUIMENU
+# GUIMENU
 msgid "CONFIGURE A CONTROLLER"
 msgstr "CONFIGURER UNE MANETTE"
+
 msgid "INPUT P1"
 msgstr "MANETTE J1"
+
 msgid "INPUT P2"
 msgstr "MANETTE J2"
+
 msgid "INPUT P3"
 msgstr "MANETTE J3"
+
 msgid "INPUT P4"
 msgstr "MANETTE J4"
 
-msgid "NOGAMEERRORMESSAGE"
-msgstr "AUCUN JEU N'A ETE TROUVE SUR LE SYSTEME !\nVEUILLEZ AJOUTER DES JEUX EN SUIVANT LES INSTRUCTIONS DE LA NOTICE.\n\nRENDEZ-VOUS SUR RECALBOX.FR POUR PLUS D'INFORMATIONS"
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
+msgstr ""
+"AUCUN JEU N'A ETE TROUVE SUR LE SYSTEME !\n"
+"VEUILLEZ AJOUTER DES JEUX EN SUIVANT LES INSTRUCTIONS DE LA NOTICE.\n"
+"\n"
+"RENDEZ-VOUS SUR RECALBOX.FR POUR PLUS D'INFORMATIONS"
 
 msgid "LANGUAGE"
 msgstr "LANGUE"
 
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "LE SYSTEME VA REDEMARRER"
-
 
 msgid "SYSTEM SETTINGS"
 msgstr "OPTIONS SYSTEME"
@@ -330,35 +426,52 @@ msgstr "FORMAT JEUX"
 # Config controllers missing translation
 msgid "PRESS ANYTHING"
 msgstr "APPUYEZ SUR UN BOUTON"
+
 msgid "-NOT DEFINED-"
 msgstr "-NON CONFIGURÉ-"
+
 msgid "ALREADY TAKEN"
 msgstr "DÉJÀ PRIS"
-msgid "HOLD FOR "
-msgstr "APPUYEZ PENDANT"
-msgid "S TO SKIP"
-msgstr "S POUR PASSER"
+
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr "RESTER APPUYÉ SUR UN BOUTTON POUR PASSER"
+
 msgid "JOYSTICK 1 UP"
 msgstr "JOYSTICK 1 HAUT"
+
 msgid "JOYSTICK 1 LEFT"
 msgstr "JOYSTICK 1 GAUCHE"
+
 msgid "JOYSTICK 2 UP"
 msgstr "JOYSTICK 2 HAUT"
+
 msgid "JOYSTICK 2 LEFT"
 msgstr "JOYSTICK 2 GAUCHE"
 
-msgid "I18NMESSAGECONTROLLERS"
-msgstr "VOUS ALLEZ CONFIGURER UNE MANETTE. SI VOUS N'AVEZ QU'UN JOYSTICK OU JUSTE UNE CROIX DIRECTIONNELLE, CONFIGUREZ SEULEMENT LES DIRECTIONS ET PASSEZ LES JOYSTICKS EN RESTANT APPUYÉ SUR UN BOUTON. SI VOUS N'AVEZ PAS DE BOUTON SPECIAL POUR HOTKEY, UTILISEZ SELECT. IGNOREZ UN BOUTON QUE VOTRE MANETTE N'A PAS EN RESTANT APPUYÉ SUR UN BOUTTON DEJA CONFIGURÉ. LES NOMS DES BOUTONS SONT BASÉS SUR LA SUPER NINTENDO"
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
+msgstr ""
+"VOUS ALLEZ CONFIGURER UNE MANETTE. SI VOUS N'AVEZ QU'UN JOYSTICK OU JUSTE "
+"UNE CROIX DIRECTIONNELLE, CONFIGUREZ SEULEMENT LES DIRECTIONS ET PASSEZ LES "
+"JOYSTICKS EN RESTANT APPUYÉ SUR UN BOUTON. SI VOUS N'AVEZ PAS DE BOUTON "
+"SPECIAL POUR HOTKEY, UTILISEZ SELECT. IGNOREZ UN BOUTON QUE VOTRE MANETTE "
+"N'A PAS EN RESTANT APPUYÉ SUR UN BOUTTON DEJA CONFIGURÉ. LES NOMS DES "
+"BOUTONS SONT BASÉS SUR LA SUPER NINTENDO"
 
-#TEXT EDITING
+# TEXT EDITING
 msgid "EDIT"
 msgstr "EDITER"
+
 msgid "STOP EDITING"
 msgstr "ARRETER EDITION"
+
 msgid "MOVE CURSOR"
 msgstr "BOUGER LE CURSEUR"
+
 msgid "DISCARD CHANGES"
 msgstr "ANNULER MODIFICATIONS"
 
@@ -390,19 +503,12 @@ msgstr "JEUX"
 msgid " OF "
 msgstr " SUR "
 
-msgid "NO GAMES WERE SCRAPED."
-msgstr "AUCUN JEU SCRAPPÉ"
-
-msgid " SUCCESSFULLY SCRAPED!"
-msgstr " SCRAPPÉS !"
-
 msgid " SKIPPED."
 msgstr " PASSÉS."
 
-# FAVORITES
+#  FAVORITES
 msgid "FAVORITES ONLY"
 msgstr "FAVORIS SEULEMENT"
-
 
 msgid "FAVORITE"
 msgstr "FAVORIS"
@@ -475,8 +581,12 @@ msgstr "ASSOCIER UNE MANETTE BLUETOOTH"
 msgid "PLEASE WAIT..."
 msgstr "VEUILLEZ PATIENTER..."
 
-msgid "THIS WILL DELETE A FILE!\nARE YOU SURE?"
-msgstr "CELA VA EFFACER LE FICHIER\nETES VOUS SUR ?"
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+"CELA VA EFFACER LE FICHIER\n"
+"ETES VOUS SUR ?"
 
 msgid " GAME AVAILABLE"
 msgstr " JEU DISPONIBLE"
@@ -504,3 +614,64 @@ msgstr "ENTRER ROMTYPE"
 
 msgid "STORAGE DEVICE"
 msgstr "MEDIA DE STOCKAGE"
+
+msgid "AUTO SAVE/LOAD"
+msgstr "SAUVEGARDE/CHARGEMENT AUTOMATIQUE"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:150
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] "%i JEU  SCRAPPÉ !"
+msgstr[1] "%i JEUX  SCRAPPÉS !"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:154
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] "%i JEU PASSÉ."
+msgstr[1] "%i  JEUX PASSÉS."
+
+#: es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] "%i JEU DISPONIBLE"
+msgstr[1] "%i JEUX DISPONIBLES"
+
+#: es-app/src/views/SystemView.cpp:238
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] "%i FAVORI"
+msgstr[1] "%i FAVORIS"
+
+#: es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] "%i SÉLECTIONNÉ"
+msgstr[1] "%i SÉLECTIONNÉS"
+
+#: es-core/src/guis/GuiInputConfig.cpp:216
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] "APPUYEZ PENDANT %iS POUR PASSER"
+msgstr[1] "APPUYEZ PENDANT %iS POUR PASSER"
+
+#: es-core/src/guis/GuiDetectDevice.cpp:39
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i MANETTE DÉTECTÉE"
+msgstr[1] "%i MANETTES DÉTECTÉES"
+
+#: es-app/src/guis/GuiScraperMulti.cpp:108
+#, c-format
+msgid "GAME %i OF %i"
+msgstr "JEU %i DE %i"
+
+#: es-core/src/guis/GuiInputConfig.cpp:24
+msgid "HOTKEY"
+msgstr "HOTKEY"

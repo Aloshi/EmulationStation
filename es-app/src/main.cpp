@@ -20,7 +20,7 @@
 #include "ScraperCmdLine.h"
 #include "VolumeControl.h"
 #include <sstream>
-#include <boost/locale.hpp>
+#include "Locale.h"
 #include <boost/algorithm/string.hpp>
 #include <RecalboxConf.h>
 #include "resources/Font.h"
@@ -148,7 +148,11 @@ bool loadSystemConfigFile(const char** errorString)
 	if(SystemData::sSystemVector.size() == 0)
 	{
 		LOG(LogError) << "No systems found! Does at least one system have a game present? (check that extensions match!)\n(Also, make sure you've updated your es_systems.cfg for XML!)";
-		*errorString = "NOGAMEERRORMESSAGE";
+		*errorString = "WE CAN'T FIND ANY SYSTEMS!\n"
+		  "CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+		  "YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+		  "\n"
+		  "VISIT RECALBOX.FR FOR MORE INFORMATION.";
 		return false;
 	}
 

@@ -1,6 +1,6 @@
 #include "components/MenuComponent.h"
 #include "components/ButtonComponent.h"
-#include <boost/locale.hpp>
+#include "Locale.h"
 
 #define BUTTON_GRID_VERT_PADDING 32
 #define BUTTON_GRID_HORIZ_PADDING 10
