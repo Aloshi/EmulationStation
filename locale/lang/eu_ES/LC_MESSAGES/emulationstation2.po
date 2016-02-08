@@ -623,6 +623,17 @@ msgstr "MEMORIA"
 msgid "AUTO SAVE/LOAD"
 msgstr ""
 
+#, fuzzy
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr "JOKOEN KONFIGURAZIOAK"
+
+#, fuzzy
+msgid "USERNAME"
+msgstr "IZENA"
+
+msgid "PASSWORD"
+msgstr ""
+
 #: es-app/src/guis/GuiScraperMulti.cpp:150
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"

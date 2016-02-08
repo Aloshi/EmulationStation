@@ -623,6 +623,17 @@ msgstr "ARMAZENAMENTO"
 msgid "AUTO SAVE/LOAD"
 msgstr ""
 
+#, fuzzy
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr "OPÇÕES DE JOGOS"
+
+#, fuzzy
+msgid "USERNAME"
+msgstr "NOME"
+
+msgid "PASSWORD"
+msgstr ""
+
 #: es-app/src/guis/GuiScraperMulti.cpp:150
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
