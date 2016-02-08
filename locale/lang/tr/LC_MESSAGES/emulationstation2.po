@@ -623,7 +623,7 @@ msgstr ""
 
 #, fuzzy
 msgid "RETROACHIEVEMENTS SETTINGS"
-msgstr "OYUN AYARLARI"
+msgstr ""
 
 #, fuzzy
 msgid "USERNAME"

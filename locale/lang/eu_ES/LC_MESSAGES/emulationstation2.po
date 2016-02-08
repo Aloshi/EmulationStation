@@ -625,7 +625,7 @@ msgstr ""
 
 #, fuzzy
 msgid "RETROACHIEVEMENTS SETTINGS"
-msgstr "JOKOEN KONFIGURAZIOAK"
+msgstr ""
 
 #, fuzzy
 msgid "USERNAME"

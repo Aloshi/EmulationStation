@@ -634,7 +634,7 @@ msgstr ""
 
 #, fuzzy
 msgid "RETROACHIEVEMENTS SETTINGS"
-msgstr "OPZIONI DELL'INTERFACCIA"
+msgstr ""
 
 #, fuzzy
 msgid "USERNAME"
