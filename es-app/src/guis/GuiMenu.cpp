@@ -335,6 +335,36 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, "MAIN MEN
                  shaders_choices->add("RETRO", "retro", currentShader == "retro");
                  s->addWithLabel("SHADERS SET", shaders_choices);
 
+                 // Retroachievements
+                 {
+                     ComponentListRow row;
+                     std::function<void()> openGui = [this] {
+                         GuiSettings *retroachievements = new GuiSettings(mWindow, "RETROACHIEVEMENTS SETTINGS");
+                     // retroachievements_enable
+                     auto retroachievements_enabled = std::make_shared<SwitchComponent>(mWindow);
+                     retroachievements_enabled->setState(RecalboxConf::getInstance()->get("global.retroachievements") == "1");
+                     retroachievements->addWithLabel("RETROACHIEVEMENTS", retroachievements_enabled);
+
+                     // retroachievements, username, password
+                     createInputTextRow(retroachievements, "USERNAME", "global.retroachievements.username", false);
+                     createInputTextRow(retroachievements, "PASSWORD", "global.retroachievements.password", false);
+
+
+                     retroachievements->addSaveFunc([retroachievements_enabled] {
+                     RecalboxConf::getInstance()->set("global.retroachievements", retroachievements_enabled->getState() ? "1" : "0");
+                     RecalboxConf::getInstance()->saveRecalboxConf();
+                     });
+                     mWindow->pushGui(retroachievements);
+                 };
+                     row.makeAcceptInputHandler(openGui);
+                     auto retroachievementsSettings = std::make_shared<TextComponent>(mWindow, "RETROACHIEVEMENTS SETTINGS",
+                                                                         Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+                     auto bracket = makeArrow(mWindow);
+                     row.addElement(retroachievementsSettings, true);
+                     row.addElement(bracket, false);
+                     s->addRow(row);
+                 }
+
                  // Custom config for systems
                  {
 
