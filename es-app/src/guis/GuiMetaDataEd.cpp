@@ -34,7 +34,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
 
     mHeaderGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(1, 5));
 
-    mTitle = std::make_shared<TextComponent>(mWindow, "EDIT METADATA", Font::get(FONT_SIZE_LARGE), 0x555555FF,
+    mTitle = std::make_shared<TextComponent>(mWindow, _("EDIT METADATA"), Font::get(FONT_SIZE_LARGE), 0x555555FF,
                                              ALIGN_CENTER);
     mSubtitle = std::make_shared<TextComponent>(mWindow,
                                                 strToUpper(scraperParams.game->getPath().filename().generic_string()),
@@ -180,13 +180,13 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
 
     if (!scraperParams.system->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
         buttons.push_back(
-                std::make_shared<ButtonComponent>(mWindow, "SCRAPE", "scrape", std::bind(&GuiMetaDataEd::fetch, this)));
+			  std::make_shared<ButtonComponent>(mWindow, _("SCRAPE"), _("scrape"), std::bind(&GuiMetaDataEd::fetch, this)));
 
-    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SAVE", "save", [&] {
+    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("SAVE"), _("save"), [&] {
         save();
         delete this;
     }));
-    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCEL", "cancel", [&] { delete this; }));
+    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("CANCEL"), _("cancel"), [&] { delete this; }));
 
     if (mDeleteFunc) {
         auto deleteFileAndSelf = [&] {
@@ -195,10 +195,10 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
         };
         auto deleteBtnFunc = [this, deleteFileAndSelf] {
             mWindow->pushGui(
-                    new GuiMsgBox(mWindow, "THIS WILL DELETE A FILE!\nARE YOU SURE?", "YES", deleteFileAndSelf, "NO",
+			     new GuiMsgBox(mWindow, _("THIS WILL DELETE A FILE!\nARE YOU SURE?"), _("YES"), deleteFileAndSelf, _("NO"),
                                   nullptr));
         };
-        buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "DELETE", "delete", deleteBtnFunc));
+        buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("DELETE"), _("delete"), deleteBtnFunc));
     }
 
     mButtons = makeButtonGrid(mWindow, buttons);
@@ -287,12 +287,12 @@ void GuiMetaDataEd::close(bool closeAllWindows) {
     if (dirty) {
         // changes were made, ask if the user wants to save them
         mWindow->pushGui(new GuiMsgBox(mWindow,
-                                       "SAVE CHANGES?",
-                                       "YES", [this, closeFunc] {
+                                       _("SAVE CHANGES?"),
+                                       _("YES"), [this, closeFunc] {
                     save();
                     closeFunc();
                 },
-                                       "NO", closeFunc
+                                       _("NO"), closeFunc
         ));
     } else {
         closeFunc();

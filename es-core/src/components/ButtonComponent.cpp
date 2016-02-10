@@ -41,8 +41,8 @@ bool ButtonComponent::input(InputConfig* config, Input input)
 
 void ButtonComponent::setText(const std::string& text, const std::string& helpText)
 {
-	mText = strToUpper(boost::locale::gettext(text.c_str()));
-	mHelpText = boost::locale::gettext(helpText.c_str());
+        mText = strToUpper(text);
+	mHelpText = helpText;
 	
 	mTextCache = std::unique_ptr<TextCache>(mFont->buildTextCache(mText, 0, 0, getCurTextColor()));
 

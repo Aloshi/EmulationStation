@@ -36,7 +36,7 @@ MenuComponent::MenuComponent(Window* window, const char* title, const std::share
 
 void MenuComponent::setTitle(const char* title, const std::shared_ptr<Font>& font)
 {
-	mTitle->setText(strToUpper(boost::locale::gettext(title)));
+	mTitle->setText(strToUpper(title));
 	mTitle->setFont(font);
 }
 

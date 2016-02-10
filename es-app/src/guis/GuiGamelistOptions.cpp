@@ -6,10 +6,11 @@
 #include "views/ViewController.h"
 #include "components/SwitchComponent.h"
 #include "guis/GuiSettings.h"
+#include "Locale.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
 	mSystem(system), 
-	mMenu(window, "OPTIONS")
+  mMenu(window, _("OPTIONS").c_str())
 {
 	addChild(&mMenu);
 
@@ -18,12 +19,12 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	if(curChar < 'A' || curChar > 'Z')
 		curChar = 'A';
 
-	mJumpToLetterList = std::make_shared<LetterList>(mWindow, "JUMP TO LETTER", false);
+	mJumpToLetterList = std::make_shared<LetterList>(mWindow, _("JUMP TO LETTER"), false);
 	for(char c = 'A'; c <= 'Z'; c++)
 		mJumpToLetterList->add(std::string(1, c), c, c == curChar);
 
 	ComponentListRow row;
-	row.addElement(std::make_shared<TextComponent>(mWindow, "JUMP TO LETTER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.addElement(std::make_shared<TextComponent>(mWindow, _("JUMP TO LETTER"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 	row.addElement(mJumpToLetterList, false);
 	row.input_handler = [&](InputConfig* config, Input input) {
 		if(config->isMappedTo("b", input) && input.value)
@@ -40,25 +41,25 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	mMenu.addRow(row);
 
 	// sort list by
-	mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
+	mListSort = std::make_shared<SortList>(mWindow, _("SORT GAMES BY"), false);
 	for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
 	{
 		const FileData::SortType& sort = FileSorts::SortTypes.at(i);
 		mListSort->add(sort.description, &sort, i == 0); // TODO - actually make the sort type persistent
 	}
 
-	mMenu.addWithLabel("SORT GAMES BY", mListSort);
+	mMenu.addWithLabel(_("SORT GAMES BY"), mListSort);
 
 	auto favorite_only = std::make_shared<SwitchComponent>(mWindow);
 	favorite_only->setState(Settings::getInstance()->getBool("FavoritesOnly"));
-	mMenu.addWithLabel("FAVORITES ONLY", favorite_only);
+	mMenu.addWithLabel(_("FAVORITES ONLY"), favorite_only);
 	addSaveFunc([favorite_only] { Settings::getInstance()->setBool("FavoritesOnly", favorite_only->getState()); });
 
 	// edit game metadata
 	row.elements.clear();
 
 	if(RecalboxConf::getInstance()->get("system.es.menu") != "none" && RecalboxConf::getInstance()->get("system.es.menu") != "bartop"){
-		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	  row.addElement(std::make_shared<TextComponent>(mWindow, _("EDIT THIS GAME'S METADATA"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(makeArrow(mWindow), false);
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 		mMenu.addRow(row);

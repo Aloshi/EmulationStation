@@ -140,33 +140,33 @@ bool SystemView::input(InputConfig* config, Input input)
 		}
 		if(config->isMappedTo("select", input) && RecalboxConf::getInstance()->get("system.es.menu") != "none")
 		{
-			auto s = new GuiSettings(mWindow, "QUIT");
+		  auto s = new GuiSettings(mWindow, _("QUIT").c_str());
 
 			Window *window = mWindow;
 			ComponentListRow row;
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
+			    window->pushGui(new GuiMsgBox(window, _("REALLY RESTART?"), _("YES"),
 											  [] {
 												  if (RecalboxSystem::getInstance()->reboot() != 0)  {
 													  LOG(LogWarning) << "Restart terminated with non-zero result!";
 												  }
-											  }, "NO", nullptr));
+							  }, _("NO"), nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+			row.addElement(std::make_shared<TextComponent>(window, _("RESTART SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
 														   0x777777FF), true);
 			s->addRow(row);
 
 			row.elements.clear();
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
+			    window->pushGui(new GuiMsgBox(window, _("REALLY SHUTDOWN?"), _("YES"),
 											  [] {
 												  if (RecalboxSystem::getInstance()->shutdown() != 0)  {
 													  LOG(LogWarning) <<
 																	  "Shutdown terminated with non-zero result!";
 												  }
-											  }, "NO", nullptr));
+							  }, _("NO"), nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+			row.addElement(std::make_shared<TextComponent>(window, _("SHUTDOWN SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
 														   0x777777FF), true);
 			s->addRow(row);
 			mWindow->pushGui(s);
