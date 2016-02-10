@@ -629,11 +629,9 @@ msgstr "SPEICHER"
 msgid "AUTO SAVE/LOAD"
 msgstr ""
 
-#, fuzzy
 msgid "RETROACHIEVEMENTS SETTINGS"
 msgstr ""
 
-#, fuzzy
 msgid "USERNAME"
 msgstr ""
 
