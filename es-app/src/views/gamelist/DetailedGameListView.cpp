@@ -32,34 +32,34 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root, Syste
 	addChild(&mImage);
 
 	// metadata labels + values
-	mLblRating.setText(_("Rating:") + " ");
+	mLblRating.setText(_("Rating") + ": ");
 	addChild(&mLblRating);
 	addChild(&mRating);
-	mLblReleaseDate.setText(_("Released:") + " ");
+	mLblReleaseDate.setText(_("Released") + ": ");
 	addChild(&mLblReleaseDate);
 	addChild(&mReleaseDate);
-	mLblDeveloper.setText(_("Developer:") + " ");
+	mLblDeveloper.setText(_("Developer") + ": ");
 	addChild(&mLblDeveloper);
 	addChild(&mDeveloper);
-	mLblPublisher.setText(_("Publisher:") + " ");
+	mLblPublisher.setText(_("Publisher") + ": ");
 	addChild(&mLblPublisher);
 	addChild(&mPublisher);
-	mLblGenre.setText(_("Genre: ") + " ");
+	mLblGenre.setText(_("Genre") + ": ");
 	addChild(&mLblGenre);
 	addChild(&mGenre);
-	mLblPlayers.setText(_("Players:") + " ");
+	mLblPlayers.setText(_("Players") + ": ");
 	addChild(&mLblPlayers);
 	addChild(&mPlayers);
-	mLblLastPlayed.setText(_("Last played:") + " ");
+	mLblLastPlayed.setText(_("Last played") + ": ");
 	addChild(&mLblLastPlayed);
 	mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 	addChild(&mLastPlayed);
-	mLblPlayCount.setText(_("Times played:") + " ");
+	mLblPlayCount.setText(_("Times played") + ": ");
 	addChild(&mLblPlayCount);
 	addChild(&mPlayCount);
 	if (system->getHasFavorites())
 	{
-	  mLblFavorite.setText(_("Favorite:") + " ");
+	  mLblFavorite.setText(_("Favorite") + ": ");
 		addChild(&mLblFavorite);
 		addChild(&mFavorite);
 	}

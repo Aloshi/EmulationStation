@@ -167,7 +167,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 	// buttons
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("OK"), _("ok"), [this, okCallback] { 
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("OK"), _("OK"), [this, okCallback] { 
 		InputManager::getInstance()->writeDeviceConfig(mTargetConfig); // save
 		if(okCallback)
 			okCallback();
@@ -216,7 +216,7 @@ void GuiInputConfig::update(int deltaTime)
 				// crossed the second boundary, update text
 				const auto& text = mMappings.at(mHeldInputRowIndex);
 				char strbuf[256];
-				snprintf(strbuf, 256, _n("HOLD FOR %iS TO SKIP", "HOLD FOR %iS TO SKIP", HOLD_TO_SKIP_MS/1000 - curSec).c_str(), HOLD_TO_SKIP_MS/1000 - curSec);
+				snprintf(strbuf, 256, ngettext("HOLD FOR %iS TO SKIP", "HOLD FOR %iS TO SKIP", HOLD_TO_SKIP_MS/1000 - curSec).c_str(), HOLD_TO_SKIP_MS/1000 - curSec);
 				text->setText(strbuf);
 				text->setColor(0x777777FF);
 			}

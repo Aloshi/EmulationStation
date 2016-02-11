@@ -43,7 +43,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 		mSearch->openInputScreen(mSearchParams); 
 		mGrid.resetCursor(); 
 	}));
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("CANCEL"), _("cancel"), [&] { delete this; }));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("CANCEL"), _("CANCEL"), [&] { delete this; }));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 
 	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 6), true, false);

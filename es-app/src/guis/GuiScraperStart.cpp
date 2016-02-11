@@ -19,7 +19,7 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 		[](SystemData*, FileData*) -> bool { return true; }, false);
 	mFilters->add(_("Only missing image"), 
 		[](SystemData*, FileData* g) -> bool { return g->metadata.get("image").empty(); }, true);
-	mMenu.addWithLabel(_("Filter"), mFilters);
+	mMenu.addWithLabel(_("FILTER"), mFilters);
 
 	//add systems (all with a platformid specified selected)
 	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, _("SCRAPE THESE SYSTEMS"), true);
@@ -28,11 +28,11 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 		if(!(*it)->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
 			mSystems->add((*it)->getFullName(), *it, !(*it)->getPlatformIds().empty());
 	}
-	mMenu.addWithLabel(_("Systems"), mSystems);
+	mMenu.addWithLabel(_("SYSTEMS"), mSystems);
 
 	mApproveResults = std::make_shared<SwitchComponent>(mWindow);
 	mApproveResults->setState(true);
-	mMenu.addWithLabel(_("User decides on conflicts"), mApproveResults);
+	mMenu.addWithLabel(_("USER DECIDES ON CONFLICTS"), mApproveResults);
 
 	mMenu.addButton(_("START"), "start", std::bind(&GuiScraperStart::pressedStart, this));
 	mMenu.addButton(_("BACK"), "back", [&] { delete this; });

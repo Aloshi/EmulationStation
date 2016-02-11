@@ -217,9 +217,9 @@ add_subdirectory("es-app")
 
 # i18n
 find_program (MSGFMT_EXECUTABLE msgfmt)
-if (MSGFMT_EXECUTABLE)
+find_program (MSGMERGE_EXECUTABLE msgmerge)
+find_program (XGETTEXT_EXECUTABLE xgettext)
+if(MSGFMT_EXECUTABLE AND MSGMERGE_EXECUTABLE AND XGETTEXT_EXECUTABLE)
 	message (STATUS "Native language support enabled.")
 	add_subdirectory (locale)
-endif (MSGFMT_EXECUTABLE)
-
-
+endif()

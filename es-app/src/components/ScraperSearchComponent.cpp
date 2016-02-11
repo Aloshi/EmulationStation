@@ -29,7 +29,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 0), false, false, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 
 	// selected result name
-	mResultName = std::make_shared<TextComponent>(mWindow, _("Result name"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+	mResultName = std::make_shared<TextComponent>(mWindow, _("RESULT NAME"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 
 	// selected result thumbnail
 	mResultThumbnail = std::make_shared<ImageComponent>(mWindow);
@@ -37,7 +37,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 
 	// selected result desc + container
 	mDescContainer = std::make_shared<ScrollableContainer>(mWindow);
-	mResultDesc = std::make_shared<TextComponent>(mWindow, _("Result desc"), Font::get(FONT_SIZE_SMALL), 0x777777FF);
+	mResultDesc = std::make_shared<TextComponent>(mWindow, _("RESULT DESC"), Font::get(FONT_SIZE_SMALL), 0x777777FF);
 	mDescContainer->addChild(mResultDesc.get());
 	mDescContainer->setAutoScroll(true);
 	
@@ -53,12 +53,12 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mMD_Genre = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
 	mMD_Players = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
 
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, _("RATING:"), font, mdLblColor), mMD_Rating, false));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, _("RELEASED:"), font, mdLblColor), mMD_ReleaseDate));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, _("DEVELOPER:"), font, mdLblColor), mMD_Developer));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, _("PUBLISHER:"), font, mdLblColor), mMD_Publisher));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, _("GENRE:"), font, mdLblColor), mMD_Genre));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, _("PLAYERS:"), font, mdLblColor), mMD_Players));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, strToUpper(_("Rating") + ":"), font, mdLblColor), mMD_Rating, false));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, strToUpper(_("Released") + ":"), font, mdLblColor), mMD_ReleaseDate));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, strToUpper(_("Developer") + ":"), font, mdLblColor), mMD_Developer));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, strToUpper(_("Publisher") + ":"), font, mdLblColor), mMD_Publisher));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, strToUpper(_("Genre") + ":"), font, mdLblColor), mMD_Genre));
+	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, strToUpper(_("Players") + ":"), font, mdLblColor), mMD_Players));
 
 	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, mMD_Pairs.size()*2 - 1));
 	unsigned int i = 0;

@@ -180,13 +180,13 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
 
     if (!scraperParams.system->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
         buttons.push_back(
-			  std::make_shared<ButtonComponent>(mWindow, _("SCRAPE"), _("scrape"), std::bind(&GuiMetaDataEd::fetch, this)));
+			  std::make_shared<ButtonComponent>(mWindow, _("SCRAPE"), _("SCRAPE"), std::bind(&GuiMetaDataEd::fetch, this)));
 
-    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("SAVE"), _("save"), [&] {
+    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("SAVE"), _("SAVE"), [&] {
         save();
         delete this;
     }));
-    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("CANCEL"), _("cancel"), [&] { delete this; }));
+    buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("CANCEL"), _("CANCEL"), [&] { delete this; }));
 
     if (mDeleteFunc) {
         auto deleteFileAndSelf = [&] {
@@ -198,7 +198,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
 			     new GuiMsgBox(mWindow, _("THIS WILL DELETE A FILE!\nARE YOU SURE?"), _("YES"), deleteFileAndSelf, _("NO"),
                                   nullptr));
         };
-        buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("DELETE"), _("delete"), deleteBtnFunc));
+        buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("DELETE"), _("DELETE"), deleteBtnFunc));
     }
 
     mButtons = makeButtonGrid(mWindow, buttons);

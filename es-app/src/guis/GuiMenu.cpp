@@ -38,7 +38,7 @@
 
 #include "RecalboxConf.h"
 
-void GuiMenu::createInputTextRow(GuiSettings *gui, const char *title, const char *settingsID, bool password) {
+void GuiMenu::createInputTextRow(GuiSettings *gui, std::string title, const char *settingsID, bool password) {
     // LABEL
     Window *window = mWindow;
     ComponentListRow row;
@@ -103,7 +103,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                  });
     }
     if (Settings::getInstance()->getBool("RomsManager")) {
-      addEntry(_("ROMS MANAGER").c_str(), 0x777777FF, true, [this] {
+      addEntry("ROMS MANAGER", 0x777777FF, true, [this] {
             mWindow->pushGui(new GuiRomsManager(mWindow));
         });
     }
@@ -182,7 +182,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                      overclock_choice->add(_("NONE (900Mhz)"), "none-rpi2", currentOverclock == "none-rpi2");
 #endif
 #else
-                     overclock_choice->add(_("None"), "none", true);
+                     overclock_choice->add(_("NONE"), "none", true);
 #endif
                      s->addWithLabel(_("OVERCLOCK"), overclock_choice);
 
@@ -346,8 +346,8 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
 		       retroachievements->addWithLabel(_("RETROACHIEVEMENTS"), retroachievements_enabled);
 
                      // retroachievements, username, password
-		       createInputTextRow(retroachievements, _("USERNAME").c_str(), "global.retroachievements.username", false);
-		       createInputTextRow(retroachievements, _("PASSWORD").c_str(), "global.retroachievements.password", false);
+		       createInputTextRow(retroachievements, _("USERNAME"), "global.retroachievements.username", false);
+		       createInputTextRow(retroachievements, _("PASSWORD"), "global.retroachievements.password", false);
 
 
                      retroachievements->addSaveFunc([retroachievements_enabled] {
@@ -617,7 +617,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                                                                Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
                      s->addWithLabel(_("IP ADDRESS"), ip);
                      // Hostname
-                     createInputTextRow(s, _("HOSTNAME").c_str(), "system.hostname", false);
+                     createInputTextRow(s, _("HOSTNAME"), "system.hostname", false);
 
                      // Wifi enable
                      auto enable_wifi = std::make_shared<SwitchComponent>(mWindow);
@@ -627,9 +627,9 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
 
                      // window, title, settingstring,
                      const std::string baseSSID = RecalboxConf::getInstance()->get("wifi.ssid");
-                     createInputTextRow(s, _("WIFI SSID").c_str(), "wifi.ssid", false);
+                     createInputTextRow(s, _("WIFI SSID"), "wifi.ssid", false);
                      const std::string baseKEY = RecalboxConf::getInstance()->get("wifi.key");
-                     createInputTextRow(s, _("WIFI KEY").c_str(), "wifi.key", true);
+                     createInputTextRow(s, _("WIFI KEY"), "wifi.key", true);
 
                      s->addSaveFunc([baseEnabled, baseSSID, baseKEY, enable_wifi, window] {
                          bool wifienabled = enable_wifi->getState();
@@ -805,10 +805,10 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
         popSystemConfigurationGui(systemData, s);
         delete systemConfiguration;
     });
-    systemConfiguration->addWithLabel(_("emulator"), emu_choice);
+    systemConfiguration->addWithLabel(_("Emulator"), emu_choice);
 
     // Core choice
-    auto core_choice = std::make_shared<OptionListComponent<std::string> >(mWindow, _("core"), false);
+    auto core_choice = std::make_shared<OptionListComponent<std::string> >(mWindow, _("Core"), false);
     selected = false;
     for (auto emulator = systemData->getEmulators()->begin();
          emulator != systemData->getEmulators()->end(); emulator++) {
@@ -821,7 +821,7 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
         }
     }
     core_choice->add(_("DEFAULT"), "default", !selected);
-    systemConfiguration->addWithLabel(_("core"), core_choice);
+    systemConfiguration->addWithLabel(_("Core"), core_choice);
 
 
     // Screen ratio choice
@@ -971,14 +971,17 @@ void GuiMenu::createConfigInput() {
     clearLoadedInput();
     
     std::vector<std::shared_ptr<OptionListComponent<StrInputConfig *>>> options;
+    char strbuf[256];
+
     for (int player = 0; player < 4; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player + 1;
         std::string confName = sstm.str() + "NAME";
         std::string confGuid = sstm.str() + "GUID";
-
+	snprintf(strbuf, 256, _("INPUT P%i").c_str(), player+1);
+	
         LOG(LogInfo) << player + 1 << " " << confName << " " << confGuid;
-        auto inputOptionList = std::make_shared<OptionListComponent<StrInputConfig *> >(mWindow, sstm.str(), false);
+        auto inputOptionList = std::make_shared<OptionListComponent<StrInputConfig *> >(mWindow, strbuf, false);
         options.push_back(inputOptionList);
 
         // Checking if a setting has been saved, else setting to default
@@ -1037,7 +1040,7 @@ void GuiMenu::createConfigInput() {
         // ADD default config
 
         // Populate controllers list
-        s->addWithLabel(sstm.str(), inputOptionList);
+        s->addWithLabel(strbuf, inputOptionList);
     }
     s->addSaveFunc([this, options, window] {
         for (int player = 0; player < 4; player++) {
@@ -1055,12 +1058,11 @@ void GuiMenu::createConfigInput() {
                 Settings::getInstance()->setString(confName, name);
                 Settings::getInstance()->setString(confGuid, "");
             } else {
-                LOG(LogWarning) << "Found the selected controller ! : name in list  = " << selectedName;
-                LOG(LogWarning) << "Found the selected controller ! : guid  = " <<
-                                input_p1->getSelected()->deviceGUIDString;
+	      LOG(LogWarning) << "Found the selected controller ! : name in list  = " << selectedName;
+	      LOG(LogWarning) << "Found the selected controller ! : guid  = " << input_p1->getSelected()->deviceGUIDString;
 
-                Settings::getInstance()->setString(confName, input_p1->getSelected()->deviceName);
-                Settings::getInstance()->setString(confGuid, input_p1->getSelected()->deviceGUIDString);
+	      Settings::getInstance()->setString(confName, input_p1->getSelected()->deviceName);
+	      Settings::getInstance()->setString(confGuid, input_p1->getSelected()->deviceGUIDString);
             }
         }
 

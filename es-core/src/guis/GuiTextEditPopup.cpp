@@ -21,7 +21,7 @@ GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, con
 
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, acceptBtnText, acceptBtnText, [this, okCallback] { okCallback(mText->getValue()); delete this; }));
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("CANCEL"), _("discard changes"), [this] { delete this; }));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("CANCEL"), _("DISCARD CHANGES"), [this] { delete this; }));
 
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 

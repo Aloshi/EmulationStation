@@ -54,7 +54,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 			mGrid.resetCursor(); 
 		}));
 
-	  buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("SKIP"), _("skip"), [&] {
+	  buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("SKIP"), _("SKIP"), [&] {
 			skip();
 			mGrid.resetCursor();
 		}));
@@ -146,11 +146,11 @@ void GuiScraperMulti::finish()
 			);
 	} else {
 	  char strbuf[256];
-	  snprintf(strbuf, 256, _n("%i GAME SUCCESSFULLY SCRAPED!", "%i GAMES SUCCESSFULLY SCRAPED!", mTotalSuccessful).c_str(), mTotalSuccessful);
+	  snprintf(strbuf, 256, ngettext("%i GAME SUCCESSFULLY SCRAPED!", "%i GAMES SUCCESSFULLY SCRAPED!", mTotalSuccessful).c_str(), mTotalSuccessful);
 	  ss << strbuf;
 
 	  if(mTotalSkipped > 0) {
-	    snprintf(strbuf, 256, _n("%i GAME SKIPPED.", "%i GAMES SKIPPED.", mTotalSkipped).c_str(), mTotalSkipped);
+	    snprintf(strbuf, 256, ngettext("%i GAME SKIPPED.", "%i GAMES SKIPPED.", mTotalSkipped).c_str(), mTotalSkipped);
 	    ss << "\n" << strbuf;
 	  }
 	}
