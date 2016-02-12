@@ -800,7 +800,7 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
         selected = selected || found;
         emu_choice->add(curEmulatorName, curEmulatorName, found);
     }
-    emu_choice->add(_("DEFAULT"), "default", !selected);
+    emu_choice->add(_("default"), "default", !selected);
     emu_choice->setSelectedChangedCallback([this, systemConfiguration, systemData](std::string s) {
         popSystemConfigurationGui(systemData, s);
         delete systemConfiguration;
@@ -820,7 +820,7 @@ void GuiMenu::popSystemConfigurationGui(SystemData *systemData, std::string prev
             }
         }
     }
-    core_choice->add(_("DEFAULT"), "default", !selected);
+    core_choice->add(_("default"), "default", !selected);
     systemConfiguration->addWithLabel(_("Core"), core_choice);
 
 
@@ -1031,10 +1031,10 @@ void GuiMenu::createConfigInput() {
         }
         if (configuratedName.compare("") == 0 || !found) {
             LOG(LogWarning) << "adding default entry for player " << player << "(selected : true)";
-            inputOptionList->add(_("DEFAULT"), NULL, true);
+            inputOptionList->add(_("default"), NULL, true);
         } else {
             LOG(LogWarning) << "adding default entry for player" << player << "(selected : false)";
-            inputOptionList->add(_("DEFAULT"), NULL, false);
+            inputOptionList->add(_("default"), NULL, false);
         }
 
         // ADD default config
@@ -1053,7 +1053,7 @@ void GuiMenu::createConfigInput() {
             std::string name;
             std::string selectedName = input_p1->getSelectedName();
 
-            if (selectedName.compare(_("DEFAULT")) == 0) {
+            if (selectedName.compare(_("default")) == 0) {
                 name = "DEFAULT";
                 Settings::getInstance()->setString(confName, name);
                 Settings::getInstance()->setString(confGuid, "");
@@ -1111,9 +1111,9 @@ bool GuiMenu::input(InputConfig *config, Input input) {
 
 std::vector<HelpPrompt> GuiMenu::getHelpPrompts() {
     std::vector<HelpPrompt> prompts;
-    prompts.push_back(HelpPrompt("up/down", "choose"));
-    prompts.push_back(HelpPrompt("b", "select"));
-    prompts.push_back(HelpPrompt("start", "close"));
+    prompts.push_back(HelpPrompt("up/down", _("CHOOSE")));
+    prompts.push_back(HelpPrompt("b", _("SELECT")));
+    prompts.push_back(HelpPrompt("start", _("CLOSE")));
     return prompts;
 }
 

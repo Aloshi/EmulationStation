@@ -521,7 +521,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 
 	prompts = mCurrentView->getHelpPrompts();
 	if(RecalboxConf::getInstance()->get("system.es.menu") != "none"){
-		prompts.push_back(HelpPrompt("start", "menu"));
+	  prompts.push_back(HelpPrompt("start", _("MENU")));
 	}
 
 	return prompts;

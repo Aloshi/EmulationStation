@@ -22,6 +22,7 @@
 #include "FileSystemSelectorComponent.h"
 #include "Renderer.h"
 #include "Log.h"
+#include "Locale.h"
 
 #define DEFAULT_FONT Font::get(FONT_SIZE_MEDIUM)
 #define DEFAULT_COLOR 0x777777FF
@@ -175,7 +176,7 @@ std::vector<HelpPrompt> FileSystemSelectorComponent::getHelpPrompts()
 		}
 	}
 
-	prompts.push_back(HelpPrompt("y", "cancel"));
+	prompts.push_back(HelpPrompt("y", _("CANCEL")));
 
 	switch (m_mode) {
 		case fssc::FilesShowFolders: {

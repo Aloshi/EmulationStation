@@ -385,8 +385,8 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 std::vector<HelpPrompt> SystemView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("left/right", "choose"));
-	prompts.push_back(HelpPrompt("b", "select"));
+	prompts.push_back(HelpPrompt("left/right", _("CHOOSE")));
+	prompts.push_back(HelpPrompt("b", _("SELECT")));
 	return prompts;
 }
 

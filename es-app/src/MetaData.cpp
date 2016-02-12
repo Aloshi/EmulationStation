@@ -12,22 +12,22 @@ std::vector<MetaDataDecl> folderMDD;
 
 void initMetadata() {
   // WARN : statistic metadata must be last in list !
-  gameMDD.push_back(MetaDataDecl("emulator",	MD_LIST,		"default",		false,		_("Emulator"),			"enter emulator"));
-  gameMDD.push_back(MetaDataDecl("core",	MD_LIST,		"default",		false,		_("Core"),			"enter core"));
+  gameMDD.push_back(MetaDataDecl("emulator",	MD_LIST,		_("default"),		false,		_("Emulator"),			"enter emulator"));
+  gameMDD.push_back(MetaDataDecl("core",	MD_LIST,		_("default"),		false,		_("Core"),			"enter core"));
   gameMDD.push_back(MetaDataDecl("name",	MD_STRING,		"", 			false,		_("Name"),			"enter game name"));
   gameMDD.push_back(MetaDataDecl("desc",	MD_MULTILINE_STRING,	"", 			false,		_("Description"),		"enter description"));
   gameMDD.push_back(MetaDataDecl("image",	MD_IMAGE_PATH,		"", 			false,		_("Image"),			"enter path to image"));
   gameMDD.push_back(MetaDataDecl("thumbnail",	MD_IMAGE_PATH,		"", 			false,		_("Thumbnail"),			"enter path to thumbnail"));
   gameMDD.push_back(MetaDataDecl("rating",	MD_RATING,		"0.000000", 		false,		_("Rating"),			"enter rating"));
   gameMDD.push_back(MetaDataDecl("releasedate", MD_DATE,		"not-a-date-time", 	false,		_("Release date"),		"enter release date"));
-  gameMDD.push_back(MetaDataDecl("developer",	MD_STRING,		"unknown",		false,		_("Developer"),			"enter game developer"));
-  gameMDD.push_back(MetaDataDecl("publisher",	MD_STRING,		"unknown",		false,		_("Publisher"),			"enter game publisher"));
-  gameMDD.push_back(MetaDataDecl("genre",	MD_STRING,		"unknown",		false,		_("Genre"),			"enter game genre"));
+  gameMDD.push_back(MetaDataDecl("developer",	MD_STRING,		_("unknown"),		false,		_("Developer"),			"enter game developer"));
+  gameMDD.push_back(MetaDataDecl("publisher",	MD_STRING,		_("unknown"),		false,		_("Publisher"),			"enter game publisher"));
+  gameMDD.push_back(MetaDataDecl("genre",	MD_STRING,		_("unknown"),		false,		_("Genre"),			"enter game genre"));
   gameMDD.push_back(MetaDataDecl("players",	MD_INT,			"1",			false,		_("Players"),			"enter number of players"));
-  gameMDD.push_back(MetaDataDecl("favorite",	MD_BOOL,		"false",		false,		_("Favorite"),			"enter favorite"));
+  gameMDD.push_back(MetaDataDecl("favorite",	MD_BOOL,		_("NO"),		false,		_("Favorite"),			"enter favorite"));
   gameMDD.push_back(MetaDataDecl("region",	MD_STRING,		"",			false,		_("Region"),			"enter region"));
-  gameMDD.push_back(MetaDataDecl("romtype",	MD_STRING,		"Original",		false,		_("Romtype"),			"enter romtype"));
-  gameMDD.push_back(MetaDataDecl("hidden",	MD_BOOL,		"false",		false,		_("Hidden"),			"set hidden"));
+  gameMDD.push_back(MetaDataDecl("romtype",	MD_STRING,		_("Original"),		false,		_("Romtype"),			"enter romtype"));
+  gameMDD.push_back(MetaDataDecl("hidden",	MD_BOOL,		_("NO"),		false,		_("Hidden"),			"set hidden"));
   gameMDD.push_back(MetaDataDecl("playcount",	MD_INT,			"0",			true,		_("Play count"),		"enter number of times played"));
   gameMDD.push_back(MetaDataDecl("lastplayed",	MD_TIME,		"0", 			true,		_("Last played"),		"enter last played date"));
 
@@ -35,7 +35,7 @@ void initMetadata() {
   folderMDD.push_back(MetaDataDecl("desc",	MD_MULTILINE_STRING,	"", 		false));
   folderMDD.push_back(MetaDataDecl("image",	MD_IMAGE_PATH,		"", 		false));
   folderMDD.push_back(MetaDataDecl("thumbnail",	MD_IMAGE_PATH,		"", 		false));
-  folderMDD.push_back(MetaDataDecl("hidden",	MD_BOOL,		"false",	false));
+  folderMDD.push_back(MetaDataDecl("hidden",	MD_BOOL,		_("NO"),	false));
 }
 
 const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type)

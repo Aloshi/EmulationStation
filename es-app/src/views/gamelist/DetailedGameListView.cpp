@@ -326,14 +326,14 @@ std::vector<HelpPrompt> DetailedGameListView::getHelpPrompts()
 
 	if (Settings::getInstance()->getBool("QuickSystemSelect"))
 	{
-		prompts.push_back(HelpPrompt("left/right", "system"));
+	  prompts.push_back(HelpPrompt("left/right", _("SYSTEM")));
 	}
-	prompts.push_back(HelpPrompt("up/down", "choose"));
-	prompts.push_back(HelpPrompt("b", "launch"));
-	prompts.push_back(HelpPrompt("a", "back"));
+	prompts.push_back(HelpPrompt("up/down", _("CHOOSE")));
+	prompts.push_back(HelpPrompt("b", _("LAUNCH")));
+	prompts.push_back(HelpPrompt("a", _("BACK")));
 	if(getRoot()->getSystem() != SystemData::getFavoriteSystem()) {
-		prompts.push_back(HelpPrompt("y", "favorite"));
-		prompts.push_back(HelpPrompt("select", "options"));
+	  prompts.push_back(HelpPrompt("y", _("Favorite")));
+	  prompts.push_back(HelpPrompt("select", _("OPTIONS")));
 	}
 	return prompts;
 }
