@@ -60,7 +60,7 @@ unsigned char TextComponent::getOpacity() const
 
 void TextComponent::setText(const std::string& text)
 {
-	mText = boost::locale::gettext(text.c_str());
+        mText = text;
 	onTextChanged();
 }
 

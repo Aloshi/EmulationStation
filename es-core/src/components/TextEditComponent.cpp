@@ -45,7 +45,7 @@ void TextEditComponent::onSizeChanged()
 
 void TextEditComponent::setValue(const std::string& val)
 {
-	mText = boost::locale::gettext(val.c_str());
+        mText = val;
 	onTextChanged();
 }
 

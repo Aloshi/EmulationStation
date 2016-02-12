@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Log.h"
 #include "Util.h"
+#include "Locale.h"
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
@@ -191,6 +192,9 @@ DateTimeComponent::DisplayMode DateTimeComponent::getCurrentDisplayMode() const
 std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 {
 	std::string fmt;
+	char strbuf[256];
+	int n;
+
 	switch(mode)
 	{
 	case DISP_DATE:
@@ -205,28 +209,38 @@ std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 			using namespace boost::posix_time;
 
 			if(mTime == not_a_date_time)
-				return "never";
+			  return _("never");
 
 			ptime now = second_clock::universal_time();
 			time_duration dur = now - mTime;
 
 			if(dur < seconds(2))
-				return "just now";
-			if(dur < seconds(60))
-				return std::to_string((long long)dur.seconds()) + " secs ago";
-			if(dur < minutes(60))
-				return std::to_string((long long)dur.minutes()) + " min" + (dur < minutes(2) ? "" : "s") + " ago";
-			if(dur < hours(24))
-				return std::to_string((long long)dur.hours()) + " hour" + (dur < hours(2) ? "" : "s") + " ago";
+			  return _("just now");
+			if(dur < seconds(60)) {
+			  n = dur.seconds();
+			  snprintf(strbuf, 256, ngettext("%i sec ago", "%i secs ago", n).c_str(), n);
+			  return strbuf;
+			}
+			if(dur < minutes(60)) {
+			  n = dur.minutes();
+			  snprintf(strbuf, 256, ngettext("%i min ago", "%i mins ago", n).c_str(), n);
+			  return strbuf;
+			}
+			if(dur < hours(24)) {
+			  n = dur.hours();
+			  snprintf(strbuf, 256, ngettext("%i hour ago", "%i hours ago", n).c_str(), n);
+			  return strbuf;
+			}
 
-			long long days = (long long)(dur.hours() / 24);
-			return std::to_string(days) + " day" + (days < 2 ? "" : "s") + " ago";
+			n = dur.hours() / 24;
+			snprintf(strbuf, 256, ngettext("%i day ago", "%i days ago", n).c_str(), n);
+			return strbuf;
 		}
 		break;
 	}
 	
 	if(mTime == boost::posix_time::not_a_date_time)
-		return "unknown";
+	  return _("unknown");
 
 	boost::posix_time::time_facet* facet = new boost::posix_time::time_facet();
 	facet->format(fmt.c_str());

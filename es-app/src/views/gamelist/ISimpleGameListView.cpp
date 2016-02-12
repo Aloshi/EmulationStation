@@ -7,6 +7,7 @@
 #include "Sound.h"
 #include "Settings.h"
 #include "Gamelist.h"
+#include "Locale.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window), mFavoriteChange(false)
@@ -134,22 +135,27 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					mFavoriteChange = true;
 					MetaDataList* md = &cursor->metadata;
 					std::string value = md->get("favorite");
-
 					bool removeFavorite = false;
 					SystemData *favoriteSystem = SystemData::getFavoriteSystem();
 					if (value.compare("false") == 0)
 					{
-						md->set("favorite", "true");
-						favoriteSystem->getRootFolder()->addAlreadyExisitingChild(cursor);
+					  md->set("favorite", "true");
+						if(favoriteSystem != NULL) {
+						  favoriteSystem->getRootFolder()->addAlreadyExisitingChild(cursor);
+						}
 					}
 					else
 					{
 						md->set("favorite", "false");
-						favoriteSystem->getRootFolder()->removeAlreadyExisitingChild(cursor);
+						if(favoriteSystem != NULL) {
+						  favoriteSystem->getRootFolder()->removeAlreadyExisitingChild(cursor);
+						}
 						removeFavorite = true;
 					}
-					ViewController::get()->setInvalidGamesList(favoriteSystem);
-					ViewController::get()->getSystemListView()->manageFavorite();
+					if(favoriteSystem != NULL) {
+					  ViewController::get()->setInvalidGamesList(favoriteSystem);
+					  ViewController::get()->getSystemListView()->manageFavorite();
+					}
 					int cursorPlace = getCursorIndex();
 					populateList(cursor->getParent()->getChildren());
 					setCursorIndex(cursorPlace + (removeFavorite ? -1 : 1));

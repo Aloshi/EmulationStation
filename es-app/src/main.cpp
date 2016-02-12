@@ -26,7 +26,7 @@
 #include "resources/Font.h"
 #include "NetworkThread.h"
 #include "RecalboxSystem.h"
-
+#include "FileSorts.h"
 
 
 #ifdef WIN32
@@ -264,6 +264,10 @@ int main(int argc, char* argv[])
 	// Set locale
 	setLocale(argv[0]);
 
+	// other init
+        FileSorts::init(); // require locale
+	initMetadata(); // require locale
+	
     Renderer::init(width, height);
 	Window window;
 	ViewController::init(&window);
@@ -279,7 +283,7 @@ int main(int argc, char* argv[])
 
 		std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
 		LOG(LogInfo) << "Checking available OpenGL extensions...";
-		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
+		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "OK" : "MISSING");
 
 		window.renderLoadingScreen();
 	}
@@ -299,7 +303,7 @@ int main(int argc, char* argv[])
 		// we can't handle es_systems.cfg file problems inside ES itself, so display the error message then quit
 		window.pushGui(new GuiMsgBox(&window,
 			errorMsg,
-			"QUIT", [] { 
+					     _("QUIT"), [] { 
 				SDL_Event* quit = new SDL_Event();
 				quit->type = SDL_QUIT;
 				SDL_PushEvent(quit);
@@ -315,7 +319,7 @@ int main(int argc, char* argv[])
 	if(RecalboxSystem::getInstance()->needToShowVersionMessage()){
 		 window.pushGui(new GuiMsgBox(&window,
 		RecalboxSystem::getInstance()->getVersionMessage(),
-		"OK", [] {
+					      _("OK"), [] {
 					 RecalboxSystem::getInstance()->updateLastVersionFile();
 					},"",nullptr,"",nullptr, ALIGN_LEFT));
 	}
