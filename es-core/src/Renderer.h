@@ -5,7 +5,7 @@
 #include <string>
 #include "platform.h"
 #include <Eigen/Dense>
-#include GLHEADER
+#include "platform_gl.h"
 
 class GuiComponent;
 class Font;

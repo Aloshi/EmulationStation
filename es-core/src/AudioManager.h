@@ -7,31 +7,42 @@
 #include "SDL_audio.h"
 
 #include "Sound.h"
+#include "Music.h"
 
 
 class AudioManager
 {
-	static SDL_AudioSpec sAudioFormat;
 	static std::vector<std::shared_ptr<Sound>> sSoundVector;
+        static std::vector<std::shared_ptr<Music>> sMusicVector;
+
 	static std::shared_ptr<AudioManager> sInstance;
+	std::shared_ptr<Music> currentMusic;
+	
 
-	static void mixAudio(void *unused, Uint8 *stream, int len);
-
+      
 	AudioManager();
 
 public:
 	static std::shared_ptr<AudioManager> & getInstance();
-
+        
+        void stopMusic();
+        void startMusic(const std::shared_ptr<ThemeData>& theme);
+        void resumeMusic();
+        
 	void init();
 	void deinit();
 
+	void registerMusic(std::shared_ptr<Music> & music);
 	void registerSound(std::shared_ptr<Sound> & sound);
+	void unregisterMusic(std::shared_ptr<Music> & music);
 	void unregisterSound(std::shared_ptr<Sound> & sound);
-
 	void play();
 	void stop();
 
 	virtual ~AudioManager();
+
+private:
+    bool running;
 };
 
 #endif

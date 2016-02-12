@@ -1,0 +1,11 @@
+add_custom_target (i18n ALL COMMENT "Building i18n messages.")
+file (GLOB es_PO_FILES ${dir}/locale/lang/*)
+
+foreach (es_PO_INPUT ${es_PO_FILES})
+        get_filename_component (es_PO_LANG ${es_PO_INPUT} NAME_WE)
+	MESSAGE("LANG = ${es_PO_LANG}")
+        MESSAGE("Will compile ${es_PO_INPUT}/LC_MESSAGES/emulationstation2.po")
+	set (es_MO_OUTPUT ${es_PO_INPUT}/LC_MESSAGES/emulationstation2.mo)
+        add_custom_command (TARGET i18n COMMAND ${MSGFMT_EXECUTABLE} -o ${es_MO_OUTPUT} ${es_PO_INPUT}/LC_MESSAGES/emulationstation2.po)
+        install (FILES ${es_MO_OUTPUT} DESTINATION share/locale/${es_PO_LANG}/LC_MESSAGES RENAME emulationstation2.mo)
+endforeach (es_PO_INPUT ${es_PO_FILES})

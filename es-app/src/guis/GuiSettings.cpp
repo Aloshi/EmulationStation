@@ -15,7 +15,7 @@ GuiSettings::GuiSettings(Window* window, const char* title) : GuiComponent(windo
 
 GuiSettings::~GuiSettings()
 {
-	save();
+	if(doSave) save();
 }
 
 void GuiSettings::save()
@@ -31,7 +31,7 @@ void GuiSettings::save()
 
 bool GuiSettings::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("b", input) && input.value != 0)
+	if(config->isMappedTo("a", input) && input.value != 0)
 	{
 		delete this;
 		return true;
@@ -53,7 +53,7 @@ std::vector<HelpPrompt> GuiSettings::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
 
-	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("a", "back"));
 	prompts.push_back(HelpPrompt("start", "close"));
 
 	return prompts;

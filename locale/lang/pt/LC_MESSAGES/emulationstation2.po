@@ -1,0 +1,718 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation 2.0RC1 FRENCH po\n"
+"POT-Creation-Date: 2014-09-20 12:00-0500\n"
+"PO-Revision-Date: 2014-09-20 15:00-0500\n"
+"Last-Translator: digitalLumberjack <digitalLumberjack@gmail.com>\n"
+"Language-Team: FRENCH\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=1;\n"
+
+msgid "MAIN MENU"
+msgstr "MENU PRINCIPAL"
+
+msgid "YES"
+msgstr "SIM"
+
+msgid "NO"
+msgstr "NÃO"
+
+#: es-app/src/views/gamelist/DetailedGameListView.cpp
+msgid "Rating: "
+msgstr "Avaliação : "
+
+msgid "Released: "
+msgstr "Lançado em : "
+
+msgid "Developer: "
+msgstr "Desenvolvedora : "
+
+msgid "Publisher: "
+msgstr "Publicadora : "
+
+msgid "Genre: "
+msgstr "Gênero : "
+
+msgid "Players: "
+msgstr "Jogadores : "
+
+msgid "Last played: "
+msgstr "Última vez jogado : "
+
+msgid "Times played: "
+msgstr "Vezes jogadas : "
+
+#: es-app/src/MetaData.cpp
+msgid "enter game name"
+msgstr "digite o nome do jogo"
+
+msgid "NAME"
+msgstr "NOME"
+
+msgid "ENTER DESCRIPTION"
+msgstr "DIGITE A DESCRIÇÃO"
+
+msgid "ENTER PATH TO IMAGE"
+msgstr "DIGITE O CAMINHO PARA A IMAGEM"
+
+msgid "THUMBNAIL"
+msgstr "MINIATURA"
+
+msgid "ENTER PATH TO THUMBNAIL"
+msgstr "DIGITE O CAMINHO PARA A MINIATURA"
+
+msgid "RATING"
+msgstr "AVALIAÇÃO"
+
+msgid "ENTER SCORE"
+msgstr "DIGITE A PONTUAÇÃO"
+
+msgid "RELEASE DATE"
+msgstr "DATA DE LANÇAMENTO"
+
+msgid "ENTER RELEASE DATE"
+msgstr "DIGITE A DATA DE LANÇAMENTO"
+
+msgid "DEVELOPER"
+msgstr "DESENVOLVEDORA"
+
+msgid "ENTER GAME DEVELOPER"
+msgstr "DIGITE O NOME DA DESENVOLVEDORA"
+
+msgid "PUBLISHER"
+msgstr "PUBLICADORA"
+
+msgid "ENTER GAME PUBLISHER"
+msgstr "DIGITE O NOME DA PUBLICADORA"
+
+msgid "GENRE"
+msgstr "GÊNERO"
+
+msgid "ENTER GAME GENRE"
+msgstr "DIGITE O GÊNERO"
+
+msgid "PLAYERS"
+msgstr "JOGADORES"
+
+msgid "ENTER NUMBER OF PLAYERS"
+msgstr "DIGITE O NÚMERO DE JOGADORES"
+
+msgid "PLAY COUNT"
+msgstr "VEZES JOGADAS"
+
+msgid "ENTER NUMBER OF TIMES PLAYED"
+msgstr "DIGITE O NÚMERO DE VEZES JOGADAS"
+
+#: es-app/src/guis/GuiMenu.cpp
+msgid "SCRAPE FROM"
+msgstr "SCRAPER DESDE"
+
+msgid "SCRAPE RATINGS"
+msgstr "SCRAPE DAS AVALIAÇÕES"
+
+msgid "SOUND SETTINGS"
+msgstr "OPÇÕES DE ÁUDIO"
+
+msgid "SYSTEM VOLUME"
+msgstr "VOLUME DO SISTEMA"
+
+msgid "ENABLE SOUNDS"
+msgstr "ATIVAR SOM"
+
+msgid "UI SETTINGS"
+msgstr "OPÇÕES DA INTERFACE"
+
+msgid "SCREENSAVER AFTER"
+msgstr "ATIVAR PROTEÇÃO DE TELA"
+
+msgid "TRANSITION STYLE"
+msgstr "ESTILO DE TRANSIÇÃO"
+
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "TIPO DA PROTEÇÃO DE TELA"
+
+msgid "SHOW FRAMERATE"
+msgstr "MOSTRAR FRAMERATE"
+
+msgid "ON-SCREEN HELP"
+msgstr "AJUDA NA TELA"
+
+msgid "QUICK SYSTEM SELECT"
+msgstr "SELEÇÃO RÁPIDA DE SISTEMA"
+
+msgid "THEME SET"
+msgstr "TEMA"
+
+msgid "CONFIGURE INPUT"
+msgstr "CONFIGURAÇÃO DOS CONTROLES"
+
+msgid "QUIT"
+msgstr "SAIR"
+
+msgid "REALLY RESTART?"
+msgstr "DESEJA REINICIAR?"
+
+msgid "RESTART SYSTEM"
+msgstr "REINICIAR SISTEMA"
+
+msgid "REALLY SHUTDOWN?"
+msgstr "DESEJA DESLIGAR?"
+
+msgid "SHUTDOWN SYSTEM"
+msgstr "DESLIGAR SISTEMA"
+
+msgid "REALLY QUIT?"
+msgstr "DESEJA SAIR?"
+
+msgid "QUIT EMULATIONSTATION"
+msgstr "SAIR DO EMULATIONSTATION"
+
+#: es-app/src/guis/GuiScraperStart.cpp
+msgid "SCRAPE NOW"
+msgstr "SCRAPE"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "USUÁRIO DECIDE CONFLITOS"
+
+msgid "SYSTEMS"
+msgstr "SISTEMAS"
+
+msgid "FILTER"
+msgstr "FILTRO"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "SCRAPE DESSES JOGOS"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "SCRAPE DESSES SISTEMAS"
+
+msgid "SELECT ALL"
+msgstr "SELECIONAR TUDO"
+
+msgid "SELECT NONE"
+msgstr "SELECIONAR NADA"
+
+#: es-app/src/guis/GuiScraperMulti.cpp"
+msgid "SCRAPING IN PROGRESS"
+msgstr "SCRAPING EM PROGRESSO"
+
+#: es-app/src/components/ScraperSearchComponent.cpp
+msgid "NO GAMES FOUND - SKIP"
+msgstr "NENHUM JOGO ENCONTRADO - PASSAR"
+
+#: Buttons
+msgid "close"
+msgstr "fechar"
+
+msgid "select"
+msgstr "selecionar"
+
+msgid "choose"
+msgstr "escolher"
+
+msgid "back"
+msgstr "voltar"
+
+msgid "CLOSE"
+msgstr "FECHAR"
+
+msgid "SELECT"
+msgstr "SELECIONAR"
+
+msgid "CHOOSE"
+msgstr "ESCOLHER"
+
+msgid "BACK"
+msgstr "VOLTAR"
+
+msgid "LAUNCH"
+msgstr "EXECUTAR"
+
+msgid "SYSTEM"
+msgstr "SISTEMA"
+
+msgid "INPUT"
+msgstr "EDITAR"
+
+msgid "SKIP"
+msgstr "PASSAR"
+
+msgid "CHANGE"
+msgstr "MODIFICAR"
+
+msgid "SAVE"
+msgstr "SALVAR"
+
+msgid "CANCEL"
+msgstr "CANCELAR"
+
+msgid "DELETE"
+msgstr "EXCLUIR"
+
+msgid "GO BACK"
+msgstr "VOLTAR"
+
+#: es-app/src/views/SystemView.cpp
+msgid " GAMES AVAILABLE"
+msgstr " JOGOS DISPONÍVEIS"
+
+#: es-app/src/guis/GuiGamelistOptions.cpp
+msgid "JUMP TO LETTER"
+msgstr "IR PARA A LETRA"
+
+msgid "SORT GAMES BY"
+msgstr "ORDENAR JOGOS POR"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "EDITAR AS INFORMAÇÕES DO JOGO"
+
+#: es-app/src/guis/GuiMetaDataEd.cpp
+msgid "EDIT METADATA"
+msgstr "EDITAR INFORMAÇÕES"
+
+msgid " GAMEPAD"
+msgstr " CONTROLE"
+
+msgid " DETECTED"
+msgstr " DETECTADO"
+
+msgid "WELCOME"
+msgstr "BEM-VINDO"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "NENHUM CONTROLE DETECTADO"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "SEGURE UM BOTÃO NO CONTROLE PARA INICIAR A CONFIGURAÇÃO"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "APERTE F4 PARA SAIR A QUALQUER MOMENTO"
+
+#, fuzzy
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "APERTE ESC PARA CANCELAR"
+
+#: es-core/src/guis/GuiInputConfig.cpp
+msgid "CONFIGURING"
+msgstr "CONFIGURAÇÃO"
+
+msgid "UP"
+msgstr "CIMA"
+
+msgid "DOWN"
+msgstr "BAIXO"
+
+msgid "LEFT"
+msgstr "ESQUERDA"
+
+msgid "RIGHT"
+msgstr "DIREITA"
+
+msgid "PAGE UP"
+msgstr "L1 (PÁGINA ACIMA)"
+
+msgid "PAGE DOWN"
+msgstr "R1 (PÁGINA ABAIXO)"
+
+msgid "SAVE CHANGES?"
+msgstr "SALVAR MODIFICAÇÕES?"
+
+#: es-app/src/guis/GuiUpdate.cpp
+msgid "WORKING..."
+msgstr "EM PROGRESSO..."
+
+msgid "UPDATE"
+msgstr "ATUALIZAR SISTEMA"
+
+msgid "REALLY UPDATE?"
+msgstr "DESEJA ATUALIZAR O SISTEMA?"
+
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "CONEXÃO COM A INTERNET NECESSÁRIA"
+
+msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+msgstr "ATUALIZAÇÃO COMPLETA, O SISTEMA SERÁ REINICIADO"
+
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "ATUALIZAÇÃO FALHOU, O SISTEMA SERÁ REINICIADO"
+
+# GUIMENU
+msgid "CONFIGURE A CONTROLLER"
+msgstr "CONFIGURAR UM CONTROLE"
+
+msgid "INPUT P1"
+msgstr "CONTROLE J1"
+
+msgid "INPUT P2"
+msgstr "CONTROLE J2"
+
+msgid "INPUT P3"
+msgstr "CONTROLE J3"
+
+msgid "INPUT P4"
+msgstr "CONTROLE J4"
+
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
+msgstr ""
+"NÃO FORAM ENCONTRADOS JOGOS EM SEU SISTEMA!\n"
+"POR FAVOR SIGA AS INSTRUÇÕES PARA VERIFICAR COMO ADICIONAR JOGOS.\n"
+"\n"
+"VISITE O SITE RECALBOX.FR PARA MAIS INFORMAÇÕES"
+
+msgid "LANGUAGE"
+msgstr "IDIOMA"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "O SISTEMA SERÁ REINICIADO"
+
+msgid "SYSTEM SETTINGS"
+msgstr "OPÇÕES DE SISTEMA"
+
+msgid "VERSION"
+msgstr "VERSÃO"
+
+msgid "STORAGE"
+msgstr "ARMAZENAMENTO"
+
+msgid "OUTPUT DEVICE"
+msgstr "SAÍDA DE ÁUDIO"
+
+msgid "SMOOTH GAMES"
+msgstr "SUAVIZAR IMAGEM"
+
+msgid "GPIO CONTROLLERS"
+msgstr "CONTROLES GPIO"
+
+msgid "GPIO CONTROLLERS ARE NOW ON"
+msgstr "CONTROLES GPIO ATIVADOS"
+
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "UMA ATUALIZAÇÃO ESTÁ DISPONÍVEL PARA SEU RECALBOX"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "NENHUMA ATUALIZAÇÃO DISPONÍVEL"
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "DESEJA INICIAR O KODI MEDIA CENTER?"
+
+msgid "ENABLE WIFI"
+msgstr "ATIVAR WIFI"
+
+msgid "NETWORK SETTINGS"
+msgstr "OPÇÕES DE REDE"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI ATIVO"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "ERRO NA CONFIGURAÇÃO DO WIFI"
+
+msgid "WIFI KEY"
+msgstr "SENHA DO WIFI"
+
+msgid "WIFI SSID"
+msgstr "NOME DA REDE WIFI (SSID)"
+
+msgid "GAME RATIO"
+msgstr "FORMATO DE TELA"
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "PRESSIONE QUALQUER BOTÃO"
+
+msgid "-NOT DEFINED-"
+msgstr "-NÃO DEFINIDO-"
+
+msgid "ALREADY TAKEN"
+msgstr "BOTÃO JÁ MAPEADO"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "SEGURE QUALQUER BOTÃO PARA PULAR"
+
+msgid "JOYSTICK 1 UP"
+msgstr "ANALÓGICO J1 CIMA"
+
+msgid "JOYSTICK 1 LEFT"
+msgstr "ANALÓGICO J1 ESQUERDA"
+
+msgid "JOYSTICK 2 UP"
+msgstr "ANALÓGICO J2 CIMA"
+
+msgid "JOYSTICK 2 LEFT"
+msgstr "ANALÓGICO J2 ESQUERDA"
+
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
+msgstr ""
+"VOCE VAI CONFIGURAR UM CONTROLE. SE SEU CONTROLE NÃO POSSUI ANALÓGICO, PULE "
+"A CONFIGURAÇÃO DO ANALÓGICO. SE VOCE NÃO TEM UM BOTÃO PARA ATRIBUIR COMO "
+"HOTKEY, UTILIZE O BOTÃO SELECT. IGNORE A CONFIGURAÇÃO DOS BOTÕES QUE NÃO "
+"EXISTEM EM SEU CONTROLE PRESSIONANDO UM BOTÃO JÁ CONFIGURADO EM SEU CONTROLE."
+
+# TEXT EDITING
+msgid "EDIT"
+msgstr "EDITAR"
+
+msgid "STOP EDITING"
+msgstr "PARAR EDIÇÃO"
+
+msgid "MOVE CURSOR"
+msgstr "MOVER CURSOR"
+
+msgid "DISCARD CHANGES"
+msgstr "ANULAR MODIFICAÇÕES"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "somente imagens faltantes"
+
+msgid "All Games"
+msgstr "Todos os jogos"
+
+msgid "accept"
+msgstr "ACEITAR"
+
+msgid " SELECTED"
+msgstr " SELECIONADOS"
+
+msgid "accept result"
+msgstr "aceitar"
+
+msgid "stop (progress saved)"
+msgstr "parar (progresso salvo)"
+
+msgid "search"
+msgstr "procurar"
+
+msgid "GAMES"
+msgstr "JOGOS"
+
+msgid " OF "
+msgstr " DE "
+
+msgid " SKIPPED."
+msgstr " PULADOS."
+
+#  FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "SOMENTE FAVORITOS"
+
+msgid "FAVORITE"
+msgstr "FAVORITOS"
+
+msgid "enter favorite"
+msgstr "entrar favoritos"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "ATUALIZAÇÕES"
+
+msgid "AUTO UPDATES"
+msgstr "ATUALIZAÇÕES AUTOMÁTICAS"
+
+msgid "START UPDATE"
+msgstr "INICIAR ATUALIZAÇÃO"
+
+msgid "KODI SETTINGS"
+msgstr "OPÇÕES DO KODI"
+
+msgid "ENABLE KODI"
+msgstr "ATIVAR KODI"
+
+msgid "KODI AT START"
+msgstr "ABRIR KODI NA INICIALIZAÇÃO"
+
+msgid "START KODI WITH X"
+msgstr "INICIAR KODI PRESSIONANDO X"
+
+msgid "GAMES SETTINGS"
+msgstr "OPÇÕES DE JOGOS"
+
+msgid "REWIND"
+msgstr "RETROCEDER"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "OPÇÕES DE CONTROLES"
+
+msgid "FRONTEND MUSIC"
+msgstr "MÚSICA DE FUNDO"
+
+msgid "HOSTNAME"
+msgstr "HOSTNAME"
+
+msgid "CONNECTED"
+msgstr "CONECTADO"
+
+msgid "NOT CONNECTED"
+msgstr "DESCONECTADO"
+
+msgid "LOADING..."
+msgstr "CARREGANDO..."
+
+# Bluetooth
+msgid "CONTROLLER PAIRED"
+msgstr "CONTROLE PAREADO"
+
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "IMPOSSÍVEL DE PAREAR CONTROLE"
+
+msgid "AN ERROR OCCURED"
+msgstr "UM ERRO OCORREU"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "NENHUM CONTROLE DETECTADO"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "PAREAR UM CONTROLE BLUETOOTH"
+
+#, fuzzy
+msgid "PLEASE WAIT..."
+msgstr "DATA DE LANÇAMENTO"
+
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+
+#, fuzzy
+msgid " GAME AVAILABLE"
+msgstr " JOGOS DISPONÍVEIS"
+
+msgid "UPDATE GAMES LISTS"
+msgstr ""
+
+#, fuzzy
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "DESEJA ATUALIZAR O SISTEMA?"
+
+msgid "EMULATOR"
+msgstr ""
+
+#, fuzzy
+msgid "FAVORITES"
+msgstr "FAVORITOS"
+
+msgid "HIDDEN"
+msgstr ""
+
+#, fuzzy
+msgid "ENTER REGION"
+msgstr "DIGITE A PONTUAÇÃO"
+
+#, fuzzy
+msgid "ENTER ROMTYPE"
+msgstr "DIGITE A PONTUAÇÃO"
+
+#, fuzzy
+msgid "STORAGE DEVICE"
+msgstr "ARMAZENAMENTO"
+
+msgid "AUTO SAVE/LOAD"
+msgstr ""
+
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr ""
+
+msgid "USERNAME"
+msgstr ""
+
+msgid "PASSWORD"
+msgstr ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:150
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:154
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/views/SystemView.cpp:238
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-core/src/guis/GuiInputConfig.cpp:216
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-core/src/guis/GuiDetectDevice.cpp:39
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: es-app/src/guis/GuiScraperMulti.cpp:108
+#, c-format
+msgid "GAME %i OF %i"
+msgstr ""
+
+#: es-core/src/guis/GuiInputConfig.cpp:24
+msgid "HOTKEY"
+msgstr ""
+
+#~ msgid "HOLD FOR "
+#~ msgstr "APERTE POR"
+
+#~ msgid "S TO SKIP"
+#~ msgstr "APERTE S PARA PULAR"
+
+#~ msgid " SUCCESSFULLY SCRAPED!"
+#~ msgstr " SCRAPE CONCLUÍDO!"
+
+#~ msgid "NOGAMEERRORMESSAGE"
+#~ msgstr ""
+#~ "NÃO FORAM ENCONTRADOS JOGOS EM SEU SISTEMA!\n"
+#~ "POR FAVOR SIGA AS INSTRUÇÕES PARA VERIFICAR COMO ADICIONAR JOGOS.\n"
+#~ "\n"
+#~ "VISITE O SITE RECALBOX.FR PARA MAIS INFORMAÇÕES"
+
+#~ msgid "I18NMESSAGECONTROLLERS"
+#~ msgstr ""
+#~ "VOCE VAI CONFIGURAR UM CONTROLE. SE SEU CONTROLE NÃO POSSUI ANALÓGICO, "
+#~ "PULE A CONFIGURAÇÃO DO ANALÓGICO. SE VOCE NÃO TEM UM BOTÃO PARA ATRIBUIR "
+#~ "COMO HOTKEY, UTILIZE O BOTÃO SELECT. IGNORE A CONFIGURAÇÃO DOS BOTÕES QUE "
+#~ "NÃO EXISTEM EM SEU CONTROLE PRESSIONANDO UM BOTÃO JÁ CONFIGURADO EM SEU "
+#~ "CONTROLE."
+
+#~ msgid "NO GAMES WERE SCRAPED."
+#~ msgstr "NENHUM JOGO FOI ENCONTRADO"

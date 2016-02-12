@@ -105,7 +105,7 @@ void ImageComponent::onSizeChanged()
 	updateVertices();
 }
 
-void ImageComponent::setImage(std::string path, bool tile)
+void ImageComponent::setImage(const std::string& path, bool tile)
 {
 	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
 		mTexture.reset();
@@ -326,6 +326,6 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()
 {
 	std::vector<HelpPrompt> ret;
-	ret.push_back(HelpPrompt("a", "select"));
+	ret.push_back(HelpPrompt("b", "select"));
 	return ret;
 }

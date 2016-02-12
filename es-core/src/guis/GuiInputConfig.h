@@ -23,7 +23,7 @@ private:
 	void setNotDefined(const std::shared_ptr<TextComponent>& text); // set text to -NOT DEFINED- + greyed out
 	void setAssignedTo(const std::shared_ptr<TextComponent>& text, Input input); // set text to "BUTTON 2"/"AXIS 2+", etc.
 
-	bool assign(Input input, int inputId);
+	bool assign(Input input, int inputId, int inputIndex);
 	void clearAssignment(int inputId);
 
 	void rowDone();
@@ -46,4 +46,5 @@ private:
 	Input mHeldInput;
 	int mHeldTime;
 	int mHeldInputId;
+	int mHeldInputRowIndex;
 };

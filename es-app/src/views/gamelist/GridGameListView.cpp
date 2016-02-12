@@ -2,6 +2,7 @@
 #include "ThemeData.h"
 #include "Window.h"
 #include "views/ViewController.h"
+#include "Settings.h"
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
 	mGrid(window)
@@ -40,7 +41,17 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 	mGrid.clear();
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
+		if (Settings::getInstance()->getBool("FavoritesOnly"))
+		{
+			if ((*it)->metadata.get("favorite").compare("true") == 0)
+			{
+				mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
+			}
+		}
+		else
+		{
+			mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
+		}
 	}
 }
 
@@ -53,7 +64,7 @@ std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
 	prompts.push_back(HelpPrompt("up/down/left/right", "scroll"));
-	prompts.push_back(HelpPrompt("a", "launch"));
-	prompts.push_back(HelpPrompt("b", "back"));
+	prompts.push_back(HelpPrompt("b", "launch"));
+	prompts.push_back(HelpPrompt("a", "back"));
 	return prompts;
 }

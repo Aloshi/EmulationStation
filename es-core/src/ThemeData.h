@@ -144,6 +144,8 @@ public:
 	static std::map<std::string, ThemeSet> getThemeSets();
 	static boost::filesystem::path getThemeFromCurrentSet(const std::string& system);
 
+	bool getHasFavoritesInTheme();
+
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
 

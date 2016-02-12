@@ -12,6 +12,7 @@ enum MetaDataType
 	//generic types
 	MD_STRING,
 	MD_INT,
+	MD_BOOL,
 	MD_FLOAT,
 
 	//specialized types
@@ -19,7 +20,8 @@ enum MetaDataType
 	MD_IMAGE_PATH,
 	MD_RATING,
 	MD_DATE,
-	MD_TIME //used for lastplayed
+	MD_TIME,//used for lastplayed
+	MD_LIST
 };
 
 struct MetaDataDecl
@@ -47,8 +49,9 @@ public:
 	void appendToXML(pugi::xml_node parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const;
 
 	MetaDataList(MetaDataListType type);
-	
+
 	void set(const std::string& key, const std::string& value);
+	void merge(const MetaDataList& other);
 	void setTime(const std::string& key, const boost::posix_time::ptime& time); //times are internally stored as ISO strings (e.g. boost::posix_time::to_iso_string(ptime))
 
 	const std::string& get(const std::string& key) const;

@@ -14,14 +14,18 @@ public:
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme);
 
 	virtual FileData* getCursor() override;
+	virtual int getCursorIndex() override;
 	virtual void setCursor(FileData* file) override;
+	virtual void setCursorIndex(int index) override;
 
 	virtual const char* getName() const override { return "basic"; }
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
-protected:
 	virtual void populateList(const std::vector<FileData*>& files) override;
+
+	virtual inline void updateInfoPanel() override {}
+protected:
 	virtual void launch(FileData* game) override;
 
 	TextListComponent<FileData*> mList;

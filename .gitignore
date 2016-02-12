@@ -1,7 +1,9 @@
+
 # Compiled Object files
 *.slo
 *.lo
 *.o
+*.mo
 
 # Compiled Dynamic libraries
 *.so
@@ -29,3 +31,9 @@ CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
 Makefile
+CPackConfig.cmake
+CPackSourceConfig.cmake
+
+.idea/
+*.iml
+*.txt.user*
