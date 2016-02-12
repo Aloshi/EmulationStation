@@ -489,21 +489,24 @@ std::string SystemData::getConfigPath(bool forWrite)
 	return "/etc/emulationstation/es_systems.cfg";
 }
 
-std::string SystemData::getGamelistPath(bool forWrite) const
-{
+std::string SystemData::getGamelistPath(bool forWrite) const {
 	fs::path filePath;
 
+	// If we have a gamelist in the rom directory, we use it
 	filePath = mRootFolder->getPath() / "gamelist.xml";
-	if(fs::exists(filePath))
+	if (fs::exists(filePath))
 		return filePath.generic_string();
 
+	// else we try to create it
+	if (forWrite) { // make sure the directory exists if we're going to write to it, or crashes will happen
+		if (fs::exists(filePath.parent_path()) || fs::create_directories(filePath.parent_path())) {
+			return filePath.generic_string();
+		}
+	}
+	// Unable to get or create directory in roms, fallback on ~
 	filePath = getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
-	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
-		fs::create_directories(filePath.parent_path());
-	if(forWrite || fs::exists(filePath))
-		return filePath.generic_string();
-
-	return "/etc/emulationstation/gamelists/" + mName + "/gamelist.xml";
+	fs::create_directories(filePath.parent_path());
+	return filePath.generic_string();
 }
 
 std::string SystemData::getThemePath() const
