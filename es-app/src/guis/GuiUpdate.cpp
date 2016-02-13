@@ -78,7 +78,7 @@ void GuiUpdate::update(int deltaTime) {
         }
         if(mState == 4){
             window->pushGui(
-			    new GuiMsgBox(window, _("UPDATE OK, THE SYSTEM WILL NOW REBOOT"), _("OK"),
+			    new GuiMsgBox(window, _("UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"), _("OK"),
                 [this] {
                     if(runRestartCommand() != 0) {
                         LOG(LogWarning) << "Reboot terminated with non-zero result!";
