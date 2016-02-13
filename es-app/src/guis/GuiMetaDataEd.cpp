@@ -115,7 +115,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
                         selected = selected || mMetaData->get("emulator") == it->first;
                         emu_choice->add(it->first, it->first, mMetaData->get(iter->key) == it->first);
                     }
-                    emu_choice->add(_("default"), "default", !selected);
+                    emu_choice->add("default", "default", !selected);
                     ed = emu_choice;
                     emu_choice->setSelectedChangedCallback([this, md, mdd, scraperParams, header, saveCallback, deleteFunc, system](std::string s) {
                         md->set("emulator", s);
@@ -137,7 +137,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window *window, MetaDataList *md, const std::vector
                             }
                         }
                     }
-                    core_choice->add(_("default"), "default", !selected);
+                    core_choice->add("default", "default", !selected);
                     ed = core_choice;
                 }
 
