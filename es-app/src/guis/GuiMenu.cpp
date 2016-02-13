@@ -1053,16 +1053,18 @@ void GuiMenu::createConfigInput() {
             std::string name;
             std::string selectedName = input_p1->getSelectedName();
 
-            if (selectedName.compare(_("default")) == 0) {
-                name = "DEFAULT";
-                Settings::getInstance()->setString(confName, name);
-                Settings::getInstance()->setString(confGuid, "");
+            if (selectedName.compare(strToUpper(_("default"))) == 0) {
+	      name = "DEFAULT";
+	      Settings::getInstance()->setString(confName, name);
+	      Settings::getInstance()->setString(confGuid, "");
             } else {
-	      LOG(LogWarning) << "Found the selected controller ! : name in list  = " << selectedName;
-	      LOG(LogWarning) << "Found the selected controller ! : guid  = " << input_p1->getSelected()->deviceGUIDString;
+	      if(input_p1->getSelected() != NULL) {
+		LOG(LogWarning) << "Found the selected controller ! : name in list  = " << selectedName;
+		LOG(LogWarning) << "Found the selected controller ! : guid  = " << input_p1->getSelected()->deviceGUIDString;
 
-	      Settings::getInstance()->setString(confName, input_p1->getSelected()->deviceName);
-	      Settings::getInstance()->setString(confGuid, input_p1->getSelected()->deviceGUIDString);
+		Settings::getInstance()->setString(confName, input_p1->getSelected()->deviceName);
+		Settings::getInstance()->setString(confGuid, input_p1->getSelected()->deviceGUIDString);
+	      }
             }
         }
 
