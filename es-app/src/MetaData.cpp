@@ -12,8 +12,8 @@ std::vector<MetaDataDecl> folderMDD;
 
 void initMetadata() {
   // WARN : statistic metadata must be last in list !
-  gameMDD.push_back(MetaDataDecl("emulator",	MD_LIST,		_("default"),		false,		_("Emulator"),			"enter emulator"));
-  gameMDD.push_back(MetaDataDecl("core",	MD_LIST,		_("default"),		false,		_("Core"),			"enter core"));
+  gameMDD.push_back(MetaDataDecl("emulator",	MD_LIST,		"default",		false,		_("Emulator"),			"enter emulator"));
+  gameMDD.push_back(MetaDataDecl("core",	MD_LIST,		"default",		false,		_("Core"),			"enter core"));
   gameMDD.push_back(MetaDataDecl("name",	MD_STRING,		"", 			false,		_("Name"),			"enter game name"));
   gameMDD.push_back(MetaDataDecl("desc",	MD_MULTILINE_STRING,	"", 			false,		_("Description"),		"enter description"));
   gameMDD.push_back(MetaDataDecl("image",	MD_IMAGE_PATH,		"", 			false,		_("Image"),			"enter path to image"));
