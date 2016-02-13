@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0RC1 FRENCH po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-12 23:59+0100\n"
+"POT-Creation-Date: 2016-02-13 18:24+0100\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
 "Last-Translator: digitalLumberjack <digitalLumberjack@gmail.com>\n"
 "Language-Team: FRENCH\n"
@@ -160,18 +160,6 @@ msgstr ""
 msgid "EDIT METADATA"
 msgstr "EDITAR INFORMAÇÕES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:118
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:140
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:803
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:823
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1034
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1037
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1056
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:15
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:16
-msgid "default"
-msgstr ""
-
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:183
 msgid "SCRAPE"
 msgstr ""
@@ -237,7 +225,7 @@ msgid "BACK"
 msgstr "VOLTAR"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:318
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1116
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1118
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:158
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:126
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiSettings.cpp:58
@@ -357,7 +345,7 @@ msgstr "OPÇÕES DE JOGOS"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:307
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:829
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1122
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1124
 msgid "GAME RATIO"
 msgstr "FORMATO DE TELA"
 
@@ -492,7 +480,7 @@ msgid "JACK"
 msgstr ""
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:580
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1129
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1131
 msgid "AUTO"
 msgstr ""
 
@@ -643,7 +631,7 @@ msgstr "PAREAR UM CONTROLE BLUETOOTH"
 msgid "INPUT P%i"
 msgstr ""
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1114
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1116
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:388
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:331
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/BasicGameListView.cpp:158
@@ -654,22 +642,22 @@ msgstr ""
 msgid "CHOOSE"
 msgstr "ESCOLHER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1115
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1117
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:389
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:345
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/ImageComponent.cpp:330
 msgid "SELECT"
 msgstr "SELECIONAR"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1128
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1130
 msgid "CUSTOM"
 msgstr ""
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1130
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1132
 msgid "4/3"
 msgstr ""
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1131
+#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1133
 msgid "16/9"
 msgstr ""
 
@@ -751,8 +739,8 @@ msgid "NETWORK CONNECTION NEEDED"
 msgstr "CONEXÃO COM A INTERNET NECESSÁRIA"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:81
-msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
-msgstr "ATUALIZAÇÃO COMPLETA, O SISTEMA SERÁ REINICIADO"
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr ""
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:92
 msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
@@ -1076,6 +1064,9 @@ msgstr "CARREGANDO..."
 #, fuzzy
 msgid "PLEASE WAIT..."
 msgstr "DATA DE LANÇAMENTO"
+
+#~ msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+#~ msgstr "ATUALIZAÇÃO COMPLETA, O SISTEMA SERÁ REINICIADO"
 
 #~ msgid "Rating: "
 #~ msgstr "Avaliação : "
