@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-14 17:44+0100\n"
+"POT-Creation-Date: 2016-02-14 21:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,204 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../es-app/src/NetworkThread.cpp:38
-msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
-msgstr ""
-
-#: ../es-app/src/components/FileSystemSelectorComponent.cpp:179
-#: ../es-app/src/components/ScraperSearchComponent.cpp:280
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:189
-#: ../es-app/src/guis/GuiGameScraper.cpp:46
-#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
-msgid "CANCEL"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:56
-#: ../es-app/src/MetaData.cpp:21
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:35
-msgid "Rating"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:57
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:38
-msgid "Released"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:58
-#: ../es-app/src/MetaData.cpp:23
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:41
-msgid "Developer"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:59
-#: ../es-app/src/MetaData.cpp:24
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:44
-msgid "Publisher"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:60
-#: ../es-app/src/MetaData.cpp:25
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:47
-msgid "Genre"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:61
-#: ../es-app/src/MetaData.cpp:26
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:50
-msgid "Players"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:240
-msgid "NO GAMES FOUND - SKIP"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:278
-msgid "RETRY"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:279
-#: ../es-app/src/guis/GuiScraperMulti.cpp:57
-msgid "SKIP"
-msgstr ""
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:454
-msgid "SEARCH FOR"
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:32
-msgid "SCRAPING IN PROGRESS"
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:35
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:329
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:157
-msgid "SYSTEM"
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:38
-msgid "subtitle text"
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:52
 #: ../es-app/src/guis/GuiGameScraper.cpp:42
+#: ../es-app/src/guis/GuiScraperMulti.cpp:52
 msgid "INPUT"
 msgstr ""
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:52
 #: ../es-app/src/guis/GuiGameScraper.cpp:42
+#: ../es-app/src/guis/GuiScraperMulti.cpp:52
 msgid "search"
 msgstr ""
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:63
-msgid "STOP"
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:63
-msgid "stop (progress saved)"
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:107
-#, c-format
-msgid "GAME %i OF %i"
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:141
-msgid ""
-"WE CAN'T FIND ANY SYSTEMS!\n"
-"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
-"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
-"\n"
-"VISIT RECALBOX.FR FOR MORE INFORMATION."
-msgstr ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:149
-#, c-format
-msgid "%i GAME SUCCESSFULLY SCRAPED!"
-msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:153
-#, c-format
-msgid "%i GAME SKIPPED."
-msgid_plural "%i GAMES SKIPPED."
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:159
-#: ../es-app/src/guis/GuiMenu.cpp:288 ../es-app/src/guis/GuiMenu.cpp:889
-#: ../es-app/src/guis/GuiMenu.cpp:911 ../es-app/src/guis/GuiMenu.cpp:914
-#: ../es-app/src/guis/GuiMenu.cpp:918 ../es-app/src/guis/GuiUpdate.cpp:72
-#: ../es-app/src/guis/GuiUpdate.cpp:81 ../es-app/src/guis/GuiUpdate.cpp:92
-#: ../es-app/src/guis/GuiUpdate.cpp:103 ../es-app/src/main.cpp:322
-#: ../es-core/src/guis/GuiInputConfig.cpp:170
-msgid "OK"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:37
-msgid "EDIT METADATA"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:183
-msgid "SCRAPE"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:185
-msgid "SAVE"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-msgid ""
-"THIS WILL DELETE A FILE!\n"
-"ARE YOU SURE?"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:291 ../es-app/src/guis/GuiMenu.cpp:419
-#: ../es-app/src/guis/GuiMenu.cpp:720 ../es-app/src/guis/GuiMenu.cpp:734
-#: ../es-app/src/guis/GuiScraperStart.cpp:52
-#: ../es-app/src/guis/GuiUpdate.cpp:56 ../es-app/src/views/SystemView.cpp:148
-#: ../es-app/src/views/SystemView.cpp:161 ../es-core/src/Window.cpp:141
-msgid "YES"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:295 ../es-app/src/guis/GuiMenu.cpp:434
-#: ../es-app/src/guis/GuiMenu.cpp:726 ../es-app/src/guis/GuiMenu.cpp:740
-#: ../es-app/src/guis/GuiScraperStart.cpp:53
-#: ../es-app/src/guis/GuiUpdate.cpp:62 ../es-app/src/MetaData.cpp:27
-#: ../es-app/src/MetaData.cpp:30 ../es-app/src/MetaData.cpp:38
-#: ../es-app/src/views/SystemView.cpp:153
-#: ../es-app/src/views/SystemView.cpp:167 ../es-core/src/Window.cpp:147
-msgid "NO"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:201
-msgid "DELETE"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:290
-msgid "SAVE CHANGES?"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:317
-#: ../es-app/src/guis/GuiScraperStart.cpp:38
-#: ../es-app/src/guis/GuiScraperStart.cpp:125
-#: ../es-app/src/guis/GuiSettings.cpp:11 ../es-app/src/guis/GuiSettings.cpp:57
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:69
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:333
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:160
-#: ../es-core/src/components/OptionListComponent.h:98
-#: ../es-core/src/components/OptionListComponent.h:139
-msgid "BACK"
-msgstr ""
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:318
-#: ../es-app/src/guis/GuiMenu.cpp:1119
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:158
-#: ../es-app/src/guis/GuiScraperStart.cpp:126
-#: ../es-app/src/guis/GuiSettings.cpp:58
-msgid "CLOSE"
+#: ../es-app/src/guis/GuiGameScraper.cpp:46
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:189
+#: ../es-app/src/components/FileSystemSelectorComponent.cpp:179
+#: ../es-app/src/components/ScraperSearchComponent.cpp:280
+#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "CANCEL"
 msgstr ""
 
 #: ../es-app/src/guis/GuiMenu.cpp:82
@@ -314,12 +132,22 @@ msgstr ""
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr ""
 
+#: ../es-app/src/guis/GuiMenu.cpp:288 ../es-app/src/guis/GuiMenu.cpp:889
+#: ../es-app/src/guis/GuiMenu.cpp:911 ../es-app/src/guis/GuiMenu.cpp:914
+#: ../es-app/src/guis/GuiMenu.cpp:918 ../es-app/src/guis/GuiMenu.cpp:967
+#: ../es-app/src/guis/GuiUpdate.cpp:72 ../es-app/src/guis/GuiUpdate.cpp:81
+#: ../es-app/src/guis/GuiUpdate.cpp:92 ../es-app/src/guis/GuiUpdate.cpp:103
+#: ../es-app/src/guis/GuiScraperMulti.cpp:159 ../es-app/src/main.cpp:322
+#: ../es-core/src/guis/GuiInputConfig.cpp:170
+msgid "OK"
+msgstr ""
+
 #: ../es-app/src/guis/GuiMenu.cpp:303 ../es-app/src/guis/GuiMenu.cpp:305
 msgid "GAMES SETTINGS"
 msgstr ""
 
 #: ../es-app/src/guis/GuiMenu.cpp:308 ../es-app/src/guis/GuiMenu.cpp:830
-#: ../es-app/src/guis/GuiMenu.cpp:1125
+#: ../es-app/src/guis/GuiMenu.cpp:1137
 msgid "GAME RATIO"
 msgstr ""
 
@@ -369,6 +197,27 @@ msgstr ""
 
 #: ../es-app/src/guis/GuiMenu.cpp:419
 msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMenu.cpp:419 ../es-app/src/guis/GuiMenu.cpp:720
+#: ../es-app/src/guis/GuiMenu.cpp:734 ../es-app/src/guis/GuiUpdate.cpp:56
+#: ../es-app/src/guis/GuiScraperStart.cpp:52
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:291
+#: ../es-app/src/views/SystemView.cpp:148
+#: ../es-app/src/views/SystemView.cpp:161 ../es-core/src/Window.cpp:141
+msgid "YES"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMenu.cpp:434 ../es-app/src/guis/GuiMenu.cpp:726
+#: ../es-app/src/guis/GuiMenu.cpp:740 ../es-app/src/guis/GuiUpdate.cpp:62
+#: ../es-app/src/guis/GuiScraperStart.cpp:53
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:295 ../es-app/src/MetaData.cpp:27
+#: ../es-app/src/MetaData.cpp:30 ../es-app/src/MetaData.cpp:38
+#: ../es-app/src/views/SystemView.cpp:153
+#: ../es-app/src/views/SystemView.cpp:167 ../es-core/src/Window.cpp:147
+msgid "NO"
 msgstr ""
 
 #: ../es-app/src/guis/GuiMenu.cpp:437
@@ -440,7 +289,7 @@ msgstr ""
 msgid "JACK"
 msgstr ""
 
-#: ../es-app/src/guis/GuiMenu.cpp:581 ../es-app/src/guis/GuiMenu.cpp:1132
+#: ../es-app/src/guis/GuiMenu.cpp:581 ../es-app/src/guis/GuiMenu.cpp:1144
 msgid "AUTO"
 msgstr ""
 
@@ -506,7 +355,7 @@ msgid "SCRAPE NOW"
 msgstr ""
 
 #: ../es-app/src/guis/GuiMenu.cpp:712 ../es-app/src/guis/GuiMenu.cpp:714
-#: ../es-app/src/main.cpp:306 ../es-app/src/views/SystemView.cpp:143
+#: ../es-app/src/views/SystemView.cpp:143 ../es-app/src/main.cpp:306
 msgid "QUIT"
 msgstr ""
 
@@ -564,16 +413,24 @@ msgstr ""
 msgid "NO CONTROLLERS FOUND"
 msgstr ""
 
-#: ../es-app/src/guis/GuiMenu.cpp:920 ../es-app/src/guis/GuiMenu.cpp:959
+#: ../es-app/src/guis/GuiMenu.cpp:920 ../es-app/src/guis/GuiMenu.cpp:958
 msgid "PAIR A BLUETOOTH CONTROLLER"
 msgstr ""
 
-#: ../es-app/src/guis/GuiMenu.cpp:982
+#: ../es-app/src/guis/GuiMenu.cpp:967
+msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
+msgstr ""
+
+#: ../es-app/src/guis/GuiMenu.cpp:970
+msgid "FORGET BLUETOOTH CONTROLLERS"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMenu.cpp:994
 #, c-format
 msgid "INPUT P%i"
 msgstr ""
 
-#: ../es-app/src/guis/GuiMenu.cpp:1117 ../es-app/src/views/SystemView.cpp:388
+#: ../es-app/src/guis/GuiMenu.cpp:1129 ../es-app/src/views/SystemView.cpp:388
 #: ../es-app/src/views/gamelist/DetailedGameListView.cpp:331
 #: ../es-app/src/views/gamelist/BasicGameListView.cpp:158
 #: ../es-core/src/components/ComponentList.cpp:332
@@ -583,22 +440,50 @@ msgstr ""
 msgid "CHOOSE"
 msgstr ""
 
-#: ../es-app/src/guis/GuiMenu.cpp:1118 ../es-app/src/views/SystemView.cpp:389
-#: ../es-core/src/components/OptionListComponent.h:345
+#: ../es-app/src/guis/GuiMenu.cpp:1130 ../es-app/src/views/SystemView.cpp:389
 #: ../es-core/src/components/ImageComponent.cpp:330
+#: ../es-core/src/components/OptionListComponent.h:345
 msgid "SELECT"
 msgstr ""
 
 #: ../es-app/src/guis/GuiMenu.cpp:1131
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:158
+#: ../es-app/src/guis/GuiScraperStart.cpp:126
+#: ../es-app/src/guis/GuiSettings.cpp:58
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:318
+msgid "CLOSE"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMenu.cpp:1143
 msgid "CUSTOM"
 msgstr ""
 
-#: ../es-app/src/guis/GuiMenu.cpp:1133
+#: ../es-app/src/guis/GuiMenu.cpp:1145
 msgid "4/3"
 msgstr ""
 
-#: ../es-app/src/guis/GuiMenu.cpp:1134
+#: ../es-app/src/guis/GuiMenu.cpp:1146
 msgid "16/9"
+msgstr ""
+
+#: ../es-app/src/guis/GuiUpdate.cpp:56
+msgid "REALLY UPDATE?"
+msgstr ""
+
+#: ../es-app/src/guis/GuiUpdate.cpp:72
+msgid "NETWORK CONNECTION NEEDED"
+msgstr ""
+
+#: ../es-app/src/guis/GuiUpdate.cpp:81
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr ""
+
+#: ../es-app/src/guis/GuiUpdate.cpp:92
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr ""
+
+#: ../es-app/src/guis/GuiUpdate.cpp:103
+msgid "NO UPDATE AVAILABLE"
 msgstr ""
 
 #: ../es-app/src/guis/GuiGamelistOptions.cpp:13
@@ -657,6 +542,18 @@ msgstr ""
 msgid "START"
 msgstr ""
 
+#: ../es-app/src/guis/GuiScraperStart.cpp:38
+#: ../es-app/src/guis/GuiScraperStart.cpp:125
+#: ../es-app/src/guis/GuiSettings.cpp:11 ../es-app/src/guis/GuiSettings.cpp:57
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:317
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:333
+#: ../es-app/src/views/gamelist/GridGameListView.cpp:69
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:160
+#: ../es-core/src/components/OptionListComponent.h:98
+#: ../es-core/src/components/OptionListComponent.h:139
+msgid "BACK"
+msgstr ""
+
 #: ../es-app/src/guis/GuiScraperStart.cpp:51
 msgid ""
 "WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
@@ -668,24 +565,89 @@ msgstr ""
 msgid "NO GAMES FIT THAT CRITERIA."
 msgstr ""
 
-#: ../es-app/src/guis/GuiUpdate.cpp:56
-msgid "REALLY UPDATE?"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:32
+msgid "SCRAPING IN PROGRESS"
 msgstr ""
 
-#: ../es-app/src/guis/GuiUpdate.cpp:72
-msgid "NETWORK CONNECTION NEEDED"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:35
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:329
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:157
+msgid "SYSTEM"
 msgstr ""
 
-#: ../es-app/src/guis/GuiUpdate.cpp:81
-msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:38
+msgid "subtitle text"
 msgstr ""
 
-#: ../es-app/src/guis/GuiUpdate.cpp:92
-msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:57
+#: ../es-app/src/components/ScraperSearchComponent.cpp:279
+msgid "SKIP"
 msgstr ""
 
-#: ../es-app/src/guis/GuiUpdate.cpp:103
-msgid "NO UPDATE AVAILABLE"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "STOP"
+msgstr ""
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "stop (progress saved)"
+msgstr ""
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:107
+#, c-format
+msgid "GAME %i OF %i"
+msgstr ""
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:141
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
+msgstr ""
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:149
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:153
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:37
+msgid "EDIT METADATA"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:183
+msgid "SCRAPE"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:185
+msgid "SAVE"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:201
+msgid "DELETE"
+msgstr ""
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:290
+msgid "SAVE CHANGES?"
+msgstr ""
+
+#: ../es-app/src/NetworkThread.cpp:38
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
 msgstr ""
 
 #: ../es-app/src/MetaData.cpp:15
@@ -729,6 +691,12 @@ msgid "enter path to thumbnail"
 msgstr ""
 
 #: ../es-app/src/MetaData.cpp:21
+#: ../es-app/src/components/ScraperSearchComponent.cpp:56
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:35
+msgid "Rating"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:21
 msgid "enter rating"
 msgstr ""
 
@@ -747,7 +715,19 @@ msgid "unknown"
 msgstr ""
 
 #: ../es-app/src/MetaData.cpp:23
+#: ../es-app/src/components/ScraperSearchComponent.cpp:58
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:41
+msgid "Developer"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:23
 msgid "enter game developer"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:24
+#: ../es-app/src/components/ScraperSearchComponent.cpp:59
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:44
+msgid "Publisher"
 msgstr ""
 
 #: ../es-app/src/MetaData.cpp:24
@@ -755,7 +735,19 @@ msgid "enter game publisher"
 msgstr ""
 
 #: ../es-app/src/MetaData.cpp:25
+#: ../es-app/src/components/ScraperSearchComponent.cpp:60
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:47
+msgid "Genre"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:25
 msgid "enter game genre"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:26
+#: ../es-app/src/components/ScraperSearchComponent.cpp:61
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:50
+msgid "Players"
 msgstr ""
 
 #: ../es-app/src/MetaData.cpp:26
@@ -818,6 +810,23 @@ msgstr ""
 msgid "enter last played date"
 msgstr ""
 
+#: ../es-app/src/components/ScraperSearchComponent.cpp:57
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:38
+msgid "Released"
+msgstr ""
+
+#: ../es-app/src/components/ScraperSearchComponent.cpp:240
+msgid "NO GAMES FOUND - SKIP"
+msgstr ""
+
+#: ../es-app/src/components/ScraperSearchComponent.cpp:278
+msgid "RETRY"
+msgstr ""
+
+#: ../es-app/src/components/ScraperSearchComponent.cpp:454
+msgid "SEARCH FOR"
+msgstr ""
+
 #: ../es-app/src/views/SystemView.cpp:236
 #, c-format
 msgid "%i GAME AVAILABLE"
@@ -832,18 +841,18 @@ msgid_plural "%i FAVORITES"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:67
-msgid "SCROLL"
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:57
+msgid "Times played"
 msgstr ""
 
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:68
 #: ../es-app/src/views/gamelist/DetailedGameListView.cpp:332
+#: ../es-app/src/views/gamelist/GridGameListView.cpp:68
 #: ../es-app/src/views/gamelist/BasicGameListView.cpp:159
 msgid "LAUNCH"
 msgstr ""
 
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:57
-msgid "Times played"
+#: ../es-app/src/views/gamelist/GridGameListView.cpp:67
+msgid "SCROLL"
 msgstr ""
 
 #: ../es-app/src/views/ViewController.cpp:524
@@ -882,66 +891,40 @@ msgstr ""
 msgid "LAST PLAYED, DESCENDING"
 msgstr ""
 
-#: ../es-core/src/components/BusyComponent.cpp:24
-msgid "WORKING..."
+#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "DISCARD CHANGES"
 msgstr ""
 
-#: ../es-core/src/components/SwitchComponent.cpp:61
-#: ../es-core/src/components/SliderComponent.cpp:144
-#: ../es-core/src/components/OptionListComponent.h:343
-msgid "CHANGE"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "WELCOME"
 msgstr ""
 
-#: ../es-core/src/components/DateTimeComponent.cpp:212
-msgid "never"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "CONFIGURE INPUT"
 msgstr ""
 
-#: ../es-core/src/components/DateTimeComponent.cpp:218
-msgid "just now"
-msgstr ""
-
-#: ../es-core/src/components/DateTimeComponent.cpp:221
+#: ../es-core/src/guis/GuiDetectDevice.cpp:38
 #, c-format
-msgid "%i sec ago"
-msgid_plural "%i secs ago"
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../es-core/src/components/DateTimeComponent.cpp:226
-#, c-format
-msgid "%i min ago"
-msgid_plural "%i mins ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../es-core/src/components/DateTimeComponent.cpp:231
-#, c-format
-msgid "%i hour ago"
-msgid_plural "%i hours ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../es-core/src/components/DateTimeComponent.cpp:236
-#, c-format
-msgid "%i day ago"
-msgid_plural "%i days ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../es-core/src/components/OptionListComponent.h:102
-msgid "SELECT ALL"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:42
+msgid "NO GAMEPADS DETECTED"
 msgstr ""
 
-#: ../es-core/src/components/OptionListComponent.h:111
-msgid "SELECT NONE"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:47
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
 msgstr ""
 
-#: ../es-core/src/components/OptionListComponent.h:312
-#, c-format
-msgid "%i SELECTED"
-msgid_plural "%i SELECTED"
-msgstr[0] ""
-msgstr[1] ""
+#: ../es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr ""
+
+#: ../es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr ""
 
 #: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "UP"
@@ -1024,41 +1007,6 @@ msgstr ""
 msgid "ALREADY TAKEN"
 msgstr ""
 
-#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
-msgid "DISCARD CHANGES"
-msgstr ""
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "WELCOME"
-msgstr ""
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "CONFIGURE INPUT"
-msgstr ""
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:38
-#, c-format
-msgid "%i GAMEPAD DETECTED"
-msgid_plural "%i GAMEPADS DETECTED"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:42
-msgid "NO GAMEPADS DETECTED"
-msgstr ""
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:47
-msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr ""
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr ""
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr ""
-
 #: ../es-core/src/Window.cpp:141
 msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
 msgstr ""
@@ -1070,3 +1018,64 @@ msgstr ""
 #: ../es-core/src/Window.cpp:374
 msgid "PLEASE WAIT..."
 msgstr ""
+
+#: ../es-core/src/components/OptionListComponent.h:102
+msgid "SELECT ALL"
+msgstr ""
+
+#: ../es-core/src/components/OptionListComponent.h:111
+msgid "SELECT NONE"
+msgstr ""
+
+#: ../es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../es-core/src/components/OptionListComponent.h:343
+#: ../es-core/src/components/SwitchComponent.cpp:61
+#: ../es-core/src/components/SliderComponent.cpp:144
+msgid "CHANGE"
+msgstr ""
+
+#: ../es-core/src/components/BusyComponent.cpp:24
+msgid "WORKING..."
+msgstr ""
+
+#: ../es-core/src/components/DateTimeComponent.cpp:212
+msgid "never"
+msgstr ""
+
+#: ../es-core/src/components/DateTimeComponent.cpp:218
+msgid "just now"
+msgstr ""
+
+#: ../es-core/src/components/DateTimeComponent.cpp:221
+#, c-format
+msgid "%i sec ago"
+msgid_plural "%i secs ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../es-core/src/components/DateTimeComponent.cpp:226
+#, c-format
+msgid "%i min ago"
+msgid_plural "%i mins ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../es-core/src/components/DateTimeComponent.cpp:231
+#, c-format
+msgid "%i hour ago"
+msgid_plural "%i hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../es-core/src/components/DateTimeComponent.cpp:236
+#, c-format
+msgid "%i day ago"
+msgid_plural "%i days ago"
+msgstr[0] ""
+msgstr[1] ""

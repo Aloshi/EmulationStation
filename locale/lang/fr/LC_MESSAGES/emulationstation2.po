@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-13 18:24+0100\n"
+"POT-Creation-Date: 2016-02-14 21:03+0100\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
 "Last-Translator: nadenislamarre <nicolas.adenis.lamarre@gmail.com>\n"
 "Language: French\n"
@@ -11,580 +11,374 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/NetworkThread.cpp:38
-msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
-msgstr "UNE MISE A JOUR EST DISPONIBLE POUR VOTRE RECALBOX"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/FileSystemSelectorComponent.cpp:179
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:280
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:189
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGameScraper.cpp:46
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiTextEditPopup.cpp:24
-msgid "CANCEL"
-msgstr "ANNULER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:56
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:21
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:35
-msgid "Rating"
-msgstr "Note"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:57
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:38
-msgid "Released"
-msgstr "Sortie"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:58
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:23
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:41
-msgid "Developer"
-msgstr "Développeur"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:59
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:24
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:44
-msgid "Publisher"
-msgstr "Éditeur"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:60
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:25
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:47
-msgid "Genre"
-msgstr "Genre"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:61
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:26
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:50
-msgid "Players"
-msgstr "Joueurs"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:240
-msgid "NO GAMES FOUND - SKIP"
-msgstr "AUCUN JEU CORRESPONDANT - PASSER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:278
-msgid "RETRY"
-msgstr "RECOMMENCER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:279
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:57
-msgid "SKIP"
-msgstr "PASSER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/components/ScraperSearchComponent.cpp:454
-msgid "SEARCH FOR"
-msgstr "RECHERCHER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:32
-msgid "SCRAPING IN PROGRESS"
-msgstr "SCRAPING EN COURS"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:35
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:329
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/BasicGameListView.cpp:157
-msgid "SYSTEM"
-msgstr "SYSTEME"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:38
-msgid "subtitle text"
-msgstr "sous-titre"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:52
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGameScraper.cpp:42
+#: ../es-app/src/guis/GuiGameScraper.cpp:42
+#: ../es-app/src/guis/GuiScraperMulti.cpp:52
 msgid "INPUT"
 msgstr "EDITER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:52
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGameScraper.cpp:42
+#: ../es-app/src/guis/GuiGameScraper.cpp:42
+#: ../es-app/src/guis/GuiScraperMulti.cpp:52
 msgid "search"
 msgstr "rechercher"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:63
-msgid "STOP"
-msgstr "ARRÊTER"
+#: ../es-app/src/guis/GuiGameScraper.cpp:46
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:189
+#: ../es-app/src/components/FileSystemSelectorComponent.cpp:179
+#: ../es-app/src/components/ScraperSearchComponent.cpp:280
+#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "CANCEL"
+msgstr "ANNULER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:63
-msgid "stop (progress saved)"
-msgstr "stop (progrès sauvegardé)"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:107
-#, c-format
-msgid "GAME %i OF %i"
-msgstr "JEU %i DE %i"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:141
-msgid ""
-"WE CAN'T FIND ANY SYSTEMS!\n"
-"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
-"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
-"\n"
-"VISIT RECALBOX.FR FOR MORE INFORMATION."
-msgstr ""
-"AUCUN JEU N'A ETE TROUVE SUR LE SYSTEME !\n"
-"VEUILLEZ AJOUTER DES JEUX EN SUIVANT LES INSTRUCTIONS DE LA NOTICE.\n"
-"\n"
-"RENDEZ-VOUS SUR RECALBOX.FR POUR PLUS D'INFORMATIONS"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:149
-#, c-format
-msgid "%i GAME SUCCESSFULLY SCRAPED!"
-msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
-msgstr[0] "%i JEU  SCRAPPÉ !"
-msgstr[1] "%i JEUX  SCRAPPÉS !"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:153
-#, c-format
-msgid "%i GAME SKIPPED."
-msgid_plural "%i GAMES SKIPPED."
-msgstr[0] "%i JEU PASSÉ."
-msgstr[1] "%i  JEUX PASSÉS."
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:159
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:287
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:888
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:910
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:913
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:917
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:72
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:81
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:92
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:103
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/main.cpp:322
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:170
-msgid "OK"
-msgstr "OK"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:37
-msgid "EDIT METADATA"
-msgstr "EDITER LES DONNEES"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:183
-msgid "SCRAPE"
-msgstr "SCRAPPER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:185
-msgid "SAVE"
-msgstr "SAUVEGARDER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:198
-msgid ""
-"THIS WILL DELETE A FILE!\n"
-"ARE YOU SURE?"
-msgstr ""
-"CELA VA EFFACER LE FICHIER\n"
-"ETES VOUS SUR ?"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:198
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:291
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:418
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:719
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:733
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:52
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:56
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:148
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:161
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/Window.cpp:141
-msgid "YES"
-msgstr "OUI"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:198
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:295
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:433
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:725
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:739
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:53
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:62
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:27
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:30
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:38
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:153
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:167
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/Window.cpp:147
-msgid "NO"
-msgstr "NON"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:201
-msgid "DELETE"
-msgstr "SUPPRIMER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:290
-msgid "SAVE CHANGES?"
-msgstr "SAUVEGARDER ?"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:317
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:38
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:125
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiSettings.cpp:11
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiSettings.cpp:57
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/GridGameListView.cpp:69
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:333
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/BasicGameListView.cpp:160
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:98
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:139
-msgid "BACK"
-msgstr "RETOUR"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMetaDataEd.cpp:318
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1118
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:158
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:126
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiSettings.cpp:58
-msgid "CLOSE"
-msgstr "FERMER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:82
+#: ../es-app/src/guis/GuiMenu.cpp:82
 msgid "MAIN MENU"
 msgstr "MENU PRINCIPAL"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:96
+#: ../es-app/src/guis/GuiMenu.cpp:96
 msgid "KODI MEDIA CENTER"
 msgstr "KODI MEDIA CENTER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:111
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:115
+#: ../es-app/src/guis/GuiMenu.cpp:111 ../es-app/src/guis/GuiMenu.cpp:115
 msgid "SYSTEM SETTINGS"
 msgstr "OPTIONS SYSTEME"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:120
+#: ../es-app/src/guis/GuiMenu.cpp:120
 msgid "VERSION"
 msgstr "VERSION"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:126
+#: ../es-app/src/guis/GuiMenu.cpp:126
 msgid "SPACE LEFT"
 msgstr "ESPACE DISPONIBLE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:132
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:147
+#: ../es-app/src/guis/GuiMenu.cpp:132 ../es-app/src/guis/GuiMenu.cpp:147
 msgid "STORAGE DEVICE"
 msgstr "MEDIA DE STOCKAGE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:151
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:165
+#: ../es-app/src/guis/GuiMenu.cpp:151 ../es-app/src/guis/GuiMenu.cpp:166
 msgid "LANGUAGE"
 msgstr "LANGUE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:168
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:187
+#: ../es-app/src/guis/GuiMenu.cpp:169 ../es-app/src/guis/GuiMenu.cpp:188
 msgid "OVERCLOCK"
 msgstr "OVERCLOCK"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:173
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:179
+#: ../es-app/src/guis/GuiMenu.cpp:174 ../es-app/src/guis/GuiMenu.cpp:180
 msgid "EXTREM (1100Mhz)"
 msgstr "EXTREM (1100Mhz)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:174
+#: ../es-app/src/guis/GuiMenu.cpp:175
 msgid "TURBO (1000Mhz)"
 msgstr "TURBO (1000Mhz)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:175
+#: ../es-app/src/guis/GuiMenu.cpp:176
 msgid "HIGH (950Mhz)"
 msgstr "HIGH (950Mhz)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:176
+#: ../es-app/src/guis/GuiMenu.cpp:177
 msgid "NONE (700Mhz)"
 msgstr "AUCUN (700Mhz)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:180
+#: ../es-app/src/guis/GuiMenu.cpp:181
 msgid "TURBO (1050Mhz)+"
 msgstr "TURBO (1050Mhz)+"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:181
+#: ../es-app/src/guis/GuiMenu.cpp:182
 msgid "HIGH (1050Mhz)"
 msgstr "HIGH (1050Mhz)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:182
+#: ../es-app/src/guis/GuiMenu.cpp:183
 msgid "NONE (900Mhz)"
 msgstr "AUCUN (900Mhz)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:185
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:333
+#: ../es-app/src/guis/GuiMenu.cpp:186 ../es-app/src/guis/GuiMenu.cpp:334
 msgid "NONE"
 msgstr "AUCUN"
 
 # NEW SETTINGS ORGANIZATION
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:193
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:222
+#: ../es-app/src/guis/GuiMenu.cpp:194 ../es-app/src/guis/GuiMenu.cpp:223
 msgid "UPDATES"
 msgstr "MISES A JOUR"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:198
+#: ../es-app/src/guis/GuiMenu.cpp:199
 msgid "AUTO UPDATES"
 msgstr "MISES A JOUR AUTO"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:205
+#: ../es-app/src/guis/GuiMenu.cpp:206
 msgid "START UPDATE"
 msgstr "LANCER LA MISE A JOUR"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:235
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:258
+#: ../es-app/src/guis/GuiMenu.cpp:236 ../es-app/src/guis/GuiMenu.cpp:259
 msgid "KODI SETTINGS"
 msgstr "OPTIONS KODI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:238
+#: ../es-app/src/guis/GuiMenu.cpp:239
 msgid "ENABLE KODI"
 msgstr "ACTIVER KODI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:242
+#: ../es-app/src/guis/GuiMenu.cpp:243
 msgid "KODI AT START"
 msgstr "AUTO DEMARRAGE DE KODI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:245
+#: ../es-app/src/guis/GuiMenu.cpp:246
 msgid "START KODI WITH X"
 msgstr "X POUR LANCER KODI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:287
+#: ../es-app/src/guis/GuiMenu.cpp:288
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "LE SYSTEME VA REDEMARRER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:302
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:304
+#: ../es-app/src/guis/GuiMenu.cpp:288 ../es-app/src/guis/GuiMenu.cpp:889
+#: ../es-app/src/guis/GuiMenu.cpp:911 ../es-app/src/guis/GuiMenu.cpp:914
+#: ../es-app/src/guis/GuiMenu.cpp:918 ../es-app/src/guis/GuiMenu.cpp:967
+#: ../es-app/src/guis/GuiUpdate.cpp:72 ../es-app/src/guis/GuiUpdate.cpp:81
+#: ../es-app/src/guis/GuiUpdate.cpp:92 ../es-app/src/guis/GuiUpdate.cpp:103
+#: ../es-app/src/guis/GuiScraperMulti.cpp:159 ../es-app/src/main.cpp:322
+#: ../es-core/src/guis/GuiInputConfig.cpp:170
+msgid "OK"
+msgstr "OK"
+
+#: ../es-app/src/guis/GuiMenu.cpp:303 ../es-app/src/guis/GuiMenu.cpp:305
 msgid "GAMES SETTINGS"
 msgstr "OPTIONS DES JEUX"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:307
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:829
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1124
+#: ../es-app/src/guis/GuiMenu.cpp:308 ../es-app/src/guis/GuiMenu.cpp:830
+#: ../es-app/src/guis/GuiMenu.cpp:1137
 msgid "GAME RATIO"
 msgstr "FORMAT JEUX"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:312
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:833
+#: ../es-app/src/guis/GuiMenu.cpp:313 ../es-app/src/guis/GuiMenu.cpp:834
 msgid "SMOOTH GAMES"
 msgstr "LISSER LES JEUX"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:317
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:838
+#: ../es-app/src/guis/GuiMenu.cpp:318 ../es-app/src/guis/GuiMenu.cpp:839
 msgid "REWIND"
 msgstr "REMBOBINAGE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:322
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:843
+#: ../es-app/src/guis/GuiMenu.cpp:323 ../es-app/src/guis/GuiMenu.cpp:844
 msgid "AUTO SAVE/LOAD"
 msgstr "SAUVEGARDE/CHARGEMENT AUTOMATIQUE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:326
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:336
+#: ../es-app/src/guis/GuiMenu.cpp:327 ../es-app/src/guis/GuiMenu.cpp:337
 msgid "SHADERS SET"
 msgstr "SHADERS SET"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:334
+#: ../es-app/src/guis/GuiMenu.cpp:335
 msgid "SCANLINES"
 msgstr "SCANLINES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:335
+#: ../es-app/src/guis/GuiMenu.cpp:336
 msgid "RETRO"
 msgstr "RETRO"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:342
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:360
+#: ../es-app/src/guis/GuiMenu.cpp:343 ../es-app/src/guis/GuiMenu.cpp:361
 msgid "RETROACHIEVEMENTS SETTINGS"
 msgstr "OPTIONS DE RETROACHIEVEMENTS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:346
+#: ../es-app/src/guis/GuiMenu.cpp:347
 msgid "RETROACHIEVEMENTS"
 msgstr "RETROACHIEVEMENTS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:349
+#: ../es-app/src/guis/GuiMenu.cpp:350
 msgid "USERNAME"
 msgstr "NOM UTILISATEUR"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:350
+#: ../es-app/src/guis/GuiMenu.cpp:351
 msgid "PASSWORD"
 msgstr "MOT DE PASSE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:374
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:398
+#: ../es-app/src/guis/GuiMenu.cpp:375 ../es-app/src/guis/GuiMenu.cpp:399
 msgid "ADVANCED"
 msgstr "AVANCÉES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:418
+#: ../es-app/src/guis/GuiMenu.cpp:419
 msgid "REALLY UPDATE GAMES LISTS ?"
 msgstr "CONFIRMER LA MISE A JOUR DES LISTES DES JEUX ?"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:436
+#: ../es-app/src/guis/GuiMenu.cpp:419 ../es-app/src/guis/GuiMenu.cpp:720
+#: ../es-app/src/guis/GuiMenu.cpp:734 ../es-app/src/guis/GuiUpdate.cpp:56
+#: ../es-app/src/guis/GuiScraperStart.cpp:52
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:291
+#: ../es-app/src/views/SystemView.cpp:148
+#: ../es-app/src/views/SystemView.cpp:161 ../es-core/src/Window.cpp:141
+msgid "YES"
+msgstr "OUI"
+
+#: ../es-app/src/guis/GuiMenu.cpp:434 ../es-app/src/guis/GuiMenu.cpp:726
+#: ../es-app/src/guis/GuiMenu.cpp:740 ../es-app/src/guis/GuiUpdate.cpp:62
+#: ../es-app/src/guis/GuiScraperStart.cpp:53
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:295 ../es-app/src/MetaData.cpp:27
+#: ../es-app/src/MetaData.cpp:30 ../es-app/src/MetaData.cpp:38
+#: ../es-app/src/views/SystemView.cpp:153
+#: ../es-app/src/views/SystemView.cpp:167 ../es-core/src/Window.cpp:147
+msgid "NO"
+msgstr "NON"
+
+#: ../es-app/src/guis/GuiMenu.cpp:437
 msgid "UPDATE GAMES LISTS"
 msgstr "METTRE A JOUR LES LISTES DES JEUX"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:446
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:877
+#: ../es-app/src/guis/GuiMenu.cpp:447 ../es-app/src/guis/GuiMenu.cpp:878
 msgid "CONTROLLERS SETTINGS"
 msgstr "OPTIONS MANETTES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:450
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:452
+#: ../es-app/src/guis/GuiMenu.cpp:451 ../es-app/src/guis/GuiMenu.cpp:453
 msgid "UI SETTINGS"
 msgstr "OPTIONS DE L'INTERFACE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:457
+#: ../es-app/src/guis/GuiMenu.cpp:458
 msgid "OVERSCAN"
 msgstr "OVERSCAN"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:468
+#: ../es-app/src/guis/GuiMenu.cpp:469
 msgid "SCREENSAVER AFTER"
 msgstr "ECRAN DE VEILLE APRES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:476
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:515
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:522
+#: ../es-app/src/guis/GuiMenu.cpp:477 ../es-app/src/guis/GuiMenu.cpp:516
+#: ../es-app/src/guis/GuiMenu.cpp:523
 msgid "TRANSITION STYLE"
 msgstr "STYLE DE LA TRANSITION"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:484
+#: ../es-app/src/guis/GuiMenu.cpp:485
 msgid "SCREENSAVER BEHAVIOR"
 msgstr "COMPORTEMENT DE L'ECRAN DE VEILLE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:492
+#: ../es-app/src/guis/GuiMenu.cpp:493
 msgid "SHOW FRAMERATE"
 msgstr "AFFICHER LE FRAMERATE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:499
+#: ../es-app/src/guis/GuiMenu.cpp:500
 msgid "ON-SCREEN HELP"
 msgstr "AFFICHAGE DE L'AIDE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:508
+#: ../es-app/src/guis/GuiMenu.cpp:509
 msgid "QUICK SYSTEM SELECT"
 msgstr "SELECTION RAPIDE DU SYSTEME"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:535
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:539
+#: ../es-app/src/guis/GuiMenu.cpp:536 ../es-app/src/guis/GuiMenu.cpp:540
 msgid "THEME SET"
 msgstr "THEME"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:558
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:560
+#: ../es-app/src/guis/GuiMenu.cpp:559 ../es-app/src/guis/GuiMenu.cpp:561
 msgid "SOUND SETTINGS"
 msgstr "OPTIONS DU SON"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:565
+#: ../es-app/src/guis/GuiMenu.cpp:566
 msgid "SYSTEM VOLUME"
 msgstr "VOLUME DU SYSTEME"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:570
+#: ../es-app/src/guis/GuiMenu.cpp:571
 msgid "FRONTEND MUSIC"
 msgstr "MUSIQUE DE FOND"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:572
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:583
+#: ../es-app/src/guis/GuiMenu.cpp:573 ../es-app/src/guis/GuiMenu.cpp:584
 msgid "OUTPUT DEVICE"
 msgstr "SORTIE AUDIO"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:578
+#: ../es-app/src/guis/GuiMenu.cpp:579
 msgid "HDMI"
 msgstr "HDMI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:579
+#: ../es-app/src/guis/GuiMenu.cpp:580
 msgid "JACK"
 msgstr "JACK"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:580
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1131
+#: ../es-app/src/guis/GuiMenu.cpp:581 ../es-app/src/guis/GuiMenu.cpp:1144
 msgid "AUTO"
 msgstr "AUTO"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:606
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:610
+#: ../es-app/src/guis/GuiMenu.cpp:607 ../es-app/src/guis/GuiMenu.cpp:611
 msgid "NETWORK SETTINGS"
 msgstr "OPTIONS RESEAU"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:612
+#: ../es-app/src/guis/GuiMenu.cpp:613
 msgid "CONNECTED"
 msgstr "CONNECTÉ"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:613
+#: ../es-app/src/guis/GuiMenu.cpp:614
 msgid "NOT CONNECTED"
 msgstr "DÉCONNECTÉ"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:615
+#: ../es-app/src/guis/GuiMenu.cpp:616
 msgid "STATUS"
 msgstr "STATUT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:618
+#: ../es-app/src/guis/GuiMenu.cpp:619
 msgid "IP ADDRESS"
 msgstr "ADRESSE IP"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:620
+#: ../es-app/src/guis/GuiMenu.cpp:621
 msgid "HOSTNAME"
 msgstr "NOM SUR LE RESEAU"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:626
+#: ../es-app/src/guis/GuiMenu.cpp:627
 msgid "ENABLE WIFI"
 msgstr "ACTIVER LE WIFI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:630
+#: ../es-app/src/guis/GuiMenu.cpp:631
 msgid "WIFI SSID"
 msgstr "SSID WIFI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:632
+#: ../es-app/src/guis/GuiMenu.cpp:633
 msgid "WIFI KEY"
 msgstr "CLÉ WIFI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:646
+#: ../es-app/src/guis/GuiMenu.cpp:647
 msgid "WIFI ENABLED"
 msgstr "WIFI ACTIVÉ"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:650
+#: ../es-app/src/guis/GuiMenu.cpp:651
 msgid "WIFI CONFIGURATION ERROR"
 msgstr "ERREUR DE CONFIGURATION WIFI"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:666
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:668
+#: ../es-app/src/guis/GuiMenu.cpp:667 ../es-app/src/guis/GuiMenu.cpp:669
 msgid "SCRAPER"
 msgstr "SCRAPPEUR"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:671
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:677
+#: ../es-app/src/guis/GuiMenu.cpp:672 ../es-app/src/guis/GuiMenu.cpp:678
 msgid "SCRAPE FROM"
 msgstr "SCRAPPER DEPUIS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:685
+#: ../es-app/src/guis/GuiMenu.cpp:686
 msgid "SCRAPE RATINGS"
 msgstr "SCRAPPER LES NOTES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:699
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:12
+#: ../es-app/src/guis/GuiMenu.cpp:700
+#: ../es-app/src/guis/GuiScraperStart.cpp:12
 msgid "SCRAPE NOW"
 msgstr "SCRAPPER MAINTENANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:711
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:713
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/main.cpp:306
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:143
+#: ../es-app/src/guis/GuiMenu.cpp:712 ../es-app/src/guis/GuiMenu.cpp:714
+#: ../es-app/src/views/SystemView.cpp:143 ../es-app/src/main.cpp:306
 msgid "QUIT"
 msgstr "QUITTER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:719
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:148
+#: ../es-app/src/guis/GuiMenu.cpp:720 ../es-app/src/views/SystemView.cpp:148
 msgid "REALLY RESTART?"
 msgstr "REDEMARRER ?"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:727
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:155
+#: ../es-app/src/guis/GuiMenu.cpp:728 ../es-app/src/views/SystemView.cpp:155
 msgid "RESTART SYSTEM"
 msgstr "REDEMARRER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:733
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:161
+#: ../es-app/src/guis/GuiMenu.cpp:734 ../es-app/src/views/SystemView.cpp:161
 msgid "REALLY SHUTDOWN?"
 msgstr "ETEINDRE ?"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:741
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:169
+#: ../es-app/src/guis/GuiMenu.cpp:742 ../es-app/src/views/SystemView.cpp:169
 msgid "SHUTDOWN SYSTEM"
 msgstr "ETEINDRE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:808
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:15
+#: ../es-app/src/guis/GuiMenu.cpp:809 ../es-app/src/MetaData.cpp:15
 msgid "Emulator"
 msgstr "Emulateur"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:811
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:824
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:16
+#: ../es-app/src/guis/GuiMenu.cpp:812 ../es-app/src/guis/GuiMenu.cpp:825
+#: ../es-app/src/MetaData.cpp:16
 msgid "Core"
 msgstr "Core"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:884
+#: ../es-app/src/guis/GuiMenu.cpp:885
 msgid ""
 "YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
 "CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
@@ -600,126 +394,171 @@ msgstr ""
 "BOUTONS SONT BASÉS SUR LA SUPER NINTENDO"
 
 # GUIMENU
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:900
+#: ../es-app/src/guis/GuiMenu.cpp:901
 msgid "CONFIGURE A CONTROLLER"
 msgstr "CONFIGURER UNE MANETTE"
 
 # Bluetooth
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:910
+#: ../es-app/src/guis/GuiMenu.cpp:911
 msgid "CONTROLLER PAIRED"
 msgstr "MANETTE ASSOCIÉE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:910
+#: ../es-app/src/guis/GuiMenu.cpp:911
 msgid "UNABLE TO PAIR CONTROLLER"
 msgstr "IMPOSSIBLE D'ASSOCIER LA MANETTE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:913
+#: ../es-app/src/guis/GuiMenu.cpp:914
 msgid "AN ERROR OCCURED"
 msgstr "UNE ERREUR EST SURVENUE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:917
+#: ../es-app/src/guis/GuiMenu.cpp:918
 msgid "NO CONTROLLERS FOUND"
 msgstr "AUCUNE MANETTE DÉTÉCTÉE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:919
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:958
+#: ../es-app/src/guis/GuiMenu.cpp:920 ../es-app/src/guis/GuiMenu.cpp:958
 msgid "PAIR A BLUETOOTH CONTROLLER"
 msgstr "ASSOCIER UNE MANETTE BLUETOOTH"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:981
+#: ../es-app/src/guis/GuiMenu.cpp:967
+msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
+msgstr "LES LIENS VERS LES MANETTES ONT ÉTÉS SUPPRIMÉS."
+
+#: ../es-app/src/guis/GuiMenu.cpp:970
+msgid "FORGET BLUETOOTH CONTROLLERS"
+msgstr "OUBLIER LES MANETTES BLUETOOTH"
+
+#: ../es-app/src/guis/GuiMenu.cpp:994
 #, c-format
 msgid "INPUT P%i"
 msgstr "JOUEUR %i"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1116
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:388
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:331
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/BasicGameListView.cpp:158
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/ComponentList.cpp:332
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/ComponentGrid.cpp:449
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/ComponentGrid.cpp:451
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/ComponentGrid.cpp:453
+#: ../es-app/src/guis/GuiMenu.cpp:1129 ../es-app/src/views/SystemView.cpp:388
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:331
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:158
+#: ../es-core/src/components/ComponentList.cpp:332
+#: ../es-core/src/components/ComponentGrid.cpp:449
+#: ../es-core/src/components/ComponentGrid.cpp:451
+#: ../es-core/src/components/ComponentGrid.cpp:453
 msgid "CHOOSE"
 msgstr "CHOISIR"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1117
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:389
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:345
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/ImageComponent.cpp:330
+#: ../es-app/src/guis/GuiMenu.cpp:1130 ../es-app/src/views/SystemView.cpp:389
+#: ../es-core/src/components/ImageComponent.cpp:330
+#: ../es-core/src/components/OptionListComponent.h:345
 msgid "SELECT"
 msgstr "SÉLECTIONNER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1130
+#: ../es-app/src/guis/GuiMenu.cpp:1131
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:158
+#: ../es-app/src/guis/GuiScraperStart.cpp:126
+#: ../es-app/src/guis/GuiSettings.cpp:58
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:318
+msgid "CLOSE"
+msgstr "FERMER"
+
+#: ../es-app/src/guis/GuiMenu.cpp:1143
 msgid "CUSTOM"
 msgstr "PERSONALISÉ"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1132
+#: ../es-app/src/guis/GuiMenu.cpp:1145
 msgid "4/3"
 msgstr "4/3"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:1133
+#: ../es-app/src/guis/GuiMenu.cpp:1146
 msgid "16/9"
 msgstr "16/9"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:13
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:336
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/BasicGameListView.cpp:163
+#: ../es-app/src/guis/GuiUpdate.cpp:56
+msgid "REALLY UPDATE?"
+msgstr "METTRE A JOUR LE SYSTEME ?"
+
+#: ../es-app/src/guis/GuiUpdate.cpp:72
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "VEUILLEZ BRANCHER UN CABLE RESEAU"
+
+#: ../es-app/src/guis/GuiUpdate.cpp:81
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr "MISE À JOUR TÉLÉCHARGÉE, REDEMARRAGE EN COURS"
+
+#: ../es-app/src/guis/GuiUpdate.cpp:92
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "ECHEC DE LA MISE A JOUR"
+
+#: ../es-app/src/guis/GuiUpdate.cpp:103
+msgid "NO UPDATE AVAILABLE"
+msgstr "AUCUNE MISE A JOUR DISPONIBLE"
+
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:13
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:336
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:163
 msgid "OPTIONS"
 msgstr "OPTIONS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:22
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:27
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:22
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:27
 msgid "JUMP TO LETTER"
 msgstr "ALLER A LA LETTRE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:44
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:51
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:44
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:51
 msgid "SORT GAMES BY"
 msgstr "TRIER LES JEUX PAR"
 
 #  FAVORITES
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:55
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:55
 msgid "FAVORITES ONLY"
 msgstr "FAVORIS SEULEMENT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiGamelistOptions.cpp:62
+#: ../es-app/src/guis/GuiGamelistOptions.cpp:62
 msgid "EDIT THIS GAME'S METADATA"
 msgstr "EDITER LES DONNEES DU JEU"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:17
+#: ../es-app/src/guis/GuiScraperStart.cpp:17
 msgid "SCRAPE THESE GAMES"
 msgstr "SCRAPPER CES JEUX"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:18
+#: ../es-app/src/guis/GuiScraperStart.cpp:18
 msgid "All Games"
 msgstr "Tous les jeux"
 
 # MISSING SCRAPPER TRANSLATIONS
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:20
+#: ../es-app/src/guis/GuiScraperStart.cpp:20
 msgid "Only missing image"
 msgstr "Seulement images manquantes"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:22
+#: ../es-app/src/guis/GuiScraperStart.cpp:22
 msgid "FILTER"
 msgstr "FILTRE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:25
+#: ../es-app/src/guis/GuiScraperStart.cpp:25
 msgid "SCRAPE THESE SYSTEMS"
 msgstr "SCRAPPER CES SYSTEMES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:31
+#: ../es-app/src/guis/GuiScraperStart.cpp:31
 msgid "SYSTEMS"
 msgstr "SYSTEMES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:35
+#: ../es-app/src/guis/GuiScraperStart.cpp:35
 msgid "USER DECIDES ON CONFLICTS"
 msgstr "CHOISIR SI CONFLIT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:37
+#: ../es-app/src/guis/GuiScraperStart.cpp:37
 msgid "START"
 msgstr "DÉMARRER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:51
+#: ../es-app/src/guis/GuiScraperStart.cpp:38
+#: ../es-app/src/guis/GuiScraperStart.cpp:125
+#: ../es-app/src/guis/GuiSettings.cpp:11 ../es-app/src/guis/GuiSettings.cpp:57
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:317
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:333
+#: ../es-app/src/views/gamelist/GridGameListView.cpp:69
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:160
+#: ../es-core/src/components/OptionListComponent.h:98
+#: ../es-core/src/components/OptionListComponent.h:139
+msgid "BACK"
+msgstr "RETOUR"
+
+#: ../es-app/src/guis/GuiScraperStart.cpp:51
 msgid ""
 "WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
 "MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
@@ -729,281 +568,444 @@ msgstr ""
 "POURRAIENT ÊTRE INATTENDUS!\n"
 "CONTINUER QUAND MÊME?"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperStart.cpp:68
+#: ../es-app/src/guis/GuiScraperStart.cpp:68
 msgid "NO GAMES FIT THAT CRITERIA."
 msgstr "AUCUN JEU NE CORRESPOND."
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:56
-msgid "REALLY UPDATE?"
-msgstr "METTRE A JOUR LE SYSTEME ?"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:32
+msgid "SCRAPING IN PROGRESS"
+msgstr "SCRAPING EN COURS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:72
-msgid "NETWORK CONNECTION NEEDED"
-msgstr "VEUILLEZ BRANCHER UN CABLE RESEAU"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:35
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:329
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:157
+msgid "SYSTEM"
+msgstr "SYSTEME"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:81
-msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
-msgstr "MISE À JOUR TÉLÉCHARGÉE, REDEMARRAGE EN COURS"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:38
+msgid "subtitle text"
+msgstr "sous-titre"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:92
-msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
-msgstr "ECHEC DE LA MISE A JOUR"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:57
+#: ../es-app/src/components/ScraperSearchComponent.cpp:279
+msgid "SKIP"
+msgstr "PASSER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiUpdate.cpp:103
-msgid "NO UPDATE AVAILABLE"
-msgstr "AUCUNE MISE A JOUR DISPONIBLE"
+#: ../es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "STOP"
+msgstr "ARRÊTER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:17
+#: ../es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "stop (progress saved)"
+msgstr "stop (progrès sauvegardé)"
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:107
+#, c-format
+msgid "GAME %i OF %i"
+msgstr "JEU %i DE %i"
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:141
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
+msgstr ""
+"AUCUN JEU N'A ETE TROUVE SUR LE SYSTEME !\n"
+"VEUILLEZ AJOUTER DES JEUX EN SUIVANT LES INSTRUCTIONS DE LA NOTICE.\n"
+"\n"
+"RENDEZ-VOUS SUR RECALBOX.FR POUR PLUS D'INFORMATIONS"
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:149
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] "%i JEU  SCRAPPÉ !"
+msgstr[1] "%i JEUX  SCRAPPÉS !"
+
+#: ../es-app/src/guis/GuiScraperMulti.cpp:153
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] "%i JEU PASSÉ."
+msgstr[1] "%i  JEUX PASSÉS."
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:37
+msgid "EDIT METADATA"
+msgstr "EDITER LES DONNEES"
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:183
+msgid "SCRAPE"
+msgstr "SCRAPPER"
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:185
+msgid "SAVE"
+msgstr "SAUVEGARDER"
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+"CELA VA EFFACER LE FICHIER\n"
+"ETES VOUS SUR ?"
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:201
+msgid "DELETE"
+msgstr "SUPPRIMER"
+
+#: ../es-app/src/guis/GuiMetaDataEd.cpp:290
+msgid "SAVE CHANGES?"
+msgstr "SAUVEGARDER ?"
+
+#: ../es-app/src/NetworkThread.cpp:38
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "UNE MISE A JOUR EST DISPONIBLE POUR VOTRE RECALBOX"
+
+#: ../es-app/src/MetaData.cpp:15
+msgid "enter emulator"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:16
+msgid "enter core"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:17
 msgid "Name"
 msgstr "Nom"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:18
+#: ../es-app/src/MetaData.cpp:17
+msgid "enter game name"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:18
 msgid "Description"
 msgstr "Description"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:19
+#: ../es-app/src/MetaData.cpp:18
+msgid "enter description"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:19
 msgid "Image"
 msgstr "Image"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:20
+#: ../es-app/src/MetaData.cpp:19
+msgid "enter path to image"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:20
 msgid "Thumbnail"
 msgstr "Miniature"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:22
+#: ../es-app/src/MetaData.cpp:20
+msgid "enter path to thumbnail"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:21
+#: ../es-app/src/components/ScraperSearchComponent.cpp:56
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:35
+msgid "Rating"
+msgstr "Note"
+
+#: ../es-app/src/MetaData.cpp:21
+msgid "enter rating"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:22
 msgid "Release date"
 msgstr "Date de sortie"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:23
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:24
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:25
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:243
+#: ../es-app/src/MetaData.cpp:22
+msgid "enter release date"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:23 ../es-app/src/MetaData.cpp:24
+#: ../es-app/src/MetaData.cpp:25
+#: ../es-core/src/components/DateTimeComponent.cpp:243
 msgid "unknown"
 msgstr "inconnu"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:27
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:62
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:335
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/BasicGameListView.cpp:162
+#: ../es-app/src/MetaData.cpp:23
+#: ../es-app/src/components/ScraperSearchComponent.cpp:58
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:41
+msgid "Developer"
+msgstr "Développeur"
+
+#: ../es-app/src/MetaData.cpp:23
+msgid "enter game developer"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:24
+#: ../es-app/src/components/ScraperSearchComponent.cpp:59
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:44
+msgid "Publisher"
+msgstr "Éditeur"
+
+#: ../es-app/src/MetaData.cpp:24
+msgid "enter game publisher"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:25
+#: ../es-app/src/components/ScraperSearchComponent.cpp:60
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:47
+msgid "Genre"
+msgstr "Genre"
+
+#: ../es-app/src/MetaData.cpp:25
+msgid "enter game genre"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:26
+#: ../es-app/src/components/ScraperSearchComponent.cpp:61
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:50
+msgid "Players"
+msgstr "Joueurs"
+
+#: ../es-app/src/MetaData.cpp:26
+msgid "enter number of players"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:27
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:62
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:335
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:162
 msgid "Favorite"
 msgstr "Favori"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:28
+#: ../es-app/src/MetaData.cpp:27
+msgid "enter favorite"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:28
 msgid "Region"
 msgstr "Région"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:29
+#: ../es-app/src/MetaData.cpp:28
+msgid "enter region"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:29
 msgid "Original"
 msgstr "Original"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:29
+#: ../es-app/src/MetaData.cpp:29
 msgid "Romtype"
 msgstr "Type de rom"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:30
+#: ../es-app/src/MetaData.cpp:29
+msgid "enter romtype"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:30
 msgid "Hidden"
 msgstr "Invisible"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:31
+#: ../es-app/src/MetaData.cpp:30
+msgid "set hidden"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:31
 msgid "Play count"
 msgstr "Nb parties"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:32
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:53
+#: ../es-app/src/MetaData.cpp:31
+msgid "enter number of times played"
+msgstr ""
+
+#: ../es-app/src/MetaData.cpp:32
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:53
 msgid "Last played"
 msgstr "Dernier jeu"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:236
+#: ../es-app/src/MetaData.cpp:32
+msgid "enter last played date"
+msgstr ""
+
+#: ../es-app/src/components/ScraperSearchComponent.cpp:57
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:38
+msgid "Released"
+msgstr "Sortie"
+
+#: ../es-app/src/components/ScraperSearchComponent.cpp:240
+msgid "NO GAMES FOUND - SKIP"
+msgstr "AUCUN JEU CORRESPONDANT - PASSER"
+
+#: ../es-app/src/components/ScraperSearchComponent.cpp:278
+msgid "RETRY"
+msgstr "RECOMMENCER"
+
+#: ../es-app/src/components/ScraperSearchComponent.cpp:454
+msgid "SEARCH FOR"
+msgstr "RECHERCHER"
+
+#: ../es-app/src/views/SystemView.cpp:236
 #, c-format
 msgid "%i GAME AVAILABLE"
 msgid_plural "%i GAMES AVAILABLE"
 msgstr[0] "%i JEU DISPONIBLE"
 msgstr[1] "%i JEUX DISPONIBLES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:237
+#: ../es-app/src/views/SystemView.cpp:237
 #, c-format
 msgid "%i FAVORITE"
 msgid_plural "%i FAVORITES"
 msgstr[0] "%i FAVORI"
 msgstr[1] "%i FAVORIS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/GridGameListView.cpp:67
-msgid "SCROLL"
-msgstr "SCROLLER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/GridGameListView.cpp:68
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:332
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/BasicGameListView.cpp:159
-msgid "LAUNCH"
-msgstr "LANCER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/DetailedGameListView.cpp:57
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:57
 msgid "Times played"
 msgstr "Nb parties"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/ViewController.cpp:524
+#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:332
+#: ../es-app/src/views/gamelist/GridGameListView.cpp:68
+#: ../es-app/src/views/gamelist/BasicGameListView.cpp:159
+msgid "LAUNCH"
+msgstr "LANCER"
+
+#: ../es-app/src/views/gamelist/GridGameListView.cpp:67
+msgid "SCROLL"
+msgstr "SCROLLER"
+
+#: ../es-app/src/views/ViewController.cpp:524
 msgid "MENU"
 msgstr "MENU"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:9
+#: ../es-app/src/FileSorts.cpp:9
 msgid "FILENAME, ASCENDING"
 msgstr "FICHIER, ASCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:10
+#: ../es-app/src/FileSorts.cpp:10
 msgid "FILENAME, DESCENDING"
 msgstr "FICHIER, DESCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:11
+#: ../es-app/src/FileSorts.cpp:11
 msgid "RATING, ASCENDING"
 msgstr "VOTES, ASCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:12
+#: ../es-app/src/FileSorts.cpp:12
 msgid "RATING, DESCENDING"
 msgstr "VOTES, DESCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:13
+#: ../es-app/src/FileSorts.cpp:13
 msgid "TIMES PLAYED, ASCENDING"
 msgstr "PARTIES JOUÉES, ASCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:14
+#: ../es-app/src/FileSorts.cpp:14
 msgid "TIMES PLAYED, DESCENDING"
 msgstr "PARTIES JOUÉES, DESCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:15
+#: ../es-app/src/FileSorts.cpp:15
 msgid "LAST PLAYED, ASCENDING"
 msgstr "DERNIÈRE PARTIE, ASCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/FileSorts.cpp:16
+#: ../es-app/src/FileSorts.cpp:16
 msgid "LAST PLAYED, DESCENDING"
 msgstr "DERNIÈRE PARTIE, DESCENDANT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/BusyComponent.cpp:24
-msgid "WORKING..."
-msgstr "EN COURS..."
+#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "DISCARD CHANGES"
+msgstr "ANNULER MODIFICATIONS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/SwitchComponent.cpp:61
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/SliderComponent.cpp:144
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:343
-msgid "CHANGE"
-msgstr "CHANGER"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "WELCOME"
+msgstr "BIENVENUE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:212
-msgid "never"
-msgstr "jamais"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "CONFIGURE INPUT"
+msgstr "CONFIGURER LES MANETTES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:218
-msgid "just now"
-msgstr "à l'instant"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:221
+#: ../es-core/src/guis/GuiDetectDevice.cpp:38
 #, c-format
-msgid "%i sec ago"
-msgid_plural "%i secs ago"
-msgstr[0] "il y a %i sec"
-msgstr[1] "il y a %i secs"
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i MANETTE DÉTECTÉE"
+msgstr[1] "%i MANETTES DÉTECTÉES"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:226
-#, c-format
-msgid "%i min ago"
-msgid_plural "%i mins ago"
-msgstr[0] "il y a %i min"
-msgstr[1] "il y a %i mins"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:42
+msgid "NO GAMEPADS DETECTED"
+msgstr "AUCUNE MANETTE DETECTEE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:231
-#, c-format
-msgid "%i hour ago"
-msgid_plural "%i hours ago"
-msgstr[0] "il y a %i heure"
-msgstr[1] "il y a %i heures"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:47
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "MAINTENEZ UN BOUTON SUR LA MANETTE POUR LA CONFIGURER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:236
-#, c-format
-msgid "%i day ago"
-msgid_plural "%i days ago"
-msgstr[0] "il y a %i jour"
-msgstr[1] "il y a %i jours"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "APPUYEZ SUR F4 POUR QUITTER A TOUT MOMENT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:102
-msgid "SELECT ALL"
-msgstr "TOUT SELECTIONNER"
+#: ../es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "APPUYEZ SUR ECHAP OU LA TOUCHE HOTKEY POUR ANNULER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:111
-msgid "SELECT NONE"
-msgstr "AUCUN"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:312
-#, c-format
-msgid "%i SELECTED"
-msgid_plural "%i SELECTED"
-msgstr[0] "%i SÉLECTIONNÉ"
-msgstr[1] "%i SÉLECTIONNÉS"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:39
+#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "UP"
 msgstr "HAUT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:39
+#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "DOWN"
 msgstr "BAS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:39
+#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "LEFT"
 msgstr "GAUCHE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:39
+#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "RIGHT"
 msgstr "DROITE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:40
+#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 1 UP"
 msgstr "JOYSTICK 1 HAUT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:40
+#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 1 LEFT"
 msgstr "JOYSTICK 1 GAUCHE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:40
+#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 2 UP"
 msgstr "JOYSTICK 2 HAUT"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:40
+#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 2 LEFT"
 msgstr "JOYSTICK 2 GAUCHE"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:41
+#: ../es-core/src/guis/GuiInputConfig.cpp:41
 msgid "PAGE UP"
 msgstr "L1 (PAGE PRECEDENTE)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:41
+#: ../es-core/src/guis/GuiInputConfig.cpp:41
 msgid "PAGE DOWN"
 msgstr "R1 (PAGE SUIVANTE)"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:41
+#: ../es-core/src/guis/GuiInputConfig.cpp:41
 msgid "HOTKEY"
 msgstr "HOTKEY"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:55
+#: ../es-core/src/guis/GuiInputConfig.cpp:55
 msgid "CONFIGURING"
 msgstr "CONFIGURATION"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:60
+#: ../es-core/src/guis/GuiInputConfig.cpp:60
 msgid "KEYBOARD"
 msgstr "CLAVIER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:62
+#: ../es-core/src/guis/GuiInputConfig.cpp:62
 #, c-format
 msgid "GAMEPAD %i"
 msgstr "JOYSTICK %i"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:68
+#: ../es-core/src/guis/GuiInputConfig.cpp:68
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr "RESTER APPUYÉ SUR UN BOUTTON POUR PASSER"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:98
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:257
+#: ../es-core/src/guis/GuiInputConfig.cpp:98
+#: ../es-core/src/guis/GuiInputConfig.cpp:257
 msgid "-NOT DEFINED-"
 msgstr "-NON CONFIGURÉ-"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:219
+#: ../es-core/src/guis/GuiInputConfig.cpp:219
 #, c-format
 msgid "HOLD FOR %iS TO SKIP"
 msgid_plural "HOLD FOR %iS TO SKIP"
@@ -1011,57 +1013,83 @@ msgstr[0] "APPUYEZ PENDANT %iS POUR PASSER"
 msgstr[1] "APPUYEZ PENDANT %iS POUR PASSER"
 
 # Config controllers missing translation
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:251
+#: ../es-core/src/guis/GuiInputConfig.cpp:251
 msgid "PRESS ANYTHING"
 msgstr "APPUYEZ SUR UN BOUTON"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:269
+#: ../es-core/src/guis/GuiInputConfig.cpp:269
 msgid "ALREADY TAKEN"
 msgstr "DÉJÀ PRIS"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiTextEditPopup.cpp:24
-msgid "DISCARD CHANGES"
-msgstr "ANNULER MODIFICATIONS"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "WELCOME"
-msgstr "BIENVENUE"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "CONFIGURE INPUT"
-msgstr "CONFIGURER LES MANETTES"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:38
-#, c-format
-msgid "%i GAMEPAD DETECTED"
-msgid_plural "%i GAMEPADS DETECTED"
-msgstr[0] "%i MANETTE DÉTECTÉE"
-msgstr[1] "%i MANETTES DÉTECTÉES"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:42
-msgid "NO GAMEPADS DETECTED"
-msgstr "AUCUNE MANETTE DETECTEE"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:47
-msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "MAINTENEZ UN BOUTON SUR LA MANETTE POUR LA CONFIGURER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr "APPUYEZ SUR F4 POUR QUITTER A TOUT MOMENT"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "APPUYEZ SUR ECHAP OU LA TOUCHE HOTKEY POUR ANNULER"
-
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/Window.cpp:141
+#: ../es-core/src/Window.cpp:141
 msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
 msgstr "VOULEZ-VOUS LANCER LE MEDIA CENTER KODI ?"
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/Window.cpp:282
+#: ../es-core/src/Window.cpp:282
 msgid "LOADING..."
 msgstr "CHARGEMENT..."
 
-#: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/Window.cpp:374
+#: ../es-core/src/Window.cpp:374
 msgid "PLEASE WAIT..."
 msgstr "VEUILLEZ PATIENTER..."
+
+#: ../es-core/src/components/OptionListComponent.h:102
+msgid "SELECT ALL"
+msgstr "TOUT SELECTIONNER"
+
+#: ../es-core/src/components/OptionListComponent.h:111
+msgid "SELECT NONE"
+msgstr "AUCUN"
+
+#: ../es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] "%i SÉLECTIONNÉ"
+msgstr[1] "%i SÉLECTIONNÉS"
+
+#: ../es-core/src/components/OptionListComponent.h:343
+#: ../es-core/src/components/SwitchComponent.cpp:61
+#: ../es-core/src/components/SliderComponent.cpp:144
+msgid "CHANGE"
+msgstr "CHANGER"
+
+#: ../es-core/src/components/BusyComponent.cpp:24
+msgid "WORKING..."
+msgstr "EN COURS..."
+
+#: ../es-core/src/components/DateTimeComponent.cpp:212
+msgid "never"
+msgstr "jamais"
+
+#: ../es-core/src/components/DateTimeComponent.cpp:218
+msgid "just now"
+msgstr "à l'instant"
+
+#: ../es-core/src/components/DateTimeComponent.cpp:221
+#, c-format
+msgid "%i sec ago"
+msgid_plural "%i secs ago"
+msgstr[0] "il y a %i sec"
+msgstr[1] "il y a %i secs"
+
+#: ../es-core/src/components/DateTimeComponent.cpp:226
+#, c-format
+msgid "%i min ago"
+msgid_plural "%i mins ago"
+msgstr[0] "il y a %i min"
+msgstr[1] "il y a %i mins"
+
+#: ../es-core/src/components/DateTimeComponent.cpp:231
+#, c-format
+msgid "%i hour ago"
+msgid_plural "%i hours ago"
+msgstr[0] "il y a %i heure"
+msgstr[1] "il y a %i heures"
+
+#: ../es-core/src/components/DateTimeComponent.cpp:236
+#, c-format
+msgid "%i day ago"
+msgid_plural "%i days ago"
+msgstr[0] "il y a %i jour"
+msgstr[1] "il y a %i jours"

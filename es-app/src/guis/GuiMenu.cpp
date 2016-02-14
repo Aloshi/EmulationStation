@@ -917,8 +917,7 @@ void GuiMenu::createConfigInput() {
             if (resolvedControllers->size() == 0) {
 	      window->pushGui(new GuiMsgBox(window, _("NO CONTROLLERS FOUND"), _("OK")));
             } else {
-	      GuiSettings *pairGui = new GuiSettings(window, _("PAIR A BLUETOOTH CONTROLLER").c_str());
-
+	            GuiSettings *pairGui = new GuiSettings(window, _("PAIR A BLUETOOTH CONTROLLER").c_str());
                 for (std::vector<std::string>::iterator controllerString = ((std::vector<std::string> *) controllers)->begin();
                      controllerString != ((std::vector<std::string> *) controllers)->end(); ++controllerString) {
 
@@ -960,10 +959,23 @@ void GuiMenu::createConfigInput() {
                                             0x777777FF),
             true);
     s->addRow(row);
+    row.elements.clear();
+
+    row.makeAcceptInputHandler([window, this, s] {
+        RecalboxSystem::getInstance()->forgetBluetoothControllers();
+        window->pushGui(new GuiMsgBox(window,
+                                      _("CONTROLLERS LINKS HAVE BEEN DELETED."), _("OK")));
+    });
+    row.addElement(
+            std::make_shared<TextComponent>(window, _("FORGET BLUETOOTH CONTROLLERS"), Font::get(FONT_SIZE_MEDIUM),
+                                            0x777777FF),
+            true);
+    s->addRow(row);
+    row.elements.clear();
+
 
 
     row.elements.clear();
-    // quick system select (left/right in game list view)
 
     // Here we go; for each player
     std::list<int> alreadyTaken = std::list<int>();
