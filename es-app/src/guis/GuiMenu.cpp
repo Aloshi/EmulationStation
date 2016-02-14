@@ -901,8 +901,7 @@ void GuiMenu::createConfigInput() {
 		   std::make_shared<TextComponent>(window, _("CONFIGURE A CONTROLLER"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF),
             true);
     s->addRow(row);
-
-
+    
     row.elements.clear();
 
     std::function<void(void *)> showControllerList = [window, this, s](void *controllers) {
