@@ -12,24 +12,24 @@ std::vector<MetaDataDecl> folderMDD;
 
 void initMetadata() {
   // WARN : statistic metadata must be last in list !
-  gameMDD.push_back(MetaDataDecl("emulator",	MD_LIST,		"default",		false,		_("Emulator"),			"enter emulator"));
-  gameMDD.push_back(MetaDataDecl("core",	MD_LIST,		"default",		false,		_("Core"),			"enter core"));
-  gameMDD.push_back(MetaDataDecl("name",	MD_STRING,		"", 			false,		_("Name"),			"enter game name"));
-  gameMDD.push_back(MetaDataDecl("desc",	MD_MULTILINE_STRING,	"", 			false,		_("Description"),		"enter description"));
-  gameMDD.push_back(MetaDataDecl("image",	MD_IMAGE_PATH,		"", 			false,		_("Image"),			"enter path to image"));
-  gameMDD.push_back(MetaDataDecl("thumbnail",	MD_IMAGE_PATH,		"", 			false,		_("Thumbnail"),			"enter path to thumbnail"));
-  gameMDD.push_back(MetaDataDecl("rating",	MD_RATING,		"0.000000", 		false,		_("Rating"),			"enter rating"));
-  gameMDD.push_back(MetaDataDecl("releasedate", MD_DATE,		"not-a-date-time", 	false,		_("Release date"),		"enter release date"));
-  gameMDD.push_back(MetaDataDecl("developer",	MD_STRING,		_("unknown"),		false,		_("Developer"),			"enter game developer"));
-  gameMDD.push_back(MetaDataDecl("publisher",	MD_STRING,		_("unknown"),		false,		_("Publisher"),			"enter game publisher"));
-  gameMDD.push_back(MetaDataDecl("genre",	MD_STRING,		_("unknown"),		false,		_("Genre"),			"enter game genre"));
-  gameMDD.push_back(MetaDataDecl("players",	MD_INT,			"1",			false,		_("Players"),			"enter number of players"));
-  gameMDD.push_back(MetaDataDecl("favorite",	MD_BOOL,		_("NO"),		false,		_("Favorite"),			"enter favorite"));
-  gameMDD.push_back(MetaDataDecl("region",	MD_STRING,		"",			false,		_("Region"),			"enter region"));
-  gameMDD.push_back(MetaDataDecl("romtype",	MD_STRING,		_("Original"),		false,		_("Romtype"),			"enter romtype"));
-  gameMDD.push_back(MetaDataDecl("hidden",	MD_BOOL,		_("NO"),		false,		_("Hidden"),			"set hidden"));
-  gameMDD.push_back(MetaDataDecl("playcount",	MD_INT,			"0",			true,		_("Play count"),		"enter number of times played"));
-  gameMDD.push_back(MetaDataDecl("lastplayed",	MD_TIME,		"0", 			true,		_("Last played"),		"enter last played date"));
+  gameMDD.push_back(MetaDataDecl("emulator",	MD_LIST,		"default",		false,		_("Emulator"),			_("enter emulator")));
+  gameMDD.push_back(MetaDataDecl("core",	MD_LIST,		"default",		false,		_("Core"),			_("enter core")));
+  gameMDD.push_back(MetaDataDecl("name",	MD_STRING,		"", 			false,		_("Name"),			_("enter game name")));
+  gameMDD.push_back(MetaDataDecl("desc",	MD_MULTILINE_STRING,	"", 			false,		_("Description"),		_("enter description")));
+  gameMDD.push_back(MetaDataDecl("image",	MD_IMAGE_PATH,		"", 			false,		_("Image"),			_("enter path to image")));
+  gameMDD.push_back(MetaDataDecl("thumbnail",	MD_IMAGE_PATH,		"", 			false,		_("Thumbnail"),			_("enter path to thumbnail")));
+  gameMDD.push_back(MetaDataDecl("rating",	MD_RATING,		"0.000000", 		false,		_("Rating"),			_("enter rating")));
+  gameMDD.push_back(MetaDataDecl("releasedate", MD_DATE,		"not-a-date-time", 	false,		_("Release date"),		_("enter release date")));
+  gameMDD.push_back(MetaDataDecl("developer",	MD_STRING,		_("unknown"),		false,		_("Developer"),			_("enter game developer")));
+  gameMDD.push_back(MetaDataDecl("publisher",	MD_STRING,		_("unknown"),		false,		_("Publisher"),			_("enter game publisher")));
+  gameMDD.push_back(MetaDataDecl("genre",	MD_STRING,		_("unknown"),		false,		_("Genre"),			_("enter game genre")));
+  gameMDD.push_back(MetaDataDecl("players",	MD_INT,			"1",			false,		_("Players"),			_("enter number of players")));
+  gameMDD.push_back(MetaDataDecl("favorite",	MD_BOOL,		_("NO"),		false,		_("Favorite"),			_("enter favorite")));
+  gameMDD.push_back(MetaDataDecl("region",	MD_STRING,		"",			false,		_("Region"),			_("enter region")));
+  gameMDD.push_back(MetaDataDecl("romtype",	MD_STRING,		_("Original"),		false,		_("Romtype"),			_("enter romtype")));
+  gameMDD.push_back(MetaDataDecl("hidden",	MD_BOOL,		_("NO"),		false,		_("Hidden"),			_("set hidden")));
+  gameMDD.push_back(MetaDataDecl("playcount",	MD_INT,			"0",			true,		_("Play count"),		_("enter number of times played")));
+  gameMDD.push_back(MetaDataDecl("lastplayed",	MD_TIME,		"0", 			true,		_("Last played"),		_("enter last played date")));
 
   folderMDD.push_back(MetaDataDecl("name",	MD_STRING,		"", 		false));
   folderMDD.push_back(MetaDataDecl("desc",	MD_MULTILINE_STRING,	"", 		false));
