@@ -3,6 +3,8 @@
 #include "resources/Font.h"
 #include "Window.h"
 
+#include "Log.h"
+
 SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(window), mImage(window), mState(state)
 {
 	mImage.setImage(":/off.svg");
@@ -13,6 +15,25 @@ SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(wind
 void SwitchComponent::onSizeChanged()
 {
 	mImage.setSize(mSize);
+}
+
+std::string SwitchComponent::getValue() const
+{
+	return  mState ? "true" : "false";
+}
+
+void SwitchComponent::setValue(const std::string& value)
+{
+	if(value == "true")
+	{
+		setState(true);
+	}else if(value == "false")
+	{
+		setState(false);
+	}else{
+		LOG(LogWarning) << "SwitchComponent setValue must be \"true\" or \"false\". Defaulting to false.";
+		setState(false);
+	}
 }
 
 bool SwitchComponent::input(InputConfig* config, Input input)
@@ -30,7 +51,7 @@ bool SwitchComponent::input(InputConfig* config, Input input)
 void SwitchComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	
+
 	mImage.render(trans);
 
 	renderChildren(trans);

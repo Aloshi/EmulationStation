@@ -439,7 +439,7 @@ bool SystemData::hasGamelist() const
 
 unsigned int SystemData::getGameCount() const
 {
-	return mRootFolder->getFilesRecursive(GAME).size();
+	return mRootFolder->getFilesRecursive(GAME, false).size();
 }
 
 void SystemData::loadTheme()

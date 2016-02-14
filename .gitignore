@@ -30,3 +30,6 @@ CMakeFiles
 cmake_install.cmake
 Makefile
 *.cmake
+
+# .idea
+.idea/*
