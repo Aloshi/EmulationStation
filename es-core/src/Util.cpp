@@ -1,30 +1,26 @@
 #include "Util.h"
 #include "resources/ResourceManager.h"
 #include "platform.h"
+#include "Locale.h"
 
 namespace fs = boost::filesystem;
 
 std::string strToUpper(const char* from)
 {
 	std::string str(from);
-	for(unsigned int i = 0; i < str.size(); i++) {
-	  str[i] = toupper(from[i]);
-	}
-	return str;
+    return boost::locale::to_upper(str);
 }
 
-std::string& strToUpper(std::string& str)
+std::string& strToUpper(std::string& from)
 {
-  for(unsigned int i = 0; i < str.size(); i++) {
-    str[i] = toupper(str[i]);
-  }
-
-  return str;
+    from = boost::locale::to_upper(from);
+    return from;
 }
 
-std::string strToUpper(const std::string& str)
+std::string strToUpper(const std::string& from)
 {
-	return strToUpper(str.c_str());
+	std::string str(from);
+    return boost::locale::to_upper(str);
 }
 
 
