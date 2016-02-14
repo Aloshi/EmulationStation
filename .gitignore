@@ -37,3 +37,6 @@ CPackSourceConfig.cmake
 .idea/
 *.iml
 *.txt.user*
+
+# po backup
+*.po~
