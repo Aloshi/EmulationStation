@@ -49,6 +49,8 @@ public:
 
     bool setStorage(std::string basic_string);
 
+    bool forgetBluetoothControllers();
+
 private:
     static RecalboxSystem * instance;
     RecalboxSystem();
