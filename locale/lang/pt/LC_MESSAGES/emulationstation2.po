@@ -1,12 +1,11 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0RC1 FRENCH po\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-02-13 18:24+0100\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
-"Last-Translator: digitalLumberjack <digitalLumberjack@gmail.com>\n"
-"Language-Team: FRENCH\n"
+"Last-Translator: mgoulartBR <mgoulart@gmail.com>\n"
+"Language-Team: PORTUGUESE\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,16 +130,16 @@ msgstr ""
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:149
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
-msgid_plural "%i JOGOS COM SUCESSO!"
-msgstr[0] ""
-msgstr[1] ""
+msgid_plural "%i SCRAPES REALIZADOS!"
+msgstr[0] "%i SCRAPE REALIZADO!"
+msgstr[1] "%i SCRAPES REALIZADOS!"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:153
 #, c-format
 msgid "%i GAME SKIPPED."
-msgid_plural "%i JOGOS IGNORADOS."
-msgstr[0] ""
-msgstr[1] ""
+msgid_plural "%i SCRAPES IGNORADOS."
+msgstr[0] "%i SCRAPE IGNORADO."
+msgstr[1] "%i SCRAPES IGNORADOS."
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiScraperMulti.cpp:159
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:287
@@ -258,7 +257,6 @@ msgstr "ESPAÇO DISPONÍVEL"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:132
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:147
-#, fuzzy
 msgid "STORAGE DEVICE"
 msgstr "ARMAZENAMENTO"
 
@@ -403,9 +401,8 @@ msgid "ADVANCED"
 msgstr "AVANÇADO"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:418
-#, fuzzy
 msgid "REALLY UPDATE GAMES LISTS ?"
-msgstr "DESEJA ATUALIZAR O SISTEMA?"
+msgstr "DESEJA ATUALIZAR AS LISTAS DE JOGOS?"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:436
 msgid "UPDATE GAMES LISTS"
@@ -587,7 +584,7 @@ msgstr "Emulador"
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:824
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/MetaData.cpp:16
 msgid "Core"
-msgstr "Núcleo"
+msgstr "Núcleo de emulação"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/guis/GuiMenu.cpp:884
 msgid ""
@@ -819,15 +816,15 @@ msgstr "Última vez jogado"
 #, c-format
 msgid "%i GAME AVAILABLE"
 msgid_plural "%i JOGOS DISPONÍVEIS"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i JOGO DISPONÍVEL"
+msgstr[1] "%i JOGOS DISPONÍVEIS"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/SystemView.cpp:237
 #, c-format
 msgid "%i FAVORITE"
 msgid_plural "%i FAVORITOS"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i FAVORITO"
+msgstr[1] "%i FAVORITOS"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-app/src/views/gamelist/GridGameListView.cpp:67
 msgid "SCROLL"
@@ -901,29 +898,29 @@ msgstr "agora"
 #, c-format
 msgid "%i sec ago"
 msgid_plural "%i segs atrás"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i seg atrás"
+msgstr[1] "%i segs atrás"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:226
 #, c-format
 msgid "%i min ago"
 msgid_plural "%i mins atrás"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i min atrás"
+msgstr[1] "%i mins atrás"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:231
 #, c-format
 msgid "%i hour ago"
 msgid_plural "%i horas atrás"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i hora atrás"
+msgstr[1] "%i horas atrás"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/DateTimeComponent.cpp:236
 #, c-format
 msgid "%i day ago"
 msgid_plural "%i dias atrás"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i dia atrás"
+msgstr[1] "%i dias atrás"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/components/OptionListComponent.h:102
 msgid "SELECT ALL"
@@ -937,8 +934,8 @@ msgstr "SELECIONAR NADA"
 #, c-format
 msgid "%i SELECTED"
 msgid_plural "%i SELECIONADOS"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i SELECIONADO"
+msgstr[1] "%i SELECIONADOS"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:39
 msgid "UP"
@@ -1010,8 +1007,8 @@ msgstr "-NÃO DEFINIDO-"
 #, c-format
 msgid "HOLD FOR %iS TO SKIP"
 msgid_plural "SEGURE POR %iS PARA PASSAR"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "SEGURE POR %i SEG PARA PASSAR"
+msgstr[1] "SEGURE POR %i SEGS PARA PASSAR"
 
 # Config controllers missing translation
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiInputConfig.cpp:251
@@ -1038,8 +1035,8 @@ msgstr "CONFIGURAÇÃO DOS CONTROLES"
 #, c-format
 msgid "%i GAMEPAD DETECTED"
 msgid_plural "%i CONTROLES DETECTADOS"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i CONTROLE DETECTADO"
+msgstr[1] "%i CONTROLES DETECTADOS"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:42
 msgid "NO GAMEPADS DETECTED"
@@ -1054,9 +1051,8 @@ msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "APERTE F4 PARA SAIR A QUALQUER MOMENTO"
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/guis/GuiDetectDevice.cpp:50
-#, fuzzy
 msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "APERTE ESC PARA CANCELAR"
+msgstr "APERTE ESC OU HOTKEY PARA CANCELAR."
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/Window.cpp:141
 msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
@@ -1067,9 +1063,8 @@ msgid "LOADING..."
 msgstr "CARREGANDO..."
 
 #: /home/nicolas/dev/recalbox4/recalbox-emulationstation-pc/es-core/src/Window.cpp:374
-#, fuzzy
 msgid "PLEASE WAIT..."
-msgstr "DATA DE LANÇAMENTO"
+msgstr "POR FAVOR, AGUARDE..."
 
 #~ msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
 #~ msgstr "ATUALIZAÇÃO COMPLETA, O SISTEMA SERÁ REINICIADO"
@@ -1249,21 +1244,17 @@ msgstr "DATA DE LANÇAMENTO"
 #~ msgid "enter favorite"
 #~ msgstr "entrar favoritos"
 
-#, fuzzy
 #~ msgid " GAME AVAILABLE"
 #~ msgstr " JOGOS DISPONÍVEIS"
 
-#, fuzzy
 #~ msgid "FAVORITES"
 #~ msgstr "FAVORITOS"
 
-#, fuzzy
 #~ msgid "ENTER REGION"
-#~ msgstr "DIGITE A PONTUAÇÃO"
+#~ msgstr "DIGITE A REGIÃO DO JOGO"
 
-#, fuzzy
 #~ msgid "ENTER ROMTYPE"
-#~ msgstr "DIGITE A PONTUAÇÃO"
+#~ msgstr "DIGITE O ROMTYPE"
 
 #~ msgid "HOLD FOR "
 #~ msgstr "APERTE POR"
