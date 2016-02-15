@@ -183,7 +183,7 @@ std::vector<std::string> getMp3in(const std::string &path) {
         return all_matching_files;
     }
     const std::string target_path(path);
-    const boost::regex my_filter(".*\\.ogg");
+    const boost::regex my_filter(".*\\.mp3");
 
 
     boost::filesystem::directory_iterator end_itr; // Default ctor yields past-the-end
