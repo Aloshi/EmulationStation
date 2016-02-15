@@ -72,19 +72,20 @@ void Music::deinitMusic()
         }
 }
 
-void Music::play()
+void Music::play(bool repeat, void (* callback)())
 {
     if(music == NULL)
-		return;
-	if(!(RecalboxConf::getInstance()->get("audio.bgmusic") == "1"))
 		return;
 	if (!playing)
 	{
 		playing = true;
 	}
     LOG(LogInfo) << "playing";
-    if(Mix_FadeInMusic(music, -1, 1000) == -1){
+    if(Mix_FadeInMusic(music, repeat ? -1 : 1, 1000) == -1){
         LOG(LogInfo) << "Mix_PlayMusic: " << Mix_GetError();
-    }else {
+		return;
     }
+	if(!repeat){
+		Mix_HookMusicFinished(callback);
+	}
 }

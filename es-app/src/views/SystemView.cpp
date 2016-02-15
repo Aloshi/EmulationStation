@@ -189,10 +189,10 @@ void SystemView::update(int deltaTime)
 void SystemView::onCursorChanged(const CursorState& state)
 {
     
-        if(lastSystem != getSelected()){
-                lastSystem = getSelected();
-                AudioManager::getInstance()->startMusic(getSelected()->getTheme());
-        }
+	if(lastSystem != getSelected()){
+		lastSystem = getSelected();
+		AudioManager::getInstance()->themeChanged(getSelected()->getTheme());
+	}
 	// update help style
 	updateHelpPrompts();
 

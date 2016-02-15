@@ -82,7 +82,7 @@ void ViewController::goToNextGameList()
 	while(next->getRootFolder()->getChildren().size() == 0) {
 		next = next->getNext();
 	}
-	AudioManager::getInstance()->startMusic(system->getNext()->getTheme());
+	AudioManager::getInstance()->themeChanged(system->getNext()->getTheme());
 
 	goToGameList(next);
 }
@@ -96,7 +96,7 @@ void ViewController::goToPrevGameList()
 	while(prev->getRootFolder()->getChildren().size() == 0) {
 		prev = prev->getPrev();
 	}
-	AudioManager::getInstance()->startMusic(prev->getTheme());
+	AudioManager::getInstance()->themeChanged(prev->getTheme());
 	goToGameList(prev);
 }
 
