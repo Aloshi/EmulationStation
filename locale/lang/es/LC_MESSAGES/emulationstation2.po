@@ -290,9 +290,8 @@ msgstr "MANTÉN PULSADO UN BOTÓN DEL MANDO PARA CONFIGURARLO"
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "PULSA F4 PARA SALIR EN CUALQUIER MOMENTO"
 
-#, fuzzy
 msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "PULSA ESC PARA CANCELAR"
+msgstr "PULSA ESC O EL BOTÓN HOTKEY PARA CANCELAR"
 
 #: es-core/src/guis/GuiInputConfig.cpp
 msgid "CONFIGURING"
@@ -588,38 +587,32 @@ msgstr ""
 "SE VA A BORRAR EL ARCHIVO\n"
 "¿ESTÁS SEGURO?"
 
-#, fuzzy
 msgid " GAME AVAILABLE"
 msgstr " JUEGOS DISPONIBLES"
 
 msgid "UPDATE GAMES LISTS"
-msgstr ""
+msgstr "ACUTALIZAR LA LISTA DE JUEGOS"
 
-#, fuzzy
 msgid "REALLY UPDATE GAMES LISTS ?"
-msgstr "¿QUIERES ACTUALIZAR EL SISTEMA?"
+msgstr "¿QUIERES ACTUALIZAR EL LISTADO DE JUEGOS?"
 
 msgid "EMULATOR"
-msgstr ""
+msgstr "EMULADOR"
 
-#, fuzzy
 msgid "FAVORITES"
-msgstr "FAVORITO"
+msgstr "FAVORITOS"
 
 msgid "HIDDEN"
-msgstr ""
+msgstr "OCULTOS"
 
-#, fuzzy
 msgid "ENTER REGION"
-msgstr "INTRODUCE LA CALIFICACIÓN"
+msgstr "INTRODUCE LA REGIÓN"
 
-#, fuzzy
 msgid "ENTER ROMTYPE"
-msgstr "INTRODUCE LA CALIFICACIÓN"
+msgstr "INTRODUCE EL TIPO DE ROM"
 
-#, fuzzy
 msgid "STORAGE DEVICE"
 msgstr "ALMACENAMIENTO"
 
 msgid "AUTO SAVE/LOAD"
-msgstr ""
+msgstr "GUARDAR/SALVAR AUTOMÁTICAMENTE"
