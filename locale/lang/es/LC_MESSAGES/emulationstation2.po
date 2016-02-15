@@ -2,604 +2,76 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-14 17:14+0100\n"
+"POT-Creation-Date: 2016-02-15 18:22+0100\n"
 "PO-Revision-Date: 201-02-15 06:00+0100\n"
 "Last-Translator: Antonio López Abad <mrpengo@gmail.com>\n"
-"Language-Team: SPANISH\n"
-"Language: es\n"
+"Language: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ../es-app/src/guis/GuiGameScraper.cpp:42
-#: ../es-app/src/guis/GuiScraperMulti.cpp:52
-msgid "INPUT"
-msgstr "EDITAR"
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "HAY UNA ACTUALIZACIÓN DISPONIBLE PARA TU RECALBOX"
 
-#: ../es-app/src/guis/GuiGameScraper.cpp:42
-#: ../es-app/src/guis/GuiScraperMulti.cpp:52
-msgid "search"
-msgstr "buscar"
-
-#: ../es-app/src/guis/GuiGameScraper.cpp:46
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:189
-#: ../es-app/src/components/FileSystemSelectorComponent.cpp:179
-#: ../es-app/src/components/ScraperSearchComponent.cpp:280
-#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
 msgid "CANCEL"
 msgstr "CANCELAR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:82
-msgid "MAIN MENU"
-msgstr "MENÚ PRINCIPAL"
+msgid "Rating"
+msgstr "Calificación"
 
-#: ../es-app/src/guis/GuiMenu.cpp:96
-msgid "KODI MEDIA CENTER"
-msgstr "KODI MEDIA CENTER"
+msgid "Released"
+msgstr "Lanzamiento"
 
-#: ../es-app/src/guis/GuiMenu.cpp:111 ../es-app/src/guis/GuiMenu.cpp:115
-msgid "SYSTEM SETTINGS"
-msgstr "CONFIGURACIÓN DEL SISTEMA"
+msgid "Developer"
+msgstr "Desarrollador"
 
-#: ../es-app/src/guis/GuiMenu.cpp:120
-msgid "VERSION"
-msgstr "VERSIÓN"
+msgid "Publisher"
+msgstr "Editor"
 
-#: ../es-app/src/guis/GuiMenu.cpp:126
-msgid "SPACE LEFT"
-msgstr "ESPACIO DISPONIBLE"
+msgid "Genre"
+msgstr "Género"
 
-#: ../es-app/src/guis/GuiMenu.cpp:132 ../es-app/src/guis/GuiMenu.cpp:147
-msgid "STORAGE DEVICE"
-msgstr "ALMACENAMIENTO"
+msgid "Players"
+msgstr "Jugadores"
 
-#: ../es-app/src/guis/GuiMenu.cpp:151 ../es-app/src/guis/GuiMenu.cpp:166
-msgid "LANGUAGE"
-msgstr "IDIOMA"
+msgid "NO GAMES FOUND - SKIP"
+msgstr "NO SE ENCONTRARON JUEGOS - SALTAR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:169 ../es-app/src/guis/GuiMenu.cpp:188
-msgid "OVERCLOCK"
-msgstr "OVERCLOCK"
+msgid "RETRY"
+msgstr "REINTENTAR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:174 ../es-app/src/guis/GuiMenu.cpp:180
-msgid "EXTREM (1100Mhz)"
-msgstr "EXTREMO (1100Mhz)"
-
-#: ../es-app/src/guis/GuiMenu.cpp:175
-msgid "TURBO (1000Mhz)"
-msgstr "TURBO (1000Mhz)"
-
-#: ../es-app/src/guis/GuiMenu.cpp:176
-msgid "HIGH (950Mhz)"
-msgstr "ALTO (950Mhz)"
-
-#: ../es-app/src/guis/GuiMenu.cpp:177
-msgid "NONE (700Mhz)"
-msgstr "NINGUNO (700Mhz)"
-
-#: ../es-app/src/guis/GuiMenu.cpp:181
-msgid "TURBO (1050Mhz)+"
-msgstr "TURBO (1050Mhz)+"
-
-#: ../es-app/src/guis/GuiMenu.cpp:182
-msgid "HIGH (1050Mhz)"
-msgstr "HIGH (1050Mhz)"
-
-#: ../es-app/src/guis/GuiMenu.cpp:183
-msgid "NONE (900Mhz)"
-msgstr "NINGUNO (900Mhz)"
-
-#: ../es-app/src/guis/GuiMenu.cpp:186 ../es-app/src/guis/GuiMenu.cpp:334
-msgid "NONE"
-msgstr "NINGUNO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:194 ../es-app/src/guis/GuiMenu.cpp:223
-msgid "UPDATES"
-msgstr "ACTUALIZACIONES"
-
-#: ../es-app/src/guis/GuiMenu.cpp:199
-msgid "AUTO UPDATES"
-msgstr "ACTUALIZACIONES AUTOMÁTICAS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:206
-msgid "START UPDATE"
-msgstr "EMPEZAR LA ACTUALIZACIÓN"
-
-#: ../es-app/src/guis/GuiMenu.cpp:236 ../es-app/src/guis/GuiMenu.cpp:259
-msgid "KODI SETTINGS"
-msgstr "COFIGURACIÓN DE KODI"
-
-#: ../es-app/src/guis/GuiMenu.cpp:239
-msgid "ENABLE KODI"
-msgstr "ACTIVAR KODI"
-
-#: ../es-app/src/guis/GuiMenu.cpp:243
-msgid "KODI AT START"
-msgstr "LANZAR KODI AL ARRANCAR"
-
-#: ../es-app/src/guis/GuiMenu.cpp:246
-msgid "START KODI WITH X"
-msgstr "PULSAR X PARA LANZAR KODI"
-
-#: ../es-app/src/guis/GuiMenu.cpp:288
-msgid "THE SYSTEM WILL NOW REBOOT"
-msgstr "EL SISTEMA VA A REINICIARSE"
-
-#: ../es-app/src/guis/GuiMenu.cpp:288 ../es-app/src/guis/GuiMenu.cpp:889
-#: ../es-app/src/guis/GuiMenu.cpp:911 ../es-app/src/guis/GuiMenu.cpp:914
-#: ../es-app/src/guis/GuiMenu.cpp:918 ../es-app/src/guis/GuiMenu.cpp:967
-#: ../es-app/src/guis/GuiUpdate.cpp:72 ../es-app/src/guis/GuiUpdate.cpp:81
-#: ../es-app/src/guis/GuiUpdate.cpp:92 ../es-app/src/guis/GuiUpdate.cpp:103
-#: ../es-app/src/guis/GuiScraperMulti.cpp:159 ../es-app/src/main.cpp:322
-#: ../es-core/src/guis/GuiInputConfig.cpp:170
-msgid "OK"
-msgstr "OK"
-
-#: ../es-app/src/guis/GuiMenu.cpp:303 ../es-app/src/guis/GuiMenu.cpp:305
-msgid "GAMES SETTINGS"
-msgstr "CONFIGURACIÓN DE JUEGO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:308 ../es-app/src/guis/GuiMenu.cpp:830
-#: ../es-app/src/guis/GuiMenu.cpp:1137
-msgid "GAME RATIO"
-msgstr "RELACIÓN DE ASPECTO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:313 ../es-app/src/guis/GuiMenu.cpp:834
-msgid "SMOOTH GAMES"
-msgstr "SUAVIZAR LOS JUEGOS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:318 ../es-app/src/guis/GuiMenu.cpp:839
-msgid "REWIND"
-msgstr "REBOBINAR"
-
-#: ../es-app/src/guis/GuiMenu.cpp:323 ../es-app/src/guis/GuiMenu.cpp:844
-msgid "AUTO SAVE/LOAD"
-msgstr "GUARDAR/CARGAR AUTOMÁTICAMENTE"
-
-#: ../es-app/src/guis/GuiMenu.cpp:327 ../es-app/src/guis/GuiMenu.cpp:337
-msgid "SHADERS SET"
-msgstr "JUEGO DE SHADERS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:335
-msgid "SCANLINES"
-msgstr "LINEAS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:336
-msgid "RETRO"
-msgstr "RETRO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:343 ../es-app/src/guis/GuiMenu.cpp:361
-msgid "RETROACHIEVEMENTS SETTINGS"
-msgstr "CONFIGURACIÓN DE RETROACHIEVEMENTS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:347
-msgid "RETROACHIEVEMENTS"
-msgstr "RETROACHIEVEMENTS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:350
-msgid "USERNAME"
-msgstr "USUARIO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:351
-msgid "PASSWORD"
-msgstr "CONTRASEÑA"
-
-#: ../es-app/src/guis/GuiMenu.cpp:375 ../es-app/src/guis/GuiMenu.cpp:399
-msgid "ADVANCED"
-msgstr "AVANZADO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:419
-msgid "REALLY UPDATE GAMES LISTS ?"
-msgstr "¿QUIERES ACTUALIZAR LAS LISTAS DE JUEGOS?"
-
-#: ../es-app/src/guis/GuiMenu.cpp:419 ../es-app/src/guis/GuiMenu.cpp:720
-#: ../es-app/src/guis/GuiMenu.cpp:734 ../es-app/src/guis/GuiUpdate.cpp:56
-#: ../es-app/src/guis/GuiScraperStart.cpp:52
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:291
-#: ../es-app/src/views/SystemView.cpp:148
-#: ../es-app/src/views/SystemView.cpp:161 ../es-core/src/Window.cpp:141
-msgid "YES"
-msgstr "SÍ"
-
-#: ../es-app/src/guis/GuiMenu.cpp:434 ../es-app/src/guis/GuiMenu.cpp:726
-#: ../es-app/src/guis/GuiMenu.cpp:740 ../es-app/src/guis/GuiUpdate.cpp:62
-#: ../es-app/src/guis/GuiScraperStart.cpp:53
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:295 ../es-app/src/MetaData.cpp:27
-#: ../es-app/src/MetaData.cpp:30 ../es-app/src/MetaData.cpp:38
-#: ../es-app/src/views/SystemView.cpp:153
-#: ../es-app/src/views/SystemView.cpp:167 ../es-core/src/Window.cpp:147
-msgid "NO"
-msgstr "NO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:437
-msgid "UPDATE GAMES LISTS"
-msgstr "ACTUALIZAR LISTAS DE JUEGOS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:447 ../es-app/src/guis/GuiMenu.cpp:878
-msgid "CONTROLLERS SETTINGS"
-msgstr "CONFIGURACIÓN DE MANDOS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:451 ../es-app/src/guis/GuiMenu.cpp:453
-msgid "UI SETTINGS"
-msgstr "CONFIGURACIÓN DE LA INTERFAZ"
-
-#: ../es-app/src/guis/GuiMenu.cpp:458
-msgid "OVERSCAN"
-msgstr "OVERSCAN"
-
-#: ../es-app/src/guis/GuiMenu.cpp:469
-msgid "SCREENSAVER AFTER"
-msgstr "SALVAPANTALLAS A LOS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:477 ../es-app/src/guis/GuiMenu.cpp:516
-#: ../es-app/src/guis/GuiMenu.cpp:523
-msgid "TRANSITION STYLE"
-msgstr "TIPO DE TRANSICIÓN"
-
-#: ../es-app/src/guis/GuiMenu.cpp:485
-msgid "SCREENSAVER BEHAVIOR"
-msgstr "COMPORTAMIENTO DEL SALVAPANTALLAS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:493
-msgid "SHOW FRAMERATE"
-msgstr "MOSTRAR LA TASA DE REFRESCO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:500
-msgid "ON-SCREEN HELP"
-msgstr "AYUDA EN PANTALLA"
-
-#: ../es-app/src/guis/GuiMenu.cpp:509
-msgid "QUICK SYSTEM SELECT"
-msgstr "SELECCIÓN RÁPIDA DE SISTEMA"
-
-#: ../es-app/src/guis/GuiMenu.cpp:536 ../es-app/src/guis/GuiMenu.cpp:540
-msgid "THEME SET"
-msgstr "TEMA"
-
-#: ../es-app/src/guis/GuiMenu.cpp:559 ../es-app/src/guis/GuiMenu.cpp:561
-msgid "SOUND SETTINGS"
-msgstr "CONFIGURACIÓN DE AUDIO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:566
-msgid "SYSTEM VOLUME"
-msgstr "VOLUMEN DEL SISTEMA"
-
-#: ../es-app/src/guis/GuiMenu.cpp:571
-msgid "FRONTEND MUSIC"
-msgstr "MÚSICA DE FONDO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:573 ../es-app/src/guis/GuiMenu.cpp:584
-msgid "OUTPUT DEVICE"
-msgstr "SALIDA DE AUDIO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:579
-msgid "HDMI"
-msgstr "HDMI"
-
-#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:580
-msgid "JACK"
-msgstr "JACK"
-
-#: ../es-app/src/guis/GuiMenu.cpp:581 ../es-app/src/guis/GuiMenu.cpp:1144
-msgid "AUTO"
-msgstr "AUTO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:607 ../es-app/src/guis/GuiMenu.cpp:611
-msgid "NETWORK SETTINGS"
-msgstr "CONFIGURACIÓN DE RED"
-
-#: ../es-app/src/guis/GuiMenu.cpp:613
-msgid "CONNECTED"
-msgstr "CONECTADO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:614
-msgid "NOT CONNECTED"
-msgstr "NO CONECTADO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:616
-msgid "STATUS"
-msgstr "ESTADO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:619
-msgid "IP ADDRESS"
-msgstr "DIRECCIÓN IP"
-
-#: ../es-app/src/guis/GuiMenu.cpp:621
-msgid "HOSTNAME"
-msgstr "NOMBRE DE EQUIPO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:627
-msgid "ENABLE WIFI"
-msgstr "ACTIVAR EL WIFI"
-
-#: ../es-app/src/guis/GuiMenu.cpp:631
-msgid "WIFI SSID"
-msgstr "SSID WIFI"
-
-#: ../es-app/src/guis/GuiMenu.cpp:633
-msgid "WIFI KEY"
-msgstr "CLAVE WIFI"
-
-#: ../es-app/src/guis/GuiMenu.cpp:647
-msgid "WIFI ENABLED"
-msgstr "WIFI ACTIVADO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:651
-msgid "WIFI CONFIGURATION ERROR"
-msgstr "ERROR DE CONFIGURACIÓN WIFI"
-
-#: ../es-app/src/guis/GuiMenu.cpp:667 ../es-app/src/guis/GuiMenu.cpp:669
-msgid "SCRAPER"
-msgstr "SCRAPER"
-
-#: ../es-app/src/guis/GuiMenu.cpp:672 ../es-app/src/guis/GuiMenu.cpp:678
-msgid "SCRAPE FROM"
-msgstr "OBTENER DATOS DE"
-
-#: ../es-app/src/guis/GuiMenu.cpp:686
-msgid "SCRAPE RATINGS"
-msgstr "OBTENER CALIFICACIONES"
-
-#: ../es-app/src/guis/GuiMenu.cpp:700
-#: ../es-app/src/guis/GuiScraperStart.cpp:12
-msgid "SCRAPE NOW"
-msgstr "OBTENER DATOS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:712 ../es-app/src/guis/GuiMenu.cpp:714
-#: ../es-app/src/views/SystemView.cpp:143 ../es-app/src/main.cpp:306
-msgid "QUIT"
-msgstr "SALIR"
-
-#: ../es-app/src/guis/GuiMenu.cpp:720 ../es-app/src/views/SystemView.cpp:148
-msgid "REALLY RESTART?"
-msgstr "¿REINICIAR?"
-
-#: ../es-app/src/guis/GuiMenu.cpp:728 ../es-app/src/views/SystemView.cpp:155
-msgid "RESTART SYSTEM"
-msgstr "REINICIAR EL SISTEMA"
-
-#: ../es-app/src/guis/GuiMenu.cpp:734 ../es-app/src/views/SystemView.cpp:161
-msgid "REALLY SHUTDOWN?"
-msgstr "¿APAGAR?"
-
-#: ../es-app/src/guis/GuiMenu.cpp:742 ../es-app/src/views/SystemView.cpp:169
-msgid "SHUTDOWN SYSTEM"
-msgstr "APAGAR EL SISTEMA"
-
-#: ../es-app/src/guis/GuiMenu.cpp:809 ../es-app/src/MetaData.cpp:15
-msgid "Emulator"
-msgstr "Emulador"
-
-#: ../es-app/src/guis/GuiMenu.cpp:812 ../es-app/src/guis/GuiMenu.cpp:825
-#: ../es-app/src/MetaData.cpp:16
-msgid "Core"
-msgstr "Nucleo"
-
-#: ../es-app/src/guis/GuiMenu.cpp:885
-msgid ""
-"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
-"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
-"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
-"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
-"SNES CONTROLLER."
-msgstr ""
-"VAS A CONFIGURAR UN MANDO. SI SOLO TIENES UN JOYSTICK CONFIGURA LAS "
-"DIRECCIONES E IGNORA LAS CONFIGURACIÓN DE JOYSTICK MANTENIENDO PRESIONADO UN BOTÓN. "
-" SI NO TIENES UN BOTÓN ESPECIAL PARA LA HOTKEY UTILIZA EL SELECT. IGNORA LOS "
-"BOTONES QUE NO EXISTAN EN TU MANDO MANTENIENDO UNA TECLA PULSADA. "
-"LOS NOMBRES DE LOS BOTONES SE BASAN EN EL MANDO DE LA SNES."
-
-#: ../es-app/src/guis/GuiMenu.cpp:901
-msgid "CONFIGURE A CONTROLLER"
-msgstr "CONFIGURAR UN MANDO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:911
-msgid "CONTROLLER PAIRED"
-msgstr "MANDO EMPAREJADO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:911
-msgid "UNABLE TO PAIR CONTROLLER"
-msgstr "NO SE PUEDE EMPAREJAR EL MANDO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:914
-msgid "AN ERROR OCCURED"
-msgstr "OCURRIÓ UN ERROR"
-
-#: ../es-app/src/guis/GuiMenu.cpp:918
-msgid "NO CONTROLLERS FOUND"
-msgstr "NO SE DETECTÓ NINGUN MANDO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:920 ../es-app/src/guis/GuiMenu.cpp:958
-msgid "PAIR A BLUETOOTH CONTROLLER"
-msgstr "EMPAREJAR UN MANDO BLUETOOTH"
-
-#: ../es-app/src/guis/GuiMenu.cpp:967
-msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
-msgstr "LOS EMPAREJAMIENTOS HAN SIDO BORRADOS"
-
-#: ../es-app/src/guis/GuiMenu.cpp:970
-msgid "FORGET BLUETOOTH CONTROLLERS"
-msgstr "DESEMPAREJAR MANDOS BLUETOOTH"
-
-#: ../es-app/src/guis/GuiMenu.cpp:994
-#, c-format
-msgid "INPUT P%i"
-msgstr "ENTRADA P%i"
-
-#: ../es-app/src/guis/GuiMenu.cpp:1129 ../es-app/src/views/SystemView.cpp:388
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:331
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:158
-#: ../es-core/src/components/ComponentList.cpp:332
-#: ../es-core/src/components/ComponentGrid.cpp:449
-#: ../es-core/src/components/ComponentGrid.cpp:451
-#: ../es-core/src/components/ComponentGrid.cpp:453
-msgid "CHOOSE"
-msgstr "CAMBIAR"
-
-#: ../es-app/src/guis/GuiMenu.cpp:1130 ../es-app/src/views/SystemView.cpp:389
-#: ../es-core/src/components/ImageComponent.cpp:330
-#: ../es-core/src/components/OptionListComponent.h:345
-msgid "SELECT"
-msgstr "SELECCIONAR"
-
-#: ../es-app/src/guis/GuiMenu.cpp:1131
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:158
-#: ../es-app/src/guis/GuiScraperStart.cpp:126
-#: ../es-app/src/guis/GuiSettings.cpp:58
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:318
-msgid "CLOSE"
-msgstr "CERRAR"
-
-#: ../es-app/src/guis/GuiMenu.cpp:1143
-msgid "CUSTOM"
-msgstr "PERSONALIZADO"
-
-#: ../es-app/src/guis/GuiMenu.cpp:1145
-msgid "4/3"
-msgstr "4/3"
-
-#: ../es-app/src/guis/GuiMenu.cpp:1146
-msgid "16/9"
-msgstr "16/9"
-
-#: ../es-app/src/guis/GuiUpdate.cpp:56
-msgid "REALLY UPDATE?"
-msgstr "¿QUIERES ACTUALIZAR EL SISTEMA?"
-
-#: ../es-app/src/guis/GuiUpdate.cpp:72
-msgid "NETWORK CONNECTION NEEDED"
-msgstr "SE NECESITA UNA CONEXIÓN DE RED"
-
-#: ../es-app/src/guis/GuiUpdate.cpp:81
-msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
-msgstr "ACTUALIZACIÓN DESCARGADA. EL SISTEMA SE REINICIARÁ"
-
-#: ../es-app/src/guis/GuiUpdate.cpp:92
-msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
-msgstr "ACTUALIZACIÓN FALLIDA. EL SISTEMA SE REINICIARÁ"
-
-#: ../es-app/src/guis/GuiUpdate.cpp:103
-msgid "NO UPDATE AVAILABLE"
-msgstr "NO HAY ACTUALIZACIONES DISPONIBLES"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:13
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:336
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:163
-msgid "OPTIONS"
-msgstr "OPCIONES"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:22
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:27
-msgid "JUMP TO LETTER"
-msgstr "IR A LA LETRA"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:44
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:51
-msgid "SORT GAMES BY"
-msgstr "ORDENAR LOS JUEGOS POR"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:55
-msgid "FAVORITES ONLY"
-msgstr "SOLO FAVORITOS"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:62
-msgid "EDIT THIS GAME'S METADATA"
-msgstr "EDITAR LOS DATOS DE ESTE JUEGO"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:17
-msgid "SCRAPE THESE GAMES"
-msgstr "OBTENER DATOS DE ESTOS JUEGOS"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:18
-msgid "All Games"
-msgstr "Todos los juegos"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:20
-msgid "Only missing image"
-msgstr "Solo imágenes faltantes"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:22
-msgid "FILTER"
-msgstr "FILTRO"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:25
-msgid "SCRAPE THESE SYSTEMS"
-msgstr "OBTENER DATOS DE ESTOS SISTEMAS"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:31
-msgid "SYSTEMS"
-msgstr "SISTEMAS"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:35
-msgid "USER DECIDES ON CONFLICTS"
-msgstr "DECIDIR EN CASO DE CONFLICTO"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:37
-msgid "START"
-msgstr "INICIO"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:38
-#: ../es-app/src/guis/GuiScraperStart.cpp:125
-#: ../es-app/src/guis/GuiSettings.cpp:11 ../es-app/src/guis/GuiSettings.cpp:57
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:317
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:333
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:69
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:160
-#: ../es-core/src/components/OptionListComponent.h:98
-#: ../es-core/src/components/OptionListComponent.h:139
-msgid "BACK"
-msgstr "VOLVER"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:51
-msgid ""
-"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
-"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
-"CONTINUE ANYWAY?"
-msgstr ""
-"CUIDADO: ALGUNOS DE LOS SISTEMAS SELECCIONADOS NO TIENE UNA PLATAFORMA DEFINIDA. "
-"¡LOS RESULTADOS PODRÍAN SER MÁS INCORRECTOS DE LO HABITUAL!\n"
-"¿EJECUTAR IGUALMENTE?"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:68
-msgid "NO GAMES FIT THAT CRITERIA."
-msgstr "NINGÚN JUEGO SE AJUSTA AL CRITERIO."
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:32
-msgid "SCRAPING IN PROGRESS"
-msgstr "OBTENCIÓN DE DATOS EN CURSO"
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:35
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:329
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:157
-msgid "SYSTEM"
-msgstr "SISTEMA"
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:38
-msgid "subtitle text"
-msgstr "subtítulo"
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:57
-#: ../es-app/src/components/ScraperSearchComponent.cpp:279
 msgid "SKIP"
 msgstr "SALTAR"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "SEARCH FOR"
+msgstr "BUSCAR POR"
+
+msgid "SCRAPING IN PROGRESS"
+msgstr "OBTENCIÓN DE DATOS EN CURSO"
+
+msgid "SYSTEM"
+msgstr "SISTEMA"
+
+msgid "subtitle text"
+msgstr "subtítulo"
+
+msgid "INPUT"
+msgstr "EDITAR"
+
+msgid "search"
+msgstr "buscar"
+
 msgid "STOP"
 msgstr "PARAR"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:63
 msgid "stop (progress saved)"
 msgstr "parar (progreso guardado)"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:107
 #, c-format
 msgid "GAME %i OF %i"
 msgstr "JUEGO %i DE %i"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:141
 msgid ""
 "WE CAN'T FIND ANY SYSTEMS!\n"
 "CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
@@ -608,38 +80,36 @@ msgid ""
 "VISIT RECALBOX.FR FOR MORE INFORMATION."
 msgstr ""
 "¡NO SE HA ENCONTRADO NINGÚN SISTEMA!\n"
-"COMPRUEBA QUE LAS RUTAS EN EL ARCHIVO DE CONFIGURACIÓN DE SISTEMAS SON CORRECTAS "
-"Y QUE TU DIRECTORIO DE JUEGOS CONTIENE AL MENOS UNO CON LA EXTENSIÓN CORRECTA.\n"
+"COMPRUEBA QUE LAS RUTAS EN EL ARCHIVO DE CONFIGURACIÓN DE SISTEMAS SON "
+"CORRECTAS Y QUE TU DIRECTORIO DE JUEGOS CONTIENE AL MENOS UNO CON LA "
+"EXTENSIÓN CORRECTA.\n"
 "\n"
 "VISITA RECALBOX.FR PARA OBTENER MÁS INFORMACIÓN"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:149
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
 msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
 msgstr[0] "¡%i JUEGO OBTENIDO CORRECTAMENTE!"
 msgstr[1] "¡%i JUEGOS OBTENIDOS CORRECTAMENTE!"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:153
 #, c-format
 msgid "%i GAME SKIPPED."
 msgid_plural "%i GAMES SKIPPED."
 msgstr[0] "%i JUEGO IGNORADO."
 msgstr[1] "%i JUEGOS IGNORADOS."
 
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:37
+msgid "OK"
+msgstr "OK"
+
 msgid "EDIT METADATA"
 msgstr "EDITAR LOS DATOS"
 
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:183
 msgid "SCRAPE"
 msgstr "OBTENER"
 
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:185
 msgid "SAVE"
 msgstr "GUARDAR"
 
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
 msgid ""
 "THIS WILL DELETE A FILE!\n"
 "ARE YOU SURE?"
@@ -647,444 +117,662 @@ msgstr ""
 "SE VA A BORRAR EL ARCHIVO\n"
 "¿ESTÁS SEGURO?"
 
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:201
+msgid "YES"
+msgstr "SÍ"
+
+msgid "NO"
+msgstr "NO"
+
 msgid "DELETE"
 msgstr "BORRAR"
 
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:290
 msgid "SAVE CHANGES?"
 msgstr "¿GUARDAR LOS CAMBIOS?"
 
-#: ../es-app/src/NetworkThread.cpp:38
-msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
-msgstr "HAY UNA ACTUALIZACIÓN DISPONIBLE PARA TU RECALBOX"
+msgid "BACK"
+msgstr "VOLVER"
 
-#: ../es-app/src/MetaData.cpp:15
+msgid "CLOSE"
+msgstr "CERRAR"
+
+msgid "MAIN MENU"
+msgstr "MENÚ PRINCIPAL"
+
+msgid "KODI MEDIA CENTER"
+msgstr "KODI MEDIA CENTER"
+
+msgid "SYSTEM SETTINGS"
+msgstr "CONFIGURACIÓN DEL SISTEMA"
+
+msgid "VERSION"
+msgstr "VERSIÓN"
+
+msgid "SPACE LEFT"
+msgstr "ESPACIO DISPONIBLE"
+
+msgid "STORAGE DEVICE"
+msgstr "ALMACENAMIENTO"
+
+msgid "LANGUAGE"
+msgstr "IDIOMA"
+
+msgid "OVERCLOCK"
+msgstr "OVERCLOCK"
+
+msgid "EXTREM (1100Mhz)"
+msgstr "EXTREMO (1100Mhz)"
+
+msgid "TURBO (1000Mhz)"
+msgstr "TURBO (1000Mhz)"
+
+msgid "HIGH (950Mhz)"
+msgstr "ALTO (950Mhz)"
+
+msgid "NONE (700Mhz)"
+msgstr "NINGUNO (700Mhz)"
+
+msgid "TURBO (1050Mhz)+"
+msgstr "TURBO (1050Mhz)+"
+
+msgid "HIGH (1050Mhz)"
+msgstr "HIGH (1050Mhz)"
+
+msgid "NONE (900Mhz)"
+msgstr "NINGUNO (900Mhz)"
+
+msgid "NONE"
+msgstr "NINGUNO"
+
+msgid "UPDATES"
+msgstr "ACTUALIZACIONES"
+
+msgid "AUTO UPDATES"
+msgstr "ACTUALIZACIONES AUTOMÁTICAS"
+
+msgid "START UPDATE"
+msgstr "EMPEZAR LA ACTUALIZACIÓN"
+
+msgid "KODI SETTINGS"
+msgstr "COFIGURACIÓN DE KODI"
+
+msgid "ENABLE KODI"
+msgstr "ACTIVAR KODI"
+
+msgid "KODI AT START"
+msgstr "LANZAR KODI AL ARRANCAR"
+
+msgid "START KODI WITH X"
+msgstr "PULSAR X PARA LANZAR KODI"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "EL SISTEMA VA A REINICIARSE"
+
+msgid "GAMES SETTINGS"
+msgstr "CONFIGURACIÓN DE JUEGO"
+
+msgid "GAME RATIO"
+msgstr "RELACIÓN DE ASPECTO"
+
+msgid "SMOOTH GAMES"
+msgstr "SUAVIZAR LOS JUEGOS"
+
+msgid "REWIND"
+msgstr "REBOBINAR"
+
+msgid "AUTO SAVE/LOAD"
+msgstr "GUARDAR/CARGAR AUTOMÁTICAMENTE"
+
+msgid "SHADERS SET"
+msgstr "JUEGO DE SHADERS"
+
+msgid "SCANLINES"
+msgstr "LINEAS"
+
+msgid "RETRO"
+msgstr "RETRO"
+
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr "CONFIGURACIÓN DE RETROACHIEVEMENTS"
+
+msgid "RETROACHIEVEMENTS"
+msgstr "RETROACHIEVEMENTS"
+
+msgid "USERNAME"
+msgstr "USUARIO"
+
+msgid "PASSWORD"
+msgstr "CONTRASEÑA"
+
+msgid "ADVANCED"
+msgstr "AVANZADO"
+
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "¿QUIERES ACTUALIZAR LAS LISTAS DE JUEGOS?"
+
+msgid "UPDATE GAMES LISTS"
+msgstr "ACTUALIZAR LISTAS DE JUEGOS"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "CONFIGURACIÓN DE MANDOS"
+
+msgid "UI SETTINGS"
+msgstr "CONFIGURACIÓN DE LA INTERFAZ"
+
+msgid "OVERSCAN"
+msgstr "OVERSCAN"
+
+msgid "SCREENSAVER AFTER"
+msgstr "SALVAPANTALLAS A LOS"
+
+msgid "TRANSITION STYLE"
+msgstr "TIPO DE TRANSICIÓN"
+
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "COMPORTAMIENTO DEL SALVAPANTALLAS"
+
+msgid "SHOW FRAMERATE"
+msgstr "MOSTRAR LA TASA DE REFRESCO"
+
+msgid "ON-SCREEN HELP"
+msgstr "AYUDA EN PANTALLA"
+
+msgid "QUICK SYSTEM SELECT"
+msgstr "SELECCIÓN RÁPIDA DE SISTEMA"
+
+msgid "THEME SET"
+msgstr "TEMA"
+
+msgid "SOUND SETTINGS"
+msgstr "CONFIGURACIÓN DE AUDIO"
+
+msgid "SYSTEM VOLUME"
+msgstr "VOLUMEN DEL SISTEMA"
+
+msgid "FRONTEND MUSIC"
+msgstr "MÚSICA DE FONDO"
+
+msgid "OUTPUT DEVICE"
+msgstr "SALIDA DE AUDIO"
+
+msgid "HDMI"
+msgstr "HDMI"
+
+msgid "JACK"
+msgstr "JACK"
+
+msgid "AUTO"
+msgstr "AUTO"
+
+msgid "NETWORK SETTINGS"
+msgstr "CONFIGURACIÓN DE RED"
+
+msgid "CONNECTED"
+msgstr "CONECTADO"
+
+msgid "NOT CONNECTED"
+msgstr "NO CONECTADO"
+
+msgid "STATUS"
+msgstr "ESTADO"
+
+msgid "IP ADDRESS"
+msgstr "DIRECCIÓN IP"
+
+msgid "HOSTNAME"
+msgstr "NOMBRE DE EQUIPO"
+
+msgid "ENABLE WIFI"
+msgstr "ACTIVAR EL WIFI"
+
+msgid "WIFI SSID"
+msgstr "SSID WIFI"
+
+msgid "WIFI KEY"
+msgstr "CLAVE WIFI"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI ACTIVADO"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "ERROR DE CONFIGURACIÓN WIFI"
+
+msgid "SCRAPER"
+msgstr "SCRAPER"
+
+msgid "SCRAPE FROM"
+msgstr "OBTENER DATOS DE"
+
+msgid "SCRAPE RATINGS"
+msgstr "OBTENER CALIFICACIONES"
+
+msgid "SCRAPE NOW"
+msgstr "OBTENER DATOS"
+
+msgid "QUIT"
+msgstr "SALIR"
+
+msgid "REALLY RESTART?"
+msgstr "¿REINICIAR?"
+
+msgid "RESTART SYSTEM"
+msgstr "REINICIAR EL SISTEMA"
+
+msgid "REALLY SHUTDOWN?"
+msgstr "¿APAGAR?"
+
+msgid "SHUTDOWN SYSTEM"
+msgstr "APAGAR EL SISTEMA"
+
+msgid "Emulator"
+msgstr "Emulador"
+
+msgid "Core"
+msgstr "Nucleo"
+
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
+msgstr ""
+"VAS A CONFIGURAR UN MANDO. SI SOLO TIENES UN JOYSTICK CONFIGURA LAS "
+"DIRECCIONES E IGNORA LAS CONFIGURACIÓN DE JOYSTICK MANTENIENDO PRESIONADO UN "
+"BOTÓN.  SI NO TIENES UN BOTÓN ESPECIAL PARA LA HOTKEY UTILIZA EL SELECT. "
+"IGNORA LOS BOTONES QUE NO EXISTAN EN TU MANDO MANTENIENDO UNA TECLA PULSADA. "
+"LOS NOMBRES DE LOS BOTONES SE BASAN EN EL MANDO DE LA SNES."
+
+msgid "CONFIGURE A CONTROLLER"
+msgstr "CONFIGURAR UN MANDO"
+
+msgid "CONTROLLER PAIRED"
+msgstr "MANDO EMPAREJADO"
+
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "NO SE PUEDE EMPAREJAR EL MANDO"
+
+msgid "AN ERROR OCCURED"
+msgstr "OCURRIÓ UN ERROR"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "NO SE DETECTÓ NINGUN MANDO"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "EMPAREJAR UN MANDO BLUETOOTH"
+
+msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
+msgstr "LOS EMPAREJAMIENTOS HAN SIDO BORRADOS"
+
+msgid "FORGET BLUETOOTH CONTROLLERS"
+msgstr "DESEMPAREJAR MANDOS BLUETOOTH"
+
+#, c-format
+msgid "INPUT P%i"
+msgstr "ENTRADA P%i"
+
+msgid "CHOOSE"
+msgstr "CAMBIAR"
+
+msgid "SELECT"
+msgstr "SELECCIONAR"
+
+msgid "CUSTOM"
+msgstr "PERSONALIZADO"
+
+msgid "4/3"
+msgstr "4/3"
+
+msgid "16/9"
+msgstr "16/9"
+
+msgid "OPTIONS"
+msgstr "OPCIONES"
+
+msgid "JUMP TO LETTER"
+msgstr "IR A LA LETRA"
+
+msgid "SORT GAMES BY"
+msgstr "ORDENAR LOS JUEGOS POR"
+
+msgid "FAVORITES ONLY"
+msgstr "SOLO FAVORITOS"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "EDITAR LOS DATOS DE ESTE JUEGO"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "OBTENER DATOS DE ESTOS JUEGOS"
+
+msgid "All Games"
+msgstr "Todos los juegos"
+
+msgid "Only missing image"
+msgstr "Solo imágenes faltantes"
+
+msgid "FILTER"
+msgstr "FILTRO"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "OBTENER DATOS DE ESTOS SISTEMAS"
+
+msgid "SYSTEMS"
+msgstr "SISTEMAS"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "DECIDIR EN CASO DE CONFLICTO"
+
+msgid "START"
+msgstr "INICIO"
+
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+"CUIDADO: ALGUNOS DE LOS SISTEMAS SELECCIONADOS NO TIENE UNA PLATAFORMA "
+"DEFINIDA. ¡LOS RESULTADOS PODRÍAN SER MÁS INCORRECTOS DE LO HABITUAL!\n"
+"¿EJECUTAR IGUALMENTE?"
+
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr "NINGÚN JUEGO SE AJUSTA AL CRITERIO."
+
+msgid "REALLY UPDATE?"
+msgstr "¿QUIERES ACTUALIZAR EL SISTEMA?"
+
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "SE NECESITA UNA CONEXIÓN DE RED"
+
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr "ACTUALIZACIÓN DESCARGADA. EL SISTEMA SE REINICIARÁ"
+
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "ACTUALIZACIÓN FALLIDA. EL SISTEMA SE REINICIARÁ"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "NO HAY ACTUALIZACIONES DISPONIBLES"
+
 msgid "enter emulator"
 msgstr "introducir emulador"
 
-#: ../es-app/src/MetaData.cpp:16
 msgid "enter core"
 msgstr "introducir nucleo"
 
-#: ../es-app/src/MetaData.cpp:17
 msgid "Name"
 msgstr "Nombre"
 
-#: ../es-app/src/MetaData.cpp:17
 msgid "enter game name"
 msgstr "nombre del juego"
 
-#: ../es-app/src/MetaData.cpp:18
 msgid "Description"
 msgstr "Descripción"
 
-#: ../es-app/src/MetaData.cpp:18
 msgid "enter description"
 msgstr "introducir descripción"
 
-#: ../es-app/src/MetaData.cpp:19
 msgid "Image"
 msgstr "Imagen"
 
-#: ../es-app/src/MetaData.cpp:19
 msgid "enter path to image"
 msgstr "introducir ruta de la imagen"
 
-#: ../es-app/src/MetaData.cpp:20
 msgid "Thumbnail"
 msgstr "Miniatura"
 
-#: ../es-app/src/MetaData.cpp:20
 msgid "enter path to thumbnail"
 msgstr "introducir ruta de la miniatura"
 
-#: ../es-app/src/MetaData.cpp:21
-#: ../es-app/src/components/ScraperSearchComponent.cpp:56
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:35
-msgid "Rating"
-msgstr "Calificación"
-
-#: ../es-app/src/MetaData.cpp:21
 msgid "enter rating"
 msgstr "introducir calificación"
 
-#: ../es-app/src/MetaData.cpp:22
 msgid "Release date"
 msgstr "Fecha de lanzamiento"
 
-#: ../es-app/src/MetaData.cpp:22
 msgid "enter release date"
 msgstr "introducir fecha de lanzamiento"
 
-#: ../es-app/src/MetaData.cpp:23 ../es-app/src/MetaData.cpp:24
-#: ../es-app/src/MetaData.cpp:25
-#: ../es-core/src/components/DateTimeComponent.cpp:243
-msgid "unknown"
-msgstr "desconocido"
-
-#: ../es-app/src/MetaData.cpp:23
-#: ../es-app/src/components/ScraperSearchComponent.cpp:58
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:41
-msgid "Developer"
-msgstr "Desarrollador"
-
-#: ../es-app/src/MetaData.cpp:23
 msgid "enter game developer"
 msgstr "introducir desarrollador"
 
-#: ../es-app/src/MetaData.cpp:24
-#: ../es-app/src/components/ScraperSearchComponent.cpp:59
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:44
-msgid "Publisher"
-msgstr "Editor"
-
-#: ../es-app/src/MetaData.cpp:24
 msgid "enter game publisher"
 msgstr "intorducir editor"
 
-#: ../es-app/src/MetaData.cpp:25
-#: ../es-app/src/components/ScraperSearchComponent.cpp:60
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:47
-msgid "Genre"
-msgstr "Género"
-
-#: ../es-app/src/MetaData.cpp:25
 msgid "enter game genre"
 msgstr "introducir género"
 
-#: ../es-app/src/MetaData.cpp:26
-#: ../es-app/src/components/ScraperSearchComponent.cpp:61
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:50
-msgid "Players"
-msgstr "Jugadores"
-
-#: ../es-app/src/MetaData.cpp:26
 msgid "enter number of players"
 msgstr "introducir nº de jugadores"
 
-#: ../es-app/src/MetaData.cpp:27
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:62
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:335
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:162
 msgid "Favorite"
 msgstr "Favorito"
 
-#: ../es-app/src/MetaData.cpp:27
 msgid "enter favorite"
 msgstr "añadir favorito"
 
-#: ../es-app/src/MetaData.cpp:28
 msgid "Region"
 msgstr "Región"
 
-#: ../es-app/src/MetaData.cpp:28
 msgid "enter region"
 msgstr "introducir región"
 
-#: ../es-app/src/MetaData.cpp:29
-msgid "Original"
-msgstr "Original"
-
-#: ../es-app/src/MetaData.cpp:29
 msgid "Romtype"
 msgstr "Romtype"
 
-#: ../es-app/src/MetaData.cpp:29
 msgid "enter romtype"
 msgstr "introducir romtype"
 
-#: ../es-app/src/MetaData.cpp:30
 msgid "Hidden"
 msgstr "Oculto"
 
-#: ../es-app/src/MetaData.cpp:30
 msgid "set hidden"
 msgstr "ocultar"
 
-#: ../es-app/src/MetaData.cpp:31
 msgid "Play count"
 msgstr "Partidas"
 
-#: ../es-app/src/MetaData.cpp:31
 msgid "enter number of times played"
 msgstr "introducir el nº de partidas jugadas"
 
-#: ../es-app/src/MetaData.cpp:32
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:53
 msgid "Last played"
 msgstr "Última partida"
 
-#: ../es-app/src/MetaData.cpp:32
 msgid "enter last played date"
 msgstr "introducir la fecha de la última partida"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:57
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:38
-msgid "Released"
-msgstr "Lanzamiento"
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:240
-msgid "NO GAMES FOUND - SKIP"
-msgstr "NO SE ENCONTRARON JUEGOS - SALTAR"
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:278
-msgid "RETRY"
-msgstr "REINTENTAR"
-
-#: ../es-app/src/components/ScraperSearchComponent.cpp:454
-msgid "SEARCH FOR"
-msgstr "BUSCAR POR"
-
-#: ../es-app/src/views/SystemView.cpp:236
 #, c-format
 msgid "%i GAME AVAILABLE"
 msgid_plural "%i GAMES AVAILABLE"
 msgstr[0] "%i JUEGO DISPONIBLE"
 msgstr[1] "%i JUEGOS DISPONIBLES"
 
-#: ../es-app/src/views/SystemView.cpp:237
 #, c-format
 msgid "%i FAVORITE"
 msgid_plural "%i FAVORITES"
 msgstr[0] "%i FAVORITOS"
 msgstr[1] "%i FAVORITOS"
 
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:57
-msgid "Times played"
-msgstr "Veces jugado"
-
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:332
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:68
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:159
-msgid "LAUNCH"
-msgstr "LANZAR"
-
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:67
 msgid "SCROLL"
 msgstr "DESPLAZAMIENTO"
 
-#: ../es-app/src/views/ViewController.cpp:524
+msgid "LAUNCH"
+msgstr "LANZAR"
+
+msgid "Times played"
+msgstr "Veces jugado"
+
 msgid "MENU"
 msgstr "MENÚ"
 
-#: ../es-app/src/FileSorts.cpp:9
 msgid "FILENAME, ASCENDING"
 msgstr "NOMBRE DE ARCHIVO, ASCENDENTE"
 
-#: ../es-app/src/FileSorts.cpp:10
 msgid "FILENAME, DESCENDING"
 msgstr "NOMBRE DE ARCHIVO, DESCENDENTE"
 
-#: ../es-app/src/FileSorts.cpp:11
 msgid "RATING, ASCENDING"
 msgstr "CALIFICACIÓN, ASCENDENTE"
 
-#: ../es-app/src/FileSorts.cpp:12
 msgid "RATING, DESCENDING"
 msgstr "CALIFICACIÓN, DESCENDENTE"
 
-#: ../es-app/src/FileSorts.cpp:13
 msgid "TIMES PLAYED, ASCENDING"
 msgstr "PARTIDAS JUGADAS, ASCENDENTE"
 
-#: ../es-app/src/FileSorts.cpp:14
 msgid "TIMES PLAYED, DESCENDING"
 msgstr "PARTIDAS JUGADAS, DESCENDENTE"
 
-#: ../es-app/src/FileSorts.cpp:15
 msgid "LAST PLAYED, ASCENDING"
 msgstr "ÚLTIMA PARTIDA, ASCENDENTE"
 
-#: ../es-app/src/FileSorts.cpp:16
 msgid "LAST PLAYED, DESCENDING"
 msgstr "ÚLTIMA PARTIDA, DESCENDENTE"
 
-#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
-msgid "DISCARD CHANGES"
-msgstr "DESCARTAR LOS CAMBIOS"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "WELCOME"
-msgstr "BIENVENIDO"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "CONFIGURE INPUT"
-msgstr "CONFIGURACIÓN DE MANDOS"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:38
-#, c-format
-msgid "%i GAMEPAD DETECTED"
-msgid_plural "%i GAMEPADS DETECTED"
-msgstr[0] "%i MANDO DETECTADO"
-msgstr[1] "%i MANDOS DETECTADOS"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:42
-msgid "NO GAMEPADS DETECTED"
-msgstr "NO SE DETECTARON MANDOS"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:47
-msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "MANTÉN PULSADO UN BOTÓN DEL MANDO PARA CONFIGURARLO"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr "PULSA F4 PARA SALIR EN CUALQUIER MOMENTO"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "PULSA ESC O EL BOTÓN HOTKEY PARA CANCELAR"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
-msgid "UP"
-msgstr "ARRIBA"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
-msgid "DOWN"
-msgstr "ABAJO"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
-msgid "LEFT"
-msgstr "IZQUIERDA"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
-msgid "RIGHT"
-msgstr "DERECHA"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
-msgid "JOYSTICK 1 UP"
-msgstr "JOYSTICK 1 ARRIBA"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
-msgid "JOYSTICK 1 LEFT"
-msgstr "JOYSTICK 1 IZQUIERDA"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
-msgid "JOYSTICK 2 UP"
-msgstr "JOYSTICK 2 ARRIBA"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
-msgid "JOYSTICK 2 LEFT"
-msgstr "JOYSTICK 2 IZQUIERDA"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:41
-msgid "PAGE UP"
-msgstr "AV. PÁG"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:41
-msgid "PAGE DOWN"
-msgstr "RE. PÁG"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:41
-msgid "HOTKEY"
-msgstr "HOTKEY"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:55
-msgid "CONFIGURING"
-msgstr "CONFIGURANDO"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:60
-msgid "KEYBOARD"
-msgstr "TECLADO"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:62
-#, c-format
-msgid "GAMEPAD %i"
-msgstr "MANDO %i"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:68
-msgid "HOLD ANY BUTTON TO SKIP"
-msgstr "MANTEN CUALQUIER BOTÓN PARA SALTAR"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:98
-#: ../es-core/src/guis/GuiInputConfig.cpp:257
-msgid "-NOT DEFINED-"
-msgstr "-SIN CONFIGURAR-"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:219
-#, c-format
-msgid "HOLD FOR %iS TO SKIP"
-msgid_plural "HOLD FOR %iS TO SKIP"
-msgstr[0] "MANTEN %iS PARA SALTAR"
-msgstr[1] "MANTEN %iS PARA SALTAR"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:251
-msgid "PRESS ANYTHING"
-msgstr "PULSA CUALQUIER BOTÓN"
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:269
-msgid "ALREADY TAKEN"
-msgstr "EN USO"
-
-#: ../es-core/src/Window.cpp:141
-msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
-msgstr "¿QUIERES LANZAR EL CENTRO MULTIMEDIA KODI?"
-
-#: ../es-core/src/Window.cpp:282
-msgid "LOADING..."
-msgstr "CARGANDO..."
-
-#: ../es-core/src/Window.cpp:374
-msgid "PLEASE WAIT..."
-msgstr "ESPERA POR FAVOR..."
-
-#: ../es-core/src/components/OptionListComponent.h:102
-msgid "SELECT ALL"
-msgstr "TODOS"
-
-#: ../es-core/src/components/OptionListComponent.h:111
-msgid "SELECT NONE"
-msgstr "NINGUNO"
-
-#: ../es-core/src/components/OptionListComponent.h:312
-#, c-format
-msgid "%i SELECTED"
-msgid_plural "%i SELECTED"
-msgstr[0] "%i SELECCIONADO"
-msgstr[1] "%i SELECCIONADOS"
-
-#: ../es-core/src/components/OptionListComponent.h:343
-#: ../es-core/src/components/SwitchComponent.cpp:61
-#: ../es-core/src/components/SliderComponent.cpp:144
-msgid "CHANGE"
-msgstr "CAMBIAR"
-
-#: ../es-core/src/components/BusyComponent.cpp:24
 msgid "WORKING..."
 msgstr "EN CURSO..."
 
-#: ../es-core/src/components/DateTimeComponent.cpp:212
+msgid "CHANGE"
+msgstr "CAMBIAR"
+
 msgid "never"
 msgstr "nunca"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:218
 msgid "just now"
 msgstr "ahora mismo"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:221
 #, c-format
 msgid "%i sec ago"
 msgid_plural "%i secs ago"
 msgstr[0] "hace %i segundo"
 msgstr[1] "hace %i segundos"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:226
 #, c-format
 msgid "%i min ago"
 msgid_plural "%i mins ago"
 msgstr[0] "hace %i minuto"
 msgstr[1] "hace %i minutos"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:231
 #, c-format
 msgid "%i hour ago"
 msgid_plural "%i hours ago"
 msgstr[0] "hace %i hora"
 msgstr[1] "hace %i horas"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:236
 #, c-format
 msgid "%i day ago"
 msgid_plural "%i days ago"
 msgstr[0] "hace %i día"
 msgstr[1] "hace %i días"
+
+msgid "unknown"
+msgstr "desconocido"
+
+msgid "SELECT ALL"
+msgstr "TODOS"
+
+msgid "SELECT NONE"
+msgstr "NINGUNO"
+
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] "%i SELECCIONADO"
+msgstr[1] "%i SELECCIONADOS"
+
+msgid "UP"
+msgstr "ARRIBA"
+
+msgid "DOWN"
+msgstr "ABAJO"
+
+msgid "LEFT"
+msgstr "IZQUIERDA"
+
+msgid "RIGHT"
+msgstr "DERECHA"
+
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 ARRIBA"
+
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 IZQUIERDA"
+
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 ARRIBA"
+
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 IZQUIERDA"
+
+msgid "PAGE UP"
+msgstr "AV. PÁG"
+
+msgid "PAGE DOWN"
+msgstr "RE. PÁG"
+
+msgid "HOTKEY"
+msgstr "HOTKEY"
+
+msgid "CONFIGURING"
+msgstr "CONFIGURANDO"
+
+msgid "KEYBOARD"
+msgstr "TECLADO"
+
+#, c-format
+msgid "GAMEPAD %i"
+msgstr "MANDO %i"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "MANTEN CUALQUIER BOTÓN PARA SALTAR"
+
+msgid "-NOT DEFINED-"
+msgstr "-SIN CONFIGURAR-"
+
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] "MANTEN %iS PARA SALTAR"
+msgstr[1] "MANTEN %iS PARA SALTAR"
+
+msgid "PRESS ANYTHING"
+msgstr "PULSA CUALQUIER BOTÓN"
+
+msgid "ALREADY TAKEN"
+msgstr "EN USO"
+
+msgid "DISCARD CHANGES"
+msgstr "DESCARTAR LOS CAMBIOS"
+
+msgid "WELCOME"
+msgstr "BIENVENIDO"
+
+msgid "CONFIGURE INPUT"
+msgstr "CONFIGURACIÓN DE MANDOS"
+
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i MANDO DETECTADO"
+msgstr[1] "%i MANDOS DETECTADOS"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "NO SE DETECTARON MANDOS"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "MANTÉN PULSADO UN BOTÓN DEL MANDO PARA CONFIGURARLO"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "PULSA F4 PARA SALIR EN CUALQUIER MOMENTO"
+
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "PULSA ESC O EL BOTÓN HOTKEY PARA CANCELAR"
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "¿QUIERES LANZAR EL CENTRO MULTIMEDIA KODI?"
+
+msgid "LOADING..."
+msgstr "CARGANDO..."
+
+msgid "PLEASE WAIT..."
+msgstr "ESPERA POR FAVOR..."
+
+#~ msgid "Original"
+#~ msgstr "Original"
