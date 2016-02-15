@@ -5,6 +5,7 @@
 #include "ThemeData.h"
 #include "Util.h"
 #include "Settings.h"
+#include "Locale.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
 	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT), mLineSpacing(1.5f)
@@ -59,7 +60,7 @@ unsigned char TextComponent::getOpacity() const
 
 void TextComponent::setText(const std::string& text)
 {
-	mText = text;
+        mText = text;
 	onTextChanged();
 }
 

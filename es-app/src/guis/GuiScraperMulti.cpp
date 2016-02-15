@@ -9,7 +9,9 @@
 #include "components/ScraperSearchComponent.h"
 #include "components/MenuComponent.h" // for makeButtonGrid
 #include "guis/GuiMsgBox.h"
+#include "Locale.h"
 
+using namespace boost::locale;
 using namespace Eigen;
 
 GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults) : 
@@ -27,13 +29,13 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mTotalSkipped = 0;
 
 	// set up grid
-	mTitle = std::make_shared<TextComponent>(mWindow, "SCRAPING IN PROGRESS", Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
+	mTitle = std::make_shared<TextComponent>(mWindow, _("SCRAPING IN PROGRESS"), Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
 	mGrid.setEntry(mTitle, Vector2i(0, 0), false, true);
 
-	mSystem = std::make_shared<TextComponent>(mWindow, "SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF, ALIGN_CENTER);
+	mSystem = std::make_shared<TextComponent>(mWindow, _("SYSTEM"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF, ALIGN_CENTER);
 	mGrid.setEntry(mSystem, Vector2i(0, 1), false, true);
 
-	mSubtitle = std::make_shared<TextComponent>(mWindow, "subtitle text", Font::get(FONT_SIZE_SMALL), 0x888888FF, ALIGN_CENTER);
+	mSubtitle = std::make_shared<TextComponent>(mWindow, _("subtitle text"), Font::get(FONT_SIZE_SMALL), 0x888888FF, ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle, Vector2i(0, 2), false, true);
 
 	mSearchComp = std::make_shared<ScraperSearchComponent>(mWindow, 
@@ -47,18 +49,18 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 
 	if(approveResults)
 	{
-		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "search", [&] { 
+	  buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("INPUT"), _("search"), [&] { 
 			mSearchComp->openInputScreen(mSearchQueue.front()); 
 			mGrid.resetCursor(); 
 		}));
 
-		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SKIP", "skip", [&] {
+	  buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("SKIP"), _("SKIP"), [&] {
 			skip();
 			mGrid.resetCursor();
 		}));
 	}
 
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "STOP", "stop (progress saved)", std::bind(&GuiScraperMulti::finish, this)));
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("STOP"), _("stop (progress saved)"), std::bind(&GuiScraperMulti::finish, this)));
 
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 	mGrid.setEntry(mButtonGrid, Vector2i(0, 4), true, false);
@@ -101,7 +103,10 @@ void GuiScraperMulti::doNextSearch()
 
 	// update subtitle
 	ss.str(""); // clear
-	ss << "GAME " << (mCurrentGame + 1) << " OF " << mTotalGames << " - " << strToUpper(mSearchQueue.front().game->getPath().filename().string());
+	char strbuf[256];
+	snprintf(strbuf, 256, _("GAME %i OF %i").c_str(), mCurrentGame + 1, mTotalGames);
+
+	ss << strbuf << " - " << strToUpper(mSearchQueue.front().game->getPath().filename().string());
 	mSubtitle->setText(ss.str());
 
 	mSearchComp->search(mSearchQueue.front());
@@ -111,7 +116,7 @@ void GuiScraperMulti::acceptResult(const ScraperSearchResult& result)
 {
 	ScraperSearchParams& search = mSearchQueue.front();
 
-	search.game->metadata = result.mdl;
+	search.game->metadata.merge(result.mdl);
 	updateGamelist(search.system);
 
 	mSearchQueue.pop();
@@ -133,16 +138,25 @@ void GuiScraperMulti::finish()
 	std::stringstream ss;
 	if(mTotalSuccessful == 0)
 	{
-		ss << "NO GAMES WERE SCRAPED.";
-	}else{
-		ss << mTotalSuccessful << " GAME" << ((mTotalSuccessful > 1) ? "S" : "") << " SUCCESSFULLY SCRAPED!";
+		ss << _("WE CAN'T FIND ANY SYSTEMS!\n"
+			"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+			"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+			"\n"
+			"VISIT RECALBOX.FR FOR MORE INFORMATION."
+			);
+	} else {
+	  char strbuf[256];
+	  snprintf(strbuf, 256, ngettext("%i GAME SUCCESSFULLY SCRAPED!", "%i GAMES SUCCESSFULLY SCRAPED!", mTotalSuccessful).c_str(), mTotalSuccessful);
+	  ss << strbuf;
 
-		if(mTotalSkipped > 0)
-			ss << "\n" << mTotalSkipped << " GAME" << ((mTotalSkipped > 1) ? "S" : "") << " SKIPPED.";
+	  if(mTotalSkipped > 0) {
+	    snprintf(strbuf, 256, ngettext("%i GAME SKIPPED.", "%i GAMES SKIPPED.", mTotalSkipped).c_str(), mTotalSkipped);
+	    ss << "\n" << strbuf;
+	  }
 	}
 
 	mWindow->pushGui(new GuiMsgBox(mWindow, ss.str(), 
-		"OK", [&] { delete this; }));
+				       _("OK"), [&] { delete this; }));
 }
 
 std::vector<HelpPrompt> GuiScraperMulti::getHelpPrompts()

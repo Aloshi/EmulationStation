@@ -9,6 +9,10 @@
 #include "components/MenuComponent.h"
 #include <sstream>
 #include "Log.h"
+#include "Locale.h"
+
+using namespace boost::locale;
+
 
 //Used to display a list of options.
 //Can select one or multiple options.
@@ -91,11 +95,11 @@ private:
 				mMenu.addRow(row, (!mParent->mMultiSelect && it->selected));
 			}
 
-			mMenu.addButton("BACK", "accept", [this] { delete this; });
+			mMenu.addButton(_("BACK"), "accept", [this] { delete this; });
 
 			if(mParent->mMultiSelect)
 			{
-				mMenu.addButton("SELECT ALL", "select all", [this, checkboxes] {
+			  mMenu.addButton(_("SELECT ALL"), "select all", [this, checkboxes] {
 					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
 					{
 						mParent->mEntries.at(i).selected = true;
@@ -104,7 +108,7 @@ private:
 					mParent->onSelectedChanged();
 				});
 
-				mMenu.addButton("SELECT NONE", "select none", [this, checkboxes] {
+			  mMenu.addButton(_("SELECT NONE"), "select none", [this, checkboxes] {
 					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
 					{
 						mParent->mEntries.at(i).selected = false;
@@ -120,7 +124,7 @@ private:
 
 		bool input(InputConfig* config, Input input) override
 		{
-			if(config->isMappedTo("b", input) && input.value != 0)
+			if(config->isMappedTo("a", input) && input.value != 0)
 			{
 				delete this;
 				return true;
@@ -132,16 +136,16 @@ private:
 		std::vector<HelpPrompt> getHelpPrompts() override
 		{
 			auto prompts = mMenu.getHelpPrompts();
-			prompts.push_back(HelpPrompt("b", "back"));
+			prompts.push_back(HelpPrompt("a", _("BACK")));
 			return prompts;
 		}
 	};
 
 public:
-	OptionListComponent(Window* window, const std::string& name, bool multiSelect = false) : GuiComponent(window), mMultiSelect(multiSelect), mName(name), 
+	OptionListComponent(Window* window, const std::string& name, bool multiSelect = false, unsigned int font_size = FONT_SIZE_MEDIUM) : GuiComponent(window), mMultiSelect(multiSelect), mName(name),
 		 mText(window), mLeftArrow(window), mRightArrow(window)
 	{
-		auto font = Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT);
+		auto font = Font::get(font_size, FONT_PATH_LIGHT);
 		mText.setFont(font);
 		mText.setColor(0x777777FF);
 		mText.setAlignment(ALIGN_CENTER);
@@ -169,8 +173,9 @@ public:
 		mLeftArrow.setResize(0, mText.getFont()->getLetterHeight());
 		mRightArrow.setResize(0, mText.getFont()->getLetterHeight());
 
-		if(mSize.x() < (mLeftArrow.getSize().x() + mRightArrow.getSize().x()))
+        if(mSize.x() < (mLeftArrow.getSize().x() + mRightArrow.getSize().x())) {
 			LOG(LogWarning) << "OptionListComponent too narrow!";
+        }
 
 		mText.setSize(mSize.x() - mLeftArrow.getSize().x() - mRightArrow.getSize().x(), mText.getFont()->getHeight());
 
@@ -184,7 +189,7 @@ public:
 	{
 		if(input.value != 0)
 		{
-			if(config->isMappedTo("a", input))
+			if(config->isMappedTo("b", input))
 			{
 				open();
 				return true;
@@ -232,13 +237,29 @@ public:
 		return ret;
 	}
 
+        
 	T getSelected()
 	{
 		assert(mMultiSelect == false);
 		auto selected = getSelectedObjects();
-		assert(selected.size() == 1);
-		return selected.at(0);
+		if(selected.size() == 1){
+                    return selected.at(0);
+                }else {
+                    return T();
+                }
 	}
+        
+	std::string getSelectedName()
+	{
+                assert(mMultiSelect == false);
+                for(unsigned int i = 0; i < mEntries.size(); i++)
+		{
+			if(mEntries.at(i).selected)
+				return mEntries.at(i).name;
+		}
+                return "";
+	}
+        
 
 	void add(const std::string& name, const T& obj, bool selected)
 	{
@@ -246,10 +267,21 @@ public:
 		e.name = name;
 		e.object = obj;
 		e.selected = selected;
+		if(selected)
+			firstSelected = obj;
 
 		mEntries.push_back(e);
 		onSelectedChanged();
 	}
+
+	inline void setSelectedChangedCallback(const std::function<void(const T&)>& callback) {
+		mSelectedChangedCallback = callback;
+	}
+
+	bool changed(){
+		return firstSelected != getSelected();
+	}
+
 
 private:
 	unsigned int getSelectedId()
@@ -275,9 +307,10 @@ private:
 		if(mMultiSelect)
 		{
 			// display # selected
-			std::stringstream ss;
-			ss << getSelectedObjects().size() << " SELECTED";
-			mText.setText(ss.str());
+		  	char strbuf[256];
+			int x = getSelectedObjects().size();
+		  	snprintf(strbuf, 256, ngettext("%i SELECTED", "%i SELECTED", x).c_str(), x);
+			mText.setText(strbuf);
 			mText.setSize(0, mText.getSize().y());
 			setSize(mText.getSize().x() + mRightArrow.getSize().x() + 24, mText.getSize().y());
 			if(mParent) // hack since theres no "on child size changed" callback atm...
@@ -297,24 +330,30 @@ private:
 				}
 			}
 		}
+
+		if (mSelectedChangedCallback) {
+			mSelectedChangedCallback(mEntries.at(getSelectedId()).object);
+		}
 	}
 
 	std::vector<HelpPrompt> getHelpPrompts() override
 	{
 		std::vector<HelpPrompt> prompts;
 		if(!mMultiSelect)
-			prompts.push_back(HelpPrompt("left/right", "change"));
+		  prompts.push_back(HelpPrompt("left/right", _("CHANGE")));
 		
-		prompts.push_back(HelpPrompt("a", "select"));
+		prompts.push_back(HelpPrompt("b", _("SELECT")));
 		return prompts;
 	}
 
 	bool mMultiSelect;
 
 	std::string mName;
+	T firstSelected;
 	TextComponent mText;
 	ImageComponent mLeftArrow;
 	ImageComponent mRightArrow;
 
 	std::vector<OptionListData> mEntries;
+	std::function<void(const T&)> mSelectedChangedCallback;
 };

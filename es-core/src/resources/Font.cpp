@@ -384,7 +384,9 @@ std::vector<std::string> getFallbackFontPaths()
 
 	// TODO
 	const char* paths[] = {
-		"/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf" // japanese, chinese, present on Debian
+		"/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",// japanese, chinese, present on Debian
+		":/fontawesome_webfont.ttf",
+		 "/usr/share/fonts/truetype/fontawesome-webfont.ttf",
 	};
 
 	std::vector<std::string> fontPaths;
@@ -497,6 +499,7 @@ void Font::rebuildTextures()
 	// recreate OpenGL textures
 	for(auto it = mTextures.begin(); it != mTextures.end(); it++)
 	{
+        it->deinitTexture();
 		it->initTexture();
 	}
 
@@ -707,12 +710,12 @@ float Font::getNewlineStartOffset(const std::string& text, const unsigned int& c
 		return 0;
 	case ALIGN_CENTER:
 		{
-			unsigned int endChar = text.find('\n', charStart);
+            int endChar = text.find('\n', charStart);
 			return (xLen - sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x()) / 2.0f;
 		}
 	case ALIGN_RIGHT:
 		{
-			unsigned int endChar = text.find('\n', charStart);
+            int endChar = text.find('\n', charStart);
 			return xLen - (sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x());
 		}
 	default:

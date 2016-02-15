@@ -8,6 +8,14 @@
 #include "SystemData.h"
 #include "Settings.h"
 #include "Util.h"
+#include <guis/GuiMsgBox.h>
+#include <RecalboxSystem.h>
+#include <components/ComponentList.h>
+#include <guis/GuiSettings.h>
+#include <RecalboxConf.h>
+#include "ThemeData.h"
+#include "AudioManager.h"
+#include "Locale.h"
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
@@ -28,62 +36,70 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 	populate();
 }
 
+void SystemView::addSystem(SystemData * it){
+	if((it)->getRootFolder()->getChildren().size() == 0){
+		return;
+	}
+	const std::shared_ptr<ThemeData>& theme = (it)->getTheme();
+
+	Entry e;
+	e.name = (it)->getName();
+	e.object = it;
+
+	// make logo
+	if(theme->getElement("system", "logo", "image"))
+	{
+		ImageComponent* logo = new ImageComponent(mWindow);
+		logo->setMaxSize(Eigen::Vector2f(logoSize().x(), logoSize().y()));
+		logo->applyTheme((it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+		logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // center
+		e.data.logo = std::shared_ptr<GuiComponent>(logo);
+
+		ImageComponent* logoSelected = new ImageComponent(mWindow);
+		logoSelected->setMaxSize(Eigen::Vector2f(logoSize().x() * SELECTED_SCALE, logoSize().y() * SELECTED_SCALE * 0.70f));
+		logoSelected->applyTheme((it)->getTheme(), "system", "logo", ThemeFlags::PATH);
+		logoSelected->setPosition((logoSize().x() - logoSelected->getSize().x()) / 2,
+								  (logoSize().y() - logoSelected->getSize().y()) / 2); // center
+		e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
+	}else{
+		// no logo in theme; use text
+		TextComponent* text = new TextComponent(mWindow,
+												(it)->getName(),
+												Font::get(FONT_SIZE_LARGE),
+												0x000000FF,
+												ALIGN_CENTER);
+		text->setSize(logoSize());
+		e.data.logo = std::shared_ptr<GuiComponent>(text);
+
+		TextComponent* textSelected = new TextComponent(mWindow,
+														(it)->getName(),
+														Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)),
+														0x000000FF,
+														ALIGN_CENTER);
+		textSelected->setSize(logoSize());
+		e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
+	}
+
+	// make background extras
+	e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
+	e.data.backgroundExtras->setExtras(ThemeData::makeExtras((it)->getTheme(), "system", mWindow));
+
+	this->add(e);
+}
 void SystemView::populate()
 {
 	mEntries.clear();
 
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
-		const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
-
-		Entry e;
-		e.name = (*it)->getName();
-		e.object = *it;
-
-		// make logo
-		if(theme->getElement("system", "logo", "image"))
-		{
-			ImageComponent* logo = new ImageComponent(mWindow);
-			logo->setMaxSize(Eigen::Vector2f(logoSize().x(), logoSize().y()));
-			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logo->setPosition((logoSize().x() - logo->getSize().x()) / 2, (logoSize().y() - logo->getSize().y()) / 2); // center
-			e.data.logo = std::shared_ptr<GuiComponent>(logo);
-
-			ImageComponent* logoSelected = new ImageComponent(mWindow);
-			logoSelected->setMaxSize(Eigen::Vector2f(logoSize().x() * SELECTED_SCALE, logoSize().y() * SELECTED_SCALE * 0.70f));
-			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logoSelected->setPosition((logoSize().x() - logoSelected->getSize().x()) / 2, 
-				(logoSize().y() - logoSelected->getSize().y()) / 2); // center
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
-		}else{
-			// no logo in theme; use text
-			TextComponent* text = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get(FONT_SIZE_LARGE), 
-				0x000000FF, 
-				ALIGN_CENTER);
-			text->setSize(logoSize());
-			e.data.logo = std::shared_ptr<GuiComponent>(text);
-
-			TextComponent* textSelected = new TextComponent(mWindow, 
-				(*it)->getName(), 
-				Font::get((int)(FONT_SIZE_LARGE * SELECTED_SCALE)), 
-				0x000000FF, 
-				ALIGN_CENTER);
-			textSelected->setSize(logoSize());
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
-		}
-
-		// make background extras
-		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
-		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
-
-		this->add(e);
+		addSystem((*it));
 	}
 }
 
 void SystemView::goToSystem(SystemData* system, bool animate)
 {
+
+        
 	setCursor(system);
 
 	if(!animate)
@@ -116,12 +132,46 @@ bool SystemView::input(InputConfig* config, Input input)
 			listInput(1);
 			return true;
 		}
-		if(config->isMappedTo("a", input))
+		if(config->isMappedTo("b", input))
 		{
 			stopScrolling();
 			ViewController::get()->goToGameList(getSelected());
 			return true;
 		}
+		if(config->isMappedTo("select", input) && RecalboxConf::getInstance()->get("system.es.menu") != "none")
+		{
+		  auto s = new GuiSettings(mWindow, _("QUIT").c_str());
+
+			Window *window = mWindow;
+			ComponentListRow row;
+			row.makeAcceptInputHandler([window] {
+			    window->pushGui(new GuiMsgBox(window, _("REALLY RESTART?"), _("YES"),
+											  [] {
+												  if (RecalboxSystem::getInstance()->reboot() != 0)  {
+													  LOG(LogWarning) << "Restart terminated with non-zero result!";
+												  }
+							  }, _("NO"), nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, _("RESTART SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
+														   0x777777FF), true);
+			s->addRow(row);
+
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+			    window->pushGui(new GuiMsgBox(window, _("REALLY SHUTDOWN?"), _("YES"),
+											  [] {
+												  if (RecalboxSystem::getInstance()->shutdown() != 0)  {
+													  LOG(LogWarning) <<
+																	  "Shutdown terminated with non-zero result!";
+												  }
+							  }, _("NO"), nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, _("SHUTDOWN SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
+														   0x777777FF), true);
+			s->addRow(row);
+			mWindow->pushGui(s);
+		}
+
 	}else{
 		if(config->isMappedTo("left", input) || config->isMappedTo("right", input))
 			listInput(0);
@@ -138,6 +188,11 @@ void SystemView::update(int deltaTime)
 
 void SystemView::onCursorChanged(const CursorState& state)
 {
+    
+        if(lastSystem != getSelected()){
+                lastSystem = getSelected();
+                AudioManager::getInstance()->startMusic(getSelected()->getTheme());
+        }
 	// update help style
 	updateHelpPrompts();
 
@@ -150,11 +205,11 @@ void SystemView::onCursorChanged(const CursorState& state)
 	// it's one of these...
 
 	float endPos = target; // directly
-	float dist = abs(endPos - startPos);
+    float dist = std::abs(endPos - startPos);
 	
-	if(abs(target + posMax - startPos) < dist)
+    if(std::abs(target + posMax - startPos) < dist)
 		endPos = target + posMax; // loop around the end (0 -> max)
-	if(abs(target - posMax - startPos) < dist)
+    if(std::abs(target - posMax - startPos) < dist)
 		endPos = target - posMax; // loop around the start (max - 1 -> -1)
 
 	
@@ -172,30 +227,25 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}, (int)(infoStartOpacity * 150));
 
 	unsigned int gameCount = getSelected()->getGameCount();
+	unsigned int favoritesCount = getSelected()->getFavoritesCount();
 
 	// also change the text after we've fully faded out
-	setAnimation(infoFadeOut, 0, [this, gameCount] {
-		std::stringstream ss;
-		
-		// only display a game count if there are at least 2 games
-		if(gameCount > 1)
-			ss << gameCount << " GAMES AVAILABLE";
-
-		mSystemInfo.setText(ss.str()); 
+	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
+		char strbuf[256];
+		snprintf(strbuf, 256,
+			 (ngettext("%i GAME AVAILABLE", "%i GAMES AVAILABLE", gameCount) + ", " +
+			  ngettext("%i FAVORITE", "%i FAVORITES", favoritesCount)).c_str(), gameCount, favoritesCount);
+		mSystemInfo.setText(strbuf);
 	}, false, 1);
 
-	// only display a game count if there are at least 2 games
-	if(gameCount > 1)
+	Animation* infoFadeIn = new LambdaAnimation(
+		[this](float t)
 	{
-		Animation* infoFadeIn = new LambdaAnimation(
-			[this](float t)
-		{
-			mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
-		}, 300);
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+	}, 300);
 
-		// wait 600ms to fade in
-		setAnimation(infoFadeIn, 2000, nullptr, false, 2);
-	}
+	// wait ms to fade in
+	setAnimation(infoFadeIn, 800, nullptr, false, 2);
 
 	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
 	if(endPos == mCamOffset && endPos == mExtrasCamOffset)
@@ -247,6 +297,8 @@ void SystemView::onCursorChanged(const CursorState& state)
 	}
 
 	setAnimation(anim, 0, nullptr, false, 0);
+
+
 }
 
 void SystemView::render(const Eigen::Affine3f& parentTrans)
@@ -329,11 +381,12 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 	mSystemInfo.render(trans);
 }
 
+
 std::vector<HelpPrompt> SystemView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("left/right", "choose"));
-	prompts.push_back(HelpPrompt("a", "select"));
+	prompts.push_back(HelpPrompt("left/right", _("CHOOSE")));
+	prompts.push_back(HelpPrompt("b", _("SELECT")));
 	return prompts;
 }
 
@@ -342,4 +395,30 @@ HelpStyle SystemView::getHelpStyle()
 	HelpStyle style;
 	style.applyTheme(mEntries.at(mCursor).object->getTheme(), "system");
 	return style;
+}
+
+void SystemView::removeFavoriteSystem(){
+	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		if(it->object->isFavorite()){
+			mEntries.erase(it);
+			break;
+		}
+}
+
+void SystemView::manageFavorite(){
+	bool hasFavorite = false;
+	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		if(it->object->isFavorite()){
+			hasFavorite = true;
+		}
+	SystemData *favorite = SystemData::getFavoriteSystem();
+	if(hasFavorite) {
+		if (favorite->getFavoritesCount() == 0) {
+			removeFavoriteSystem();
+		}
+	}else {
+		if (favorite->getFavoritesCount() > 0) {
+			addSystem(favorite);
+		}
+	}
 }

@@ -83,13 +83,15 @@ public:
 class InputConfig
 {
 public:
-	InputConfig(int deviceId, const std::string& deviceName, const std::string& deviceGUID);
+	InputConfig(int deviceId, int deviceIndex, const std::string& deviceName, const std::string& deviceGUID);
 
 	void clear();
 	void mapInput(const std::string& name, Input input);
 	void unmapInput(const std::string& name); // unmap all Inputs mapped to this name
 
 	inline int getDeviceId() const { return mDeviceId; };
+        
+	inline int getDeviceIndex() const { return mDeviceIndex; };
 	inline const std::string& getDeviceName() { return mDeviceName; }
 	inline const std::string& getDeviceGUIDString() { return mDeviceGUID; }
 
@@ -111,6 +113,7 @@ private:
 
 	std::map<std::string, Input> mNameMap;
 	const int mDeviceId;
+	const int mDeviceIndex;
 	const std::string mDeviceName;
 	const std::string mDeviceGUID;
 };

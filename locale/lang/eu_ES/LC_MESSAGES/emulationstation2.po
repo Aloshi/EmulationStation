@@ -1,0 +1,1362 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation 2.0RC1 BASQUE po\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-14 17:14+0100\n"
+"PO-Revision-Date: 2015-08-14 13:00+0100\n"
+"Last-Translator: Xabier Calvo <xabi.calvo@gmail.com>\n"
+"Language-Team: BASQUE\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:42
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:52
+msgid "INPUT"
+msgstr "EDITATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:42
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:52
+msgid "search"
+msgstr "bilatu"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:46
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:189
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/FileSystemSelectorComponent.cpp:179
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:280
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "CANCEL"
+msgstr "EZEZTATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:82
+msgid "MAIN MENU"
+msgstr "MENU NAGUSIA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:96
+msgid "KODI MEDIA CENTER"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:111
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:115
+msgid "SYSTEM SETTINGS"
+msgstr "SISTEMAREN KONFIGURAZIOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:120
+msgid "VERSION"
+msgstr "BERTSIOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:126
+msgid "SPACE LEFT"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:132
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:147
+#, fuzzy
+msgid "STORAGE DEVICE"
+msgstr "MEMORIA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:151
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:166
+msgid "LANGUAGE"
+msgstr "HIZKUNTZA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:169
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:188
+msgid "OVERCLOCK"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:174
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:180
+msgid "EXTREM (1100Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:175
+msgid "TURBO (1000Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:176
+msgid "HIGH (950Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:177
+msgid "NONE (700Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:181
+msgid "TURBO (1050Mhz)+"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:182
+msgid "HIGH (1050Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:183
+msgid "NONE (900Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:186
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:334
+msgid "NONE"
+msgstr ""
+
+# NEW SETTINGS ORGANIZATION
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:194
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:223
+msgid "UPDATES"
+msgstr "EGUNERAKETAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:199
+msgid "AUTO UPDATES"
+msgstr "EGUNERAKETA AUTOMATIKOAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:206
+msgid "START UPDATE"
+msgstr "EGUNERAKETA HASI"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:236
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:259
+msgid "KODI SETTINGS"
+msgstr "KODI-ren KONFIGURAZIOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:239
+msgid "ENABLE KODI"
+msgstr "KODI AKTIBATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:243
+msgid "KODI AT START"
+msgstr "HASI KODI ABIARAZTEAN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:246
+msgid "START KODI WITH X"
+msgstr "X SAKATU KODI ABIARAZTEKO"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:288
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "SISTEMA BERRABIARAZIKO DA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:288
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:889
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:911
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:914
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:918
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:967
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:72
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:81
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:92
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:103
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:159
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/main.cpp:322
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:170
+msgid "OK"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:303
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:305
+msgid "GAMES SETTINGS"
+msgstr "JOKOEN KONFIGURAZIOAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:308
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:830
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1137
+msgid "GAME RATIO"
+msgstr "JOKOAREN RATIOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:313
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:834
+msgid "SMOOTH GAMES"
+msgstr "JOKUAK LEUNDU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:318
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:839
+msgid "REWIND"
+msgstr "ATZERA ERAMAN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:323
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:844
+msgid "AUTO SAVE/LOAD"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:327
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:337
+msgid "SHADERS SET"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:335
+msgid "SCANLINES"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:336
+msgid "RETRO"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:343
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:361
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:347
+msgid "RETROACHIEVEMENTS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:350
+msgid "USERNAME"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:351
+msgid "PASSWORD"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:375
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:399
+msgid "ADVANCED"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:419
+#, fuzzy
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "ZIUR EGUNERATU NAHI DUZULA?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:419
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:720
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:734
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:56
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:52
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:291
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:148
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:161
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:141
+msgid "YES"
+msgstr "BAI"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:434
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:726
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:740
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:62
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:53
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:295
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:38
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:153
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:167
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:147
+msgid "NO"
+msgstr "EZ"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:437
+msgid "UPDATE GAMES LISTS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:447
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:878
+msgid "CONTROLLERS SETTINGS"
+msgstr "AGINTEEN KONFIGURAZIOAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:451
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:453
+msgid "UI SETTINGS"
+msgstr "INTERFAZEAREN EZARPENAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:458
+msgid "OVERSCAN"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:469
+msgid "SCREENSAVER AFTER"
+msgstr "PANTAILA BABESLEA ZENBAT SEGUNDU ONDOREN:"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:477
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:516
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:523
+msgid "TRANSITION STYLE"
+msgstr "TRANTSIZIO MOTA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:485
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "PANTAILA BABESLEAREN PORTAERA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:493
+msgid "SHOW FRAMERATE"
+msgstr "ERAKUTSI FRAMERATEA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:500
+msgid "ON-SCREEN HELP"
+msgstr "LAGUNTZA PANTAILAN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:509
+msgid "QUICK SYSTEM SELECT"
+msgstr "SISTEMA AUKERATZE AZKARRA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:536
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:540
+msgid "THEME SET"
+msgstr "GAIA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:559
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:561
+msgid "SOUND SETTINGS"
+msgstr "SOINU EZARPENAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:566
+msgid "SYSTEM VOLUME"
+msgstr "SISTEMAREN BOLUMENA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:571
+msgid "FRONTEND MUSIC"
+msgstr "ATZEKO MUSIKA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:573
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:584
+msgid "OUTPUT DEVICE"
+msgstr "SOINU IRTEERA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:579
+msgid "HDMI"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:580
+msgid "JACK"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:581
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1144
+msgid "AUTO"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:607
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:611
+msgid "NETWORK SETTINGS"
+msgstr "SARE KONFIGURAZIOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:613
+msgid "CONNECTED"
+msgstr "KONEKTATUTA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:614
+msgid "NOT CONNECTED"
+msgstr "KONEKTATU GABE"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:616
+msgid "STATUS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:619
+msgid "IP ADDRESS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:621
+msgid "HOSTNAME"
+msgstr "GAILUAREN IZENA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:627
+msgid "ENABLE WIFI"
+msgstr "WIFI-a AKTIBATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:631
+msgid "WIFI SSID"
+msgstr "WIFI SSID-a"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:633
+msgid "WIFI KEY"
+msgstr "WIFI GAKOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:647
+msgid "WIFI ENABLED"
+msgstr "WIFI-a AKTIBATUTA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:651
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "WIFI KONFIGURAZIO ERROREA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:667
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:669
+msgid "SCRAPER"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:672
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:678
+msgid "SCRAPE FROM"
+msgstr "LORTU DATUAK HEMENDIK:"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:686
+msgid "SCRAPE RATINGS"
+msgstr "LORTU KALIFIKAZIOAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:700
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:12
+msgid "SCRAPE NOW"
+msgstr "DATUAK LORTU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:712
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:714
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:143
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/main.cpp:306
+msgid "QUIT"
+msgstr "IRTEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:720
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:148
+msgid "REALLY RESTART?"
+msgstr "BERRABIARAZI?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:728
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:155
+msgid "RESTART SYSTEM"
+msgstr "SISTEMA BERRABIARAZI"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:734
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:161
+msgid "REALLY SHUTDOWN?"
+msgstr "ITZALI?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:742
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:169
+msgid "SHUTDOWN SYSTEM"
+msgstr "ITZALI SISTEMA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:809
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:15
+msgid "Emulator"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:812
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:825
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:16
+msgid "Core"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:885
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
+msgstr ""
+"AGINTE BAT KONFIGURATZERA ZOAZ. JOYSTICK BAT SOILIK BADUZU NORABIDEAK "
+"KONFIGURATU ETA AHAZTU BESTE KONFIGURAZIOA BOTO BAT SAKATU ETA MANTENDUZ. EZ "
+"BADUZU BOTOI BEREZIRIK HOTKEY-arentzat ERABILI EZAZU SELECT BOTOIA. ZURE "
+"AGINTEAN EXISTITZEN EZ DIREN BOTOIEI EZ EGIN KASURIK BOTOI BAT SAKATU ETA "
+"MANTENDUZ."
+
+# GUIMENU
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:901
+msgid "CONFIGURE A CONTROLLER"
+msgstr "AGINTE BAT KONFIGURATU"
+
+# Bluetooth
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:911
+msgid "CONTROLLER PAIRED"
+msgstr "AGINTEA PAREKATUA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:911
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "AGINTEA PAREKATZEA EZINEZKOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:914
+msgid "AN ERROR OCCURED"
+msgstr "ERRORE BAT GERTATU DA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:918
+msgid "NO CONTROLLERS FOUND"
+msgstr "EZ DA AGINTERIK DETEKTATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:920
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:958
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "BLUETOOTH AGINTE BAT PAREKATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:967
+msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:970
+msgid "FORGET BLUETOOTH CONTROLLERS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:994
+#, c-format
+msgid "INPUT P%i"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1129
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:388
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:331
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:158
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentList.cpp:332
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:449
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:451
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:453
+msgid "CHOOSE"
+msgstr "HAUTATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1130
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:389
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ImageComponent.cpp:330
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:345
+msgid "SELECT"
+msgstr "AUKERATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1131
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:158
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:126
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:58
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:318
+msgid "CLOSE"
+msgstr "ITXI"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1143
+msgid "CUSTOM"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1145
+msgid "4/3"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1146
+msgid "16/9"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:56
+msgid "REALLY UPDATE?"
+msgstr "ZIUR EGUNERATU NAHI DUZULA?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:72
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "SARE KONEXIO BAT BEHARREZKOA DA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:81
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:92
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "EGUNERAKETAK HUTS EGIN DU. SISTEMA BERRABIARAZIKO DA ORAIN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:103
+msgid "NO UPDATE AVAILABLE"
+msgstr "EZ DAGO EGUNERAKETARIK ERABILGARRI"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:13
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:336
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:163
+msgid "OPTIONS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:22
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:27
+msgid "JUMP TO LETTER"
+msgstr "LETRARA JOAN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:44
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:51
+msgid "SORT GAMES BY"
+msgstr "JOKUAN ORDENATU:"
+
+#  FAVORITES
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:55
+msgid "FAVORITES ONLY"
+msgstr "GOGOKOAK SOILIK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:62
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "JOKU HONEN DATUAK EDITATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:17
+msgid "SCRAPE THESE GAMES"
+msgstr "JOKU HAUEN DATUAK LORTU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:18
+msgid "All Games"
+msgstr "Joko guztiak"
+
+# MISSING SCRAPPER TRANSLATIONS
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:20
+msgid "Only missing image"
+msgstr "Falta diren irudiak bakarrik"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:22
+msgid "FILTER"
+msgstr "IRAGAZKIAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:25
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "SISTEMA HAUEN DATUAK LORTU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:31
+msgid "SYSTEMS"
+msgstr "SISTEMAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:35
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "ERABILTZAILEAK ERABAKI GATAZKETAN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:37
+msgid "START"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:38
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:125
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:11
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:57
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:317
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:333
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:69
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:160
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:98
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:139
+msgid "BACK"
+msgstr "ATZERA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:51
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:68
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:32
+msgid "SCRAPING IN PROGRESS"
+msgstr "DATUAK LORTZEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:35
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:329
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:157
+msgid "SYSTEM"
+msgstr "SISTEMA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:38
+msgid "subtitle text"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:57
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:279
+msgid "SKIP"
+msgstr "TXANDAPASA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "STOP"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "stop (progress saved)"
+msgstr "gelditu (orain artekoa gordeta)"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:107
+#, c-format
+msgid "GAME %i OF %i"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:141
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
+msgstr ""
+"EZ DA JOKORIK AURKITU SISTEMAN !\n"
+"MESEDEZ, JARRAITU ARGIBIDEAK JOKOAK GEHITZEKO.\n"
+"\n"
+"RECALBOX.COM-EN BISITA GAITZAZU INFORMAZIO GEHIAGO ESKURATZEKO"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:149
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:153
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:37
+msgid "EDIT METADATA"
+msgstr "DATUAK EDITATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:183
+msgid "SCRAPE"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:185
+msgid "SAVE"
+msgstr "GORDE"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+"FITXATEGI BAT EZABATZERA ZOAZ!\n"
+" ZIUR AL ZAUDE?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:201
+msgid "DELETE"
+msgstr "EZABATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:290
+msgid "SAVE CHANGES?"
+msgstr "ALDAKETAK GORDE?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/NetworkThread.cpp:38
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "ZURE RECALBOX-arentzat EGUNERAKETA BAT DAGO"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:15
+msgid "enter emulator"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:16
+msgid "enter core"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:17
+msgid "Name"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:17
+msgid "enter game name"
+msgstr "jokoarean izena"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:18
+msgid "Description"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:18
+msgid "enter description"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:19
+msgid "Image"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:19
+msgid "enter path to image"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:20
+msgid "Thumbnail"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:20
+msgid "enter path to thumbnail"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:21
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:56
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:35
+msgid "Rating"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:21
+msgid "enter rating"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:22
+msgid "Release date"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:22
+msgid "enter release date"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:243
+msgid "unknown"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:58
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:41
+msgid "Developer"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+msgid "enter game developer"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:59
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:44
+msgid "Publisher"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+msgid "enter game publisher"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:60
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:47
+msgid "Genre"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+msgid "enter game genre"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:26
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:61
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:50
+msgid "Players"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:26
+msgid "enter number of players"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:62
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:335
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:162
+msgid "Favorite"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+msgid "enter favorite"
+msgstr "gogokoa gehitu"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:28
+msgid "Region"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:28
+msgid "enter region"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "Original"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "Romtype"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "enter romtype"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+msgid "Hidden"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+msgid "set hidden"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:31
+msgid "Play count"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:31
+msgid "enter number of times played"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:32
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:53
+msgid "Last played"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:32
+msgid "enter last played date"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:57
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:38
+msgid "Released"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:240
+msgid "NO GAMES FOUND - SKIP"
+msgstr "EZ DIRA JOKUAK AURKITU - TXANDAPASA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:278
+msgid "RETRY"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:454
+msgid "SEARCH FOR"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:236
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:57
+msgid "Times played"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:332
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:68
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:159
+msgid "LAUNCH"
+msgstr "ABIARAZI"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:67
+msgid "SCROLL"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/ViewController.cpp:524
+msgid "MENU"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:9
+msgid "FILENAME, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:10
+msgid "FILENAME, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:11
+msgid "RATING, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:12
+msgid "RATING, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:13
+msgid "TIMES PLAYED, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:14
+msgid "TIMES PLAYED, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:15
+msgid "LAST PLAYED, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:16
+msgid "LAST PLAYED, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "DISCARD CHANGES"
+msgstr "ALDAKETAK BAZTERTU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "WELCOME"
+msgstr "ONGI ETORRI"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "CONFIGURE INPUT"
+msgstr "KONTROLEN KONFIGURAZIOA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:38
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:42
+msgid "NO GAMEPADS DETECTED"
+msgstr "EZ DA AGINTERIK DETEKTATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:47
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "BOTOI BAT SAKATUA MANTENDU AGINTEAN KONFIGURATZEKO."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "F4 SAKATU EDOZEIN UNETAN IRTETZEKO."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:50
+#, fuzzy
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "ESC SAKATU EZEZTATZEKO"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "UP"
+msgstr "GORA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "DOWN"
+msgstr "BEHERA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "LEFT"
+msgstr "EZKERRA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "RIGHT"
+msgstr "ESKUINA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 GORA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 EZKERRA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 GORA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 EZKERRA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "PAGE UP"
+msgstr "L1 (HUR. ORRIA)"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "PAGE DOWN"
+msgstr "R1 (AUR. ORRIA)"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "HOTKEY"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:55
+msgid "CONFIGURING"
+msgstr "KONFIGURATZEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:60
+msgid "KEYBOARD"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:62
+#, c-format
+msgid "GAMEPAD %i"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:68
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "MANTENDU EDOZEIN BOTOI TXANDAPASARAKO"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:98
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:257
+msgid "-NOT DEFINED-"
+msgstr "-KONFIGURATU GABE-"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:219
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] ""
+msgstr[1] ""
+
+# Config controllers missing translation
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:251
+msgid "PRESS ANYTHING"
+msgstr "EDOZEIN BOTOI SAKATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:269
+msgid "ALREADY TAKEN"
+msgstr "ERABILITA"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:141
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "KODI MULTIMEDIA GUNEA ABIARAZI NAHI DUZU?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:282
+msgid "LOADING..."
+msgstr "KARGATZEN..."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:374
+msgid "PLEASE WAIT..."
+msgstr "ITXARON MESEDEZ..."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:102
+msgid "SELECT ALL"
+msgstr "DENAK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:111
+msgid "SELECT NONE"
+msgstr "BAT ERE EZ"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:343
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/SwitchComponent.cpp:61
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/SliderComponent.cpp:144
+msgid "CHANGE"
+msgstr "ALDATU"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/BusyComponent.cpp:24
+msgid "WORKING..."
+msgstr "LANEAN..."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:212
+msgid "never"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:218
+msgid "just now"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:221
+#, c-format
+msgid "%i sec ago"
+msgid_plural "%i secs ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:226
+#, c-format
+msgid "%i min ago"
+msgid_plural "%i mins ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:231
+#, c-format
+msgid "%i hour ago"
+msgid_plural "%i hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:236
+#, c-format
+msgid "%i day ago"
+msgid_plural "%i days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#~ msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+#~ msgstr "EGUNERAKETA AMAITUTA. SISTEMA BERRABIARAZIKO DA ORAIN"
+
+#~ msgid "Rating: "
+#~ msgstr "Puntuazioa: "
+
+#~ msgid "Released: "
+#~ msgstr "Argitaratua:"
+
+#~ msgid "Developer: "
+#~ msgstr "Garatzailea : "
+
+#~ msgid "Publisher: "
+#~ msgstr "Editorea : "
+
+#~ msgid "Genre: "
+#~ msgstr "Generoa:"
+
+#~ msgid "Players: "
+#~ msgstr "Jokalariak : "
+
+#~ msgid "Last played: "
+#~ msgstr "Azken partida : "
+
+#~ msgid "Times played: "
+#~ msgstr "Alditan jokatua : "
+
+#~ msgid "NAME"
+#~ msgstr "IZENA"
+
+#~ msgid "ENTER DESCRIPTION"
+#~ msgstr "SARTU DESKRIPZIOA"
+
+#~ msgid "ENTER PATH TO IMAGE"
+#~ msgstr "SARTU IRUDIRA BIDEA"
+
+#~ msgid "THUMBNAIL"
+#~ msgstr "IRUDI TXIKIA"
+
+#~ msgid "ENTER PATH TO THUMBNAIL"
+#~ msgstr "SARTU IRUDI TXIKIRA BIDEA"
+
+#~ msgid "RATING"
+#~ msgstr "KALIFIKAZIOA"
+
+#~ msgid "ENTER SCORE"
+#~ msgstr "SARTU KALIFIKAZIOA"
+
+#~ msgid "RELEASE DATE"
+#~ msgstr "ARGITARATZE DATA"
+
+#~ msgid "ENTER RELEASE DATE"
+#~ msgstr "SARTU ARGITARATZE DATA"
+
+#~ msgid "DEVELOPER"
+#~ msgstr "GARATZAILEA"
+
+#~ msgid "ENTER GAME DEVELOPER"
+#~ msgstr "SARTU GARATZAILEAREN IZENA"
+
+#~ msgid "PUBLISHER"
+#~ msgstr "EDITOREA"
+
+#~ msgid "ENTER GAME PUBLISHER"
+#~ msgstr "SARTU EDITOREAREN IZENA"
+
+#~ msgid "GENRE"
+#~ msgstr "GENEROA"
+
+#~ msgid "ENTER GAME GENRE"
+#~ msgstr "SARTU GENEROA"
+
+#~ msgid "PLAYERS"
+#~ msgstr "JOKALARIAK"
+
+#~ msgid "ENTER NUMBER OF PLAYERS"
+#~ msgstr "SARTU JOKALARI KOPURUA"
+
+#~ msgid "PLAY COUNT"
+#~ msgstr "PARTIDA KOPURUA"
+
+#~ msgid "ENTER NUMBER OF TIMES PLAYED"
+#~ msgstr "SARTU JOKATUTAKO PARTIDEN KOPURUA"
+
+#~ msgid "ENABLE SOUNDS"
+#~ msgstr "SOINUA AKTIBATU"
+
+#~ msgid "REALLY QUIT?"
+#~ msgstr "IRTEN?"
+
+#~ msgid "QUIT EMULATIONSTATION"
+#~ msgstr "EMULATIONSTATION-etik IRTEN"
+
+#~ msgid "close"
+#~ msgstr "itxi"
+
+#~ msgid "select"
+#~ msgstr "aukeratu"
+
+#~ msgid "choose"
+#~ msgstr "hautatu"
+
+#~ msgid "back"
+#~ msgstr "atzera"
+
+#~ msgid "GO BACK"
+#~ msgstr "ATZERA EGIN"
+
+#~ msgid " GAMES AVAILABLE"
+#~ msgstr " JOKU ERABILGARRIAK"
+
+#~ msgid " GAMEPAD"
+#~ msgstr " AGINTEA"
+
+#~ msgid " DETECTED"
+#~ msgstr " DETEKTATUA"
+
+#~ msgid "UPDATE"
+#~ msgstr "EGUNERATU"
+
+#~ msgid "INPUT P1"
+#~ msgstr "J1 AGINTEA"
+
+#~ msgid "INPUT P2"
+#~ msgstr "J2 AGINTEA"
+
+#~ msgid "INPUT P3"
+#~ msgstr "J3 AGINTEA"
+
+#~ msgid "INPUT P4"
+#~ msgstr "J4 AGINTEA"
+
+#~ msgid "STORAGE"
+#~ msgstr "MEMORIA"
+
+#~ msgid "GPIO CONTROLLERS"
+#~ msgstr "GPIO AGINTEAK"
+
+#~ msgid "GPIO CONTROLLERS ARE NOW ON"
+#~ msgstr "GPIO AGINTEAK AKTIBATUTA DAUDE"
+
+# TEXT EDITING
+#~ msgid "EDIT"
+#~ msgstr "EDITATU"
+
+#~ msgid "STOP EDITING"
+#~ msgstr "EDITATZEZ UTZI"
+
+#~ msgid "MOVE CURSOR"
+#~ msgstr "KURTSOREA MUGITU"
+
+#~ msgid "accept"
+#~ msgstr "Onartu"
+
+#~ msgid " SELECTED"
+#~ msgstr " AUKERATUAK"
+
+#~ msgid "accept result"
+#~ msgstr "erantzuna onartu"
+
+#~ msgid "GAMES"
+#~ msgstr "JOKOAK"
+
+#~ msgid " OF "
+#~ msgstr " NOREN: "
+
+#~ msgid " SKIPPED."
+#~ msgstr " TXANDAPASA EGINDA."
+
+#~ msgid "FAVORITE"
+#~ msgstr "GOGOKOA"
+
+#~ msgid " GAME AVAILABLE"
+#~ msgstr " JOKOA ERABILGARRI"
+
+#, fuzzy
+#~ msgid "FAVORITES"
+#~ msgstr "GOGOKOA"
+
+#, fuzzy
+#~ msgid "ENTER REGION"
+#~ msgstr "SARTU KALIFIKAZIOA"
+
+#, fuzzy
+#~ msgid "ENTER ROMTYPE"
+#~ msgstr "SARTU KALIFIKAZIOA"
+
+#~ msgid "HOLD FOR "
+#~ msgstr "MANTENDU HONETARAKO:"
+
+#~ msgid "S TO SKIP"
+#~ msgstr "S TXANDAPASARAKO"
+
+#~ msgid " SUCCESSFULLY SCRAPED!"
+#~ msgstr " LORTUAK!"
+
+#~ msgid "NOGAMEERRORMESSAGE"
+#~ msgstr ""
+#~ "EZ DA JOKORIK AURKITU SISTEMAN !\n"
+#~ "MESEDEZ, JARRAITU ARGIBIDEAK JOKOAK GEHITZEKO.\n"
+#~ "\n"
+#~ "RECALBOX.COM-EN BISITA GAITZAZU INFORMAZIO GEHIAGO ESKURATZEKO"
+
+#~ msgid "I18NMESSAGECONTROLLERS"
+#~ msgstr ""
+#~ "AGINTE BAT KONFIGURATZERA ZOAZ. JOYSTICK BAT SOILIK BADUZU NORABIDEAK "
+#~ "KONFIGURATU ETA AHAZTU BESTE KONFIGURAZIOA BOTO BAT SAKATU ETA MANTENDUZ. "
+#~ "EZ BADUZU BOTOI BEREZIRIK HOTKEY-arentzat ERABILI EZAZU SELECT BOTOIA. "
+#~ "ZURE AGINTEAN EXISTITZEN EZ DIREN BOTOIEI EZ EGIN KASURIK BOTOI BAT "
+#~ "SAKATU ETA MANTENDUZ."
+
+#~ msgid "NO GAMES WERE SCRAPED."
+#~ msgstr "EZ DA INONGO JOKOREN DATURIK LORTU."

@@ -1,3 +1,12 @@
+Recalbox Emulationstation
+================
+Your are on the Emulationstation github for the recalbox.
+The frontend has been modified for the need of the recalbox.
+
+Rendez-vous on https://github.com/digitalLumberjack/recalbox-os for wiki, issues and more !
+
+Below this line is the original readme.
+
 EmulationStation
 ================
 
@@ -41,7 +50,7 @@ EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, 
 **On Debian/Ubuntu:**
 All of this be easily installed with apt-get:
 ```bash
-sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid
+sudo apt-get install libsdl2-dev libsdl2-mixer-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libboost-regex-dev libboost-thread-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid
 ```
 
 Then, generate and build the Makefile with CMake:
