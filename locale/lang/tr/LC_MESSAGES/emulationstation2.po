@@ -1,208 +1,78 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Emulationstation 2.0RC1 TURKISH po\n"
+"Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 00:18+0200\n"
+"POT-Creation-Date: 2016-02-15 18:22+0100\n"
 "PO-Revision-Date: 2016-02-15 00:22+0200\n"
 "Last-Translator: Ibrahim Gungor <igungor@gmail.com>\n"
-"Language-Team: TURKISH\n"
-"Language: tr\n"
+"Language: Turkish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.8.7\n"
 
-#: ../es-app/src/components/FileSystemSelectorComponent.cpp:179
-#: ../es-app/src/components/ScraperSearchComponent.cpp:280
-#: ../es-app/src/guis/GuiGameScraper.cpp:46
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:189
-#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "SİSTEMİNİZE AİT GÜNCELLEME MEVCUT"
+
 msgid "CANCEL"
 msgstr "İPTAL"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:56
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:35
-#: ../es-app/src/MetaData.cpp:21
 msgid "Rating"
 msgstr "Puan"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:57
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:38
 msgid "Released"
 msgstr "Yayın"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:58
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:41
-#: ../es-app/src/MetaData.cpp:23
 msgid "Developer"
 msgstr "Geliştirici"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:59
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:44
-#: ../es-app/src/MetaData.cpp:24
 msgid "Publisher"
 msgstr "Yayıncı"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:60
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:47
-#: ../es-app/src/MetaData.cpp:25
 msgid "Genre"
 msgstr "Tür"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:61
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:50
-#: ../es-app/src/MetaData.cpp:26
 msgid "Players"
 msgstr "Oyuncu"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:240
 msgid "NO GAMES FOUND - SKIP"
 msgstr "OYUN BULUNAMADI"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:278
 msgid "RETRY"
 msgstr "TEKRAR DENE"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:279
-#: ../es-app/src/guis/GuiScraperMulti.cpp:57
 msgid "SKIP"
 msgstr "GEÇ"
 
-#: ../es-app/src/components/ScraperSearchComponent.cpp:454
 msgid "SEARCH FOR"
 msgstr "ARAMA YAP"
 
-#: ../es-app/src/guis/GuiGameScraper.cpp:42
-#: ../es-app/src/guis/GuiScraperMulti.cpp:52
-msgid "INPUT"
-msgstr "GİRDİ"
-
-#: ../es-app/src/guis/GuiGameScraper.cpp:42
-#: ../es-app/src/guis/GuiScraperMulti.cpp:52
-msgid "search"
-msgstr "ara"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:13
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:163
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:336
-msgid "OPTIONS"
-msgstr "SEÇENEKLER"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:22
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:27
-msgid "JUMP TO LETTER"
-msgstr "ŞU HARFE GİT"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:44
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:51
-msgid "SORT GAMES BY"
-msgstr "SIRALAMA KRİTERİ"
-
-#  FAVORITES
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:55
-msgid "FAVORITES ONLY"
-msgstr "SADECE FAVORİLER"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:62
-msgid "EDIT THIS GAME'S METADATA"
-msgstr "OYUN BİLGİLERİNİ DÜZENLE"
-
-#: ../es-app/src/guis/GuiGamelistOptions.cpp:158
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:318
-#: ../es-app/src/guis/GuiScraperStart.cpp:126
-#: ../es-app/src/guis/GuiSettings.cpp:58 ../es-app/src/guis/GuiMenu.cpp:1130
-msgid "CLOSE"
-msgstr "KAPAT"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:37
-msgid "EDIT METADATA"
-msgstr "DÜZENLE"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:183
-msgid "SCRAPE"
-msgstr "ÇEK"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:185
-msgid "SAVE"
-msgstr "KAYDET"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-msgid ""
-"THIS WILL DELETE A FILE!\n"
-"ARE YOU SURE?"
-msgstr ""
-"BU İŞLEM BİR DOSYA SİLECEK!\n"
-"EMİN MİSİNİZ?"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:291
-#: ../es-app/src/guis/GuiScraperStart.cpp:52
-#: ../es-app/src/guis/GuiUpdate.cpp:56 ../es-app/src/guis/GuiMenu.cpp:419
-#: ../es-app/src/guis/GuiMenu.cpp:720 ../es-app/src/guis/GuiMenu.cpp:734
-#: ../es-app/src/views/SystemView.cpp:148
-#: ../es-app/src/views/SystemView.cpp:161 ../es-core/src/Window.cpp:141
-msgid "YES"
-msgstr "EVET"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:198
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:295
-#: ../es-app/src/guis/GuiScraperStart.cpp:53
-#: ../es-app/src/guis/GuiUpdate.cpp:62 ../es-app/src/guis/GuiMenu.cpp:434
-#: ../es-app/src/guis/GuiMenu.cpp:726 ../es-app/src/guis/GuiMenu.cpp:740
-#: ../es-app/src/views/SystemView.cpp:153
-#: ../es-app/src/views/SystemView.cpp:167 ../es-core/src/Window.cpp:147
-msgid "NO"
-msgstr "HAYIR"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:201
-msgid "DELETE"
-msgstr "SİL"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:290
-msgid "SAVE CHANGES?"
-msgstr "DEĞİŞİKLİKLERİ KAYDET?"
-
-#: ../es-app/src/guis/GuiMetaDataEd.cpp:317
-#: ../es-app/src/guis/GuiScraperStart.cpp:38
-#: ../es-app/src/guis/GuiScraperStart.cpp:125
-#: ../es-app/src/guis/GuiSettings.cpp:11 ../es-app/src/guis/GuiSettings.cpp:57
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:160
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:333
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:69
-#: ../es-core/src/components/OptionListComponent.h:98
-#: ../es-core/src/components/OptionListComponent.h:139
-msgid "BACK"
-msgstr "GERİ"
-
-#: ../es-app/src/guis/GuiScraperMulti.cpp:32
 msgid "SCRAPING IN PROGRESS"
 msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:35
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:157
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:329
 msgid "SYSTEM"
 msgstr "SİSTEM"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:38
 msgid "subtitle text"
 msgstr "altyazı metni"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "INPUT"
+msgstr "GİRDİ"
+
+msgid "search"
+msgstr "ara"
+
 msgid "STOP"
 msgstr "DUR"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:63
 msgid "stop (progress saved)"
 msgstr "dur"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:107
 #, c-format
 msgid "GAME %i OF %i"
 msgstr "OYUN %i/%i"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:141
 msgid ""
 "WE CAN'T FIND ANY SYSTEMS!\n"
 "CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
@@ -214,415 +84,290 @@ msgstr ""
 "SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN "
 "KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:149
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
 msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
 msgstr[0] "%i OYUN BAŞARIYLA ÇEKİLDİ!"
 msgstr[1] "%i OYUN BAŞARIYLA ÇEKİLDİ!"
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:153
 #, c-format
 msgid "%i GAME SKIPPED."
 msgid_plural "%i GAMES SKIPPED."
 msgstr[0] "%i OYUN ATLANDI."
 msgstr[1] "%i OYUN ATLANDI."
 
-#: ../es-app/src/guis/GuiScraperMulti.cpp:159
-#: ../es-app/src/guis/GuiUpdate.cpp:72 ../es-app/src/guis/GuiUpdate.cpp:81
-#: ../es-app/src/guis/GuiUpdate.cpp:92 ../es-app/src/guis/GuiUpdate.cpp:103
-#: ../es-app/src/guis/GuiMenu.cpp:288 ../es-app/src/guis/GuiMenu.cpp:889
-#: ../es-app/src/guis/GuiMenu.cpp:910 ../es-app/src/guis/GuiMenu.cpp:913
-#: ../es-app/src/guis/GuiMenu.cpp:917 ../es-app/src/guis/GuiMenu.cpp:966
-#: ../es-app/src/main.cpp:322 ../es-core/src/guis/GuiInputConfig.cpp:170
 msgid "OK"
 msgstr "TAMAM"
 
-#: ../es-app/src/guis/GuiScraperStart.cpp:12 ../es-app/src/guis/GuiMenu.cpp:700
-msgid "SCRAPE NOW"
-msgstr "ŞİMDİ ÇEK"
+msgid "EDIT METADATA"
+msgstr "DÜZENLE"
 
-#: ../es-app/src/guis/GuiScraperStart.cpp:17
-msgid "SCRAPE THESE GAMES"
-msgstr "ŞU OYUNLARI ÇEK"
+msgid "SCRAPE"
+msgstr "ÇEK"
 
-#: ../es-app/src/guis/GuiScraperStart.cpp:18
-msgid "All Games"
-msgstr "Tüm Oyunlar"
+msgid "SAVE"
+msgstr "KAYDET"
 
-# MISSING SCRAPPER TRANSLATIONS
-#: ../es-app/src/guis/GuiScraperStart.cpp:20
-msgid "Only missing image"
-msgstr "Sadece eksik resimliler"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:22
-msgid "FILTER"
-msgstr "FİLTRE"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:25
-msgid "SCRAPE THESE SYSTEMS"
-msgstr "ŞU SİSTEMLERİ ÇEK"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:31
-msgid "SYSTEMS"
-msgstr "SİSTEMLER"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:35
-msgid "USER DECIDES ON CONFLICTS"
-msgstr "ÇAKIŞMALARDA KULLANICI KARAR VERSİN"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:37
-msgid "START"
-msgstr "BAŞLAT"
-
-#: ../es-app/src/guis/GuiScraperStart.cpp:51
 msgid ""
-"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
-"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
-"CONTINUE ANYWAY?"
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
 msgstr ""
-"UYARI: SEÇİLİ SİSTEMLERDEN BAZILARININ PLATFORMLARI BULUNAMADI. TARAMA "
-"SONUÇLARI TUTARSIZ OLABİLİR!\n"
-"DEVAM EDİLSİN Mİ?"
+"BU İŞLEM BİR DOSYA SİLECEK!\n"
+"EMİN MİSİNİZ?"
 
-#: ../es-app/src/guis/GuiScraperStart.cpp:68
-msgid "NO GAMES FIT THAT CRITERIA."
-msgstr "BU KRİTERE UYAN OYUN BULUNAMADI."
+msgid "YES"
+msgstr "EVET"
 
-#: ../es-app/src/guis/GuiUpdate.cpp:56
-msgid "REALLY UPDATE?"
-msgstr "GÜNCELLE?"
+msgid "NO"
+msgstr "HAYIR"
 
-#: ../es-app/src/guis/GuiUpdate.cpp:72
-msgid "NETWORK CONNECTION NEEDED"
-msgstr "AĞ BAĞLANTISI GEREKİYOR"
+msgid "DELETE"
+msgstr "SİL"
 
-#: ../es-app/src/guis/GuiUpdate.cpp:81
-msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
-msgstr "GÜNCELLEME İNDİRİLDİ, SİSTEM YENİDEN BAŞLATILACAK"
+msgid "SAVE CHANGES?"
+msgstr "DEĞİŞİKLİKLERİ KAYDET?"
 
-#: ../es-app/src/guis/GuiUpdate.cpp:92
-msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
-msgstr "GÜNCELLEME BAŞARISIZ, SİSTEM YENİDEN BAŞLATILIYOR"
+msgid "BACK"
+msgstr "GERİ"
 
-#: ../es-app/src/guis/GuiUpdate.cpp:103
-msgid "NO UPDATE AVAILABLE"
-msgstr "YENİ GÜNCELLEME YOK"
+msgid "CLOSE"
+msgstr "KAPAT"
 
-#: ../es-app/src/guis/GuiMenu.cpp:82
 msgid "MAIN MENU"
 msgstr "ANA MENÜ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:96
 msgid "KODI MEDIA CENTER"
 msgstr "KODI MEDIA CENTER"
 
-#: ../es-app/src/guis/GuiMenu.cpp:111 ../es-app/src/guis/GuiMenu.cpp:115
 msgid "SYSTEM SETTINGS"
 msgstr "SİSTEM AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:120
 msgid "VERSION"
 msgstr "SÜRÜM"
 
-#: ../es-app/src/guis/GuiMenu.cpp:126
 msgid "SPACE LEFT"
 msgstr "KALAN DEPO"
 
-#: ../es-app/src/guis/GuiMenu.cpp:132 ../es-app/src/guis/GuiMenu.cpp:147
 msgid "STORAGE DEVICE"
 msgstr "DEPO CİHAZI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:151 ../es-app/src/guis/GuiMenu.cpp:166
 msgid "LANGUAGE"
 msgstr "DİL"
 
-#: ../es-app/src/guis/GuiMenu.cpp:169 ../es-app/src/guis/GuiMenu.cpp:188
 msgid "OVERCLOCK"
 msgstr "HIZAŞIMI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:174 ../es-app/src/guis/GuiMenu.cpp:180
 msgid "EXTREM (1100Mhz)"
 msgstr "EKSTREM (1100Mhz)"
 
-#: ../es-app/src/guis/GuiMenu.cpp:175
 msgid "TURBO (1000Mhz)"
 msgstr "TURBO (1000Mhz)"
 
-#: ../es-app/src/guis/GuiMenu.cpp:176
 msgid "HIGH (950Mhz)"
 msgstr "YÜKSEK (950Mhz)"
 
-#: ../es-app/src/guis/GuiMenu.cpp:177
 msgid "NONE (700Mhz)"
 msgstr "YOK (700Mhz)"
 
-#: ../es-app/src/guis/GuiMenu.cpp:181
 msgid "TURBO (1050Mhz)+"
 msgstr "TURBO (1050Mhz)+"
 
-#: ../es-app/src/guis/GuiMenu.cpp:182
 msgid "HIGH (1050Mhz)"
 msgstr "YÜKSEK (1050Mhz)"
 
-#: ../es-app/src/guis/GuiMenu.cpp:183
 msgid "NONE (900Mhz)"
 msgstr "YOK (900Mhz)"
 
-#: ../es-app/src/guis/GuiMenu.cpp:186 ../es-app/src/guis/GuiMenu.cpp:334
 msgid "NONE"
 msgstr "YOK"
 
 # NEW SETTINGS ORGANIZATION
-#: ../es-app/src/guis/GuiMenu.cpp:194 ../es-app/src/guis/GuiMenu.cpp:223
 msgid "UPDATES"
 msgstr "GÜNCELLEMELER"
 
-#: ../es-app/src/guis/GuiMenu.cpp:199
 msgid "AUTO UPDATES"
 msgstr "OTOMATİK GÜNCELLEME"
 
-#: ../es-app/src/guis/GuiMenu.cpp:206
 msgid "START UPDATE"
 msgstr "GÜNCELLE"
 
-#: ../es-app/src/guis/GuiMenu.cpp:236 ../es-app/src/guis/GuiMenu.cpp:259
 msgid "KODI SETTINGS"
 msgstr "KODI AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:239
 msgid "ENABLE KODI"
 msgstr "ETKİNLEŞTİR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:243
 msgid "KODI AT START"
 msgstr "AÇILIŞTA BAŞLASIN"
 
-#: ../es-app/src/guis/GuiMenu.cpp:246
 msgid "START KODI WITH X"
 msgstr "X İLE BAŞLASIN"
 
-#: ../es-app/src/guis/GuiMenu.cpp:288
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "SİSTEM YENİDEN BAŞLATILIYOR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:303 ../es-app/src/guis/GuiMenu.cpp:305
 msgid "GAMES SETTINGS"
 msgstr "OYUN AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:308 ../es-app/src/guis/GuiMenu.cpp:830
-#: ../es-app/src/guis/GuiMenu.cpp:1136
 msgid "GAME RATIO"
 msgstr "GÖRÜNTÜ ORANI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:313 ../es-app/src/guis/GuiMenu.cpp:834
 msgid "SMOOTH GAMES"
 msgstr "OYUNLARI SMOOTH GÖSTER"
 
-#: ../es-app/src/guis/GuiMenu.cpp:318 ../es-app/src/guis/GuiMenu.cpp:839
 msgid "REWIND"
 msgstr "GERİ SAR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:323 ../es-app/src/guis/GuiMenu.cpp:844
 msgid "AUTO SAVE/LOAD"
 msgstr "OTOMATİK KAYDET/YÜKLE"
 
-#: ../es-app/src/guis/GuiMenu.cpp:327 ../es-app/src/guis/GuiMenu.cpp:337
 msgid "SHADERS SET"
 msgstr "SHADER"
 
-#: ../es-app/src/guis/GuiMenu.cpp:335
 msgid "SCANLINES"
 msgstr "SCANLINES"
 
-#: ../es-app/src/guis/GuiMenu.cpp:336
 msgid "RETRO"
 msgstr "RETRO"
 
-#: ../es-app/src/guis/GuiMenu.cpp:343 ../es-app/src/guis/GuiMenu.cpp:361
 msgid "RETROACHIEVEMENTS SETTINGS"
 msgstr "RETROACHIEVEMENT AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:347
 msgid "RETROACHIEVEMENTS"
 msgstr "RETROACHIEVEMENT"
 
-#: ../es-app/src/guis/GuiMenu.cpp:350
 msgid "USERNAME"
 msgstr "KULLANICI ADI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:351
 msgid "PASSWORD"
 msgstr "PAROLA"
 
-#: ../es-app/src/guis/GuiMenu.cpp:375 ../es-app/src/guis/GuiMenu.cpp:399
 msgid "ADVANCED"
 msgstr "GELİŞMİŞ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:419
 msgid "REALLY UPDATE GAMES LISTS ?"
 msgstr "OYUN LİSTESİ GÜNCELLENSİN Mİ?"
 
-#: ../es-app/src/guis/GuiMenu.cpp:437
 msgid "UPDATE GAMES LISTS"
 msgstr "OYUN LİSTESİNİ GÜNCELLE"
 
-#: ../es-app/src/guis/GuiMenu.cpp:447 ../es-app/src/guis/GuiMenu.cpp:878
 msgid "CONTROLLERS SETTINGS"
 msgstr "KUMANDA AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:451 ../es-app/src/guis/GuiMenu.cpp:453
 msgid "UI SETTINGS"
 msgstr "ARABİRİM AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:458
 msgid "OVERSCAN"
 msgstr "OVERSCAN"
 
-#: ../es-app/src/guis/GuiMenu.cpp:469
 msgid "SCREENSAVER AFTER"
 msgstr "EKRAN KORUYUCU"
 
-#: ../es-app/src/guis/GuiMenu.cpp:477 ../es-app/src/guis/GuiMenu.cpp:516
-#: ../es-app/src/guis/GuiMenu.cpp:523
 msgid "TRANSITION STYLE"
 msgstr "GEÇİŞ STİLİ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:485
 msgid "SCREENSAVER BEHAVIOR"
 msgstr "EKRAN KORUYUCU DAVRANIŞI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:493
 msgid "SHOW FRAMERATE"
 msgstr "FRAMERATE GÖSTER"
 
-#: ../es-app/src/guis/GuiMenu.cpp:500
 msgid "ON-SCREEN HELP"
 msgstr "YARDIMI GÖSTER"
 
-#: ../es-app/src/guis/GuiMenu.cpp:509
 msgid "QUICK SYSTEM SELECT"
 msgstr "HIZLI SİSTEM SEÇİMİ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:536 ../es-app/src/guis/GuiMenu.cpp:540
 msgid "THEME SET"
 msgstr "TEMA"
 
-#: ../es-app/src/guis/GuiMenu.cpp:559 ../es-app/src/guis/GuiMenu.cpp:561
 msgid "SOUND SETTINGS"
 msgstr "SES AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:566
 msgid "SYSTEM VOLUME"
 msgstr "SİSTEM SESİ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:571
 msgid "FRONTEND MUSIC"
 msgstr "ARABİRİM MÜZİĞİ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:573 ../es-app/src/guis/GuiMenu.cpp:584
 msgid "OUTPUT DEVICE"
 msgstr "ÇIKTI AYGITI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:579
 msgid "HDMI"
 msgstr "HDMI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:580
 msgid "JACK"
 msgstr "JACK"
 
-#: ../es-app/src/guis/GuiMenu.cpp:581 ../es-app/src/guis/GuiMenu.cpp:1143
 msgid "AUTO"
 msgstr "OTOMATİK"
 
-#: ../es-app/src/guis/GuiMenu.cpp:607 ../es-app/src/guis/GuiMenu.cpp:611
 msgid "NETWORK SETTINGS"
 msgstr "AĞ AYARLARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:613
 msgid "CONNECTED"
 msgstr "BAĞLI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:614
 msgid "NOT CONNECTED"
 msgstr "BAĞLI DEĞİL"
 
-#: ../es-app/src/guis/GuiMenu.cpp:616
 msgid "STATUS"
 msgstr "DURUM"
 
-#: ../es-app/src/guis/GuiMenu.cpp:619
 msgid "IP ADDRESS"
 msgstr "IP ADRESİ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:621
 msgid "HOSTNAME"
 msgstr "SİSTEM ADI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:627
 msgid "ENABLE WIFI"
 msgstr "WIFI ETKİNLEŞTİR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:631
 msgid "WIFI SSID"
 msgstr "WIFI SSID"
 
-#: ../es-app/src/guis/GuiMenu.cpp:633
 msgid "WIFI KEY"
 msgstr "WIFI ANAHTARI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:647
 msgid "WIFI ENABLED"
 msgstr "WIFI ETKİN"
 
-#: ../es-app/src/guis/GuiMenu.cpp:651
 msgid "WIFI CONFIGURATION ERROR"
 msgstr "WIFI YAPILANDIRMA HATASI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:667 ../es-app/src/guis/GuiMenu.cpp:669
 msgid "SCRAPER"
 msgstr "SCRAPER"
 
-#: ../es-app/src/guis/GuiMenu.cpp:672 ../es-app/src/guis/GuiMenu.cpp:678
 msgid "SCRAPE FROM"
 msgstr "ŞURADAN ÇEK"
 
-#: ../es-app/src/guis/GuiMenu.cpp:686
 msgid "SCRAPE RATINGS"
 msgstr "PUANLARI ÇEK"
 
-#: ../es-app/src/guis/GuiMenu.cpp:712 ../es-app/src/guis/GuiMenu.cpp:714
-#: ../es-app/src/views/SystemView.cpp:143 ../es-app/src/main.cpp:306
+msgid "SCRAPE NOW"
+msgstr "ŞİMDİ ÇEK"
+
 msgid "QUIT"
 msgstr "ÇIKIŞ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:720 ../es-app/src/views/SystemView.cpp:148
 msgid "REALLY RESTART?"
 msgstr "YENİDEN BAŞLAT"
 
-#: ../es-app/src/guis/GuiMenu.cpp:728 ../es-app/src/views/SystemView.cpp:155
 msgid "RESTART SYSTEM"
 msgstr "YENİDEN BAŞLAT"
 
-#: ../es-app/src/guis/GuiMenu.cpp:734 ../es-app/src/views/SystemView.cpp:161
 msgid "REALLY SHUTDOWN?"
 msgstr "KAPAT"
 
-#: ../es-app/src/guis/GuiMenu.cpp:742 ../es-app/src/views/SystemView.cpp:169
 msgid "SHUTDOWN SYSTEM"
 msgstr "KAPAT"
 
-#: ../es-app/src/guis/GuiMenu.cpp:809 ../es-app/src/MetaData.cpp:15
 msgid "Emulator"
 msgstr "Emulator"
 
-#: ../es-app/src/guis/GuiMenu.cpp:812 ../es-app/src/guis/GuiMenu.cpp:825
-#: ../es-app/src/MetaData.cpp:16
 msgid "Core"
 msgstr "Core"
 
-#: ../es-app/src/guis/GuiMenu.cpp:885
 msgid ""
 "YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
 "CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
@@ -636,424 +381,353 @@ msgstr ""
 "HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
 
 # GUIMENU
-#: ../es-app/src/guis/GuiMenu.cpp:901
 msgid "CONFIGURE A CONTROLLER"
 msgstr "KUMANDA YAPILANDIR"
 
 # Bluetooth
-#: ../es-app/src/guis/GuiMenu.cpp:910
 msgid "CONTROLLER PAIRED"
 msgstr "KUMANDA EŞLEŞTİRİLDİ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:910
 msgid "UNABLE TO PAIR CONTROLLER"
 msgstr "KUMANDA EŞLEŞTİRİLEMEDİ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:913
 msgid "AN ERROR OCCURED"
 msgstr "BİR HATA OLUŞTU"
 
-#: ../es-app/src/guis/GuiMenu.cpp:917
 msgid "NO CONTROLLERS FOUND"
 msgstr "KUMANDA BULUNAMADI"
 
-#: ../es-app/src/guis/GuiMenu.cpp:919 ../es-app/src/guis/GuiMenu.cpp:957
 msgid "PAIR A BLUETOOTH CONTROLLER"
 msgstr "BLUETOOTH KUMANDA EŞLEŞTİR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:966
 msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
 msgstr "KUMANDA BAĞLANTILARI SİLİNDİ."
 
-#: ../es-app/src/guis/GuiMenu.cpp:969
 msgid "FORGET BLUETOOTH CONTROLLERS"
 msgstr "BLUETOOTH KUMANDA AYARLARINI UNUT"
 
-#: ../es-app/src/guis/GuiMenu.cpp:993
 #, c-format
 msgid "INPUT P%i"
 msgstr "GİRDİ P%i"
 
-#: ../es-app/src/guis/GuiMenu.cpp:1128
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:158
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:331
-#: ../es-app/src/views/SystemView.cpp:388
-#: ../es-core/src/components/ComponentGrid.cpp:449
-#: ../es-core/src/components/ComponentGrid.cpp:451
-#: ../es-core/src/components/ComponentGrid.cpp:453
-#: ../es-core/src/components/ComponentList.cpp:332
 msgid "CHOOSE"
 msgstr "DEĞİŞTİR"
 
-#: ../es-app/src/guis/GuiMenu.cpp:1129 ../es-app/src/views/SystemView.cpp:389
-#: ../es-core/src/components/ImageComponent.cpp:330
-#: ../es-core/src/components/OptionListComponent.h:345
 msgid "SELECT"
 msgstr "SEÇ"
 
-#: ../es-app/src/guis/GuiMenu.cpp:1142
 msgid "CUSTOM"
 msgstr "ÖZEL"
 
-#: ../es-app/src/guis/GuiMenu.cpp:1144
 msgid "4/3"
 msgstr "4/3"
 
-#: ../es-app/src/guis/GuiMenu.cpp:1145
 msgid "16/9"
 msgstr "16/9"
 
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:159
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:332
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:68
-msgid "LAUNCH"
+msgid "OPTIONS"
+msgstr "SEÇENEKLER"
+
+msgid "JUMP TO LETTER"
+msgstr "ŞU HARFE GİT"
+
+msgid "SORT GAMES BY"
+msgstr "SIRALAMA KRİTERİ"
+
+#  FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "SADECE FAVORİLER"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "OYUN BİLGİLERİNİ DÜZENLE"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "ŞU OYUNLARI ÇEK"
+
+msgid "All Games"
+msgstr "Tüm Oyunlar"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "Sadece eksik resimliler"
+
+msgid "FILTER"
+msgstr "FİLTRE"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "ŞU SİSTEMLERİ ÇEK"
+
+msgid "SYSTEMS"
+msgstr "SİSTEMLER"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "ÇAKIŞMALARDA KULLANICI KARAR VERSİN"
+
+msgid "START"
 msgstr "BAŞLAT"
 
-#: ../es-app/src/views/gamelist/BasicGameListView.cpp:162
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:62
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:335
-#: ../es-app/src/MetaData.cpp:27
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+"UYARI: SEÇİLİ SİSTEMLERDEN BAZILARININ PLATFORMLARI BULUNAMADI. TARAMA "
+"SONUÇLARI TUTARSIZ OLABİLİR!\n"
+"DEVAM EDİLSİN Mİ?"
+
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr "BU KRİTERE UYAN OYUN BULUNAMADI."
+
+msgid "REALLY UPDATE?"
+msgstr "GÜNCELLE?"
+
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "AĞ BAĞLANTISI GEREKİYOR"
+
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME İNDİRİLDİ, SİSTEM YENİDEN BAŞLATILACAK"
+
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME BAŞARISIZ, SİSTEM YENİDEN BAŞLATILIYOR"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "YENİ GÜNCELLEME YOK"
+
+msgid "enter emulator"
+msgstr "emulator girin"
+
+msgid "enter core"
+msgstr "core girin"
+
+msgid "Name"
+msgstr "İsim"
+
+msgid "enter game name"
+msgstr "oyun ismi girin"
+
+msgid "Description"
+msgstr "Açıklama"
+
+msgid "enter description"
+msgstr "açıklama girin"
+
+msgid "Image"
+msgstr "Resim"
+
+msgid "enter path to image"
+msgstr "resim adresini girin"
+
+msgid "Thumbnail"
+msgstr "Mini-resim"
+
+msgid "enter path to thumbnail"
+msgstr "mini-resmin adresini girin"
+
+msgid "enter rating"
+msgstr "puan girin"
+
+msgid "Release date"
+msgstr "Yayın tarihi"
+
+msgid "enter release date"
+msgstr "yayınlanma tarihi girin"
+
+msgid "enter game developer"
+msgstr "geliştirici ismini girin"
+
+msgid "enter game publisher"
+msgstr "yayıncı ismini girin"
+
+msgid "enter game genre"
+msgstr "oyun türünü girin"
+
+msgid "enter number of players"
+msgstr "oyuncu sayısını girin"
+
 msgid "Favorite"
 msgstr "Favori"
 
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:53
-#: ../es-app/src/MetaData.cpp:32
+msgid "enter favorite"
+msgstr "favori girin"
+
+msgid "Region"
+msgstr "Bölge"
+
+msgid "enter region"
+msgstr "bölge girin"
+
+msgid "Romtype"
+msgstr "Rom tipi"
+
+msgid "enter romtype"
+msgstr "rom tipi girin"
+
+msgid "Hidden"
+msgstr "Gizli"
+
+msgid "set hidden"
+msgstr "gizle"
+
+msgid "Play count"
+msgstr "Oynama sayısı"
+
+msgid "enter number of times played"
+msgstr "kaç kez oynandığını girin"
+
 msgid "Last played"
 msgstr "Son oynanma"
 
-#: ../es-app/src/views/gamelist/DetailedGameListView.cpp:57
-msgid "Times played"
-msgstr "Kaç kez oynandı"
+msgid "enter last played date"
+msgstr "son oynanma tarihini girin"
 
-#: ../es-app/src/views/gamelist/GridGameListView.cpp:67
-msgid "SCROLL"
-msgstr "KAYDIR"
-
-#: ../es-app/src/views/SystemView.cpp:236
 #, c-format
 msgid "%i GAME AVAILABLE"
 msgid_plural "%i GAMES AVAILABLE"
 msgstr[0] "%i OYUN"
 msgstr[1] "%i OYUN"
 
-#: ../es-app/src/views/SystemView.cpp:237
 #, c-format
 msgid "%i FAVORITE"
 msgid_plural "%i FAVORITES"
 msgstr[0] "%i FAVORİ"
 msgstr[1] "%i FAVORİ"
 
-#: ../es-app/src/views/ViewController.cpp:524
+msgid "SCROLL"
+msgstr "KAYDIR"
+
+msgid "LAUNCH"
+msgstr "BAŞLAT"
+
+msgid "Times played"
+msgstr "Kaç kez oynandı"
+
 msgid "MENU"
 msgstr "MENÜ"
 
-#: ../es-app/src/FileSorts.cpp:9
 msgid "FILENAME, ASCENDING"
 msgstr "DOSYA ADI, ARTAN"
 
-#: ../es-app/src/FileSorts.cpp:10
 msgid "FILENAME, DESCENDING"
 msgstr "DOSYA ADI, AZALAN"
 
-#: ../es-app/src/FileSorts.cpp:11
 msgid "RATING, ASCENDING"
 msgstr "PUAN, ARTAN"
 
-#: ../es-app/src/FileSorts.cpp:12
 msgid "RATING, DESCENDING"
 msgstr "PUAN, AZALAN"
 
-#: ../es-app/src/FileSorts.cpp:13
 msgid "TIMES PLAYED, ASCENDING"
 msgstr "OYNANMA SAYISI, ARTAN"
 
-#: ../es-app/src/FileSorts.cpp:14
 msgid "TIMES PLAYED, DESCENDING"
 msgstr "OYNANMA SAYISI, AZALAN"
 
-#: ../es-app/src/FileSorts.cpp:15
 msgid "LAST PLAYED, ASCENDING"
 msgstr "SON OYNANMA, ARTAN"
 
-#: ../es-app/src/FileSorts.cpp:16
 msgid "LAST PLAYED, DESCENDING"
 msgstr "SON OYNANMA, AZALAN"
 
-#: ../es-app/src/NetworkThread.cpp:38
-msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
-msgstr "SİSTEMİNİZE AİT GÜNCELLEME MEVCUT"
-
-#: ../es-app/src/MetaData.cpp:15
-msgid "enter emulator"
-msgstr "emulator girin"
-
-#: ../es-app/src/MetaData.cpp:16
-msgid "enter core"
-msgstr "core girin"
-
-#: ../es-app/src/MetaData.cpp:17
-msgid "Name"
-msgstr "İsim"
-
-#: ../es-app/src/MetaData.cpp:17
-msgid "enter game name"
-msgstr "oyun ismi girin"
-
-#: ../es-app/src/MetaData.cpp:18
-msgid "Description"
-msgstr "Açıklama"
-
-#: ../es-app/src/MetaData.cpp:18
-msgid "enter description"
-msgstr "açıklama girin"
-
-#: ../es-app/src/MetaData.cpp:19
-msgid "Image"
-msgstr "Resim"
-
-#: ../es-app/src/MetaData.cpp:19
-msgid "enter path to image"
-msgstr "resim adresini girin"
-
-#: ../es-app/src/MetaData.cpp:20
-msgid "Thumbnail"
-msgstr "Mini-resim"
-
-#: ../es-app/src/MetaData.cpp:20
-msgid "enter path to thumbnail"
-msgstr "mini-resmin adresini girin"
-
-#: ../es-app/src/MetaData.cpp:21
-msgid "enter rating"
-msgstr "puan girin"
-
-#: ../es-app/src/MetaData.cpp:22
-msgid "Release date"
-msgstr "Yayın tarihi"
-
-#: ../es-app/src/MetaData.cpp:22
-msgid "enter release date"
-msgstr "yayınlanma tarihi girin"
-
-#: ../es-app/src/MetaData.cpp:23
-msgid "enter game developer"
-msgstr "geliştirici ismini girin"
-
-#: ../es-app/src/MetaData.cpp:24
-msgid "enter game publisher"
-msgstr "yayıncı ismini girin"
-
-#: ../es-app/src/MetaData.cpp:25
-msgid "enter game genre"
-msgstr "oyun türünü girin"
-
-#: ../es-app/src/MetaData.cpp:26
-msgid "enter number of players"
-msgstr "oyuncu sayısını girin"
-
-#: ../es-app/src/MetaData.cpp:27
-msgid "enter favorite"
-msgstr "favori girin"
-
-#: ../es-app/src/MetaData.cpp:28
-msgid "Region"
-msgstr "Bölge"
-
-#: ../es-app/src/MetaData.cpp:28
-msgid "enter region"
-msgstr "bölge girin"
-
-#: ../es-app/src/MetaData.cpp:29
-msgid "Romtype"
-msgstr "Rom tipi"
-
-#: ../es-app/src/MetaData.cpp:29
-msgid "enter romtype"
-msgstr "rom tipi girin"
-
-#: ../es-app/src/MetaData.cpp:30
-msgid "Hidden"
-msgstr "Gizli"
-
-#: ../es-app/src/MetaData.cpp:30
-msgid "set hidden"
-msgstr "gizle"
-
-#: ../es-app/src/MetaData.cpp:31
-msgid "Play count"
-msgstr "Oynama sayısı"
-
-#: ../es-app/src/MetaData.cpp:31
-msgid "enter number of times played"
-msgstr "kaç kez oynandığını girin"
-
-#: ../es-app/src/MetaData.cpp:32
-msgid "enter last played date"
-msgstr "son oynanma tarihini girin"
-
-#: ../es-core/src/components/BusyComponent.cpp:24
 msgid "WORKING..."
 msgstr "DEVAM EDİYOR..."
 
-#: ../es-core/src/components/DateTimeComponent.cpp:212
+msgid "CHANGE"
+msgstr "DEĞİŞTİR"
+
 msgid "never"
 msgstr "hiç"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:218
 msgid "just now"
 msgstr "az önce"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:221
 #, c-format
 msgid "%i sec ago"
 msgid_plural "%i secs ago"
 msgstr[0] "%i saniye önce"
 msgstr[1] "%i saniye önce"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:226
 #, c-format
 msgid "%i min ago"
 msgid_plural "%i mins ago"
 msgstr[0] "%i dakika önce"
 msgstr[1] "%i dakika önce"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:231
 #, c-format
 msgid "%i hour ago"
 msgid_plural "%i hours ago"
 msgstr[0] "%i saat önce"
 msgstr[1] "%i saat önce"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:236
 #, c-format
 msgid "%i day ago"
 msgid_plural "%i days ago"
 msgstr[0] "%i gün önce"
 msgstr[1] "%i gün önce"
 
-#: ../es-core/src/components/DateTimeComponent.cpp:243
 msgid "unknown"
 msgstr "bilinmiyor"
 
-#: ../es-core/src/components/OptionListComponent.h:102
 msgid "SELECT ALL"
 msgstr "TÜMÜ"
 
-#: ../es-core/src/components/OptionListComponent.h:111
 msgid "SELECT NONE"
 msgstr "HİÇBİRİ"
 
-#: ../es-core/src/components/OptionListComponent.h:312
 #, c-format
 msgid "%i SELECTED"
 msgid_plural "%i SELECTED"
 msgstr[0] "%i SEÇİLİ"
 msgstr[1] "%i SEÇİLİ"
 
-#: ../es-core/src/components/OptionListComponent.h:343
-#: ../es-core/src/components/SliderComponent.cpp:144
-#: ../es-core/src/components/SwitchComponent.cpp:61
-msgid "CHANGE"
-msgstr "DEĞİŞTİR"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "WELCOME"
-msgstr "HOŞGELDİN"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:28
-msgid "CONFIGURE INPUT"
-msgstr "GİRDİ YAPILANDIR"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:38
-#, c-format
-msgid "%i GAMEPAD DETECTED"
-msgid_plural "%i GAMEPADS DETECTED"
-msgstr[0] "%i GAMEPAD ALGILANDI"
-msgstr[1] "%i GAMEPAD ALGILANDI"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:42
-msgid "NO GAMEPADS DETECTED"
-msgstr "GAMEPAD BULUNAMADI"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:47
-msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "CİHAZI YAPILANDIRMAK İÇİN BİR TUŞA BASILI TUT"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr "ÇIKMAK İÇİN F4 TUŞUNA BAŞ"
-
-#: ../es-core/src/guis/GuiDetectDevice.cpp:50
-msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "İPTAL İÇİN ESC VEYA HOTKEY TUŞUNA BAS."
-
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "UP"
 msgstr "YUKARI"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "DOWN"
 msgstr "AŞAĞI"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "LEFT"
 msgstr "SOL"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:39
 msgid "RIGHT"
 msgstr "SAĞ"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 1 UP"
 msgstr "JOYSTICK 1 YUKARI"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 1 LEFT"
 msgstr "JOYSTICK 1 SOL"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 2 UP"
 msgstr "JOYSTICK 2 YUKARI"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:40
 msgid "JOYSTICK 2 LEFT"
 msgstr "JOYSTICK 2 SOL"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:41
 msgid "PAGE UP"
 msgstr "PAGE UP"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:41
 msgid "PAGE DOWN"
 msgstr "PAGE DOWN"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:41
 msgid "HOTKEY"
 msgstr "HOTKEY"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:55
 msgid "CONFIGURING"
 msgstr "YAPILANDIRILIYOR"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:60
 msgid "KEYBOARD"
 msgstr "KLAVYE"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:62
 #, c-format
 msgid "GAMEPAD %i"
 msgstr "GAMEPAD %i"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:68
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr "GEÇMEK İÇİN BİR TUŞA BASILI TUTUN"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:98
-#: ../es-core/src/guis/GuiInputConfig.cpp:257
 msgid "-NOT DEFINED-"
 msgstr "-TANIMLI DEĞİL-"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:219
 #, c-format
 msgid "HOLD FOR %iS TO SKIP"
 msgid_plural "HOLD FOR %iS TO SKIP"
@@ -1061,27 +735,45 @@ msgstr[0] "GEÇMEK İÇİN %iS BASILI TUT"
 msgstr[1] "GEÇMEK İÇİN %iS BASILI TUT"
 
 # Config controllers missing translation
-#: ../es-core/src/guis/GuiInputConfig.cpp:251
 msgid "PRESS ANYTHING"
 msgstr "HERHANGİ BİR TUŞA BASIN"
 
-#: ../es-core/src/guis/GuiInputConfig.cpp:269
 msgid "ALREADY TAKEN"
 msgstr "ÖNCEDEN TANIMLANMIŞ"
 
-#: ../es-core/src/guis/GuiTextEditPopup.cpp:24
 msgid "DISCARD CHANGES"
 msgstr "DEĞİŞİKLİKLERİ KAYDETME"
 
-#: ../es-core/src/Window.cpp:141
+msgid "WELCOME"
+msgstr "HOŞGELDİN"
+
+msgid "CONFIGURE INPUT"
+msgstr "GİRDİ YAPILANDIR"
+
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i GAMEPAD ALGILANDI"
+msgstr[1] "%i GAMEPAD ALGILANDI"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "GAMEPAD BULUNAMADI"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "CİHAZI YAPILANDIRMAK İÇİN BİR TUŞA BASILI TUT"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "ÇIKMAK İÇİN F4 TUŞUNA BAŞ"
+
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "İPTAL İÇİN ESC VEYA HOTKEY TUŞUNA BAS."
+
 msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
 msgstr "KODI SUNUCUSU BAŞLATILSIN MI?"
 
-#: ../es-core/src/Window.cpp:282
 msgid "LOADING..."
 msgstr "YÜKLENİYOR..."
 
-#: ../es-core/src/Window.cpp:374
 msgid "PLEASE WAIT..."
 msgstr "LÜTFEN BEKLEYİN..."
 
