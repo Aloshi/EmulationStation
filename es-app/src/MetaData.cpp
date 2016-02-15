@@ -134,10 +134,11 @@ float MetaDataList::getFloat(const std::string& key) const
 
 bool MetaDataList::getBool(const std::string& key) const
 {
-	if(get(key) == "true"){
+	std::string to_test = get(key);
+	if(to_test == "true"){
 		return true;
 	}
-	else if(get(key) == "false"){
+	else if(to_test == "false" || to_test == ""){
 		return false;
 	}
 	else{
