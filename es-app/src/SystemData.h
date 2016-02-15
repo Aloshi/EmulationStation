@@ -18,6 +18,7 @@ public:
 	inline FileData* getRootFolder() const { return mRootFolder; };
 	inline const std::string& getName() const { return mName; }
 	inline const std::string& getFullName() const { return mFullName; }
+        inline const bool& isVisible() const { return mVisible; }
         inline const std::string& getInput() const { return mInput; }
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
@@ -64,6 +65,7 @@ public:
 
 	// Load or re-load theme.
 	void loadTheme();
+        void updateVisibility();
 
 private:
 	std::string mName;
@@ -75,6 +77,8 @@ private:
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+
+        bool mVisible;
 
 	void populateFolder(FileData* folder);
 

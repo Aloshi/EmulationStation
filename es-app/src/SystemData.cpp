@@ -24,6 +24,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mFullName = fullName;
 	mStartPath = startPath;
         mInput = input;
+        updateVisibility();
 
 	//expand home symbol if the startpath contains ~
 	if(mStartPath[0] == '~')
@@ -49,6 +50,11 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mRootFolder->sort(FileSorts::SortTypes.at(0));
 
 	loadTheme();
+}
+
+void SystemData::updateVisibility()
+{
+	mVisible = InputManager::getInstance()->isInputFound(mInput);
 }
 
 SystemData::~SystemData()

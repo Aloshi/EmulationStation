@@ -62,6 +62,19 @@ void InputManager::init()
 	loadInputConfig(mKeyboardInputConfig);
 }
 
+bool InputManager::isInputFound(const std::string& name) {
+	if (name.empty()) return true;
+	int numJoysticks = SDL_NumJoysticks();
+	for(int i = 0; i < numJoysticks; i++)
+	{
+                std::string s(SDL_JoystickNameForIndex(i));
+		if (s.find(name, 0) != std::string::npos) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void InputManager::addJoystickByDeviceIndex(int id)
 {
 	assert(id >= 0 && id < SDL_NumJoysticks());
