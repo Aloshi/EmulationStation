@@ -7,7 +7,7 @@
 #include "Log.h"
 #include "Settings.h"
 #include "RecalboxSystem.h"
-
+#include "Locale.h"
 
 GuiUpdate::GuiUpdate(Window* window) : GuiComponent(window), mBusyAnim(window)
 {
@@ -53,13 +53,13 @@ void GuiUpdate::update(int deltaTime) {
         Window* window = mWindow;
         if(mState == 1){
             window->pushGui(
-                           new GuiMsgBox(window, "REALLY UPDATE?", "YES", 
+			    new GuiMsgBox(window, _("REALLY UPDATE?"), _("YES"),
                            [this] { 
                                mState = 2;
                                mLoading = true;
                                mHandle = new boost::thread(boost::bind(&GuiUpdate::threadUpdate, this));
 
-                           }, "NO", [this] { 
+					  }, _("NO"), [this] {
                                mState = -1;
                            })
                                    
@@ -69,7 +69,7 @@ void GuiUpdate::update(int deltaTime) {
          
         if(mState == 3){
             window->pushGui(
-                new GuiMsgBox(window, "NETWORK CONNECTION NEEDED", "OK", 
+			    new GuiMsgBox(window, _("NETWORK CONNECTION NEEDED"), _("OK"), 
                 [this] {
                     mState = -1;
                 })
@@ -78,7 +78,7 @@ void GuiUpdate::update(int deltaTime) {
         }
         if(mState == 4){
             window->pushGui(
-                new GuiMsgBox(window, "UPDATE OK, THE SYSTEM WILL NOW REBOOT", "OK", 
+			    new GuiMsgBox(window, _("UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"), _("OK"),
                 [this] {
                     if(runRestartCommand() != 0) {
                         LOG(LogWarning) << "Reboot terminated with non-zero result!";
@@ -89,7 +89,7 @@ void GuiUpdate::update(int deltaTime) {
         }
         if(mState == 5){
             window->pushGui(
-                new GuiMsgBox(window, "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT", "OK", 
+			    new GuiMsgBox(window, _("UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"), _("OK"), 
                 [this] {
                     if(runRestartCommand() != 0) {
                         LOG(LogWarning) << "Reboot terminated with non-zero result!";
@@ -100,7 +100,7 @@ void GuiUpdate::update(int deltaTime) {
         }
         if(mState == 6){
             window->pushGui(
-                new GuiMsgBox(window, "NO UPDATE AVAILABLE", "OK", 
+			    new GuiMsgBox(window, _("NO UPDATE AVAILABLE"), _("OK"), 
                 [this] {
                     mState = -1;
                 }));

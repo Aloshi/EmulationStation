@@ -10,7 +10,7 @@
 #include "guis/GuiMsgBox.h"
 #include "RecalboxSystem.h"
 #include "RecalboxConf.h"
-
+#include "Locale.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0), launchKodi(false)
@@ -138,13 +138,13 @@ void Window::input(InputConfig* config, Input input)
             if(config->isMappedTo("x", input) && input.value && !launchKodi && RecalboxConf::getInstance()->get("kodi.enabled") == "1" && RecalboxConf::getInstance()->get("kodi.xbutton") == "1"){
                 launchKodi = true;
                 Window * window = this;
-                this->pushGui(new GuiMsgBox(this, "DO YOU WANT TO START KODI MEDIA CENTER ?", "YES", 
+                this->pushGui(new GuiMsgBox(this, _("DO YOU WANT TO START KODI MEDIA CENTER ?"), _("YES"),
 				[window, this] { 
                                     if( ! RecalboxSystem::getInstance()->launchKodi(window)) {
                                         LOG(LogWarning) << "Shutdown terminated with non-zero result!";
                                     }
                                     launchKodi = false;
-				}, "NO", [this] {
+					    }, _("NO"), [this] {
                                     launchKodi = false;
                                 }));
             }else {
@@ -268,7 +268,7 @@ void Window::renderWaitingScreen(const std::string& text)
 	splash.render(trans);
 
 	auto& font = mDefaultFonts.at(1);
-	TextCache* cache = font->buildTextCache(gettext(text.c_str()), 0, 0, 0x656565FF);
+	TextCache* cache = font->buildTextCache(text, 0, 0, 0x656565FF);
 	trans = trans.translate(Eigen::Vector3f(round((Renderer::getScreenWidth() - cache->metrics.size.x()) / 2.0f),
 											round(Renderer::getScreenHeight() * 0.835f), 0.0f));
 	Renderer::setMatrix(trans);
@@ -279,7 +279,7 @@ void Window::renderWaitingScreen(const std::string& text)
 }
 void Window::renderLoadingScreen()
 {
-	renderWaitingScreen("LOADING...");
+  renderWaitingScreen(_("LOADING..."));
 }
 
 void Window::renderHelpPromptsEarly()
@@ -300,7 +300,7 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 	for(auto it = prompts.begin(); it != prompts.end(); it++)
 	{
 		// only add it if the same icon hasn't already been added
-		if(inputSeenMap.insert(std::make_pair<std::string, bool>(it->first, true)).second)
+	  if(inputSeenMap.insert(std::make_pair<std::string, bool>(it->first.c_str(), true)).second)
 		{
 			// this symbol hasn't been seen yet, what about the action name?
 			auto mappedTo = mappedToSeenMap.find(it->second);
@@ -309,11 +309,11 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 				// yes, it has!
 
 				// can we combine? (dpad only)
-                if((strcmp(it->first, "up/down") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "left/right") == 0) ||
-                    (strcmp(it->first, "left/right") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "up/down") == 0))
+			  if((strcmp(it->first.c_str(), "up/down") == 0 && strcmp(addPrompts.at(mappedTo->second).first.c_str(), "left/right") == 0) ||
+			     (strcmp(it->first.c_str(), "left/right") == 0 && strcmp(addPrompts.at(mappedTo->second).first.c_str(), "up/down") == 0))
 				{
 					// yes!
-					addPrompts.at(mappedTo->second).first = "up/down/left/right";
+				  addPrompts.at(mappedTo->second).first = "up/down/left/right";
 					// don't need to add this to addPrompts since we just merged
 				}else{
 					// no, we can't combine!
@@ -371,6 +371,6 @@ void Window::onWake()
 }
 
 void Window::renderShutdownScreen() {
-	renderWaitingScreen("PLEASE WAIT...");
+  renderWaitingScreen(_("PLEASE WAIT..."));
 
 }

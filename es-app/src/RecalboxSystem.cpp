@@ -451,3 +451,10 @@ bool RecalboxSystem::setStorage(std::string selected) {
     int exitcode = system(oss.str().c_str());
     return exitcode == 0;
 }
+
+bool RecalboxSystem::forgetBluetoothControllers() {
+    std::ostringstream oss;
+    oss << Settings::getInstance()->getString("RecalboxSettingScript") << " " << "forgetBT";
+    int exitcode = system(oss.str().c_str());
+    return exitcode == 0;
+}

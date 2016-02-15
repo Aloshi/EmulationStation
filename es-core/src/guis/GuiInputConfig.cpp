@@ -1,4 +1,4 @@
-#include <boost/locale.hpp>
+#include "Locale.h"
 #include "guis/GuiInputConfig.h"
 #include "Window.h"
 #include "Log.h"
@@ -7,6 +7,7 @@
 #include "components/MenuComponent.h"
 #include "components/ButtonComponent.h"
 #include "Util.h"
+#include "Locale.h"
 #include "InputManager.h"
 
 using namespace boost::locale;
@@ -18,9 +19,6 @@ static const int inputCount = 21;
 static const char* inputName[inputCount] = {      "Up", "Down", "Left", "Right", "Joystick1Up" , "Joystick1Left", "Joystick2Up" , "Joystick2Left", "A",    "B",   "X",   "Y", "Start", "Select", "PageUp", "PageDown", "L2", "R2", "L3", "R3", "HotKey" };
 static const bool inputSkippable[inputCount] = { false, false,   false,   false,     true,              true,         true,             true,      false,  false,  true,   true, false,    false,     true,      true, true, true, true, true,  false};
 static const int inputTypes[inputCount] = {     HAT,     HAT,   HAT,    HAT ,        AXIS,             AXIS,          AXIS,            AXIS,       BTN,    BTN,   BTN,   BTN,    BTN,    BTN,        BTN,      BTN,     BTN,  BTN, BTN,  BTN,  BTN};
-static const char* inputDispName[inputCount] = { gettext("UP"), gettext("DOWN"), gettext("LEFT"), gettext("RIGHT"),
-												 gettext("JOYSTICK 1 UP"), gettext("JOYSTICK 1 LEFT"),gettext("JOYSTICK 2 UP"), gettext("JOYSTICK 2 LEFT"),
-                                                    "A", "B", "X", "Y", "START", "SELECT ", gettext("PAGE UP"), gettext("PAGE DOWN"),  "L2", "R2", "L3", "R3",gettext("HOTKEY") };
 static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg", ":/help/joystick_up.svg", ":/help/joystick_left.svg",
 											 ":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_x.svg", ":/help/button_y.svg", ":/help/button_start.svg", ":/help/button_select.svg",
 											":/help/button_l.svg", ":/help/button_r.svg", ":/help/button_l2.svg", ":/help/button_r2.svg",":/help/button_l3.svg", ":/help/button_r3.svg", ":/help/button_hotkey.svg" };
@@ -38,6 +36,10 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 {
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId() << " (" << target->getDeviceName() << ").";
 
+	std::string inputDispName[inputCount] = { _("UP"), _("DOWN"), _("LEFT"), _("RIGHT"),
+						  _("JOYSTICK 1 UP"), _("JOYSTICK 1 LEFT"), _("JOYSTICK 2 UP"), _("JOYSTICK 2 LEFT"),
+						  "A", "B", "X", "Y", "START", "SELECT ", _("PAGE UP"), _("PAGE DOWN"),  "L2", "R2", "L3", "R3", _("HOTKEY") };
+
 	if(reconfigureAll)
 		target->clear();
 
@@ -50,18 +52,20 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	// 0 is a spacer row
 	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 0), false);
 
-	mTitle = std::make_shared<TextComponent>(mWindow, "CONFIGURING", Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
+	mTitle = std::make_shared<TextComponent>(mWindow, _("CONFIGURING"), Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
 	mGrid.setEntry(mTitle, Vector2i(0, 1), false, true);
-	
-	std::stringstream ss;
+
+	char strbuf[256];
 	if(target->getDeviceId() == DEVICE_KEYBOARD)
-		ss << "KEYBOARD";
-	else
-		ss << "GAMEPAD " << (target->getDeviceId() + 1);
-	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(ss.str()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, ALIGN_CENTER);
+	  strncpy(strbuf, _("KEYBOARD").c_str(), 256);
+	else {
+	  snprintf(strbuf, 256, _("GAMEPAD %i").c_str(), target->getDeviceId() + 1);
+	}
+	  
+	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(strbuf), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle1, Vector2i(0, 2), false, true);
 
-	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "HOLD ANY BUTTON TO SKIP", Font::get(FONT_SIZE_SMALL), 0x99999900, ALIGN_CENTER);
+	mSubtitle2 = std::make_shared<TextComponent>(mWindow, _("HOLD ANY BUTTON TO SKIP"), Font::get(FONT_SIZE_SMALL), 0x99999900, ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle2, Vector2i(0, 3), false, true);
 
 	// 4 is a spacer row
@@ -91,7 +95,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		auto text = std::make_shared<TextComponent>(mWindow, inputDispName[i], Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 		row.addElement(text, true);
 
-		auto mapping = std::make_shared<TextComponent>(mWindow, "-NOT DEFINED-", Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT), 0x999999FF, ALIGN_RIGHT);
+		auto mapping = std::make_shared<TextComponent>(mWindow, _("-NOT DEFINED-"), Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT), 0x999999FF, ALIGN_RIGHT);
 		setNotDefined(mapping); // overrides text and color set above
 		row.addElement(mapping, true);
 		mMappings.push_back(mapping);
@@ -163,7 +167,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 	// buttons
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "OK", "ok", [this, okCallback] { 
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, _("OK"), _("OK"), [this, okCallback] { 
 		InputManager::getInstance()->writeDeviceConfig(mTargetConfig); // save
 		if(okCallback)
 			okCallback();
@@ -211,9 +215,9 @@ void GuiInputConfig::update(int deltaTime)
 			{
 				// crossed the second boundary, update text
 				const auto& text = mMappings.at(mHeldInputRowIndex);
-				std::stringstream ss;
-				ss << gettext("HOLD FOR ") << HOLD_TO_SKIP_MS/1000 - curSec << gettext("S TO SKIP");
-				text->setText(ss.str());
+				char strbuf[256];
+				snprintf(strbuf, 256, ngettext("HOLD FOR %iS TO SKIP", "HOLD FOR %iS TO SKIP", HOLD_TO_SKIP_MS/1000 - curSec).c_str(), HOLD_TO_SKIP_MS/1000 - curSec);
+				text->setText(strbuf);
 				text->setColor(0x777777FF);
 			}
 		}
@@ -244,13 +248,13 @@ void GuiInputConfig::rowDone()
 
 void GuiInputConfig::setPress(const std::shared_ptr<TextComponent>& text)
 {
-	text->setText("PRESS ANYTHING");
+  text->setText(_("PRESS ANYTHING"));
 	text->setColor(0x656565FF);
 }
 
 void GuiInputConfig::setNotDefined(const std::shared_ptr<TextComponent>& text)
 {
-	text->setText("-NOT DEFINED-");
+  text->setText(_("-NOT DEFINED-"));
 	text->setColor(0x999999FF);
 }
 
@@ -262,7 +266,7 @@ void GuiInputConfig::setAssignedTo(const std::shared_ptr<TextComponent>& text, I
 
 void GuiInputConfig::error(const std::shared_ptr<TextComponent>& text, const std::string& msg)
 {
-	text->setText("ALREADY TAKEN");
+  text->setText(_("ALREADY TAKEN"));
 	text->setColor(0x656565FF);
 }
 

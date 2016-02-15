@@ -9,7 +9,7 @@
 #include "RecalboxSystem.h"
 #include "RecalboxConf.h"
 #include "guis/GuiMsgBox.h"
-
+#include "Locale.h"
 
 NetworkThread::NetworkThread(Window* window) : mWindow(window){
     
@@ -35,7 +35,7 @@ void NetworkThread::run(){
 
 	if(RecalboxConf::getInstance()->get("updates.enabled") == "1") {
 	  if(RecalboxSystem::getInstance()->canUpdate()){
-	    mWindow->displayMessage("AN UPDATE IS AVAILABLE FOR YOUR RECALBOX");
+	    mWindow->displayMessage(_("AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"));
 	    mRunning = false;
 	  }
 	}

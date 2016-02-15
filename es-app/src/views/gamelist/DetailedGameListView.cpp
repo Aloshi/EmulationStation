@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Settings.h"
 #include "animations/LambdaAnimation.h"
+#include "Locale.h"
 
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root, SystemData* system) : 
 	BasicGameListView(window, root), 
@@ -31,34 +32,34 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root, Syste
 	addChild(&mImage);
 
 	// metadata labels + values
-	mLblRating.setText("Rating: ");
+	mLblRating.setText(_("Rating") + ": ");
 	addChild(&mLblRating);
 	addChild(&mRating);
-	mLblReleaseDate.setText("Released: ");
+	mLblReleaseDate.setText(_("Released") + ": ");
 	addChild(&mLblReleaseDate);
 	addChild(&mReleaseDate);
-	mLblDeveloper.setText("Developer: ");
+	mLblDeveloper.setText(_("Developer") + ": ");
 	addChild(&mLblDeveloper);
 	addChild(&mDeveloper);
-	mLblPublisher.setText("Publisher: ");
+	mLblPublisher.setText(_("Publisher") + ": ");
 	addChild(&mLblPublisher);
 	addChild(&mPublisher);
-	mLblGenre.setText("Genre: ");
+	mLblGenre.setText(_("Genre") + ": ");
 	addChild(&mLblGenre);
 	addChild(&mGenre);
-	mLblPlayers.setText("Players: ");
+	mLblPlayers.setText(_("Players") + ": ");
 	addChild(&mLblPlayers);
 	addChild(&mPlayers);
-	mLblLastPlayed.setText("Last played: ");
+	mLblLastPlayed.setText(_("Last played") + ": ");
 	addChild(&mLblLastPlayed);
 	mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 	addChild(&mLastPlayed);
-	mLblPlayCount.setText("Times played: ");
+	mLblPlayCount.setText(_("Times played") + ": ");
 	addChild(&mLblPlayCount);
 	addChild(&mPlayCount);
 	if (system->getHasFavorites())
 	{
-		mLblFavorite.setText("Favorite: ");
+	  mLblFavorite.setText(_("Favorite") + ": ");
 		addChild(&mLblFavorite);
 		addChild(&mFavorite);
 	}
@@ -325,14 +326,14 @@ std::vector<HelpPrompt> DetailedGameListView::getHelpPrompts()
 
 	if (Settings::getInstance()->getBool("QuickSystemSelect"))
 	{
-		prompts.push_back(HelpPrompt("left/right", "system"));
+	  prompts.push_back(HelpPrompt("left/right", _("SYSTEM")));
 	}
-	prompts.push_back(HelpPrompt("up/down", "choose"));
-	prompts.push_back(HelpPrompt("b", "launch"));
-	prompts.push_back(HelpPrompt("a", "back"));
+	prompts.push_back(HelpPrompt("up/down", _("CHOOSE")));
+	prompts.push_back(HelpPrompt("b", _("LAUNCH")));
+	prompts.push_back(HelpPrompt("a", _("BACK")));
 	if(getRoot()->getSystem() != SystemData::getFavoriteSystem()) {
-		prompts.push_back(HelpPrompt("y", "favorite"));
-		prompts.push_back(HelpPrompt("select", "options"));
+	  prompts.push_back(HelpPrompt("y", _("Favorite")));
+	  prompts.push_back(HelpPrompt("select", _("OPTIONS")));
 	}
 	return prompts;
 }

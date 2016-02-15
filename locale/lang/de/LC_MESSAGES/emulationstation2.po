@@ -2,7 +2,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0RC1 GERMAN po\n"
-"POT-Creation-Date: 2015-02-03 12:00-0500\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-14 17:14+0100\n"
 "PO-Revision-Date: 2015-02-03 15:00-0500\n"
 "Last-Translator: nonatz <nonatz@web.de>\n"
 "Language-Team: GERMAN\n"
@@ -10,451 +11,435 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-msgid "MAIN MENU"
-msgstr "HAUPTMENÜ"
-
-msgid "YES"
-msgstr "JA"
-
-msgid "NO"
-msgstr "NEIN"
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp
-msgid "Rating: "
-msgstr "Bewertung: "
-
-msgid "Released: "
-msgstr "Veröffentlicht: "
-
-msgid "Developer: "
-msgstr "Entwickler: "
-
-msgid "Publisher: "
-msgstr "Publisher: "
-
-msgid "Genre: "
-msgstr "Genre: "
-
-msgid "Players: "
-msgstr "Spieler: "
-
-msgid "Last played: "
-msgstr "Zuletzt gespielt: "
-
-msgid "Times played: "
-msgstr "Gespielt: "
-
-#: es-app/src/MetaData.cpp
-msgid "enter game name"
-msgstr "Spielnamen eingeben"
-
-msgid "NAME"
-msgstr "NAME"
-
-msgid "ENTER DESCRIPTION"
-msgstr "BESCHREIBUNG EINGEBEN"
-
-msgid "ENTER PATH TO IMAGE"
-msgstr "PFAD FÜR BILD ANGEBEN"
-
-msgid "THUMBNAIL"
-msgstr "VORSCHAUBILD"
-
-msgid "ENTER PATH TO THUMBNAIL"
-msgstr "PFAD FÜR VORSCHAUBILD ANGEBEN"
-
-msgid "RATING"
-msgstr "BEWERTUNG"
-
-msgid "ENTER SCORE"
-msgstr "BEWERTUNG EINGEBEN"
-
-msgid "RELEASE DATE"
-msgstr "VERÖFFENTLICHUNG"
-
-msgid "ENTER RELEASE DATE"
-msgstr "VERÖFFENTLICHUNG EINGEBEN"
-
-msgid "DEVELOPER"
-msgstr "ENTWICKLER"
-
-msgid "ENTER GAME DEVELOPER"
-msgstr "SPIELENTWICKLER EINGEBEN"
-
-msgid "PUBLISHER"
-msgstr "PUBLISHER"
-
-msgid "ENTER GAME PUBLISHER"
-msgstr "SPIELPUBLISHER EINGEBEN"
-
-msgid "GENRE"
-msgstr "GENRE"
-
-msgid "ENTER GAME GENRE"
-msgstr "SPIELGENRE EINGEBEN"
-
-msgid "PLAYERS"
-msgstr "SPIELER"
-
-msgid "ENTER NUMBER OF PLAYERS"
-msgstr "SPIELERANZAHL EINGEBEN"
-
-msgid "PLAY COUNT"
-msgstr "GESPIELT (ANZAHL)"
-
-msgid "ENTER NUMBER OF TIMES PLAYED"
-msgstr "WIE OFT GESPIELT EINGEBEN"
-
-#: es-app/src/guis/GuiMenu.cpp
-msgid "SCRAPE FROM"
-msgstr "SCRAPEN VON"
-
-msgid "SCRAPE RATINGS"
-msgstr "BEWERTUNGEN SCRAPEN"
-
-msgid "SOUND SETTINGS"
-msgstr "SOUND-EINSTELLUNGEN"
-
-msgid "SYSTEM VOLUME"
-msgstr "SYSTEMLAUTSTÄRKE"
-
-msgid "ENABLE SOUNDS"
-msgstr "SOUNDS AKTIVIEREN"
-
-msgid "UI SETTINGS"
-msgstr "BENUTZEROBERFLÄCHEN-EINSTELLUNGEN"
-
-msgid "SCREENSAVER AFTER"
-msgstr "BILDSCHIRMSCHONER NACH"
-
-msgid "TRANSITION STYLE"
-msgstr "ÜBERGANGSSTIL"
-
-msgid "SCREENSAVER BEHAVIOR"
-msgstr "BILDSCHIRMSCHONER-EINSTELLUNGEN"
-
-msgid "SHOW FRAMERATE"
-msgstr "BILDRATE ANZEIGEN"
-
-msgid "ON-SCREEN HELP"
-msgstr "BILDSCHIRM-HILFE"
-
-msgid "QUICK SYSTEM SELECT"
-msgstr "SYSTEM-SCHNELLAUSWAHL"
-
-msgid "THEME SET"
-msgstr "THEME"
-
-msgid "CONFIGURE INPUT"
-msgstr "EINGABE KONFIGURIEREN"
-
-msgid "QUIT"
-msgstr "BEENDEN"
-
-msgid "REALLY RESTART?"
-msgstr "WIRKLICH NEU STARTEN?"
-
-msgid "RESTART SYSTEM"
-msgstr "SYSTEM NEU STARTEN"
-
-msgid "REALLY SHUTDOWN?"
-msgstr "WIRKLICH HERUNTERFAHREN?"
-
-msgid "SHUTDOWN SYSTEM"
-msgstr "SYSTEM HERUNTERFAHREN"
-
-msgid "REALLY QUIT?"
-msgstr "WIRKLICH BEENDEN?"
-
-msgid "QUIT EMULATIONSTATION"
-msgstr "EMULATIONSTATION BEENDEN"
-
-#: es-app/src/guis/GuiScraperStart.cpp
-msgid "SCRAPE NOW"
-msgstr "SCRAPEN"
-
-msgid "USER DECIDES ON CONFLICTS"
-msgstr "BENUTZER ENTSCHEIDET SELBST BEI KONFLIKTEN"
-
-msgid "SYSTEMS"
-msgstr "SYSTEME"
-
-msgid "FILTER"
-msgstr "FILTER"
-
-msgid "SCRAPE THESE GAMES"
-msgstr "DIESE SPIELE SCRAPEN"
-
-msgid "SCRAPE THESE SYSTEMS"
-msgstr "DIESE SYSTEME SCRAPEN"
-
-msgid "SELECT ALL"
-msgstr "ALLES AUSWÄHLEN"
-
-msgid "SELECT NONE"
-msgstr "AUSWAHL AUFHEBEN"
-
-#: es-app/src/guis/GuiScraperMulti.cpp"
-msgid "SCRAPING IN PROGRESS"
-msgstr "SCRAPING WIRD DURCHGEFÜHRT"
-
-#: es-app/src/components/ScraperSearchComponent.cpp
-msgid "NO GAMES FOUND - SKIP"
-msgstr "KEINE SPIELE GEFUNDEN - ÜBERSPRINGEN"
-
-#: Buttons
-msgid "close"
-msgstr "schliessen"
-
-msgid "select"
-msgstr "auswahl"
-
-msgid "choose"
-msgstr "wechseln"
-
-msgid "back"
-msgstr "zurück"
-
-msgid "CLOSE"
-msgstr "SCHLIESSEN"
-
-msgid "SELECT"
-msgstr "AUSWAHL"
-
-msgid "CHOOSE"
-msgstr "WECHSELN"
-
-msgid "BACK"
-msgstr "ZURÜCK"
-
-msgid "LAUNCH"
-msgstr "START"
-
-msgid "SYSTEM"
-msgstr "SYSTEM"
-
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:42
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:52
 msgid "INPUT"
 msgstr "EINGABE"
 
-msgid "SKIP"
-msgstr "ÜBERSPRINGEN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:42
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:52
+msgid "search"
+msgstr "suche"
 
-msgid "CHANGE"
-msgstr "ÄNDERN"
-
-msgid "SAVE"
-msgstr "SPEICHERN"
-
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:46
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:189
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/FileSystemSelectorComponent.cpp:179
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:280
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiTextEditPopup.cpp:24
 msgid "CANCEL"
 msgstr "ABBRECHEN"
 
-msgid "DELETE"
-msgstr "LÖSCHEN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:82
+msgid "MAIN MENU"
+msgstr "HAUPTMENÜ"
 
-msgid "GO BACK"
-msgstr "ZURÜCK"
-
-#: es-app/src/views/SystemView.cpp
-msgid " GAMES AVAILABLE"
-msgstr " VERFÜGBARE SPIELE"
-
-#: es-app/src/guis/GuiGamelistOptions.cpp
-msgid "JUMP TO LETTER"
-msgstr "SPRING ZU BUCHSTABE"
-
-msgid "SORT GAMES BY"
-msgstr "SPIELE SORTIEREN NACH"
-
-msgid "EDIT THIS GAME'S METADATA"
-msgstr "METADATEN DES SPIELS BEARBEITEN"
-
-#: es-app/src/guis/GuiMetaDataEd.cpp
-msgid "EDIT METADATA"
-msgstr "METADATEN BEARBEITEN"
-
-msgid " GAMEPAD"
-msgstr " CONTROLLER"
-
-msgid " DETECTED"
-msgstr " GEFUNDEN"
-
-msgid "WELCOME"
-msgstr "WILLKOMMEN"
-
-msgid "NO GAMEPADS DETECTED"
-msgstr "KEINE CONTROLLER GEFUNDEN"
-
-msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "EINE TASTE AM GERÄT GEDRÜCKT HALTEN, UM ES ZU KONFIGURIEREN."
-
-msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr "F4 DRÜCKEN, UM JEDERZEIT ZU SCHLIESSEN."
-
-#, fuzzy
-msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "ESC DRÜCKEN ZUM ABBRECHEN."
-
-#: es-core/src/guis/GuiInputConfig.cpp
-msgid "CONFIGURING"
-msgstr "KONFIGURIEREN"
-
-msgid "UP"
-msgstr "HOCH"
-
-msgid "DOWN"
-msgstr "RUNTER"
-
-msgid "LEFT"
-msgstr "LINKS"
-
-msgid "RIGHT"
-msgstr "RECHTS"
-
-msgid "PAGE UP"
-msgstr "L1 (SEITE HOCH)"
-
-msgid "PAGE DOWN"
-msgstr "R1 (SEITE RUNTER)"
-
-msgid "SAVE CHANGES?"
-msgstr "ÄNDERUNGEN SPEICHERN?"
-
-#: es-app/src/guis/GuiUpdate.cpp
-msgid "WORKING..."
-msgstr "ARBEITE..."
-
-msgid "UPDATE"
-msgstr "SYSTEM AKTUALISIEREN"
-
-msgid "REALLY UPDATE?"
-msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
-
-msgid "NETWORK CONNECTION NEEDED"
-msgstr "NETZWERKVERBINDUNG BENÖTIGT"
-
-msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
-msgstr "AKTUALISIERUNG ERFOLGREICH, SYSTEM WIRD NEU GESTARTET"
-
-msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
-msgstr "AKTUALISIERUNG GESCHEITERT, DAS SYSTEM WIR NEU GESTARTET"
-
-# GUIMENU
-msgid "CONFIGURE A CONTROLLER"
-msgstr "EINEN CONTROLLER KONFIGURIEREN"
-
-msgid "INPUT P1"
-msgstr "EINGABE SPIELER 1"
-
-msgid "INPUT P2"
-msgstr "EINGABE SPIELER 2"
-
-msgid "INPUT P3"
-msgstr "EINGABE SPIELER 3"
-
-msgid "INPUT P4"
-msgstr "EINGABE SPIELER 4"
-
-msgid "NOGAMEERRORMESSAGE"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:96
+msgid "KODI MEDIA CENTER"
 msgstr ""
-"KEIN SPIEL GEFUNDEN! UM SPIELE HINZUZUFÜGEN, BITTE DER ANLEITUNG FOLGEN. "
-"WEITERE INFORMATIONEN UNTER www.recalbox.com"
 
-msgid "LANGUAGE"
-msgstr "SPRACHE"
-
-msgid "THE SYSTEM WILL NOW REBOOT"
-msgstr "DAS SYSTEM WIRD JETZT NEU GESTARTET"
-
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:111
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:115
 msgid "SYSTEM SETTINGS"
 msgstr "SYSTEM-EINSTELLUNGEN"
 
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:120
 msgid "VERSION"
 msgstr "VERSION"
 
-msgid "STORAGE"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:126
+msgid "SPACE LEFT"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:132
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:147
+#, fuzzy
+msgid "STORAGE DEVICE"
 msgstr "SPEICHER"
 
-msgid "OUTPUT DEVICE"
-msgstr "AUSGANGSGERÄT"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:151
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:166
+msgid "LANGUAGE"
+msgstr "SPRACHE"
 
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:169
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:188
+msgid "OVERCLOCK"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:174
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:180
+msgid "EXTREM (1100Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:175
+msgid "TURBO (1000Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:176
+msgid "HIGH (950Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:177
+msgid "NONE (700Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:181
+msgid "TURBO (1050Mhz)+"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:182
+msgid "HIGH (1050Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:183
+msgid "NONE (900Mhz)"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:186
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:334
+msgid "NONE"
+msgstr ""
+
+# NEW SETTINGS ORGANIZATION
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:194
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:223
+msgid "UPDATES"
+msgstr "AKTUALISIERUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:199
+msgid "AUTO UPDATES"
+msgstr "AUTOMATISCHE AKTUALISIERUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:206
+msgid "START UPDATE"
+msgstr "STARTE AKTUALISIERUNG"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:236
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:259
+msgid "KODI SETTINGS"
+msgstr "KODI-EINSTELLUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:239
+msgid "ENABLE KODI"
+msgstr "KODI AKTIVIEREN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:243
+msgid "KODI AT START"
+msgstr "KODI BEIM START"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:246
+msgid "START KODI WITH X"
+msgstr "KODI MIT X STARTEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:288
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "DAS SYSTEM WIRD JETZT NEU GESTARTET"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:288
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:889
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:911
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:914
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:918
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:967
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:72
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:81
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:92
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:103
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:159
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/main.cpp:322
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:170
+msgid "OK"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:303
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:305
+msgid "GAMES SETTINGS"
+msgstr "SPIEL-EINSTELLUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:308
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:830
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1137
+msgid "GAME RATIO"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:313
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:834
 msgid "SMOOTH GAMES"
 msgstr "SPIELE GLÄTTEN"
 
-msgid "GPIO CONTROLLERS"
-msgstr "GPIO CONTROLLER"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:318
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:839
+msgid "REWIND"
+msgstr "RÜCKWÄRTS"
 
-msgid "GPIO CONTROLLERS ARE NOW ON"
-msgstr "GPIO CONTROLLER SIND JETZT AKTIVIERT"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:323
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:844
+msgid "AUTO SAVE/LOAD"
+msgstr ""
 
-# update 3.2.0
-msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
-msgstr "EIN UPDATE FÜR DEINE RECALBOX IST VERFÜGBAR"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:327
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:337
+msgid "SHADERS SET"
+msgstr ""
 
-msgid "NO UPDATE AVAILABLE"
-msgstr "KEIN UPDATE VERFÜGBAR"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:335
+msgid "SCANLINES"
+msgstr ""
 
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:336
+msgid "RETRO"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:343
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:361
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:347
+msgid "RETROACHIEVEMENTS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:350
+msgid "USERNAME"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:351
+msgid "PASSWORD"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:375
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:399
+msgid "ADVANCED"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:419
 #, fuzzy
-msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
-msgstr "MÖCHTEN SIE KODI MEDIA CENTER STARTEN?"
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
 
-msgid "ENABLE WIFI"
-msgstr "W-LAN AKTIVIEREN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:419
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:720
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:734
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:56
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:52
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:291
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:148
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:161
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:141
+msgid "YES"
+msgstr "JA"
 
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:434
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:726
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:740
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:62
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:53
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:295
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:38
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:153
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:167
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:147
+msgid "NO"
+msgstr "NEIN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:437
+msgid "UPDATE GAMES LISTS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:447
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:878
+msgid "CONTROLLERS SETTINGS"
+msgstr "CONTROLLER-EINSTELLUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:451
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:453
+msgid "UI SETTINGS"
+msgstr "BENUTZEROBERFLÄCHEN-EINSTELLUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:458
+msgid "OVERSCAN"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:469
+msgid "SCREENSAVER AFTER"
+msgstr "BILDSCHIRMSCHONER NACH"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:477
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:516
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:523
+msgid "TRANSITION STYLE"
+msgstr "ÜBERGANGSSTIL"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:485
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "BILDSCHIRMSCHONER-EINSTELLUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:493
+msgid "SHOW FRAMERATE"
+msgstr "BILDRATE ANZEIGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:500
+msgid "ON-SCREEN HELP"
+msgstr "BILDSCHIRM-HILFE"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:509
+msgid "QUICK SYSTEM SELECT"
+msgstr "SYSTEM-SCHNELLAUSWAHL"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:536
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:540
+msgid "THEME SET"
+msgstr "THEME"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:559
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:561
+msgid "SOUND SETTINGS"
+msgstr "SOUND-EINSTELLUNGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:566
+msgid "SYSTEM VOLUME"
+msgstr "SYSTEMLAUTSTÄRKE"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:571
+msgid "FRONTEND MUSIC"
+msgstr "FRONTEND MUSIK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:573
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:584
+msgid "OUTPUT DEVICE"
+msgstr "AUSGANGSGERÄT"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:579
+msgid "HDMI"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:580
+msgid "JACK"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:581
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1144
+msgid "AUTO"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:607
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:611
 msgid "NETWORK SETTINGS"
 msgstr "NETZWERK-EINSTELLUNGEN"
 
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:613
+msgid "CONNECTED"
+msgstr "VERBUNDEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:614
+msgid "NOT CONNECTED"
+msgstr "NICHT VERBUNDEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:616
+msgid "STATUS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:619
+msgid "IP ADDRESS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:621
+msgid "HOSTNAME"
+msgstr "NETZWERKNAME"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:627
+msgid "ENABLE WIFI"
+msgstr "W-LAN AKTIVIEREN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:631
+msgid "WIFI SSID"
+msgstr "W-LAN NAME (SSID)"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:633
+msgid "WIFI KEY"
+msgstr "W-LAN SCHLÜSSEL (PASSWORT)"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:647
 #, fuzzy
 msgid "WIFI ENABLED"
 msgstr "KODI AKTIVIEREN"
 
 # GUIMENU
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:651
 #, fuzzy
 msgid "WIFI CONFIGURATION ERROR"
 msgstr "EINEN CONTROLLER KONFIGURIEREN"
 
-msgid "WIFI KEY"
-msgstr "W-LAN SCHLÜSSEL (PASSWORT)"
-
-msgid "WIFI SSID"
-msgstr "W-LAN NAME (SSID)"
-
-msgid "GAME RATIO"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:667
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:669
+msgid "SCRAPER"
 msgstr ""
 
-# Config controllers missing translation
-msgid "PRESS ANYTHING"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:672
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:678
+msgid "SCRAPE FROM"
+msgstr "SCRAPEN VON"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:686
+msgid "SCRAPE RATINGS"
+msgstr "BEWERTUNGEN SCRAPEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:700
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:12
+msgid "SCRAPE NOW"
+msgstr "SCRAPEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:712
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:714
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:143
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/main.cpp:306
+msgid "QUIT"
+msgstr "BEENDEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:720
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:148
+msgid "REALLY RESTART?"
+msgstr "WIRKLICH NEU STARTEN?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:728
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:155
+msgid "RESTART SYSTEM"
+msgstr "SYSTEM NEU STARTEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:734
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:161
+msgid "REALLY SHUTDOWN?"
+msgstr "WIRKLICH HERUNTERFAHREN?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:742
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:169
+msgid "SHUTDOWN SYSTEM"
+msgstr "SYSTEM HERUNTERFAHREN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:809
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:15
+msgid "Emulator"
 msgstr ""
 
-msgid "-NOT DEFINED-"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:812
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:825
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:16
+msgid "Core"
 msgstr ""
 
-msgid "ALREADY TAKEN"
-msgstr ""
-
-msgid "HOLD FOR "
-msgstr ""
-
-#, fuzzy
-msgid "S TO SKIP"
-msgstr "ÜBERSPRINGEN"
-
-msgid "HOLD ANY BUTTON TO SKIP"
-msgstr ""
-
-msgid "JOYSTICK 1 UP"
-msgstr ""
-
-msgid "JOYSTICK 1 LEFT"
-msgstr ""
-
-msgid "JOYSTICK 2 UP"
-msgstr ""
-
-msgid "JOYSTICK 2 LEFT"
-msgstr ""
-
-msgid "I18NMESSAGECONTROLLERS"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:885
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
 msgstr ""
 "EIN CONTROLLER MUSS KONFIGURIERT WERDEN. WENN NUR EIN JOYSTICK VORHANDEN "
 "IST, DIE RICHTUNGEN KONFIGURIEREN UND DIE CONTROLLER-KONFIGURATION DURCH "
@@ -463,179 +448,924 @@ msgstr ""
 "VORHANDEN SIND, KÖNNEN EINFACH DURCH GEDRÜCKT HALTEN EINES BUTTONS "
 "ÜBERSPRUNGEN WERDEN."
 
-# TEXT EDITING
-msgid "EDIT"
-msgstr "BEARBEITEN"
+# GUIMENU
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:901
+msgid "CONFIGURE A CONTROLLER"
+msgstr "EINEN CONTROLLER KONFIGURIEREN"
 
-msgid "STOP EDITING"
-msgstr "BEARBEITEN ABBRECHEN"
+# Bluetooth
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:911
+msgid "CONTROLLER PAIRED"
+msgstr "CONTROLLER VERBUNDEN"
 
-msgid "MOVE CURSOR"
-msgstr "CURSOR BEWEGEN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:911
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "VERBINDUNG MIT CONTROLLER FEHLGESCHLAGEN"
 
-msgid "DISCARD CHANGES"
-msgstr "ÄNDERUNGEN VERWERFEN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:914
+msgid "AN ERROR OCCURED"
+msgstr "EIN FEHLER IST AUFGETRETEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:918
+msgid "NO CONTROLLERS FOUND"
+msgstr "KEIN CONTROLLER GEFUNDEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:920
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:958
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "EINEN BLUETOOTH CONTROLLER VERBINDEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:967
+msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:970
+msgid "FORGET BLUETOOTH CONTROLLERS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:994
+#, c-format
+msgid "INPUT P%i"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1129
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:388
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:331
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:158
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentList.cpp:332
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:449
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:451
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:453
+msgid "CHOOSE"
+msgstr "WECHSELN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1130
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:389
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/ImageComponent.cpp:330
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:345
+msgid "SELECT"
+msgstr "AUSWAHL"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1131
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:158
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:126
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:58
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:318
+msgid "CLOSE"
+msgstr "SCHLIESSEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1143
+msgid "CUSTOM"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1145
+msgid "4/3"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1146
+msgid "16/9"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:56
+msgid "REALLY UPDATE?"
+msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:72
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "NETZWERKVERBINDUNG BENÖTIGT"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:81
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:92
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "AKTUALISIERUNG GESCHEITERT, DAS SYSTEM WIR NEU GESTARTET"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:103
+msgid "NO UPDATE AVAILABLE"
+msgstr "KEIN UPDATE VERFÜGBAR"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:13
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:336
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:163
+msgid "OPTIONS"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:22
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:27
+msgid "JUMP TO LETTER"
+msgstr "SPRING ZU BUCHSTABE"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:44
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:51
+msgid "SORT GAMES BY"
+msgstr "SPIELE SORTIEREN NACH"
+
+# FAVORITES
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:55
+msgid "FAVORITES ONLY"
+msgstr "NUR FAVORITEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:62
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "METADATEN DES SPIELS BEARBEITEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:17
+msgid "SCRAPE THESE GAMES"
+msgstr "DIESE SPIELE SCRAPEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:18
+msgid "All Games"
+msgstr "Alle Spiele"
 
 # MISSING SCRAPPER TRANSLATIONS
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:20
 #, fuzzy
 msgid "Only missing image"
 msgstr "Nur fehlende Bilder"
 
-msgid "All Games"
-msgstr "Alle Spiele"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:22
+msgid "FILTER"
+msgstr "FILTER"
 
-msgid "accept"
-msgstr "AKZEPTIEREN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:25
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "DIESE SYSTEME SCRAPEN"
 
-msgid " SELECTED"
-msgstr " AUSGEWÄHLT"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:31
+msgid "SYSTEMS"
+msgstr "SYSTEME"
 
-msgid "accept result"
-msgstr "Ergebnis akzeptieren"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:35
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "BENUTZER ENTSCHEIDET SELBST BEI KONFLIKTEN"
 
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:37
+msgid "START"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:38
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:125
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:11
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:57
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:317
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:333
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:69
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:160
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:98
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:139
+msgid "BACK"
+msgstr "ZURÜCK"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:51
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:68
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:32
+msgid "SCRAPING IN PROGRESS"
+msgstr "SCRAPING WIRD DURCHGEFÜHRT"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:35
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:329
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:157
+msgid "SYSTEM"
+msgstr "SYSTEM"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:38
+msgid "subtitle text"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:57
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:279
+msgid "SKIP"
+msgstr "ÜBERSPRINGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "STOP"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:63
 msgid "stop (progress saved)"
 msgstr "stop (Fortschritt gespeichert)"
 
-msgid "search"
-msgstr "suche"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:107
+#, c-format
+msgid "GAME %i OF %i"
+msgstr ""
 
-msgid "GAMES"
-msgstr "SPIELE"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:141
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
+msgstr ""
+"KEIN SPIEL GEFUNDEN! UM SPIELE HINZUZUFÜGEN, BITTE DER ANLEITUNG FOLGEN. "
+"WEITERE INFORMATIONEN UNTER www.recalbox.com"
 
-msgid " OF "
-msgstr " AUF "
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:149
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] ""
+msgstr[1] ""
 
-msgid "NO GAMES WERE SCRAPED."
-msgstr "ES WURDEN KEINE SPIELE GESCRAPED."
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:153
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] ""
+msgstr[1] ""
 
-msgid " SUCCESSFULLY SCRAPED!"
-msgstr " SCRAPING ERFOLGREICH!"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:37
+msgid "EDIT METADATA"
+msgstr "METADATEN BEARBEITEN"
 
-msgid " SKIPPED."
-msgstr " ÜBERSPRUNGEN."
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:183
+msgid "SCRAPE"
+msgstr ""
 
-# FAVORITES
-msgid "FAVORITES ONLY"
-msgstr "NUR FAVORITEN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:185
+msgid "SAVE"
+msgstr "SPEICHERN"
 
-msgid "FAVORITE"
-msgstr "FAVORIT"
-
-msgid "enter favorite"
-msgstr "Favoriten eingeben"
-
-# NEW SETTINGS ORGANIZATION
-msgid "UPDATES"
-msgstr "AKTUALISIERUNGEN"
-
-msgid "AUTO UPDATES"
-msgstr "AUTOMATISCHE AKTUALISIERUNGEN"
-
-msgid "START UPDATE"
-msgstr "STARTE AKTUALISIERUNG"
-
-msgid "KODI SETTINGS"
-msgstr "KODI-EINSTELLUNGEN"
-
-msgid "ENABLE KODI"
-msgstr "KODI AKTIVIEREN"
-
-msgid "KODI AT START"
-msgstr "KODI BEIM START"
-
-msgid "START KODI WITH X"
-msgstr "KODI MIT X STARTEN"
-
-msgid "GAMES SETTINGS"
-msgstr "SPIEL-EINSTELLUNGEN"
-
-msgid "REWIND"
-msgstr "RÜCKWÄRTS"
-
-msgid "CONTROLLERS SETTINGS"
-msgstr "CONTROLLER-EINSTELLUNGEN"
-
-msgid "FRONTEND MUSIC"
-msgstr "FRONTEND MUSIK"
-
-msgid "HOSTNAME"
-msgstr "NETZWERKNAME"
-
-msgid "CONNECTED"
-msgstr "VERBUNDEN"
-
-msgid "NOT CONNECTED"
-msgstr "NICHT VERBUNDEN"
-
-msgid "LOADING..."
-msgstr "LADE..."
-
-# Bluetooth
-msgid "CONTROLLER PAIRED"
-msgstr "CONTROLLER VERBUNDEN"
-
-msgid "UNABLE TO PAIR CONTROLLER"
-msgstr "VERBINDUNG MIT CONTROLLER FEHLGESCHLAGEN"
-
-msgid "AN ERROR OCCURED"
-msgstr "EIN FEHLER IST AUFGETRETEN"
-
-msgid "NO CONTROLLERS FOUND"
-msgstr "KEIN CONTROLLER GEFUNDEN"
-
-msgid "PAIR A BLUETOOTH CONTROLLER"
-msgstr "EINEN BLUETOOTH CONTROLLER VERBINDEN"
-
-#, fuzzy
-msgid "PLEASE WAIT..."
-msgstr "VERÖFFENTLICHUNG"
-
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
 msgid ""
 "THIS WILL DELETE A FILE!\n"
 "ARE YOU SURE?"
 msgstr ""
 
-#, fuzzy
-msgid " GAME AVAILABLE"
-msgstr " VERFÜGBARE SPIELE"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:201
+msgid "DELETE"
+msgstr "LÖSCHEN"
 
-msgid "UPDATE GAMES LISTS"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:290
+msgid "SAVE CHANGES?"
+msgstr "ÄNDERUNGEN SPEICHERN?"
+
+# update 3.2.0
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/NetworkThread.cpp:38
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "EIN UPDATE FÜR DEINE RECALBOX IST VERFÜGBAR"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:15
+msgid "enter emulator"
 msgstr ""
 
-#, fuzzy
-msgid "REALLY UPDATE GAMES LISTS ?"
-msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
-
-msgid "EMULATOR"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:16
+msgid "enter core"
 msgstr ""
 
-#, fuzzy
-msgid "FAVORITES"
-msgstr "FAVORIT"
-
-msgid "HIDDEN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:17
+msgid "Name"
 msgstr ""
 
-#, fuzzy
-msgid "ENTER REGION"
-msgstr "BEWERTUNG EINGEBEN"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:17
+msgid "enter game name"
+msgstr "Spielnamen eingeben"
 
-#, fuzzy
-msgid "ENTER ROMTYPE"
-msgstr "BEWERTUNG EINGEBEN"
-
-#, fuzzy
-msgid "STORAGE DEVICE"
-msgstr "SPEICHER"
-
-msgid "AUTO SAVE/LOAD"
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:18
+msgid "Description"
 msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:18
+msgid "enter description"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:19
+msgid "Image"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:19
+msgid "enter path to image"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:20
+msgid "Thumbnail"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:20
+msgid "enter path to thumbnail"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:21
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:56
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:35
+msgid "Rating"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:21
+msgid "enter rating"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:22
+msgid "Release date"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:22
+msgid "enter release date"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:243
+msgid "unknown"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:58
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:41
+msgid "Developer"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+msgid "enter game developer"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:59
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:44
+msgid "Publisher"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+msgid "enter game publisher"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:60
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:47
+msgid "Genre"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+msgid "enter game genre"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:26
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:61
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:50
+msgid "Players"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:26
+msgid "enter number of players"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:62
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:335
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:162
+msgid "Favorite"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+msgid "enter favorite"
+msgstr "Favoriten eingeben"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:28
+msgid "Region"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:28
+msgid "enter region"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "Original"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "Romtype"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "enter romtype"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+msgid "Hidden"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+msgid "set hidden"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:31
+msgid "Play count"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:31
+msgid "enter number of times played"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:32
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:53
+msgid "Last played"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/MetaData.cpp:32
+msgid "enter last played date"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:57
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:38
+msgid "Released"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:240
+msgid "NO GAMES FOUND - SKIP"
+msgstr "KEINE SPIELE GEFUNDEN - ÜBERSPRINGEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:278
+msgid "RETRY"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:454
+msgid "SEARCH FOR"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:236
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:57
+msgid "Times played"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:332
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:68
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:159
+msgid "LAUNCH"
+msgstr "START"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:67
+msgid "SCROLL"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/views/ViewController.cpp:524
+msgid "MENU"
+msgstr "MENÜ"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:9
+msgid "FILENAME, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:10
+msgid "FILENAME, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:11
+msgid "RATING, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:12
+msgid "RATING, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:13
+msgid "TIMES PLAYED, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:14
+msgid "TIMES PLAYED, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:15
+msgid "LAST PLAYED, ASCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-app/src/FileSorts.cpp:16
+msgid "LAST PLAYED, DESCENDING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "DISCARD CHANGES"
+msgstr "ÄNDERUNGEN VERWERFEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "WELCOME"
+msgstr "WILLKOMMEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "CONFIGURE INPUT"
+msgstr "EINGABE KONFIGURIEREN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:38
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:42
+msgid "NO GAMEPADS DETECTED"
+msgstr "KEINE CONTROLLER GEFUNDEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:47
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "EINE TASTE AM GERÄT GEDRÜCKT HALTEN, UM ES ZU KONFIGURIEREN."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "F4 DRÜCKEN, UM JEDERZEIT ZU SCHLIESSEN."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:50
+#, fuzzy
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "ESC DRÜCKEN ZUM ABBRECHEN."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "UP"
+msgstr "HOCH"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "DOWN"
+msgstr "RUNTER"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "LEFT"
+msgstr "LINKS"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "RIGHT"
+msgstr "RECHTS"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 1 UP"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 1 LEFT"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 2 UP"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 2 LEFT"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "PAGE UP"
+msgstr "L1 (SEITE HOCH)"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "PAGE DOWN"
+msgstr "R1 (SEITE RUNTER)"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "HOTKEY"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:55
+msgid "CONFIGURING"
+msgstr "KONFIGURIEREN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:60
+msgid "KEYBOARD"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:62
+#, c-format
+msgid "GAMEPAD %i"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:68
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:98
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:257
+msgid "-NOT DEFINED-"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:219
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] ""
+msgstr[1] ""
+
+# Config controllers missing translation
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:251
+msgid "PRESS ANYTHING"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:269
+msgid "ALREADY TAKEN"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:141
+#, fuzzy
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "MÖCHTEN SIE KODI MEDIA CENTER STARTEN?"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:282
+msgid "LOADING..."
+msgstr "LADE..."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/Window.cpp:374
+#, fuzzy
+msgid "PLEASE WAIT..."
+msgstr "VERÖFFENTLICHUNG"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:102
+msgid "SELECT ALL"
+msgstr "ALLES AUSWÄHLEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:111
+msgid "SELECT NONE"
+msgstr "AUSWAHL AUFHEBEN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:343
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/SwitchComponent.cpp:61
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/SliderComponent.cpp:144
+msgid "CHANGE"
+msgstr "ÄNDERN"
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/BusyComponent.cpp:24
+msgid "WORKING..."
+msgstr "ARBEITE..."
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:212
+msgid "never"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:218
+msgid "just now"
+msgstr ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:221
+#, c-format
+msgid "%i sec ago"
+msgid_plural "%i secs ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:226
+#, c-format
+msgid "%i min ago"
+msgid_plural "%i mins ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:231
+#, c-format
+msgid "%i hour ago"
+msgid_plural "%i hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/matthieu/dev/recalbox-3.3.X/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:236
+#, c-format
+msgid "%i day ago"
+msgid_plural "%i days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#~ msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
+#~ msgstr "AKTUALISIERUNG ERFOLGREICH, SYSTEM WIRD NEU GESTARTET"
+
+#~ msgid "Rating: "
+#~ msgstr "Bewertung: "
+
+#~ msgid "Released: "
+#~ msgstr "Veröffentlicht: "
+
+#~ msgid "Developer: "
+#~ msgstr "Entwickler: "
+
+#~ msgid "Publisher: "
+#~ msgstr "Publisher: "
+
+#~ msgid "Genre: "
+#~ msgstr "Genre: "
+
+#~ msgid "Players: "
+#~ msgstr "Spieler: "
+
+#~ msgid "Last played: "
+#~ msgstr "Zuletzt gespielt: "
+
+#~ msgid "Times played: "
+#~ msgstr "Gespielt: "
+
+#~ msgid "NAME"
+#~ msgstr "NAME"
+
+#~ msgid "ENTER DESCRIPTION"
+#~ msgstr "BESCHREIBUNG EINGEBEN"
+
+#~ msgid "ENTER PATH TO IMAGE"
+#~ msgstr "PFAD FÜR BILD ANGEBEN"
+
+#~ msgid "THUMBNAIL"
+#~ msgstr "VORSCHAUBILD"
+
+#~ msgid "ENTER PATH TO THUMBNAIL"
+#~ msgstr "PFAD FÜR VORSCHAUBILD ANGEBEN"
+
+#~ msgid "RATING"
+#~ msgstr "BEWERTUNG"
+
+#~ msgid "ENTER SCORE"
+#~ msgstr "BEWERTUNG EINGEBEN"
+
+#~ msgid "RELEASE DATE"
+#~ msgstr "VERÖFFENTLICHUNG"
+
+#~ msgid "ENTER RELEASE DATE"
+#~ msgstr "VERÖFFENTLICHUNG EINGEBEN"
+
+#~ msgid "DEVELOPER"
+#~ msgstr "ENTWICKLER"
+
+#~ msgid "ENTER GAME DEVELOPER"
+#~ msgstr "SPIELENTWICKLER EINGEBEN"
+
+#~ msgid "PUBLISHER"
+#~ msgstr "PUBLISHER"
+
+#~ msgid "ENTER GAME PUBLISHER"
+#~ msgstr "SPIELPUBLISHER EINGEBEN"
+
+#~ msgid "GENRE"
+#~ msgstr "GENRE"
+
+#~ msgid "ENTER GAME GENRE"
+#~ msgstr "SPIELGENRE EINGEBEN"
+
+#~ msgid "PLAYERS"
+#~ msgstr "SPIELER"
+
+#~ msgid "ENTER NUMBER OF PLAYERS"
+#~ msgstr "SPIELERANZAHL EINGEBEN"
+
+#~ msgid "PLAY COUNT"
+#~ msgstr "GESPIELT (ANZAHL)"
+
+#~ msgid "ENTER NUMBER OF TIMES PLAYED"
+#~ msgstr "WIE OFT GESPIELT EINGEBEN"
+
+#~ msgid "ENABLE SOUNDS"
+#~ msgstr "SOUNDS AKTIVIEREN"
+
+#~ msgid "REALLY QUIT?"
+#~ msgstr "WIRKLICH BEENDEN?"
+
+#~ msgid "QUIT EMULATIONSTATION"
+#~ msgstr "EMULATIONSTATION BEENDEN"
+
+#~ msgid "close"
+#~ msgstr "schliessen"
+
+#~ msgid "select"
+#~ msgstr "auswahl"
+
+#~ msgid "choose"
+#~ msgstr "wechseln"
+
+#~ msgid "back"
+#~ msgstr "zurück"
+
+#~ msgid "GO BACK"
+#~ msgstr "ZURÜCK"
+
+#~ msgid " GAMES AVAILABLE"
+#~ msgstr " VERFÜGBARE SPIELE"
+
+#~ msgid " GAMEPAD"
+#~ msgstr " CONTROLLER"
+
+#~ msgid " DETECTED"
+#~ msgstr " GEFUNDEN"
+
+#~ msgid "UPDATE"
+#~ msgstr "SYSTEM AKTUALISIEREN"
+
+#~ msgid "INPUT P1"
+#~ msgstr "EINGABE SPIELER 1"
+
+#~ msgid "INPUT P2"
+#~ msgstr "EINGABE SPIELER 2"
+
+#~ msgid "INPUT P3"
+#~ msgstr "EINGABE SPIELER 3"
+
+#~ msgid "INPUT P4"
+#~ msgstr "EINGABE SPIELER 4"
+
+#~ msgid "STORAGE"
+#~ msgstr "SPEICHER"
+
+#~ msgid "GPIO CONTROLLERS"
+#~ msgstr "GPIO CONTROLLER"
+
+#~ msgid "GPIO CONTROLLERS ARE NOW ON"
+#~ msgstr "GPIO CONTROLLER SIND JETZT AKTIVIERT"
+
+# TEXT EDITING
+#~ msgid "EDIT"
+#~ msgstr "BEARBEITEN"
+
+#~ msgid "STOP EDITING"
+#~ msgstr "BEARBEITEN ABBRECHEN"
+
+#~ msgid "MOVE CURSOR"
+#~ msgstr "CURSOR BEWEGEN"
+
+#~ msgid "accept"
+#~ msgstr "AKZEPTIEREN"
+
+#~ msgid " SELECTED"
+#~ msgstr " AUSGEWÄHLT"
+
+#~ msgid "accept result"
+#~ msgstr "Ergebnis akzeptieren"
+
+#~ msgid "GAMES"
+#~ msgstr "SPIELE"
+
+#~ msgid " OF "
+#~ msgstr " AUF "
+
+#~ msgid " SKIPPED."
+#~ msgstr " ÜBERSPRUNGEN."
+
+#~ msgid "FAVORITE"
+#~ msgstr "FAVORIT"
+
+#, fuzzy
+#~ msgid " GAME AVAILABLE"
+#~ msgstr " VERFÜGBARE SPIELE"
+
+#, fuzzy
+#~ msgid "FAVORITES"
+#~ msgstr "FAVORIT"
+
+#, fuzzy
+#~ msgid "ENTER REGION"
+#~ msgstr "BEWERTUNG EINGEBEN"
+
+#, fuzzy
+#~ msgid "ENTER ROMTYPE"
+#~ msgstr "BEWERTUNG EINGEBEN"
+
+#, fuzzy
+#~ msgid "S TO SKIP"
+#~ msgstr "ÜBERSPRINGEN"
+
+#~ msgid " SUCCESSFULLY SCRAPED!"
+#~ msgstr " SCRAPING ERFOLGREICH!"
+
+#~ msgid "NOGAMEERRORMESSAGE"
+#~ msgstr ""
+#~ "KEIN SPIEL GEFUNDEN! UM SPIELE HINZUZUFÜGEN, BITTE DER ANLEITUNG FOLGEN. "
+#~ "WEITERE INFORMATIONEN UNTER www.recalbox.com"
+
+#~ msgid "I18NMESSAGECONTROLLERS"
+#~ msgstr ""
+#~ "EIN CONTROLLER MUSS KONFIGURIERT WERDEN. WENN NUR EIN JOYSTICK VORHANDEN "
+#~ "IST, DIE RICHTUNGEN KONFIGURIEREN UND DIE CONTROLLER-KONFIGURATION DURCH "
+#~ "GEDRÜCKT HALTEN EINES BUTTONS ÜBERSPRINGEN. WENN KEIN SPEZIELLER BUTTON "
+#~ "FÜR DEN HOTKEY VORHANDEN IST, DEN SELECT BUTTON WÄHLEN. BUTTONS DIE NICHT "
+#~ "VORHANDEN SIND, KÖNNEN EINFACH DURCH GEDRÜCKT HALTEN EINES BUTTONS "
+#~ "ÜBERSPRUNGEN WERDEN."
+
+#~ msgid "NO GAMES WERE SCRAPED."
+#~ msgstr "ES WURDEN KEINE SPIELE GESCRAPED."
 
 #~ msgid "ENTER GAME NAME"
 #~ msgstr "SPIELNAMEN EINGEBEN"
 
 #~ msgid "DESCRIPTION"
 #~ msgstr "BESCHREIBUNG"
-
-#~ msgid "MENU"
-#~ msgstr "MENÜ"

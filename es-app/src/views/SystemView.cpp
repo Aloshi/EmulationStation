@@ -8,7 +8,6 @@
 #include "SystemData.h"
 #include "Settings.h"
 #include "Util.h"
-#include <boost/locale.hpp>
 #include <guis/GuiMsgBox.h>
 #include <RecalboxSystem.h>
 #include <components/ComponentList.h>
@@ -16,6 +15,7 @@
 #include <RecalboxConf.h>
 #include "ThemeData.h"
 #include "AudioManager.h"
+#include "Locale.h"
 
 #define SELECTED_SCALE 1.5f
 #define LOGO_PADDING ((logoSize().x() * (SELECTED_SCALE - 1)/2) + (mSize.x() * 0.06f))
@@ -140,33 +140,33 @@ bool SystemView::input(InputConfig* config, Input input)
 		}
 		if(config->isMappedTo("select", input) && RecalboxConf::getInstance()->get("system.es.menu") != "none")
 		{
-			auto s = new GuiSettings(mWindow, "QUIT");
+		  auto s = new GuiSettings(mWindow, _("QUIT").c_str());
 
 			Window *window = mWindow;
 			ComponentListRow row;
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
+			    window->pushGui(new GuiMsgBox(window, _("REALLY RESTART?"), _("YES"),
 											  [] {
 												  if (RecalboxSystem::getInstance()->reboot() != 0)  {
 													  LOG(LogWarning) << "Restart terminated with non-zero result!";
 												  }
-											  }, "NO", nullptr));
+							  }, _("NO"), nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+			row.addElement(std::make_shared<TextComponent>(window, _("RESTART SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
 														   0x777777FF), true);
 			s->addRow(row);
 
 			row.elements.clear();
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
+			    window->pushGui(new GuiMsgBox(window, _("REALLY SHUTDOWN?"), _("YES"),
 											  [] {
 												  if (RecalboxSystem::getInstance()->shutdown() != 0)  {
 													  LOG(LogWarning) <<
 																	  "Shutdown terminated with non-zero result!";
 												  }
-											  }, "NO", nullptr));
+							  }, _("NO"), nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM),
+			row.addElement(std::make_shared<TextComponent>(window, _("SHUTDOWN SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
 														   0x777777FF), true);
 			s->addRow(row);
 			mWindow->pushGui(s);
@@ -231,27 +231,11 @@ void SystemView::onCursorChanged(const CursorState& state)
 
 	// also change the text after we've fully faded out
 	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
-		std::stringstream ss;
- 		if (gameCount == 1)
-		{
-			ss << "1" << boost::locale::gettext(" GAME AVAILABLE");
-		}
-		// only display a game count if there are at least 2 games
-		else
-		{
-			ss << gameCount << boost::locale::gettext(" GAMES AVAILABLE");
-		}
-
-		if (favoritesCount == 1)
-		{
-			ss << ", 1 " << boost::locale::gettext("FAVORITE");
-		}
-		else if (favoritesCount > 1)
-		{
-			ss << ", " << favoritesCount << " " << boost::locale::gettext("FAVORITES");
-		}
-
-		mSystemInfo.setText(ss.str());
+		char strbuf[256];
+		snprintf(strbuf, 256,
+			 (ngettext("%i GAME AVAILABLE", "%i GAMES AVAILABLE", gameCount) + ", " +
+			  ngettext("%i FAVORITE", "%i FAVORITES", favoritesCount)).c_str(), gameCount, favoritesCount);
+		mSystemInfo.setText(strbuf);
 	}, false, 1);
 
 	Animation* infoFadeIn = new LambdaAnimation(
@@ -401,8 +385,8 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 std::vector<HelpPrompt> SystemView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("left/right", "choose"));
-	prompts.push_back(HelpPrompt("b", "select"));
+	prompts.push_back(HelpPrompt("left/right", _("CHOOSE")));
+	prompts.push_back(HelpPrompt("b", _("SELECT")));
 	return prompts;
 }
 

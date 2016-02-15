@@ -9,7 +9,7 @@
 #include "components/MenuComponent.h"
 #include <sstream>
 #include "Log.h"
-#include <boost/locale.hpp>
+#include "Locale.h"
 
 using namespace boost::locale;
 
@@ -95,11 +95,11 @@ private:
 				mMenu.addRow(row, (!mParent->mMultiSelect && it->selected));
 			}
 
-			mMenu.addButton("BACK", "accept", [this] { delete this; });
+			mMenu.addButton(_("BACK"), "accept", [this] { delete this; });
 
 			if(mParent->mMultiSelect)
 			{
-				mMenu.addButton("SELECT ALL", "select all", [this, checkboxes] {
+			  mMenu.addButton(_("SELECT ALL"), "select all", [this, checkboxes] {
 					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
 					{
 						mParent->mEntries.at(i).selected = true;
@@ -108,7 +108,7 @@ private:
 					mParent->onSelectedChanged();
 				});
 
-				mMenu.addButton("SELECT NONE", "select none", [this, checkboxes] {
+			  mMenu.addButton(_("SELECT NONE"), "select none", [this, checkboxes] {
 					for(unsigned int i = 0; i < mParent->mEntries.size(); i++)
 					{
 						mParent->mEntries.at(i).selected = false;
@@ -136,7 +136,7 @@ private:
 		std::vector<HelpPrompt> getHelpPrompts() override
 		{
 			auto prompts = mMenu.getHelpPrompts();
-			prompts.push_back(HelpPrompt("a", "back"));
+			prompts.push_back(HelpPrompt("a", _("BACK")));
 			return prompts;
 		}
 	};
@@ -307,9 +307,10 @@ private:
 		if(mMultiSelect)
 		{
 			// display # selected
-			std::stringstream ss;
-			ss << getSelectedObjects().size() << gettext(" SELECTED");
-			mText.setText(ss.str());
+		  	char strbuf[256];
+			int x = getSelectedObjects().size();
+		  	snprintf(strbuf, 256, ngettext("%i SELECTED", "%i SELECTED", x).c_str(), x);
+			mText.setText(strbuf);
 			mText.setSize(0, mText.getSize().y());
 			setSize(mText.getSize().x() + mRightArrow.getSize().x() + 24, mText.getSize().y());
 			if(mParent) // hack since theres no "on child size changed" callback atm...
@@ -339,9 +340,9 @@ private:
 	{
 		std::vector<HelpPrompt> prompts;
 		if(!mMultiSelect)
-			prompts.push_back(HelpPrompt("left/right", "change"));
+		  prompts.push_back(HelpPrompt("left/right", _("CHANGE")));
 		
-		prompts.push_back(HelpPrompt("b", "select"));
+		prompts.push_back(HelpPrompt("b", _("SELECT")));
 		return prompts;
 	}
 

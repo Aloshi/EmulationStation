@@ -5,7 +5,7 @@
 #include "Renderer.h"
 
 #include "Util.h"
-#include <boost/locale.hpp>
+#include "Locale.h"
 
 #define TEXT_PADDING_HORIZ 10
 #define TEXT_PADDING_VERT 2
@@ -45,7 +45,7 @@ void TextEditComponent::onSizeChanged()
 
 void TextEditComponent::setValue(const std::string& val)
 {
-	mText = boost::locale::gettext(val.c_str());
+        mText = val;
 	onTextChanged();
 }
 

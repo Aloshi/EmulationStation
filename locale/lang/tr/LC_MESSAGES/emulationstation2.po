@@ -1,586 +1,134 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0RC1 TURKISH po\n"
-"POT-Creation-Date: 2014-09-20 12:00-0500\n"
-"PO-Revision-Date: 2015-11-13 16:57+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-14 02:40+0200\n"
+"PO-Revision-Date: 2016-02-14 11:51+0200\n"
 "Last-Translator: Ibrahim Gungor <igungor@gmail.com>\n"
 "Language-Team: TURKISH\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
-
-msgid "MAIN MENU"
-msgstr "ANA MENÜ"
-
-msgid "YES"
-msgstr "EVET"
-
-msgid "NO"
-msgstr "HAYIR"
-
-#: es-app/src/views/gamelist/DetailedGameListView.cpp
-msgid "Rating: "
-msgstr "PUAN: "
-
-msgid "Released: "
-msgstr "TARİH: "
-
-msgid "Developer: "
-msgstr "GELİŞTİRİCİ: "
-
-msgid "Publisher: "
-msgstr "YAYINCI: "
-
-msgid "Genre: "
-msgstr "TÜR: "
-
-msgid "Players: "
-msgstr "OYUNCU: "
-
-msgid "Last played: "
-msgstr "EN SON: "
-
-msgid "Times played: "
-msgstr "KAÇ KEZ: "
-
-#: es-app/src/MetaData.cpp
-msgid "enter game name"
-msgstr ""
-
-msgid "NAME"
-msgstr "İSİM"
-
-msgid "ENTER DESCRIPTION"
-msgstr "AÇIKLAMA"
-
-msgid "ENTER PATH TO IMAGE"
-msgstr "RESMİN KONUMU"
-
-msgid "THUMBNAIL"
-msgstr "ÖNİZLEME"
-
-msgid "ENTER PATH TO THUMBNAIL"
-msgstr "ÖNİZLEMENİN KONUMU"
-
-msgid "RATING"
-msgstr "PUAN"
-
-msgid "ENTER SCORE"
-msgstr "SKOR"
-
-msgid "RELEASE DATE"
-msgstr "TARİH"
-
-msgid "ENTER RELEASE DATE"
-msgstr "YAYIN TARİHİ"
-
-msgid "DEVELOPER"
-msgstr "GELİŞTİRİCİ"
-
-msgid "ENTER GAME DEVELOPER"
-msgstr "GELİŞTİRİCİ"
-
-msgid "PUBLISHER"
-msgstr "YAYINCI"
-
-msgid "ENTER GAME PUBLISHER"
-msgstr "YAYINCI"
-
-msgid "GENRE"
-msgstr "TÜR"
-
-msgid "ENTER GAME GENRE"
-msgstr "TÜR"
-
-msgid "PLAYERS"
-msgstr "OYUNCU"
-
-msgid "ENTER NUMBER OF PLAYERS"
-msgstr "OYUNCU SAYISI"
-
-msgid "PLAY COUNT"
-msgstr "OYNANMA SAYISI"
-
-msgid "ENTER NUMBER OF TIMES PLAYED"
-msgstr "KAÇ KEZ OYNANDI?"
-
-#: es-app/src/guis/GuiMenu.cpp
-msgid "SCRAPE FROM"
-msgstr "ŞURADAN ÇEK"
-
-msgid "SCRAPE RATINGS"
-msgstr "PUANLARI ÇEK"
-
-msgid "SOUND SETTINGS"
-msgstr "SES AYARLARI"
-
-msgid "SYSTEM VOLUME"
-msgstr "SİSTEM SESİ"
-
-msgid "ENABLE SOUNDS"
-msgstr "SESİ ETKİNLEŞTİR"
-
-msgid "UI SETTINGS"
-msgstr "ARABİRİM AYARLARI"
-
-msgid "SCREENSAVER AFTER"
-msgstr "EKRAN KORUYUCU"
-
-msgid "TRANSITION STYLE"
-msgstr "GEÇİŞ STİLİ"
-
-msgid "SCREENSAVER BEHAVIOR"
-msgstr "EKRAN KORUYUCU DAVRANIŞI"
-
-msgid "SHOW FRAMERATE"
-msgstr "FRAMERATE GÖSTER"
-
-msgid "ON-SCREEN HELP"
-msgstr "YARDIMI GÖSTER"
-
-msgid "QUICK SYSTEM SELECT"
-msgstr "HIZLI SİSTEM SEÇİMİ"
-
-msgid "THEME SET"
-msgstr "TEMA"
-
-msgid "CONFIGURE INPUT"
-msgstr "GİRDİ YAPILANDIR"
-
-msgid "QUIT"
-msgstr "ÇIKIŞ"
-
-msgid "REALLY RESTART?"
-msgstr "YENİDEN BAŞLAT"
-
-msgid "RESTART SYSTEM"
-msgstr "YENİDEN BAŞLAT"
-
-msgid "REALLY SHUTDOWN?"
-msgstr "KAPAT"
-
-msgid "SHUTDOWN SYSTEM"
-msgstr "KAPAT"
-
-msgid "REALLY QUIT?"
-msgstr "ÇIK"
-
-msgid "QUIT EMULATIONSTATION"
-msgstr "ARABİRİMDEN ÇIK"
-
-#: es-app/src/guis/GuiScraperStart.cpp
-msgid "SCRAPE NOW"
-msgstr "ŞİMDİ ÇEK"
-
-msgid "USER DECIDES ON CONFLICTS"
-msgstr "ÇAKIŞMALARDA KULLANICI KARAR VERSİN"
-
-msgid "SYSTEMS"
-msgstr "SİSTEMLER"
-
-msgid "FILTER"
-msgstr "FİLTRE"
-
-msgid "SCRAPE THESE GAMES"
-msgstr "ŞU OYUNLARI ÇEK"
-
-msgid "SCRAPE THESE SYSTEMS"
-msgstr "ŞU SİSTEMLERİ ÇEK"
-
-msgid "SELECT ALL"
-msgstr "TÜMÜ"
-
-msgid "SELECT NONE"
-msgstr "HİÇBİRİ"
-
-#: es-app/src/guis/GuiScraperMulti.cpp"
-msgid "SCRAPING IN PROGRESS"
-msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
-
-#: es-app/src/components/ScraperSearchComponent.cpp
-msgid "NO GAMES FOUND - SKIP"
-msgstr "OYUN BULUNAMADI"
-
-#: Buttons
-msgid "close"
-msgstr "kapat"
-
-msgid "select"
-msgstr "değiştir"
-
-msgid "choose"
-msgstr "seç"
-
-msgid "back"
-msgstr "geri"
-
-msgid "CLOSE"
-msgstr "KAPAT"
-
-msgid "SELECT"
-msgstr "SEÇ"
-
-msgid "CHOOSE"
-msgstr "DEĞİŞTİR"
-
-msgid "BACK"
-msgstr "GERİ"
-
-msgid "LAUNCH"
-msgstr "BAŞLAT"
-
-msgid "SYSTEM"
-msgstr "SİSTEM"
-
-msgid "INPUT"
-msgstr "GİRDİ"
-
-msgid "SKIP"
-msgstr "GEÇ"
-
-msgid "CHANGE"
-msgstr "DEĞİŞTİR"
-
-msgid "SAVE"
-msgstr "KAYDET"
-
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/FileSystemSelectorComponent.cpp:179
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:280
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:46
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:189
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiTextEditPopup.cpp:24
 msgid "CANCEL"
 msgstr "İPTAL"
 
-msgid "DELETE"
-msgstr "SİL"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:56
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:35
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:21
+msgid "Rating"
+msgstr "Puan"
 
-msgid "GO BACK"
-msgstr "GERİ DÖN"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:57
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:38
+msgid "Released"
+msgstr "Yayın"
 
-#: es-app/src/views/SystemView.cpp
-msgid " GAMES AVAILABLE"
-msgstr " OYUN"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:58
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:41
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+msgid "Developer"
+msgstr "Geliştirici"
 
-#: es-app/src/guis/GuiGamelistOptions.cpp
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:59
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:44
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+msgid "Publisher"
+msgstr "Yayıncı"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:60
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:47
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+msgid "Genre"
+msgstr "Tür"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:61
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:50
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:26
+msgid "Players"
+msgstr "Oyuncu"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:240
+msgid "NO GAMES FOUND - SKIP"
+msgstr "OYUN BULUNAMADI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:278
+msgid "RETRY"
+msgstr "TEKRAR DENE"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:279
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:57
+msgid "SKIP"
+msgstr "GEÇ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/components/ScraperSearchComponent.cpp:454
+msgid "SEARCH FOR"
+msgstr "ARAMA YAP"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:42
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:52
+msgid "INPUT"
+msgstr "GİRDİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGameScraper.cpp:42
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:52
+msgid "search"
+msgstr "ara"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:13
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:163
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:336
+msgid "OPTIONS"
+msgstr "SEÇENEKLER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:22
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:27
 msgid "JUMP TO LETTER"
 msgstr "ŞU HARFE GİT"
 
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:44
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:51
 msgid "SORT GAMES BY"
 msgstr "SIRALAMA KRİTERİ"
 
-msgid "EDIT THIS GAME'S METADATA"
-msgstr "OYUN BİLGİLERİNİ DÜZENLE"
-
-#: es-app/src/guis/GuiMetaDataEd.cpp
-msgid "EDIT METADATA"
-msgstr "DÜZENLE"
-
-msgid " GAMEPAD"
-msgstr " GAMEPAD"
-
-msgid " DETECTED"
-msgstr " ALGILANDI"
-
-msgid "WELCOME"
-msgstr "HOŞGELDİN"
-
-msgid "NO GAMEPADS DETECTED"
-msgstr "GAMEPAD BULUNAMADI"
-
-msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "CİHAZI YAPILANDIRMAK İÇİN BİR TUŞA BASILI TUT"
-
-msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr "ÇIKMAK İÇİN F4 TUŞUNA BAŞ"
-
-#, fuzzy
-msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "İPTAL İÇİN ESC TUŞUNA BAS"
-
-#: es-core/src/guis/GuiInputConfig.cpp
-msgid "CONFIGURING"
-msgstr "YAPILANDIRILIYOR"
-
-msgid "UP"
-msgstr "YUKARI"
-
-msgid "DOWN"
-msgstr "AŞAĞI"
-
-msgid "LEFT"
-msgstr "SOL"
-
-msgid "RIGHT"
-msgstr "SAĞ"
-
-msgid "PAGE UP"
-msgstr "PAGE UP"
-
-msgid "PAGE DOWN"
-msgstr "PAGE DOWN"
-
-msgid "SAVE CHANGES?"
-msgstr "DEĞİŞİKLİKLERİ KAYDET?"
-
-#: es-app/src/guis/GuiUpdate.cpp
-msgid "WORKING..."
-msgstr "DEVAM EDİYOR..."
-
-msgid "UPDATE"
-msgstr "GÜNCELLE"
-
-msgid "REALLY UPDATE?"
-msgstr "GÜNCELLE?"
-
-msgid "NETWORK CONNECTION NEEDED"
-msgstr "AĞ BAĞLANTISI GEREKİYOR"
-
-msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
-msgstr "GÜNCELLEME TAMAMLANDI, SİSTEM YENİDEN BAŞLATILIYOR"
-
-msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
-msgstr "GÜNCELLEME BAŞARISIZ, SİSTEM YENİDEN BAŞLATILIYOR"
-
-# GUIMENU
-msgid "CONFIGURE A CONTROLLER"
-msgstr "JOYSTICK YAPILANDIR"
-
-msgid "INPUT P1"
-msgstr "GİRDİ P1"
-
-msgid "INPUT P2"
-msgstr "GİRDİ P2"
-
-msgid "INPUT P3"
-msgstr "GİRDİ P3"
-
-msgid "INPUT P4"
-msgstr "GİRDİ P4"
-
-msgid "NOGAMEERRORMESSAGE"
-msgstr ""
-"KURULU BİR SİSTEM BULUNAMADI!\n"
-"SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN "
-"KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
-
-msgid "LANGUAGE"
-msgstr "DİL"
-
-msgid "THE SYSTEM WILL NOW REBOOT"
-msgstr "SİSTEM YENIDEN BAŞLATILIYOR"
-
-msgid "SYSTEM SETTINGS"
-msgstr "SİSTEM AYARLARI"
-
-msgid "VERSION"
-msgstr "SÜRÜM"
-
-msgid "STORAGE"
-msgstr "DEPO"
-
-msgid "OUTPUT DEVICE"
-msgstr "ÇIKTI AYGITI"
-
-msgid "SMOOTH GAMES"
-msgstr "OYUNLARI SMOOTH GÖSTER"
-
-msgid "GPIO CONTROLLERS"
-msgstr "GPIO KUMANDASI"
-
-msgid "GPIO CONTROLLERS ARE NOW ON"
-msgstr "GPIO KUMANDASI ETKİN"
-
-msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
-msgstr "SİSTEMİNİZE AİT GÜNCELLEME MEVCUT"
-
-msgid "NO UPDATE AVAILABLE"
-msgstr "YENİ GÜNCELLEME YOK"
-
-msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
-msgstr "KODI SUNUCUSU BAŞLATILSIN MI?"
-
-msgid "ENABLE WIFI"
-msgstr "WIFI ETKİNLEŞTİR"
-
-msgid "NETWORK SETTINGS"
-msgstr "AĞ AYARLARI"
-
-msgid "WIFI ENABLED"
-msgstr "WIFI ETKİN"
-
-msgid "WIFI CONFIGURATION ERROR"
-msgstr "WIFI YAPILANDIRMA HATASI"
-
-msgid "WIFI KEY"
-msgstr "WIFI ANAHTARI"
-
-msgid "WIFI SSID"
-msgstr "WIFI SSID"
-
-msgid "GAME RATIO"
-msgstr "GÖRÜNTÜ ORANI"
-
-# Config controllers missing translation
-msgid "PRESS ANYTHING"
-msgstr "HERHANGİ BİR TUŞA BASIN"
-
-msgid "-NOT DEFINED-"
-msgstr "-TANIMLI DEĞİL-"
-
-msgid "ALREADY TAKEN"
-msgstr "ÖNCEDEN TANIMLANMIŞ"
-
-msgid "HOLD FOR "
-msgstr "GEÇMEK İÇİN"
-
-msgid "S TO SKIP"
-msgstr "SANİYE BASILI TUTUN"
-
-msgid "HOLD ANY BUTTON TO SKIP"
-msgstr "GEÇMEK İÇİN BİR TUŞA BASILI TUTUN"
-
-msgid "JOYSTICK 1 UP"
-msgstr "JOYSTICK 1 YUKARI"
-
-msgid "JOYSTICK 1 LEFT"
-msgstr "JOYSTICK 1 SOL"
-
-msgid "JOYSTICK 2 UP"
-msgstr "JOYSTICK 2 YUKARI"
-
-msgid "JOYSTICK 2 LEFT"
-msgstr "JOYSTICK 2 SOL"
-
-msgid "I18NMESSAGECONTROLLERS"
-msgstr ""
-"JOYSTICK YAPILANDIRIRKEN AYARLAMAK İSTEMEDİĞİNİZ TUŞLAR İÇİN HERHANGİ GİR "
-"TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI "
-"TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAYAN BİR TUŞTUR. "
-"HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
-
-# TEXT EDITING
-msgid "EDIT"
-msgstr "DÜZENLE"
-
-msgid "STOP EDITING"
-msgstr "DÜZENLEMEKTEN VAZGEÇ"
-
-msgid "MOVE CURSOR"
-msgstr "İMLECİ OYNAT"
-
-msgid "DISCARD CHANGES"
-msgstr "DEĞİŞİKLİKLERİ KAYDETME"
-
-# MISSING SCRAPPER TRANSLATIONS
-msgid "Only missing image"
-msgstr ""
-
-msgid "All Games"
-msgstr ""
-
-msgid "accept"
-msgstr ""
-
-msgid " SELECTED"
-msgstr " TANESİ SEÇİLİ"
-
-msgid "accept result"
-msgstr ""
-
-msgid "stop (progress saved)"
-msgstr "dur"
-
-msgid "search"
-msgstr ""
-
-msgid "GAMES"
-msgstr "OYUNLAR"
-
-msgid " OF "
-msgstr " | TOPLAM: "
-
-msgid "NO GAMES WERE SCRAPED."
-msgstr "HİÇBİR OYUN ÇEKİLMEDİ."
-
-msgid " SUCCESSFULLY SCRAPED!"
-msgstr "BAŞARIYLA ÇEKİLDİ!"
-
-msgid " SKIPPED."
-msgstr "ATLANDI."
-
 #  FAVORITES
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:55
 msgid "FAVORITES ONLY"
 msgstr "SADECE FAVORİLER"
 
-msgid "FAVORITE"
-msgstr "FAVORİ"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:62
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "OYUN BİLGİLERİNİ DÜZENLE"
 
-msgid "enter favorite"
-msgstr ""
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiGamelistOptions.cpp:158
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:318
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:126
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:58
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1118
+msgid "CLOSE"
+msgstr "KAPAT"
 
-# NEW SETTINGS ORGANIZATION
-msgid "UPDATES"
-msgstr "GÜNCELLEMELER"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:37
+msgid "EDIT METADATA"
+msgstr "DÜZENLE"
 
-msgid "AUTO UPDATES"
-msgstr "OTOMATİK GÜNCELLEME"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:183
+msgid "SCRAPE"
+msgstr "ÇEK"
 
-msgid "START UPDATE"
-msgstr "GÜNCELLE"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:185
+msgid "SAVE"
+msgstr "KAYDET"
 
-msgid "KODI SETTINGS"
-msgstr "KODI AYARLARI"
-
-msgid "ENABLE KODI"
-msgstr "KODIYI ETKİNLEŞTİR"
-
-msgid "KODI AT START"
-msgstr "KODI AÇILIŞTA BAŞLASIN"
-
-msgid "START KODI WITH X"
-msgstr "KODI X İLE BAŞLASIN"
-
-msgid "GAMES SETTINGS"
-msgstr "OYUN AYARLARI"
-
-msgid "REWIND"
-msgstr "GERİ SAR"
-
-msgid "CONTROLLERS SETTINGS"
-msgstr "KUMANDA AYARLARI"
-
-msgid "FRONTEND MUSIC"
-msgstr "ARABİRİM MÜZİĞİ"
-
-msgid "HOSTNAME"
-msgstr "SİSTEM ADI"
-
-msgid "CONNECTED"
-msgstr "BAĞLI"
-
-msgid "NOT CONNECTED"
-msgstr "BAĞLI DEĞİL"
-
-msgid "LOADING..."
-msgstr "YÜKLENİYOR..."
-
-# Bluetooth
-msgid "CONTROLLER PAIRED"
-msgstr "KUMANDA EŞLEŞTİRİLDİ"
-
-msgid "UNABLE TO PAIR CONTROLLER"
-msgstr "KUMANDA EŞLEŞTİRİLEMEDİ"
-
-msgid "AN ERROR OCCURED"
-msgstr "BİR HATA OLUŞTU"
-
-msgid "NO CONTROLLERS FOUND"
-msgstr "KUMANDA BULUNAMADI"
-
-msgid "PAIR A BLUETOOTH CONTROLLER"
-msgstr "BLUETOOTH KUMANDA EŞLEŞTİR"
-
-msgid "PLEASE WAIT..."
-msgstr "LÜTFEN BEKLEYİN..."
-
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
 msgid ""
 "THIS WILL DELETE A FILE!\n"
 "ARE YOU SURE?"
@@ -588,133 +136,931 @@ msgstr ""
 "BU İŞLEM BİR DOSYA SİLECEK!\n"
 "EMİN MİSİNİZ?"
 
-msgid " GAME AVAILABLE"
-msgstr " OYUN"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:291
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:52
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:56
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:418
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:719
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:733
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:148
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:161
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/Window.cpp:141
+msgid "YES"
+msgstr "EVET"
 
-msgid "UPDATE GAMES LISTS"
-msgstr "OYUN LİSTESİNİ GÜNCELLE"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:198
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:295
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:53
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:62
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:433
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:725
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:739
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:153
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:167
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:38
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/Window.cpp:147
+msgid "NO"
+msgstr "HAYIR"
 
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:201
+msgid "DELETE"
+msgstr "SİL"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:290
+msgid "SAVE CHANGES?"
+msgstr "DEĞİŞİKLİKLERİ KAYDET?"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMetaDataEd.cpp:317
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:38
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:125
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:11
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiSettings.cpp:57
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:160
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:333
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:69
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:98
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:139
+msgid "BACK"
+msgstr "GERİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:32
+msgid "SCRAPING IN PROGRESS"
+msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:35
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:157
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:329
+msgid "SYSTEM"
+msgstr "SİSTEM"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:38
+msgid "subtitle text"
+msgstr "altyazı metni"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "STOP"
+msgstr "DUR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:63
+msgid "stop (progress saved)"
+msgstr "dur"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:107
+#, c-format
+msgid "GAME %i OF %i"
+msgstr "OYUN %i/%i"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:141
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.FR FOR MORE INFORMATION."
+msgstr ""
+"KURULU BİR SİSTEM BULUNAMADI!\n"
+"SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN "
+"KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:149
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] "%i OYUN BAŞARIYLA ÇEKİLDİ!"
+msgstr[1] "%i OYUN BAŞARIYLA ÇEKİLDİ!"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:153
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] "%i OYUN ATLANDI."
+msgstr[1] "%i OYUN ATLANDI."
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperMulti.cpp:159
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:72
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:81
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:92
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:103
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:287
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:888
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:910
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:913
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:917
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/main.cpp:325
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:170
+msgid "OK"
+msgstr "TAMAM"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:12
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:699
+msgid "SCRAPE NOW"
+msgstr "ŞİMDİ ÇEK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:17
+msgid "SCRAPE THESE GAMES"
+msgstr "ŞU OYUNLARI ÇEK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:18
+msgid "All Games"
+msgstr "Tüm Oyunlar"
+
+# MISSING SCRAPPER TRANSLATIONS
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:20
+msgid "Only missing image"
+msgstr "Sadece eksik resimliler"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:22
+msgid "FILTER"
+msgstr "FİLTRE"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:25
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "ŞU SİSTEMLERİ ÇEK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:31
+msgid "SYSTEMS"
+msgstr "SİSTEMLER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:35
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "ÇAKIŞMALARDA KULLANICI KARAR VERSİN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:37
+msgid "START"
+msgstr "BAŞLAT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:51
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+"UYARI: SEÇİLİ SİSTEMLERDEN BAZILARININ PLATFORMLARI BULUNAMADI. TARAMA "
+"SONUÇLARI TUTARSIZ OLABİLİR!\n"
+"DEVAM EDİLSİN Mİ?"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiScraperStart.cpp:68
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr "BU KRİTERE UYAN OYUN BULUNAMADI."
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:56
+msgid "REALLY UPDATE?"
+msgstr "GÜNCELLE?"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:72
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "AĞ BAĞLANTISI GEREKİYOR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:81
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME İNDİRİLDİ, SİSTEM YENİDEN BAŞLATILACAK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:92
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME BAŞARISIZ, SİSTEM YENİDEN BAŞLATILIYOR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiUpdate.cpp:103
+msgid "NO UPDATE AVAILABLE"
+msgstr "YENİ GÜNCELLEME YOK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:82
+msgid "MAIN MENU"
+msgstr "ANA MENÜ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:96
+msgid "KODI MEDIA CENTER"
+msgstr "KODI MEDIA CENTER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:111
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:115
+msgid "SYSTEM SETTINGS"
+msgstr "SİSTEM AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:120
+msgid "VERSION"
+msgstr "SÜRÜM"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:126
+msgid "SPACE LEFT"
+msgstr "KALAN DEPO"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:132
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:147
+msgid "STORAGE DEVICE"
+msgstr "DEPO CİHAZI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:151
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:165
+msgid "LANGUAGE"
+msgstr "DİL"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:168
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:187
+msgid "OVERCLOCK"
+msgstr "HIZAŞIMI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:173
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:179
+msgid "EXTREM (1100Mhz)"
+msgstr "EKSTREM (1100Mhz)"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:174
+msgid "TURBO (1000Mhz)"
+msgstr "TURBO (1000Mhz)"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:175
+msgid "HIGH (950Mhz)"
+msgstr "YÜKSEK (950Mhz)"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:176
+msgid "NONE (700Mhz)"
+msgstr "YOK (700Mhz)"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:180
+msgid "TURBO (1050Mhz)+"
+msgstr "TURBO (1050Mhz)+"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:181
+msgid "HIGH (1050Mhz)"
+msgstr "YÜKSEK (1050Mhz)"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:182
+msgid "NONE (900Mhz)"
+msgstr "YOK (900Mhz)"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:185
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:333
+msgid "NONE"
+msgstr "YOK"
+
+# NEW SETTINGS ORGANIZATION
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:193
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:222
+msgid "UPDATES"
+msgstr "GÜNCELLEMELER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:198
+msgid "AUTO UPDATES"
+msgstr "OTOMATİK GÜNCELLEME"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:205
+msgid "START UPDATE"
+msgstr "GÜNCELLE"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:235
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:258
+msgid "KODI SETTINGS"
+msgstr "KODI AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:238
+msgid "ENABLE KODI"
+msgstr "ETKİNLEŞTİR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:242
+msgid "KODI AT START"
+msgstr "AÇILIŞTA BAŞLASIN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:245
+msgid "START KODI WITH X"
+msgstr "X İLE BAŞLASIN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:287
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "SİSTEM YENİDEN BAŞLATILIYOR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:302
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:304
+msgid "GAMES SETTINGS"
+msgstr "OYUN AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:307
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:829
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1124
+msgid "GAME RATIO"
+msgstr "GÖRÜNTÜ ORANI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:312
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:833
+msgid "SMOOTH GAMES"
+msgstr "OYUNLARI SMOOTH GÖSTER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:317
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:838
+msgid "REWIND"
+msgstr "GERİ SAR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:322
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:843
+msgid "AUTO SAVE/LOAD"
+msgstr "OTOMATİK KAYDET/YÜKLE"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:326
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:336
+msgid "SHADERS SET"
+msgstr "SHADER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:334
+msgid "SCANLINES"
+msgstr "SCANLINES"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:335
+msgid "RETRO"
+msgstr "RETRO"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:342
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:360
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr "RETROACHIEVEMENT AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:346
+msgid "RETROACHIEVEMENTS"
+msgstr "RETROACHIEVEMENT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:349
+msgid "USERNAME"
+msgstr "KULLANICI ADI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:350
+msgid "PASSWORD"
+msgstr "PAROLA"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:374
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:398
+msgid "ADVANCED"
+msgstr "GELİŞMİŞ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:418
 msgid "REALLY UPDATE GAMES LISTS ?"
 msgstr "OYUN LİSTESİ GÜNCELLENSİN Mİ?"
 
-msgid "EMULATOR"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:436
+msgid "UPDATE GAMES LISTS"
+msgstr "OYUN LİSTESİNİ GÜNCELLE"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:446
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:877
+msgid "CONTROLLERS SETTINGS"
+msgstr "KUMANDA AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:450
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:452
+msgid "UI SETTINGS"
+msgstr "ARABİRİM AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:457
+msgid "OVERSCAN"
+msgstr "OVERSCAN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:468
+msgid "SCREENSAVER AFTER"
+msgstr "EKRAN KORUYUCU"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:476
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:515
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:522
+msgid "TRANSITION STYLE"
+msgstr "GEÇİŞ STİLİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:484
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "EKRAN KORUYUCU DAVRANIŞI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:492
+msgid "SHOW FRAMERATE"
+msgstr "FRAMERATE GÖSTER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:499
+msgid "ON-SCREEN HELP"
+msgstr "YARDIMI GÖSTER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:508
+msgid "QUICK SYSTEM SELECT"
+msgstr "HIZLI SİSTEM SEÇİMİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:535
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:539
+msgid "THEME SET"
+msgstr "TEMA"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:558
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:560
+msgid "SOUND SETTINGS"
+msgstr "SES AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:565
+msgid "SYSTEM VOLUME"
+msgstr "SİSTEM SESİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:570
+msgid "FRONTEND MUSIC"
+msgstr "ARABİRİM MÜZİĞİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:572
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:583
+msgid "OUTPUT DEVICE"
+msgstr "ÇIKTI AYGITI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:578
+msgid "HDMI"
+msgstr "HDMI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:579
+msgid "JACK"
+msgstr "JACK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:580
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1131
+msgid "AUTO"
+msgstr "OTOMATİK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:606
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:610
+msgid "NETWORK SETTINGS"
+msgstr "AĞ AYARLARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:612
+msgid "CONNECTED"
+msgstr "BAĞLI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:613
+msgid "NOT CONNECTED"
+msgstr "BAĞLI DEĞİL"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:615
+msgid "STATUS"
+msgstr "DURUM"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:618
+msgid "IP ADDRESS"
+msgstr "IP ADRESİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:620
+msgid "HOSTNAME"
+msgstr "SİSTEM ADI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:626
+msgid "ENABLE WIFI"
+msgstr "WIFI ETKİNLEŞTİR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:630
+msgid "WIFI SSID"
+msgstr "WIFI SSID"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:632
+msgid "WIFI KEY"
+msgstr "WIFI ANAHTARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:646
+msgid "WIFI ENABLED"
+msgstr "WIFI ETKİN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:650
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "WIFI YAPILANDIRMA HATASI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:666
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:668
+msgid "SCRAPER"
+msgstr "SCRAPER"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:671
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:677
+msgid "SCRAPE FROM"
+msgstr "ŞURADAN ÇEK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:685
+msgid "SCRAPE RATINGS"
+msgstr "PUANLARI ÇEK"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:711
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:713
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:143
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/main.cpp:309
+msgid "QUIT"
+msgstr "ÇIKIŞ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:719
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:148
+msgid "REALLY RESTART?"
+msgstr "YENİDEN BAŞLAT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:727
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:155
+msgid "RESTART SYSTEM"
+msgstr "YENİDEN BAŞLAT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:733
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:161
+msgid "REALLY SHUTDOWN?"
+msgstr "KAPAT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:741
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:169
+msgid "SHUTDOWN SYSTEM"
+msgstr "KAPAT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:808
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:15
+msgid "Emulator"
+msgstr "Emulator"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:811
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:824
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:16
+msgid "Core"
+msgstr "Core"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:884
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
 msgstr ""
+"KUMANDA YAPILANDIRIRKEN AYARLAMAK İSTEMEDİĞİNİZ TUŞLAR İÇİN HERHANGİ GİR "
+"TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI "
+"TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAYAN BİR TUŞTUR. "
+"HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
 
-#, fuzzy
-msgid "FAVORITES"
-msgstr "FAVORİ"
+# GUIMENU
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:900
+msgid "CONFIGURE A CONTROLLER"
+msgstr "KUMANDA YAPILANDIR"
 
-msgid "HIDDEN"
-msgstr ""
+# Bluetooth
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:910
+msgid "CONTROLLER PAIRED"
+msgstr "KUMANDA EŞLEŞTİRİLDİ"
 
-#, fuzzy
-msgid "ENTER REGION"
-msgstr "SKOR"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:910
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "KUMANDA EŞLEŞTİRİLEMEDİ"
 
-#, fuzzy
-msgid "ENTER ROMTYPE"
-msgstr "SKOR"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:913
+msgid "AN ERROR OCCURED"
+msgstr "BİR HATA OLUŞTU"
 
-#, fuzzy
-msgid "STORAGE DEVICE"
-msgstr "DEPO"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:917
+msgid "NO CONTROLLERS FOUND"
+msgstr "KUMANDA BULUNAMADI"
 
-msgid "AUTO SAVE/LOAD"
-msgstr ""
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:919
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:958
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "BLUETOOTH KUMANDA EŞLEŞTİR"
 
-#~ msgid "ENTER GAME NAME"
-#~ msgstr "OYUN ADI"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:981
+#, c-format
+msgid "INPUT P%i"
+msgstr "GİRDİ P%i"
 
-#~ msgid "DESCRIPTION"
-#~ msgstr "AÇIKLAMA"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1116
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:158
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:331
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:388
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:449
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:451
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/ComponentGrid.cpp:453
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/ComponentList.cpp:332
+msgid "CHOOSE"
+msgstr "DEĞİŞTİR"
 
-#~ msgid "IMAGE"
-#~ msgstr "RESİM"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1117
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:389
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/ImageComponent.cpp:330
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:345
+msgid "SELECT"
+msgstr "SEÇ"
 
-#~ msgid "RATING:"
-#~ msgstr "PUAN:"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1130
+msgid "CUSTOM"
+msgstr "ÖZEL"
 
-#~ msgid "RELEASED:"
-#~ msgstr "TARİH:"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1132
+msgid "4/3"
+msgstr "4/3"
 
-#~ msgid "DEVELOPER:"
-#~ msgstr "GELİŞTİRİCİ:"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/guis/GuiMenu.cpp:1133
+msgid "16/9"
+msgstr "16/9"
 
-#~ msgid "PUBLISHER:"
-#~ msgstr "YAYINCI:"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:159
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:332
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:68
+msgid "LAUNCH"
+msgstr "BAŞLAT"
 
-#~ msgid "GENRE:"
-#~ msgstr "TÜR:"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/BasicGameListView.cpp:162
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:62
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:335
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:27
+msgid "Favorite"
+msgstr "Favori"
 
-#~ msgid "PLAYERS:"
-#~ msgstr "OYUNCU:"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:53
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:32
+msgid "Last played"
+msgstr "Son oynanma"
 
-#~ msgid "STOP"
-#~ msgstr "DUR"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/DetailedGameListView.cpp:57
+msgid "Times played"
+msgstr "Kaç kez oynandı"
 
-# MISSING SCRAPPER TRANSLATIONS
-#~ msgid "ONLY MISSING IMAGE"
-#~ msgstr "SADECE RESMİ OLMAYANLAR"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/gamelist/GridGameListView.cpp:67
+msgid "SCROLL"
+msgstr "KAYDIR"
 
-#~ msgid "ALL GAMES"
-#~ msgstr "TÜM OYUNLAR"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:236
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] "%i OYUN"
+msgstr[1] "%i OYUN"
 
-#~ msgid "ACCEPT"
-#~ msgstr "KABUL ET"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/SystemView.cpp:237
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] "%i FAVORİ"
+msgstr[1] "%i FAVORİ"
 
-#~ msgid "SELECTED"
-#~ msgstr "TANESİ SEÇİLİ"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/views/ViewController.cpp:524
+msgid "MENU"
+msgstr "MENÜ"
 
-#~ msgid "ACCEPT RESULT"
-#~ msgstr "KABUL ET"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:9
+msgid "FILENAME, ASCENDING"
+msgstr "DOSYA ADI, ARTAN"
 
-#~ msgid "SEARCH"
-#~ msgstr "ARA"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:10
+msgid "FILENAME, DESCENDING"
+msgstr "DOSYA ADI, AZALAN"
 
-#~ msgid "GAME"
-#~ msgstr "OYUN:"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:11
+msgid "RATING, ASCENDING"
+msgstr "PUAN, ARTAN"
 
-#~ msgid "ENTER FAVORITE"
-#~ msgstr "FAVORİ"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:12
+msgid "RATING, DESCENDING"
+msgstr "PUAN, AZALAN"
 
-#~ msgid "IP ADDRESS"
-#~ msgstr "IP ADRESİ"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:13
+msgid "TIMES PLAYED, ASCENDING"
+msgstr "OYNANMA SAYISI, ARTAN"
 
-#~ msgid "STATUS"
-#~ msgstr "DURUM"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:14
+msgid "TIMES PLAYED, DESCENDING"
+msgstr "OYNANMA SAYISI, AZALAN"
 
-#~ msgid "DEFAULT"
-#~ msgstr "ÖNTANIMLI"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:15
+msgid "LAST PLAYED, ASCENDING"
+msgstr "SON OYNANMA, ARTAN"
 
-#~ msgid "MENU"
-#~ msgstr "MENÜ"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/FileSorts.cpp:16
+msgid "LAST PLAYED, DESCENDING"
+msgstr "SON OYNANMA, AZALAN"
 
-#~ msgid "OPTIONS"
-#~ msgstr "SEÇENEKLER"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:17
+msgid "Name"
+msgstr "İsim"
 
-#~ msgid "START"
-#~ msgstr "BAŞLAT"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:18
+msgid "Description"
+msgstr "Açıklama"
 
-#~ msgid "unknown"
-#~ msgstr "bilinmiyor"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:19
+msgid "Image"
+msgstr "Resim"
 
-#~ msgid "ok"
-#~ msgstr "tamam"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:20
+msgid "Thumbnail"
+msgstr "Minikresim"
 
-#~ msgid "OK"
-#~ msgstr "TAMAM"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:22
+msgid "Release date"
+msgstr "Yayın tarihi"
 
-#~ msgid "yes"
-#~ msgstr "evet"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:23
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:24
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:25
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:243
+msgid "unknown"
+msgstr "bilinmiyor"
 
-#~ msgid "no"
-#~ msgstr "hayır"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:28
+msgid "Region"
+msgstr "Bölge"
 
-#~ msgid "SEARCH FOR"
-#~ msgstr "ARAMA YAP"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "Original"
+msgstr "Orijinal"
 
-#~ msgid "FADE"
-#~ msgstr "KAYBOL"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:29
+msgid "Romtype"
+msgstr "Rom tipi"
 
-#~ msgid "SLIDE"
-#~ msgstr "KAYDIR"
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:30
+msgid "Hidden"
+msgstr "Gizli"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/MetaData.cpp:31
+msgid "Play count"
+msgstr "Oynama sayısı"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-app/src/NetworkThread.cpp:38
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "SİSTEMİNİZE AİT GÜNCELLEME MEVCUT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/BusyComponent.cpp:24
+msgid "WORKING..."
+msgstr "DEVAM EDİYOR..."
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:212
+msgid "never"
+msgstr "hiç"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:218
+msgid "just now"
+msgstr "az önce"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:221
+#, c-format
+msgid "%i sec ago"
+msgid_plural "%i secs ago"
+msgstr[0] "%i saniye önce"
+msgstr[1] "%i saniye önce"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:226
+#, c-format
+msgid "%i min ago"
+msgid_plural "%i mins ago"
+msgstr[0] "%i dakika önce"
+msgstr[1] "%i dakika önce"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:231
+#, c-format
+msgid "%i hour ago"
+msgid_plural "%i hours ago"
+msgstr[0] "%i saat önce"
+msgstr[1] "%i saat önce"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/DateTimeComponent.cpp:236
+#, c-format
+msgid "%i day ago"
+msgid_plural "%i days ago"
+msgstr[0] "%i gün önce"
+msgstr[1] "%i gün önce"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:102
+msgid "SELECT ALL"
+msgstr "TÜMÜ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:111
+msgid "SELECT NONE"
+msgstr "HİÇBİRİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:312
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] "%i SEÇİLİ"
+msgstr[1] "%i SEÇİLİ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/OptionListComponent.h:343
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/SliderComponent.cpp:144
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/components/SwitchComponent.cpp:61
+msgid "CHANGE"
+msgstr "DEĞİŞTİR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "WELCOME"
+msgstr "HOŞGELDİN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:28
+msgid "CONFIGURE INPUT"
+msgstr "GİRDİ YAPILANDIR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:38
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i GAMEPAD ALGILANDI"
+msgstr[1] "%i GAMEPAD ALGILANDI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:42
+msgid "NO GAMEPADS DETECTED"
+msgstr "GAMEPAD BULUNAMADI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:47
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "CİHAZI YAPILANDIRMAK İÇİN BİR TUŞA BASILI TUT"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "ÇIKMAK İÇİN F4 TUŞUNA BAŞ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiDetectDevice.cpp:50
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "İPTAL İÇİN ESC VEYA HOTKEY TUŞUNA BAS."
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "UP"
+msgstr "YUKARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "DOWN"
+msgstr "AŞAĞI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "LEFT"
+msgstr "SOL"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:39
+msgid "RIGHT"
+msgstr "SAĞ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 YUKARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 SOL"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 YUKARI"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:40
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 SOL"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "PAGE UP"
+msgstr "PAGE UP"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "PAGE DOWN"
+msgstr "PAGE DOWN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:41
+msgid "HOTKEY"
+msgstr "HOTKEY"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:55
+msgid "CONFIGURING"
+msgstr "YAPILANDIRILIYOR"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:60
+msgid "KEYBOARD"
+msgstr "KLAVYE"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:62
+#, c-format
+msgid "GAMEPAD %i"
+msgstr "GAMEPAD %i"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:68
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "GEÇMEK İÇİN BİR TUŞA BASILI TUTUN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:98
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:257
+msgid "-NOT DEFINED-"
+msgstr "-TANIMLI DEĞİL-"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:219
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] "GEÇMEK İÇİN %iS BASILI TUT"
+msgstr[1] "GEÇMEK İÇİN %iS BASILI TUT"
+
+# Config controllers missing translation
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:251
+msgid "PRESS ANYTHING"
+msgstr "HERHANGİ BİR TUŞA BASIN"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiInputConfig.cpp:269
+msgid "ALREADY TAKEN"
+msgstr "ÖNCEDEN TANIMLANMIŞ"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/guis/GuiTextEditPopup.cpp:24
+msgid "DISCARD CHANGES"
+msgstr "DEĞİŞİKLİKLERİ KAYDETME"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/Window.cpp:141
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "KODI SUNUCUSU BAŞLATILSIN MI?"
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/Window.cpp:282
+msgid "LOADING..."
+msgstr "YÜKLENİYOR..."
+
+#: /home/ibrahim/bluebox/recalbox-emulationstation/es-core/src/Window.cpp:374
+msgid "PLEASE WAIT..."
+msgstr "LÜTFEN BEKLEYİN..."

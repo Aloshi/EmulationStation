@@ -7,6 +7,7 @@
 #include "ThemeData.h"
 #include "Util.h"
 #include "resources/SVGResource.h"
+#include "Locale.h"
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
@@ -326,6 +327,6 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()
 {
 	std::vector<HelpPrompt> ret;
-	ret.push_back(HelpPrompt("b", "select"));
+	ret.push_back(HelpPrompt("b", _("SELECT")));
 	return ret;
 }
