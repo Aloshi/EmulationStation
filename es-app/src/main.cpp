@@ -304,6 +304,16 @@ int main(int argc, char* argv[])
 					running = false;
 					break;
 			}
+			switch(event.type)
+			{
+				case SDL_JOYDEVICEADDED:
+				case SDL_JOYDEVICEREMOVED:
+					SystemData::updateSystems();
+					ViewController::get()->reloadAll();
+					break;
+				default:
+					break;
+			}
 		}
 
 		if(window.isSleeping())

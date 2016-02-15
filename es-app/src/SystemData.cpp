@@ -111,6 +111,15 @@ std::string escapePath(const boost::filesystem::path& path)
 #endif
 }
 
+void SystemData::updateSystems()
+{
+	for(unsigned int i = 0; i < sSystemVector.size(); i++)
+	{
+                SystemData *v = sSystemVector.at(i);
+		v->updateVisibility();
+	}
+}
+
 void SystemData::launchGame(Window* window, FileData* game)
 {
 	LOG(LogInfo) << "Attempting to launch game...";

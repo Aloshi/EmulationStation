@@ -67,6 +67,8 @@ public:
 	void loadTheme();
         void updateVisibility();
 
+        static void updateSystems();
+
 private:
 	std::string mName;
 	std::string mFullName;
