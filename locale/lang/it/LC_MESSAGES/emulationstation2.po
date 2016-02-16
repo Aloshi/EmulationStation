@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:40+0100\n"
+"POT-Creation-Date: 2016-02-16 20:55+0100\n"
 "PO-Revision-Date: 2016-02-15 10:44+0100\n"
 "Last-Translator: gmello <giuseppe.mello@gmail.com>\n"
 "Language: Italian\n"
@@ -47,6 +47,9 @@ msgstr "SALTA"
 
 msgid "SEARCH FOR"
 msgstr "CERCA PER"
+
+msgid "SEARCH"
+msgstr ""
 
 msgid "SCRAPING IN PROGRESS"
 msgstr "RACCOLTA INFORMAZIONI IN CORSO"
