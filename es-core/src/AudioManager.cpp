@@ -176,14 +176,14 @@ void AudioManager::stop() {
 }
 
 
-std::vector<std::string> getMp3in(const std::string &path) {
+std::vector<std::string> getMusicIn(const std::string &path) {
     std::vector<std::string> all_matching_files;
 
     if (!boost::filesystem::is_directory(path)) {
         return all_matching_files;
     }
     const std::string target_path(path);
-    const boost::regex my_filter(".*\\.mp3");
+    const boost::regex my_filter(".*\\.(mp3|ogg)$");
 
 
     boost::filesystem::directory_iterator end_itr; // Default ctor yields past-the-end
@@ -203,10 +203,10 @@ std::vector<std::string> getMp3in(const std::string &path) {
 
 std::shared_ptr<Music> AudioManager::getRandomMusic(std::string directorySound) {
     // 1 check in User music directory
-    std::vector<std::string> musics = getMp3in(Settings::getInstance()->getString("MusicDirectory"));
+    std::vector<std::string> musics = getMusicIn(Settings::getInstance()->getString("MusicDirectory"));
     if (musics.empty()) {
         if(directorySound != "")
-            musics = getMp3in(directorySound);
+            musics = getMusicIn(directorySound);
     }
     int randomIndex = rand() % musics.size();
     std::shared_ptr<Music> bgsound = Music::get(musics.at(randomIndex));
