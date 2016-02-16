@@ -146,7 +146,7 @@ msgstr "SISTEMAREN KONFIGURAZIOA"
 msgid "VERSION"
 msgstr "BERTSIOA"
 
-msgid "SPACE LEFT"
+msgid "DISK USAGE"
 msgstr ""
 
 #, fuzzy

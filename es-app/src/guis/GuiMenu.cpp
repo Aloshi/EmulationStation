@@ -123,7 +123,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                                                                   RecalboxSystem::getInstance()->getFreeSpaceInfo(),
                                                                   Font::get(FONT_SIZE_MEDIUM),
                                                                   warning ? 0xFF0000FF : 0x777777FF);
-                     s->addWithLabel(_("SPACE LEFT"), space);
+                     s->addWithLabel(_("DISK USAGE"), space);
 
                      std::vector<std::string> availableStorage = RecalboxSystem::getInstance()->getAvailableStorageDevices();
                      std::string selectedStorage = RecalboxSystem::getInstance()->getCurrentStorage();

@@ -145,7 +145,7 @@ msgstr "SİSTEM AYARLARI"
 msgid "VERSION"
 msgstr "SÜRÜM"
 
-msgid "SPACE LEFT"
+msgid "DISK USAGE"
 msgstr "KALAN DEPO"
 
 msgid "STORAGE DEVICE"
