@@ -77,7 +77,7 @@ void AudioManager::themeChanged(const std::shared_ptr<ThemeData> &theme) {
         const ThemeData::ThemeElement *elem = theme->getElement("system", "directory", "sound");
         if (!elem || !elem->has("path")) {
             currentThemeMusicDirectory = "";
-        }else {
+        } else {
             currentThemeMusicDirectory = elem->get<std::string>("path");
         }
 
@@ -201,12 +201,15 @@ std::vector<std::string> getMusicIn(const std::string &path) {
     }
 }
 
-std::shared_ptr<Music> AudioManager::getRandomMusic(std::string directorySound) {
+std::shared_ptr<Music> AudioManager::getRandomMusic(std::string themeSoundDirectory) {
     // 1 check in User music directory
     std::vector<std::string> musics = getMusicIn(Settings::getInstance()->getString("MusicDirectory"));
     if (musics.empty()) {
-        if(directorySound != "")
-            musics = getMusicIn(directorySound);
+        //  Check in theme sound directory
+        if (themeSoundDirectory != "") {
+            musics = getMusicIn(themeSoundDirectory);
+            if(musics.empty()) return NULL;
+        }
     }
     int randomIndex = rand() % musics.size();
     std::shared_ptr<Music> bgsound = Music::get(musics.at(randomIndex));

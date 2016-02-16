@@ -53,7 +53,7 @@ private:
     bool running;
     int lastTime = 0;
 
-    std::shared_ptr<Music> getRandomMusic(std::string themeMusicDirectory);
+    std::shared_ptr<Music> getRandomMusic(std::string themeSoundDirectory);
 
     bool runningFromPlaylist;
 

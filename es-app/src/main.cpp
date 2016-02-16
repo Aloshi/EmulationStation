@@ -428,7 +428,7 @@ int main(int argc, char* argv[])
 
 void playSound(std::string name) {
 	std::string selectedTheme = Settings::getInstance()->getString("ThemeSet");
-	std::string loadingMusic = getHomePath()+"/.emulationstation/themes/"+selectedTheme+"/music/"+name+".ogg";
+	std::string loadingMusic = getHomePath()+"/.emulationstation/themes/"+selectedTheme+"/fx/"+name+".ogg";
 	if(boost::filesystem::exists(loadingMusic)){
 		Music::get(loadingMusic)->play(false, NULL);
 	}
