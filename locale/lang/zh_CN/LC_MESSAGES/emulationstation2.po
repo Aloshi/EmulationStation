@@ -143,7 +143,7 @@ msgstr "系统设置"
 msgid "VERSION"
 msgstr "版本"
 
-msgid "SPACE LEFT"
+msgid "DISK USAGE"
 msgstr ""
 
 #, fuzzy

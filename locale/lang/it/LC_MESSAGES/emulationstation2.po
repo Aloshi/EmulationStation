@@ -148,7 +148,7 @@ msgstr "OPZIONI DI SISTEMA"
 msgid "VERSION"
 msgstr "VERSIONE"
 
-msgid "SPACE LEFT"
+msgid "DISK USAGE"
 msgstr "SPAZIO RIMASTO"
 
 msgid "STORAGE DEVICE"
