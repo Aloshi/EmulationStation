@@ -1,19 +1,16 @@
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Emulationstation 2.0RC1 GERMAN po\n"
+"Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-02-15 18:22+0100\n"
 "PO-Revision-Date: 2015-02-03 15:00-0500\n"
-"Last-Translator: nonatz <nonatz@web.de>\n"
-"Language-Team: GERMAN\n"
-"Language: \n"
+"Last-Translator: Björn Bahnsen<mors-mors@gmx.de>\n"
+"Language: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-# update 3.2.0
 msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
 msgstr "EIN UPDATE FÜR DEINE RECALBOX IST VERFÜGBAR"
 
@@ -21,59 +18,59 @@ msgid "CANCEL"
 msgstr "ABBRECHEN"
 
 msgid "Rating"
-msgstr ""
+msgstr "BEWERTUNG"
 
 msgid "Released"
-msgstr ""
+msgstr "VERÖFFENTLICHT"
 
 msgid "Developer"
-msgstr ""
+msgstr "ENTWICKLER"
 
 msgid "Publisher"
-msgstr ""
+msgstr "HERAUSGEBER"
 
 msgid "Genre"
-msgstr ""
+msgstr "GENRE"
 
 msgid "Players"
-msgstr ""
+msgstr "SPIELER"
 
 msgid "NO GAMES FOUND - SKIP"
 msgstr "KEINE SPIELE GEFUNDEN - ÜBERSPRINGEN"
 
 msgid "RETRY"
-msgstr ""
+msgstr "WIEDERHOLEN"
 
 msgid "SKIP"
 msgstr "ÜBERSPRINGEN"
 
 msgid "SEARCH FOR"
-msgstr ""
+msgstr "SUCHE NACH"
 
 msgid "SCRAPING IN PROGRESS"
-msgstr "SCRAPING WIRD DURCHGEFÜHRT"
+msgstr "LADE SPIELINFORMATIONEN"
 
 msgid "SYSTEM"
 msgstr "SYSTEM"
 
 msgid "subtitle text"
-msgstr ""
+msgstr "Untertitel"
 
 msgid "INPUT"
 msgstr "EINGABE"
 
 msgid "search"
-msgstr "suche"
+msgstr "SUCHE"
 
 msgid "STOP"
-msgstr ""
+msgstr "STOP"
 
 msgid "stop (progress saved)"
 msgstr "stop (Fortschritt gespeichert)"
 
 #, c-format
 msgid "GAME %i OF %i"
-msgstr ""
+msgstr "SPIEL %i VON %i"
 
 msgid ""
 "WE CAN'T FIND ANY SYSTEMS!\n"
@@ -88,23 +85,23 @@ msgstr ""
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
 msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "SPIELINFORMATIONEN ERFOLGREICH GELADEN"
+msgstr[1] "SPIELE-INFORMATIONEN ERFOLGREICH GELADEN"
 
 #, c-format
 msgid "%i GAME SKIPPED."
 msgid_plural "%i GAMES SKIPPED."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i SPIEL ÜBERSPRUNGEN"
+msgstr[1] "%i SPIELE ÜBERSPRUNGEN"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 msgid "EDIT METADATA"
 msgstr "METADATEN BEARBEITEN"
 
 msgid "SCRAPE"
-msgstr ""
+msgstr "LADE"
 
 msgid "SAVE"
 msgstr "SPEICHERN"
@@ -113,6 +110,8 @@ msgid ""
 "THIS WILL DELETE A FILE!\n"
 "ARE YOU SURE?"
 msgstr ""
+"DIES LÖSCHT EINE DATEI!\n"
+"SICHER?"
 
 msgid "YES"
 msgstr "JA"
@@ -136,7 +135,7 @@ msgid "MAIN MENU"
 msgstr "HAUPTMENÜ"
 
 msgid "KODI MEDIA CENTER"
-msgstr ""
+msgstr "KODI MEDIA CENTER"
 
 msgid "SYSTEM SETTINGS"
 msgstr "SYSTEM-EINSTELLUNGEN"
@@ -145,9 +144,8 @@ msgid "VERSION"
 msgstr "VERSION"
 
 msgid "SPACE LEFT"
-msgstr ""
+msgstr "SPEICHERPLATZ ÜBRIG"
 
-#, fuzzy
 msgid "STORAGE DEVICE"
 msgstr "SPEICHER"
 
@@ -155,31 +153,31 @@ msgid "LANGUAGE"
 msgstr "SPRACHE"
 
 msgid "OVERCLOCK"
-msgstr ""
+msgstr "ÜBERTAKTEN"
 
 msgid "EXTREM (1100Mhz)"
-msgstr ""
+msgstr "EXTREM (1100Mhz)"
 
 msgid "TURBO (1000Mhz)"
-msgstr ""
+msgstr "TURBO (1000Mhz)"
 
 msgid "HIGH (950Mhz)"
-msgstr ""
+msgstr "HOCH (950Mhz)"
 
 msgid "NONE (700Mhz)"
-msgstr ""
+msgstr "KEINE (700Mhz)"
 
 msgid "TURBO (1050Mhz)+"
-msgstr ""
+msgstr "TURBO (1050Mhz)+"
 
 msgid "HIGH (1050Mhz)"
-msgstr ""
+msgstr "HOCH (1050Mhz)"
 
 msgid "NONE (900Mhz)"
-msgstr ""
+msgstr "KEINE (900Mhz)"
 
 msgid "NONE"
-msgstr ""
+msgstr "KEINE"
 
 # NEW SETTINGS ORGANIZATION
 msgid "UPDATES"
@@ -210,7 +208,7 @@ msgid "GAMES SETTINGS"
 msgstr "SPIEL-EINSTELLUNGEN"
 
 msgid "GAME RATIO"
-msgstr ""
+msgstr "BILDFORMAT"
 
 msgid "SMOOTH GAMES"
 msgstr "SPIELE GLÄTTEN"
@@ -219,38 +217,37 @@ msgid "REWIND"
 msgstr "RÜCKWÄRTS"
 
 msgid "AUTO SAVE/LOAD"
-msgstr ""
+msgstr "AUTOMATISCH SPEICHERN/LADEN"
 
 msgid "SHADERS SET"
-msgstr ""
+msgstr "TEXTUREN EINSTELLUNGEN"
 
 msgid "SCANLINES"
-msgstr ""
+msgstr "SCANLINES"
 
 msgid "RETRO"
-msgstr ""
+msgstr "RETRO"
 
 msgid "RETROACHIEVEMENTS SETTINGS"
-msgstr ""
+msgstr "RETROACHIEVEMENTS EINSTELLUNGEN"
 
 msgid "RETROACHIEVEMENTS"
-msgstr ""
+msgstr "RETROACHIEVEMENTS"
 
 msgid "USERNAME"
-msgstr ""
+msgstr "BENUTZER"
 
 msgid "PASSWORD"
-msgstr ""
+msgstr "PASSWORT"
 
 msgid "ADVANCED"
-msgstr ""
+msgstr "FORTGESCHRITTEN"
 
-#, fuzzy
 msgid "REALLY UPDATE GAMES LISTS ?"
 msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
 
 msgid "UPDATE GAMES LISTS"
-msgstr ""
+msgstr "SPIEL-LISTE AKTUALISIEREN"
 
 msgid "CONTROLLERS SETTINGS"
 msgstr "CONTROLLER-EINSTELLUNGEN"
@@ -259,7 +256,7 @@ msgid "UI SETTINGS"
 msgstr "BENUTZEROBERFLÄCHEN-EINSTELLUNGEN"
 
 msgid "OVERSCAN"
-msgstr ""
+msgstr "OVERSCAN"
 
 msgid "SCREENSAVER AFTER"
 msgstr "BILDSCHIRMSCHONER NACH"
@@ -283,7 +280,7 @@ msgid "THEME SET"
 msgstr "THEME"
 
 msgid "SOUND SETTINGS"
-msgstr "SOUND-EINSTELLUNGEN"
+msgstr "KLANG EINSTELLUNGEN"
 
 msgid "SYSTEM VOLUME"
 msgstr "SYSTEMLAUTSTÄRKE"
@@ -295,16 +292,16 @@ msgid "OUTPUT DEVICE"
 msgstr "AUSGANGSGERÄT"
 
 msgid "HDMI"
-msgstr ""
+msgstr "HDMI"
 
 msgid "JACK"
-msgstr ""
+msgstr "JACK"
 
 msgid "AUTO"
-msgstr ""
+msgstr "AUTO"
 
 msgid "NETWORK SETTINGS"
-msgstr "NETZWERK-EINSTELLUNGEN"
+msgstr "NETZWERK EINSTELLUNGEN"
 
 msgid "CONNECTED"
 msgstr "VERBUNDEN"
@@ -313,10 +310,10 @@ msgid "NOT CONNECTED"
 msgstr "NICHT VERBUNDEN"
 
 msgid "STATUS"
-msgstr ""
+msgstr "STATUS"
 
 msgid "IP ADDRESS"
-msgstr ""
+msgstr "IP ADDRESSE"
 
 msgid "HOSTNAME"
 msgstr "NETZWERKNAME"
@@ -330,17 +327,15 @@ msgstr "W-LAN NAME (SSID)"
 msgid "WIFI KEY"
 msgstr "W-LAN SCHLÜSSEL (PASSWORT)"
 
-#, fuzzy
 msgid "WIFI ENABLED"
-msgstr "KODI AKTIVIEREN"
+msgstr "W-LAN AKTIVIERT"
 
 # GUIMENU
-#, fuzzy
 msgid "WIFI CONFIGURATION ERROR"
-msgstr "EINEN CONTROLLER KONFIGURIEREN"
+msgstr "W-LAN AKTIVIERENE"
 
 msgid "SCRAPER"
-msgstr ""
+msgstr "SCRAPER"
 
 msgid "SCRAPE FROM"
 msgstr "SCRAPEN VON"
@@ -367,10 +362,10 @@ msgid "SHUTDOWN SYSTEM"
 msgstr "SYSTEM HERUNTERFAHREN"
 
 msgid "Emulator"
-msgstr ""
+msgstr "EMULATOR"
 
 msgid "Core"
-msgstr ""
+msgstr "KERN"
 
 msgid ""
 "YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
@@ -407,14 +402,14 @@ msgid "PAIR A BLUETOOTH CONTROLLER"
 msgstr "EINEN BLUETOOTH CONTROLLER VERBINDEN"
 
 msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
-msgstr ""
+msgstr "CONTROLLER VERBINDUNG WURDE GELÖSCHT"
 
 msgid "FORGET BLUETOOTH CONTROLLERS"
-msgstr ""
+msgstr "BLUETOOTH CONTROLLER VERGESSEN"
 
 #, c-format
 msgid "INPUT P%i"
-msgstr ""
+msgstr "EINGABE P%i"
 
 msgid "CHOOSE"
 msgstr "WECHSELN"
@@ -423,16 +418,16 @@ msgid "SELECT"
 msgstr "AUSWAHL"
 
 msgid "CUSTOM"
-msgstr ""
+msgstr "BENUTZERDEFINIERT"
 
 msgid "4/3"
-msgstr ""
+msgstr "4/3"
 
 msgid "16/9"
-msgstr ""
+msgstr "16/9"
 
 msgid "OPTIONS"
-msgstr ""
+msgstr "OPTIONEN"
 
 msgid "JUMP TO LETTER"
 msgstr "SPRING ZU BUCHSTABE"
@@ -454,7 +449,6 @@ msgid "All Games"
 msgstr "Alle Spiele"
 
 # MISSING SCRAPPER TRANSLATIONS
-#, fuzzy
 msgid "Only missing image"
 msgstr "Nur fehlende Bilder"
 
@@ -471,16 +465,18 @@ msgid "USER DECIDES ON CONFLICTS"
 msgstr "BENUTZER ENTSCHEIDET SELBST BEI KONFLIKTEN"
 
 msgid "START"
-msgstr ""
+msgstr "START"
 
 msgid ""
 "WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
 "MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
 "CONTINUE ANYWAY?"
-msgstr ""
+msgstr "WARNUNG! EINIGE DEINER AUSGEWÄHLTEN SYSTEME HABEN KEINE PLATFORM EINGESTELLT."
+"ERGEBNISSE KÖNNEN UNGENAUER SEIN ALS GEWÖHNLICH"
+"TROTZDEM FORTFAHREN?"
 
 msgid "NO GAMES FIT THAT CRITERIA."
-msgstr ""
+msgstr "KEINE SPIELE PASSEN ZU DEN KRITERIEN"
 
 msgid "REALLY UPDATE?"
 msgstr "SYSTEM WIRKLICH AKTUALISIEREN?"
@@ -489,7 +485,7 @@ msgid "NETWORK CONNECTION NEEDED"
 msgstr "NETZWERKVERBINDUNG BENÖTIGT"
 
 msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
-msgstr ""
+msgstr "AKTUALISIERUNGEN HERUNTERGELADEN, DAS SYSTEM WIR NEU GESTARTET"
 
 msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
 msgstr "AKTUALISIERUNG GESCHEITERT, DAS SYSTEM WIR NEU GESTARTET"
@@ -498,139 +494,139 @@ msgid "NO UPDATE AVAILABLE"
 msgstr "KEIN UPDATE VERFÜGBAR"
 
 msgid "enter emulator"
-msgstr ""
+msgstr "EMULATOR EINGEBEN"
 
 msgid "enter core"
-msgstr ""
+msgstr "KERNE EINGEBEN"
 
 msgid "Name"
-msgstr ""
+msgstr "NAME"
 
 msgid "enter game name"
 msgstr "Spielnamen eingeben"
 
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 msgid "enter description"
-msgstr ""
+msgstr "Beschreibung eingeben"
 
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 msgid "enter path to image"
-msgstr ""
+msgstr "Bildpfad eingeben"
 
 msgid "Thumbnail"
-msgstr ""
+msgstr "Miniaturbild"
 
 msgid "enter path to thumbnail"
-msgstr ""
+msgstr "Miniaturbildpfad eingeben"
 
 msgid "enter rating"
-msgstr ""
+msgstr "Bewertung eingeben"
 
 msgid "Release date"
-msgstr ""
+msgstr "Veröffentlichungsdatum"
 
 msgid "enter release date"
-msgstr ""
+msgstr "Veröffentlichungsdatum eingeben"
 
 msgid "enter game developer"
-msgstr ""
+msgstr "Entwickler eingeben"
 
 msgid "enter game publisher"
-msgstr ""
+msgstr "Herausgeber eingeben"
 
 msgid "enter game genre"
-msgstr ""
+msgstr "Spiel Genre eingeben"
 
 msgid "enter number of players"
-msgstr ""
+msgstr "Spieleranzahl eingeben"
 
 msgid "Favorite"
-msgstr ""
+msgstr "Favoriten"
 
 msgid "enter favorite"
 msgstr "Favoriten eingeben"
 
 msgid "Region"
-msgstr ""
+msgstr "Region"
 
 msgid "enter region"
-msgstr ""
+msgstr "Region eingeben"
 
 msgid "Romtype"
-msgstr ""
+msgstr "Romtype"
 
 msgid "enter romtype"
 msgstr ""
 
 msgid "Hidden"
-msgstr ""
+msgstr "Versteckt"
 
 msgid "set hidden"
-msgstr ""
+msgstr "Verstecken"
 
 msgid "Play count"
-msgstr ""
+msgstr "Anzahl der gespielten Runden"
 
 msgid "enter number of times played"
-msgstr ""
+msgstr "Rundenanzahl eingeben"
 
 msgid "Last played"
-msgstr ""
+msgstr "Zuletzt gespielt"
 
 msgid "enter last played date"
-msgstr ""
+msgstr "Zuletzt gespielt eingeben"
 
 #, c-format
 msgid "%i GAME AVAILABLE"
 msgid_plural "%i GAMES AVAILABLE"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i SPIEL VERFÜGBAR"
+msgstr[1] "%i SPIELE VERFÜGBAR"
 
 #, c-format
 msgid "%i FAVORITE"
 msgid_plural "%i FAVORITES"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i FAVORIT"
+msgstr[1] "%i FAVORITEN"
 
 msgid "SCROLL"
-msgstr ""
+msgstr "BLÄTTERN"
 
 msgid "LAUNCH"
 msgstr "START"
 
 msgid "Times played"
-msgstr ""
+msgstr "mal gespielt"
 
 msgid "MENU"
 msgstr "MENÜ"
 
 msgid "FILENAME, ASCENDING"
-msgstr ""
+msgstr "DATEINAME, AUFSTEIGEND"
 
 msgid "FILENAME, DESCENDING"
-msgstr ""
+msgstr "DATEINAME, ABSTEIGEND"
 
 msgid "RATING, ASCENDING"
-msgstr ""
+msgstr "BEWERTUNG, AUFSTEIGEND"
 
 msgid "RATING, DESCENDING"
-msgstr ""
+msgstr "BEWERTUNG, ABSTEIGEND"
 
 msgid "TIMES PLAYED, ASCENDING"
-msgstr ""
+msgstr "GESPIELT, AUFSTEIGEND"
 
 msgid "TIMES PLAYED, DESCENDING"
-msgstr ""
+msgstr "GESPIELT, ABSTEIGEND"
 
 msgid "LAST PLAYED, ASCENDING"
-msgstr ""
+msgstr "ZULETZT GESPIELT, AUFSTEIGEND"
 
 msgid "LAST PLAYED, DESCENDING"
-msgstr ""
+msgstr "ZULETZT GESPIELT, ABSTEIGEND"
 
 msgid "WORKING..."
 msgstr "ARBEITE..."
@@ -639,37 +635,37 @@ msgid "CHANGE"
 msgstr "ÄNDERN"
 
 msgid "never"
-msgstr ""
+msgstr "NIEMALS"
 
 msgid "just now"
-msgstr ""
+msgstr "NUR JETZT"
 
 #, c-format
 msgid "%i sec ago"
 msgid_plural "%i secs ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "vor %i Sekunde"
+msgstr[1] "vor %i Sekunden"
 
 #, c-format
 msgid "%i min ago"
 msgid_plural "%i mins ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "vor %i Minute"
+msgstr[1] "vor %i Minuten"
 
 #, c-format
 msgid "%i hour ago"
 msgid_plural "%i hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "vor %i Stunde"
+msgstr[1] "vor %i Stunden"
 
 #, c-format
 msgid "%i day ago"
 msgid_plural "%i days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "vor %i Tag"
+msgstr[1] "vor %i Tagen"
 
 msgid "unknown"
-msgstr ""
+msgstr "unbekannt"
 
 msgid "SELECT ALL"
 msgstr "ALLES AUSWÄHLEN"
@@ -680,8 +676,8 @@ msgstr "AUSWAHL AUFHEBEN"
 #, c-format
 msgid "%i SELECTED"
 msgid_plural "%i SELECTED"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i AUSGEWÄHLT"
+msgstr[1] "%i AUSGEWÄHLT"
 
 msgid "UP"
 msgstr "HOCH"
@@ -696,16 +692,16 @@ msgid "RIGHT"
 msgstr "RECHTS"
 
 msgid "JOYSTICK 1 UP"
-msgstr ""
+msgstr "JOYSTICK 1 HOCH"
 
 msgid "JOYSTICK 1 LEFT"
-msgstr ""
+msgstr "JOYSTICK 1 LINKS"
 
 msgid "JOYSTICK 2 UP"
-msgstr ""
+msgstr "JOYSTICK 2 HOCH"
 
 msgid "JOYSTICK 2 LEFT"
-msgstr ""
+msgstr "JOYSTICK 2 LINKS"
 
 msgid "PAGE UP"
 msgstr "L1 (SEITE HOCH)"
@@ -714,36 +710,36 @@ msgid "PAGE DOWN"
 msgstr "R1 (SEITE RUNTER)"
 
 msgid "HOTKEY"
-msgstr ""
+msgstr "KURZWEGTASTE"
 
 msgid "CONFIGURING"
 msgstr "KONFIGURIEREN"
 
 msgid "KEYBOARD"
-msgstr ""
+msgstr "TASTATUR"
 
 #, c-format
 msgid "GAMEPAD %i"
-msgstr ""
+msgstr "GAMEPAD %i"
 
 msgid "HOLD ANY BUTTON TO SKIP"
-msgstr ""
+msgstr "EINE TASTE DRÜCKEN UM FORTZUFAHREN"
 
 msgid "-NOT DEFINED-"
-msgstr ""
+msgstr "NICHT DEFINIERT"
 
 #, c-format
 msgid "HOLD FOR %iS TO SKIP"
 msgid_plural "HOLD FOR %iS TO SKIP"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "FÜR %i SEKUNDE HALTEN UM FORTZUFAHREN"
+msgstr[1] "FÜR %i SEKUNDEN HALTEN UM FORTZUFAHREN"
 
 # Config controllers missing translation
 msgid "PRESS ANYTHING"
-msgstr ""
+msgstr "DRÜCKE IRGENDWAS"
 
 msgid "ALREADY TAKEN"
-msgstr ""
+msgstr "BEREITS VERGEBEN"
 
 msgid "DISCARD CHANGES"
 msgstr "ÄNDERUNGEN VERWERFEN"
@@ -757,8 +753,8 @@ msgstr "EINGABE KONFIGURIEREN"
 #, c-format
 msgid "%i GAMEPAD DETECTED"
 msgid_plural "%i GAMEPADS DETECTED"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i GAMEPAD GEFUNDEN"
+msgstr[1] "%i GAMEPAD GEFUNDEN"
 
 msgid "NO GAMEPADS DETECTED"
 msgstr "KEINE CONTROLLER GEFUNDEN"
@@ -769,235 +765,14 @@ msgstr "EINE TASTE AM GERÄT GEDRÜCKT HALTEN, UM ES ZU KONFIGURIEREN."
 msgid "PRESS F4 TO QUIT AT ANY TIME."
 msgstr "F4 DRÜCKEN, UM JEDERZEIT ZU SCHLIESSEN."
 
-#, fuzzy
 msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
 msgstr "ESC DRÜCKEN ZUM ABBRECHEN."
 
-#, fuzzy
 msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
 msgstr "MÖCHTEN SIE KODI MEDIA CENTER STARTEN?"
 
 msgid "LOADING..."
 msgstr "LADE..."
 
-#, fuzzy
 msgid "PLEASE WAIT..."
 msgstr "VERÖFFENTLICHUNG"
-
-#~ msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
-#~ msgstr "AKTUALISIERUNG ERFOLGREICH, SYSTEM WIRD NEU GESTARTET"
-
-#~ msgid "Rating: "
-#~ msgstr "Bewertung: "
-
-#~ msgid "Released: "
-#~ msgstr "Veröffentlicht: "
-
-#~ msgid "Developer: "
-#~ msgstr "Entwickler: "
-
-#~ msgid "Publisher: "
-#~ msgstr "Publisher: "
-
-#~ msgid "Genre: "
-#~ msgstr "Genre: "
-
-#~ msgid "Players: "
-#~ msgstr "Spieler: "
-
-#~ msgid "Last played: "
-#~ msgstr "Zuletzt gespielt: "
-
-#~ msgid "Times played: "
-#~ msgstr "Gespielt: "
-
-#~ msgid "NAME"
-#~ msgstr "NAME"
-
-#~ msgid "ENTER DESCRIPTION"
-#~ msgstr "BESCHREIBUNG EINGEBEN"
-
-#~ msgid "ENTER PATH TO IMAGE"
-#~ msgstr "PFAD FÜR BILD ANGEBEN"
-
-#~ msgid "THUMBNAIL"
-#~ msgstr "VORSCHAUBILD"
-
-#~ msgid "ENTER PATH TO THUMBNAIL"
-#~ msgstr "PFAD FÜR VORSCHAUBILD ANGEBEN"
-
-#~ msgid "RATING"
-#~ msgstr "BEWERTUNG"
-
-#~ msgid "ENTER SCORE"
-#~ msgstr "BEWERTUNG EINGEBEN"
-
-#~ msgid "RELEASE DATE"
-#~ msgstr "VERÖFFENTLICHUNG"
-
-#~ msgid "ENTER RELEASE DATE"
-#~ msgstr "VERÖFFENTLICHUNG EINGEBEN"
-
-#~ msgid "DEVELOPER"
-#~ msgstr "ENTWICKLER"
-
-#~ msgid "ENTER GAME DEVELOPER"
-#~ msgstr "SPIELENTWICKLER EINGEBEN"
-
-#~ msgid "PUBLISHER"
-#~ msgstr "PUBLISHER"
-
-#~ msgid "ENTER GAME PUBLISHER"
-#~ msgstr "SPIELPUBLISHER EINGEBEN"
-
-#~ msgid "GENRE"
-#~ msgstr "GENRE"
-
-#~ msgid "ENTER GAME GENRE"
-#~ msgstr "SPIELGENRE EINGEBEN"
-
-#~ msgid "PLAYERS"
-#~ msgstr "SPIELER"
-
-#~ msgid "ENTER NUMBER OF PLAYERS"
-#~ msgstr "SPIELERANZAHL EINGEBEN"
-
-#~ msgid "PLAY COUNT"
-#~ msgstr "GESPIELT (ANZAHL)"
-
-#~ msgid "ENTER NUMBER OF TIMES PLAYED"
-#~ msgstr "WIE OFT GESPIELT EINGEBEN"
-
-#~ msgid "ENABLE SOUNDS"
-#~ msgstr "SOUNDS AKTIVIEREN"
-
-#~ msgid "REALLY QUIT?"
-#~ msgstr "WIRKLICH BEENDEN?"
-
-#~ msgid "QUIT EMULATIONSTATION"
-#~ msgstr "EMULATIONSTATION BEENDEN"
-
-#~ msgid "close"
-#~ msgstr "schliessen"
-
-#~ msgid "select"
-#~ msgstr "auswahl"
-
-#~ msgid "choose"
-#~ msgstr "wechseln"
-
-#~ msgid "back"
-#~ msgstr "zurück"
-
-#~ msgid "GO BACK"
-#~ msgstr "ZURÜCK"
-
-#~ msgid " GAMES AVAILABLE"
-#~ msgstr " VERFÜGBARE SPIELE"
-
-#~ msgid " GAMEPAD"
-#~ msgstr " CONTROLLER"
-
-#~ msgid " DETECTED"
-#~ msgstr " GEFUNDEN"
-
-#~ msgid "UPDATE"
-#~ msgstr "SYSTEM AKTUALISIEREN"
-
-#~ msgid "INPUT P1"
-#~ msgstr "EINGABE SPIELER 1"
-
-#~ msgid "INPUT P2"
-#~ msgstr "EINGABE SPIELER 2"
-
-#~ msgid "INPUT P3"
-#~ msgstr "EINGABE SPIELER 3"
-
-#~ msgid "INPUT P4"
-#~ msgstr "EINGABE SPIELER 4"
-
-#~ msgid "STORAGE"
-#~ msgstr "SPEICHER"
-
-#~ msgid "GPIO CONTROLLERS"
-#~ msgstr "GPIO CONTROLLER"
-
-#~ msgid "GPIO CONTROLLERS ARE NOW ON"
-#~ msgstr "GPIO CONTROLLER SIND JETZT AKTIVIERT"
-
-# TEXT EDITING
-#~ msgid "EDIT"
-#~ msgstr "BEARBEITEN"
-
-#~ msgid "STOP EDITING"
-#~ msgstr "BEARBEITEN ABBRECHEN"
-
-#~ msgid "MOVE CURSOR"
-#~ msgstr "CURSOR BEWEGEN"
-
-#~ msgid "accept"
-#~ msgstr "AKZEPTIEREN"
-
-#~ msgid " SELECTED"
-#~ msgstr " AUSGEWÄHLT"
-
-#~ msgid "accept result"
-#~ msgstr "Ergebnis akzeptieren"
-
-#~ msgid "GAMES"
-#~ msgstr "SPIELE"
-
-#~ msgid " OF "
-#~ msgstr " AUF "
-
-#~ msgid " SKIPPED."
-#~ msgstr " ÜBERSPRUNGEN."
-
-#~ msgid "FAVORITE"
-#~ msgstr "FAVORIT"
-
-#, fuzzy
-#~ msgid " GAME AVAILABLE"
-#~ msgstr " VERFÜGBARE SPIELE"
-
-#, fuzzy
-#~ msgid "FAVORITES"
-#~ msgstr "FAVORIT"
-
-#, fuzzy
-#~ msgid "ENTER REGION"
-#~ msgstr "BEWERTUNG EINGEBEN"
-
-#, fuzzy
-#~ msgid "ENTER ROMTYPE"
-#~ msgstr "BEWERTUNG EINGEBEN"
-
-#, fuzzy
-#~ msgid "S TO SKIP"
-#~ msgstr "ÜBERSPRINGEN"
-
-#~ msgid " SUCCESSFULLY SCRAPED!"
-#~ msgstr " SCRAPING ERFOLGREICH!"
-
-#~ msgid "NOGAMEERRORMESSAGE"
-#~ msgstr ""
-#~ "KEIN SPIEL GEFUNDEN! UM SPIELE HINZUZUFÜGEN, BITTE DER ANLEITUNG FOLGEN. "
-#~ "WEITERE INFORMATIONEN UNTER www.recalbox.com"
-
-#~ msgid "I18NMESSAGECONTROLLERS"
-#~ msgstr ""
-#~ "EIN CONTROLLER MUSS KONFIGURIERT WERDEN. WENN NUR EIN JOYSTICK VORHANDEN "
-#~ "IST, DIE RICHTUNGEN KONFIGURIEREN UND DIE CONTROLLER-KONFIGURATION DURCH "
-#~ "GEDRÜCKT HALTEN EINES BUTTONS ÜBERSPRINGEN. WENN KEIN SPEZIELLER BUTTON "
-#~ "FÜR DEN HOTKEY VORHANDEN IST, DEN SELECT BUTTON WÄHLEN. BUTTONS DIE NICHT "
-#~ "VORHANDEN SIND, KÖNNEN EINFACH DURCH GEDRÜCKT HALTEN EINES BUTTONS "
-#~ "ÜBERSPRUNGEN WERDEN."
-
-#~ msgid "NO GAMES WERE SCRAPED."
-#~ msgstr "ES WURDEN KEINE SPIELE GESCRAPED."
-
-#~ msgid "ENTER GAME NAME"
-#~ msgstr "SPIELNAMEN EINGEBEN"
-
-#~ msgid "DESCRIPTION"
-#~ msgstr "BESCHREIBUNG"
