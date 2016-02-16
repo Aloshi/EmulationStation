@@ -37,6 +37,8 @@ namespace fs = boost::filesystem;
 
 bool scrape_cmdline = false;
 
+void playSound(std::string name);
+
 bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
 {
 	for(int i = 1; i < argc; i++)
@@ -265,7 +267,7 @@ int main(int argc, char* argv[])
 	setLocale(argv[0]);
 
 	// other init
-        FileSorts::init(); // require locale
+	FileSorts::init(); // require locale
 	initMetadata(); // require locale
 	
     Renderer::init(width, height);
@@ -287,6 +289,12 @@ int main(int argc, char* argv[])
 
 		window.renderLoadingScreen();
 	}
+
+	// Initialize audio manager
+	VolumeControl::getInstance()->init();
+	AudioManager::getInstance()->init();
+
+	playSound("loading");
 
 	const char* errorMsg = NULL;
 	if(!loadSystemConfigFile(&errorMsg))
@@ -337,11 +345,9 @@ int main(int argc, char* argv[])
 
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
-        
-	// Initialize audio manager
-	VolumeControl::getInstance()->init();
-	AudioManager::getInstance()->init();
-        
+
+
+
 	// preload what we can right away instead of waiting for the user to select it
 	// this makes for no delays when accessing content, but a longer startup time
 	//ViewController::get()->preload();
@@ -362,7 +368,6 @@ int main(int argc, char* argv[])
 
 	int lastTime = SDL_GetTicks();
 	bool running = true;
-
 	while(running)
 	{
 		SDL_Event event;
@@ -419,4 +424,12 @@ int main(int argc, char* argv[])
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
 	return 0;
+}
+
+void playSound(std::string name) {
+	std::string selectedTheme = Settings::getInstance()->getString("ThemeSet");
+	std::string loadingMusic = getHomePath()+"/.emulationstation/themes/"+selectedTheme+"/music/"+name+".ogg";
+	if(boost::filesystem::exists(loadingMusic)){
+		Music::get(loadingMusic)->play(false, NULL);
+	}
 }
