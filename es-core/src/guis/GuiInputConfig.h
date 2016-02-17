@@ -4,7 +4,6 @@
 #include "components/NinePatchComponent.h"
 #include "components/ComponentGrid.h"
 #include "components/ComponentList.h"
-#include "components/BusyComponent.h"
 
 class TextComponent;
 
@@ -47,6 +46,4 @@ private:
 	Input mHeldInput;
 	int mHeldTime;
 	int mHeldInputId;
-
-	BusyComponent mBusyAnim;	
 };
