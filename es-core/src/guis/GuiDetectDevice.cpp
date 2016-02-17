@@ -107,10 +107,10 @@ void GuiDetectDevice::update(int deltaTime)
 		// If ES starts and if a known device is connected after startup skip controller configuration
 		if(mFirstRun && fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
-			InputManager::getInstance()->doOnFinish(); // execute possible onFinish commands
-			if(mDoneCallback)
+			InputManager::getInstance()->doOnFinish();  	// execute possible onFinish commands
+			if(mDoneCallback)				
 				mDoneCallback();
-			delete this; // delete GUI element
+			delete this;					// delete GUI element
 		}
 		else
 		{
