@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: EmulationstationPOT-Creation-Date: 2015-12-25 "
 "12:00-0500\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:22+0100\n"
+"POT-Creation-Date: 2016-02-16 20:55+0100\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
 "Last-Translator: Charlie <rpicharlie@gmail.com>\n"
 "Language-Team: SWEDISH\n"
@@ -48,6 +48,9 @@ msgid "SKIP"
 msgstr "HOPPA ÖVER"
 
 msgid "SEARCH FOR"
+msgstr ""
+
+msgid "SEARCH"
 msgstr ""
 
 msgid "SCRAPING IN PROGRESS"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0.1A zh_CN po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:22+0100\n"
+"POT-Creation-Date: 2016-02-16 20:55+0100\n"
 "PO-Revision-Date: 2015-09-01 10:59+0800\n"
 "Last-Translator: ShiKeYu <shikeyu@tom.com>\n"
 "Language-Team: CHINESE <shikeyu@tom.com>\n"
@@ -48,6 +48,9 @@ msgstr "跳过"
 
 msgid "SEARCH FOR"
 msgstr "以何标题搜索"
+
+msgid "SEARCH"
+msgstr "搜索"
 
 msgid "SCRAPING IN PROGRESS"
 msgstr "正在进行搜刮"
@@ -990,6 +993,3 @@ msgstr "发布日期。"
 
 #~ msgid "IMAGE"
 #~ msgstr "图像"
-
-#~ msgid "SEARCH"
-#~ msgstr "搜索"

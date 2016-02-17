@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:22+0100\n"
+"POT-Creation-Date: 2016-02-16 20:55+0100\n"
 "PO-Revision-Date: 2016-02-15 00:22+0200\n"
 "Last-Translator: Ibrahim Gungor <igungor@gmail.com>\n"
 "Language: Turkish\n"
@@ -47,6 +47,9 @@ msgstr "GEÇ"
 
 msgid "SEARCH FOR"
 msgstr "ARAMA YAP"
+
+msgid "SEARCH"
+msgstr ""
 
 msgid "SCRAPING IN PROGRESS"
 msgstr "ÇEKME İŞLEMİ SÜRÜYOR"

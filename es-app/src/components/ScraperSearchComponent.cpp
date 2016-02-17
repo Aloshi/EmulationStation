@@ -454,7 +454,7 @@ void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
 	mWindow->pushGui(new GuiTextEditPopup(mWindow, _("SEARCH FOR"),
 		// initial value is last search if there was one, otherwise the clean path name
 		params.nameOverride.empty() ? params.game->getCleanName() : params.nameOverride, 
-		searchForFunc, false, "SEARCH"));
+					      searchForFunc, false, _("SEARCH")));
 }
 
 std::vector<HelpPrompt> ScraperSearchComponent::getHelpPrompts()

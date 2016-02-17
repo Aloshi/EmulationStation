@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:22+0100\n"
+"POT-Creation-Date: 2016-02-16 20:55+0100\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
 "Last-Translator: mgoulartBR <mgoulart@gmail.com>\n"
 "Language: Portuguese\n"
@@ -46,6 +46,9 @@ msgstr "PASSAR"
 
 msgid "SEARCH FOR"
 msgstr "PROCURAR POR"
+
+msgid "SEARCH"
+msgstr ""
 
 msgid "SCRAPING IN PROGRESS"
 msgstr "SCRAPING EM PROGRESSO"
