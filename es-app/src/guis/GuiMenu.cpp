@@ -302,11 +302,17 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
 
     addEntry(_("GAMES SETTINGS").c_str(), 0x777777FF, true,
              [this] {
-	       auto s = new GuiSettings(mWindow, _("GAMES SETTINGS").c_str());
-                 // Screen ratio choice
-                 auto ratio_choice = createRatioOptionList(mWindow, "global");
-                 s->addWithLabel(_("GAME RATIO"), ratio_choice);
+                 auto s = new GuiSettings(mWindow, _("GAMES SETTINGS").c_str());
+                 if (RecalboxConf::getInstance()->get("system.es.menu") != "bartop") {
 
+                     // Screen ratio choice
+                     auto ratio_choice = createRatioOptionList(mWindow, "global");
+                     s->addWithLabel(_("GAME RATIO"), ratio_choice);
+                     s->addSaveFunc([ratio_choice] {
+                         RecalboxConf::getInstance()->set("global.ratio", ratio_choice->getSelected());
+                         RecalboxConf::getInstance()->saveRecalboxConf();
+                     });
+                 }
                  // smoothing
                  auto smoothing_enabled = std::make_shared<SwitchComponent>(mWindow);
                  smoothing_enabled->setState(RecalboxConf::getInstance()->get("global.smooth") == "1");
@@ -336,39 +342,47 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                  shaders_choices->add(_("RETRO"), "retro", currentShader == "retro");
                  s->addWithLabel(_("SHADERS SET"), shaders_choices);
 
-                 // Retroachievements
-                 {
-                     ComponentListRow row;
-                     std::function<void()> openGui = [this] {
-		       GuiSettings *retroachievements = new GuiSettings(mWindow, _("RETROACHIEVEMENTS SETTINGS").c_str());
-                     // retroachievements_enable
-                     auto retroachievements_enabled = std::make_shared<SwitchComponent>(mWindow);
-                     retroachievements_enabled->setState(RecalboxConf::getInstance()->get("global.retroachievements") == "1");
-		       retroachievements->addWithLabel(_("RETROACHIEVEMENTS"), retroachievements_enabled);
+                 if (RecalboxConf::getInstance()->get("system.es.menu") != "bartop") {
 
-                     // retroachievements, username, password
-		       createInputTextRow(retroachievements, _("USERNAME"), "global.retroachievements.username", false);
-		       createInputTextRow(retroachievements, _("PASSWORD"), "global.retroachievements.password", false);
+                     // Retroachievements
+                     {
+                         ComponentListRow row;
+                         std::function<void()> openGui = [this] {
+                             GuiSettings *retroachievements = new GuiSettings(mWindow,
+                                                                              _("RETROACHIEVEMENTS SETTINGS").c_str());
+                             // retroachievements_enable
+                             auto retroachievements_enabled = std::make_shared<SwitchComponent>(mWindow);
+                             retroachievements_enabled->setState(
+                                     RecalboxConf::getInstance()->get("global.retroachievements") == "1");
+                             retroachievements->addWithLabel(_("RETROACHIEVEMENTS"), retroachievements_enabled);
+
+                             // retroachievements, username, password
+                             createInputTextRow(retroachievements, _("USERNAME"), "global.retroachievements.username",
+                                                false);
+                             createInputTextRow(retroachievements, _("PASSWORD"), "global.retroachievements.password",
+                                                false);
 
 
-                     retroachievements->addSaveFunc([retroachievements_enabled] {
-                     RecalboxConf::getInstance()->set("global.retroachievements", retroachievements_enabled->getState() ? "1" : "0");
-                     RecalboxConf::getInstance()->saveRecalboxConf();
-                     });
-                     mWindow->pushGui(retroachievements);
-                 };
-                     row.makeAcceptInputHandler(openGui);
-                     auto retroachievementsSettings = std::make_shared<TextComponent>(mWindow, _("RETROACHIEVEMENTS SETTINGS"),
-                                                                         Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-                     auto bracket = makeArrow(mWindow);
-                     row.addElement(retroachievementsSettings, true);
-                     row.addElement(bracket, false);
-                     s->addRow(row);
+                             retroachievements->addSaveFunc([retroachievements_enabled] {
+                                 RecalboxConf::getInstance()->set("global.retroachievements",
+                                                                  retroachievements_enabled->getState() ? "1" : "0");
+                                 RecalboxConf::getInstance()->saveRecalboxConf();
+                             });
+                             mWindow->pushGui(retroachievements);
+                         };
+                         row.makeAcceptInputHandler(openGui);
+                         auto retroachievementsSettings = std::make_shared<TextComponent>(mWindow,
+                                                                                          _("RETROACHIEVEMENTS SETTINGS"),
+                                                                                          Font::get(FONT_SIZE_MEDIUM),
+                                                                                          0x777777FF);
+                         auto bracket = makeArrow(mWindow);
+                         row.addElement(retroachievementsSettings, true);
+                         row.addElement(bracket, false);
+                         s->addRow(row);
+                     }
                  }
-
                  // Custom config for systems
-                 {
-
+                 if (RecalboxConf::getInstance()->get("system.es.menu") != "bartop") {
                      ComponentListRow row;
                      std::function<void()> openGuiD = [this, s] {
                          s->save();
@@ -403,41 +417,43 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                      row.addElement(bracket, false);
                      s->addRow(row);
                  }
-                 s->addSaveFunc([smoothing_enabled, ratio_choice, rewind_enabled, shaders_choices, autosave_enabled] {
+                 s->addSaveFunc([smoothing_enabled, rewind_enabled, shaders_choices, autosave_enabled] {
                      RecalboxConf::getInstance()->set("global.smooth", smoothing_enabled->getState() ? "1" : "0");
-                     RecalboxConf::getInstance()->set("global.ratio", ratio_choice->getSelected());
                      RecalboxConf::getInstance()->set("global.rewind", rewind_enabled->getState() ? "1" : "0");
                      RecalboxConf::getInstance()->set("global.shaderset", shaders_choices->getSelected());
                      RecalboxConf::getInstance()->set("global.autosave", autosave_enabled->getState() ? "1" : "0");
                      RecalboxConf::getInstance()->saveRecalboxConf();
                  });
                  // reread game list
-                 ComponentListRow row;
-                 Window *window = mWindow;
+                 if (RecalboxConf::getInstance()->get("system.es.menu") != "bartop") {
 
-                 row.makeAcceptInputHandler([this,window] {
-                     window->pushGui(new GuiMsgBox(window, _("REALLY UPDATE GAMES LISTS ?"), _("YES"),
-                                                   [this,window] {
-                                                       ViewController::get()->goToStart();
-                                                       window->renderShutdownScreen();
-                                                       delete ViewController::get();
-                                                       SystemData::deleteSystems();
-                                                       SystemData::loadConfig();
-                                                       GuiComponent* gui;
-                                                       while((gui = window->peekGui()) != NULL){
-                                                           window->removeGui(gui);
-                                                           delete gui;
-                                                       }
-                                                       ViewController::init(window);
-                                                       ViewController::get()->reloadAll();
-                                                       window->pushGui(ViewController::get());
-                                                   }, _("NO"), nullptr));
-                 });
-                 row.addElement(
-				std::make_shared<TextComponent>(window, _("UPDATE GAMES LISTS"), Font::get(FONT_SIZE_MEDIUM),
-                                                         0x777777FF), true);
-                 s->addRow(row);
+                     ComponentListRow row;
+                     Window *window = mWindow;
 
+                     row.makeAcceptInputHandler([this, window] {
+                         window->pushGui(new GuiMsgBox(window, _("REALLY UPDATE GAMES LISTS ?"), _("YES"),
+                                                       [this, window] {
+                                                           ViewController::get()->goToStart();
+                                                           window->renderShutdownScreen();
+                                                           delete ViewController::get();
+                                                           SystemData::deleteSystems();
+                                                           SystemData::loadConfig();
+                                                           GuiComponent *gui;
+                                                           while ((gui = window->peekGui()) != NULL) {
+                                                               window->removeGui(gui);
+                                                               delete gui;
+                                                           }
+                                                           ViewController::init(window);
+                                                           ViewController::get()->reloadAll();
+                                                           window->pushGui(ViewController::get());
+                                                       }, _("NO"), nullptr));
+                     });
+                     row.addElement(
+                             std::make_shared<TextComponent>(window, _("UPDATE GAMES LISTS"),
+                                                             Font::get(FONT_SIZE_MEDIUM),
+                                                             0x777777FF), true);
+                     s->addRow(row);
+                 }
                  mWindow->pushGui(s);
              }
 
@@ -901,7 +917,7 @@ void GuiMenu::createConfigInput() {
 		   std::make_shared<TextComponent>(window, _("CONFIGURE A CONTROLLER"), Font::get(FONT_SIZE_MEDIUM), 0x777777FF),
             true);
     s->addRow(row);
-    
+
     row.elements.clear();
 
     std::function<void(void *)> showControllerList = [window, this, s](void *controllers) {
@@ -981,7 +997,7 @@ void GuiMenu::createConfigInput() {
 
     // clear the current loaded inputs
     clearLoadedInput();
-    
+
     std::vector<std::shared_ptr<OptionListComponent<StrInputConfig *>>> options;
     char strbuf[256];
 
@@ -991,7 +1007,7 @@ void GuiMenu::createConfigInput() {
         std::string confName = sstm.str() + "NAME";
         std::string confGuid = sstm.str() + "GUID";
 	snprintf(strbuf, 256, _("INPUT P%i").c_str(), player+1);
-	
+
         LOG(LogInfo) << player + 1 << " " << confName << " " << confGuid;
         auto inputOptionList = std::make_shared<OptionListComponent<StrInputConfig *> >(mWindow, strbuf, false);
         options.push_back(inputOptionList);
