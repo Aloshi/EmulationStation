@@ -69,6 +69,7 @@ void Settings::setDefaults()
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
         mIntMap["SortTypeDefault"] = 0;
+        mIntMap["DimValue"] = 0x90;
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
