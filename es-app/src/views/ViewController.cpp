@@ -259,7 +259,7 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 
 	// open menu
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if(config->isMappedTo("start", input) && input.value != 0 && !Settings::getInstance()->getBool("HideMainMenu"))
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));
