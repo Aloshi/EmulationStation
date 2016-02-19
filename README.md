@@ -1,3 +1,15 @@
+Fork Reasons
+============
+
+Since I recently discovered the EmulationStation project I was sad to see that there wasn't a commit in nearly a year and following a big Pull Request backlog.
+
+This fork tries to incorporate all useful work done by other contributers, fixing bugs and supplying new features.
+
+Long term goals I see are more configurability (specificing directories for meta data, setting rom language preference etc.), full crossplatform support adhering to platform idioms and as a strech goal full libretro support.
+
+This project is still in its infancy and I just skimmed over the codebase, so don't expect anything super soon.
+
+What follows is the original README.md
 EmulationStation
 ================
 
