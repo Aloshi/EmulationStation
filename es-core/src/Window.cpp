@@ -13,7 +13,6 @@ Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCoun
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
-	mBackgroundOverlay->setImage(":/scroll_gradient.png");
 }
 
 Window::~Window()
@@ -77,6 +76,7 @@ bool Window::init(unsigned int width, unsigned int height)
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_LARGE));
 	}
 
+	mBackgroundOverlay->setImage(":/scroll_gradient.png");
 	mBackgroundOverlay->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// update our help because font sizes probably changed

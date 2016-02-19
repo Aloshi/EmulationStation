@@ -12,7 +12,7 @@
 class AudioManager
 {
 	static SDL_AudioSpec sAudioFormat;
-	static std::vector<std::shared_ptr<Sound>> sSoundVector;
+	static std::vector<std::shared_ptr<Sound> > sSoundVector;
 	static std::shared_ptr<AudioManager> sInstance;
 
 	static void mixAudio(void *unused, Uint8 *stream, int len);

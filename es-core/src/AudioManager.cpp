@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include "Log.h"
 
-std::vector<std::shared_ptr<Sound>> AudioManager::sSoundVector;
+std::vector<std::shared_ptr<Sound> > AudioManager::sSoundVector;
 SDL_AudioSpec AudioManager::sAudioFormat;
 std::shared_ptr<AudioManager> AudioManager::sInstance;
 
@@ -16,7 +16,7 @@ void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
 	SDL_memset(stream, 0, len);
 
 	//iterate through all our samples
-	std::vector<std::shared_ptr<Sound>>::const_iterator soundIt = sSoundVector.cbegin();
+	std::vector<std::shared_ptr<Sound> >::const_iterator soundIt = sSoundVector.cbegin();
 	while (soundIt != sSoundVector.cend())
 	{
 		std::shared_ptr<Sound> sound = *soundIt;
