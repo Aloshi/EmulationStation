@@ -91,7 +91,7 @@ void saveMap(pugi::xml_document& doc, std::map<K, V>& map, const char* type)
 
 void Settings::saveFile()
 {
-	const std::string path = getHomePath() + "/.emulationstation/es_settings.cfg";
+	const std::string path = getConfigDirectory() + "/es_settings.cfg";
 
 	pugi::xml_document doc;
 
@@ -112,7 +112,7 @@ void Settings::saveFile()
 
 void Settings::loadFile()
 {
-	const std::string path = getHomePath() + "/.emulationstation/es_settings.cfg";
+	const std::string path = getConfigDirectory() + "/es_settings.cfg";
 
 	if(!boost::filesystem::exists(path))
 		return;

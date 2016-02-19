@@ -7,6 +7,33 @@
 #include <codecvt>
 #endif
 
+std::string getConfigDirectory()
+{
+    boost::filesystem::path path;
+#ifdef _WIN32
+#include <windows.h>
+#include <shlobj.h>
+    CHAR my_documents[MAX_PATH];
+    SHGetFolderPath(NULL, CSIDL_PRESONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    path = boost::filesystem::path(my_documents) / "EmulationStation";
+#elif __APPLE__ && !defined(USE_XDG_OSX)
+    const char* homePath = getenv("HOME");
+    path = boost::filesystem::path(homePath);
+    path /= "Library" / "Application Support" / "org.emulationstation.EmulationStation" ;
+#else
+    const char* envXdgConfig = getenv("XDG_CONFIG_HOME");
+    if(envXdgConfig){
+        path = boost::filesystem::path(envXdgConfig);
+    } else {
+        const char* homePath = getenv("HOME");
+        path = boost::filesystem::path(homePath);
+        path /= boost::filesystem::path(".config");
+    }
+    path /= boost::filesystem::path("emulationstation");
+#endif
+    return path.generic_string();
+}
+
 std::string getHomePath()
 {
 	std::string homePath;

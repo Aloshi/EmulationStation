@@ -60,6 +60,11 @@ if(DEFINED BCMHOST)
     add_definitions(-D_RPI_)
 endif()
 
+option(XdgOsx "XdgOsx" OFF)
+if(XdgOsx)
+    add_definitions(-DUSE_XDG_OSX)
+endif()
+
 #-------------------------------------------------------------------------------
 
 if(MSVC)

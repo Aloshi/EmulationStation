@@ -18,6 +18,8 @@
 #include <string>
 
 std::string getHomePath();
+std::string getConfigDirectory();
+std::string getDataDirectory();
 
 int runShutdownCommand(); // shut down the system (returns 0 if successful)
 int runRestartCommand(); // restart the system (returns 0 if successful)

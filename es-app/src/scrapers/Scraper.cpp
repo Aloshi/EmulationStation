@@ -273,7 +273,7 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 	const std::string subdirectory = params.system->getName();
 	const std::string name = params.game->getPath().stem().generic_string() + "-" + suffix;
 
-	std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
+	std::string path = getConfigDirectory() + "/downloaded_images/";
 
 	if(!boost::filesystem::exists(path))
 		boost::filesystem::create_directory(path);
