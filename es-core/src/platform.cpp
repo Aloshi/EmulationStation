@@ -3,8 +3,11 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 
-#ifdef WIN32
-#include <codecvt>
+#if defined(WIN32)
+	#include <codecvt>
+#elif define(__linux__)
+	#include <unistd.h>
+	#include <sys/reboot.h>
 #endif
 
 std::string getConfigDirectory()
@@ -68,18 +71,24 @@ std::string getHomePath()
 
 int runShutdownCommand()
 {
-#ifdef WIN32 // windows
+#if defined(WIN32)
 	return system("shutdown -s -t 0");
-#else // osx / linux
+#elif defined(__linux__)
+	sync();
+	return reboot(RB_POWER_OFF);
+#else
 	return system("sudo shutdown -h now");
 #endif
 }
 
 int runRestartCommand()
 {
-#ifdef WIN32 // windows
+#if defined(WIN32)
 	return system("shutdown -r -t 0");
-#else // osx / linux
+#elif defined(__linux__)
+	sync();
+	return reboot(RB_AUTOBOOT);
+#else
 	return system("sudo shutdown -r now");
 #endif
 }
