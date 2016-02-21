@@ -10,6 +10,7 @@ MetaDataDecl gameDecls[] = {
 	{"name",		MD_STRING,				"", 				false,		"name",					"enter game name"}, 
 	{"desc",		MD_MULTILINE_STRING,	"", 				false,		"description",			"enter description"},
 	{"image",		MD_IMAGE_PATH,			"", 				false,		"image",				"enter path to image"},
+	{"fanart",		MD_IMAGE_PATH,			"", 				false,		"fanart",				"enter path to fanart"},
 	{"thumbnail",	MD_IMAGE_PATH,			"", 				false,		"thumbnail",			"enter path to thumbnail"},
 	{"rating",		MD_RATING,				"0.000000", 		false,		"rating",				"enter rating"},
 	{"releasedate", MD_DATE,				"not-a-date-time", 	false,		"release date",			"enter release date"},
