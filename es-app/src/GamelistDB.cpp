@@ -478,13 +478,13 @@ void GamelistDB::addMissingFiles(const SystemData* system)
 	SQLTransaction transaction(mDB);
 
 	// actually start adding things.
-	// if we are doing the empty system, just go ahead and add the root.
-	if(system->getName().empty()) {
-		sqlite3_bind_text(stmt,1,".",1,SQLITE_STATIC);
-		sqlite3_bind_int(stmt,2,FileType::FOLDER);
-		sqlite3_bind_null(stmt,3);
-		stmt.step_expected(SQLITE_DONE);
-	} else {
+	// go ahead and add the root always.
+	sqlite3_bind_text(stmt,1,".",1,SQLITE_STATIC);
+	sqlite3_bind_int(stmt,2,FileType::FOLDER);
+	sqlite3_bind_null(stmt,3);
+	stmt.step_expected(SQLITE_DONE);
+	if(!relativeTo.empty())
+	{
 		populate_recursive(relativeTo, extensions, relativeTo, system, mDB, stmt);
 	}
 	transaction.commit();
@@ -662,20 +662,30 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType)
 {
 	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
 	std::vector<FileData> children;
 
 	std::stringstream ss;
-	ss << "SELECT fileid,systemid,name,filetype FROM files WHERE systemid = ?1 ";
+	ss << "SELECT fileid,systemid,name,filetype FROM files WHERE 1 ";
+	if(!systemFilter.empty()) 
+	{
+		ss << "AND (" << systemFilter << ") ";
+	}
+	if(!system->isMetaSystem())
+	{
+		ss << "AND ( systemid = ?1 ) ";
+	}
 	if(immediateChildrenOnly)
 		ss << "AND inimmediatedir(fileid, ?2) ";
 	else
 		ss << "AND indir(fileid, ?2) ";
 
 	if(!includeFolders)
-		ss << "AND NOT filetype in ( " << FileType::FOLDER << "," << FileType::FILTER << ") ";
+		ss << " AND NOT filetype in ( " << FileType::FOLDER << "," << FileType::FILTER << ") ";
 
 	ss << " ORDER BY ";
-	if(includeFolders && foldersFirst) ss << "CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
+	if(includeFolders && foldersFirst) ss << " CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
 	if(sortType)
 		ss << sortType->sql;
 	else
@@ -703,6 +713,8 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 	 bool matchFolders, const std::string& filter_matches, int limit, bool foldersFirst, const FileSort* sortType)
 {
 	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
 	std::vector<FileData> children;
 
 	std::stringstream ss;
@@ -710,22 +722,27 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 	//A subfilter may return more entries than the parent!
 	//The user can handle making sure subfilters make subsets.
 	ss << "SELECT fileid, systemid, name, filetype, CAST(strftime(\"%Y\",releasedate) as INTEGER) as year FROM files WHERE ";
-	if(!systemID.empty()) 
-		ss << "systemid = ?1 AND ";
-	//BUG: A metasystem filter might have spurious children inimmediatedir!
-	ss << "( inimmediatedir(fileid, ?2) ";
 
+
+	ss << "( (inimmediatedir(fileid, ?2) AND systemid = ?1) OR ( ";
+
+	if(!systemFilter.empty()) 
+		ss << " (" << systemFilter << ") AND ";
+	if(!system->isMetaSystem())
+		ss << " ( systemid = ?1 ) AND ";
 	if(!filter_matches.empty())
         {
-		ss << " OR ((" << filter_matches << ")";
-		if(!matchFolders)
-			ss << "AND filetype is " << FileType::GAME;
-		ss << ")";
+		ss << " (" << filter_matches << ") ";
+	}else{
+		//Just match everything, put something to make the OR syntax work.
+		ss << " 1 ";
 	}
-	ss << ")";
+	if(!matchFolders)
+		ss << " AND filetype is " << FileType::GAME;
+	ss << " )) ";
 
 	ss << " ORDER BY ";
-	if(foldersFirst) ss << "CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
+	if(foldersFirst) ss << " CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
 	if(sortType)
 		ss << sortType->sql;
 	else
@@ -751,7 +768,8 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 			SystemData* childSystem = (systemname == systemID) ? system : SystemManager::getInstance()->getSystemByName(systemname);
 			const char* name = (const char*)sqlite3_column_text(stmt, 2);
 			FileType filetype = (FileType)sqlite3_column_int(stmt, 3);
-			children.push_back(FileData(fileid, childSystem, filetype, name ? name : ""));
+			if (childSystem != NULL)
+				children.push_back(FileData(fileid, childSystem, filetype, name ? name : ""));
 		}
 	}catch(...){
 		//statement failed, likely to do to syntax in the filter.
@@ -763,12 +781,17 @@ std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID,
 bool GamelistDB::systemHasFileWithImage(const SystemData* system)
 {
 	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
 	std::stringstream ss;
-	ss << "SELECT EXISTS(SELECT 1 FROM files WHERE image IS NOT NULL AND image <> ''";
-	if(!systemID.empty()) ss << " AND systemid = ?1";
+	ss << "SELECT EXISTS(SELECT 1 FROM files WHERE image IS NOT NULL AND image <> '' ";
+	if(!systemFilter.empty()) 
+		ss << "AND (" << systemFilter << ") ";
+	if(!system->isMetaSystem())
+		ss << "AND ( systemid = ?1 ) ";
 	ss << ")";
 	SQLPreparedStmt readStmt(mDB, ss.str());
-	if(!systemID.empty()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+	if(!system->isMetaSystem()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
 
 	readStmt.step_expected(SQLITE_ROW);
 	return sqlite3_column_int(readStmt,0);
@@ -776,11 +799,16 @@ bool GamelistDB::systemHasFileWithImage(const SystemData* system)
 int GamelistDB::getSystemFileCount(const SystemData* system)
 {
 	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
 	std::stringstream ss;
-	ss << "SELECT COUNT(1) FROM files WHERE filetype = 1";
-	if(!systemID.empty()) ss << " AND systemid = ?1";
+	ss << "SELECT COUNT(1) FROM files WHERE filetype = 1 ";
+	if(!systemFilter.empty()) 
+		ss << "AND (" << systemFilter << ") ";
+	if(!system->isMetaSystem())
+		ss << "AND ( systemid = ?1 ) ";
 	SQLPreparedStmt readStmt(mDB, ss.str());
-	if(!systemID.empty()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+	if(!system->isMetaSystem()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
 
 	readStmt.step_expected(SQLITE_ROW);
 	return sqlite3_column_int(readStmt,0);

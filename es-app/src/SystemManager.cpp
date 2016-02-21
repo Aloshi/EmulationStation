@@ -84,12 +84,13 @@ void SystemManager::loadConfig()
 	// load each system in the config file
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
-		std::string name, fullname, path, cmd, themeFolder;
+		std::string name, fullname, path, cmd, themeFolder, filter;
 		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
 		fullname = system.child("fullname").text().get();
 		path = system.child("path").text().get();
+		filter = system.child("filter").text().get();
 
 		// convert extensions list from a string into a vector of strings
 		std::vector<std::string> extensions = readList(system.child("extension").text().get());
@@ -124,7 +125,10 @@ void SystemManager::loadConfig()
 		themeFolder = system.child("theme").text().as_string(name.c_str());
 
 		// validate as best we can (make sure we're not missing required information)
-		if(!isValidSystemName(name) || path.empty() || extensions.empty() || cmd.empty())
+		// If we have a filter, we don't need a path, extensions, or cmd.
+		if(!isValidSystemName(name))
+			throw ESException() << "System \"" << name << "\" has an invalid or missing name!";
+		if(filter.empty() && ((path.empty() || extensions.empty() || cmd.empty())))
 			throw ESException() << "System \"" << name << "\" is missing name, path, extension, or command!";
 
 		// convert path to generic directory seperators
@@ -135,7 +139,11 @@ void SystemManager::loadConfig()
 		if(path[path.size() - 1] == '/')
 			path = path.erase(path.size() - 1);
 
-		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
+		//empty path means this is a filter system. Scraping does not make sense for these.
+		if(path.empty())
+			platformIds.push_back(PlatformIds::PLATFORM_IGNORE);
+
+		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder, filter);
 
 		if(newSys->getGameCount() == 0)
 		{
@@ -154,15 +162,6 @@ void SystemManager::loadConfig()
 			mSystems.push_back(newSys);
 		}
 	}
-	if(Settings::getInstance()->getBool("MakeCombinedSystem"))
-	{
-		std::vector<std::string> no_exts;
-		std::vector<PlatformIds::PlatformId> ignored;
-		ignored.push_back(PlatformIds::PLATFORM_IGNORE);
-                SystemData* combined = new SystemData("","All","",no_exts,"",ignored,"all");
-		mSystems.push_back(combined);
-		mDatabase.addMissingFiles(combined);
-        }
 
 }
 
@@ -204,6 +203,12 @@ void SystemManager::writeExampleConfig(const fs::path& path)
 		"		<!-- The theme to load from the current theme set.  See THEMES.md for more information.\n"
 		"		This tag is optional. If not set, it will default to the value of <name>. -->\n"
 		"		<theme>nes</theme>\n"
+		"\n"
+		"		<!-- The extra constraints a file must satisfy to be shown.\n"
+		"		This tag is optional, and defaults to showing all files in the system.\n"
+		"		If the system has no path, extension, and command, and it has a non-empty filter string,\n"
+		"		then this system can show results from all systems. -->\n"
+		"		<filter></filter>\n"
 		"	</system>\n"
 		"</systemList>\n";
 

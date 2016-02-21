@@ -12,7 +12,7 @@ class SystemData
 {
 public:
 	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-		const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder);
+		const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder, const std::string& filterQuery);
 	virtual ~SystemData();
 
 	inline const std::string& getName() const { return mName; }
@@ -23,6 +23,8 @@ public:
 	inline bool hasPlatformId(PlatformIds::PlatformId id) const { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
+	inline const std::string& getFilterQuery() const { return mFilterQuery; }
+	inline bool isMetaSystem() const { return mStartPath.empty(); }
 
 	inline const FileData& getRootFolder() const { return mRoot; }
 
@@ -45,6 +47,7 @@ private:
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+	std::string mFilterQuery;
 
 	FileData mRoot;
 };

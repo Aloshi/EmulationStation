@@ -15,7 +15,7 @@
 namespace fs = boost::filesystem;
 
 SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
-	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder) :
+	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder, const std::string& filterQuery) :
 	mRoot(FileData(".", this, FileType::FOLDER))
 {
 	mName = name;
@@ -33,6 +33,19 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mLaunchCommand = command;
 	mPlatformIds = platformIds;
 	mThemeFolder = themeFolder;
+	mFilterQuery = filterQuery;
+	MetaDataMap md = MetaDataMap(FOLDER_METADATA,true);
+	if(mStartPath.empty())
+	{
+		mRoot = FileData(".", this, FileType::FILTER);
+		md = MetaDataMap(FILTER_METADATA,true);
+		//TODO: Fix schema to avoid this column abuse.
+		md.set("genre","");
+		md.set("players",0);
+		md.set("developer","");
+	}
+	//User might have switched this system from a pure filter to a folder, so we need to update the DB.
+	mRoot.set_metadata(md);
 
 	loadTheme();
 }

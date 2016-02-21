@@ -96,6 +96,9 @@ void ViewController::goToGameList(SystemData* system, int velocity)
 		sysList->setPosition(sysId * (float)Renderer::getScreenWidth(), sysList->getPosition().y());
 		offX = sysList->getPosition().x() - offX;
 		mCamera.translation().x() -= offX;
+		//Recompute meta system entries, so that the system select can be used to refresh them
+		if(system->isMetaSystem())
+			onFilesChanged(system);
 	}
 
 	mState.viewing = GAME_LIST;
