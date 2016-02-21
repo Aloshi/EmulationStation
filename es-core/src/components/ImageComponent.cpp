@@ -23,7 +23,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF), mCentered(false)
 {
 	updateColors();
 }
@@ -42,6 +42,10 @@ void ImageComponent::resize()
 	const Eigen::Vector2f textureSize = svg ? svg->getSourceImageSize() : Eigen::Vector2f((float)mTexture->getSize().x(), (float)mTexture->getSize().y());
 	if(textureSize.isZero())
 		return;
+
+	if (mCentered) {
+		setPosition((mTargetSize.x() - mSize.x())/2.0f + mOrigPosition.x(), (mTargetSize.y() - mSize.y())/2.0f+ mOrigPosition.y(), mOrigPosition.z());
+        }
 
 	if(mTexture->isTiled())
 	{
@@ -299,8 +303,14 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	{
 		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
 		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+		mOrigPosition << mPosition;
 	}
 
+
+	if (elem->has("centered") && elem->get<bool>("centered"))
+	{
+		mCentered = true;
+	}
 	if(properties & ThemeFlags::SIZE)
 	{
 		if(elem->has("size"))
