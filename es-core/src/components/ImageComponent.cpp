@@ -23,7 +23,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF), mCentered(false)
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF), mCentered(false), mFullscreen(false)
 {
 	updateColors();
 }
@@ -62,16 +62,26 @@ void ImageComponent::resize()
 			mSize = textureSize;
 
 			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
-			
-			if(resizeScale.x() < resizeScale.y())
-			{
-				mSize[0] *= resizeScale.x();
-				mSize[1] *= resizeScale.x();
-			}else{
-				mSize[0] *= resizeScale.y();
-				mSize[1] *= resizeScale.y();
+			if (mFullscreen) 
+                        {
+				if(resizeScale.x() < resizeScale.y())
+				{
+					mSize[0] *= resizeScale.y();
+					mSize[1] *= resizeScale.y();
+				}else{
+					mSize[0] *= resizeScale.x();
+					mSize[1] *= resizeScale.x();
+				}
+                        } else {
+				if(resizeScale.x() < resizeScale.y())
+				{
+					mSize[0] *= resizeScale.x();
+					mSize[1] *= resizeScale.x();
+				}else{
+					mSize[0] *= resizeScale.y();
+					mSize[1] *= resizeScale.y();
+				}
 			}
-
 			// for SVG rasterization, always calculate width from rounded height (see comment above)
 			mSize[1] = round(mSize[1]);
 			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
@@ -306,11 +316,16 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		mOrigPosition << mPosition;
 	}
 
-
 	if (elem->has("centered") && elem->get<bool>("centered"))
 	{
 		mCentered = true;
 	}
+
+        if (elem->has("fullscreen") && elem->get<bool>("fullscreen"))
+	{
+		mFullscreen = true;
+	}
+
 	if(properties & ThemeFlags::SIZE)
 	{
 		if(elem->has("size"))

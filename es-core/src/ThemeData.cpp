@@ -32,6 +32,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("path", PATH)
 		("tile", BOOLEAN)
 		("centered", BOOLEAN)
+		("fullscreen", BOOLEAN)
 		("color", COLOR)))
 	("fanart", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)

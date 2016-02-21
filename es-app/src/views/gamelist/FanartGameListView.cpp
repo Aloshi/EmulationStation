@@ -133,6 +133,10 @@ void FanartGameListView::updateInfoPanel()
 	}else{
 		mImage.setImage(file->metadata.get("image"));
 		mFanart.setImage(file->metadata.get("fanart"));
+		if (mFanart.hasImage())
+			mBackground.setOpacity(0x00);
+		else
+			mBackground.setOpacity(0xFF);
 
 		if(file->getType() == GAME)
 		{

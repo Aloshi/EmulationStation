@@ -66,7 +66,7 @@ private:
 	Eigen::Vector2f mOrigin;
 	Eigen::Vector3f mOrigPosition;
 
-	bool mFlipX, mFlipY, mTargetIsMax, mCentered;
+	bool mFlipX, mFlipY, mTargetIsMax, mCentered, mFullscreen;
 
 	// Calculates the correct mSize from our resizing information (set by setResize/setMaxSize).
 	// Used internally whenever the resizing parameters or texture change.
