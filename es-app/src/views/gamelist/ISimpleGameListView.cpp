@@ -6,7 +6,7 @@
 #include "Settings.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
-	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
+	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window), mFanart(window)
 {
 	mHeaderText.setText("Logo Text");
 	mHeaderText.setSize(mSize.x(), 0);
@@ -19,8 +19,13 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 
 	mBackground.setResize(mSize.x(), mSize.y());
 
+	mFanart.setOrigin(0.0f, 0.0f);
+	mFanart.setPosition(0.0f, 0.0f);
+	mFanart.setMaxSize(mSize.x(), mSize.y());
+
 	addChild(&mHeaderText);
 	addChild(&mBackground);
+	addChild(&mFanart);
 	addChild(&mThemeExtras);
 }
 

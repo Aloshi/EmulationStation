@@ -4,7 +4,11 @@
 #include "Settings.h"
 
 #include "views/gamelist/BasicGameListView.h"
+#ifdef USE_FANART
+#include "views/gamelist/FanartGameListView.h"
+#else
 #include "views/gamelist/DetailedGameListView.h"
+#endif
 #include "views/gamelist/GridGameListView.h"
 #include "guis/GuiMenu.h"
 #include "guis/GuiMsgBox.h"
@@ -221,7 +225,11 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	}
 		
 	if(detailed)
+#ifdef USE_FANART
+		view = std::shared_ptr<IGameListView>(new FanartGameListView(mWindow, system->getRootFolder()));
+#else
 		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+#endif
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 		

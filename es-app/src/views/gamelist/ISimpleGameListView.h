@@ -31,6 +31,7 @@ protected:
 	TextComponent mHeaderText;
 	ImageComponent mHeaderImage;
 	ImageComponent mBackground;
+	ImageComponent mFanart;
 	
 	ThemeExtras mThemeExtras;
 
