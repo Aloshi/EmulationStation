@@ -191,6 +191,11 @@ void ImageComponent::updateVertices()
 	Eigen::Vector2f topLeft(-mSize.x() * mOrigin.x(), -mSize.y() * mOrigin.y());
 	Eigen::Vector2f bottomRight(mSize.x() * (1 -mOrigin.x()), mSize.y() * (1 - mOrigin.y()));
 
+	if (mFullscreen) {
+		topLeft << -mPosition.x(), -mPosition.y();
+		bottomRight << (float)Renderer::getScreenWidth() - mPosition.x(), (float)Renderer::getScreenHeight() - mPosition.y();
+	}
+
 	const float width = round(bottomRight.x() - topLeft.x());
 	const float height = round(bottomRight.y() - topLeft.y());
 
