@@ -62,29 +62,20 @@ void ImageComponent::resize()
 			mSize = textureSize;
 
 			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
-			if (mFullscreen) 
+			if (!mFullscreen) 
                         {
 				if(resizeScale.x() < resizeScale.y())
 				{
-					mSize[0] *= resizeScale.y();
-					mSize[1] *= resizeScale.y();
-				}else{
-					mSize[0] *= resizeScale.x();
-					mSize[1] *= resizeScale.x();
-				}
-                        } else {
-				if(resizeScale.x() < resizeScale.y())
-				{
 					mSize[0] *= resizeScale.x();
 					mSize[1] *= resizeScale.x();
 				}else{
 					mSize[0] *= resizeScale.y();
 					mSize[1] *= resizeScale.y();
 				}
+				// for SVG rasterization, always calculate width from rounded height (see comment above)
+				mSize[1] = round(mSize[1]);
+				mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
 			}
-			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = round(mSize[1]);
-			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
 
 		}else{
 			// if both components are set, we just stretch
