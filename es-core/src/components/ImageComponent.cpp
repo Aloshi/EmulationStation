@@ -212,7 +212,9 @@ void ImageComponent::updateVertices()
 	mVertices[4].pos << topLeft.x(), bottomRight.y();
 	mVertices[5].pos << bottomRight.x(), bottomRight.y();
 
-	float px, py;
+	float px, py, ox, oy;
+	ox = 0;
+	oy = 0;
 	if(mTexture->isTiled())
 	{
 		px = mSize.x() / getTextureSize().x();
@@ -220,25 +222,38 @@ void ImageComponent::updateVertices()
 	}else{
 		px = 1;
 		py = 1;
+		if (mFullscreen) {
+			Eigen::Vector2f aspectRatio((width / height), (mSize.x() / mSize.y()));
+			if(aspectRatio.x() < aspectRatio.y())
+			{
+				float l = aspectRatio.x()/(aspectRatio.y() * 2.0f);
+				ox = 0.5f - l;
+				px = 0.5f + l;
+			}else{
+				float l = aspectRatio.y()/(aspectRatio.x() * 2.0f);
+				oy = 0.5f - l;
+				py = 0.5f + l;
+			}
+		}
 	}
 
-	mVertices[0].tex << 0, py;
-	mVertices[1].tex << 0, 0;
+	mVertices[0].tex << ox, py;
+	mVertices[1].tex << ox, oy;
 	mVertices[2].tex << px, py;
 
 	mVertices[3].tex << px, py;
-	mVertices[4].tex << 0, 0;
-	mVertices[5].tex << px, 0;
+	mVertices[4].tex << ox, oy;
+	mVertices[5].tex << px, oy;
 
 	if(mFlipX)
 	{
 		for(int i = 0; i < 6; i++)
-			mVertices[i].tex[0] = mVertices[i].tex[0] == px ? 0 : px;
+			mVertices[i].tex[0] = mVertices[i].tex[0] == px ? ox : px;
 	}
 	if(mFlipY)
 	{
 		for(int i = 1; i < 6; i++)
-			mVertices[i].tex[1] = mVertices[i].tex[1] == py ? 0 : py;
+			mVertices[i].tex[1] = mVertices[i].tex[1] == py ? oy : py;
 	}
 }
 
