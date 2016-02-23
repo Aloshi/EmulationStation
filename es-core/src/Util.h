@@ -17,6 +17,9 @@ Eigen::Vector2f roundVector(const Eigen::Vector2f& vec);
 
 float round(float num);
 
+std::string getMd5(const boost::filesystem::path& path);
+std::string getCrc(const boost::filesystem::path& path);
+
 std::string getCanonicalPath(const std::string& str);
 
 // example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
