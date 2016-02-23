@@ -5,7 +5,7 @@
 
 #if defined(WIN32)
 	#include <codecvt>
-#elif define(__linux__)
+#elif defined(__linux__)
 	#include <unistd.h>
 	#include <sys/reboot.h>
 #endif
