@@ -4,6 +4,7 @@
 #include "SystemData.h"
 #include "HttpReq.h"
 #include "AsyncHandle.h"
+#include "Renderer.h"
 #include <vector>
 #include <functional>
 #include <queue>
@@ -25,6 +26,7 @@ struct ScraperSearchResult
 	MetaDataList mdl;
 	std::string imageUrl;
 	std::string thumbnailUrl;
+	std::string fanartUrl;
 };
 
 // So let me explain why I've abstracted this so heavily.
@@ -146,6 +148,7 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 
 //Will resize according to Settings::getInt("ScraperResizeWidth") and Settings::getInt("ScraperResizeHeight").
 std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, const std::string& saveAs);
+std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, const std::string& saveAs, int width, int height);
 
 // Resolves all metadata assets that need to be downloaded.
 std::unique_ptr<MDResolveHandle> resolveMetaDataAssets(const ScraperSearchResult& result, const ScraperSearchParams& search);

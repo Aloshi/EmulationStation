@@ -132,6 +132,15 @@ MDResolveHandle::MDResolveHandle(const ScraperSearchResult& result, const Scrape
 			mResult.imageUrl = "";
 		}));
 	}
+	if(!result.fanartUrl.empty())
+	{
+		std::string imgPath = getSaveAsPath(search, "fanart", result.fanartUrl);
+		mFuncs.push_back(ResolvePair(downloadImageAsync(result.fanartUrl, imgPath, Renderer::getScreenWidth(), Renderer::getScreenHeight()), [this, imgPath]
+		{
+			mResult.mdl.set("fanart", imgPath);
+			mResult.fanartUrl = "";
+		}));
+	}
 }
 
 void MDResolveHandle::update()
@@ -159,10 +168,16 @@ void MDResolveHandle::update()
 		setStatus(ASYNC_DONE);
 }
 
-std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, const std::string& saveAs)
+std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, const std::string& saveAs, int width, int height)
 {
 	return std::unique_ptr<ImageDownloadHandle>(new ImageDownloadHandle(url, saveAs, 
-		Settings::getInstance()->getInt("ScraperResizeWidth"), Settings::getInstance()->getInt("ScraperResizeHeight")));
+		width, height));
+}
+
+std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, const std::string& saveAs)
+{
+
+	return downloadImageAsync(url, saveAs, Settings::getInstance()->getInt("ScraperResizeWidth"), Settings::getInstance()->getInt("ScraperResizeHeight"));
 }
 
 ImageDownloadHandle::ImageDownloadHandle(const std::string& url, const std::string& path, int maxWidth, int maxHeight) : 
