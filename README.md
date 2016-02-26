@@ -9,7 +9,7 @@ Long term goals I see are more configurability (specificing directories for meta
 
 This project is still in its infancy and I just skimmed over the codebase, so don't expect anything super soon.
 
-What follows is the original README.md
+
 EmulationStation
 ================
 
@@ -91,55 +91,25 @@ Complete Raspberry Pi build instructions at [emulationstation.org](http://emulat
 Configuring
 ===========
 
-**~/.emulationstation/es_systems.cfg:**
-When first run, an example systems configuration file will be created at `~/.emulationstation/es_systems.cfg`.  `~` is `$HOME` on Linux, and `%HOMEPATH%` on Windows.  This example has some comments explaining how to write the configuration file. See the "Writing an es_systems.cfg" section for more information.
+When first run, an example systems configuration file will be created at `$CONFIG_DIR/es_systems.cfg`.
+Where `$CONFIG_DIR` is by platform:
 
-**Keep in mind you'll have to set up your emulator separately from EmulationStation!**
+**On Windows:**
 
-**~/.emulationstation/es_input.cfg:**
-When you first start EmulationStation, you will be prompted to configure an input device. The process is thus:
+`My Documents/EmulationStation/`
 
-1. Hold a button on the device you want to configure.  This includes the keyboard.
+**On Linux:**
 
-2. Press the buttons as they appear in the list.  Some inputs can be skipped by holding any button down for a few seconds (e.g. page up/page down).
+`$XDG_CONFIG_HOME/EmulationStation/` which usually defaults to `~/.config/EmulationStation/`
 
-3. You can review your mappings by pressing up and down, making any changes by pressing A.
+**On OSX:**
 
-4. Choose "SAVE" to save this device and close the input configuration screen.
-
-The new configuration will be added to the `~/.emulationstation/es_input.cfg` file.
-
-**Both new and old devices can be (re)configured at any time by pressing the Start button and choosing "CONFIGURE INPUT".**  From here, you may unplug the device you used to open the menu and plug in a new one, if necessary.  New devices will be appended to the existing input configuration file, so your old devices will remain configured.
-
-**If your controller stops working, you can delete the `~/.emulationstation/es_input.cfg` file to make the input configuration screen re-appear on next run.**
-
-
-You can use `--help` or `-h` to view a list of command-line options. Briefly outlined here:
-```
---resolution [width] [height]	- try and force a particular resolution
---gamelist-only		- only display games defined in a gamelist.xml file.
---ignore-gamelist	- do not parse any gamelist.xml files.
---draw-framerate	- draw the framerate.
---no-exit		- do not display 'exit' in the ES menu.
---debug			- show the console window on Windows, do slightly more logging
---windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
---vsync [1/on or 0/off]	- turn vsync on or off (default is on).
---scrape	- run the interactive command-line metadata scraper.
-```
-
-As long as ES hasn't frozen, you can always press F4 to close the application.
-
-
-Writing an es_systems.cfg
-=========================
+`~/Library/Application Support/org.emulationstation.EmulationStation/`by default
+and the same as Linux if EmulationStation is build with `cmake -DXdgOsx=ON`
 
 Complete configuration instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#config).
 
 The `es_systems.cfg` file contains the system configuration data for EmulationStation, written in XML.  This tells EmulationStation what systems you have, what platform they correspond to (for scraping), and where the games are located.
-
-ES will check two places for an es_systems.cfg file, in the following order, stopping after it finds one that works:
-* `~/.emulationstation/es_systems.cfg`
-* `/etc/emulationstation/es_systems.cfg`
 
 The order EmulationStation displays systems reflects the order you define them in.
 
@@ -193,6 +163,41 @@ The following "tags" are replaced by ES in launch commands:
 `%ROM_RAW%`	- Replaced with the unescaped, absolute path to the selected ROM.  If your emulator is picky about paths, you might want to use this instead of %ROM%, but enclosed in quotes.
 
 See [SYSTEMS.md](SYSTEMS.md) for some live examples in EmulationStation.
+
+**Keep in mind you'll have to set up your emulator separately from EmulationStation!**
+
+**$CONFIG_DIR/es_input.cfg:**
+When you first start EmulationStation, you will be prompted to configure an input device. The process is thus:
+
+1. Hold a button on the device you want to configure.  This includes the keyboard.
+
+2. Press the buttons as they appear in the list.  Some inputs can be skipped by holding any button down for a few seconds (e.g. page up/page down).
+
+3. You can review your mappings by pressing up and down, making any changes by pressing A.
+
+4. Choose "SAVE" to save this device and close the input configuration screen.
+
+The new configuration will be added to the `$CONFIG_DIR/es_input.cfg` file.
+
+**Both new and old devices can be (re)configured at any time by pressing the Start button and choosing "CONFIGURE INPUT".**  From here, you may unplug the device you used to open the menu and plug in a new one, if necessary.  New devices will be appended to the existing input configuration file, so your old devices will remain configured.
+
+**If your controller stops working, you can delete the `~/.emulationstation/es_input.cfg` file to make the input configuration screen re-appear on next run.**
+
+
+You can use `--help` or `-h` to view a list of command-line options. Briefly outlined here:
+```
+--resolution [width] [height]	- try and force a particular resolution
+--gamelist-only		- only display games defined in a gamelist.xml file.
+--ignore-gamelist	- do not parse any gamelist.xml files.
+--draw-framerate	- draw the framerate.
+--no-exit		- do not display 'exit' in the ES menu.
+--debug			- show the console window on Windows, do slightly more logging
+--windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
+--vsync [1/on or 0/off]	- turn vsync on or off (default is on).
+--scrape	- run the interactive command-line metadata scraper.
+```
+
+As long as ES hasn't frozen, you can always press F4 to close the application.
 
 gamelist.xml
 ============
