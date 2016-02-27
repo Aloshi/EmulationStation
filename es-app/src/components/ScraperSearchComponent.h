@@ -48,6 +48,7 @@ public:
 private:
 	void updateViewStyle();
 	void updateThumbnail();
+	void updateFanart();
 	void updateInfoPane();
 
 	void resizeMetadata();
@@ -66,6 +67,7 @@ private:
 	std::shared_ptr<ScrollableContainer> mDescContainer;
 	std::shared_ptr<TextComponent> mResultDesc;
 	std::shared_ptr<ImageComponent> mResultThumbnail;
+	std::shared_ptr<ImageComponent> mResultFanart;
 	std::shared_ptr<ComponentList> mResultList;
 
 
@@ -92,6 +94,7 @@ private:
 	std::unique_ptr<MDResolveHandle> mMDResolveHandle;
 	std::vector<ScraperSearchResult> mScraperResults;
 	std::unique_ptr<HttpReq> mThumbnailReq;
+	std::unique_ptr<HttpReq> mFanartReq;
 
 	BusyComponent mBusyAnim;
 };

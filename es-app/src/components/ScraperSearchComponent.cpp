@@ -32,7 +32,12 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 
 	// selected result thumbnail
 	mResultThumbnail = std::make_shared<ImageComponent>(mWindow);
-	mGrid.setEntry(mResultThumbnail, Vector2i(1, 1), false, false, Vector2i(1, 1));
+	mGrid.setEntry(mResultThumbnail, Vector2i(1, 1), false, false, Vector2i(2, 3));
+
+	// selected result fanart
+	mResultFanart = std::make_shared<ImageComponent>(mWindow);
+	if(mSearchType != ALWAYS_ACCEPT_FIRST_RESULT)
+		mGrid.setEntry(mResultFanart, Vector2i(3, 2), false, false, Vector2i(1, 1));
 
 	// selected result desc + container
 	mDescContainer = std::make_shared<ScrollableContainer>(mWindow);
@@ -80,7 +85,8 @@ void ScraperSearchComponent::onSizeChanged()
 
 	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
 	// we also pad a little so it doesn't rub up against the metadata labels
-	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) * boxartCellScale, mGrid.getRowHeight(1));
+	mResultThumbnail->setMaxSize((mGrid.getColWidth(1)+mGrid.getColWidth(2)) * boxartCellScale, (mGrid.getRowHeight(1)+mGrid.getRowHeight(2)));
+	mResultFanart->setMaxSize(mGrid.getColWidth(2), mGrid.getRowHeight(2) * boxartCellScale);
 
 	// metadata
 	resizeMetadata();
@@ -124,8 +130,7 @@ void ScraperSearchComponent::updateViewStyle()
 		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 	}else{
 		// show result list on the right
-		mGrid.setEntry(mResultList, Vector2i(3, 0), true, true, Vector2i(1, 3), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
-
+		mGrid.setEntry(mResultList, Vector2i(3, 0), true, true, Vector2i(1, 2), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 	}
 }
 
@@ -237,12 +242,24 @@ void ScraperSearchComponent::updateInfoPane()
 			mThumbnailReq.reset();
 		}
 
+		if(mSearchType != ALWAYS_ACCEPT_FIRST_RESULT) {
+			mResultFanart->setImage("");
+			const std::string& fanarturl = res.fanartUrl;	
+			if(!fanarturl.empty())
+			{
+				mFanartReq = std::unique_ptr<HttpReq>(new HttpReq(fanarturl));
+			}else{
+				mFanartReq.reset();
+			}
+		}
+
 		// metadata
 		mGrid.onSizeChanged();
 	}else{
 		mResultName->setText("");
 		mResultDesc->setText("");
 		mResultThumbnail->setImage("");
+		mResultFanart->setImage("");
 	}
 }
 
@@ -302,6 +319,11 @@ void ScraperSearchComponent::update(int deltaTime)
 		updateThumbnail();
 	}
 
+	if(mFanartReq && mFanartReq->status() != HttpReq::REQ_IN_PROGRESS)
+	{
+		updateFanart();
+	}
+
 	if(mSearchHandle && mSearchHandle->status() != ASYNC_IN_PROGRESS)
 	{
 		auto status = mSearchHandle->status();
@@ -351,6 +373,21 @@ void ScraperSearchComponent::updateThumbnail()
 	}
 
 	mThumbnailReq.reset();
+}
+
+void ScraperSearchComponent::updateFanart()
+{
+	if(mFanartReq && mFanartReq->status() == HttpReq::REQ_SUCCESS)
+	{
+		std::string content = mFanartReq->getContent();
+		mResultFanart->setImage(content.data(), content.length());
+		mGrid.onSizeChanged(); // a hack to fix the thumbnail position since its size changed
+	}else{
+		LOG(LogWarning) << "fanart req failed: " << mFanartReq->getErrorMsg();
+		mResultFanart->setImage("");
+	}
+
+	mFanartReq.reset();
 }
 
 void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)
