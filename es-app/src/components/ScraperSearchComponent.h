@@ -68,13 +68,6 @@ private:
 	std::shared_ptr<ImageComponent> mResultThumbnail;
 	std::shared_ptr<ComponentList> mResultList;
 
-	std::shared_ptr<ComponentGrid> mMD_Grid;
-	std::shared_ptr<RatingComponent> mMD_Rating;
-	std::shared_ptr<DateTimeComponent> mMD_ReleaseDate;
-	std::shared_ptr<TextComponent> mMD_Developer;
-	std::shared_ptr<TextComponent> mMD_Publisher;
-	std::shared_ptr<TextComponent> mMD_Genre;
-	std::shared_ptr<TextComponent> mMD_Players;
 
 	// label-component pair
 	struct MetaDataPair
