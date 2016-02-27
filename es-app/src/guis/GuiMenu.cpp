@@ -152,16 +152,16 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                                                                                                 false);
                      std::string language = RecalboxConf::getInstance()->get("system.language");
                      if (language.empty()) language = "en_US";
-		     language_choice->add("Basque",    "eu_ES", language == "eu_ES");
-		     language_choice->add("Chinese",   "zh_CN", language == "zh_CN");
-		     language_choice->add("Deutsch",   "de_DE", language == "de_DE");
-		     language_choice->add("English",   "en_US", language == "en_US");
-                     language_choice->add("Español",   "es_ES", language == "es_ES");
-		     language_choice->add("Français",  "fr_FR", language == "fr_FR");
-		     language_choice->add("Italiano",  "it_IT", language == "it_IT");
-                     language_choice->add("Portugues", "pt_BR", language == "pt_BR");
-		     language_choice->add("Svenska",   "sv_SE", language == "sv_SE");
-                     language_choice->add("Türkçe",    "tr_TR", language == "tr_TR");
+		     language_choice->add("BASQUE",    "eu_ES", language == "eu_ES");
+		     language_choice->add("CHINESE",   "zh_CN", language == "zh_CN");
+		     language_choice->add("DEUTSCH",   "de_DE", language == "de_DE");
+		     language_choice->add("ENGLISH",   "en_US", language == "en_US");
+                     language_choice->add("ESPAÑOL",   "es_ES", language == "es_ES");
+		     language_choice->add("FRANÇAIS",  "fr_FR", language == "fr_FR");
+		     language_choice->add("ITALIANO",  "it_IT", language == "it_IT");
+                     language_choice->add("PORTUGUES", "pt_BR", language == "pt_BR");
+		     language_choice->add("SVENSKA",   "sv_SE", language == "sv_SE");
+                     language_choice->add("TÜRKÇE",    "tr_TR", language == "tr_TR");
 
                      s->addWithLabel(_("LANGUAGE"), language_choice);
 
