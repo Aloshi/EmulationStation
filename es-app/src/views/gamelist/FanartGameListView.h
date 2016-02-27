@@ -32,4 +32,6 @@ private:
 
 	std::vector<TextComponent*> getMDLabels();
 	std::vector<GuiComponent*> getMDValues();
+
+	std::shared_ptr<ThemeData> mTheme;
 };

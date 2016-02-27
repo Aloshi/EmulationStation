@@ -43,11 +43,12 @@ FanartGameListView::FanartGameListView(Window* window, FileData* root) :
 
 void FanartGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 {
+	mTheme = theme;
 	BasicGameListView::onThemeChanged(theme);
 
 	using namespace ThemeFlags;
 	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE);
-	mFanart.applyTheme(theme, getName(), "md_fanart", POSITION | COLOR | ThemeFlags::SIZE);
+	mFanart.applyTheme(theme, getName(), "md_fanart", POSITION | COLOR | ThemeFlags::SIZE | ThemeFlags::PATH);
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
@@ -132,7 +133,10 @@ void FanartGameListView::updateInfoPanel()
 		fadingOut = true;
 	}else{
 		mImage.setImage(file->metadata.get("image"));
-		mFanart.setImage(file->metadata.get("fanart"));
+		if (!file->metadata.get("fanart").empty())
+			mFanart.setImage(file->metadata.get("fanart"));
+		else
+			if (mTheme != NULL) mFanart.applyTheme(mTheme, getName(), "md_fanart", ThemeFlags::PATH);
 		if (mFanart.hasImage())
 			mBackground.setOpacity(0x00);
 		else
