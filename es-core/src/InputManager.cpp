@@ -465,7 +465,7 @@ std::string InputManager::configureEmulators() {
     std::map<int, InputConfig*> playerJoysticks;
 
 	// First loop, search for GUID + NAME. High Priority
-    for (int player = 0; player < 4; player++) {
+    for (int player = 0; player < MAX_PLAYERS; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player+1;
 		std::string confName = sstm.str()+"NAME";
@@ -489,7 +489,7 @@ std::string InputManager::configureEmulators() {
         }
     }
 	// Second loop, search for NAME. Low Priority
-	for (int player = 0; player < 4; player++) {
+	for (int player = 0; player < MAX_PLAYERS; player++) {
 		std::stringstream sstm;
 		sstm << "INPUT P" << player+1;
 		std::string confName = sstm.str()+"NAME";
@@ -510,7 +510,7 @@ std::string InputManager::configureEmulators() {
 	}
 
     // Last loop, search for free controllers for remaining players.
-    for (int player = 0; player < 4; player++) {
+    for (int player = 0; player < MAX_PLAYERS; player++) {
         // si aucune config a été trouvé pour le joueur, on essaie de lui filer un libre
         if(playerJoysticks[player] == NULL){
             LOG(LogInfo) << "No config for player " << player;
@@ -526,9 +526,9 @@ std::string InputManager::configureEmulators() {
     }
 
     // in case of hole (player 1 missing, but player 4 set, fill the holes with last players joysticks)
-    for (int player = 0; player < 4; player++) {
+    for (int player = 0; player < MAX_PLAYERS; player++) {
       if(playerJoysticks[player] == NULL){
-    	for (int repplayer = 4; repplayer > player; repplayer--) {
+    	for (int repplayer = MAX_PLAYERS; repplayer > player; repplayer--) {
     	  if(playerJoysticks[player] == NULL && playerJoysticks[repplayer] != NULL){
     	    playerJoysticks[player]    = playerJoysticks[repplayer];
 	    playerJoysticks[repplayer] = NULL;
@@ -537,7 +537,7 @@ std::string InputManager::configureEmulators() {
       }
     }
 
-    for (int player = 0; player < 4; player++) {
+    for (int player = 0; player < MAX_PLAYERS; player++) {
       InputConfig * playerInputConfig = playerJoysticks[player];
         if(playerInputConfig != NULL){
             command << "-p" << player+1 << "index " <<  playerInputConfig->getDeviceIndex() << " -p" << player+1 << "guid " << playerInputConfig->getDeviceGUIDString() << " -p" << player+1 << "name \"" <<  playerInputConfig->getDeviceName() << "\" ";

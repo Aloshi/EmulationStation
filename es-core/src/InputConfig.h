@@ -9,6 +9,7 @@
 #include "pugixml/pugixml.hpp"
 
 #define DEVICE_KEYBOARD -1
+#define MAX_PLAYERS 5
 
 enum InputType
 {

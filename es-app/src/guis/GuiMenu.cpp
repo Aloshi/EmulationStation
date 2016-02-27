@@ -1001,7 +1001,7 @@ void GuiMenu::createConfigInput() {
     std::vector<std::shared_ptr<OptionListComponent<StrInputConfig *>>> options;
     char strbuf[256];
 
-    for (int player = 0; player < 4; player++) {
+    for (int player = 0; player < MAX_PLAYERS; player++) {
         std::stringstream sstm;
         sstm << "INPUT P" << player + 1;
         std::string confName = sstm.str() + "NAME";
@@ -1071,7 +1071,7 @@ void GuiMenu::createConfigInput() {
         s->addWithLabel(strbuf, inputOptionList);
     }
     s->addSaveFunc([this, options, window] {
-        for (int player = 0; player < 4; player++) {
+        for (int player = 0; player < MAX_PLAYERS; player++) {
             std::stringstream sstm;
             sstm << "INPUT P" << player + 1;
             std::string confName = sstm.str() + "NAME";
