@@ -270,12 +270,27 @@ bool RecalboxSystem::launchKodi(Window *window) {
     window->deinit();
 
     int exitCode = system(command.c_str());
+    if(WIFEXITED(exitCode)) {
+      exitCode = WEXITSTATUS(exitCode);
+    }
 
     window->init();
     VolumeControl::getInstance()->init();
     AudioManager::getInstance()->resumeMusic();
     window->normalizeNextUpdate();
 
+    // handle end of kodi
+    switch(exitCode) {
+    case 10: // reboot code
+      reboot();
+      return true;
+      break;
+    case 11: // shutdown code
+      shutdown();
+      return true;
+      break;
+    }
+    
     return exitCode == 0;
 
 }
