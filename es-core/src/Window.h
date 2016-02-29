@@ -28,7 +28,7 @@ public:
 
 	void normalizeNextUpdate();
 
-	inline bool isSleeping() const { return mSleeping; }
+	inline bool isSleeping() const { return (mSleeping && mDeepSleeping); }
 	bool getAllowSleep();
 	void setAllowSleep(bool sleep);
 	
@@ -58,6 +58,7 @@ private:
 
 	bool mAllowSleep;
 	bool mSleeping;
+	bool mDeepSleeping;
 	unsigned int mTimeSinceLastInput;
 
 	bool mRenderedHelpPrompts;

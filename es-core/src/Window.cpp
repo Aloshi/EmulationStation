@@ -9,7 +9,7 @@
 #include "components/ImageComponent.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
-	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
+	mAllowSleep(true), mSleeping(false), mDeepSleeping(false), mTimeSinceLastInput(0)
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
@@ -106,6 +106,7 @@ void Window::input(InputConfig* config, Input input)
 		// wake up
 		mTimeSinceLastInput = 0;
 		mSleeping = false;
+		mDeepSleeping = false;
 		onWake();
 		return;
 	}
@@ -205,6 +206,8 @@ void Window::render()
 	{
 		// go to sleep
 		mSleeping = true;
+		if(mTimeSinceLastInput >= 3*screensaverTime && screensaverTime != 0 && mAllowSleep)
+			mDeepSleeping = true;
 		onSleep();
 	}
 }
@@ -326,11 +329,15 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 void Window::onSleep()
 {
 	Renderer::setMatrix(Eigen::Affine3f::Identity());
-	unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? (unsigned int)Settings::getInstance()->getInt("DimValue") : 0xFF;
-	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
+	if (Settings::getInstance()->getString("ScreenSaverBehavior") != "dim") {
+		mDeepSleeping = true;
+		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | 0xFF);
+	} else {
+		unsigned char opacity = mDeepSleeping ? 0xFF : (unsigned int)Settings::getInstance()->getInt("DimValue");
+		Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
+	}
 }
 
 void Window::onWake()
 {
-
 }
