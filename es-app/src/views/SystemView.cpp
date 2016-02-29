@@ -232,9 +232,13 @@ void SystemView::onCursorChanged(const CursorState& state)
 	// also change the text after we've fully faded out
 	setAnimation(infoFadeOut, 0, [this, gameCount, favoritesCount] {
 		char strbuf[256];
-		snprintf(strbuf, 256,
-			 (ngettext("%i GAME AVAILABLE", "%i GAMES AVAILABLE", gameCount) + ", " +
-			  ngettext("%i FAVORITE", "%i FAVORITES", favoritesCount)).c_str(), gameCount, favoritesCount);
+		if(favoritesCount == 0) {
+		  snprintf(strbuf, 256, ngettext("%i GAME AVAILABLE", "%i GAMES AVAILABLE", gameCount).c_str(), gameCount);
+		} else {
+		  snprintf(strbuf, 256,
+			   (ngettext("%i GAME AVAILABLE", "%i GAMES AVAILABLE", gameCount) + ", " +
+			    ngettext("%i FAVORITE", "%i FAVORITES", favoritesCount)).c_str(), gameCount, favoritesCount);
+		}
 		mSystemInfo.setText(strbuf);
 	}, false, 1);
 
