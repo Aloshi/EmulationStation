@@ -41,7 +41,7 @@ msgid "NO GAMES FOUND - SKIP"
 msgstr "没有发现对应数据 - 跳过"
 
 msgid "RETRY"
-msgstr ""
+msgstr "重试"
 
 msgid "SKIP"
 msgstr "跳过"
