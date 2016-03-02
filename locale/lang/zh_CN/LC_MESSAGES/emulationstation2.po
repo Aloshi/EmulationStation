@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Emulationstation 2.0.1A zh_CN po\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-02-16 20:55+0100\n"
-"PO-Revision-Date: 2015-09-01 10:59+0800\n"
+"PO-Revision-Date: 2016-03-02 13:25+0800\n"
 "Last-Translator: ShiKeYu <shikeyu@tom.com>\n"
 "Language-Team: CHINESE <shikeyu@tom.com>\n"
 "Language: zh_CN\n"
@@ -11,37 +11,37 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.7\n"
 
 msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
-msgstr "您的 RECALBOX 有更新可提供"
+msgstr "您的 RECALBOX 现在有新版本了"
 
 msgid "CANCEL"
 msgstr "取消"
 
 msgid "Rating"
-msgstr ""
+msgstr "评分"
 
 msgid "Released"
-msgstr ""
+msgstr "发行日期"
 
 msgid "Developer"
-msgstr ""
+msgstr "开发者"
 
 msgid "Publisher"
-msgstr ""
+msgstr "出版商"
 
 msgid "Genre"
-msgstr ""
+msgstr "类型"
 
 msgid "Players"
-msgstr ""
+msgstr "游戏人数"
 
 msgid "NO GAMES FOUND - SKIP"
 msgstr "没有发现对应数据 - 跳过"
 
 msgid "RETRY"
-msgstr ""
+msgstr "重试"
 
 msgid "SKIP"
 msgstr "跳过"
@@ -59,13 +59,13 @@ msgid "SYSTEM"
 msgstr "游戏系统"
 
 msgid "subtitle text"
-msgstr ""
+msgstr "副标题文本"
 
 msgid "INPUT"
 msgstr "输入名称"
 
 msgid "search"
-msgstr ""
+msgstr "搜索"
 
 msgid "STOP"
 msgstr "停止"
@@ -75,7 +75,7 @@ msgstr "停止 (进度会保存)"
 
 #, c-format
 msgid "GAME %i OF %i"
-msgstr ""
+msgstr "游戏 %i - %i"
 
 msgid ""
 "WE CAN'T FIND ANY SYSTEMS!\n"
@@ -92,12 +92,12 @@ msgstr ""
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
 msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
-msgstr[0] ""
+msgstr[0] "%i 个游戏搜刮成功！"
 
 #, c-format
 msgid "%i GAME SKIPPED."
 msgid_plural "%i GAMES SKIPPED."
-msgstr[0] ""
+msgstr[0] "跳过了 %i 个游戏。"
 
 msgid "OK"
 msgstr "确定"
@@ -115,6 +115,8 @@ msgid ""
 "THIS WILL DELETE A FILE!\n"
 "ARE YOU SURE?"
 msgstr ""
+"此操作将删除一个文件!\n"
+"是否确定？"
 
 msgid "YES"
 msgstr "是"
@@ -147,11 +149,10 @@ msgid "VERSION"
 msgstr "版本"
 
 msgid "DISK USAGE"
-msgstr ""
+msgstr "磁盘使用情况"
 
-#, fuzzy
 msgid "STORAGE DEVICE"
-msgstr "空间使用"
+msgstr "存储设备"
 
 msgid "LANGUAGE"
 msgstr "语言"
@@ -221,38 +222,37 @@ msgid "REWIND"
 msgstr "回退功能"
 
 msgid "AUTO SAVE/LOAD"
-msgstr ""
+msgstr "自动保存/加载"
 
 msgid "SHADERS SET"
-msgstr ""
+msgstr "主题设置"
 
 msgid "SCANLINES"
-msgstr ""
+msgstr "扫描线"
 
 msgid "RETRO"
-msgstr ""
+msgstr "复古"
 
 msgid "RETROACHIEVEMENTS SETTINGS"
-msgstr ""
+msgstr "RETROACHIEVEMENTS 设置"
 
 msgid "RETROACHIEVEMENTS"
-msgstr ""
+msgstr "RETROACHIEVEMENTS"
 
 msgid "USERNAME"
-msgstr ""
+msgstr "用户名"
 
 msgid "PASSWORD"
-msgstr ""
+msgstr "口令"
 
 msgid "ADVANCED"
-msgstr ""
+msgstr "高级设置"
 
-#, fuzzy
 msgid "REALLY UPDATE GAMES LISTS ?"
-msgstr "确定进行更新吗?"
+msgstr "确定进行游戏列表更新吗?"
 
 msgid "UPDATE GAMES LISTS"
-msgstr ""
+msgstr "更新游戏列表"
 
 msgid "CONTROLLERS SETTINGS"
 msgstr "控制器设置"
@@ -297,19 +297,19 @@ msgid "OUTPUT DEVICE"
 msgstr "輸出裝置"
 
 msgid "HDMI"
-msgstr ""
+msgstr "HDMI"
 
 msgid "JACK"
-msgstr ""
+msgstr "音频插座"
 
 msgid "AUTO"
-msgstr ""
+msgstr "自动"
 
 msgid "NETWORK SETTINGS"
 msgstr "网络设置"
 
 msgid "CONNECTED"
-msgstr "CONNECTED"
+msgstr "已连接"
 
 msgid "NOT CONNECTED"
 msgstr "没有连接"
@@ -366,10 +366,10 @@ msgid "SHUTDOWN SYSTEM"
 msgstr "关闭系统"
 
 msgid "Emulator"
-msgstr ""
+msgstr "模拟器"
 
 msgid "Core"
-msgstr ""
+msgstr "核心"
 
 msgid ""
 "YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
@@ -381,22 +381,20 @@ msgstr ""
 "您将要进行控制器的设置。如果您的手柄仅有\n"
 "一个摇杆，设置方向键后按住A键跳过摇杆设置。\n"
 "如果您没有多余的键作为“热键”，请选择SELECT键。\n"
-"按住A键可跳过您没有的那些按键设置。"
+"按住A键可跳过您没有的那些按键的设置。"
 
 # GUIMENU
 msgid "CONFIGURE A CONTROLLER"
 msgstr "设置一个控制器"
 
-#, fuzzy
 msgid "CONTROLLER PAIRED"
 msgstr "没有找到控制器"
 
-#, fuzzy
 msgid "UNABLE TO PAIR CONTROLLER"
 msgstr "连接一个蓝牙控制器"
 
 msgid "AN ERROR OCCURED"
-msgstr ""
+msgstr "发生错误"
 
 msgid "NO CONTROLLERS FOUND"
 msgstr "没有找到控制器"
@@ -405,14 +403,14 @@ msgid "PAIR A BLUETOOTH CONTROLLER"
 msgstr "连接一个蓝牙控制器"
 
 msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
-msgstr ""
+msgstr "控制器连接已经被删除"
 
 msgid "FORGET BLUETOOTH CONTROLLERS"
-msgstr ""
+msgstr "删除蓝牙控制器"
 
 #, c-format
 msgid "INPUT P%i"
-msgstr ""
+msgstr "输入 P%i"
 
 msgid "CHOOSE"
 msgstr "浏览"
@@ -421,7 +419,7 @@ msgid "SELECT"
 msgstr "选择"
 
 msgid "CUSTOM"
-msgstr ""
+msgstr "自定义"
 
 msgid "4/3"
 msgstr ""
@@ -440,7 +438,7 @@ msgstr "游戏排序方式"
 
 #  FAVORITES
 msgid "FAVORITES ONLY"
-msgstr "仅限于收藏项"
+msgstr "仅显示收藏项"
 
 msgid "EDIT THIS GAME'S METADATA"
 msgstr "编辑此游戏的数据"
@@ -475,9 +473,12 @@ msgid ""
 "MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
 "CONTINUE ANYWAY?"
 msgstr ""
+"警告：你选择的一些系统没有平台数据。\n"
+"结果可能比原来的更不准确！\n"
+"是否继续？"
 
 msgid "NO GAMES FIT THAT CRITERIA."
-msgstr ""
+msgstr "没有符合标准的游戏。"
 
 msgid "REALLY UPDATE?"
 msgstr "确定进行更新吗?"
@@ -486,7 +487,7 @@ msgid "NETWORK CONNECTION NEEDED"
 msgstr "必须连接到互联网"
 
 msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
-msgstr ""
+msgstr "更新下载完毕，系统将重新启动"
 
 msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
 msgstr "更新失败，系统将重新启动"
@@ -495,137 +496,137 @@ msgid "NO UPDATE AVAILABLE"
 msgstr "没有可用的更新"
 
 msgid "enter emulator"
-msgstr ""
+msgstr "输入模拟器"
 
 msgid "enter core"
-msgstr ""
+msgstr "输入核心"
 
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 msgid "enter game name"
 msgstr "输入游戏名称"
 
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 msgid "enter description"
-msgstr ""
+msgstr "输入描述"
 
 msgid "Image"
-msgstr ""
+msgstr "图片"
 
 msgid "enter path to image"
-msgstr ""
+msgstr "输入图片路径"
 
 msgid "Thumbnail"
-msgstr ""
+msgstr "缩略图"
 
 msgid "enter path to thumbnail"
-msgstr ""
+msgstr "输入缩略图路径"
 
 msgid "enter rating"
-msgstr ""
+msgstr "输入评分"
 
 msgid "Release date"
-msgstr ""
+msgstr "发行日期"
 
 msgid "enter release date"
-msgstr ""
+msgstr "输入发行日期"
 
 msgid "enter game developer"
-msgstr ""
+msgstr "输入游戏开发者"
 
 msgid "enter game publisher"
-msgstr ""
+msgstr "输入游戏发行商"
 
 msgid "enter game genre"
-msgstr ""
+msgstr "输入游戏类型"
 
 msgid "enter number of players"
-msgstr ""
+msgstr "输入游戏玩家人数"
 
 msgid "Favorite"
-msgstr ""
+msgstr "收藏"
 
 msgid "enter favorite"
 msgstr "作为收藏"
 
 msgid "Region"
-msgstr ""
+msgstr "区域"
 
 msgid "enter region"
-msgstr ""
+msgstr "输入区域"
 
 msgid "Romtype"
-msgstr ""
+msgstr "Rom类型"
 
 msgid "enter romtype"
-msgstr ""
+msgstr "输入Rom类型"
 
 msgid "Hidden"
-msgstr ""
+msgstr "隐藏"
 
 msgid "set hidden"
-msgstr ""
+msgstr "设置隐藏"
 
 msgid "Play count"
-msgstr ""
+msgstr "游戏运行次数"
 
 msgid "enter number of times played"
-msgstr ""
+msgstr "输入游戏运行次数"
 
 msgid "Last played"
-msgstr ""
+msgstr "最后游戏运行日期"
 
 msgid "enter last played date"
-msgstr ""
+msgstr "输入最后游戏运行日期"
 
 #, c-format
 msgid "%i GAME AVAILABLE"
 msgid_plural "%i GAMES AVAILABLE"
-msgstr[0] ""
+msgstr[0] "%i 个可用游戏"
 
 #, c-format
 msgid "%i FAVORITE"
 msgid_plural "%i FAVORITES"
-msgstr[0] ""
+msgstr[0] "%i 个收藏"
 
 msgid "SCROLL"
-msgstr ""
+msgstr "滚动"
 
 msgid "LAUNCH"
 msgstr "运行"
 
 msgid "Times played"
-msgstr ""
+msgstr "游戏运行次数"
 
 msgid "MENU"
 msgstr "菜单"
 
 msgid "FILENAME, ASCENDING"
-msgstr ""
+msgstr "游戏名（升序）"
 
 msgid "FILENAME, DESCENDING"
-msgstr ""
+msgstr "游戏名（降序）"
 
 msgid "RATING, ASCENDING"
-msgstr ""
+msgstr "评分（升序）"
 
 msgid "RATING, DESCENDING"
-msgstr ""
+msgstr "评分（降序）"
 
 msgid "TIMES PLAYED, ASCENDING"
-msgstr ""
+msgstr "游戏运行次数（升序）"
 
 msgid "TIMES PLAYED, DESCENDING"
-msgstr ""
+msgstr "游戏运行次数（降序）"
 
 msgid "LAST PLAYED, ASCENDING"
-msgstr ""
+msgstr "最近运行（升序）"
 
 msgid "LAST PLAYED, DESCENDING"
-msgstr ""
+msgstr "最近运行（降序）"
 
 msgid "WORKING..."
 msgstr "进行中..."
@@ -634,30 +635,30 @@ msgid "CHANGE"
 msgstr "改变"
 
 msgid "never"
-msgstr ""
+msgstr "从未"
 
 msgid "just now"
-msgstr ""
+msgstr "刚刚"
 
 #, c-format
 msgid "%i sec ago"
 msgid_plural "%i secs ago"
-msgstr[0] ""
+msgstr[0] "%i 秒之前"
 
 #, c-format
 msgid "%i min ago"
 msgid_plural "%i mins ago"
-msgstr[0] ""
+msgstr[0] "%i 分钟之前"
 
 #, c-format
 msgid "%i hour ago"
 msgid_plural "%i hours ago"
-msgstr[0] ""
+msgstr[0] "%i 小时之前"
 
 #, c-format
 msgid "%i day ago"
 msgid_plural "%i days ago"
-msgstr[0] ""
+msgstr[0] "%i 天之前"
 
 msgid "unknown"
 msgstr "未知"
@@ -671,7 +672,7 @@ msgstr "都不选择"
 #, c-format
 msgid "%i SELECTED"
 msgid_plural "%i SELECTED"
-msgstr[0] ""
+msgstr[0] "%i 个已选择"
 
 msgid "UP"
 msgstr "上"
@@ -704,20 +705,20 @@ msgid "PAGE DOWN"
 msgstr "R1 "
 
 msgid "HOTKEY"
-msgstr ""
+msgstr "热键"
 
 msgid "CONFIGURING"
 msgstr "配置"
 
 msgid "KEYBOARD"
-msgstr ""
+msgstr "键盘"
 
 #, c-format
 msgid "GAMEPAD %i"
-msgstr ""
+msgstr "手柄 %i"
 
 msgid "HOLD ANY BUTTON TO SKIP"
-msgstr "按任意键跳过"
+msgstr "长按任意键跳过"
 
 msgid "-NOT DEFINED-"
 msgstr "-未定义-"
@@ -725,7 +726,7 @@ msgstr "-未定义-"
 #, c-format
 msgid "HOLD FOR %iS TO SKIP"
 msgid_plural "HOLD FOR %iS TO SKIP"
-msgstr[0] ""
+msgstr[0] "按住跳过  %i"
 
 # Config controllers missing translation
 msgid "PRESS ANYTHING"
@@ -746,30 +747,31 @@ msgstr "输入设置"
 #, c-format
 msgid "%i GAMEPAD DETECTED"
 msgid_plural "%i GAMEPADS DETECTED"
-msgstr[0] ""
+msgstr[0] "检测到 %i个手柄"
 
 msgid "NO GAMEPADS DETECTED"
 msgstr "没有检测到游戏手柄"
 
 msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
-msgstr "按住您的设备上的按钮 A 来配置它。"
+msgstr "请按住您要设置的设备上的一个按钮。"
 
 msgid "PRESS F4 TO QUIT AT ANY TIME."
-msgstr "按 F4 在任何时候退出。"
+msgstr "退出请按 F4。"
 
-#, fuzzy
 msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
-msgstr "按 ESC 键取消"
+msgstr "按 ESC 键或热键取消"
 
 msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
-msgstr "你想开始 KODI 媒体中心吗?"
+msgstr "你想启动 KODI 媒体中心吗?"
 
 msgid "LOADING..."
 msgstr "载入中......"
 
-#, fuzzy
 msgid "PLEASE WAIT..."
-msgstr "发布日期。"
+msgstr "请稍候 ..."
+
+#~ msgid "FAVORITE"
+#~ msgstr "收藏"
 
 #~ msgid "UPDATE OK, THE SYSTEM WILL NOW REBOOT"
 #~ msgstr "更新完成，系统将重新启动"
@@ -939,9 +941,6 @@ msgstr "发布日期。"
 
 #~ msgid " SKIPPED."
 #~ msgstr " 已跳过."
-
-#~ msgid "FAVORITE"
-#~ msgstr "收藏"
 
 #, fuzzy
 #~ msgid " GAME AVAILABLE"
