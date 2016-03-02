@@ -39,6 +39,8 @@ cd YourEmulationStationDirectory
 git pull
 cmake .
 make
+
+chmod +x emulationstation
 ```
 
 - If your problem still isn't gone, the best way to report a bug is to post an issue on GitHub. Try to post the simplest steps possible to reproduce the bug. Include files you think might be related (except for ROMs, of course). If you haven't re-run ES since the crash, the log file `~/.emulationstation/es_log.txt` is also helpful.
@@ -87,6 +89,25 @@ Complete Raspberry Pi build instructions at [emulationstation.org](http://emulat
 
 (If you don't know how to use CMake, here are some hints: run cmake-gui and point it at your EmulationStation folder.  Point the "build" directory somewhere - I use EmulationStation/build.  Click configure, choose "Visual Studio [year] Project", fill in red fields as they appear and keep clicking Configure (you may need to check "Advanced"), then click Generate.)
 
+**On MacOS**
+
+[HomeBrew] (http://brew.sh/)
+
+[XCode Dev Tools] (http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)
+
+```bash
+brew install cmake freeimage freetype eigen boost
+
+```
+
+Then, generate and build the Makefile with CMake:
+```bash
+cd YourEmulationStationDirectory
+cmake .
+make
+chmod +x emulationstation
+
+```
 
 Configuring
 ===========

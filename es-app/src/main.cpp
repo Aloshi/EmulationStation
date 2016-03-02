@@ -22,6 +22,7 @@
 
 #ifdef WIN32
 #include <Windows.h>
+#include <shellapi.h>
 #endif
 
 namespace fs = boost::filesystem;
@@ -342,3 +343,26 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+
+#ifdef WIN32
+int CALLBACK WinMain(
+	_In_ HINSTANCE hInstance,
+	_In_ HINSTANCE hPrevInstance,
+	_In_ LPSTR     lpCmdLine,
+	_In_ int       nCmdShow
+	)
+{
+	/* Just convert command-line arguments to UTF-8 and call main() */
+	int argc, i;
+	LPWSTR *argvW = CommandLineToArgvW(GetCommandLineW(), &argc);
+	char **argv = new char *[argc];
+	for (i = 0; i < argc; i++)
+	{
+		int len = WideCharToMultiByte(CP_UTF8, 0, argvW[i], -1, NULL, 0, NULL, NULL);
+		argv[i] = new char[len];
+		WideCharToMultiByte(CP_UTF8, 0, argvW[i], -1, argv[i], len, NULL, NULL);
+	}
+	main(argc, argv);
+}
+
+#endif /* WIN32 */

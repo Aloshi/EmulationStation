@@ -210,7 +210,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 
 	//decide type
 	bool detailed = false;
-	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
+	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER, false);
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
 		if(!(*it)->getThumbnailPath().empty())

@@ -40,7 +40,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
 	{
 		const FileData::SortType& sort = FileSorts::SortTypes.at(i);
-		mListSort->add(sort.description, &sort, i == 0); // TODO - actually make the sort type persistent
+		mListSort->add(sort.description, &sort, i == system->sortId);
 	}
 
 	mMenu.addWithLabel("SORT GAMES BY", mListSort);
@@ -59,8 +59,10 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 GuiGamelistOptions::~GuiGamelistOptions()
 {
-	// apply sort
-	FileData* root = getGamelist()->getCursor()->getSystem()->getRootFolder();
+	// save and apply sort
+	SystemData* system = getGamelist()->getCursor()->getSystem();
+	FileData* root = system->getRootFolder();
+	system->sortId = mListSort->getSelectedId(); // this will break if mListSort isn't in the same order as FileSorts:typesArr
 	root->sort(*mListSort->getSelected()); // will also recursively sort children
 
 	// notify that the root folder was sorted
