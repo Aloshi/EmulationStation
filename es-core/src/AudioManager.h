@@ -1,12 +1,13 @@
 #ifndef _AUDIOMANAGER_H_
 #define _AUDIOMANAGER_H_
 
+#include "Sound.h"
+
+#include <SDL.h>
 #include <vector>
 #include <memory>
 
-#include "SDL_audio.h"
 
-#include "Sound.h"
 
 
 class AudioManager

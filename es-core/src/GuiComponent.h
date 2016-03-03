@@ -1,9 +1,10 @@
 #pragma once
 
 #include "InputConfig.h"
-#include <memory>
-#include <Eigen/Dense>
 #include "HelpStyle.h"
+
+#include <Eigen/Dense>
+#include <memory>
 
 class Window;
 class Animation;

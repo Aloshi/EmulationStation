@@ -1,11 +1,13 @@
 #include "guis/GuiScraperStart.h"
+
 #include "guis/GuiScraperMulti.h"
 #include "guis/GuiMsgBox.h"
-#include "views/ViewController.h"
 
 #include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
 #include "components/SwitchComponent.h"
+
+#include "views/ViewController.h"
 
 GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mMenu(window, "SCRAPE NOW")

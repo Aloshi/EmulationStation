@@ -1,11 +1,13 @@
 #include "InputManager.h"
+
 #include "InputConfig.h"
 #include "Settings.h"
 #include "Window.h"
 #include "Log.h"
+#include "platform.h"
+
 #include "pugixml/pugixml.hpp"
 #include <boost/filesystem.hpp>
-#include "platform.h"
 
 #define KEYBOARD_GUID_STRING "-1"
 

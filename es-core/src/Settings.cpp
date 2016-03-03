@@ -1,7 +1,9 @@
 #include "Settings.h"
+
 #include "Log.h"
-#include "pugixml/pugixml.hpp"
 #include "platform.h"
+
+#include "pugixml/pugixml.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
 

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "resources/TextureResource.h"
+
+#include "GuiComponent.h"
 
 #define NUM_RATING_STARS 5
 

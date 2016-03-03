@@ -1,4 +1,5 @@
 #include "components/NinePatchComponent.h"
+
 #include "Window.h"
 #include "Log.h"
 #include "Renderer.h"

@@ -1,13 +1,14 @@
 #ifndef _IMAGECOMPONENT_H_
 #define _IMAGECOMPONENT_H_
 
-#include "platform.h"
-#include GLHEADER
+#include "resources/TextureResource.h"
 
+#include "platform.h"
 #include "GuiComponent.h"
+
+#include GLHEADER
 #include <string>
 #include <memory>
-#include "resources/TextureResource.h"
 
 class ImageComponent : public GuiComponent
 {

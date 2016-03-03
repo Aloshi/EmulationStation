@@ -1,15 +1,19 @@
 #include "ThemeData.h"
-#include "Renderer.h"
+
 #include "resources/Font.h"
-#include "Sound.h"
 #include "resources/TextureResource.h"
-#include "Log.h"
-#include "Settings.h"
-#include "pugixml/pugixml.hpp"
-#include <boost/assign.hpp>
 
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
+
+#include "Renderer.h"
+#include "Sound.h"
+#include "Settings.h"
+#include "Log.h"
+
+#include "pugixml/pugixml.hpp"
+#include <boost/assign.hpp>
+
 
 
 // This is a work around for some ambiguity that is introduced in C++11 that boost::assign::map_list_of leave open.

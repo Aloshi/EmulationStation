@@ -1,9 +1,11 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
 #include "components/ComponentGrid.h"
+
 #include "scrapers/Scraper.h"
+
+#include "GuiComponent.h"
 
 #include <queue>
 

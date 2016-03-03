@@ -1,5 +1,7 @@
-#include "GuiGamelistOptions.h"
-#include "GuiMetaDataEd.h"
+#include "guis/GuiGamelistOptions.h"
+
+#include "guis/GuiMetaDataEd.h"
+
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 

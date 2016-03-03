@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <stdint.h>
+#include <cstdint>
 
 /*!
 Singleton pattern. Call getInstance() to get an object.

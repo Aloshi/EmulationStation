@@ -1,5 +1,6 @@
 #include "PlatformId.h"
-#include <string.h>
+
+#include <cstring>
 
 extern const char* mameNameToRealName[];
 

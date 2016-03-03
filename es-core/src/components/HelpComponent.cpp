@@ -1,11 +1,14 @@
 #include "components/HelpComponent.h"
+
+#include "components/ImageComponent.h"
+#include "components/TextComponent.h"
+#include "components/ComponentGrid.h"
+
 #include "Renderer.h"
 #include "Settings.h"
 #include "Log.h"
 #include "Util.h"
-#include "components/ImageComponent.h"
-#include "components/TextComponent.h"
-#include "components/ComponentGrid.h"
+
 #include <boost/assign.hpp>
 
 #define OFFSET_X 12 // move the entire thing right by this amount (px)

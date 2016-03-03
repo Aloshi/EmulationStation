@@ -1,5 +1,6 @@
-#include "GuiComponent.h"
 #include "components/MenuComponent.h"
+
+#include "GuiComponent.h"
 
 // This is just a really simple template for a GUI that calls some save functions when closed.
 class GuiSettings : public GuiComponent

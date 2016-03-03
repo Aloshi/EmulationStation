@@ -1,8 +1,10 @@
 #pragma once
 
-#include "GuiComponent.h"
-#include <boost/date_time.hpp>
 #include "resources/Font.h"
+
+#include "GuiComponent.h"
+
+#include <boost/date_time.hpp>
 
 // Used to enter or display a specific point in time.
 class DateTimeComponent : public GuiComponent

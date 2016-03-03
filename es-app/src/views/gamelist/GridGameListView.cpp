@@ -1,7 +1,9 @@
 #include "views/gamelist/GridGameListView.h"
+
+#include "views/ViewController.h"
+
 #include "ThemeData.h"
 #include "Window.h"
-#include "views/ViewController.h"
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
 	mGrid(window)

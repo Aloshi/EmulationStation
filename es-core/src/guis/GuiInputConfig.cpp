@@ -1,11 +1,12 @@
 #include "guis/GuiInputConfig.h"
+
 #include "Window.h"
 #include "Log.h"
+#include "Util.h"
 #include "components/TextComponent.h"
 #include "components/ImageComponent.h"
 #include "components/MenuComponent.h"
 #include "components/ButtonComponent.h"
-#include "Util.h"
 
 static const int inputCount = 10;
 static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown" };

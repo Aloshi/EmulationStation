@@ -1,9 +1,12 @@
 #pragma once
 
-#include "GuiComponent.h"
-#include <functional>
-#include "resources/Font.h"
 #include "components/NinePatchComponent.h"
+
+#include "resources/Font.h"
+
+#include "GuiComponent.h"
+
+#include <functional>
 
 class ButtonComponent : public GuiComponent
 {

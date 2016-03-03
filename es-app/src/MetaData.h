@@ -1,11 +1,12 @@
 #pragma once
 
-#include "pugixml/pugixml.hpp"
-#include <string>
-#include <map>
 #include "GuiComponent.h"
+
+#include "pugixml/pugixml.hpp"
 #include <boost/date_time.hpp>
 #include <boost/filesystem.hpp>
+#include <string>
+#include <map>
 
 enum MetaDataType
 {

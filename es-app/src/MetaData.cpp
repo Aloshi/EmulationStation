@@ -1,5 +1,7 @@
 #include "MetaData.h"
+
 #include "components/TextComponent.h"
+
 #include "Log.h"
 #include "Util.h"
 

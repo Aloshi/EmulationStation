@@ -1,6 +1,7 @@
 #pragma once
 
 #include "views/gamelist/BasicGameListView.h"
+
 #include "components/ScrollableContainer.h"
 #include "components/RatingComponent.h"
 #include "components/DateTimeComponent.h"

@@ -1,13 +1,15 @@
 #include "guis/GuiDetectDevice.h"
+
 #include "Window.h"
 #include "Renderer.h"
+#include "Util.h"
 #include "resources/Font.h"
 #include "guis/GuiInputConfig.h"
 #include "components/TextComponent.h"
+
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "Util.h"
 
 #define HOLD_TIME 1000
 

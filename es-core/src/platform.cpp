@@ -1,6 +1,7 @@
 #include "platform.h"
-#include <stdlib.h>
+
 #include <boost/filesystem.hpp>
+#include <cstdlib>
 #include <iostream>
 
 #if defined(WIN32)

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "components/ScraperSearchComponent.h"
 #include "components/NinePatchComponent.h"
+
+#include "GuiComponent.h"
 
 class GuiGameScraper : public GuiComponent
 {

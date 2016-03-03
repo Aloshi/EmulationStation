@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
 #include <Eigen/Dense>
 #include <boost/filesystem.hpp>
 #include <boost/date_time.hpp>
+#include <string>
 
 std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);

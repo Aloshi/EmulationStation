@@ -1,8 +1,11 @@
 #include "Util.h"
+
 #include "resources/ResourceManager.h"
+
 #include "platform.h"
 #include "md5.h"
 #include "crc32.h"
+
 #include <fstream>
 
 namespace fs = boost::filesystem;

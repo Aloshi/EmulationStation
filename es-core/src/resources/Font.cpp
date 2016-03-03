@@ -1,11 +1,13 @@
 #include "resources/Font.h"
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <boost/filesystem.hpp>
+
 #include "Renderer.h"
 #include "Log.h"
 #include "Util.h"
+
+#include <boost/filesystem.hpp>
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
 FT_Library Font::sLibrary = NULL;
 

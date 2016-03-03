@@ -1,11 +1,13 @@
 #include "resources/TextureResource.h"
+
 #include "Log.h"
 #include "platform.h"
-#include GLHEADER
 #include "ImageIO.h"
 #include "Renderer.h"
 #include "Util.h"
 #include "resources/SVGResource.h"
+
+#include GLHEADER
 
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
 std::list< std::weak_ptr<TextureResource> > TextureResource::sTextureList;

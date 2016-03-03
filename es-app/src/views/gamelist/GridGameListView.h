@@ -1,8 +1,10 @@
 #pragma once
 
 #include "views/gamelist/ISimpleGameListView.h"
+
 #include "components/ImageGridComponent.h"
 #include "components/ImageComponent.h"
+
 #include <stack>
 
 class GridGameListView : public ISimpleGameListView

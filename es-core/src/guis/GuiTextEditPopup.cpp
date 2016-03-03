@@ -1,4 +1,5 @@
 #include "guis/GuiTextEditPopup.h"
+
 #include "components/MenuComponent.h"
 
 using namespace Eigen;

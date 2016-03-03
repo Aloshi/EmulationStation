@@ -1,19 +1,23 @@
 #include "guis/GuiMetaDataEd.h"
-#include "Renderer.h"
-#include "Log.h"
-#include "components/AsyncReqComponent.h"
-#include "Settings.h"
-#include "views/ViewController.h"
+
 #include "guis/GuiGameScraper.h"
 #include "guis/GuiMsgBox.h"
-#include <boost/filesystem.hpp>
+#include "guis/GuiTextEditPopup.h"
 
+#include "components/AsyncReqComponent.h"
 #include "components/TextEditComponent.h"
 #include "components/DateTimeComponent.h"
 #include "components/RatingComponent.h"
 #include "components/SwitchComponent.h"
 
-#include "guis/GuiTextEditPopup.h"
+#include "views/ViewController.h"
+
+#include "Renderer.h"
+#include "Log.h"
+#include "Settings.h"
+
+#include <boost/filesystem.hpp>
+
 
 using namespace Eigen;
 

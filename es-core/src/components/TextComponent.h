@@ -1,8 +1,9 @@
 #ifndef _TEXTCOMPONENT_H_
 #define _TEXTCOMPONENT_H_
 
-#include "GuiComponent.h"
 #include "resources/Font.h"
+
+#include "GuiComponent.h"
 
 class ThemeData;
 

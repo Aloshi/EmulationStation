@@ -1,6 +1,7 @@
 #pragma once
 
 #include "views/gamelist/ISimpleGameListView.h"
+
 #include "components/TextListComponent.h"
 
 class BasicGameListView : public ISimpleGameListView

@@ -1,12 +1,15 @@
-#include "platform.h"
 #include "Renderer.h"
-#include GLHEADER
-#include <iostream>
+
 #include "resources/Font.h"
-#include <boost/filesystem.hpp>
+
 #include "Log.h"
-#include <stack>
 #include "Util.h"
+#include "platform.h"
+
+#include GLHEADER
+#include <boost/filesystem.hpp>
+#include <iostream>
+#include <stack>
 
 namespace Renderer {
 	std::stack<Eigen::Vector4i> clipStack;

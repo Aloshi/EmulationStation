@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vector>
-#include <string>
 #include "FileData.h"
 #include "Window.h"
 #include "MetaData.h"
 #include "PlatformId.h"
 #include "ThemeData.h"
+
+#include <vector>
+#include <string>
 
 class SystemData
 {

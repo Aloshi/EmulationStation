@@ -1,9 +1,13 @@
 #include "guis/GuiGameScraper.h"
+
 #include "guis/GuiTextEditPopup.h"
+
 #include "components/TextComponent.h"
 #include "components/ButtonComponent.h"
 #include "components/MenuComponent.h"
+
 #include "scrapers/Scraper.h"
+
 #include "Renderer.h"
 #include "Log.h"
 #include "Settings.h"

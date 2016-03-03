@@ -1,11 +1,11 @@
 #pragma once
 
 #include "resources/ResourceManager.h"
-
-#include <string>
-#include <Eigen/Dense>
 #include "platform.h"
+
 #include GLHEADER
+#include <Eigen/Dense>
+#include <string>
 
 // An OpenGL texture.
 // Automatically recreates the texture with renderer deinit/reinit.

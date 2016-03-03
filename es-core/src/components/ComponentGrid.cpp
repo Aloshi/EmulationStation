@@ -1,8 +1,10 @@
 #include "components/ComponentGrid.h"
-#include <cstring>
+
 #include "Log.h"
 #include "Renderer.h"
 #include "Settings.h"
+
+#include <cstring>
 
 using namespace GridFlags;
 

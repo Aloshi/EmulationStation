@@ -1,16 +1,19 @@
 #include "views/ViewController.h"
-#include "Log.h"
-#include "SystemData.h"
-#include "Settings.h"
 
 #include "views/gamelist/BasicGameListView.h"
 #include "views/gamelist/DetailedGameListView.h"
 #include "views/gamelist/GridGameListView.h"
+
 #include "guis/GuiMenu.h"
 #include "guis/GuiMsgBox.h"
+
 #include "animations/LaunchAnimation.h"
 #include "animations/MoveCameraAnimation.h"
 #include "animations/LambdaAnimation.h"
+
+#include "Log.h"
+#include "SystemData.h"
+#include "Settings.h"
 
 ViewController* ViewController::sInstance = NULL;
 

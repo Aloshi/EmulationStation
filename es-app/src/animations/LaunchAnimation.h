@@ -1,6 +1,7 @@
 #pragma once
 
 #include "animations/Animation.h"
+
 #include "Log.h"
 
 // let's look at the game launch effect:

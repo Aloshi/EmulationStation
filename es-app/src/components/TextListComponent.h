@@ -1,13 +1,16 @@
 #pragma once
 
 #include "components/IList.h"
-#include "Renderer.h"
+
 #include "resources/Font.h"
+
+#include "Renderer.h"
 #include "InputManager.h"
 #include "Sound.h"
 #include "Log.h"
 #include "ThemeData.h"
 #include "Util.h"
+
 #include <vector>
 #include <string>
 #include <memory>

@@ -1,7 +1,9 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "components/MenuComponent.h"
+
+#include "GuiComponent.h"
+
 #include <functional>
 
 class GuiMenu : public GuiComponent

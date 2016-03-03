@@ -1,9 +1,10 @@
 #pragma once
 
+#include "MetaData.h"
+
+#include <boost/filesystem.hpp>
 #include <vector>
 #include <string>
-#include <boost/filesystem.hpp>
-#include "MetaData.h"
 
 class SystemData;
 

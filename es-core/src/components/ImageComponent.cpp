@@ -1,12 +1,15 @@
 #include "components/ImageComponent.h"
-#include <iostream>
-#include <boost/filesystem.hpp>
-#include <math.h>
+
+#include "resources/SVGResource.h"
+
 #include "Log.h"
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
-#include "resources/SVGResource.h"
+
+#include <boost/filesystem.hpp>
+#include <cmath>
+#include <iostream>
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {

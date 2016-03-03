@@ -1,16 +1,17 @@
 #pragma once
 
+#include "GuiComponent.h"
+
+#include "pugixml/pugixml.hpp"
+#include <Eigen/Dense>
+#include <boost/filesystem.hpp>
+#include <boost/variant.hpp>
 #include <iostream>
 #include <sstream>
 #include <memory>
 #include <map>
 #include <deque>
 #include <string>
-#include <boost/filesystem.hpp>
-#include <boost/variant.hpp>
-#include <Eigen/Dense>
-#include "pugixml/pugixml.hpp"
-#include "GuiComponent.h"
 
 template<typename T>
 class TextListComponent;

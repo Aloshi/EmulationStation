@@ -1,11 +1,12 @@
 #ifndef _RENDERER_H_
 #define _RENDERER_H_
 
+#include "platform.h"
+
+#include GLHEADER
+#include <Eigen/Dense>
 #include <vector>
 #include <string>
-#include "platform.h"
-#include <Eigen/Dense>
-#include GLHEADER
 
 class GuiComponent;
 class Font;

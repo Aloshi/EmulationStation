@@ -1,12 +1,15 @@
 #include "scrapers/Scraper.h"
+
+#include "scrapers/GamesDBScraper.h"
+#include "scrapers/TheArchiveScraper.h"
+
 #include "Log.h"
 #include "Settings.h"
+
 #include <FreeImage.h>
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
 
-#include "GamesDBScraper.h"
-#include "TheArchiveScraper.h"
 
 const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
 	("TheGamesDB", &thegamesdb_generate_scraper_requests)

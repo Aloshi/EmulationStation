@@ -1,9 +1,12 @@
 #pragma once
 
+#include "scrapers/Scraper.h"
+
+#include "components/MenuComponent.h"
+
 #include "GuiComponent.h"
 #include "SystemData.h"
-#include "scrapers/Scraper.h"
-#include "components/MenuComponent.h"
+
 #include <queue>
 
 typedef std::function<bool(SystemData*, FileData*)> GameFilterFunc;

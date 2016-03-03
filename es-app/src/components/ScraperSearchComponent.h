@@ -1,9 +1,12 @@
 #pragma once
 
-#include "GuiComponent.h"
-#include "scrapers/Scraper.h"
 #include "components/ComponentGrid.h"
 #include "components/BusyComponent.h"
+
+#include "scrapers/Scraper.h"
+
+#include "GuiComponent.h"
+
 #include <functional>
 
 class ComponentList;

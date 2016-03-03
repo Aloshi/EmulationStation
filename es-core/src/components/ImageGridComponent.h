@@ -1,8 +1,9 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "components/IList.h"
 #include "components/ImageComponent.h"
+
+#include "GuiComponent.h"
 #include "Log.h"
 
 struct ImageGridData

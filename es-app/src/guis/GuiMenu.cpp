@@ -1,14 +1,9 @@
-#include "EmulationStation.h"
 #include "guis/GuiMenu.h"
-#include "Window.h"
-#include "Sound.h"
-#include "Log.h"
-#include "Settings.h"
+
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
-#include "views/ViewController.h"
 
 #include "components/ButtonComponent.h"
 #include "components/SwitchComponent.h"
@@ -16,9 +11,18 @@
 #include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
 #include "components/MenuComponent.h"
-#include "VolumeControl.h"
+
+#include "views/ViewController.h"
+
 #include "scrapers/GamesDBScraper.h"
 #include "scrapers/TheArchiveScraper.h"
+
+#include "EmulationStation.h"
+#include "Window.h"
+#include "Sound.h"
+#include "Log.h"
+#include "Settings.h"
+#include "VolumeControl.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
