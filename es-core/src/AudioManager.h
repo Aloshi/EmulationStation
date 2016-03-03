@@ -1,5 +1,4 @@
-#ifndef _AUDIOMANAGER_H_
-#define _AUDIOMANAGER_H_
+#pragma once
 
 #include "Sound.h"
 
@@ -34,5 +33,3 @@ public:
 
 	virtual ~AudioManager();
 };
-
-#endif

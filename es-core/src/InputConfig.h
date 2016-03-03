@@ -1,5 +1,4 @@
-#ifndef _INPUTCONFIG_H_
-#define _INPUTCONFIG_H_
+#pragma once
 
 #include "pugixml/pugixml.hpp"
 #include <SDL.h>
@@ -114,5 +113,3 @@ private:
 	const std::string mDeviceName;
 	const std::string mDeviceGUID;
 };
-
-#endif

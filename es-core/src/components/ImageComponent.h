@@ -1,5 +1,4 @@
-#ifndef _IMAGECOMPONENT_H_
-#define _IMAGECOMPONENT_H_
+#pragma once
 
 #include "resources/TextureResource.h"
 
@@ -87,5 +86,3 @@ private:
 
 	std::shared_ptr<TextureResource> mTexture;
 };
-
-#endif

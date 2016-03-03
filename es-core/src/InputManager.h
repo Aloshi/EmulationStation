@@ -1,5 +1,4 @@
-#ifndef _INPUTMANAGER_H_
-#define _INPUTMANAGER_H_
+#pragma once
 
 #include <SDL.h>
 #include <vector>
@@ -54,5 +53,3 @@ public:
 
 	bool parseEvent(const SDL_Event& ev, Window* window);
 };
-
-#endif
