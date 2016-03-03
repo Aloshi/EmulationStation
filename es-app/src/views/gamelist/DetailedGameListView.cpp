@@ -5,14 +5,16 @@
 
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root) : 
 	BasicGameListView(window, root), 
-	mDescContainer(window), mDescription(window), 
 	mImage(window),
 
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window), 
 	mLblGenre(window), mLblPlayers(window), mLblLastPlayed(window), mLblPlayCount(window),
 
 	mRating(window), mReleaseDate(window), mDeveloper(window), mPublisher(window), 
-	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window)
+	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window),
+
+	mDescContainer(window), 
+    mDescription(window)
 {
 	//mHeaderImage.setPosition(mSize.x() * 0.25f, 0);
 

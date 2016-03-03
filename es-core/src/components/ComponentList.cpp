@@ -1,6 +1,7 @@
 #include "components/ComponentList.h"
 #include "Util.h"
 #include "Log.h"
+#include <cstring>
 
 #define TOTAL_HORIZONTAL_PADDING_PX 20
 
@@ -318,7 +319,7 @@ std::vector<HelpPrompt> ComponentList::getHelpPrompts()
 		bool addMovePrompt = true;
 		for(auto it = prompts.begin(); it != prompts.end(); it++)
 		{
-			if(it->first == "up/down" || it->first == "up/down/left/right")
+			if(strcmp(it->first, "up/down") == 0 || strcmp(it->first, "up/down/left/right") == 0)
 			{
 				addMovePrompt = false;
 				break;

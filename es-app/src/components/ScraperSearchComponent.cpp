@@ -15,8 +15,8 @@
 #include "guis/GuiTextEditPopup.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
-	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
-	mSearchType(type)
+	mGrid(window, Eigen::Vector2i(4, 3)),
+	mSearchType(type), mBusyAnim(window)
 {
 	addChild(&mGrid);
 

@@ -45,7 +45,7 @@ std::string removeParenthesis(const std::string& str)
 
 
 FileData::FileData(FileType type, const fs::path& path, SystemData* system)
-	: mType(type), mPath(path), mSystem(system), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
+	: metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA), mType(type), mPath(path), mSystem(system), mParent(nullptr) // metadata is REALLY set in the constructor!
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
@@ -64,7 +64,7 @@ FileData::~FileData()
 std::string FileData::getCleanName() const
 {
 	std::string stem = mPath.stem().generic_string();
-	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
+	if(mSystem && (mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO)))
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
 	return removeParenthesis(stem);
@@ -85,7 +85,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool f
 
 	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
 	{
-		if((*it)->getType() & typeMask & (!(*it)->metadata.getBool("hidden") || Settings::getInstance()->getBool("ShowHiddenFiles") || forceHidden))
+		if((*it)->getType() & typeMask & (!(*it)->metadata.getBool("hidden") || Settings::getInstance()->getBool("ShowHiddenFiles") || forceHidden)){
 			if ((*it)->getParent() != NULL)
 			{
 				if (!(*it)->getParent()->metadata.getBool("hidden") || Settings::getInstance()->getBool("ShowHiddenFiles") || forceHidden)
@@ -96,6 +96,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool f
 			else {
 				out.push_back(*it);
 			}
+        }
 		
 		if((*it)->getChildren().size() > 0)
 		{

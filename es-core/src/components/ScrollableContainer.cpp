@@ -7,7 +7,7 @@
 #define AUTO_SCROLL_SPEED 50 // ms between scrolls
 
 ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window), 
-	mAutoScrollDelay(0), mAutoScrollSpeed(0), mAutoScrollAccumulator(0), mScrollPos(0, 0), mScrollDir(0, 0), mAutoScrollResetAccumulator(0)
+	mScrollPos(0, 0), mScrollDir(0, 0), mAutoScrollDelay(0), mAutoScrollSpeed(0), mAutoScrollAccumulator(0), mAutoScrollResetAccumulator(0)
 {
 }
 

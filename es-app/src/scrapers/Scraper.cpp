@@ -166,7 +166,7 @@ std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, 
 }
 
 ImageDownloadHandle::ImageDownloadHandle(const std::string& url, const std::string& path, int maxWidth, int maxHeight) : 
-	mSavePath(path), mMaxWidth(maxWidth), mMaxHeight(maxHeight), mReq(new HttpReq(url))
+	mReq(new HttpReq(url)), mSavePath(path), mMaxWidth(maxWidth), mMaxHeight(maxHeight)
 {
 }
 

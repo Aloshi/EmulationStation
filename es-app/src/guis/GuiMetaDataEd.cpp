@@ -19,10 +19,9 @@ using namespace Eigen;
 
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams,
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window),
-	mScraperParams(scraperParams),
-
 	mBackground(window, ":/frame.png"),
 	mGrid(window, Vector2i(1, 3)),
+	mScraperParams(scraperParams),
 
 	mMetaDataDecl(mdd),
 	mMetaData(md),

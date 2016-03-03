@@ -4,8 +4,8 @@
 #include "views/ViewController.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
-	mSystem(system), 
-	mMenu(window, "OPTIONS")
+	mMenu(window, "OPTIONS"),
+	mSystem(system)
 {
 	addChild(&mMenu);
 

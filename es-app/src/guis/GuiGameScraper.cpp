@@ -9,10 +9,10 @@
 #include "Settings.h"
 
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc) : GuiComponent(window), 
+	mClose(false),
 	mGrid(window, Eigen::Vector2i(1, 7)), 
 	mBox(window, ":/frame.png"),
-	mSearchParams(params),
-	mClose(false)
+	mSearchParams(params)
 {
 	addChild(&mBox);
 	addChild(&mGrid);

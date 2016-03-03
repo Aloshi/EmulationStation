@@ -23,7 +23,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
+    mTargetSize(0, 0), mOrigin(0.0, 0.0), mFlipX(false), mFlipY(false), mTargetIsMax(false), mColorShift(0xFFFFFFFF)
 {
 	updateColors();
 }
