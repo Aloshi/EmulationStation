@@ -2,7 +2,7 @@
 
 #include "Log.h"
 
-#include <memory>
+#include <cstring>
 
 
 std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * data, const size_t size, size_t & width, size_t & height)
