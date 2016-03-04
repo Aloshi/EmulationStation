@@ -209,7 +209,7 @@ std::shared_ptr<Music> AudioManager::getRandomMusic(std::string themeSoundDirect
         if (themeSoundDirectory != "") {
             musics = getMusicIn(themeSoundDirectory);
             if(musics.empty()) return NULL;
-        }
+        } else return NULL;
     }
     int randomIndex = rand() % musics.size();
     std::shared_ptr<Music> bgsound = Music::get(musics.at(randomIndex));
