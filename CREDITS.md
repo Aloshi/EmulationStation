@@ -1,8 +1,8 @@
 Programming
 	Alec "Aloshi" Lofquist - http://www.aloshi.com
 
-UI Art & Design
-	Nils Bonenberger
+EmulationStation UI Design & original ’simple’ stock theme: 
+	Nils Bonenberger - http://blog.nilsbyte.de/
 
 
 Libraries

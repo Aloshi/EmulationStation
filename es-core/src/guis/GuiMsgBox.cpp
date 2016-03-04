@@ -11,13 +11,14 @@
 GuiMsgBox::GuiMsgBox(Window* window, const std::string& text, 
 	const std::string& name1, const std::function<void()>& func1,
 	const std::string& name2, const std::function<void()>& func2, 
-	const std::string& name3, const std::function<void()>& func3) : GuiComponent(window), 
+	const std::string& name3, const std::function<void()>& func3,
+        Alignment align) : GuiComponent(window), 
 	mBackground(window, ":/frame.png"), mGrid(window, Eigen::Vector2i(1, 2))
 {
 	float width = Renderer::getScreenWidth() * 0.6f; // max width
 	float minWidth = Renderer::getScreenWidth() * 0.3f; // minimum width
 
-	mMsg = std::make_shared<TextComponent>(mWindow, text, Font::get(FONT_SIZE_MEDIUM), 0x777777FF, ALIGN_CENTER);
+	mMsg = std::make_shared<TextComponent>(mWindow, text, Font::get(FONT_SIZE_MEDIUM), 0x777777FF, align);
 	mGrid.setEntry(mMsg, Eigen::Vector2i(0, 0), false, false);
 
 	// create the buttons
@@ -76,7 +77,8 @@ bool GuiMsgBox::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(mAcceleratorFunc && config->isMappedTo("b", input) && input.value != 0)
+	/* when it's not configured, allow to remove the message box too to allow the configdevice window a chance */
+	if(mAcceleratorFunc && ((config->isMappedTo("a", input) && input.value != 0) || (config->isConfigured() == false && input.type == TYPE_BUTTON)))
 	{
 		mAcceleratorFunc();
 		return true;

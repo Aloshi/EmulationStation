@@ -5,6 +5,7 @@
 #include "ThemeData.h"
 #include "SystemData.h"
 #include "Settings.h"
+#include "Locale.h"
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
@@ -25,6 +26,8 @@ void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 
 void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 {
+	ISimpleGameListView::onFileChanged(file, change);
+
 	if(change == FILE_METADATA_CHANGED)
 	{
 		// might switch to a detailed view
@@ -32,18 +35,70 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 		return;
 	}
 
-	ISimpleGameListView::onFileChanged(file, change);
 }
 
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
 
-	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
+	const FileData* root = getRoot();
+	const SystemData* systemData = root->getSystem();
+	mHeaderText.setText(systemData ? systemData->getFullName() : root->getCleanName());
 
-	for(auto it = files.begin(); it != files.end(); it++)
+	bool favoritesOnly = false;
+
+	if (Settings::getInstance()->getBool("FavoritesOnly") && !systemData->isFavorite())
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		for (auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->getType() == GAME)
+			{
+				if ((*it)->metadata.get("favorite").compare("true") == 0)
+				{
+					favoritesOnly = true;
+					break;
+				}
+			}
+		}
+	}
+
+	// The TextListComponent would be able to insert at a specific position,
+	// but the cost of this operation could be seriously huge.
+	// This naive implemention of doing a first pass in the list is used instead.
+	if(!Settings::getInstance()->getBool("FavoritesOnly") || systemData->isFavorite()){
+		for(auto it = files.begin(); it != files.end(); it++)
+		{
+			if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("true") == 0)
+			{
+				mList.add("\uF006 " + (*it)->getName(), *it, ((*it)->getType() == FOLDER)); // FIXME Folder as favorite ?
+			}
+		}
+	}
+
+	// Do not show double names in favorite system.
+	if(!systemData->isFavorite())
+	{
+		for (auto it = files.begin(); it != files.end(); it++) {
+			if (favoritesOnly) {
+				if ((*it)->getType() == GAME) {
+					if ((*it)->metadata.get("hidden").compare("yes") != 0) {
+						if ((*it)->metadata.get("favorite").compare("true") == 0) {
+							mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+						}
+					}
+				}
+			}
+			else {
+				if ((*it)->metadata.get("hidden").compare("true") != 0) {
+					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+				}
+			}
+		}
+	}
+	if(files.size() == 0){
+		while(!mCursorStack.empty()){
+			mCursorStack.pop();
+		}
 	}
 }
 
@@ -52,11 +107,19 @@ FileData* BasicGameListView::getCursor()
 	return mList.getSelected();
 }
 
+void BasicGameListView::setCursorIndex(int cursor){
+	mList.setCursorIndex(cursor);
+}
+
+int BasicGameListView::getCursorIndex(){
+	return mList.getCursorIndex();
+}
+
 void BasicGameListView::setCursor(FileData* cursor)
 {
 	if(!mList.setCursor(cursor))
 	{
-		populateList(cursor->getParent()->getChildren());
+		populateList(mRoot->getChildren());
 		mList.setCursor(cursor);
 
 		// update our cursor stack in case our cursor just got set to some folder we weren't in before
@@ -91,10 +154,13 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 
 	if(Settings::getInstance()->getBool("QuickSystemSelect"))
-		prompts.push_back(HelpPrompt("left/right", "system"));
-	prompts.push_back(HelpPrompt("up/down", "choose"));
-	prompts.push_back(HelpPrompt("a", "launch"));
-	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("select", "options"));
+	  prompts.push_back(HelpPrompt("left/right", _("SYSTEM")));
+	prompts.push_back(HelpPrompt("up/down", _("CHOOSE")));
+	prompts.push_back(HelpPrompt("b", _("LAUNCH")));
+	prompts.push_back(HelpPrompt("a", _("BACK")));
+	if(getRoot()->getSystem() != SystemData::getFavoriteSystem()) {
+	  prompts.push_back(HelpPrompt("y", _("Favorite")));
+	  prompts.push_back(HelpPrompt("select", _("OPTIONS")));
+	}
 	return prompts;
 }

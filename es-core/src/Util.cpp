@@ -1,28 +1,26 @@
 #include "Util.h"
 #include "resources/ResourceManager.h"
 #include "platform.h"
+#include "Locale.h"
 
 namespace fs = boost::filesystem;
 
 std::string strToUpper(const char* from)
 {
 	std::string str(from);
-	for(unsigned int i = 0; i < str.size(); i++)
-		str[i] = toupper(from[i]);
-	return str;
+    return boost::locale::to_upper(str);
 }
 
-std::string& strToUpper(std::string& str)
+std::string& strToUpper(std::string& from)
 {
-	for(unsigned int i = 0; i < str.size(); i++)
-		str[i] = toupper(str[i]);
-
-	return str;
+    from = boost::locale::to_upper(from);
+    return from;
 }
 
-std::string strToUpper(const std::string& str)
+std::string strToUpper(const std::string& from)
 {
-	return strToUpper(str.c_str());
+	std::string str(from);
+    return boost::locale::to_upper(str);
 }
 
 
@@ -71,6 +69,20 @@ std::string getCanonicalPath(const std::string& path)
 		return path;
 
 	return boost::filesystem::canonical(path).generic_string();
+}
+
+std::string getExpandedPath(const std::string& str)
+{
+	std::string path = str;
+
+	//expand home symbol if the startpath contains ~
+	if (!path.empty() && path[0] == '~')
+	{
+		path.erase(0, 1);
+		path.insert(0, getHomePath());
+	}
+
+	return path;
 }
 
 // expands "./my/path.sfc" to "[relativeTo]/my/path.sfc"

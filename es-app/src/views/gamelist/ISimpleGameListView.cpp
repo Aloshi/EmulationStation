@@ -1,12 +1,16 @@
+#include <Log.h>
 #include "views/gamelist/ISimpleGameListView.h"
 #include "ThemeData.h"
+#include "SystemData.h"
 #include "Window.h"
 #include "views/ViewController.h"
 #include "Sound.h"
 #include "Settings.h"
+#include "Gamelist.h"
+#include "Locale.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
-	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
+mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window), mFavoriteChange(false)
 {
 	mHeaderText.setText("Logo Text");
 	mHeaderText.setSize(mSize.x(), 0);
@@ -47,20 +51,48 @@ void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 	// we could be tricky here to be efficient;
 	// but this shouldn't happen very often so we'll just always repopulate
 	FileData* cursor = getCursor();
-	populateList(cursor->getParent()->getChildren());
-	setCursor(cursor);
+	int index = getCursorIndex();
+	populateList(getRoot()->getChildren());
+	setCursorIndex(index);
+
+	/* Favorite */
+	if(file->getType() == GAME){
+		SystemData * favoriteSystem = SystemData::getFavoriteSystem();
+		bool isFavorite = file->metadata.get("favorite") == "true";
+		bool foundInFavorite = false;
+		/* Removing favortie case : */
+		for(auto gameInFavorite = favoriteSystem->getRootFolder()->getChildren().begin();
+			gameInFavorite != favoriteSystem->getRootFolder()->getChildren().end();
+			gameInFavorite ++){
+				if((*gameInFavorite) == file){
+					if(!isFavorite){
+						favoriteSystem->getRootFolder()->removeAlreadyExisitingChild(file);
+						ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
+						ViewController::get()->getSystemListView()->manageFavorite();
+					}
+					foundInFavorite = true;
+					break;
+				}
+		}
+		/* Adding favorite case : */
+		if(!foundInFavorite && isFavorite){
+			favoriteSystem->getRootFolder()->addAlreadyExisitingChild(file);
+			ViewController::get()->setInvalidGamesList(SystemData::getFavoriteSystem());
+			ViewController::get()->getSystemListView()->manageFavorite();
+		}
+	}
 }
 
 bool ISimpleGameListView::input(InputConfig* config, Input input)
 {
 	if(input.value != 0)
 	{
-		if(config->isMappedTo("a", input))
+		if(config->isMappedTo("b", input))
 		{
 			FileData* cursor = getCursor();
 			if(cursor->getType() == GAME)
 			{
-				Sound::getFromTheme(getTheme(), getName(), "launch")->play();
+				//Sound::getFromTheme(getTheme(), getName(), "launch")->play();
 				launch(cursor);
 			}else{
 				// it's a folder
@@ -72,25 +104,74 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}
 				
 			return true;
-		}else if(config->isMappedTo("b", input))
+		}else if(config->isMappedTo("a", input))
 		{
 			if(mCursorStack.size())
 			{
-				populateList(mCursorStack.top()->getParent()->getChildren());
+				populateList(getRoot()->getChildren());
 				setCursor(mCursorStack.top());
 				mCursorStack.pop();
-				Sound::getFromTheme(getTheme(), getName(), "back")->play();
+				//Sound::getFromTheme(getTheme(), getName(), "back")->play();
 			}else{
 				onFocusLost();
-				ViewController::get()->goToSystemView(getCursor()->getSystem());
+
+				if (mFavoriteChange)
+				{
+					ViewController::get()->setInvalidGamesList(getRoot()->getSystem());
+					mFavoriteChange = false;
+				}
+
+				ViewController::get()->goToSystemView(getRoot()->getSystem());
 			}
 
 			return true;
+		}else if (config->isMappedTo("y", input))
+		{
+			FileData* cursor = getCursor();
+			if (!ViewController::get()->getState().getSystem()->isFavorite() && cursor->getSystem()->getHasFavorites())
+			{
+				if (cursor->getType() == GAME)
+				{
+					mFavoriteChange = true;
+					MetaDataList* md = &cursor->metadata;
+					std::string value = md->get("favorite");
+					bool removeFavorite = false;
+					SystemData *favoriteSystem = SystemData::getFavoriteSystem();
+					if (value.compare("false") == 0)
+					{
+					  md->set("favorite", "true");
+						if(favoriteSystem != NULL) {
+						  favoriteSystem->getRootFolder()->addAlreadyExisitingChild(cursor);
+						}
+					}
+					else
+					{
+						md->set("favorite", "false");
+						if(favoriteSystem != NULL) {
+						  favoriteSystem->getRootFolder()->removeAlreadyExisitingChild(cursor);
+						}
+						removeFavorite = true;
+					}
+					if(favoriteSystem != NULL) {
+					  ViewController::get()->setInvalidGamesList(favoriteSystem);
+					  ViewController::get()->getSystemListView()->manageFavorite();
+					}
+					int cursorPlace = getCursorIndex();
+					populateList(cursor->getParent()->getChildren());
+					setCursorIndex(cursorPlace + (removeFavorite ? -1 : 1));
+					updateInfoPanel();
+				}
+			}
 		}else if(config->isMappedTo("right", input))
 		{
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
 				onFocusLost();
+				if (mFavoriteChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+				}
 				ViewController::get()->goToNextGameList();
 				return true;
 			}
@@ -99,6 +180,11 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
 				onFocusLost();
+				if (mFavoriteChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+				}
 				ViewController::get()->goToPrevGameList();
 				return true;
 			}

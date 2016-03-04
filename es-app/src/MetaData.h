@@ -12,6 +12,7 @@ enum MetaDataType
 	//generic types
 	MD_STRING,
 	MD_INT,
+	MD_BOOL,
 	MD_FLOAT,
 
 	//specialized types
@@ -19,7 +20,8 @@ enum MetaDataType
 	MD_IMAGE_PATH,
 	MD_RATING,
 	MD_DATE,
-	MD_TIME //used for lastplayed
+	MD_TIME,//used for lastplayed
+	MD_LIST
 };
 
 struct MetaDataDecl
@@ -30,6 +32,22 @@ struct MetaDataDecl
 	bool isStatistic; //if true, ignore scraper values for this metadata
 	std::string displayName; // displayed as this in editors
 	std::string displayPrompt; // phrase displayed in editors when prompted to enter value (currently only for strings)
+
+  MetaDataDecl(std::string key, MetaDataType type, std::string defaultValue, bool isStatistic, std::string displayName, std::string displayPrompt) {
+    this->key = key;
+    this->type = type;
+    this->defaultValue = defaultValue;
+    this->isStatistic = isStatistic;
+    this->displayName = displayName;
+    this->displayPrompt = displayPrompt;
+  }
+
+  MetaDataDecl(std::string key, MetaDataType type, std::string defaultValue, bool isStatistic) {
+    this->key = key;
+    this->type = type;
+    this->defaultValue = defaultValue;
+    this->isStatistic = isStatistic;
+  }
 };
 
 enum MetaDataListType
@@ -39,6 +57,7 @@ enum MetaDataListType
 };
 
 const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type);
+void initMetadata();
 
 class MetaDataList
 {
@@ -47,8 +66,9 @@ public:
 	void appendToXML(pugi::xml_node parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const;
 
 	MetaDataList(MetaDataListType type);
-	
+
 	void set(const std::string& key, const std::string& value);
+	void merge(const MetaDataList& other);
 	void setTime(const std::string& key, const boost::posix_time::ptime& time); //times are internally stored as ISO strings (e.g. boost::posix_time::to_iso_string(ptime))
 
 	const std::string& get(const std::string& key) const;

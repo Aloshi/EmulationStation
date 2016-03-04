@@ -11,7 +11,7 @@ class AnimationController;
 class ThemeData;
 class Font;
 
-typedef std::pair<const char*, const char*> HelpPrompt;
+typedef std::pair<std::string, std::string> HelpPrompt;
 
 class GuiComponent
 {
@@ -89,6 +89,8 @@ public:
 	void updateHelpPrompts();
 	
 	virtual HelpStyle getHelpStyle();
+
+	virtual inline void setScrollDir(int dir) {}
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;

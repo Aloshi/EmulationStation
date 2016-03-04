@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <boost/filesystem.hpp>
 #include <iostream>
+#include <sys/statvfs.h>
+#include <sstream>
+#include "Settings.h"
+
+#include <fstream>
+
 
 #ifdef WIN32
 #include <codecvt>
@@ -44,7 +50,7 @@ int runShutdownCommand()
 #ifdef WIN32 // windows
 	return system("shutdown -s -t 0");
 #else // osx / linux
-	return system("sudo shutdown -h now");
+	return system("poweroff");
 #endif
 }
 
@@ -53,7 +59,7 @@ int runRestartCommand()
 #ifdef WIN32 // windows
 	return system("shutdown -r -t 0");
 #else // osx / linux
-	return system("sudo shutdown -r now");
+	return system("reboot");
 #endif
 }
 

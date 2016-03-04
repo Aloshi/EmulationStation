@@ -1,22 +1,20 @@
 #include "FileSorts.h"
+#include "Locale.h"
 
 namespace FileSorts
 {
-	const FileData::SortType typesArr[] = {
-		FileData::SortType(&compareFileName, true, "filename, ascending"),
-		FileData::SortType(&compareFileName, false, "filename, descending"),
-
-		FileData::SortType(&compareRating, true, "rating, ascending"),
-		FileData::SortType(&compareRating, false, "rating, descending"),
-
-		FileData::SortType(&compareTimesPlayed, true, "times played, ascending"),
-		FileData::SortType(&compareTimesPlayed, false, "times played, descending"),
-
-		FileData::SortType(&compareLastPlayed, true, "last played, ascending"),
-		FileData::SortType(&compareLastPlayed, false, "last played, descending")
-	};
-
-	const std::vector<FileData::SortType> SortTypes(typesArr, typesArr + sizeof(typesArr)/sizeof(typesArr[0]));
+  std::vector<FileData::SortType> SortTypes;
+  
+  void init() {
+	SortTypes.push_back(FileData::SortType(&compareFileName, true, _("FILENAME, ASCENDING")));
+	SortTypes.push_back(FileData::SortType(&compareFileName, false, _("FILENAME, DESCENDING")));
+	SortTypes.push_back(FileData::SortType(&compareRating, true, _("RATING, ASCENDING")));
+	SortTypes.push_back(FileData::SortType(&compareRating, false, _("RATING, DESCENDING")));
+	SortTypes.push_back(FileData::SortType(&compareTimesPlayed, true, _("TIMES PLAYED, ASCENDING")));
+	SortTypes.push_back(FileData::SortType(&compareTimesPlayed, false, _("TIMES PLAYED, DESCENDING")));
+	SortTypes.push_back(FileData::SortType(&compareLastPlayed, true, _("LAST PLAYED, ASCENDING")));
+	SortTypes.push_back(FileData::SortType(&compareLastPlayed, false, _("LAST PLAYED, DESCENDING")));
+  }
 
 	//returns if file1 should come before file2
 	bool compareFileName(const FileData* file1, const FileData* file2)
