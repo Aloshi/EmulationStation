@@ -6,6 +6,8 @@
 
 #if defined(WIN32)
 	#include <codecvt>
+	#include <windows.h>
+	#include <shlobj.h>
 #elif defined(__linux__)
 	#include <unistd.h>
 	#include <sys/reboot.h>
@@ -17,10 +19,8 @@ std::string getConfigDirectory()
 {
     fs::path path;
 #ifdef _WIN32
-#include <windows.h>
-#include <shlobj.h>
     CHAR my_documents[MAX_PATH];
-    SHGetFolderPath(NULL, CSIDL_PRESONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
     path = fs::path(my_documents) / fs::path("EmulationStation");
 #elif __APPLE__ && !defined(USE_XDG_OSX)
     const char* homePath = getenv("HOME");
