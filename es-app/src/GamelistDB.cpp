@@ -292,6 +292,7 @@ void GamelistDB::createMissingTables()
 
 	if(sqlite3_exec(mDB, "CREATE TABLE IF NOT EXISTS tagtable (fileid VARCHAR(255) NOT NULL, systemid VARCHAR(255) NOT NULL, tag VARCHAR(255) NOT NULL, PRIMARY KEY (fileid, systemid, tag), FOREIGN KEY(fileid,systemid) REFERENCES files(fileid,systemid))", NULL, NULL, NULL))
 		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
+	sqlite3_exec(mDB, "DROP VIEW tags", NULL, NULL, NULL);
 	if(sqlite3_exec(mDB, "CREATE VIEW IF NOT EXISTS tags (tag) as select tag from tagtable where tagtable.fileid = files.fileid and tagtable.systemid = files.systemid", NULL, NULL, NULL))
 		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
 }
@@ -398,7 +399,7 @@ void add_file(const char* fileid, FileType filetype, const SystemData* system, s
 
 	std::string clean_name = getCleanGameName(fileid, system);
 	if(sqlite3_bind_text(insert_stmt, 3, clean_name.c_str(), clean_name.size(), SQLITE_STATIC))
-		throw DBException() << "Error binding filetype in populate().\n\t" << sqlite3_errmsg(db);
+		throw DBException() << "Error binding name in populate().\n\t" << sqlite3_errmsg(db);
 
 	if(sqlite3_step(insert_stmt) != SQLITE_DONE)
 		throw DBException() << "Error adding file \"" << fileid << "\" in populate().\n\t" << sqlite3_errmsg(db);
@@ -483,6 +484,7 @@ void GamelistDB::addMissingFiles(const SystemData* system)
 	sqlite3_bind_int(stmt,2,FileType::FOLDER);
 	sqlite3_bind_null(stmt,3);
 	stmt.step_expected(SQLITE_DONE);
+	sqlite3_reset(stmt);
 	if(!relativeTo.empty())
 	{
 		populate_recursive(relativeTo, extensions, relativeTo, system, mDB, stmt);
@@ -703,7 +705,8 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 		SystemData* childSystem = (systemname == systemID) ? system : SystemManager::getInstance()->getSystemByName(systemname);
 		const char* name = (const char*)sqlite3_column_text(stmt, 2);
 		FileType filetype = (FileType)sqlite3_column_int(stmt, 3);
-		children.push_back(FileData(fileid, childSystem, filetype, name ? name : ""));
+		if(childSystem)
+			children.push_back(FileData(fileid, childSystem, filetype, name ? name : ""));
 	}
 
 	return children;
