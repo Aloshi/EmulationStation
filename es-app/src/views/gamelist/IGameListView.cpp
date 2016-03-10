@@ -10,15 +10,9 @@
 
 bool IGameListView::input(InputConfig* config, Input input)
 {
-	// select to open GuiGamelistOptions
-	if(config->isMappedTo("select", input) && input.value)
-	{
-		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
-		mWindow->pushGui(new GuiGamelistOptions(mWindow, this->mRoot.getSystem()));
-		return true;
 
 	// Ctrl-R to reload a view when debugging
-	}else if(Settings::getInstance()->getBool("Debug") && config->getDeviceId() == DEVICE_KEYBOARD && 
+	if(Settings::getInstance()->getBool("Debug") && config->getDeviceId() == DEVICE_KEYBOARD && 
 		(SDL_GetModState() & (KMOD_LCTRL | KMOD_RCTRL)) && input.id == SDLK_r && input.value != 0)
 	{
 		LOG(LogDebug) << "reloading view";

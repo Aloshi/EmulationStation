@@ -11,12 +11,15 @@ struct FileSort;
 enum FileType
 {
 	GAME = 1,
-	FOLDER = 2
+	FOLDER = 2,
+        FILTER = 3
 };
 
 // Used for loading/saving gamelist.xml.
 const char* fileTypeToString(FileType type);
 FileType stringToFileType(const char* str);
+
+MetaDataListType fileTypeToMetaDataType(FileType type);
 
 // Remove (.*) and [.*] from str
 std::string removeParenthesis(const std::string& str);
@@ -34,7 +37,7 @@ public:
 	inline bool operator!=(const FileData& rhs) const { return !(*this == rhs); }
 
 	MetaDataMap get_metadata() const;
-	void set_metadata(const MetaDataMap& metadata);
+	void set_metadata(const MetaDataMap& metadata) const;
 
 	const std::string& getName() const;
 	FileType getType() const;
@@ -56,4 +59,6 @@ private:
 	FileType mType;
 
 	mutable std::string mNameCache;
+	mutable MetaDataMap mMetaDataCache;
+	mutable bool mValidMetaDataCache = false;
 };

@@ -13,6 +13,7 @@ public:
 
 	virtual void onFilesChanged();
 	virtual void onMetaDataChanged(const FileData& file);
+	virtual void onStatisticsChanged(const FileData& file);
 
 	// Called whenever the theme changes.
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme);
@@ -24,13 +25,11 @@ public:
 
 protected:
 	virtual void populateList(const std::vector<FileData>& files) = 0;
-	virtual void launch(FileData& game) = 0;
+	virtual void launch(const FileData& game) = 0;
 
 	TextComponent mHeaderText;
 	ImageComponent mHeaderImage;
 	ImageComponent mBackground;
 	
 	ThemeExtras mThemeExtras;
-
-	std::stack<FileData> mCursorStack;
 };

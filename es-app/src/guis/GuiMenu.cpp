@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
+#include "guis/GuiRefreshDatabase.h"
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
 #include "views/ViewController.h"
@@ -21,19 +22,25 @@
 #include "scrapers/GamesDBScraper.h"
 #include "scrapers/TheArchiveScraper.h"
 
-GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
+GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "SETTINGS"), mVersion(window)
 {
-	// MAIN MENU
+	// SETTINGS MENU
 
-	// SCRAPER >
-	// SOUND SETTINGS >
-	// UI SETTINGS >
-	// CONFIGURE INPUT >
-	// QUIT >
+	// SCRAPER
+	// SOUND
+	// UI
+	// CONFIGURE INPUT
 
 	// [version]
 
-	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
+	
+
+	auto openScrapeNow = [this] { 
+		mWindow->pushGui(new GuiScraperStart(mWindow));
+	};
+	auto openRefreshDatabase = [this] { 
+		mWindow->pushGui(new GuiRefreshDatabase(mWindow));
+	};
 
 	auto importXMLAndClose = [this] {
 		SystemManager::getInstance()->importGamelistXML(false);
@@ -42,45 +49,68 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		while(windowCopy->peekGui() != ViewController::get())
 			delete windowCopy->peekGui();
 	};
-	addEntry("SCRAPER", 0x777777FF, true, 
-		[this, openScrapeNow, importXMLAndClose] { 
-			auto s = new GuiSettings(mWindow, "SCRAPER");
 
-			// scrape from
-			auto scraper_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "SCRAPE FROM", false);
-			std::vector<std::string> scrapers = getScraperList();
-			for(auto it = scrapers.begin(); it != scrapers.end(); it++)
-				scraper_list->add(*it, *it, *it == Settings::getInstance()->getString("Scraper"));
 
-			s->addWithLabel("SCRAPE FROM", scraper_list);
-			s->addSaveFunc([scraper_list] { Settings::getInstance()->setString("Scraper", scraper_list->getSelected()); });
+	addEntry("DATABASE", 0x777777FF, true, 
+		[this, openRefreshDatabase, importXMLAndClose, openScrapeNow] { 
+			auto s = new GuiSettings(mWindow, "UPDATE DATABASE");
 
-			// scrape ratings
-			auto scrape_ratings = std::make_shared<SwitchComponent>(mWindow);
-			scrape_ratings->setState(Settings::getInstance()->getBool("ScrapeRatings"));
-			s->addWithLabel("SCRAPE RATINGS", scrape_ratings);
-			s->addSaveFunc([scrape_ratings] { Settings::getInstance()->setBool("ScrapeRatings", scrape_ratings->getState()); });
-
-			// scrape now
+			// scan filesystem
 			ComponentListRow row;
-			std::function<void()> openAndSave = openScrapeNow;
-			openAndSave = [s, openAndSave] { s->save(); openAndSave(); };
-			row.makeAcceptInputHandler(openAndSave);
+			row.makeAcceptInputHandler(openRefreshDatabase);
 
-			auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPE NOW", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+			auto scan_files = std::make_shared<TextComponent>(mWindow, "SCAN FILE SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 			auto bracket = makeArrow(mWindow);
-			row.addElement(scrape_now, true);
+			row.addElement(scan_files, true);
+			row.addElement(bracket, false);
+			s->addRow(row);
+
+                        // open scraper
+                        row.elements.clear();
+                        row.makeAcceptInputHandler([this, openScrapeNow] { 
+				auto s = new GuiSettings(mWindow, "SCRAPER");
+
+				// scrape from
+				auto scraper_list = std::make_shared< OptionListComponent< std::string > >(mWindow, "SCRAPE FROM", false);
+				std::vector<std::string> scrapers = getScraperList();
+				for(auto it = scrapers.begin(); it != scrapers.end(); it++)
+					scraper_list->add(*it, *it, *it == Settings::getInstance()->getString("Scraper"));
+
+				s->addWithLabel("SCRAPE FROM", scraper_list);
+				s->addSaveFunc([scraper_list] { Settings::getInstance()->setString("Scraper", scraper_list->getSelected()); });
+
+				// scrape ratings
+				auto scrape_ratings = std::make_shared<SwitchComponent>(mWindow);
+				scrape_ratings->setState(Settings::getInstance()->getBool("ScrapeRatings"));
+				s->addWithLabel("SCRAPE RATINGS", scrape_ratings);
+				s->addSaveFunc([scrape_ratings] { Settings::getInstance()->setBool("ScrapeRatings", scrape_ratings->getState()); });
+
+				// scrape now
+				ComponentListRow row;
+				std::function<void()> openAndSave = openScrapeNow;
+				openAndSave = [s, openAndSave] { s->save(); openAndSave(); };
+				row.makeAcceptInputHandler(openAndSave);
+
+				auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPE NOW", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+				auto bracket = makeArrow(mWindow);
+				row.addElement(scrape_now, true);
+				row.addElement(bracket, false);
+				s->addRow(row);
+
+				mWindow->pushGui(s);
+			});
+                        auto run_scanner = std::make_shared<TextComponent>(mWindow, "SCRAPER",Font::get(FONT_SIZE_MEDIUM), 0x777777FF); 
+			bracket = makeArrow(mWindow);
+			row.addElement(run_scanner, true);
 			row.addElement(bracket, false);
 			s->addRow(row);
 
 			// import XML
 			row.elements.clear();
-			row.makeAcceptInputHandler(importXMLAndClose);
+			row.makeAcceptInputHandler(importXMLAndClose); 	
 
 			auto import_xml = std::make_shared<TextComponent>(mWindow, "IMPORT FROM XML", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-			bracket = makeArrow(mWindow);
 			row.addElement(import_xml, true);
-			row.addElement(bracket, false);
 			s->addRow(row);
 
 			mWindow->pushGui(s);
@@ -90,12 +120,6 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		[this] {
 			auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
 
-			// volume
-			auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
-			volume->setValue((float)VolumeControl::getInstance()->getVolume());
-			s->addWithLabel("SYSTEM VOLUME", volume);
-			s->addSaveFunc([volume] { VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); });
-			
 			// disable sounds
 			auto sounds_enabled = std::make_shared<SwitchComponent>(mWindow);
 			sounds_enabled->setState(Settings::getInstance()->getBool("EnableSounds"));
@@ -189,56 +213,14 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
 	});
 
-	addEntry("QUIT", 0x777777FF, true, 
-		[this] {
-			auto s = new GuiSettings(mWindow, "QUIT");
-			
-			Window* window = mWindow;
 
-			ComponentListRow row;
-			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES", 
-				[] { 
-					if(runRestartCommand() != 0)
-						LOG(LogWarning) << "Restart terminated with non-zero result!";
-				}, "NO", nullptr));
-			});
-			row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-			s->addRow(row);
 
-			row.elements.clear();
-			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES", 
-				[] { 
-					if(runShutdownCommand() != 0)
-						LOG(LogWarning) << "Shutdown terminated with non-zero result!";
-				}, "NO", nullptr));
-			});
-			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-			s->addRow(row);
-
-			if(Settings::getInstance()->getBool("ShowExit"))
-			{
-				row.elements.clear();
-				row.makeAcceptInputHandler([window] {
-					window->pushGui(new GuiMsgBox(window, "REALLY QUIT?", "YES", 
-					[] { 
-						SDL_Event ev;
-						ev.type = SDL_QUIT;
-						SDL_PushEvent(&ev);
-					}, "NO", nullptr));
-				});
-				row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-				s->addRow(row);
-			}
-
-			mWindow->pushGui(s);
-	});
+	mMenu.addButton("BACK", "go back", [this] { delete this; });
 
 	mVersion.setFont(Font::get(FONT_SIZE_SMALL));
 	mVersion.setColor(0xC6C6C6FF);
-	mVersion.setText("EMULATIONSTATION V" + strToUpper(PROGRAM_VERSION_STRING));
-	mVersion.setAlignment(ALIGN_CENTER);
+	mVersion.setText("EMULATIONSTATION V" + strToUpper(PROGRAM_VERSION_STRING) + "  ");
+	mVersion.setAlignment(ALIGN_RIGHT);
 
 	addChild(&mMenu);
 	addChild(&mVersion);
@@ -277,9 +259,18 @@ bool GuiMenu::input(InputConfig* config, Input input)
 	if(GuiComponent::input(config, input))
 		return true;
 
-	if((config->isMappedTo("b", input) || config->isMappedTo("start", input)) && input.value != 0)
+	if((config->isMappedTo("b", input)) && input.value)
 	{
 		delete this;
+		return true;
+	}
+	
+	if((config->isMappedTo("select", input) || config->isMappedTo("start",input)) && input.value != 0)
+	{
+		// close everything
+		Window* window = mWindow;
+		while(window->peekGui() && window->peekGui() != ViewController::get())
+			delete window->peekGui();
 		return true;
 	}
 
@@ -291,6 +282,6 @@ std::vector<HelpPrompt> GuiMenu::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "select"));
-	prompts.push_back(HelpPrompt("start", "close"));
+	prompts.push_back(HelpPrompt("select", "close"));
 	return prompts;
 }

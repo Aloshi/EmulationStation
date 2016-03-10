@@ -14,6 +14,7 @@ GuiTextEditPopup::GuiTextEditPopup(Window* window, const std::string& title, con
 
 	mText = std::make_shared<TextEditComponent>(mWindow);
 	mText->setValue(initValue);
+	mText->setAutoEdit(true);
 
 	if(!multiLine)
 		mText->setCursor(initValue.size());

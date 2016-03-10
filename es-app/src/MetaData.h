@@ -36,7 +36,8 @@ struct MetaDataDecl
 enum MetaDataListType
 {
 	GAME_METADATA,
-	FOLDER_METADATA
+	FOLDER_METADATA,
+        FILTER_METADATA,
 };
 
 const std::map< MetaDataListType, std::vector<MetaDataDecl> >& getMDDMap();
@@ -46,6 +47,7 @@ class MetaDataMap
 {
 public:
 	MetaDataMap(MetaDataListType type);
+	MetaDataMap(MetaDataListType type, bool initialize);
 
 	inline MetaDataListType getType() const { return mType; }
 	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDMap().at(getType()); }
@@ -81,6 +83,8 @@ public:
 		set<T>(key.c_str(), value);
 	}
 
+	void setDefaults();
+
 private:
 	MetaDataListType mType;
 	std::map<std::string, std::string> mMap;
@@ -95,6 +99,6 @@ inline boost::posix_time::ptime MetaDataMap::get(const char* key) const
 template<>
 inline void MetaDataMap::set(const char* key, const boost::posix_time::ptime& time)
 {
-	mMap[key] = boost::posix_time::to_iso_string(time);
+	mMap[key] = ptime_to_string(time, SQLITE_TIME_STRING_FORMAT);
 }
 

@@ -84,12 +84,13 @@ void SystemManager::loadConfig()
 	// load each system in the config file
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
-		std::string name, fullname, path, cmd, themeFolder;
+		std::string name, fullname, path, cmd, themeFolder, filter;
 		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
 		fullname = system.child("fullname").text().get();
 		path = system.child("path").text().get();
+		filter = system.child("filter").text().get();
 
 		// convert extensions list from a string into a vector of strings
 		std::vector<std::string> extensions = readList(system.child("extension").text().get());
@@ -124,7 +125,10 @@ void SystemManager::loadConfig()
 		themeFolder = system.child("theme").text().as_string(name.c_str());
 
 		// validate as best we can (make sure we're not missing required information)
-		if(!isValidSystemName(name) || path.empty() || extensions.empty() || cmd.empty())
+		// If we have a filter, we don't need a path, extensions, or cmd.
+		if(!isValidSystemName(name))
+			throw ESException() << "System \"" << name << "\" has an invalid or missing name!";
+		if(filter.empty() && ((path.empty() || extensions.empty() || cmd.empty())))
 			throw ESException() << "System \"" << name << "\" is missing name, path, extension, or command!";
 
 		// convert path to generic directory seperators
@@ -135,20 +139,30 @@ void SystemManager::loadConfig()
 		if(path[path.size() - 1] == '/')
 			path = path.erase(path.size() - 1);
 
-		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
-		mDatabase.addMissingFiles(newSys);
-		mDatabase.updateExists(newSys);
+		//empty path means this is a filter system. Scraping does not make sense for these.
+		if(path.empty())
+			platformIds.push_back(PlatformIds::PLATFORM_IGNORE);
+
+		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder, filter);
 
 		if(newSys->getGameCount() == 0)
 		{
-			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
-			delete newSys;
+			LOG(LogWarning) << "System \"" << name << "\" has no games! Running file system scan.";
+			mDatabase.addMissingFiles(newSys);
+			if(newSys->getGameCount() == 0)
+			{
+				LOG(LogWarning) << "System \"" << name << "\" still has no games! Ignoring it.";
+			
+				delete newSys;
+			}else{
+				mSystems.push_back(newSys);
+			}
+
 		}else{
 			mSystems.push_back(newSys);
 		}
 	}
 
-	updateDatabase();
 }
 
 void SystemManager::writeExampleConfig(const fs::path& path)
@@ -189,6 +203,12 @@ void SystemManager::writeExampleConfig(const fs::path& path)
 		"		<!-- The theme to load from the current theme set.  See THEMES.md for more information.\n"
 		"		This tag is optional. If not set, it will default to the value of <name>. -->\n"
 		"		<theme>nes</theme>\n"
+		"\n"
+		"		<!-- The extra constraints a file must satisfy to be shown.\n"
+		"		This tag is optional, and defaults to showing all files in the system.\n"
+		"		If the system has no path, extension, and command, and it has a non-empty filter string,\n"
+		"		then this system can show results from all systems. -->\n"
+		"		<filter></filter>\n"
 		"	</system>\n"
 		"</systemList>\n";
 

@@ -19,6 +19,7 @@ public:
 
 	virtual void onFilesChanged() = 0;
 	virtual void onMetaDataChanged(const FileData& file) = 0;
+	virtual void onStatisticsChanged(const FileData& file) = 0;
 
 	// Called whenever the theme changes.
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) = 0;
@@ -27,6 +28,9 @@ public:
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
 	virtual const FileData& getCursor() = 0;
+	virtual const bool validCursor() = 0;
+	virtual const FileData& getParentCursor() = 0;
+	virtual const bool validParentCursor() = 0;
 	virtual void setCursor(const FileData& file) = 0;
 
 	virtual bool input(InputConfig* config, Input input) override;
@@ -37,4 +41,5 @@ public:
 protected:
 	FileData mRoot;
 	std::shared_ptr<ThemeData> mTheme;
+	std::stack<FileData> mCursorStack;
 };

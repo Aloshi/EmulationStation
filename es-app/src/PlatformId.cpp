@@ -62,6 +62,7 @@ namespace PlatformIds
 		"wonderswan",
 		"wonderswancolor",
 		"zxspectrum",
+                "virtualboy",
 
 		"ignore", // do not allow scraping for this system
 		"invalid"

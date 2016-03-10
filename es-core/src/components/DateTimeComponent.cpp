@@ -171,7 +171,7 @@ void DateTimeComponent::setValue(const std::string& val)
 
 std::string DateTimeComponent::getValue() const
 {
-	return boost::posix_time::to_iso_string(mTime);
+	return ptime_to_string(mTime, SQLITE_TIME_STRING_FORMAT);
 }
 
 DateTimeComponent::DisplayMode DateTimeComponent::getCurrentDisplayMode() const
@@ -256,6 +256,8 @@ void DateTimeComponent::updateTextCache()
 	if(mAutoSize)
 	{
 		mSize = mTextCache->metrics.size;
+
+		mAutoSize = false;
 		if(getParent())
 			getParent()->onSizeChanged();
 	}
@@ -302,6 +304,7 @@ void DateTimeComponent::setFont(std::shared_ptr<Font> font)
 
 void DateTimeComponent::onSizeChanged()
 {
+	mAutoSize = false;
 	updateTextCache();
 }
 

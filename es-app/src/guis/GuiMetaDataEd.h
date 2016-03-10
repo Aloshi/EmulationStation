@@ -11,7 +11,7 @@ class GuiMetaDataEd : public GuiComponent
 {
 public:
 	GuiMetaDataEd(Window* window, const FileData& file, 
-		const std::function<void()>& savedCallback, const std::function<void()>& deleteFunc);
+		const std::function<void()>& savedCallback, const std::function<void()>& deleteFunc, const std::function<void()>& removeFunc);
 
 	bool input(InputConfig* config, Input input) override;
 	void onSizeChanged() override;
@@ -42,4 +42,5 @@ private:
 	
 	std::function<void()> mSavedCallback;
 	std::function<void()> mDeleteFunc;
+	std::function<void()> mRemoveFunc;
 };

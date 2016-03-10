@@ -70,6 +70,8 @@ void Settings::setDefaults()
 	mIntMap["ScraperResizeHeight"] = 0;
 	mIntMap["SortTypeIndex"] = 0;
 
+	mBoolMap["SortFoldersFirst"] = false;
+
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";

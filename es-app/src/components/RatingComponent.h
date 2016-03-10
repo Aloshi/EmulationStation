@@ -31,6 +31,7 @@ private:
 	void updateVertices();
 
 	float mValue;
+        std::string mValueGiven; //Cache the exact string, so we can give it back unchanged.
 
 	struct Vertex
 	{

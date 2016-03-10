@@ -195,6 +195,7 @@ void DetailedGameListView::updateInfoPanel()
 
 		if(file->getType() == GAME)
 		{
+			mLastPlayed.setDisplayMode(DateTimeComponent::DISP_RELATIVE_TO_NOW);
 			mRating.setValue(metadata.get("rating"));
 			mReleaseDate.setValue(metadata.get("releasedate"));
 			mDeveloper.setValue(metadata.get("developer"));
@@ -203,6 +204,16 @@ void DetailedGameListView::updateInfoPanel()
 			mPlayers.setValue(metadata.get("players"));
 			mLastPlayed.setValue(metadata.get("lastplayed"));
 			mPlayCount.setValue(metadata.get("playcount"));
+		}else{
+			mLastPlayed.setDisplayMode(DateTimeComponent::DISP_DATE_TIME);
+			mRating.setValue("");
+			mReleaseDate.setValue("");
+			mDeveloper.setValue("");
+			mPublisher.setValue("");
+			mGenre.setValue("");
+			mPlayers.setValue("");
+			mLastPlayed.setValue("");
+			mPlayCount.setValue("");
 		}
 		
 		fadingOut = false;
@@ -233,13 +244,14 @@ void DetailedGameListView::updateInfoPanel()
 	}
 }
 
-void DetailedGameListView::launch(FileData& game)
+void DetailedGameListView::launch(const FileData& game)
 {
 	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
 	if(mImage.hasImage())
 		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
 
 	ViewController::get()->launch(game, target);
+	updateInfoPanel();
 }
 
 // we know we won't be recreated as a new type of gamelist,
@@ -254,7 +266,16 @@ void DetailedGameListView::onMetaDataChanged(const FileData& file)
 {
 	ISimpleGameListView::onMetaDataChanged(file);
 }
+void DetailedGameListView::onStatisticsChanged(const FileData& file)
+{
+	updateInfoPanel();
+}
 
+void DetailedGameListView::populateList(const std::vector<FileData>& files)
+{
+	BasicGameListView::populateList(files);
+	updateInfoPanel();
+}
 std::vector<TextComponent*> DetailedGameListView::getMDLabels()
 {
 	std::vector<TextComponent*> ret;

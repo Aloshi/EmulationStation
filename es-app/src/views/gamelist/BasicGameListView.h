@@ -17,6 +17,9 @@ public:
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme);
 
 	virtual const FileData& getCursor() override;
+	virtual const FileData& getParentCursor() override;
+	virtual const bool validCursor() override;
+	virtual const bool validParentCursor() override;
 	virtual void setCursor(const FileData& file) override;
 
 	virtual const char* getName() const override { return "basic"; }
@@ -25,7 +28,7 @@ public:
 
 protected:
 	virtual void populateList(const std::vector<FileData>& files) override;
-	virtual void launch(FileData& game) override;
+	virtual void launch(const FileData& game) override;
 
 	TextListComponent<FileData> mList;
 };

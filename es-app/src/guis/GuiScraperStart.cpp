@@ -21,12 +21,15 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 		[](SystemData*, const FileData& g) -> bool { return g.get_metadata().get("image").empty(); }, true);
 	mMenu.addWithLabel("Filter", mFilters);
 
-	//add systems (all with a platformid specified selected)
+	//add systems (only current system, or all with a platformid specified selected)
+	SystemData* currentSystem = ViewController::get()->getSystem();
 	mSystems = std::make_shared< OptionListComponent<SystemData*> >(mWindow, "SCRAPE THESE SYSTEMS", true);
 	for(auto it = SystemManager::getInstance()->getSystems().begin(); it != SystemManager::getInstance()->getSystems().end(); it++)
 	{
+		bool selectSystem = ((*it) == currentSystem);
+		if(!currentSystem) selectSystem = !(*it)->getPlatformIds().empty();
 		if(!(*it)->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
-			mSystems->add((*it)->getFullName(), *it, !(*it)->getPlatformIds().empty());
+			mSystems->add((*it)->getFullName(), *it, selectSystem);
 	}
 	mMenu.addWithLabel("Systems", mSystems);
 
@@ -104,7 +107,7 @@ bool GuiScraperStart::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if((config->isMappedTo("start", input) || config->isMappedTo("select",input)) && input.value != 0)
 	{
 		// close everything
 		Window* window = mWindow;
@@ -120,6 +123,6 @@ std::vector<HelpPrompt> GuiScraperStart::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
 	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("start", "close"));
+	prompts.push_back(HelpPrompt("select", "close"));
 	return prompts;
 }

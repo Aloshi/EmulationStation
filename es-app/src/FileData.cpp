@@ -5,6 +5,21 @@
 
 namespace fs = boost::filesystem;
 
+MetaDataListType fileTypeToMetaDataType(FileType type)
+{
+	switch(type)
+	{
+	case GAME:
+		return GAME_METADATA;
+	case FOLDER:
+		return FOLDER_METADATA;
+	case FILTER:
+		return FILTER_METADATA;
+	}
+
+	return GAME_METADATA;
+}
+
 std::string removeParenthesis(const std::string& str)
 {
 	// remove anything in parenthesis or brackets
@@ -51,16 +66,17 @@ std::string getCleanGameName(const std::string& str, const SystemData* system)
 	if(system && system->hasPlatformId(PlatformIds::ARCADE) || system->hasPlatformId(PlatformIds::NEOGEO))
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
-	return removeParenthesis(stem);
+	return stem;
 }
 
 FileData::FileData(const std::string& fileID, SystemData* system, FileType type, const std::string& nameCache)
-	: mFileID(fileID), mSystem(system), mType(type), mNameCache(nameCache)
+	: mFileID(fileID), mSystem(system), mType(type), mNameCache(nameCache), mMetaDataCache(fileTypeToMetaDataType(type), false)
 {
 }
 
 FileData::FileData() : FileData("", NULL, (FileType)0)
 {
+
 }
 
 FileData::FileData(const std::string& fileID, const std::string& systemID, FileType type) : 
@@ -98,11 +114,17 @@ FileType FileData::getType() const
 
 MetaDataMap FileData::get_metadata() const
 {
-	return SystemManager::getInstance()->database().getFileData(mFileID, mSystem->getName());
+	if(mValidMetaDataCache) return mMetaDataCache;
+	mMetaDataCache = SystemManager::getInstance()->database().getFileData(mFileID, mSystem->getName());
+	mValidMetaDataCache = true;
+	return mMetaDataCache;
 }
 
-void FileData::set_metadata(const MetaDataMap& metadata)
+void FileData::set_metadata(const MetaDataMap& metadata) const
 {
+	// The database round trip might alter some values.
+	// Setting metadata should be fairly infrequent, so this should be fine.
+	mValidMetaDataCache = false;
 	SystemManager::getInstance()->database().setFileData(mFileID, getSystemID(), mType, metadata);
 }
 
@@ -111,7 +133,23 @@ std::vector<FileData> FileData::getChildren(const FileSort* sort) const
 	if(sort == NULL)
 		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
 
-	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true, sort);
+	bool foldersFirst = Settings::getInstance()->getBool("SortFoldersFirst");
+
+	if(mType == FILTER)
+	{
+		MetaDataMap metadata = get_metadata();
+		//Sorry about abusing columns for other purposes.
+		std::string filter_matches = mMetaDataCache.get("genre");
+		int limit = mMetaDataCache.get<int>("players");
+		//TODO: Let a filter also specify ability to match filters/folders
+		std::string orderby = mMetaDataCache.get("developer");
+		FileSort filterSort("Filter given sort",orderby.c_str());
+		if(!orderby.empty())
+			sort = &filterSort;
+		return SystemManager::getInstance()->database().getChildrenOfFilter(mFileID, mSystem, false, filter_matches, limit, foldersFirst, sort);
+	}
+
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, true, true, foldersFirst, sort);
 }
 
 std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const FileSort* sort) const
@@ -119,5 +157,9 @@ std::vector<FileData> FileData::getChildrenRecursive(bool includeFolders, const 
 	if(sort == NULL)
 		sort = &getFileSorts().at(Settings::getInstance()->getInt("SortTypeIndex"));
 
-	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, sort);
+	bool foldersFirst = Settings::getInstance()->getBool("SortFoldersFirst");
+
+	if(mType == FILTER)
+		return getChildren(sort);
+	return SystemManager::getInstance()->database().getChildrenOf(mFileID, mSystem, false, includeFolders, foldersFirst, sort);
 }

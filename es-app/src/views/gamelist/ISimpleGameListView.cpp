@@ -48,6 +48,7 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 // but this shouldn't happen very often so we'll just always repopulate
 void ISimpleGameListView::onFilesChanged()
 {
+        if(!validCursor()) { populateList(mCursorStack.top().getChildren()); return;};
 	FileData cursor = getCursor();
 	FileData parent = mCursorStack.top();
 	populateList(parent.getChildren());
@@ -58,31 +59,37 @@ void ISimpleGameListView::onMetaDataChanged(const FileData& file)
 {
 	onFilesChanged();
 }
+void ISimpleGameListView::onStatisticsChanged(const FileData& file)
+{
+	return;
+}
+
 
 bool ISimpleGameListView::input(InputConfig* config, Input input)
 {
 	if(input.value != 0)
 	{
-		if(config->isMappedTo("a", input))
+		if(validCursor() && config->isMappedTo("a", input) || config->isMappedTo("start", input))
 		{
-			FileData cursor = getCursor();
+			const FileData& cursor = getCursor();
 			if(cursor.getType() == GAME)
 			{
 				Sound::getFromTheme(getTheme(), getName(), "launch")->play();
 				launch(cursor);
 			}else{
-				// it's a folder
-				if(cursor.getChildren().size() > 0)
-				{
+				// it's a folder or filter
+				auto children = cursor.getChildren();
+				//if(children.size() > 0)
+				//{
 					mCursorStack.push(cursor);
-					populateList(cursor.getChildren());
-				}
+					populateList(children);
+				//}
 			}
-				
+
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{
-			if(mCursorStack.top() != mRoot)
+			if(mCursorStack.size() > 1)
 			{
 				FileData old_cursor = mCursorStack.top();
 				mCursorStack.pop();

@@ -43,13 +43,28 @@ void BasicGameListView::populateList(const std::vector<FileData>& files)
 
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mList.add(it->getName(), *it, (it->getType() == FOLDER));
+		mList.add(it->getName(), *it, (it->getType() == FOLDER || it->getType() == FILTER));
 	}
 }
 
 const FileData& BasicGameListView::getCursor()
 {
 	return mList.getSelected();
+}
+
+const FileData& BasicGameListView::getParentCursor()
+{
+	return mCursorStack.top();
+}
+
+const bool BasicGameListView::validCursor()
+{
+	return mList.size() > 0;
+}
+
+const bool BasicGameListView::validParentCursor()
+{
+	return mCursorStack.size() > 0;
 }
 
 void BasicGameListView::setCursor(const FileData& cursor)
@@ -60,7 +75,7 @@ void BasicGameListView::setCursor(const FileData& cursor)
 	}
 }
 
-void BasicGameListView::launch(FileData& game)
+void BasicGameListView::launch(const FileData& game)
 {
 	ViewController::get()->launch(game);
 }
@@ -74,6 +89,6 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("up/down", "choose"));
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
-	prompts.push_back(HelpPrompt("select", "options"));
+	prompts.push_back(HelpPrompt("select", "menu"));
 	return prompts;
 }

@@ -12,11 +12,13 @@
 #include "components/DateTimeComponent.h"
 #include "components/RatingComponent.h"
 #include "guis/GuiTextEditPopup.h"
+#include "SystemManager.h"
+
 
 using namespace Eigen;
 
 GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file, 
-	const std::function<void()>& saveCallback, const std::function<void()>& deleteFunc) 
+	const std::function<void()>& saveCallback, const std::function<void()>& deleteFunc, const std::function<void()>& removeFunc) 
 	: GuiComponent(window), 
 	mFile(file),
 	mMetaData(mFile.get_metadata()),
@@ -26,7 +28,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file,
 	mBackground(window, ":/frame.png"), 
 	mGrid(window, Vector2i(1, 3)),
 
-	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc)
+	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc), mRemoveFunc(removeFunc)
 {
 	addChild(&mBackground);
 	addChild(&mGrid);
@@ -83,7 +85,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file,
 				row.addElement(ed, false);
 
 				auto spacer = std::make_shared<GuiComponent>(mWindow);
-				spacer->setSize(Renderer::getScreenWidth() * 0.0025f, 0);
+				spacer->setSize(Renderer::getScreenWidth() * 0.025f, 0);
 				row.addElement(spacer, false);
 
 				// pass input to the actual DateTimeComponent instead of the spacer
@@ -137,6 +139,12 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file,
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SAVE", "save", [&] { save(); delete this; }));
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "CANCEL", "cancel", [&] { delete this; }));
 
+        if (mRemoveFunc)
+        {
+		auto removeAndClose = [&] { mRemoveFunc(); delete this; };
+		auto removeBtnFunc = [this, removeAndClose] { mWindow->pushGui(new GuiMsgBox(mWindow, "THIS WILL REMOVE THIS ENTRY FROM THE DATABASE, BUT WILL LEAVE THE FILE ON THE FILE SYSTEM.\nARE YOU SURE?", "YES", removeAndClose, "NO", nullptr)); };
+		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "REMOVE", "remove", removeBtnFunc));
+	}
 	if(mDeleteFunc)
 	{
 		auto deleteFileAndSelf = [&] { mDeleteFunc(); delete this; };

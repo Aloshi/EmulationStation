@@ -62,6 +62,7 @@ namespace PlatformIds
 		WONDERSWAN,
 		WONDERSWAN_COLOR,
 		ZX_SPECTRUM,
+                VIRTUAL_BOY,
 
 		PLATFORM_IGNORE, // do not allow scraping for this system
 		PLATFORM_COUNT

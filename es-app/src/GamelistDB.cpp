@@ -5,6 +5,7 @@
 #include <sstream>
 #include <map>
 #include <boost/assign.hpp>
+#include "SystemManager.h"
 
 namespace fs = boost::filesystem;
 
@@ -29,23 +30,22 @@ fs::path fileIDToPath(const std::string& fileID, const SystemData* system)
 	return resolvePath(fileID, system->getStartPath(), true);
 }
 
-MetaDataListType fileTypeToMetaDataType(FileType type)
-{
-	switch(type)
-	{
-	case GAME:
-		return GAME_METADATA;
-	case FOLDER:
-		return FOLDER_METADATA;
-	}
 
-	assert(false);
-	return GAME_METADATA;
-}
 
 std::vector<FileSort> sFileSorts = boost::assign::list_of
-	(FileSort("Alphabetical, asc", "ORDER BY name"))
-	(FileSort("Alphabetical, desc", "ORDER BY name DESC"));
+	(FileSort("Alphabetical", "LOWER(name)"))
+	(FileSort("Reverse Alphabetical", "LOWER(name) DESC"))
+	(FileSort("Highest Rating", "rating DESC, LOWER(name)"))
+	(FileSort("Lowest Rating", "rating, LOWER(name)"))
+	(FileSort("Lowest Rating (Non-zero)", "case when rating = 0 then 1 else 0 end, rating, LOWER(name)"))
+	(FileSort("Chronological", "releasedate IS NULL, releasedate, LOWER(name)"))
+	(FileSort("Reverse Chronological", "releasedate DESC, LOWER(name)"))
+	(FileSort("Played Recently", "lastplayed DESC, LOWER(name)"))
+	(FileSort("Played Long Ago", "lastplayed IS NULL, lastplayed, LOWER(name)"))
+	(FileSort("Most Played", "playcount DESC, LOWER(name)"))
+	(FileSort("Least Played", "playcount, LOWER(name)"))
+	(FileSort("Least Played (Non-zero)", "case when playcount = 0 then 1 else 0 end, playcount, LOWER(name)"))
+	(FileSort("Random", "RANDOM()"));
 
 const std::vector<FileSort>& getFileSorts()
 {
@@ -289,6 +289,12 @@ void GamelistDB::createMissingTables()
 
 	if(sqlite3_exec(mDB, ss.str().c_str(), NULL, NULL, NULL))
 		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
+
+	if(sqlite3_exec(mDB, "CREATE TABLE IF NOT EXISTS tagtable (fileid VARCHAR(255) NOT NULL, systemid VARCHAR(255) NOT NULL, tag VARCHAR(255) NOT NULL, PRIMARY KEY (fileid, systemid, tag), FOREIGN KEY(fileid,systemid) REFERENCES files(fileid,systemid))", NULL, NULL, NULL))
+		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
+	sqlite3_exec(mDB, "DROP VIEW tags", NULL, NULL, NULL);
+	if(sqlite3_exec(mDB, "CREATE VIEW IF NOT EXISTS tags (tag) as select tag from tagtable where tagtable.fileid = files.fileid and tagtable.systemid = files.systemid", NULL, NULL, NULL))
+		throw DBException() << "Error creating table!\n\t" << sqlite3_errmsg(mDB);
 }
 
 // returns a vector of all columns in a particular table
@@ -393,7 +399,7 @@ void add_file(const char* fileid, FileType filetype, const SystemData* system, s
 
 	std::string clean_name = getCleanGameName(fileid, system);
 	if(sqlite3_bind_text(insert_stmt, 3, clean_name.c_str(), clean_name.size(), SQLITE_STATIC))
-		throw DBException() << "Error binding filetype in populate().\n\t" << sqlite3_errmsg(db);
+		throw DBException() << "Error binding name in populate().\n\t" << sqlite3_errmsg(db);
 
 	if(sqlite3_step(insert_stmt) != SQLITE_DONE)
 		throw DBException() << "Error adding file \"" << fileid << "\" in populate().\n\t" << sqlite3_errmsg(db);
@@ -472,9 +478,17 @@ void GamelistDB::addMissingFiles(const SystemData* system)
 
 	SQLTransaction transaction(mDB);
 
-	// actually start adding things
-	populate_recursive(relativeTo, extensions, relativeTo, system, mDB, stmt);
-
+	// actually start adding things.
+	// go ahead and add the root always.
+	sqlite3_bind_text(stmt,1,".",1,SQLITE_STATIC);
+	sqlite3_bind_int(stmt,2,FileType::FOLDER);
+	sqlite3_bind_null(stmt,3);
+	stmt.step_expected(SQLITE_DONE);
+	sqlite3_reset(stmt);
+	if(!relativeTo.empty())
+	{
+		populate_recursive(relativeTo, extensions, relativeTo, system, mDB, stmt);
+	}
 	transaction.commit();
 }
 
@@ -482,7 +496,7 @@ void GamelistDB::updateExists(const SystemData* system)
 {
 	const std::string& relativeTo = system->getStartPath();
 
-	SQLPreparedStmt readStmt(mDB, "SELECT fileid FROM files WHERE systemid = ?1");
+	SQLPreparedStmt readStmt(mDB, "SELECT fileid,fileexists,filetype FROM files WHERE systemid = ?1");
 	sqlite3_bind_text(readStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
 	
 	SQLPreparedStmt updateStmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
@@ -490,20 +504,21 @@ void GamelistDB::updateExists(const SystemData* system)
 
 	SQLTransaction transaction(mDB);
 
-	// for each game, check if its file exists - if it doesn't remove it from the DB
+	// for each game, check if its file exists
 	while(readStmt.step() != SQLITE_DONE)
 	{
 		const char* path = (const char*)sqlite3_column_text(readStmt, 0);
+		bool existsOld = sqlite3_column_int(readStmt, 1) > 0;
 
-		bool exists = false;
+		bool existsNew = false;
 		if(path && path[0] == '.') // it's relative
-			exists = fs::exists(relativeTo + "/" + path);
+			existsNew = fs::exists(relativeTo + "/" + path);
 		else
-			exists = fs::exists(path);
+			existsNew = fs::exists(path);
 
 		sqlite3_bind_text(updateStmt, 2, path, strlen(path), SQLITE_STATIC);
-		sqlite3_bind_int(updateStmt, 1, exists);
-		updateStmt.step_expected(SQLITE_DONE);
+		sqlite3_bind_int(updateStmt, 1, existsNew);
+		if(existsNew != existsOld) updateStmt.step_expected(SQLITE_DONE);
 		updateStmt.reset();
 	}
 
@@ -514,10 +529,32 @@ void GamelistDB::updateExists(const FileData& file)
 {
 	SQLPreparedStmt stmt(mDB, "UPDATE files SET fileexists = ?1 WHERE fileid = ?2 AND systemid = ?3");
 	bool exists = fs::exists(fileIDToPath(file.getFileID(), file.getSystem()));
+	if(file.getType() == FILTER) exists = true;
 	sqlite3_bind_int(stmt, 1, exists);
 	sqlite3_bind_text(stmt, 2, file.getFileID().c_str(), file.getFileID().size(), SQLITE_STATIC);
 	sqlite3_bind_text(stmt, 3, file.getSystem()->getName().c_str(), file.getSystem()->getName().size(), SQLITE_STATIC);
 	stmt.step_expected(SQLITE_DONE);
+}
+
+void GamelistDB::removeEntry(const FileData& file)
+{
+	SQLPreparedStmt stmt(mDB, "DELETE FROM files WHERE fileid = ?1 AND systemid = ?2");
+	bool exists = fs::exists(fileIDToPath(file.getFileID(), file.getSystem()));
+	sqlite3_bind_text(stmt, 1, file.getFileID().c_str(), file.getFileID().size(), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 2, file.getSystem()->getName().c_str(), file.getSystem()->getName().size(), SQLITE_STATIC);
+	stmt.step_expected(SQLITE_DONE);
+}
+
+//Remove rows where the fileexists flag is not set.
+//No check to verify the truth of that flag is performed.
+void GamelistDB::removeNonexisting(const SystemData* system)
+{
+	SQLPreparedStmt deleteStmt(mDB, "DELETE FROM files WHERE systemid = ?1 AND fileexists = '0'");
+	sqlite3_bind_text(deleteStmt, 1, system->getName().c_str(), system->getName().size(), SQLITE_STATIC);
+
+	SQLTransaction transaction(mDB);
+	deleteStmt.step_expected(SQLITE_DONE);
+	transaction.commit();
 }
 
 MetaDataMap GamelistDB::getFileData(const std::string& fileID, const std::string& systemID) const
@@ -550,7 +587,7 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	std::stringstream ss;
 	ss << "INSERT OR REPLACE INTO files VALUES (?1, ?2, ?3, ?4, ";
 
-	auto& mdd = metadata.getMDD();
+	const std::vector<MetaDataDecl>& mdd = getMDDMap().at(GAME_METADATA);
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
 		ss << "?" << i + RESERVED_COLUMNS + 1;
@@ -570,32 +607,91 @@ void GamelistDB::setFileData(const std::string& fileID, const std::string& syste
 	for(unsigned int i = 0; i < mdd.size(); i++)
 	{
 		const std::string& val = metadata.get(mdd.at(i).key);
-		sqlite3_bind_text(stmt, i + RESERVED_COLUMNS + 1, val.c_str(), val.size(), SQLITE_STATIC);
+		if((mdd.at(i).type == MD_TIME || mdd.at(i).type == MD_DATE) && (val == "not-a-date-time" || val.empty()))
+		{
+			sqlite3_bind_null(stmt, i + RESERVED_COLUMNS + 1);
+		}else{
+			sqlite3_bind_text(stmt, i + RESERVED_COLUMNS + 1, val.c_str(), val.size(), SQLITE_STATIC);
+		}
 	}
 
 	stmt.step_expected(SQLITE_DONE);
 }
 
+
+std::vector<std::string> GamelistDB::getFileTags(const std::string& fileID, const std::string& systemID) const
+{
+	SQLPreparedStmt stmt(mDB, "SELECT tag FROM tagtable WHERE fileid = ?1 AND systemid = ?2");
+	sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+	sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+
+	std::vector<std::string> tags;
+
+	while(stmt.step() != SQLITE_DONE)
+	{
+		tags.push_back((const char*)sqlite3_column_text(stmt,0));
+	}
+
+	return tags;
+}
+
+
+void GamelistDB::setFileTag(const std::string& fileID, const std::string& systemID, const std::string& tagID, bool value)
+{
+	if(value)
+	{
+		SQLPreparedStmt stmt(mDB, "INSERT OR IGNORE INTO tagtable VALUES ( ?1, ?2, ?3 )");
+		sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 3, tagID.c_str(), tagID.size(), SQLITE_STATIC);
+
+		SQLTransaction transaction(mDB);
+		stmt.step_expected(SQLITE_DONE);
+		transaction.commit();
+	}else{
+		SQLPreparedStmt stmt(mDB, "DELETE FROM tagtable where fileid = ?1 AND systemid = ?2 AND tag = ?3");
+		sqlite3_bind_text(stmt, 1, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 2, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+		sqlite3_bind_text(stmt, 3, tagID.c_str(), tagID.size(), SQLITE_STATIC);
+
+		SQLTransaction transaction(mDB);
+		stmt.step_expected(SQLITE_DONE);
+		transaction.commit();
+	}
+}
+
 std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, SystemData* system, 
-	bool immediateChildrenOnly, bool includeFolders, const FileSort* sortType)
+	bool immediateChildrenOnly, bool includeFolders, bool foldersFirst, const FileSort* sortType)
 {
 	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
 	std::vector<FileData> children;
 
 	std::stringstream ss;
-	ss << "SELECT fileid, name, filetype FROM files WHERE systemid = ?1 AND fileexists = 1 ";
+	ss << "SELECT fileid,systemid,name,filetype FROM files WHERE 1 ";
+	if(!systemFilter.empty()) 
+	{
+		ss << "AND (" << systemFilter << ") ";
+	}
+	if(!system->isMetaSystem())
+	{
+		ss << "AND ( systemid = ?1 ) ";
+	}
 	if(immediateChildrenOnly)
 		ss << "AND inimmediatedir(fileid, ?2) ";
 	else
 		ss << "AND indir(fileid, ?2) ";
 
 	if(!includeFolders)
-		ss << "AND NOT filetype = " << FileType::FOLDER << " ";
+		ss << " AND NOT filetype in ( " << FileType::FOLDER << "," << FileType::FILTER << ") ";
 
+	ss << " ORDER BY ";
+	if(includeFolders && foldersFirst) ss << " CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
 	if(sortType)
 		ss << sortType->sql;
 	else
-		ss << "ORDER BY name";
+		ss << "LOWER(name)";
 
 	std::string query = ss.str();
 	SQLPreparedStmt stmt(mDB, query);
@@ -605,14 +701,121 @@ std::vector<FileData> GamelistDB::getChildrenOf(const std::string& fileID, Syste
 	while(stmt.step() != SQLITE_DONE)
 	{
 		const char* fileid = (const char*)sqlite3_column_text(stmt, 0);
-		const char* name = (const char*)sqlite3_column_text(stmt, 1);
-		FileType filetype = (FileType)sqlite3_column_int(stmt, 2);
-		children.push_back(FileData(fileid, system, filetype, name ? name : ""));
+		std::string systemname((const char*)sqlite3_column_text(stmt,1));
+		SystemData* childSystem = (systemname == systemID) ? system : SystemManager::getInstance()->getSystemByName(systemname);
+		const char* name = (const char*)sqlite3_column_text(stmt, 2);
+		FileType filetype = (FileType)sqlite3_column_int(stmt, 3);
+		if(childSystem)
+			children.push_back(FileData(fileid, childSystem, filetype, name ? name : ""));
 	}
 
 	return children;
 }
 
+std::vector<FileData> GamelistDB::getChildrenOfFilter(const std::string& fileID, SystemData* system, 
+	 bool matchFolders, const std::string& filter_matches, int limit, bool foldersFirst, const FileSort* sortType)
+{
+	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
+	std::vector<FileData> children;
+
+	std::stringstream ss;
+	//Use the indir logic to support filters having subfilters
+	//A subfilter may return more entries than the parent!
+	//The user can handle making sure subfilters make subsets.
+	ss << "SELECT fileid, systemid, name, filetype, CAST(strftime(\"%Y\",releasedate) as INTEGER) as year FROM files WHERE ";
+
+
+	ss << "( (inimmediatedir(fileid, ?2) AND systemid = ?1) OR ( ";
+
+	if(!systemFilter.empty()) 
+		ss << " (" << systemFilter << ") AND ";
+	if(!system->isMetaSystem())
+		ss << " ( systemid = ?1 ) AND ";
+	if(!filter_matches.empty())
+        {
+		ss << " (" << filter_matches << ") ";
+	}else{
+		//Just match everything, put something to make the OR syntax work.
+		ss << " 1 ";
+	}
+	if(!matchFolders)
+		ss << " AND filetype is " << FileType::GAME;
+	ss << " )) ";
+
+	ss << " ORDER BY ";
+	if(foldersFirst) ss << " CASE WHEN filetype = 1 THEN 1 ELSE 0 END, ";
+	if(sortType)
+		ss << sortType->sql;
+	else
+		ss << "LOWER(name)";
+	if(limit > 0)
+		ss << " LIMIT ?3";
+
+	std::string query = ss.str();
+        LOG(LogDebug) << "(" << fileID << ","<<systemID<<") " << query << std::endl;
+	try
+	{
+		SQLPreparedStmt stmt(mDB, query);
+
+		sqlite3_bind_text(stmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC); // systemid
+		sqlite3_bind_text(stmt, 2, fileID.c_str(), fileID.size(), SQLITE_STATIC);
+		if(limit > 0)
+			sqlite3_bind_int(stmt, 3, limit);
+
+		while(stmt.step() != SQLITE_DONE)
+		{
+			const char* fileid = (const char*)sqlite3_column_text(stmt, 0);
+			std::string systemname((const char*)sqlite3_column_text(stmt,1));
+			SystemData* childSystem = (systemname == systemID) ? system : SystemManager::getInstance()->getSystemByName(systemname);
+			const char* name = (const char*)sqlite3_column_text(stmt, 2);
+			FileType filetype = (FileType)sqlite3_column_int(stmt, 3);
+			if (childSystem != NULL)
+				children.push_back(FileData(fileid, childSystem, filetype, name ? name : ""));
+		}
+	}catch(...){
+		//statement failed, likely to do to syntax in the filter.
+		//we'll just return the empty children vector.
+	}
+
+	return children;
+}
+bool GamelistDB::systemHasFileWithImage(const SystemData* system)
+{
+	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
+	std::stringstream ss;
+	ss << "SELECT EXISTS(SELECT 1 FROM files WHERE image IS NOT NULL AND image <> '' ";
+	if(!systemFilter.empty()) 
+		ss << "AND (" << systemFilter << ") ";
+	if(!system->isMetaSystem())
+		ss << "AND ( systemid = ?1 ) ";
+	ss << ")";
+	SQLPreparedStmt readStmt(mDB, ss.str());
+	if(!system->isMetaSystem()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+
+	readStmt.step_expected(SQLITE_ROW);
+	return sqlite3_column_int(readStmt,0);
+}
+int GamelistDB::getSystemFileCount(const SystemData* system)
+{
+	const std::string& systemID = system->getName();
+	const std::string& systemFilter = system->getFilterQuery();
+	const std::string& systemPath = system->getStartPath();
+	std::stringstream ss;
+	ss << "SELECT COUNT(1) FROM files WHERE filetype = 1 ";
+	if(!systemFilter.empty()) 
+		ss << "AND (" << systemFilter << ") ";
+	if(!system->isMetaSystem())
+		ss << "AND ( systemid = ?1 ) ";
+	SQLPreparedStmt readStmt(mDB, ss.str());
+	if(!system->isMetaSystem()) sqlite3_bind_text(readStmt, 1, systemID.c_str(), systemID.size(), SQLITE_STATIC);
+
+	readStmt.step_expected(SQLITE_ROW);
+	return sqlite3_column_int(readStmt,0);
+}
 void GamelistDB::importXML(const SystemData* system, const std::string& xml_path)
 {
 	LOG(LogInfo) << "Appending gamelist.xml file \"" << xml_path << "\" to database (system: " << system->getName() << ")...";
@@ -734,4 +937,9 @@ void GamelistDB::exportXML(const SystemData* system, const std::string& xml_path
 	}
 
 	doc.save_file(xml_path.c_str());
+}
+
+int GamelistDB::totalChanges()
+{
+	return sqlite3_total_changes(mDB);
 }

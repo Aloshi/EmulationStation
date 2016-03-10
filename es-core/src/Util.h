@@ -8,7 +8,7 @@
 // the original gamelist.xml used this format - it's something ISO, I forget what
 #define LEGACY_TIME_STRING_FORMAT "%Y%m%dT%H%M%S%F%q"
 // the SQLite database uses this format, as do MD_TIME/MD_DATE entries in the MetaDataMap
-#define SQLITE_TIME_STRING_FORMAT "%Y-%m-%d %H:%M:%S.%F"
+#define SQLITE_TIME_STRING_FORMAT "%Y-%m-%d %H:%M:%S"
 
 std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);

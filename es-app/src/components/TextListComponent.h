@@ -124,7 +124,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mColors[0] = 0x0000FFFF;
 	mColors[1] = 0x00FF00FF;
 }
-
+#include <iostream>
 template <typename T>
 void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 {
@@ -151,17 +151,25 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 			startEntry = size() - screenCount;
 	}
 
+	float overflow = (mCursor - startEntry)*entrySize + (entrySize + font->getHeight())/2 - mSize.y();
 	float y = 0;
+	
+        if (overflow > 0)
+        {
+		y = - overflow;
+	}
 
 	int listCutoff = startEntry + screenCount;
 	if(listCutoff > size())
 		listCutoff = size();
+		
+        
 
 	// draw selector bar
 	if(startEntry < listCutoff)
 	{
 		Renderer::setMatrix(trans);
-		Renderer::drawRect(0.f, (mCursor - startEntry)*entrySize + (entrySize - font->getHeight())/2, mSize.x(), font->getHeight(), mSelectorColor);
+		Renderer::drawRect(0.f, y + (mCursor - startEntry)*entrySize + (entrySize - font->getHeight())/2, mSize.x(), font->getHeight(), mSelectorColor);
 	}
 
 	// clip to inside margins
@@ -217,6 +225,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 		y += entrySize;
 	}
 
+	//pop margin clip
 	Renderer::popClipRect();
 
 	listRenderTitleOverlay(trans);

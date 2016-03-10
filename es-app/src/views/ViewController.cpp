@@ -7,6 +7,7 @@
 #include "views/gamelist/DetailedGameListView.h"
 #include "views/gamelist/GridGameListView.h"
 #include "guis/GuiMenu.h"
+#include "guis/GuiGamelistOptions.h"
 #include "guis/GuiMsgBox.h"
 #include "animations/LaunchAnimation.h"
 #include "animations/MoveCameraAnimation.h"
@@ -64,7 +65,7 @@ void ViewController::goToSystemView(SystemData* system)
 
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
-
+	mFadeOpacity = 0;
 	playViewTransition();
 }
 
@@ -73,7 +74,7 @@ void ViewController::goToNextGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(SystemManager::getInstance()->getNext(system));
+	goToGameList(SystemManager::getInstance()->getNext(system), 1);
 }
 
 void ViewController::goToPrevGameList()
@@ -81,10 +82,10 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(SystemManager::getInstance()->getPrev(system));
+	goToGameList(SystemManager::getInstance()->getPrev(system), -1);
 }
 
-void ViewController::goToGameList(SystemData* system)
+void ViewController::goToGameList(SystemData* system, int velocity)
 {
 	if(mState.viewing == SYSTEM_SELECT)
 	{
@@ -95,12 +96,27 @@ void ViewController::goToGameList(SystemData* system)
 		sysList->setPosition(sysId * (float)Renderer::getScreenWidth(), sysList->getPosition().y());
 		offX = sysList->getPosition().x() - offX;
 		mCamera.translation().x() -= offX;
+		//Recompute meta system entries, so that the system select can be used to refresh them
+		if(system->isMetaSystem())
+			onFilesChanged(system);
 	}
 
 	mState.viewing = GAME_LIST;
 	mState.system = system;
 
 	mCurrentView = getGameListView(system);
+	//If needed, wrap around before scrolling.
+	if(velocity < 0 && mCurrentView->getPosition().x() > -mCamera.translation().x())
+	{
+		float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+		mCamera *= Eigen::Translation3f(-sceneWidth,0,0);
+	}
+	if(velocity > 0 && mCurrentView->getPosition().x() < -mCamera.translation().x())
+	{
+		float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+		mCamera *= Eigen::Translation3f(sceneWidth,0,0);
+	}
+	mFadeOpacity = 0;
 	playViewTransition();
 }
 
@@ -175,8 +191,14 @@ void ViewController::onMetaDataChanged(SystemData* system, const FileData& file)
 	if(it != mGameListViews.end())
 		it->second->onMetaDataChanged(file);
 }
+void ViewController::onStatisticsChanged(SystemData* system, const FileData& file)
+{
+	auto it = mGameListViews.find(system);
+	if(it != mGameListViews.end())
+		it->second->onStatisticsChanged(file);
+}
 
-void ViewController::launch(FileData& game, Eigen::Vector3f center)
+void ViewController::launch(const FileData& game, Eigen::Vector3f center)
 {
 	if(game.getType() != GAME)
 	{
@@ -199,22 +221,22 @@ void ViewController::launch(FileData& game, Eigen::Vector3f center)
 			//mFadeOpacity = lerp<float>(0.0f, 1.0f, t*t*t + 1);
 			mFadeOpacity = lerp<float>(0.0f, 1.0f, t);
 		};
-		setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this, game, fadeFunc]
+		setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this, &game, fadeFunc]
 		{
 			game.getSystem()->launchGame(mWindow, game);
 			mLockInput = false;
 			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, nullptr, true);
-			this->onMetaDataChanged(game.getSystem(), game);
+			this->onStatisticsChanged(game.getSystem(), game);
 		});
 	}else{
 		// move camera to zoom in on center + fade out, launch game, come back in
-		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game] 
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, &game] 
 		{
 			game.getSystem()->launchGame(mWindow, game);
 			mCamera = origCamera;
 			mLockInput = false;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, nullptr, true);
-			this->onMetaDataChanged(game.getSystem(), game);
+			this->onStatisticsChanged(game.getSystem(), game);
 		});
 	}
 }
@@ -268,10 +290,15 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 
 	// open menu
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if(config->isMappedTo("select", input) && input.value != 0)
 	{
 		// open menu
-		mWindow->pushGui(new GuiMenu(mWindow));
+		if(mState.viewing == GAME_LIST) 
+		{
+			mWindow->pushGui(new GuiGamelistOptions(mWindow, mState.getSystem()));
+		} else {
+			mWindow->pushGui(new GuiGamelistOptions(mWindow, nullptr));
+		}
 		return true;
 	}
 
@@ -301,7 +328,31 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 	// draw systemview
 	getSystemListView()->render(trans);
-	
+	Eigen::Affine3f wrapTrans;
+	Eigen::Vector3f wrapStart;
+	Eigen::Vector3f wrapEnd;
+	bool wrapped = false;
+
+	float sceneWidth = (float)Renderer::getScreenWidth() * mGameListViews.size();
+	if(viewStart.x() < 0)
+	{
+		wrapped = true;
+		wrapTrans = trans * Eigen::Translation3f(-sceneWidth,0,0);
+	}
+	if(viewEnd.x() > sceneWidth)
+	{
+		wrapped = true;
+		wrapTrans = trans * Eigen::Translation3f(sceneWidth,0,0);
+	}
+
+	if(wrapped)
+	{
+		wrapStart = wrapTrans.inverse().translation();
+		wrapEnd = wrapTrans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
+	}
+
+
+
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -312,6 +363,9 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 		if(guiEnd.x() >= viewStart.x() && guiEnd.y() >= viewStart.y() &&
 			guiStart.x() <= viewEnd.x() && guiStart.y() <= viewEnd.y())
 				it->second->render(trans);
+		if(wrapped && guiEnd.x() >= wrapStart.x() && guiEnd.y() >= wrapStart.y() &&
+			guiStart.x() <= wrapEnd.x() && guiStart.y() <= wrapEnd.y())
+				it->second->render(wrapTrans);
 	}
 
 	if(mWindow->peekGui() == this)
@@ -399,7 +453,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 		return prompts;
 	
 	prompts = mCurrentView->getHelpPrompts();
-	prompts.push_back(HelpPrompt("start", "menu"));
+	prompts.push_back(HelpPrompt("select", "menu"));
 
 	return prompts;
 }
