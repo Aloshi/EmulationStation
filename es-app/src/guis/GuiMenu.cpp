@@ -175,7 +175,7 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                      overclock_choice->add(_("TURBO (1000Mhz)"), "turbo", currentOverclock == "turbo");
                      overclock_choice->add(_("HIGH (950Mhz)"), "high", currentOverclock == "high");
                      overclock_choice->add(_("NONE (700Mhz)"), "none", currentOverclock == "none");
-#else if RPI_VERSION == 2
+#elif RPI_VERSION == 2
                      std::string currentOverclock = Settings::getInstance()->getString("Overclock");
                      overclock_choice->add(_("EXTREM (1100Mhz)"), "rpi2-extrem", currentOverclock == "rpi2-extrem");
                      overclock_choice->add(_("TURBO (1050Mhz)+"), "rpi2-turbo", currentOverclock == "rpi2-turbo");
