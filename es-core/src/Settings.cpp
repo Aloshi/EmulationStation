@@ -87,15 +87,7 @@ void Settings::setDefaults() {
     mStringMap["INPUT P2"] = "DEFAULT";
     mStringMap["INPUT P3"] = "DEFAULT";
     mStringMap["INPUT P4"] = "DEFAULT";
-#ifdef RPI_VERSION
-    #if RPI_VERSION == 2
-        mStringMap["Overclock"] = "none-rpi2";
-    #else
-        mStringMap["Overclock"] = "none";
-    #endif
-#else
     mStringMap["Overclock"] = "none";
-#endif
     mStringMap["UpdateCommand"] = "/recalbox/scripts/recalbox-upgrade.sh";
     mStringMap["UpdateServer"] = "recalbox.com";
     mStringMap["VersionFile"] = "/recalbox/recalbox.version";

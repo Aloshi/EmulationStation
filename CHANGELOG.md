@@ -13,3 +13,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Multithreaded list loading and writing
 - Added favorite system
 - Switched a and b buttons functions
+- Added support for RPI3 overclock (only none)
