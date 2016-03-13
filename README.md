@@ -96,7 +96,7 @@ Complete Raspberry Pi build instructions at [emulationstation.org](http://emulat
 [XCode Dev Tools] (http://osxdaily.com/2014/02/12/install-command-line-tools-mac-os-x/)
 
 ```bash
-brew install cmake freeimage freetype eigen boost
+brew install cmake freeimage freetype eigen boost sdl2
 
 ```
 
