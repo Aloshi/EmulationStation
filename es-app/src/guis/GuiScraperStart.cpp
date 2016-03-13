@@ -33,6 +33,11 @@ GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mApproveResults->setState(true);
 	mMenu.addWithLabel("User decides on conflicts", mApproveResults);
 
+	// scrape auto skip
+	mAutoSkipNoResults = std::make_shared<SwitchComponent>(mWindow);
+	mAutoSkipNoResults->setState(false);
+	mMenu.addWithLabel("auto skip no games found", mAutoSkipNoResults);
+
 	mMenu.addButton("START", "start", std::bind(&GuiScraperStart::pressedStart, this));
 	mMenu.addButton("BACK", "back", [&] { delete this; });
 
@@ -66,7 +71,7 @@ void GuiScraperStart::start()
 		mWindow->pushGui(new GuiMsgBox(mWindow,
 			"NO GAMES FIT THAT CRITERIA."));
 	}else{
-		GuiScraperMulti* gsm = new GuiScraperMulti(mWindow, searches, mApproveResults->getState());
+		GuiScraperMulti* gsm = new GuiScraperMulti(mWindow, searches, mApproveResults->getState(), mAutoSkipNoResults->getState());
 		mWindow->pushGui(gsm);
 		delete this;
 	}
