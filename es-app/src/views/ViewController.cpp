@@ -3,6 +3,8 @@
 #include "SystemData.h"
 #include "Settings.h"
 
+#define USE_FANART
+
 #include "views/gamelist/BasicGameListView.h"
 #ifdef USE_FANART
 #include "views/gamelist/FanartGameListView.h"
