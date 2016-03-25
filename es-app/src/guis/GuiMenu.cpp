@@ -94,6 +94,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		[this] {
 			auto s = new GuiSettings(mWindow, "UI SETTINGS");
 
+			// show splash screen
+			auto show_spash = std::make_shared<SwitchComponent>(mWindow);
+			show_spash->setState(Settings::getInstance()->getBool("SplashScreen"));
+			s->addWithLabel("SHOW SPASH SCREEN", show_spash);
+			s->addSaveFunc([show_spash] { Settings::getInstance()->setBool("SplashScreen", show_spash->getState()); });
+
 			// screensaver time
 			auto screensaver_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
 			screensaver_time->setValue((float)(Settings::getInstance()->getInt("ScreenSaverTime") / (1000 * 60)));
@@ -127,6 +133,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			quick_sys_select->setState(Settings::getInstance()->getBool("QuickSystemSelect"));
 			s->addWithLabel("QUICK SYSTEM SELECT", quick_sys_select);
 			s->addSaveFunc([quick_sys_select] { Settings::getInstance()->setBool("QuickSystemSelect", quick_sys_select->getState()); });
+
+			// show hidden files
+			auto show_hidden_files = std::make_shared<SwitchComponent>(mWindow);
+			show_hidden_files->setState(Settings::getInstance()->getBool("ShowHiddenFiles"));
+			s->addWithLabel("SHOW HIDDEN FILES", show_hidden_files);
+			s->addSaveFunc([show_hidden_files] { Settings::getInstance()->setBool("ShowHiddenFiles", show_hidden_files->getState()); });
 
 			// transition style
 			auto transition_style = std::make_shared< OptionListComponent<std::string> >(mWindow, "TRANSITION STYLE", false);

@@ -9,8 +9,9 @@
 
 Settings* Settings::sInstance = NULL;
 
-// these values are NOT saved to es_settings.xml
+// these values are **NOT** ever saved to es_settings.cfg - even when you manually put them in the file
 // since they're set through command-line arguments, and not the in-program settings menu
+// TODO: what happens when you want both a command line config AND define it in es_sessings.cfg?
 std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
@@ -20,9 +21,7 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Windowed")
 	("VSync")
 	("HideConsole")
-	("IgnoreGamelist")
-	("SplashScreen")
-	("ShowHiddenFiles");
+	("IgnoreGamelist");
 
 Settings::Settings()
 {
