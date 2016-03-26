@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-16 20:55+0100\n"
+"POT-Creation-Date: 2016-03-26 22:02+0100\n"
 "PO-Revision-Date: 2014-09-20 15:00-0500\n"
 "Last-Translator: mgoulartBR <mgoulart@gmail.com>\n"
 "Language: Portuguese\n"
@@ -182,6 +182,9 @@ msgstr "ALTO (1050Mhz)"
 
 msgid "NONE (900Mhz)"
 msgstr "DESLIGADO (900Mhz)"
+
+msgid "NONE (1200Mhz)"
+msgstr ""
 
 msgid "NONE"
 msgstr "NENHUM"
