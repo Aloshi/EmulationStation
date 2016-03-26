@@ -175,6 +175,11 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("SAVE METADATA ON EXIT", save_gamelists);
 			s->addSaveFunc([save_gamelists] { Settings::getInstance()->setBool("SaveGamelistsOnExit", save_gamelists->getState()); });
 
+			auto parse_gamelists = std::make_shared<SwitchComponent>(mWindow);
+			parse_gamelists->setState(Settings::getInstance()->getBool("ParseGamelistOnly"));
+			s->addWithLabel("PARSE GAMESLISTS ONLY", parse_gamelists);
+			s->addSaveFunc([parse_gamelists] { Settings::getInstance()->setBool("ParseGamelistOnly", parse_gamelists->getState()); });
+
 			mWindow->pushGui(s);
 	});
 
