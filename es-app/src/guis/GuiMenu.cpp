@@ -165,6 +165,19 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(s);
 	});
 
+	addEntry("OTHER SETTINGS", 0x777777FF, true,
+		[this] {
+			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
+
+			// gamelists
+			auto save_gamelists = std::make_shared<SwitchComponent>(mWindow);
+			save_gamelists->setState(Settings::getInstance()->getBool("SaveGamelistsOnExit"));
+			s->addWithLabel("SAVE METADATA ON EXIT", save_gamelists);
+			s->addSaveFunc([save_gamelists] { Settings::getInstance()->setBool("SaveGamelistsOnExit", save_gamelists->getState()); });
+
+			mWindow->pushGui(s);
+	});
+
 	addEntry("CONFIGURE INPUT", 0x777777FF, true, 
 		[this] { 
 			mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
