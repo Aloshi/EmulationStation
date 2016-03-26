@@ -13,7 +13,6 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
 	("DebugText")
-	("ParseGamelistOnly")
 	("ShowExit")
 	("Windowed")
 	("VSync")
