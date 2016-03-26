@@ -32,6 +32,7 @@ public:
 	virtual void setCursor(FileData*) = 0;
 
 	virtual bool input(InputConfig* config, Input input) override;
+	virtual void remove(FileData* game) = 0;
 
 	virtual const char* getName() const = 0;
 
