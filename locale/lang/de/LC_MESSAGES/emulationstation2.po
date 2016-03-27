@@ -183,7 +183,7 @@ msgid "NONE (900Mhz)"
 msgstr "KEINE (900Mhz)"
 
 msgid "NONE (1200Mhz)"
-msgstr ""
+msgstr "KEINE (1200Mhz)"
 
 msgid "NONE"
 msgstr "KEINE"
@@ -228,7 +228,7 @@ msgid "AUTO SAVE/LOAD"
 msgstr "AUTOMATISCH SPEICHERN/LADEN"
 
 msgid "SHADERS SET"
-msgstr "SHADER GESETZT"
+msgstr "SHADER"
 
 msgid "SCANLINES"
 msgstr "SCANLINES"
@@ -291,7 +291,7 @@ msgid "SOUND SETTINGS"
 msgstr "SOUNDEINSTELLUNGEN"
 
 msgid "SYSTEM VOLUME"
-msgstr "SYSTEMLAUTSTÄRKE"
+msgstr "LAUTSTÄRKE"
 
 msgid "FRONTEND MUSIC"
 msgstr "FRONTEND MUSIK"
@@ -435,7 +435,7 @@ msgid "OPTIONS"
 msgstr "OPTIONEN"
 
 msgid "JUMP TO LETTER"
-msgstr "SPRING ZU BUCHSTABE"
+msgstr "SPRINGE ZU BUCHSTABE"
 
 msgid "SORT GAMES BY"
 msgstr "SPIELE SORTIEREN NACH"
@@ -444,7 +444,7 @@ msgid "FAVORITES ONLY"
 msgstr "NUR FAVORITEN"
 
 msgid "EDIT THIS GAME'S METADATA"
-msgstr "METADATEN DES SPIELS BEARBEITEN"
+msgstr "METADATEN BEARBEITEN"
 
 msgid "SCRAPE THESE GAMES"
 msgstr "DIESE SPIELE SCRAPEN"
@@ -453,7 +453,7 @@ msgid "All Games"
 msgstr "Alle Spiele"
 
 msgid "Only missing image"
-msgstr "Nur fehlende Bilder"
+msgstr "Nur Fehlende"
 
 msgid "FILTER"
 msgstr "FILTER"
@@ -465,7 +465,7 @@ msgid "SYSTEMS"
 msgstr "SYSTEME"
 
 msgid "USER DECIDES ON CONFLICTS"
-msgstr "BENUTZER ENTSCHEIDET BEI KONFLIKTEN"
+msgstr "BENUTZER ENTSCHEIDET BEI KONFLIKT"
 
 msgid "START"
 msgstr "STARTEN"
@@ -480,7 +480,7 @@ msgstr ""
 "TROTZDEM FORTFAHREN?"
 
 msgid "NO GAMES FIT THAT CRITERIA."
-msgstr "KEINE SPIELE ERFÜLLEN DIE KRITERIEN"
+msgstr "KEIN SPIEL ERFÜLLt DIE KRITERIEN"
 
 msgid "REALLY UPDATE?"
 msgstr "WIRKLICH AKTUALISIEREN?"
@@ -498,10 +498,10 @@ msgid "NO UPDATE AVAILABLE"
 msgstr "KEIN UPDATE VERFÜGBAR"
 
 msgid "enter emulator"
-msgstr "Emulator eingeben"
+msgstr "Emulator angeben"
 
 msgid "enter core"
-msgstr "Core eingeben"
+msgstr "Core angeben"
 
 msgid "Name"
 msgstr "Name"
@@ -519,13 +519,13 @@ msgid "Image"
 msgstr "Bild"
 
 msgid "enter path to image"
-msgstr "Bildpfad eingeben"
+msgstr "Bildpfad angeben"
 
 msgid "Thumbnail"
 msgstr "Vorschaubild"
 
 msgid "enter path to thumbnail"
-msgstr "Pfad zum Vorschaubild eingeben"
+msgstr "Pfad zum Vorschaubild angeben"
 
 msgid "enter rating"
 msgstr "Bewertung eingeben"
@@ -543,7 +543,7 @@ msgid "enter game publisher"
 msgstr "Herausgeber eingeben"
 
 msgid "enter game genre"
-msgstr "Genre des Spiels eingeben"
+msgstr "Genre eingeben"
 
 msgid "enter number of players"
 msgstr "Spieleranzahl eingeben"
@@ -576,7 +576,7 @@ msgid "Play count"
 msgstr "Anzahl gespielt"
 
 msgid "enter number of times played"
-msgstr "Anzahl Male gespielt eingeben"
+msgstr "Anzahl gespielt eingeben"
 
 msgid "Last played"
 msgstr "Zuletzt gespielt"
