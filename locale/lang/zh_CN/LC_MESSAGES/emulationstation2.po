@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Emulationstation 2.0.1A zh_CN po\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-16 20:55+0100\n"
+"POT-Creation-Date: 2016-03-26 22:02+0100\n"
 "PO-Revision-Date: 2016-03-02 13:25+0800\n"
 "Last-Translator: ShiKeYu <shikeyu@tom.com>\n"
 "Language-Team: CHINESE <shikeyu@tom.com>\n"
@@ -179,6 +179,9 @@ msgid "HIGH (1050Mhz)"
 msgstr ""
 
 msgid "NONE (900Mhz)"
+msgstr ""
+
+msgid "NONE (1200Mhz)"
 msgstr ""
 
 msgid "NONE"
