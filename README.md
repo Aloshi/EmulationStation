@@ -23,7 +23,9 @@ A cool guy named petrockblog made a script which automatically installs many emu
 Download
 ========
 
-Download a pre-compiled version at [emulationstation.org](http://emulationstation.org#download).
+Download an official pre-compiled version at [emulationstation.org](http://emulationstation.org#download).
+
+You can also download nightly binaries (assuming it builds) from Dropbox: https://www.dropbox.com/sh/qr4h23hgtuer3nl/AACzJWKoyNAu0kLkprwMv3b5a?dl=0
 
 
 I found a bug! I have a problem!
