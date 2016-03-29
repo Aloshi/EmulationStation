@@ -148,7 +148,7 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 	
 	if(newNode.children().begin() == newNode.child("name") //first element is name
 		&& ++newNode.children().begin() == newNode.children().end() //theres only one element
-		&& newNode.child("name").text().get() == file->getCleanName()) //the name is the default
+		&& newNode.child("name").text().get() == file->getDisplayName()) //the name is the default
 	{
 		//if the only info is the default name, don't bother with this node
 		//delete it and ultimately do nothing

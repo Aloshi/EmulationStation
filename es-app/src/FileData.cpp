@@ -48,7 +48,7 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
-		metadata.set("name", getCleanName());
+		metadata.set("name", getDisplayName());
 }
 
 FileData::~FileData()
@@ -60,13 +60,18 @@ FileData::~FileData()
 		delete mChildren.back();
 }
 
-std::string FileData::getCleanName() const
+std::string FileData::getDisplayName() const
 {
 	std::string stem = mPath.stem().generic_string();
 	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
 	return stem;
+}
+
+std::string FileData::getCleanName() const
+{
+	return removeParenthesis(this->getDisplayName());
 }
 
 const std::string& FileData::getThumbnailPath() const
