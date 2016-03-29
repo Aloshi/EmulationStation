@@ -38,12 +38,6 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
-	
-	// file list can be empty if direct launch item
-	if (files.size()==0)
-	{
-		return;
-	}
 
 	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
 
