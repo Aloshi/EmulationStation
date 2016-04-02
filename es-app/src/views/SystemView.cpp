@@ -122,15 +122,8 @@ bool SystemView::input(InputConfig* config, Input input)
 		{
 			stopScrolling();
 			
-			SystemData *systemData = getSelected();
-			
-			// decide whether to show game list or launch the command directly
-			if ( !systemData->getDirectLaunch() )
-			{
-				ViewController::get()->goToGameList(getSelected());
-			}else{
-				systemData->launchGame( mWindow, nullptr );
-			}
+			ViewController::get()->goToGameList(getSelected());
+
 			return true;
 		}
 	}else{

@@ -22,7 +22,6 @@ public:
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
-	inline const bool getDirectLaunch() const { return mDirectLaunch; }
 
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mPlatformIds; }
 	inline bool hasPlatformId(PlatformIds::PlatformId id) { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
@@ -77,7 +76,6 @@ private:
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
-	bool mDirectLaunch;
 
 	void populateFolder(FileData* folder);
 

@@ -9,6 +9,7 @@
 	#include <codecvt>
 	#include <windows.h>
 	#include <shlobj.h>
+	#include <io.h>
 #elif defined(__linux__)
 	#include <unistd.h>
 	#include <sys/reboot.h>
@@ -122,7 +123,13 @@ int quitES(const std::string& filename)
 
 void touch(const std::string& filename)
 {
-	int fd = open(filename.c_str(), O_CREAT|O_WRONLY, 0644);
+#ifdef WIN32
+	int fd = _open(filename.c_str(), O_CREAT | O_WRONLY, 0644);
+	if (fd >= 0)
+		_close(fd);
+#else
+	int fd = open(filename.c_str(), O_CREAT | O_WRONLY, 0644);
 	if (fd >= 0)
 		close(fd);
+#endif
 }
