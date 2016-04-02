@@ -121,7 +121,9 @@ bool SystemView::input(InputConfig* config, Input input)
 		if(config->isMappedTo("a", input))
 		{
 			stopScrolling();
+			
 			ViewController::get()->goToGameList(getSelected());
+
 			return true;
 		}
 	}else{

@@ -1,13 +1,15 @@
 #include "platform.h"
-
+#include <stdlib.h>
 #include <boost/filesystem.hpp>
-#include <cstdlib>
+#include <SDL.h>
 #include <iostream>
+#include <fcntl.h>
 
 #if defined(WIN32)
 	#include <codecvt>
 	#include <windows.h>
 	#include <shlobj.h>
+	#include <io.h>
 #elif defined(__linux__)
 	#include <unistd.h>
 	#include <sys/reboot.h>
@@ -107,5 +109,27 @@ int runSystemCommand(const std::string& cmd_utf8)
 	return _wsystem(wchar_str.c_str());
 #else
 	return system(cmd_utf8.c_str());
+#endif
+}
+
+int quitES(const std::string& filename)
+{
+	touch(filename);
+	SDL_Event* quit = new SDL_Event();
+	quit->type = SDL_QUIT;
+	SDL_PushEvent(quit);
+	return 0;
+}
+
+void touch(const std::string& filename)
+{
+#ifdef WIN32
+	int fd = _open(filename.c_str(), O_CREAT | O_WRONLY, 0644);
+	if (fd >= 0)
+		_close(fd);
+#else
+	int fd = open(filename.c_str(), O_CREAT | O_WRONLY, 0644);
+	if (fd >= 0)
+		close(fd);
 #endif
 }
