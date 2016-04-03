@@ -24,6 +24,8 @@
 #include "Settings.h"
 #include "VolumeControl.h"
 
+#include <SDL.h>
+
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
 	// MAIN MENU
@@ -99,6 +101,27 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			show_spash->setState(Settings::getInstance()->getBool("SplashScreen"));
 			s->addWithLabel("SHOW SPASH SCREEN", show_spash);
 			s->addSaveFunc([show_spash] { Settings::getInstance()->setBool("SplashScreen", show_spash->getState()); });
+
+			// change display number
+			struct DISPLAY {
+				int index;
+				std::string name;
+			};
+			auto display_number = std::make_shared< OptionListComponent<DISPLAY> >(mWindow, "DISPLAY", false);
+			std::vector<DISPLAY> displays;
+			for (int v = 1; v <= SDL_GetNumVideoDisplays(); v++){
+				DISPLAY to_add;
+				to_add.index = v - 1;
+				to_add.name = SDL_GetDisplayName(v - 1);
+				displays.push_back(to_add);
+			}
+			for(auto it = displays.begin(); it != displays.end(); it++)
+				display_number->add(it->name, *it, Settings::getInstance()->getInt("DisplayNumber") == it->index);
+			s->addWithLabel("DISPLAY", display_number);
+			s->addSaveFunc([display_number] {
+				int selected_index = display_number->getSelected().index;
+				Settings::getInstance()->setInt("DisplayNumber", selected_index);
+			});
 
 			// screensaver time
 			auto screensaver_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
