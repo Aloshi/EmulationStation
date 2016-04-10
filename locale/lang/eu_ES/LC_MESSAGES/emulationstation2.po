@@ -19,37 +19,37 @@ msgid "CANCEL"
 msgstr "EZEZTATU"
 
 msgid "Rating"
-msgstr ""
+msgstr "Sailkapena"
 
 msgid "Released"
-msgstr ""
+msgstr "Argitaratua"
 
 msgid "Developer"
-msgstr ""
+msgstr "Gartzailea"
 
 msgid "Publisher"
-msgstr ""
+msgstr "Argitaratzailea"
 
 msgid "Genre"
-msgstr ""
+msgstr "Generoa"
 
 msgid "Players"
-msgstr ""
+msgstr "Jokalariak"
 
 msgid "NO GAMES FOUND - SKIP"
 msgstr "EZ DIRA JOKUAK AURKITU - TXANDAPASA"
 
 msgid "RETRY"
-msgstr ""
+msgstr "BERRIRO SAIATU"
 
 msgid "SKIP"
 msgstr "TXANDAPASA"
 
 msgid "SEARCH FOR"
-msgstr ""
+msgstr "BILATU:"
 
 msgid "SEARCH"
-msgstr ""
+msgstr "BILATU"
 
 msgid "SCRAPING IN PROGRESS"
 msgstr "DATUAK LORTZEN"
@@ -58,7 +58,7 @@ msgid "SYSTEM"
 msgstr "SISTEMA"
 
 msgid "subtitle text"
-msgstr ""
+msgstr "azpititulu testua"
 
 msgid "INPUT"
 msgstr "EDITATU"
@@ -67,14 +67,14 @@ msgid "search"
 msgstr "bilatu"
 
 msgid "STOP"
-msgstr ""
+msgstr "GELDITU"
 
 msgid "stop (progress saved)"
 msgstr "gelditu (orain artekoa gordeta)"
 
 #, c-format
 msgid "GAME %i OF %i"
-msgstr ""
+msgstr "%i/%i JOKOA"
 
 msgid ""
 "WE CAN'T FIND ANY SYSTEMS!\n"
@@ -91,23 +91,23 @@ msgstr ""
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
 msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i JOKOAREN DATUAK ONGI LORTUAK!"
+msgstr[1] "%i JOKOEN DATUAK ONGI LORTUAK!"
 
 #, c-format
 msgid "%i GAME SKIPPED."
 msgid_plural "%i GAMES SKIPPED."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i JOKO TXANDAPASA EGINDA"
+msgstr[1] "%I JOKO TXANDAPASA EGINDA"
 
 msgid "OK"
-msgstr ""
+msgstr "ADOS"
 
 msgid "EDIT METADATA"
 msgstr "DATUAK EDITATU"
 
 msgid "SCRAPE"
-msgstr ""
+msgstr "DATUAK LORTU"
 
 msgid "SAVE"
 msgstr "GORDE"
@@ -141,7 +141,7 @@ msgid "MAIN MENU"
 msgstr "MENU NAGUSIA"
 
 msgid "KODI MEDIA CENTER"
-msgstr ""
+msgstr "KODI MEDIA CENTER-a"
 
 msgid "SYSTEM SETTINGS"
 msgstr "SISTEMAREN KONFIGURAZIOA"
@@ -150,7 +150,7 @@ msgid "VERSION"
 msgstr "BERTSIOA"
 
 msgid "DISK USAGE"
-msgstr ""
+msgstr "DISKO ERABILERA"
 
 #, fuzzy
 msgid "STORAGE DEVICE"
@@ -160,34 +160,34 @@ msgid "LANGUAGE"
 msgstr "HIZKUNTZA"
 
 msgid "OVERCLOCK"
-msgstr ""
+msgstr "OVERCLOCK"
 
 msgid "EXTREM (1100Mhz)"
-msgstr ""
+msgstr "MUTURREKO (1100Mhz)"
 
 msgid "TURBO (1000Mhz)"
-msgstr ""
+msgstr "TURBO (1000MHz)"
 
 msgid "HIGH (950Mhz)"
-msgstr ""
+msgstr "ALTUA (950Mhz)"
 
 msgid "NONE (700Mhz)"
-msgstr ""
+msgstr "BAT ERE EZ (700Mhz)"
 
 msgid "TURBO (1050Mhz)+"
-msgstr ""
+msgstr "TURBO (1050Mhz)+"
 
 msgid "HIGH (1050Mhz)"
-msgstr ""
+msgstr "ALTUA (1050Mhz)"
 
 msgid "NONE (900Mhz)"
-msgstr ""
+msgstr "BAT ERE EZE (900Mhz)"
 
 msgid "NONE (1200Mhz)"
-msgstr ""
+msgstr "BAT ERE EZ (1200Mhz)"
 
 msgid "NONE"
-msgstr ""
+msgstr "BAT ERE EZ"
 
 # NEW SETTINGS ORGANIZATION
 msgid "UPDATES"
@@ -227,38 +227,38 @@ msgid "REWIND"
 msgstr "ATZERA ERAMAN"
 
 msgid "AUTO SAVE/LOAD"
-msgstr ""
+msgstr "AUTO GORDE/KARGATU"
 
 msgid "SHADERS SET"
-msgstr ""
+msgstr "EZARRI SHADER-ak"
 
 msgid "SCANLINES"
-msgstr ""
+msgstr "SCANLINE-ak"
 
 msgid "RETRO"
-msgstr ""
+msgstr "RETRO"
 
 msgid "RETROACHIEVEMENTS SETTINGS"
-msgstr ""
+msgstr "RETROACHIVEMENTS EZARPENAK"
 
 msgid "RETROACHIEVEMENTS"
-msgstr ""
+msgstr "RETROACHIVEMENTS"
 
 msgid "USERNAME"
-msgstr ""
+msgstr "ERABILTZAILE IZENA"
 
 msgid "PASSWORD"
-msgstr ""
+msgstr "PASAHITZA"
 
 msgid "ADVANCED"
-msgstr ""
+msgstr "AURRERATUA"
 
 #, fuzzy
 msgid "REALLY UPDATE GAMES LISTS ?"
 msgstr "ZIUR EGUNERATU NAHI DUZULA?"
 
 msgid "UPDATE GAMES LISTS"
-msgstr ""
+msgstr "EGUNERATU JOKO ZERRENDAK"
 
 msgid "CONTROLLERS SETTINGS"
 msgstr "AGINTEEN KONFIGURAZIOAK"
@@ -267,7 +267,7 @@ msgid "UI SETTINGS"
 msgstr "INTERFAZEAREN EZARPENAK"
 
 msgid "OVERSCAN"
-msgstr ""
+msgstr "OVERSCAN"
 
 msgid "SCREENSAVER AFTER"
 msgstr "PANTAILA BABESLEA ZENBAT SEGUNDU ONDOREN:"
@@ -303,13 +303,13 @@ msgid "OUTPUT DEVICE"
 msgstr "SOINU IRTEERA"
 
 msgid "HDMI"
-msgstr ""
+msgstr "HDMI"
 
 msgid "JACK"
-msgstr ""
+msgstr "JACK"
 
 msgid "AUTO"
-msgstr ""
+msgstr "AUTO"
 
 msgid "NETWORK SETTINGS"
 msgstr "SARE KONFIGURAZIOA"
@@ -321,10 +321,10 @@ msgid "NOT CONNECTED"
 msgstr "KONEKTATU GABE"
 
 msgid "STATUS"
-msgstr ""
+msgstr "EGOERA"
 
 msgid "IP ADDRESS"
-msgstr ""
+msgstr "IP HELBIDEA"
 
 msgid "HOSTNAME"
 msgstr "GAILUAREN IZENA"
@@ -345,7 +345,7 @@ msgid "WIFI CONFIGURATION ERROR"
 msgstr "WIFI KONFIGURAZIO ERROREA"
 
 msgid "SCRAPER"
-msgstr ""
+msgstr "DATU LORTZAILEA"
 
 msgid "SCRAPE FROM"
 msgstr "LORTU DATUAK HEMENDIK:"
@@ -372,10 +372,10 @@ msgid "SHUTDOWN SYSTEM"
 msgstr "ITZALI SISTEMA"
 
 msgid "Emulator"
-msgstr ""
+msgstr "Emulatzaile"
 
 msgid "Core"
-msgstr ""
+msgstr "Nukleoa"
 
 msgid ""
 "YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
@@ -411,14 +411,14 @@ msgid "PAIR A BLUETOOTH CONTROLLER"
 msgstr "BLUETOOTH AGINTE BAT PAREKATU"
 
 msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
-msgstr ""
+msgstr "AGINTEEN ESTEKAK EZABATUAK IZAN DIRA"
 
 msgid "FORGET BLUETOOTH CONTROLLERS"
-msgstr ""
+msgstr "AHAZTU BLUETOOTH AGINTEAK"
 
 #, c-format
 msgid "INPUT P%i"
-msgstr ""
+msgstr "P%i SARRERA"
 
 msgid "CHOOSE"
 msgstr "HAUTATU"
@@ -427,16 +427,16 @@ msgid "SELECT"
 msgstr "AUKERATU"
 
 msgid "CUSTOM"
-msgstr ""
+msgstr "PERTSONALIZATUA"
 
 msgid "4/3"
-msgstr ""
+msgstr "4/3"
 
 msgid "16/9"
-msgstr ""
+msgstr "16/9"
 
 msgid "OPTIONS"
-msgstr ""
+msgstr "AUKERAK"
 
 msgid "JUMP TO LETTER"
 msgstr "LETRARA JOAN"
@@ -474,16 +474,17 @@ msgid "USER DECIDES ON CONFLICTS"
 msgstr "ERABILTZAILEAK ERABAKI GATAZKETAN"
 
 msgid "START"
-msgstr ""
+msgstr "HASI"
 
 msgid ""
 "WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
 "MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
 "CONTINUE ANYWAY?"
-msgstr ""
-
+msgstr "ABISUA: AUKERATU DITUZUN SISTEMA BATZUEK EZ DUTE PLATAFORMARIK EZARRITA. EMAITZAK "
+"NORMALEAN BAINO ZEHAZTASUN GUTXIAGOKOAK IZAN DAITEZKE!\n"
+"JARRAITU HALA ERE?"
 msgid "NO GAMES FIT THAT CRITERIA."
-msgstr ""
+msgstr "EZ DAUDE JOKORIK IRIZPIDE HORI BETETZEN DUTENIK"
 
 msgid "REALLY UPDATE?"
 msgstr "ZIUR EGUNERATU NAHI DUZULA?"
@@ -492,7 +493,7 @@ msgid "NETWORK CONNECTION NEEDED"
 msgstr "SARE KONEXIO BAT BEHARREZKOA DA"
 
 msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
-msgstr ""
+msgstr "EGUNERAKETA DESKARGATUA, SISTEMA BERRABIARAZIKO DA ORAIN"
 
 msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
 msgstr "EGUNERAKETAK HUTS EGIN DU. SISTEMA BERRABIARAZIKO DA ORAIN"
@@ -501,139 +502,139 @@ msgid "NO UPDATE AVAILABLE"
 msgstr "EZ DAGO EGUNERAKETARIK ERABILGARRI"
 
 msgid "enter emulator"
-msgstr ""
+msgstr "sartu emulatzailea"
 
 msgid "enter core"
-msgstr ""
+msgstr "sartu nukleoa"
 
 msgid "Name"
-msgstr ""
+msgstr "Izena"
 
 msgid "enter game name"
-msgstr "jokoarean izena"
+msgstr "jokoarean izena sartu"
 
 msgid "Description"
-msgstr ""
+msgstr "Deskribapena"
 
 msgid "enter description"
-msgstr ""
+msgstr "Sartu deskribapena"
 
 msgid "Image"
-msgstr ""
+msgstr "Irudia"
 
 msgid "enter path to image"
-msgstr ""
+msgstr "Sartu irudirako bidea"
 
 msgid "Thumbnail"
-msgstr ""
+msgstr "Thumbnail"
 
 msgid "enter path to thumbnail"
-msgstr ""
+msgstr "Sartu Thumbnail-erako bidea"
 
 msgid "enter rating"
-msgstr ""
+msgstr "Sartu sailkapena"
 
 msgid "Release date"
-msgstr ""
+msgstr "Argitaratze data"
 
 msgid "enter release date"
-msgstr ""
+msgstr "sartu argitaratze data"
 
 msgid "enter game developer"
-msgstr ""
+msgstr "sartu joko garatzailea"
 
 msgid "enter game publisher"
-msgstr ""
+msgstr "sartu joko argitaratzailea"
 
 msgid "enter game genre"
-msgstr ""
+msgstr "sartu jokoaren generoa"
 
 msgid "enter number of players"
-msgstr ""
+msgstr "sartu jokalari zenbatekoa"
 
 msgid "Favorite"
-msgstr ""
+msgstr "Gogokoa"
 
 msgid "enter favorite"
 msgstr "gogokoa gehitu"
 
 msgid "Region"
-msgstr ""
+msgstr "Herrialde"
 
 msgid "enter region"
-msgstr ""
+msgstr "Sartu herrialdea"
 
 msgid "Romtype"
-msgstr ""
+msgstr "Rom mota"
 
 msgid "enter romtype"
-msgstr ""
+msgstr "sartu rom mota"
 
 msgid "Hidden"
-msgstr ""
+msgstr "Ezkutatua"
 
 msgid "set hidden"
-msgstr ""
+msgstr "Ezkutatua ezarri"
 
 msgid "Play count"
-msgstr ""
+msgstr "Partida zenbatekoa"
 
 msgid "enter number of times played"
-msgstr ""
+msgstr "sartu jokatutako partida zenbatekoa"
 
 msgid "Last played"
-msgstr ""
+msgstr "Azken jokatutakoa"
 
 msgid "enter last played date"
-msgstr ""
+msgstr "sartu azken jokatutako data"
 
 #, c-format
 msgid "%i GAME AVAILABLE"
 msgid_plural "%i GAMES AVAILABLE"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i JOKOA ERABILGARRI"
+msgstr[1] "%i JOKOAK ERABILGARRI"
 
 #, c-format
 msgid "%i FAVORITE"
 msgid_plural "%i FAVORITES"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i GOGOKOA"
+msgstr[1] "%i GOGOKOAK"
 
 msgid "SCROLL"
-msgstr ""
+msgstr "SCROLL"
 
 msgid "LAUNCH"
 msgstr "ABIARAZI"
 
 msgid "Times played"
-msgstr ""
+msgstr "Zenbat aldiz jokatua"
 
 msgid "MENU"
-msgstr ""
+msgstr "MENUA"
 
 msgid "FILENAME, ASCENDING"
-msgstr ""
+msgstr "FITXATEGI IZENA, IGOTZEN"
 
 msgid "FILENAME, DESCENDING"
-msgstr ""
+msgstr "FITXATEGI IZENA, JAISTEN"
 
 msgid "RATING, ASCENDING"
-msgstr ""
+msgstr "SAILKAPENA, IGOTZEN"
 
 msgid "RATING, DESCENDING"
-msgstr ""
+msgstr "SAILKAPENA, JAISTEN"
 
 msgid "TIMES PLAYED, ASCENDING"
-msgstr ""
+msgstr "ZENBAT ALDIZ JOKATUA, IGOTZEN"
 
 msgid "TIMES PLAYED, DESCENDING"
-msgstr ""
+msgstr "ZENBAT ALDIZ JOKATUA, JAISTEN"
 
 msgid "LAST PLAYED, ASCENDING"
-msgstr ""
+msgstr "AZKEN ALDIZ JOKATUA, IGOTZEN"
 
 msgid "LAST PLAYED, DESCENDING"
-msgstr ""
+msgstr "AZKEN ALDIZ JOKATUA, JAISTEN"
 
 msgid "WORKING..."
 msgstr "LANEAN..."
@@ -642,37 +643,37 @@ msgid "CHANGE"
 msgstr "ALDATU"
 
 msgid "never"
-msgstr ""
+msgstr "inoiz"
 
 msgid "just now"
-msgstr ""
+msgstr "oraintxe"
 
 #, c-format
 msgid "%i sec ago"
 msgid_plural "%i secs ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "orain dela segundu %i"
+msgstr[1] "orain dela %i segundu"
 
 #, c-format
 msgid "%i min ago"
 msgid_plural "%i mins ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "orain dela minutu %i"
+msgstr[1] "orain dela %i minutu"
 
 #, c-format
 msgid "%i hour ago"
 msgid_plural "%i hours ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "orain dela ordu %i"
+msgstr[1] "orain dela %i ordu"
 
 #, c-format
 msgid "%i day ago"
 msgid_plural "%i days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "orain dela egun %i"
+msgstr[1] "orain dela %i egun"
 
 msgid "unknown"
-msgstr ""
+msgstr "ezezaguna"
 
 msgid "SELECT ALL"
 msgstr "DENAK"
@@ -683,8 +684,8 @@ msgstr "BAT ERE EZ"
 #, c-format
 msgid "%i SELECTED"
 msgid_plural "%i SELECTED"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%i AUKERATUA"
+msgstr[1] "%i AUKERATUAK"
 
 msgid "UP"
 msgstr "GORA"
@@ -717,17 +718,17 @@ msgid "PAGE DOWN"
 msgstr "R1 (AUR. ORRIA)"
 
 msgid "HOTKEY"
-msgstr ""
+msgstr "HOTKEY"
 
 msgid "CONFIGURING"
 msgstr "KONFIGURATZEN"
 
 msgid "KEYBOARD"
-msgstr ""
+msgstr "TEKLATUA"
 
 #, c-format
 msgid "GAMEPAD %i"
-msgstr ""
+msgstr "%i AGINTEA"
 
 msgid "HOLD ANY BUTTON TO SKIP"
 msgstr "MANTENDU EDOZEIN BOTOI TXANDAPASARAKO"
@@ -738,8 +739,8 @@ msgstr "-KONFIGURATU GABE-"
 #, c-format
 msgid "HOLD FOR %iS TO SKIP"
 msgid_plural "HOLD FOR %iS TO SKIP"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "MANTENDU %i PASATZEKO"
+msgstr[1] "MANTENDU %i PASATZEKO"
 
 # Config controllers missing translation
 msgid "PRESS ANYTHING"
@@ -760,8 +761,8 @@ msgstr "KONTROLEN KONFIGURAZIOA"
 #, c-format
 msgid "%i GAMEPAD DETECTED"
 msgid_plural "%i GAMEPADS DETECTED"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "AGINTE %i DETEKTATUA"
+msgstr[1] "%i AGINTE DETEKTATUAK"
 
 msgid "NO GAMEPADS DETECTED"
 msgstr "EZ DA AGINTERIK DETEKTATU"
