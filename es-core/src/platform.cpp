@@ -1,4 +1,5 @@
 #include "platform.h"
+#include "Settings.h"
 #include <stdlib.h>
 #include <boost/filesystem.hpp>
 #include <SDL.h>
@@ -17,7 +18,7 @@
 
 namespace fs = boost::filesystem;
 
-std::string getConfigDirectory()
+std::string getDefaultConfigDirectory()
 {
     fs::path path;
 #ifdef _WIN32
@@ -40,6 +41,11 @@ std::string getConfigDirectory()
     path /= fs::path("emulationstation");
 #endif
     return path.generic_string();
+}
+
+std::string getConfigDirectory()
+{
+    return Settings::getInstance()->getString("ConfigDirectory");
 }
 
 std::string getHomePath()

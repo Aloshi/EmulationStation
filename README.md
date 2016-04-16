@@ -130,6 +130,8 @@ Where `$CONFIG_DIR` is by platform:
 `~/Library/Application Support/org.emulationstation.EmulationStation/`by default
 and the same as Linux if EmulationStation is build with `cmake -DXdgOsx=ON`
 
+Alternatively you can specify `$CONFIG_DIR` through the `--config-directory [path]` command line option.
+
 Complete configuration instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#config).
 
 The `es_systems.cfg` file contains the system configuration data for EmulationStation, written in XML.  This tells EmulationStation what systems you have, what platform they correspond to (for scraping), and where the games are located.

@@ -21,12 +21,12 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Windowed")
 	("VSync")
 	("HideConsole")
+    ("ConfigDirectory")
 	("IgnoreGamelist");
 
 Settings::Settings()
 {
 	setDefaults();
-	loadFile();
 }
 
 Settings* Settings::getInstance()
@@ -78,6 +78,7 @@ void Settings::setDefaults()
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
+    mStringMap["ConfigDirectory"] = "";
 }
 
 template <typename K, typename V>
@@ -116,19 +117,19 @@ void Settings::saveFile()
 	doc.save_file(path.c_str());
 }
 
-void Settings::loadFile()
+bool Settings::loadFile()
 {
 	const std::string path = getConfigDirectory() + "/es_settings.cfg";
 
 	if(!boost::filesystem::exists(path))
-		return;
+		return false;
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(path.c_str());
 	if(!result)
 	{
 		LOG(LogError) << "Could not parse Settings file!\n   " << result.description();
-		return;
+		return false;
 	}
 
 	for(pugi::xml_node node = doc.child("bool"); node; node = node.next_sibling("bool"))
@@ -139,6 +140,7 @@ void Settings::loadFile()
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
 	for(pugi::xml_node node = doc.child("string"); node; node = node.next_sibling("string"))
 		setString(node.attribute("name").as_string(), node.attribute("value").as_string());
+    return true;
 }
 
 //Print a warning message if the setting we're trying to get doesn't already exist in the map, then return the value in the map.
