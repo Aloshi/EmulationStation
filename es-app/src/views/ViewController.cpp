@@ -83,7 +83,7 @@ void ViewController::goToPrevGameList()
 	assert(mState.viewing == GAME_LIST);
 	SystemData* system = getState().getSystem();
 	assert(system);
-	goToGameList(system->getNext());
+	goToGameList(system->getPrev());
 }
 
 void ViewController::goToGameList(SystemData* system)
