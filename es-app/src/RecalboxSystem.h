@@ -1,45 +1,63 @@
-/* 
- * File:   RetroboxSystem.h
- * Author: matthieu
- *
- * Created on 29 novembre 2014, 03:15
- */
+#ifndef RECALBOX_SYSTEM
+#define    RECALBOX_SYSTEM
 
-#ifndef RETROBOXSYSTEM_H
-#define	RETROBOXSYSTEM_H
 #include <string>
 #include "Window.h"
 
 
 class RecalboxSystem {
 public:
-    
-    
-    static RecalboxSystem * getInstance();
+
+    static RecalboxSystem *getInstance();
+
+    const static Uint32 SDL_FAST_QUIT = 0x800F;
 
     unsigned long getFreeSpaceGB(std::string mountpoint);
+
     std::string getFreeSpaceInfo();
+
     bool isFreeSpaceLimit();
+
     std::string getVersion();
+
     bool setAudioOutputDevice(std::string device);
+
     bool setOverscan(bool enable);
+
     bool setOverclock(std::string mode);
+
     bool createLastVersionFileIfNotExisting();
+
     bool updateLastVersionFile();
+
     bool needToShowVersionMessage();
+
     std::string getVersionMessage();
+
     bool updateSystem();
+
     bool ping();
+
     bool canUpdate();
-    bool launchKodi(Window * window);
+
+    bool launchKodi(Window *window);
+
     bool enableWifi(std::string ssid, std::string key);
+
     bool disableWifi();
+
     bool reboot();
+
     bool shutdown();
+
+    bool fastReboot();
+
+    bool fastShutdown();
+
     std::string getIpAdress();
 
 
-    std::vector<std::string> * scanBluetooth();
+    std::vector<std::string> *scanBluetooth();
 
     bool pairBluetooth(std::string &basic_string);
 
@@ -52,10 +70,13 @@ public:
     bool forgetBluetoothControllers();
 
 private:
-    static RecalboxSystem * instance;
+    static RecalboxSystem *instance;
+
     RecalboxSystem();
+
+    bool halt(bool reboot, bool fast);
 
 };
 
-#endif	/* RETROBOXSYSTEM_Hm */
+#endif
 
