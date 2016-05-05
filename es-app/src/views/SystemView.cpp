@@ -169,6 +169,19 @@ bool SystemView::input(InputConfig* config, Input input)
 			row.addElement(std::make_shared<TextComponent>(window, _("SHUTDOWN SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
 														   0x777777FF), true);
 			s->addRow(row);
+			row.elements.clear();
+			row.makeAcceptInputHandler([window] {
+				window->pushGui(new GuiMsgBox(window, _("REALLY SHUTDOWN WITHOUT SAVING METADATAS?"), _("YES"),
+											  [] {
+												  if (RecalboxSystem::getInstance()->fastShutdown() != 0)  {
+													  LOG(LogWarning) <<
+																	  "Shutdown terminated with non-zero result!";
+												  }
+											  }, _("NO"), nullptr));
+			});
+			row.addElement(std::make_shared<TextComponent>(window, _("FAST SHUTDOWN SYSTEM"), Font::get(FONT_SIZE_MEDIUM),
+														   0x777777FF), true);
+			s->addRow(row);
 			mWindow->pushGui(s);
 		}
 

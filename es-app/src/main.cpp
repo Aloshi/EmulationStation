@@ -390,6 +390,10 @@ int main(int argc, char* argv[])
 				case SDL_QUIT:
 					running = false;
 					break;
+				case RecalboxSystem::SDL_FAST_QUIT:
+					running = false;
+					Settings::getInstance()->setBool("IgnoreGamelist", true);
+					break;
 			}
 		}
 

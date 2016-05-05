@@ -770,3 +770,9 @@ msgstr ""
 
 msgid "PLEASE WAIT..."
 msgstr ""
+
+msgid "REALLY SHUTDOWN WITHOUT SAVING METADATAS?"
+msgstr ""
+
+msgid "FAST SHUTDOWN SYSTEM"
+msgstr ""

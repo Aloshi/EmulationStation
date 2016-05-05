@@ -449,7 +449,7 @@ bool deleteSystem(SystemData * system){
 void SystemData::deleteSystems()
 {
 	if(sSystemVector.size()) {
-		// THE CREATION OF EACH SYSTEM
+		// THE DELETION OF EACH SYSTEM
 		boost::asio::io_service ioService;
 		boost::thread_group threadpool;
 		boost::asio::io_service::work work(ioService);
