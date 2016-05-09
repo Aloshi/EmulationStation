@@ -31,7 +31,7 @@ std::string strToUpper(const std::string& str)
 	return strToUpper(str.c_str());
 }
 
-
+#ifdef _MSC_VER
 #if _MSC_VER < 1800
 float round(float num)
 {
@@ -45,6 +45,7 @@ FILE * __iob_func(void)
 {
 	return iob;
 }
+#endif
 #endif
 
 Eigen::Affine3f& roundMatrix(Eigen::Affine3f& mat)
