@@ -89,7 +89,9 @@ void InputManager::addJoystickByDeviceIndex(int id)
 	// set up the prevAxisValues
 	int numAxes = SDL_JoystickNumAxes(joy);
 	mPrevAxisValues[joyId] = new int[numAxes];
-	std::fill(mPrevAxisValues[joyId], mPrevAxisValues[joyId] + numAxes, 0); //initialize array to 0
+	for(int i = 0; i<numAxes; i++) {
+		mPrevAxisValues[joyId][i] = SDL_JoystickGetAxis(joy, i);
+	}
 }
 
 void InputManager::removeJoystickByJoystickID(SDL_JoystickID joyId)
