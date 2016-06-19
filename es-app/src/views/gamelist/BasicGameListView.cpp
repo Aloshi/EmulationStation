@@ -90,7 +90,12 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 			}
 			else {
 				if ((*it)->metadata.get("hidden").compare("true") != 0) {
-					mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+					if ((*it)->getType() != FOLDER &&(*it)->metadata.get("favorite").compare("true") == 0)
+					{
+						mList.add("\uF006 " + (*it)->getName(), *it, ((*it)->getType() == FOLDER));
+					}else {
+						mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+					}
 				}
 			}
 		}
