@@ -14,3 +14,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added favorite system
 - Switched a and b buttons functions
 - Added support for RPI3 overclock (only none)
+- Added integer scale option in game options
