@@ -343,6 +343,19 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                  shaders_choices->add(_("SCANLINES"), "scanlines", currentShader == "scanlines");
                  shaders_choices->add(_("RETRO"), "retro", currentShader == "retro");
                  s->addWithLabel(_("SHADERS SET"), shaders_choices);
+                 // Integer scale
+                 auto integerscale_enabled = std::make_shared<SwitchComponent>(mWindow);
+                 integerscale_enabled->setState(RecalboxConf::getInstance()->get("global.integerscale") == "1");
+                 s->addWithLabel(_("INTEGER SCALE (PIXEL PERFECT)"), integerscale_enabled);
+                 s->addSaveFunc([integerscale_enabled] {
+                     RecalboxConf::getInstance()->set("global.integerscale", integerscale_enabled->getState() ? "1" : "0");
+                     RecalboxConf::getInstance()->saveRecalboxConf();
+                 });
+
+                 shaders_choices->setSelectedChangedCallback([integerscale_enabled] (std::string selectedShader){
+                     integerscale_enabled->setState(selectedShader != "none") ;
+                 });
+
 
                  if (RecalboxConf::getInstance()->get("system.es.menu") != "bartop") {
 
@@ -382,42 +395,72 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                          row.addElement(bracket, false);
                          s->addRow(row);
                      }
-                 }
-                 // Custom config for systems
-                 if (RecalboxConf::getInstance()->get("system.es.menu") != "bartop") {
-                     ComponentListRow row;
-                     std::function<void()> openGuiD = [this, s] {
-                         s->save();
-                         GuiSettings *configuration = new GuiSettings(mWindow, _("ADVANCED").c_str());
-                         // For each activated system
-                         std::vector<SystemData *> systems = SystemData::sSystemVector;
-                         for (auto system = systems.begin(); system != systems.end(); system++) {
-                             if ((*system) != SystemData::getFavoriteSystem()) {
-                                 ComponentListRow systemRow;
-                                 auto systemText = std::make_shared<TextComponent>(mWindow, (*system)->getFullName(),
-                                                                                   Font::get(FONT_SIZE_MEDIUM),
-                                                                                   0x777777FF);
-                                 auto bracket = makeArrow(mWindow);
-                                 systemRow.addElement(systemText, true);
-                                 systemRow.addElement(bracket, false);
-                                 SystemData *systemData = (*system);
-                                 systemRow.makeAcceptInputHandler([this, systemData] {
-                                     popSystemConfigurationGui(systemData, "");
-                                 });
-                                 configuration->addRow(systemRow);
+                     // Custom config for systems
+                     {
+                         ComponentListRow row;
+                         std::function<void()> openGuiD = [this, s] {
+                             s->save();
+                             GuiSettings *configuration = new GuiSettings(mWindow, _("ADVANCED").c_str());
+                             // For each activated system
+                             std::vector<SystemData *> systems = SystemData::sSystemVector;
+                             for (auto system = systems.begin(); system != systems.end(); system++) {
+                                 if ((*system) != SystemData::getFavoriteSystem()) {
+                                     ComponentListRow systemRow;
+                                     auto systemText = std::make_shared<TextComponent>(mWindow, (*system)->getFullName(),
+                                                                                       Font::get(FONT_SIZE_MEDIUM),
+                                                                                       0x777777FF);
+                                     auto bracket = makeArrow(mWindow);
+                                     systemRow.addElement(systemText, true);
+                                     systemRow.addElement(bracket, false);
+                                     SystemData *systemData = (*system);
+                                     systemRow.makeAcceptInputHandler([this, systemData] {
+                                         popSystemConfigurationGui(systemData, "");
+                                     });
+                                     configuration->addRow(systemRow);
+                                 }
                              }
-                         }
-                         mWindow->pushGui(configuration);
+                             mWindow->pushGui(configuration);
 
-                     };
-                     // Advanced button
-                     row.makeAcceptInputHandler(openGuiD);
-                     auto advanced = std::make_shared<TextComponent>(mWindow, _("ADVANCED"), Font::get(FONT_SIZE_MEDIUM),
-                                                                     0x777777FF);
-                     auto bracket = makeArrow(mWindow);
-                     row.addElement(advanced, true);
-                     row.addElement(bracket, false);
-                     s->addRow(row);
+                         };
+                         // Advanced button
+                         row.makeAcceptInputHandler(openGuiD);
+                         auto advanced = std::make_shared<TextComponent>(mWindow, _("ADVANCED"),
+                                                                         Font::get(FONT_SIZE_MEDIUM),
+                                                                         0x777777FF);
+                         auto bracket = makeArrow(mWindow);
+                         row.addElement(advanced, true);
+                         row.addElement(bracket, false);
+                         s->addRow(row);
+                     }
+                     // Game List Update
+                     {
+                         ComponentListRow row;
+                         Window *window = mWindow;
+
+                         row.makeAcceptInputHandler([this, window] {
+                             window->pushGui(new GuiMsgBox(window, _("REALLY UPDATE GAMES LISTS ?"), _("YES"),
+                                                           [this, window] {
+                                                               ViewController::get()->goToStart();
+                                                               window->renderShutdownScreen();
+                                                               delete ViewController::get();
+                                                               SystemData::deleteSystems();
+                                                               SystemData::loadConfig();
+                                                               GuiComponent *gui;
+                                                               while ((gui = window->peekGui()) != NULL) {
+                                                                   window->removeGui(gui);
+                                                                   delete gui;
+                                                               }
+                                                               ViewController::init(window);
+                                                               ViewController::get()->reloadAll();
+                                                               window->pushGui(ViewController::get());
+                                                           }, _("NO"), nullptr));
+                         });
+                         row.addElement(
+                                 std::make_shared<TextComponent>(window, _("UPDATE GAMES LISTS"),
+                                                                 Font::get(FONT_SIZE_MEDIUM),
+                                                                 0x777777FF), true);
+                         s->addRow(row);
+                     }
                  }
                  s->addSaveFunc([smoothing_enabled, rewind_enabled, shaders_choices, autosave_enabled] {
                      RecalboxConf::getInstance()->set("global.smooth", smoothing_enabled->getState() ? "1" : "0");
@@ -426,36 +469,6 @@ GuiMenu::GuiMenu(Window *window) : GuiComponent(window), mMenu(window, _("MAIN M
                      RecalboxConf::getInstance()->set("global.autosave", autosave_enabled->getState() ? "1" : "0");
                      RecalboxConf::getInstance()->saveRecalboxConf();
                  });
-                 // reread game list
-                 if (RecalboxConf::getInstance()->get("system.es.menu") != "bartop") {
-
-                     ComponentListRow row;
-                     Window *window = mWindow;
-
-                     row.makeAcceptInputHandler([this, window] {
-                         window->pushGui(new GuiMsgBox(window, _("REALLY UPDATE GAMES LISTS ?"), _("YES"),
-                                                       [this, window] {
-                                                           ViewController::get()->goToStart();
-                                                           window->renderShutdownScreen();
-                                                           delete ViewController::get();
-                                                           SystemData::deleteSystems();
-                                                           SystemData::loadConfig();
-                                                           GuiComponent *gui;
-                                                           while ((gui = window->peekGui()) != NULL) {
-                                                               window->removeGui(gui);
-                                                               delete gui;
-                                                           }
-                                                           ViewController::init(window);
-                                                           ViewController::get()->reloadAll();
-                                                           window->pushGui(ViewController::get());
-                                                       }, _("NO"), nullptr));
-                     });
-                     row.addElement(
-                             std::make_shared<TextComponent>(window, _("UPDATE GAMES LISTS"),
-                                                             Font::get(FONT_SIZE_MEDIUM),
-                                                             0x777777FF), true);
-                     s->addRow(row);
-                 }
                  mWindow->pushGui(s);
              }
 
