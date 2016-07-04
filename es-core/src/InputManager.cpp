@@ -348,6 +348,10 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 
 	config->writeToXML(root);
 	doc.save_file(path.c_str());
+	
+	// execute any onFinish commands and re-load the config for changes
+	doOnFinish();
+	loadInputConfig(config);
 }
 
 void InputManager::doOnFinish()
