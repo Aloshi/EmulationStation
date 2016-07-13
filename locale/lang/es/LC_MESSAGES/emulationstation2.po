@@ -80,14 +80,14 @@ msgid ""
 "CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
 "YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
 "\n"
-"VISIT RECALBOX.FR FOR MORE INFORMATION."
+"VISIT RECALBOX.COM FOR MORE INFORMATION."
 msgstr ""
 "¡NO SE HA ENCONTRADO NINGÚN SISTEMA!\n"
 "COMPRUEBA QUE LAS RUTAS EN EL ARCHIVO DE CONFIGURACIÓN DE SISTEMAS SON "
 "CORRECTAS Y QUE TU DIRECTORIO DE JUEGOS CONTIENE AL MENOS UNO CON LA "
 "EXTENSIÓN CORRECTA.\n"
 "\n"
-"VISITA RECALBOX.FR PARA OBTENER MÁS INFORMACIÓN"
+"VISITA RECALBOX.COM PARA OBTENER MÁS INFORMACIÓN"
 
 #, c-format
 msgid "%i GAME SUCCESSFULLY SCRAPED!"
@@ -373,7 +373,7 @@ msgid "Emulator"
 msgstr "Emulador"
 
 msgid "Core"
-msgstr "Nucleo"
+msgstr "Núcleo"
 
 msgid ""
 "YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
@@ -501,7 +501,7 @@ msgid "enter emulator"
 msgstr "introducir emulador"
 
 msgid "enter core"
-msgstr "introducir nucleo"
+msgstr "introducir núcleo"
 
 msgid "Name"
 msgstr "Nombre"
@@ -540,7 +540,7 @@ msgid "enter game developer"
 msgstr "introducir desarrollador"
 
 msgid "enter game publisher"
-msgstr "intorducir editor"
+msgstr "introducir editor"
 
 msgid "enter game genre"
 msgstr "introducir género"
@@ -561,10 +561,10 @@ msgid "enter region"
 msgstr "introducir región"
 
 msgid "Romtype"
-msgstr "Romtype"
+msgstr "Tipo de rom"
 
 msgid "enter romtype"
-msgstr "introducir romtype"
+msgstr "introducir tipo de rom"
 
 msgid "Hidden"
 msgstr "Oculto"
@@ -727,7 +727,7 @@ msgid "GAMEPAD %i"
 msgstr "MANDO %i"
 
 msgid "HOLD ANY BUTTON TO SKIP"
-msgstr "MANTEN CUALQUIER BOTÓN PARA SALTAR"
+msgstr "MANTÉN CUALQUIER BOTÓN PARA SALTAR"
 
 msgid "-NOT DEFINED-"
 msgstr "-SIN CONFIGURAR-"
@@ -735,8 +735,8 @@ msgstr "-SIN CONFIGURAR-"
 #, c-format
 msgid "HOLD FOR %iS TO SKIP"
 msgid_plural "HOLD FOR %iS TO SKIP"
-msgstr[0] "MANTEN %iS PARA SALTAR"
-msgstr[1] "MANTEN %iS PARA SALTAR"
+msgstr[0] "MANTÉN %iS PARA SALTAR"
+msgstr[1] "MANTÉN %iS PARA SALTAR"
 
 msgid "PRESS ANYTHING"
 msgstr "PULSA CUALQUIER BOTÓN"
