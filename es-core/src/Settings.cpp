@@ -122,7 +122,9 @@ bool Settings::loadFile()
 	const std::string path = getConfigDirectory() + "/es_settings.cfg";
 
 	if(!boost::filesystem::exists(path))
+	{
 		return false;
+	}
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result result = doc.load_file(path.c_str());
