@@ -39,7 +39,9 @@ public:
 	static InputManager* getInstance();
 
 	void writeDeviceConfig(InputConfig* config);
+	void doOnFinish();
 	static std::string getConfigPath();
+	static std::string getTemporaryConfigPath();
 
 	void init();
 	void deinit();
