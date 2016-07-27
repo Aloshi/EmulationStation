@@ -183,10 +183,15 @@ InputConfig* InputManager::getInputConfigByDevice(int device)
 bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 {
 	bool causedEvent = false;
+	std::string PS3("PLAYSTATION(R)3");
 	switch(ev.type)
 	{
 	case SDL_JOYAXISMOTION:
+		//Do not handle JOYAXISMOTION for PS3 controller
 		//if it switched boundaries
+		if (PS3.compare(0,15,SDL_JoystickNameForIndex(ev.jaxis.which),0,15) == 0) {
+			return false;
+		}
 		if((abs(ev.jaxis.value) > DEADZONE) != (abs(mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis]) > DEADZONE))
 		{
 			int normValue;
@@ -221,14 +226,14 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 		}
 
 		if(ev.key.repeat)
-			return false;
+			return true;
 
 		if(ev.key.keysym.sym == SDLK_F4)
 		{
 			SDL_Event* quit = new SDL_Event();
 			quit->type = SDL_QUIT;
 			SDL_PushEvent(quit);
-			return false;
+			return true;
 		}
 
 		window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 1, false));
@@ -248,7 +253,7 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 
 	case SDL_JOYDEVICEREMOVED:
 		removeJoystickByJoystickID(ev.jdevice.which); // ev.jdevice.which is an SDL_JoystickID (instance ID)
-		return false;
+		return true;
 	}
 
 	return false;
