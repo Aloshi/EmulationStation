@@ -100,6 +100,20 @@ fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allo
 	return path;
 }
 
+fs::path removeCommonPathUsingStrings(const fs::path& path, const fs::path& relativeTo, bool& contains)
+{
+	std::string pathStr = path.c_str();
+	std::string relativeToStr = relativeTo.c_str();
+	if (pathStr.find_first_of(relativeToStr) == 0) {
+		contains = true;
+		return pathStr.substr(relativeToStr.size() + 1);
+	}
+	else {
+		contains = false;
+		return path;
+	}
+}
+
 // example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
 fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool& contains)
 {
