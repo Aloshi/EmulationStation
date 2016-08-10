@@ -293,54 +293,54 @@ void InputManager::loadDefaultKBConfig()
 
 void InputManager::writeDeviceConfig(InputConfig* config)
 {
-    assert(initialized());
+	assert(initialized());
 
-    std::string path = getConfigPath();
+	std::string path = getConfigPath();
 
-    pugi::xml_document doc;
+	pugi::xml_document doc;
 
-    if(fs::exists(path))
-    {
-        // merge files
-        pugi::xml_parse_result result = doc.load_file(path.c_str());
-        if(!result)
-        {
-            LOG(LogError) << "Error parsing input config: " << result.description();
-        }
-        else
-        {
-            // successfully loaded, delete the old entry if it exists
-            pugi::xml_node root = doc.child("inputList");
-            if(root)
-            {
-                // if inputAction @type=onfinish is set, let onfinish command take care for creating input configuration.
-                // we just put the input configuration into a temporary input config file.
-                pugi::xml_node actionnode = root.find_child_by_attribute("inputAction", "type", "onfinish");
-                if(actionnode)
-                {
-                    path = getTemporaryConfigPath();
-                    doc.reset();
-                    root = doc.append_child("inputList");
-                    root.append_copy(actionnode);
-                }
-                else
-                {
-                    pugi::xml_node oldEntry = root.find_child_by_attribute("inputConfig", "deviceGUID",
-                                              config->getDeviceGUIDString().c_str());
-                    if(oldEntry)
-                    {
-                        root.remove_child(oldEntry);
-                    }
-                    oldEntry = root.find_child_by_attribute("inputConfig", "deviceName",
-                                                            config->getDeviceName().c_str());
-                    if(oldEntry)
-                    {
-                        root.remove_child(oldEntry);
-                    }
-                }
-            }
-        }
-    }
+	if(fs::exists(path))
+	{
+		// merge files
+		pugi::xml_parse_result result = doc.load_file(path.c_str());
+		if(!result)
+		{
+			LOG(LogError) << "Error parsing input config: " << result.description();
+		}
+		else
+		{
+			// successfully loaded, delete the old entry if it exists
+			pugi::xml_node root = doc.child("inputList");
+			if(root)
+			{
+				// if inputAction @type=onfinish is set, let onfinish command take care for creating input configuration.
+				// we just put the input configuration into a temporary input config file.
+				pugi::xml_node actionnode = root.find_child_by_attribute("inputAction", "type", "onfinish");
+				if(actionnode)
+				{
+					path = getTemporaryConfigPath();
+					doc.reset();
+					root = doc.append_child("inputList");
+					root.append_copy(actionnode);
+				}
+				else
+				{
+					pugi::xml_node oldEntry = root.find_child_by_attribute("inputConfig", "deviceGUID",
+											  config->getDeviceGUIDString().c_str());
+					if(oldEntry)
+					{
+						root.remove_child(oldEntry);
+					}
+					oldEntry = root.find_child_by_attribute("inputConfig", "deviceName",
+															config->getDeviceName().c_str());
+					if(oldEntry)
+					{
+						root.remove_child(oldEntry);
+					}
+				}
+			}
+		}
+	}
 
 	pugi::xml_node root = doc.child("inputList");
 	if(!root)
@@ -356,44 +356,44 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 
 void InputManager::doOnFinish()
 {
-    assert(initialized());
-    std::string path = getConfigPath();
-    pugi::xml_document doc;
+	assert(initialized());
+	std::string path = getConfigPath();
+	pugi::xml_document doc;
 
-    if(fs::exists(path))
-    {
-        pugi::xml_parse_result result = doc.load_file(path.c_str());
-        if(!result)
-        {
-            LOG(LogError) << "Error parsing input config: " << result.description();
-        }
-        else
-        {
-            pugi::xml_node root = doc.child("inputList");
-            if(root)
-            {
-                root = root.find_child_by_attribute("inputAction", "type", "onfinish");
-                if(root)
-                {
-                    for(pugi::xml_node command = root.child("command"); command;
-                            command = command.next_sibling("command"))
-                    {
-                        std::string tocall = command.text().get();
+	if(fs::exists(path))
+	{
+		pugi::xml_parse_result result = doc.load_file(path.c_str());
+		if(!result)
+		{
+			LOG(LogError) << "Error parsing input config: " << result.description();
+		}
+		else
+		{
+			pugi::xml_node root = doc.child("inputList");
+			if(root)
+			{
+				root = root.find_child_by_attribute("inputAction", "type", "onfinish");
+				if(root)
+				{
+					for(pugi::xml_node command = root.child("command"); command;
+							command = command.next_sibling("command"))
+					{
+						std::string tocall = command.text().get();
 
-                        LOG(LogInfo) << "	" << tocall;
-                        std::cout << "==============================================\ninput config finish command:\n";
-                        int exitCode = runSystemCommand(tocall);
-                        std::cout << "==============================================\n";
+						LOG(LogInfo) << "	" << tocall;
+						std::cout << "==============================================\ninput config finish command:\n";
+						int exitCode = runSystemCommand(tocall);
+						std::cout << "==============================================\n";
 
-                        if(exitCode != 0)
-                        {
-                            LOG(LogWarning) << "...launch terminated with nonzero exit code " << exitCode << "!";
-                        }
-                    }
-                }
-            }
-        }
-    }
+						if(exitCode != 0)
+						{
+							LOG(LogWarning) << "...launch terminated with nonzero exit code " << exitCode << "!";
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 std::string InputManager::getConfigPath()
