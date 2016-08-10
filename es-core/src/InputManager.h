@@ -1,5 +1,4 @@
-#ifndef _INPUTMANAGER_H_
-#define _INPUTMANAGER_H_
+#pragma once
 
 #include <SDL.h>
 #include <vector>
@@ -39,7 +38,9 @@ public:
 	static InputManager* getInstance();
 
 	void writeDeviceConfig(InputConfig* config);
+	void doOnFinish();
 	static std::string getConfigPath();
+	static std::string getTemporaryConfigPath();
 
 	void init();
 	void deinit();
@@ -54,5 +55,3 @@ public:
 
 	bool parseEvent(const SDL_Event& ev, Window* window);
 };
-
-#endif

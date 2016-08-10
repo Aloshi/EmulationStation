@@ -1,11 +1,52 @@
 #include "platform.h"
+#include "Settings.h"
 #include <stdlib.h>
 #include <boost/filesystem.hpp>
+#include <SDL.h>
 #include <iostream>
+#include <fcntl.h>
 
-#ifdef WIN32
-#include <codecvt>
+#if defined(WIN32)
+	#include <codecvt>
+	#include <windows.h>
+	#include <shlobj.h>
+	#include <io.h>
+#elif defined(__linux__)
+	#include <unistd.h>
+	#include <sys/reboot.h>
 #endif
+
+namespace fs = boost::filesystem;
+
+std::string getDefaultConfigDirectory()
+{
+    fs::path path;
+#ifdef _WIN32
+    CHAR my_documents[MAX_PATH];
+    SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, my_documents);
+    path = fs::path(my_documents) / fs::path("EmulationStation");
+#elif __APPLE__ && !defined(USE_XDG_OSX)
+    const char* homePath = getenv("HOME");
+    path = boost::filesystem::path(homePath);
+    path /= fs::path("Library") / fs::path("Application Support") / fs::path("org.emulationstation.EmulationStation") ;
+#else
+    const char* envXdgConfig = getenv("XDG_CONFIG_HOME");
+    if(envXdgConfig){
+        path = fs::path(envXdgConfig);
+    } else {
+        const char* homePath = getenv("HOME");
+        path = fs::path(homePath);
+        path /= fs::path(".config");
+    }
+    path /= fs::path("emulationstation");
+#endif
+    return path.generic_string();
+}
+
+std::string getConfigDirectory()
+{
+    return Settings::getInstance()->getString("ConfigDirectory");
+}
 
 std::string getHomePath()
 {
@@ -41,20 +82,35 @@ std::string getHomePath()
 
 int runShutdownCommand()
 {
-#ifdef WIN32 // windows
-	return system("shutdown -s -t 0");
-#else // osx / linux
-	return system("sudo shutdown -h now");
+    int returnCode = 0;
+#if defined(WIN32)
+	returnCode = system("shutdown -s -t 0");
+#elif defined(__linux__)
+	sync();
+	returnCode = reboot(RB_POWER_OFF);
+#else
+	returnCode = system("sudo shutdown -h now");
 #endif
+
+    //Clean up the SDL
+    quitES("/tmp/es-shutdown");
+    return returnCode;
 }
 
 int runRestartCommand()
 {
-#ifdef WIN32 // windows
-	return system("shutdown -r -t 0");
-#else // osx / linux
-	return system("sudo shutdown -r now");
+    int returnCode = 0;
+#if defined(WIN32)
+	returnCode = system("shutdown -r -t 0");
+#elif defined(__linux__)
+	sync();
+	returnCode = reboot(RB_AUTOBOOT);
+#else
+	returnCode = system("sudo shutdown -r now");
 #endif
+        //Clean up the SDL
+        quitES("/tmp/es-restart");
+        return returnCode;
 }
 
 int runSystemCommand(const std::string& cmd_utf8)
@@ -68,5 +124,27 @@ int runSystemCommand(const std::string& cmd_utf8)
 	return _wsystem(wchar_str.c_str());
 #else
 	return system(cmd_utf8.c_str());
+#endif
+}
+
+int quitES(const std::string& filename)
+{
+	touch(filename);
+	SDL_Event* quit = new SDL_Event();
+	quit->type = SDL_QUIT;
+	SDL_PushEvent(quit);
+	return 0;
+}
+
+void touch(const std::string& filename)
+{
+#ifdef WIN32
+	int fd = _open(filename.c_str(), O_CREAT | O_WRONLY, 0644);
+	if (fd >= 0)
+		_close(fd);
+#else
+	int fd = open(filename.c_str(), O_CREAT | O_WRONLY, 0644);
+	if (fd >= 0)
+		close(fd);
 #endif
 }

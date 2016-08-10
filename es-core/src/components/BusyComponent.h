@@ -1,6 +1,7 @@
-#include "GuiComponent.h"
 #include "components/ComponentGrid.h"
 #include "components/NinePatchComponent.h"
+
+#include "GuiComponent.h"
 
 class AnimatedImageComponent;
 class TextComponent;

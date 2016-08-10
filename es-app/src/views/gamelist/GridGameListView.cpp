@@ -1,7 +1,9 @@
 #include "views/gamelist/GridGameListView.h"
+
+#include "views/ViewController.h"
+
 #include "ThemeData.h"
 #include "Window.h"
-#include "views/ViewController.h"
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
 	mGrid(window)
@@ -40,7 +42,13 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 	mGrid.clear();
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
+		if ((*it)->metadata.get("hidden") != "true")
+		{
+			mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
+		}
+		else{
+			LOG(LogInfo) << (*it)->getPath() << " is hidden. Skipping displaying it.";
+		}
 	}
 }
 

@@ -1,15 +1,16 @@
 #include "components/ButtonComponent.h"
+
 #include "Renderer.h"
 #include "Window.h"
 #include "Util.h"
 #include "Log.h"
 
 ButtonComponent::ButtonComponent(Window* window, const std::string& text, const std::string& helpText, const std::function<void()>& func) : GuiComponent(window),
-	mBox(window, ":/button.png"),
 	mFont(Font::get(FONT_SIZE_MEDIUM)), 
 	mFocused(false), 
 	mEnabled(true), 
-	mTextColorFocused(0xFFFFFFFF), mTextColorUnfocused(0x777777FF)
+	mTextColorFocused(0xFFFFFFFF), mTextColorUnfocused(0x777777FF),
+	mBox(window, ":/button.png")
 {
 	setPressedFunc(func);
 	setText(text, helpText);

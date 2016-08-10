@@ -1,18 +1,18 @@
-#ifndef _AUDIOMANAGER_H_
-#define _AUDIOMANAGER_H_
+#pragma once
 
+#include "Sound.h"
+
+#include <SDL.h>
 #include <vector>
 #include <memory>
 
-#include "SDL_audio.h"
 
-#include "Sound.h"
 
 
 class AudioManager
 {
 	static SDL_AudioSpec sAudioFormat;
-	static std::vector<std::shared_ptr<Sound>> sSoundVector;
+	static std::vector<std::shared_ptr<Sound> > sSoundVector;
 	static std::shared_ptr<AudioManager> sInstance;
 
 	static void mixAudio(void *unused, Uint8 *stream, int len);
@@ -33,5 +33,3 @@ public:
 
 	virtual ~AudioManager();
 };
-
-#endif

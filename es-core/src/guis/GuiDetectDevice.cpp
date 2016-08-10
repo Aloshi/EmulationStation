@@ -1,6 +1,7 @@
 #include "guis/GuiDetectDevice.h"
 #include "Window.h"
 #include "Renderer.h"
+#include "Util.h"
 #include "resources/Font.h"
 #include "guis/GuiInputConfig.h"
 #include "components/TextComponent.h"
@@ -13,7 +14,9 @@
 
 using namespace Eigen;
 
-GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun, const std::function<void()>& doneCallback) : GuiComponent(window), mFirstRun(firstRun), 
+namespace fs = boost::filesystem;
+
+GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun, const std::function<void()>& doneCallback) : GuiComponent(window), mFirstRun(firstRun),
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5))
 {
 	mHoldingConfig = NULL;
@@ -100,15 +103,26 @@ void GuiDetectDevice::update(int deltaTime)
 {
 	if(mHoldingConfig)
 	{
-		mHoldTime -= deltaTime;
-		const float t = (float)mHoldTime / HOLD_TIME;
-		unsigned int c = (unsigned char)(t * 255);
-		mDeviceHeld->setColor((c << 24) | (c << 16) | (c << 8) | 0xFF);
-		if(mHoldTime <= 0)
+		// If ES starts and if a known device is connected after startup skip controller configuration
+		if(mFirstRun && fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
-			// picked one!
-			mWindow->pushGui(new GuiInputConfig(mWindow, mHoldingConfig, true, mDoneCallback));
-			delete this;
+			InputManager::getInstance()->doOnFinish(); // execute possible onFinish commands
+			if(mDoneCallback)
+				mDoneCallback();
+			delete this; // delete GUI element
+		}
+		else
+		{
+			mHoldTime -= deltaTime;
+			const float t = (float)mHoldTime / HOLD_TIME;
+			unsigned int c = (unsigned char)(t * 255);
+			mDeviceHeld->setColor((c << 24) | (c << 16) | (c << 8) | 0xFF);
+			if(mHoldTime <= 0)
+			{
+				// picked one!
+				mWindow->pushGui(new GuiInputConfig(mWindow, mHoldingConfig, true, mDoneCallback));
+				delete this;
+			}
 		}
 	}
 }

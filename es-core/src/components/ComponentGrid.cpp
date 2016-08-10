@@ -1,7 +1,10 @@
 #include "components/ComponentGrid.h"
+
 #include "Log.h"
 #include "Renderer.h"
 #include "Settings.h"
+
+#include <cstring>
 
 using namespace GridFlags;
 
@@ -430,15 +433,15 @@ std::vector<HelpPrompt> ComponentGrid::getHelpPrompts()
 	bool canScrollHoriz = mGridSize.x() > 1;
 	for(auto it = prompts.begin(); it != prompts.end(); it++)
 	{
-		if(it->first == "up/down/left/right")
+		if(strcmp(it->first, "up/down/left/right") == 0)
 		{
 			canScrollHoriz = false;
 			canScrollVert = false;
 			break;
-		}else if(it->first == "up/down")
+		}else if(strcmp(it->first, "up/down") == 0)
 		{
 			canScrollVert = false;
-		}else if(it->first == "left/right")
+		}else if(strcmp(it->first, "left/right") == 0)
 		{
 			canScrollHoriz = false;
 		}

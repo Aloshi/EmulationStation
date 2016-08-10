@@ -1,11 +1,13 @@
 #include "resources/Font.h"
-#include <iostream>
-#include <algorithm>
-#include <vector>
-#include <boost/filesystem.hpp>
+
 #include "Renderer.h"
 #include "Log.h"
 #include "Util.h"
+
+#include <boost/filesystem.hpp>
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
 FT_Library Font::sLibrary = NULL;
 
@@ -707,12 +709,12 @@ float Font::getNewlineStartOffset(const std::string& text, const unsigned int& c
 		return 0;
 	case ALIGN_CENTER:
 		{
-			unsigned int endChar = text.find('\n', charStart);
+			auto endChar = text.find('\n', charStart);
 			return (xLen - sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x()) / 2.0f;
 		}
 	case ALIGN_RIGHT:
 		{
-			unsigned int endChar = text.find('\n', charStart);
+			auto endChar = text.find('\n', charStart);
 			return xLen - (sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x());
 		}
 	default:

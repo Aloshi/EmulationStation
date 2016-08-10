@@ -1,8 +1,9 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "components/IList.h"
 #include "components/ImageComponent.h"
+
+#include "GuiComponent.h"
 #include "Log.h"
 
 struct ImageGridData
@@ -21,7 +22,7 @@ protected:
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
 	using IList<ImageGridData, T>::mCursor;
-	using IList<ImageGridData, T>::Entry;
+	using typename IList<ImageGridData, T>::Entry;
 	using IList<ImageGridData, T>::mWindow;
 
 public:

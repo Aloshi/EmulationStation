@@ -1,5 +1,7 @@
 #include "FileData.h"
+
 #include "SystemData.h"
+#include "Settings.h"
 
 namespace fs = boost::filesystem;
 
@@ -44,7 +46,7 @@ std::string removeParenthesis(const std::string& str)
 
 
 FileData::FileData(FileType type, const fs::path& path, SystemData* system)
-	: mType(type), mPath(path), mSystem(system), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
+	: metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA), mType(type), mPath(path), mSystem(system), mParent(nullptr) // metadata is REALLY set in the constructor!
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
@@ -63,10 +65,10 @@ FileData::~FileData()
 std::string FileData::getCleanName() const
 {
 	std::string stem = mPath.stem().generic_string();
-	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
+	if(mSystem && (mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO)))
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
-	return removeParenthesis(stem);
+	return stem;
 }
 
 const std::string& FileData::getThumbnailPath() const
@@ -78,18 +80,28 @@ const std::string& FileData::getThumbnailPath() const
 }
 
 
-std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask) const
+std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool forceHidden) const
 {
 	std::vector<FileData*> out;
 
 	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
 	{
-		if((*it)->getType() & typeMask)
-			out.push_back(*it);
+		if((*it)->getType() & typeMask & (!(*it)->metadata.getBool("hidden") || Settings::getInstance()->getBool("ShowHiddenFiles") || forceHidden)){
+			if ((*it)->getParent() != NULL)
+			{
+				if (!(*it)->getParent()->metadata.getBool("hidden") || Settings::getInstance()->getBool("ShowHiddenFiles") || forceHidden)
+				{
+					out.push_back(*it);
+				}
+			}
+			else {
+				out.push_back(*it);
+			}
+        }
 		
 		if((*it)->getChildren().size() > 0)
 		{
-			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask);
+			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask, forceHidden);
 			out.insert(out.end(), subchildren.cbegin(), subchildren.cend());
 		}
 	}

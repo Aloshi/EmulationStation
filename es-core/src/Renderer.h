@@ -1,11 +1,11 @@
-#ifndef _RENDERER_H_
-#define _RENDERER_H_
+#pragma once
 
+#include "platform.h"
+
+#include GLHEADER
+#include <Eigen/Dense>
 #include <vector>
 #include <string>
-#include "platform.h"
-#include <Eigen/Dense>
-#include GLHEADER
 
 class GuiComponent;
 class Font;
@@ -35,5 +35,3 @@ namespace Renderer
 	void drawRect(int x, int y, int w, int h, unsigned int color, GLenum blend_sfactor = GL_SRC_ALPHA, GLenum blend_dfactor = GL_ONE_MINUS_SRC_ALPHA);
 	void drawRect(float x, float y, float w, float h, unsigned int color, GLenum blend_sfactor = GL_SRC_ALPHA, GLenum blend_dfactor = GL_ONE_MINUS_SRC_ALPHA);
 }
-
-#endif

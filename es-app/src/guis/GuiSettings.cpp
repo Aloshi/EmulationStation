@@ -1,7 +1,9 @@
 #include "guis/GuiSettings.h"
+
+#include "views/ViewController.h"
+
 #include "Window.h"
 #include "Settings.h"
-#include "views/ViewController.h"
 
 GuiSettings::GuiSettings(Window* window, const char* title) : GuiComponent(window), mMenu(window, title)
 {

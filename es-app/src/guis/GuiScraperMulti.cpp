@@ -1,20 +1,23 @@
 #include "guis/GuiScraperMulti.h"
-#include "Renderer.h"
-#include "Log.h"
-#include "views/ViewController.h"
-#include "Gamelist.h"
+
+#include "guis/GuiMsgBox.h"
 
 #include "components/TextComponent.h"
 #include "components/ButtonComponent.h"
 #include "components/ScraperSearchComponent.h"
 #include "components/MenuComponent.h" // for makeButtonGrid
-#include "guis/GuiMsgBox.h"
+
+#include "views/ViewController.h"
+
+#include "Renderer.h"
+#include "Log.h"
+#include "Gamelist.h"
 
 using namespace Eigen;
 
 GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults) : 
-	GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)), 
-	mSearchQueue(searches)
+	GuiComponent(window), mSearchQueue(searches),
+    mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5))
 {
 	assert(mSearchQueue.size());
 

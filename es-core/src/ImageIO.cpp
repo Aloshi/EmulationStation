@@ -1,8 +1,8 @@
 #include "ImageIO.h"
 
-#include <memory.h>
-
 #include "Log.h"
+
+#include <cstring>
 
 
 std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * data, const size_t size, size_t & width, size_t & height)

@@ -8,7 +8,7 @@ class Settings
 public:
 	static Settings* getInstance();
 
-	void loadFile();
+	bool loadFile();
 	void saveFile();
 
 	//You will get a warning if you try a get on a key that is not already present.

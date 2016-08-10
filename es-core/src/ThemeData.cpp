@@ -1,15 +1,19 @@
 #include "ThemeData.h"
-#include "Renderer.h"
+
 #include "resources/Font.h"
-#include "Sound.h"
 #include "resources/TextureResource.h"
-#include "Log.h"
-#include "Settings.h"
-#include "pugixml/pugixml.hpp"
-#include <boost/assign.hpp>
 
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
+
+#include "Renderer.h"
+#include "Sound.h"
+#include "Settings.h"
+#include "Log.h"
+
+#include "pugixml/pugixml.hpp"
+#include <boost/assign.hpp>
+
 
 
 // This is a work around for some ambiguity that is introduced in C++11 that boost::assign::map_list_of leave open.
@@ -362,7 +366,7 @@ const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 	{
 		theme = std::shared_ptr<ThemeData>(new ThemeData());
 
-		const std::string path = getHomePath() + "/.emulationstation/es_theme_default.xml";
+		const std::string path = getConfigDirectory() + "/es_theme_default.xml";
 		if(fs::exists(path))
 		{
 			try
@@ -432,7 +436,7 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	static const size_t pathCount = 2;
 	fs::path paths[pathCount] = { 
 		"/etc/emulationstation/themes", 
-		getHomePath() + "/.emulationstation/themes" 
+		getConfigDirectory() + "/themes"
 	};
 
 	fs::directory_iterator end;

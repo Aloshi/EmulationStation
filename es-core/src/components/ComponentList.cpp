@@ -1,6 +1,9 @@
 #include "components/ComponentList.h"
+
 #include "Util.h"
 #include "Log.h"
+
+#include <cstring>
 
 #define TOTAL_HORIZONTAL_PADDING_PX 20
 
@@ -81,10 +84,10 @@ bool ComponentList::input(InputConfig* config, Input input)
 	}else if(config->isMappedTo("down", input))
 	{
 		return listInput(input.value != 0 ? 1 : 0);
-	}else if(config->isMappedTo("pageup", input))
+	}else if(config->isMappedTo("leftbottom", input))
 	{
 		return listInput(input.value != 0 ? -7 : 0);
-	}else if(config->isMappedTo("pagedown", input)){
+	}else if(config->isMappedTo("rightbottom", input)){
 		return listInput(input.value != 0 ? 7 : 0);
 	}
 
@@ -318,7 +321,7 @@ std::vector<HelpPrompt> ComponentList::getHelpPrompts()
 		bool addMovePrompt = true;
 		for(auto it = prompts.begin(); it != prompts.end(); it++)
 		{
-			if(it->first == "up/down" || it->first == "up/down/left/right")
+			if(strcmp(it->first, "up/down") == 0 || strcmp(it->first, "up/down/left/right") == 0)
 			{
 				addMovePrompt = false;
 				break;

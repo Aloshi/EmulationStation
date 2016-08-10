@@ -1,5 +1,4 @@
-#ifndef _LOG_H_
-#define _LOG_H_
+#pragma once
 
 #define LOG(level) \
 if(level > Log::getReportingLevel()) ; \
@@ -34,5 +33,3 @@ private:
 	static FILE* getOutput();
 	LogLevel messageLevel;
 };
-
-#endif

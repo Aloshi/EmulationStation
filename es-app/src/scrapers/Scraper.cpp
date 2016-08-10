@@ -1,12 +1,15 @@
 #include "scrapers/Scraper.h"
+
+#include "scrapers/GamesDBScraper.h"
+#include "scrapers/TheArchiveScraper.h"
+
 #include "Log.h"
 #include "Settings.h"
+
 #include <FreeImage.h>
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
 
-#include "GamesDBScraper.h"
-#include "TheArchiveScraper.h"
 
 const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
 	("TheGamesDB", &thegamesdb_generate_scraper_requests)
@@ -166,7 +169,7 @@ std::unique_ptr<ImageDownloadHandle> downloadImageAsync(const std::string& url, 
 }
 
 ImageDownloadHandle::ImageDownloadHandle(const std::string& url, const std::string& path, int maxWidth, int maxHeight) : 
-	mSavePath(path), mMaxWidth(maxWidth), mMaxHeight(maxHeight), mReq(new HttpReq(url))
+	mReq(new HttpReq(url)), mSavePath(path), mMaxWidth(maxWidth), mMaxHeight(maxHeight)
 {
 }
 
@@ -273,7 +276,7 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 	const std::string subdirectory = params.system->getName();
 	const std::string name = params.game->getPath().stem().generic_string() + "-" + suffix;
 
-	std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
+	std::string path = getConfigDirectory() + "/downloaded_images/";
 
 	if(!boost::filesystem::exists(path))
 		boost::filesystem::create_directory(path);

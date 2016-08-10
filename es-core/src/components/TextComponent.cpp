@@ -1,4 +1,5 @@
 #include "components/TextComponent.h"
+
 #include "Renderer.h"
 #include "Log.h"
 #include "Window.h"
@@ -7,13 +8,13 @@
 #include "Settings.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
-	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT), mLineSpacing(1.5f)
+	mColor(0x000000FF), mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT), mLineSpacing(1.5f)
 {
 }
 
 TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
 	Eigen::Vector3f pos, Eigen::Vector2f size) : GuiComponent(window), 
-	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align), mLineSpacing(1.5f)
+	mColor(0x000000FF), mFont(nullptr), mUppercase(false), mAutoCalcExtent(true, true), mAlignment(align), mLineSpacing(1.5f)
 {
 	setFont(font);
 	setColor(color);

@@ -1,11 +1,13 @@
-#include "GuiGamelistOptions.h"
-#include "GuiMetaDataEd.h"
+#include "guis/GuiGamelistOptions.h"
+
+#include "guis/GuiMetaDataEd.h"
+
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
-	mSystem(system), 
-	mMenu(window, "OPTIONS")
+	mMenu(window, "OPTIONS"),
+	mSystem(system)
 {
 	addChild(&mMenu);
 
@@ -40,7 +42,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
 	{
 		const FileData::SortType& sort = FileSorts::SortTypes.at(i);
-		mListSort->add(sort.description, &sort, i == 0); // TODO - actually make the sort type persistent
+		mListSort->add(sort.description, &sort, i == system->sortId);
 	}
 
 	mMenu.addWithLabel("SORT GAMES BY", mListSort);
@@ -59,8 +61,10 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 GuiGamelistOptions::~GuiGamelistOptions()
 {
-	// apply sort
-	FileData* root = getGamelist()->getCursor()->getSystem()->getRootFolder();
+	// save and apply sort
+	SystemData* system = getGamelist()->getCursor()->getSystem();
+	FileData* root = system->getRootFolder();
+	system->sortId = mListSort->getSelectedId(); // this will break if mListSort isn't in the same order as FileSorts:typesArr
 	root->sort(*mListSort->getSelected()); // will also recursively sort children
 
 	// notify that the root folder was sorted
@@ -76,10 +80,7 @@ void GuiGamelistOptions::openMetaDataEd()
 	p.system = file->getSystem();
 	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(), 
 		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), [this, file] { 
-			boost::filesystem::remove(file->getPath()); //actually delete the file on the filesystem
-			file->getParent()->removeChild(file); //unlink it so list repopulations triggered from onFileChanged won't see it
-			getGamelist()->onFileChanged(file, FILE_REMOVED); //tell the view
-			delete file; //free it
+			getGamelist()->remove(file);
 	}));
 }
 

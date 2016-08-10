@@ -1,6 +1,7 @@
 #pragma once
 
 #include "views/gamelist/ISimpleGameListView.h"
+
 #include "components/TextListComponent.h"
 
 class BasicGameListView : public ISimpleGameListView
@@ -23,6 +24,7 @@ public:
 protected:
 	virtual void populateList(const std::vector<FileData*>& files) override;
 	virtual void launch(FileData* game) override;
+	virtual void remove(FileData* game) override;
 
 	TextListComponent<FileData*> mList;
 };

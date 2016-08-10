@@ -1,10 +1,12 @@
 #include "Gamelist.h"
+
 #include "SystemData.h"
-#include "pugixml/pugixml.hpp"
-#include <boost/filesystem.hpp>
 #include "Log.h"
 #include "Settings.h"
 #include "Util.h"
+
+#include "pugixml/pugixml.hpp"
+#include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -102,6 +104,9 @@ void parseGamelist(SystemData* system)
 		return;
 	}
 
+	/* Set system sort ID */
+	system->sortId = root.attribute("sortid").as_int(0);
+
 	fs::path relativeTo = system->getStartPath();
 
 	const char* tagList[2] = { "game", "folder" };
@@ -197,13 +202,16 @@ void updateGamelist(SystemData* system)
 		root = doc.append_child("gameList");
 	}
 
+	// Update to the current sort type for this system
+	root.remove_attribute("sortid");
+	root.append_attribute("sortid") = std::to_string(system->sortId).c_str();
 
 	//now we have all the information from the XML. now iterate through all our games and add information from there
 	FileData* rootFolder = system->getRootFolder();
 	if (rootFolder != nullptr)
 	{
 		//get only files, no folders
-		std::vector<FileData*> files = rootFolder->getFilesRecursive(GAME | FOLDER);
+		std::vector<FileData*> files = rootFolder->getFilesRecursive(GAME | FOLDER, true);
 		//iterate through all files, checking if they're already in the XML
 		std::vector<FileData*>::const_iterator fit = files.cbegin();
 		while(fit != files.cend())

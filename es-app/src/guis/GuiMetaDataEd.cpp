@@ -1,38 +1,43 @@
 #include "guis/GuiMetaDataEd.h"
-#include "Renderer.h"
-#include "Log.h"
-#include "components/AsyncReqComponent.h"
-#include "Settings.h"
-#include "views/ViewController.h"
+
 #include "guis/GuiGameScraper.h"
 #include "guis/GuiMsgBox.h"
-#include <boost/filesystem.hpp>
+#include "guis/GuiTextEditPopup.h"
 
+#include "components/AsyncReqComponent.h"
 #include "components/TextEditComponent.h"
 #include "components/DateTimeComponent.h"
 #include "components/RatingComponent.h"
-#include "guis/GuiTextEditPopup.h"
+#include "components/SwitchComponent.h"
+
+#include "views/ViewController.h"
+
+#include "Renderer.h"
+#include "Log.h"
+#include "Settings.h"
+
+#include <boost/filesystem.hpp>
+
 
 using namespace Eigen;
 
-GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
-	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
-	mScraperParams(scraperParams), 
-
-	mBackground(window, ":/frame.png"), 
+GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams,
+	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window),
+	mBackground(window, ":/frame.png"),
 	mGrid(window, Vector2i(1, 3)),
+	mScraperParams(scraperParams),
 
-	mMetaDataDecl(mdd), 
-	mMetaData(md), 
+	mMetaDataDecl(mdd),
+	mMetaData(md),
 	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc)
 {
 	addChild(&mBackground);
 	addChild(&mGrid);
 
 	mHeaderGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(1, 5));
-	
+
 	mTitle = std::make_shared<TextComponent>(mWindow, "EDIT METADATA", Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
-	mSubtitle = std::make_shared<TextComponent>(mWindow, strToUpper(scraperParams.game->getPath().filename().generic_string()), 
+	mSubtitle = std::make_shared<TextComponent>(mWindow, strToUpper(scraperParams.game->getPath().filename().generic_string()),
 		Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mHeaderGrid->setEntry(mTitle, Vector2i(0, 1), false, true);
 	mHeaderGrid->setEntry(mSubtitle, Vector2i(0, 3), false, true);
@@ -75,6 +80,20 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 				break;
 			}
+		case MD_BOOL:
+			{
+				ed = std::make_shared<SwitchComponent>(window);
+				//ed->setState(false);
+				row.addElement(ed, false, true);
+
+				auto spacer = std::make_shared<GuiComponent>(mWindow);
+				spacer->setSize(Renderer::getScreenWidth() * 0.0025f, 0);
+				row.addElement(spacer, false);
+
+				// pass input to the actual SwitchComponent instead of the spacer
+				row.input_handler = std::bind(&GuiComponent::input, ed.get(), std::placeholders::_1, std::placeholders::_2);
+				break;
+			}
 		case MD_DATE:
 			{
 				ed = std::make_shared<DateTimeComponent>(window);
@@ -86,7 +105,6 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 				// pass input to the actual DateTimeComponent instead of the spacer
 				row.input_handler = std::bind(&GuiComponent::input, ed.get(), std::placeholders::_1, std::placeholders::_2);
-
 				break;
 			}
 		case MD_TIME:
@@ -101,7 +119,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 				// MD_STRING
 				ed = std::make_shared<TextComponent>(window, "", Font::get(FONT_SIZE_SMALL, FONT_PATH_LIGHT), 0x777777FF, ALIGN_RIGHT);
 				row.addElement(ed, true);
-				
+
 				auto spacer = std::make_shared<GuiComponent>(mWindow);
 				spacer->setSize(Renderer::getScreenWidth() * 0.005f, 0);
 				row.addElement(spacer, false);
@@ -230,7 +248,7 @@ void GuiMetaDataEd::close(bool closeAllWindows)
 	if(dirty)
 	{
 		// changes were made, ask if the user wants to save them
-		mWindow->pushGui(new GuiMsgBox(mWindow, 
+		mWindow->pushGui(new GuiMsgBox(mWindow,
 			"SAVE CHANGES?",
 			"YES", [this, closeFunc] { save(); closeFunc(); },
 			"NO", closeFunc

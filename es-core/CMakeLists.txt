@@ -17,6 +17,9 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ThemeData.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Util.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Window.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/hash.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/md5.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/crc32.h
 
 	# Animations
 	${CMAKE_CURRENT_SOURCE_DIR}/src/animations/Animation.h
@@ -76,6 +79,8 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ThemeData.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Util.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Window.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/md5.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/crc32.cpp
 
 	# Animations
 	${CMAKE_CURRENT_SOURCE_DIR}/src/animations/AnimationController.cpp
@@ -121,6 +126,11 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/frame_png.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
 
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_thumb_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_x_svg.cpp

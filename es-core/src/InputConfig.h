@@ -1,12 +1,11 @@
-#ifndef _INPUTCONFIG_H_
-#define _INPUTCONFIG_H_
+#pragma once
 
+#include "pugixml/pugixml.hpp"
+#include <SDL.h>
 #include <map>
 #include <vector>
 #include <string>
-#include <SDL.h>
 #include <sstream>
-#include "pugixml/pugixml.hpp"
 
 #define DEVICE_KEYBOARD -1
 
@@ -114,5 +113,3 @@ private:
 	const std::string mDeviceName;
 	const std::string mDeviceGUID;
 };
-
-#endif

@@ -1,14 +1,17 @@
 #pragma once
 
-#include "GuiComponent.h"
-#include "resources/Font.h"
-#include "Renderer.h"
-#include "Window.h"
 #include "components/TextComponent.h"
 #include "components/ImageComponent.h"
 #include "components/MenuComponent.h"
-#include <sstream>
+
+#include "resources/Font.h"
+
+#include "GuiComponent.h"
+#include "Renderer.h"
+#include "Window.h"
 #include "Log.h"
+
+#include <sstream>
 
 //Used to display a list of options.
 //Can select one or multiple options.
@@ -251,7 +254,6 @@ public:
 		onSelectedChanged();
 	}
 
-private:
 	unsigned int getSelectedId()
 	{
 		assert(mMultiSelect == false);
@@ -265,6 +267,7 @@ private:
 		return 0;
 	}
 
+private:
 	void open()
 	{
 		mWindow->pushGui(new OptionListPopup(mWindow, this, mName));

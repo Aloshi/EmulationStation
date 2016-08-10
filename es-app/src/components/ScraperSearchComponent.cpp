@@ -1,6 +1,5 @@
 #include "components/ScraperSearchComponent.h"
 
-#include "guis/GuiMsgBox.h"
 #include "components/TextComponent.h"
 #include "components/ScrollableContainer.h"
 #include "components/ImageComponent.h"
@@ -8,15 +7,18 @@
 #include "components/DateTimeComponent.h"
 #include "components/AnimatedImageComponent.h"
 #include "components/ComponentList.h"
+
+#include "guis/GuiTextEditPopup.h"
+#include "guis/GuiMsgBox.h"
+
 #include "HttpReq.h"
 #include "Settings.h"
 #include "Log.h"
 #include "Util.h"
-#include "guis/GuiTextEditPopup.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
-	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
-	mSearchType(type)
+	mGrid(window, Eigen::Vector2i(4, 3)),
+	mSearchType(type), mBusyAnim(window)
 {
 	addChild(&mGrid);
 

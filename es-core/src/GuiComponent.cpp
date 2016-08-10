@@ -1,15 +1,17 @@
 #include "GuiComponent.h"
+
+#include "animations/AnimationController.h"
+
 #include "Window.h"
 #include "Log.h"
 #include "Renderer.h"
-#include "animations/AnimationController.h"
 #include "ThemeData.h"
 
-GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
+GuiComponent::GuiComponent(Window* window) : mOpacity(255), mWindow(window), mParent(nullptr), 
 	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity())
 {
 	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
-		mAnimationMap[i] = NULL;
+		mAnimationMap[i] = nullptr;
 }
 
 GuiComponent::~GuiComponent()
@@ -22,7 +24,7 @@ GuiComponent::~GuiComponent()
 		mParent->removeChild(this);
 
 	for(unsigned int i = 0; i < getChildCount(); i++)
-		getChild(i)->setParent(NULL);
+		getChild(i)->setParent(nullptr);
 }
 
 bool GuiComponent::input(InputConfig* config, Input input)
@@ -125,7 +127,7 @@ void GuiComponent::removeChild(GuiComponent* cmp)
 		LOG(LogError) << "Tried to remove child from incorrect parent!";
 	}
 
-	cmp->setParent(NULL);
+	cmp->setParent(nullptr);
 
 	for(auto i = mChildren.begin(); i != mChildren.end(); i++)
 	{
@@ -217,7 +219,7 @@ bool GuiComponent::stopAnimation(unsigned char slot)
 	if(mAnimationMap[slot])
 	{
 		delete mAnimationMap[slot];
-		mAnimationMap[slot] = NULL;
+		mAnimationMap[slot] = nullptr;
 		return true;
 	}else{
 		return false;
@@ -231,7 +233,7 @@ bool GuiComponent::cancelAnimation(unsigned char slot)
 	{
 		mAnimationMap[slot]->removeFinishedCallback();
 		delete mAnimationMap[slot];
-		mAnimationMap[slot] = NULL;
+		mAnimationMap[slot] = nullptr;
 		return true;
 	}else{
 		return false;
@@ -248,7 +250,7 @@ bool GuiComponent::finishAnimation(unsigned char slot)
 		assert(done);
 
 		delete mAnimationMap[slot]; // will also call finishedCallback
-		mAnimationMap[slot] = NULL;
+		mAnimationMap[slot] = nullptr;
 		return true;
 	}else{
 		return false;
@@ -264,7 +266,7 @@ bool GuiComponent::advanceAnimation(unsigned char slot, unsigned int time)
 		bool done = anim->update(time);
 		if(done)
 		{
-			mAnimationMap[slot] = NULL;
+			mAnimationMap[slot] = nullptr;
 			delete anim;
 		}
 		return true;
@@ -287,18 +289,18 @@ void GuiComponent::cancelAllAnimations()
 
 bool GuiComponent::isAnimationPlaying(unsigned char slot) const
 {
-	return mAnimationMap[slot] != NULL;
+	return mAnimationMap[slot] != nullptr;
 }
 
 bool GuiComponent::isAnimationReversed(unsigned char slot) const
 {
-	assert(mAnimationMap[slot] != NULL);
+	assert(mAnimationMap[slot] != nullptr);
 	return mAnimationMap[slot]->isReversed();
 }
 
 int GuiComponent::getAnimationTime(unsigned char slot) const
 {
-	assert(mAnimationMap[slot] != NULL);
+	assert(mAnimationMap[slot] != nullptr);
 	return mAnimationMap[slot]->getTime();
 }
 

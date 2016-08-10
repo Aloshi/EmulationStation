@@ -1,9 +1,10 @@
 #pragma once
 
+#include "MetaData.h"
+
+#include <boost/filesystem.hpp>
 #include <vector>
 #include <string>
-#include <boost/filesystem.hpp>
-#include "MetaData.h"
 
 class SystemData;
 
@@ -44,7 +45,7 @@ public:
 	
 	virtual const std::string& getThumbnailPath() const;
 
-	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
+	std::vector<FileData*> getFilesRecursive(unsigned int typeMask, bool forceHidden) const;
 
 	void addChild(FileData* file); // Error if mType != FOLDER
 	void removeChild(FileData* file); //Error if mType != FOLDER

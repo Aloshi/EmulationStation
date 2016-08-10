@@ -1,17 +1,19 @@
 #include "resources/TextureResource.h"
+
 #include "Log.h"
 #include "platform.h"
-#include GLHEADER
 #include "ImageIO.h"
 #include "Renderer.h"
 #include "Util.h"
 #include "resources/SVGResource.h"
 
+#include GLHEADER
+
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
 std::list< std::weak_ptr<TextureResource> > TextureResource::sTextureList;
 
 TextureResource::TextureResource(const std::string& path, bool tile) : 
-	mTextureID(0), mPath(path), mTextureSize(Eigen::Vector2i::Zero()), mTile(tile)
+	mTextureSize(Eigen::Vector2i::Zero()), mPath(path), mTile(tile), mTextureID(0)
 {
 }
 

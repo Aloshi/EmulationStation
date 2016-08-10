@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <FreeImage.h>
+#include <vector>
 
 class ImageIO
 {

@@ -1,5 +1,6 @@
+#include "components/ImageComponent.h"
+
 #include "GuiComponent.h"
-#include "ImageComponent.h"
 
 struct AnimationFrame
 {

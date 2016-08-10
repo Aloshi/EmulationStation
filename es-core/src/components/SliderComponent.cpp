@@ -1,9 +1,12 @@
 #include "components/SliderComponent.h"
-#include <assert.h>
-#include "Renderer.h"
+
 #include "resources/Font.h"
+
+#include "Renderer.h"
 #include "Log.h"
 #include "Util.h"
+
+#include <cassert>
 
 #define MOVE_REPEAT_DELAY 500
 #define MOVE_REPEAT_RATE 40

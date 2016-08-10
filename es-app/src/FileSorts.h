@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include "FileData.h"
+
+#include <vector>
 
 namespace FileSorts
 {

@@ -1,7 +1,9 @@
 #include "views/gamelist/ISimpleGameListView.h"
+
+#include "views/ViewController.h"
+
 #include "ThemeData.h"
 #include "Window.h"
-#include "views/ViewController.h"
 #include "Sound.h"
 #include "Settings.h"
 

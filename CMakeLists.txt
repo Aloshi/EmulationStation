@@ -60,6 +60,11 @@ if(DEFINED BCMHOST)
     add_definitions(-D_RPI_)
 endif()
 
+option(XdgOsx "XdgOsx" OFF)
+if(XdgOsx)
+    add_definitions(-DUSE_XDG_OSX)
+endif()
+
 #-------------------------------------------------------------------------------
 
 if(MSVC)
@@ -68,17 +73,9 @@ if(MSVC)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-    #check for G++ 4.7+
-    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE G++_VERSION)
-    if (G++_VERSION VERSION_LESS 4.7)
-            message(SEND_ERROR "You need at least G++ 4.7 to compile EmulationStation!")
-    endif()
-
+else()
     #set up compiler flags for GCC
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O3") #support C++11 for std::, optimize
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -O3") #support C++11 for std::, optimize
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O3")  #-s = strip binary
 endif()
 

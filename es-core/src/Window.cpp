@@ -1,19 +1,22 @@
 #include "Window.h"
-#include <iostream>
+
+#include "components/HelpComponent.h"
+#include "components/ImageComponent.h"
+
 #include "Renderer.h"
 #include "AudioManager.h"
 #include "Log.h"
 #include "Settings.h"
-#include <iomanip>
-#include "components/HelpComponent.h"
-#include "components/ImageComponent.h"
 
-Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
+#include <iostream>
+#include <cstring>
+#include <iomanip>
+
+Window::Window() : mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), mNormalizeNextUpdate(false),
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
-	mBackgroundOverlay->setImage(":/scroll_gradient.png");
 }
 
 Window::~Window()
@@ -77,6 +80,7 @@ bool Window::init(unsigned int width, unsigned int height)
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_LARGE));
 	}
 
+	mBackgroundOverlay->setImage(":/scroll_gradient.png");
 	mBackgroundOverlay->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// update our help because font sizes probably changed
@@ -274,8 +278,8 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 				// yes, it has!
 
 				// can we combine? (dpad only)
-				if((it->first == "up/down" && addPrompts.at(mappedTo->second).first == "left/right") ||
-					(it->first == "left/right" && addPrompts.at(mappedTo->second).first == "up/down"))
+				if((strcmp(it->first, "up/down") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "left/right") == 0) ||
+					(strcmp(it->first, "left/right") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "up/down") == 0 ))
 				{
 					// yes!
 					addPrompts.at(mappedTo->second).first = "up/down/left/right";

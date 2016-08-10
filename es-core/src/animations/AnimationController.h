@@ -1,8 +1,9 @@
 #pragma once
 
+#include "animations/Animation.h"
+
 #include <memory>
 #include <functional>
-#include "animations/Animation.h"
 
 class AnimationController
 {

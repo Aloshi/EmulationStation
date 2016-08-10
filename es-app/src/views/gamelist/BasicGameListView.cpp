@@ -1,5 +1,7 @@
 #include "views/gamelist/BasicGameListView.h"
+
 #include "views/ViewController.h"
+
 #include "Renderer.h"
 #include "Window.h"
 #include "ThemeData.h"
@@ -38,12 +40,26 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
+	
+	// file list can be empty if direct launch item
+	if (files.size()==0)
+	{
+		return;
+	}
 
 	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
 
+	bool showHiddenFiles = Settings::getInstance()->getBool("ShowHiddenFiles");
+
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		if ((*it)->metadata.get("hidden") != "true" || showHiddenFiles)
+		{
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		}
+		else{
+			LOG(LogInfo) << (*it)->getPath() << " is hidden. Skipping displaying it.";
+		}
 	}
 }
 
@@ -84,6 +100,28 @@ void BasicGameListView::setCursor(FileData* cursor)
 void BasicGameListView::launch(FileData* game)
 {
 	ViewController::get()->launch(game);
+}
+
+void BasicGameListView::remove(FileData *game)
+{
+	boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
+	if (getCursor() == game)                     // Select next element in list, or prev if none
+	{
+		std::vector<FileData*> siblings = game->getParent()->getChildren();
+		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
+		auto gamePos = std::distance(siblings.begin(), gameIter);
+		if (gameIter != siblings.end())
+		{
+			if ((gamePos + 1) < siblings.size())
+			{
+				setCursor(siblings.at(gamePos + 1));
+			} else if ((gamePos - 1) > 0) {
+				setCursor(siblings.at(gamePos - 1));
+			}
+		}
+	}
+	delete game;                                 // remove before repopulating (removes from parent)
+	onFileChanged(game, FILE_REMOVED);           // update the view, with game removed
 }
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()

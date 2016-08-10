@@ -1,11 +1,13 @@
 #include "guis/GuiScraperStart.h"
+
 #include "guis/GuiScraperMulti.h"
 #include "guis/GuiMsgBox.h"
-#include "views/ViewController.h"
 
 #include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
 #include "components/SwitchComponent.h"
+
+#include "views/ViewController.h"
 
 GuiScraperStart::GuiScraperStart(Window* window) : GuiComponent(window),
 	mMenu(window, "SCRAPE NOW")
@@ -77,7 +79,7 @@ std::queue<ScraperSearchParams> GuiScraperStart::getSearches(std::vector<SystemD
 	std::queue<ScraperSearchParams> queue;
 	for(auto sys = systems.begin(); sys != systems.end(); sys++)
 	{
-		std::vector<FileData*> games = (*sys)->getRootFolder()->getFilesRecursive(GAME);
+		std::vector<FileData*> games = (*sys)->getRootFolder()->getFilesRecursive(GAME, false);
 		for(auto game = games.begin(); game != games.end(); game++)
 		{
 			if(selector((*sys), (*game)))

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "resources/TextureResource.h"
+
+#include "GuiComponent.h"
 
 // Display an image in a way so that edges don't get too distorted no matter the final size. Useful for UI elements like backgrounds, buttons, etc.
 // This is accomplished by splitting an image into 9 pieces:

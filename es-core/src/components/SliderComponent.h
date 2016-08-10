@@ -1,7 +1,8 @@
 #pragma once
 
-#include "GuiComponent.h"
 #include "components/ImageComponent.h"
+
+#include "GuiComponent.h"
 
 class TextCache;
 class Font;

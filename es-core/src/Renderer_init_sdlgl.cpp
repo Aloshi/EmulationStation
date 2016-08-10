@@ -1,13 +1,17 @@
 #include "Renderer.h"
-#include <iostream>
-#include "platform.h"
-#include GLHEADER
+
 #include "resources/Font.h"
-#include <SDL.h>
-#include "Log.h"
-#include "ImageIO.h"
+
 #include "../data/Resources.h"
+
+#include "Log.h"
+#include "platform.h"
+#include "ImageIO.h"
 #include "Settings.h"
+
+#include GLHEADER
+#include <SDL.h>
+#include <iostream>
 
 #ifdef USE_OPENGL_ES
 	#define glOrtho glOrthof
@@ -36,6 +40,9 @@ namespace Renderer
 			return false;
 		}
 
+		//hide mouse cursor early
+		initialCursorState = SDL_ShowCursor(0) == 1;
+
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -49,16 +56,17 @@ namespace Renderer
 #ifdef USE_OPENGL_ES
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
 #endif
+		int displayIndex = Settings::getInstance()->getInt("DisplayNumber");
 
 		SDL_DisplayMode dispMode;
-		SDL_GetDesktopDisplayMode(0, &dispMode);
+		SDL_GetDesktopDisplayMode(displayIndex, &dispMode);
 		if(display_width == 0)
 			display_width = dispMode.w;
 		if(display_height == 0)
 			display_height = dispMode.h;
 
 		sdlWindow = SDL_CreateWindow("EmulationStation", 
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+			SDL_WINDOWPOS_CENTERED_DISPLAY(displayIndex), SDL_WINDOWPOS_CENTERED_DISPLAY(displayIndex),
 			display_width, display_height, 
 			SDL_WINDOW_OPENGL | (Settings::getInstance()->getBool("Windowed") ? 0 : SDL_WINDOW_FULLSCREEN));
 
@@ -107,9 +115,6 @@ namespace Renderer
 			if(SDL_GL_SetSwapInterval(-1) != 0 && SDL_GL_SetSwapInterval(1) != 0)
 				LOG(LogWarning) << "Tried to enable vsync, but failed! (" << SDL_GetError() << ")";
 		}
-
-		//hide mouse cursor
-		initialCursorState = SDL_ShowCursor(0) == 1;
 
 		return true;
 	}

@@ -1,17 +1,19 @@
 #include "SystemData.h"
+
 #include "Gamelist.h"
-#include <boost/filesystem.hpp>
-#include <fstream>
-#include <stdlib.h>
-#include <SDL_joystick.h>
 #include "Renderer.h"
 #include "AudioManager.h"
 #include "VolumeControl.h"
 #include "Log.h"
 #include "InputManager.h"
-#include <iostream>
 #include "Settings.h"
 #include "FileSorts.h"
+
+#include <SDL_joystick.h>
+#include <boost/filesystem.hpp>
+#include <fstream>
+#include <cstdlib>
+#include <iostream>
 
 std::vector<SystemData*> SystemData::sSystemVector;
 
@@ -23,6 +25,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	mName = name;
 	mFullName = fullName;
 	mStartPath = startPath;
+	sortId = 0; /* This may be updated before sorting by stored gamelist data */
 
 	//expand home symbol if the startpath contains ~
 	if(mStartPath[0] == '~')
@@ -45,7 +48,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
 		parseGamelist(this);
 
-	mRootFolder->sort(FileSorts::SortTypes.at(0));
+	mRootFolder->sort(FileSorts::SortTypes.at(sortId));
 
 	loadTheme();
 }
@@ -60,7 +63,6 @@ SystemData::~SystemData()
 
 	delete mRootFolder;
 }
-
 
 std::string strreplace(std::string str, const std::string& replace, const std::string& with)
 {
@@ -185,8 +187,18 @@ void SystemData::populateFolder(FileData* folder)
 		//fyi, folders *can* also match the extension and be added as games - this is mostly just to support higan
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
 
+        //We'll ignore any filenames starting with a period.
+        //
+        //Generally a good idea on unix-ish systems, but especially important on OS X when files are stored
+        //on a filesystem (e.g. network share) which does not have native support for HFS+ metadata.
+        //
+        //In that situation, OS X puts ._SomeFile clutter all over the place.
+
+        std::string prefix = ".";
+
 		isGame = false;
-		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end())
+		if(std::find(mSearchExtensions.begin(), mSearchExtensions.end(), extension) != mSearchExtensions.end() &&
+           filePath.filename().string().compare(0, prefix.length(), prefix) != 0)
 		{
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), this);
 			folder->addChild(newGame);
@@ -308,7 +320,7 @@ bool SystemData::loadConfig()
 			continue;
 		}
 
-		//convert path to generic directory seperators
+		//convert path to generic directory separators
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
@@ -382,7 +394,7 @@ void SystemData::deleteSystems()
 
 std::string SystemData::getConfigPath(bool forWrite)
 {
-	fs::path path = getHomePath() + "/.emulationstation/es_systems.cfg";
+	fs::path path = getConfigDirectory() + "/es_systems.cfg";
 	if(forWrite || fs::exists(path))
 		return path.generic_string();
 
@@ -397,7 +409,7 @@ std::string SystemData::getGamelistPath(bool forWrite) const
 	if(fs::exists(filePath))
 		return filePath.generic_string();
 
-	filePath = getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
+	filePath = getConfigDirectory() + "/gamelists/" + mName + "/gamelist.xml";
 	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
 		fs::create_directories(filePath.parent_path());
 	if(forWrite || fs::exists(filePath))
@@ -428,7 +440,7 @@ bool SystemData::hasGamelist() const
 
 unsigned int SystemData::getGameCount() const
 {
-	return mRootFolder->getFilesRecursive(GAME).size();
+	return mRootFolder->getFilesRecursive(GAME, false).size();
 }
 
 void SystemData::loadTheme()

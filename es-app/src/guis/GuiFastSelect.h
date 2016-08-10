@@ -1,10 +1,11 @@
 #pragma once
 
-#include "GuiComponent.h"
-#include "views/gamelist/IGameListView.h"
-
 #include "components/NinePatchComponent.h"
 #include "components/TextComponent.h"
+
+#include "views/gamelist/IGameListView.h"
+
+#include "GuiComponent.h"
 
 class GuiFastSelect : public GuiComponent
 {

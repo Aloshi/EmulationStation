@@ -1,12 +1,15 @@
 #include "components/ImageComponent.h"
-#include <iostream>
-#include <boost/filesystem.hpp>
-#include <math.h>
+
+#include "resources/SVGResource.h"
+
 #include "Log.h"
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
-#include "resources/SVGResource.h"
+
+#include <boost/filesystem.hpp>
+#include <cmath>
+#include <iostream>
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
@@ -23,7 +26,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
+    mTargetSize(0, 0), mOrigin(0.0, 0.0), mFlipX(false), mFlipY(false), mTargetIsMax(false), mColorShift(0xFFFFFFFF)
 {
 	updateColors();
 }

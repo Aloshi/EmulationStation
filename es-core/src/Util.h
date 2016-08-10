@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
 #include <Eigen/Dense>
 #include <boost/filesystem.hpp>
 #include <boost/date_time.hpp>
+#include <string>
 
 std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);
@@ -15,7 +15,14 @@ Eigen::Affine3f roundMatrix(const Eigen::Affine3f& mat);
 Eigen::Vector3f roundVector(const Eigen::Vector3f& vec);
 Eigen::Vector2f roundVector(const Eigen::Vector2f& vec);
 
+#ifdef _MSC_VER
+#if _MSC_VER < 1800
 float round(float num);
+#endif /* _MSC_VER */
+#endif
+
+std::string getMd5(const boost::filesystem::path& path);
+std::string getCrc(const boost::filesystem::path& path);
 
 std::string getCanonicalPath(const std::string& str);
 

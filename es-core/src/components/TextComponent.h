@@ -1,8 +1,8 @@
-#ifndef _TEXTCOMPONENT_H_
-#define _TEXTCOMPONENT_H_
+#pragma once
+
+#include "resources/Font.h"
 
 #include "GuiComponent.h"
-#include "resources/Font.h"
 
 class ThemeData;
 
@@ -53,5 +53,3 @@ private:
 	Alignment mAlignment;
 	float mLineSpacing;
 };
-
-#endif

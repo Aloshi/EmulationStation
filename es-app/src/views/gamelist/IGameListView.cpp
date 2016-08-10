@@ -1,9 +1,12 @@
 #include "views/gamelist/IGameListView.h"
-#include "Window.h"
+
+#include "views/ViewController.h"
+
 #include "guis/GuiMetaDataEd.h"
 #include "guis/GuiMenu.h"
 #include "guis/GuiGamelistOptions.h"
-#include "views/ViewController.h"
+
+#include "Window.h"
 #include "Settings.h"
 #include "Log.h"
 #include "Sound.h"
