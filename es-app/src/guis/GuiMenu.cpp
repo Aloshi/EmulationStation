@@ -219,7 +219,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			row.makeAcceptInputHandler([window] {
 				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
 				[] {
-					if(quitES("/tmp/es-restart") != 0)
+					if(runRestartCommand() != 0)
 						LOG(LogWarning) << "Restart terminated with non-zero result!";
 				}, "NO", nullptr));
 			});
@@ -241,7 +241,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			row.makeAcceptInputHandler([window] {
 				window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES", 
 				[] { 
-					if(quitES("/tmp/es-shutdown") != 0)
+					if(runShutdownCommand() != 0)
 						LOG(LogWarning) << "Shutdown terminated with non-zero result!";
 				}, "NO", nullptr));
 			});

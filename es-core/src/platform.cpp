@@ -82,26 +82,35 @@ std::string getHomePath()
 
 int runShutdownCommand()
 {
+    int returnCode = 0;
 #if defined(WIN32)
-	return system("shutdown -s -t 0");
+	returnCode = system("shutdown -s -t 0");
 #elif defined(__linux__)
 	sync();
-	return reboot(RB_POWER_OFF);
+	returnCode = reboot(RB_POWER_OFF);
 #else
-	return system("sudo shutdown -h now");
+	returnCode = system("sudo shutdown -h now");
 #endif
+
+    //Clean up the SDL
+    quitES("/tmp/es-shutdown");
+    return returnCode;
 }
 
 int runRestartCommand()
 {
+    int returnCode = 0;
 #if defined(WIN32)
-	return system("shutdown -r -t 0");
+	returnCode = system("shutdown -r -t 0");
 #elif defined(__linux__)
 	sync();
-	return reboot(RB_AUTOBOOT);
+	returnCode = reboot(RB_AUTOBOOT);
 #else
-	return system("sudo shutdown -r now");
+	returnCode = system("sudo shutdown -r now");
 #endif
+        //Clean up the SDL
+        quitES("/tmp/es-restart");
+        return returnCode;
 }
 
 int runSystemCommand(const std::string& cmd_utf8)
