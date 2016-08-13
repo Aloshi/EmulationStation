@@ -178,13 +178,13 @@ msgid "TURBO (1050Mhz)+"
 msgstr "TURBO (1050Mhz)+"
 
 msgid "HIGH (1050Mhz)"
-msgstr "HIGH (1050Mhz)"
+msgstr "ALTO (1050Mhz)"
 
 msgid "NONE (900Mhz)"
 msgstr "NINGUNO (900Mhz)"
 
 msgid "NONE (1200Mhz)"
-msgstr ""
+msgstr "NINGUNO (1200Mhz)"
 
 msgid "NONE"
 msgstr "NINGUNO"
@@ -205,10 +205,10 @@ msgid "ENABLE KODI"
 msgstr "ACTIVAR KODI"
 
 msgid "KODI AT START"
-msgstr "LANZAR KODI AL ARRANCAR"
+msgstr "INICIAR KODI AL ARRANCAR"
 
 msgid "START KODI WITH X"
-msgstr "PULSAR X PARA LANZAR KODI"
+msgstr "PULSAR X PARA INICIAR KODI"
 
 msgid "THE SYSTEM WILL NOW REBOOT"
 msgstr "EL SISTEMA VA A REINICIARSE"
@@ -772,7 +772,7 @@ msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
 msgstr "PULSA ESC O EL BOTÓN HOTKEY PARA CANCELAR"
 
 msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
-msgstr "¿QUIERES LANZAR EL CENTRO MULTIMEDIA KODI?"
+msgstr "¿QUIERES INICIAR EL CENTRO MULTIMEDIA KODI?"
 
 msgid "LOADING..."
 msgstr "CARGANDO..."
