@@ -26,7 +26,6 @@ private:
 	InputConfig* mKeyboardInputConfig;
 
 	std::map<SDL_JoystickID, int*> mPrevAxisValues;
-	std::map<SDL_JoystickID, int*> mInitAxisValues;
 
 	bool initialized() const;
 
