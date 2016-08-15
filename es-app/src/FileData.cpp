@@ -56,8 +56,7 @@ FileData::~FileData()
 	if(mParent)
 		mParent->removeChild(this);
 
-	while(mChildren.size())
-		delete mChildren.back();
+		mChildren.clear();
 }
 
 std::string FileData::getDisplayName() const
@@ -107,15 +106,20 @@ void FileData::addChild(FileData* file)
 	assert(mType == FOLDER);
 	assert(file->getParent() == NULL);
 
-	mChildren.push_back(file);
-	file->mParent = this;
+	const std::string key = file->getPath().filename().string();
+	if (mChildrenByFilename.find(key) == mChildrenByFilename.end())
+	{
+		mChildrenByFilename[key] = file;
+		mChildren.push_back(file);
+		file->mParent = this;
+	}
 }
 
 void FileData::removeChild(FileData* file)
 {
 	assert(mType == FOLDER);
 	assert(file->getParent() == this);
-
+	mChildrenByFilename.erase(file->getPath().filename().string());
 	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
 	{
 		if(*it == file)
@@ -127,6 +131,7 @@ void FileData::removeChild(FileData* file)
 
 	// File somehow wasn't in our children.
 	assert(false);
+
 }
 
 void FileData::sort(ComparisonFunction& comparator, bool ascending)
