@@ -12,12 +12,12 @@ Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCoun
 	mAllowSleep(true), mSleeping(false), mDeepSleeping(false), mTimeSinceLastInput(0)
 {
 	mHelp = new HelpComponent(this);
-	mBackgroundOverlay = new ImageComponent(this);
+	//mBackgroundOverlay = new ImageComponent(this);
 }
 
 Window::~Window()
 {
-	delete mBackgroundOverlay;
+	//delete mBackgroundOverlay;
 
 	// delete all our GUIs
 	while(peekGui())
@@ -64,7 +64,7 @@ bool Window::init(unsigned int width, unsigned int height)
 		return false;
 	}
 
-	mBackgroundOverlay->setImage(":/scroll_gradient.png");
+	//mBackgroundOverlay->setImage(":/scroll_gradient.png");
 	
 	InputManager::getInstance()->init();
 
@@ -78,7 +78,7 @@ bool Window::init(unsigned int width, unsigned int height)
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_LARGE));
 	}
 
-	mBackgroundOverlay->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	//mBackgroundOverlay->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// update our help because font sizes probably changed
 	if(peekGui())
@@ -188,7 +188,7 @@ void Window::render()
 		bottom->render(transform);
 		if(bottom != top)
 		{
-			mBackgroundOverlay->render(transform);
+			//mBackgroundOverlay->render(transform);
 			top->render(transform);
 		}
 	}
