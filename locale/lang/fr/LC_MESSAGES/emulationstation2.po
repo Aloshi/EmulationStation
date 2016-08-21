@@ -169,9 +169,6 @@ msgstr "TURBO (1000Mhz)"
 msgid "HIGH (950Mhz)"
 msgstr "HIGH (950Mhz)"
 
-msgid "NONE (700Mhz)"
-msgstr "AUCUN (700Mhz)"
-
 msgid "TURBO (1050Mhz)+"
 msgstr "TURBO (1050Mhz)+"
 
