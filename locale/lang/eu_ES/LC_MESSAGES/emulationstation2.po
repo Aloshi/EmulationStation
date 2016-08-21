@@ -170,9 +170,6 @@ msgstr "TURBO (1000MHz)"
 msgid "HIGH (950Mhz)"
 msgstr "ALTUA (950Mhz)"
 
-msgid "NONE (700Mhz)"
-msgstr "BAT ERE EZ (700Mhz)"
-
 msgid "TURBO (1050Mhz)+"
 msgstr "TURBO (1050Mhz)+"
 
