@@ -133,3 +133,12 @@ boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
 {
 	return string_to_ptime(get(key), "%Y%m%dT%H%M%S%F%q");
 }
+
+bool MetaDataList::isDefault()
+{
+	for (int i = 1; i < mMap.size(); i++) {
+		if (mMap.at(gameDecls[i].key) != gameDecls[i].defaultValue) return false;
+	}
+
+	return true;
+}

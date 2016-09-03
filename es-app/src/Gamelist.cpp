@@ -215,6 +215,12 @@ void updateGamelist(SystemData* system)
 		{
 			const char* tag = ((*fit)->getType() == GAME) ? "game" : "folder";
 
+			// check if current file has metadata, if no, skip it as it wont be in the gamelist anyway.
+			if ((*fit)->metadata.isDefault()) {
+				++fit;
+				continue;
+			}
+
 			// check if the file already exists in the XML
 			// if it does, remove it before adding
 			for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
