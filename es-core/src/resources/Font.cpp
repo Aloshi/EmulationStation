@@ -124,7 +124,7 @@ UnicodeChar Font::readUnicodeChar(const std::string& str, size_t& cursor)
 	else
 	{
 		// error, invalid utf8 string
-
+		LOG(LogError) << "Error invalid utf8 string when parsing file: " << str.c_str();
 		// if this assert is tripped, the cursor is in the middle of a utf8 code point
 		assert((c & 0xC0) != 0x80); // character is 10xxxxxx
 
