@@ -21,6 +21,8 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	addChild(&mBackground);
 	addChild(&mGrid);
 
+	mIsProcessing = true;
+
 	mTotalGames = mSearchQueue.size();
 	mCurrentGame = 0;
 	mTotalSuccessful = 0;
@@ -143,6 +145,8 @@ void GuiScraperMulti::finish()
 
 	mWindow->pushGui(new GuiMsgBox(mWindow, ss.str(), 
 		"OK", [&] { delete this; }));
+
+	mIsProcessing = false;
 }
 
 std::vector<HelpPrompt> GuiScraperMulti::getHelpPrompts()

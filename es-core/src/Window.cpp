@@ -4,6 +4,7 @@
 #include "AudioManager.h"
 #include "Log.h"
 #include "Settings.h"
+#include <algorithm>
 #include <iomanip>
 #include "components/HelpComponent.h"
 #include "components/ImageComponent.h"
@@ -202,7 +203,7 @@ void Window::render()
 	}
 
 	unsigned int screensaverTime = (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime");
-	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0 && mAllowSleep)
+	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0 && !isProcessing() && mAllowSleep)
 	{
 		// go to sleep
 		mSleeping = true;
@@ -334,4 +335,9 @@ void Window::onSleep()
 void Window::onWake()
 {
 
+}
+
+bool Window::isProcessing()
+{
+	return count_if(mGuiStack.begin(), mGuiStack.end(), [](GuiComponent* c) { return c->isProcessing(); }) > 0;
 }
