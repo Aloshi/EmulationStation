@@ -15,6 +15,5 @@ while true; do
         sudo poweroff
         break
     fi
-    tput cnorm
     break
 done
