@@ -203,11 +203,16 @@ void Window::render()
 	}
 
 	unsigned int screensaverTime = (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime");
-	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0 && !isProcessing() && mAllowSleep)
+	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 	{
-		// go to sleep
-		mSleeping = true;
-		onSleep();
+		renderScreenSaver();
+
+		if (!isProcessing() && mAllowSleep)
+		{
+			// go to sleep
+			mSleeping = true;
+			onSleep();
+		}
 	}
 }
 
@@ -327,9 +332,6 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 
 void Window::onSleep()
 {
-	Renderer::setMatrix(Eigen::Affine3f::Identity());
-	unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
-	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
 }
 
 void Window::onWake()
@@ -340,4 +342,11 @@ void Window::onWake()
 bool Window::isProcessing()
 {
 	return count_if(mGuiStack.begin(), mGuiStack.end(), [](GuiComponent* c) { return c->isProcessing(); }) > 0;
+}
+
+void Window::renderScreenSaver()
+{
+	Renderer::setMatrix(Eigen::Affine3f::Identity());
+	unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
 }
