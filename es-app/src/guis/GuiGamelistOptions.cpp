@@ -13,7 +13,6 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	mSystem(system),
 	mMenu(window, "OPTIONS")
 {
-	LOG(LogDebug) << "GUIGamelistOptions::GuiGamelistOptions()";
 	addChild(&mMenu);
 
 	// jump to letter
@@ -42,86 +41,62 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	};
 	mMenu.addRow(row);
 
-	row.elements.clear();
-	row.addElement(std::make_shared<TextComponent>(mWindow, "SURPRISE ME!", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-	row.input_handler = [&](InputConfig* config, Input input) {
-		if(config->isMappedTo("a", input) && input.value)
-		{
-			SurpriseMe();
-			return true;
-		}
-		return false;
-	};
-	mMenu.addRow(row);
-
 	// sort list by
-	mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
+	std::shared_ptr<SortList> list_sorts = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
 	for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
 	{
 		const FileData::SortType& sort = FileSorts::SortTypes.at(i);
-		mListSort->add(sort.description, &sort, i == 0); // TODO - actually make the sort type persistent
+		list_sorts->add(sort.description, &sort, Settings::getInstance()->getString("SortMode") == sort.description);
 	}
 
-	mMenu.addWithLabel("SORT GAMES BY", mListSort);
-
+	mMenu.addWithLabel("SORT GAMES BY", list_sorts);
+	addSaveFunc([list_sorts, this]{
+		if (list_sorts->getSelected()->description != Settings::getInstance()->getString("SortMode"))
+		{
+			Settings::getInstance()->setString("SortMode", list_sorts->getSelected()->description);
+			FileData* root = getGamelist()->getCursor()->getSystem()->getRootFolder();
+			root->sort(*list_sorts->getSelected());
+			getGamelist()->onFileChanged(root, FILE_SORTED); // notify that the root folder was sorted
+		}
+	});
+	
 	// Toggle: Show favorites-only
 	auto favorite_only = std::make_shared<SwitchComponent>(mWindow);
 	favorite_only->setState(Settings::getInstance()->getBool("FavoritesOnly"));
 	mMenu.addWithLabel("FAVORITES ONLY", favorite_only);
 	addSaveFunc([favorite_only, this] {
-
-		// First save to settings, in order for filtering to work
 		if (favorite_only->getState() != Settings::getInstance()->getBool("FavoritesOnly"))
 		{
-			Settings::getInstance()->setBool("FavoritesOnly", favorite_only->getState());
-			mFavoriteStateChanged = true;
-		}
-		if(favorite_only->getState())
-		{
-			bool hasFavorite = false;
-			// check if there is anything at all to show, otherwise revert
-			for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++) {
-				if( (*it)->getGameCount(true) > 0 ) {
-					hasFavorite = true;
-					break;
-				}
-			}
-			if(!hasFavorite)
+			Settings::getInstance()->setBool("FavoritesOnly", favorite_only->getState());	// First save to settings, in order for filtering to work
+			if(! mSystem->isValidFilter())													// then check if there is anything at all to show in any system
 			{
-				LOG(LogDebug) << "Nothing to show in selected favorites mode, resetting";
-				favorite_only->setState(false);
-				Settings::getInstance()->setBool("FavoritesOnly", favorite_only->getState());
+				LOG(LogDebug) << "Nothing to show in selected favorites mode, resetting";	// if not, then revert chenge.
+				Settings::getInstance()->setBool("FavoritesOnly", false);
+			} else
+			{
+				mViewStateChanged = true;
 			}
 		}
 	});
 
-	// Toggle: Show hidden
+	// Toggle: Show hidden, only in Full UI mode
 	if(Settings::getInstance()->getString("UIMode") == "Full")
 	{
 		auto show_hidden = std::make_shared<SwitchComponent>(mWindow);
 		show_hidden->setState(Settings::getInstance()->getBool("ShowHidden"));
 		mMenu.addWithLabel("SHOW HIDDEN", show_hidden);
 		addSaveFunc([show_hidden, this] {
-			// First save to settings, in order for filtering to work
+			
 			if(show_hidden->getState() != Settings::getInstance()->getBool("ShowHidden"))
 			{
-				Settings::getInstance()->setBool("ShowHidden", show_hidden->getState());
-				mHiddenStateChanged = true;
-			}
-			if(!show_hidden->getState())
-			{
-				bool hasNonHidden = false;
-				for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++) {
-					if( (*it)->getGameCount(true) > 0 ) {
-						hasNonHidden = true;
-						break;
-					}
-				}
-				if(!hasNonHidden)
+				Settings::getInstance()->setBool("ShowHidden", show_hidden->getState());			// First save to settings, in order for filtering to work
+				if (!mSystem->isValidFilter())														// then check if there is anything at all to show in any system
 				{
-					LOG(LogDebug) << "Nothing to show in selected show hidden mode, resetting";
-					show_hidden->setState(true);
-					Settings::getInstance()->setBool("ShowHidden", show_hidden->getState());
+					LOG(LogDebug) << "Nothing to show when not showing hidden files, resetting";	// if not, then revert change.
+					Settings::getInstance()->setBool("ShowHidden", true);
+				} else
+				{
+					mViewStateChanged = true;
 				}
 			}
 		});
@@ -145,24 +120,20 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 GuiGamelistOptions::~GuiGamelistOptions()
 {
 	LOG(LogDebug) << "GUIGamelistOptions::~GuiGamelistOptions()";
-	// apply sort
-	FileData* root = getGamelist()->getCursor()->getSystem()->getRootFolder();
-	root->sort(*mListSort->getSelected()); // will also recursively sort children
+	if (mViewStateChanged)
+		refreshView();
 
-	// notify that the root folder was sorted
+}
 
-	getGamelist()->onFileChanged(root, FILE_SORTED);
-	if (mFavoriteStateChanged || mHiddenStateChanged)
-	{
-		if (mFavoriteStateChanged) {
-			LOG(LogDebug) << "  GUIGamelistOptions::~GuiGamelistOptions(): FavoriteStateChanged, reloading GameList";
-		}
-		if (mHiddenStateChanged) {
-			LOG(LogDebug) << "  GUIGamelistOptions::~GuiGamelistOptions(): HiddenStateChanged, reloading GameList";
-		}
-		ViewController::get()->setAllInvalidGamesList(getGamelist()->getCursor()->getSystem());
-		//ViewController::get()->reloadGameListView(getGamelist()->getCursor()->getSystem());
-		ViewController::get()->reloadAll();
+void GuiGamelistOptions::refreshView()
+{
+	LOG(LogDebug) << " Updating filter mode, or edited metadata, notifying ViewController";
+	FileData* root = mSystem->getRootFolder();
+	ViewController::get()->onFileChanged(root, FILE_FILTERED);
+
+	if (mSystem->getGameCount(true) == 0) {											//still, the current gamelist might be empty, so lets check and otherwise revert
+		LOG(LogDebug) << " Whoops, nothing to see here, returning to start.";
+		ViewController::get()->goToStart();
 	}
 }
 
@@ -177,6 +148,9 @@ void GuiGamelistOptions::openMetaDataEd()
 		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), [this, file] {
 			getGamelist()->remove(file);
 	}));
+	
+	//This might be too costly, but is a failsave way to trigger a game-list refresh.
+	mViewStateChanged = true;
 }
 
 void GuiGamelistOptions::jumpToLetter()
@@ -247,11 +221,4 @@ void GuiGamelistOptions::save()
 		(*it)();
 
 	Settings::getInstance()->saveFile();
-}
-
-void GuiGamelistOptions::SurpriseMe()
-{
-	LOG(LogDebug) << "GuiGamelistOptions::SurpriseMe()";
-	ViewController::get()->goToRandomGame();
-	delete this;
 }

@@ -14,6 +14,7 @@
 #include "FileSorts.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
+std::vector<SystemData*> SystemData::sFilteredSystemVector;
 
 namespace fs = boost::filesystem;
 
@@ -450,29 +451,21 @@ void SystemData::loadTheme()
 	}
 }
 
-SystemData* SystemData::getRandom() const
+// This function returns true when there is at least a single system with a valid item.
+bool SystemData::isValidFilter() const
 {
-	LOG(LogDebug) << "SystemData::getRandom()";
-	//Get list of systems with # games > 0, given the filters
-	std::vector<SystemData*> validSystems;
-	for (auto it = sSystemVector.begin(); it != sSystemVector.end(); it++) {
-		if((*it)->getGameCount(true) > 0) {
-			validSystems.push_back(*it);
+	LOG(LogDebug) << "SystemData::isValidFilter()";
+	bool found = false;
+				
+	for(auto it = sSystemVector.begin(); it != sSystemVector.end(); it++) {
+		if( (*it)->getGameCount(true) > 0 ) {
+			found = true;
+			LOG(LogDebug) << "  Valid system found!";
+			break;
 		}
 	}
-	
-	const unsigned long n = validSystems.size();
-    LOG(LogDebug) << "   Valid systems: " << n;
-	
-	//Select random system
-	//const unsigned long divisor = (RAND_MAX + 1) / n;
-	const unsigned long divisor = (RAND_MAX) / n; // the above is correct, but gives compiler warning.
-    unsigned long k;
-	do {
-		k = std::rand() / divisor;
-	} while (k >= n); // pick the first within range
-	
-	LOG(LogDebug) << "   Picked system: " << validSystems.at(k)->getFullName();
-    
-	return validSystems.at(k);
+	if (!found){
+		LOG(LogDebug) << "  No valid system found.";
+	}
+	return found;
 }

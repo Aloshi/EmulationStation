@@ -313,7 +313,7 @@ Reference
 		* `text name="md_lbl_players"` - ALL
 		* `text name="md_lbl_lastplayed"` - ALL
 		* `text name="md_lbl_playcount"` - ALL
-      * `text name="md_lbl_favorite"` - ALL
+		* `text name="md_lbl_favorite"` - ALL
 
 	* Values
 		* All values will follow to the right of their labels if a position isn't specified.

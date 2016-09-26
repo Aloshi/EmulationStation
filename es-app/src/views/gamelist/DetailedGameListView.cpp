@@ -262,6 +262,7 @@ void DetailedGameListView::updateInfoPanel()
 			comp->setAnimation(new LambdaAnimation(func, 150), 0, nullptr, fadingOut);
 		}
 	}
+	LOG(LogDebug) << "DetailedGameListView::UpdateInfoPanel():end";
 }
 
 void DetailedGameListView::launch(FileData* game)
@@ -273,8 +274,6 @@ void DetailedGameListView::launch(FileData* game)
 	ViewController::get()->launch(game, target);
 }
 
-// This function returns a pointer vector to all metadata labels supported by the theme
-// TODO: auto populate this based on the theme xml
 std::vector<TextComponent*> DetailedGameListView::getMDLabels()
 {
 	std::vector<TextComponent*> ret;
@@ -289,8 +288,6 @@ std::vector<TextComponent*> DetailedGameListView::getMDLabels()
 	return ret;
 }
 
-// This function returns a pointer vector to all metadata values supported by the theme
-// TODO: auto populate this based on the theme xml
 std::vector<GuiComponent*> DetailedGameListView::getMDValues()
 {
 	std::vector<GuiComponent*> ret;

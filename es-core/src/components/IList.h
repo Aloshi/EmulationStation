@@ -7,7 +7,6 @@
 #include "components/ImageComponent.h"
 #include "resources/Font.h"
 #include "Renderer.h"
-#include "Log.h"
 
 enum CursorState
 {

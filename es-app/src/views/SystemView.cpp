@@ -23,22 +23,17 @@ SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(wind
 
 void SystemView::populate()
 {
-	LOG(LogDebug) << "SystemView::populate()";
-	LOG(LogDebug) << "    Settings.UIMode  = " << Settings::getInstance()->getString("UIMode");
-	LOG(LogDebug) << "    Settings.FavoritesOnly  = " << Settings::getInstance()->getBool("FavoritesOnly");
-	
 	mEntries.clear();
+
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
-		LOG(LogDebug) << "System = " << (*it)->getName();
-
-		if ((*it)->getGameCount(true) > 0) {
-			LOG(LogDebug) << (*it)->getGameCount(true) << " games found, populating.";
+		if ((*it)->getGameCount(true) > 0) 
+		{
+			const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
+			
 
 			if (mViewNeedsReload)
 				getViewElements(theme);
-
-			const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
 
 			Entry e;
 			e.name = (*it)->getName();
@@ -106,7 +101,6 @@ bool SystemView::input(InputConfig* config, Input input)
 		{
 			LOG(LogInfo) << " Reloading all";
 			ViewController::get()->reloadAll();
-
 			return true;
 		}
 
@@ -197,11 +191,11 @@ void SystemView::onCursorChanged(const CursorState& state)
 		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
 	}, (int)(infoStartOpacity * 150));
 
-	// also change the text after we've fully faded out
-	setAnimation(infoFadeOut, 0, [this] {
-		unsigned int gameCount = getSelected()->getGameCount(true);
-		std::stringstream ss;
+	unsigned int gameCount = getSelected()->getGameCount(true);
 
+	// also change the text after we've fully faded out
+	setAnimation(infoFadeOut, 0, [this, gameCount] {
+		std::stringstream ss;
 		if (getSelected()->getName() == "retropie")
 			ss << "CONFIGURATION";
 		// only display a game count if there are at least 2 games
@@ -211,15 +205,18 @@ void SystemView::onCursorChanged(const CursorState& state)
 		mSystemInfo.setText(ss.str());
 	}, false, 1);
 
-	Animation* infoFadeIn = new LambdaAnimation(
-		[this](float t)
+	// only display a game count if there are at least 2 games
+	if(gameCount > 1)
 	{
-		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
-	}, 300);
-
-	// wait ms to fade in
-	setAnimation(infoFadeIn, 800, nullptr, false, 2);
-
+		Animation* infoFadeIn = new LambdaAnimation(
+			[this](float t)
+		{
+			mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+		}, 300);
+		// wait 600ms to fade in
+		setAnimation(infoFadeIn, 2000, nullptr, false, 2);
+	}
+	
 	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
 	if(endPos == mCamOffset && endPos == mExtrasCamOffset)
 		return;

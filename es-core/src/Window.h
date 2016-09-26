@@ -67,6 +67,6 @@ private:
 	bool mRenderedHelpPrompts;
 	
 	void ListenForPassKeySequence(InputConfig* config, Input input);
-	int mPasskeyCounter;
+	unsigned int mPasskeyCounter;
 	bool mRestartNeeded;
 };

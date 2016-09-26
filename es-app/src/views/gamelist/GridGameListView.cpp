@@ -10,7 +10,6 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mGrid.setPosition(0, mSize.y() * 0.2f);
 	mGrid.setSize(mSize.x(), mSize.y() * 0.8f);
 	addChild(&mGrid);
-
 	populateList(root->getChildren());
 }
 
@@ -41,22 +40,7 @@ void GridGameListView::populateList(const std::vector<FileData*>& files)
 	mGrid.clear();
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
-		if (Settings::getInstance()->getBool("FavoritesOnly"))
-		{
-			if ((*it)->metadata.get("favorite").compare("true") == 0)
-			{
-				mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
-			}
-		}else if(Settings::getInstance()->getString("UIMode") == "Kid")
-		{
-			if ((*it)->metadata.get("kidgame").compare("true") == 0)
-			{
-				mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
-			}
-		}else
-		{
-			mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
-		}
+		mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
 	}
 }
 

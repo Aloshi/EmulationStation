@@ -50,12 +50,11 @@ public:
 
 	std::vector<HelpPrompt> getHelpPrompts() override;
 	virtual HelpStyle getHelpStyle() override;
-
+	void populate();
 protected:
 	void onCursorChanged(const CursorState& state) override;
 
 private:
-	void populate();
 	void getViewElements(const std::shared_ptr<ThemeData>& theme);
 	void getDefaultElements(void);
 	void getCarouselFromTheme(const ThemeData::ThemeElement* elem);

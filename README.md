@@ -1,5 +1,5 @@
-EmulationStation
-================
+EmulationStation - KidMode UI
+=============================
 
 A cross-platform graphical front-end for emulators with controller navigation.
 

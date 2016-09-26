@@ -8,7 +8,7 @@
 Settings* Settings::sInstance = NULL;
 
 // these values are NOT saved to es_settings.xml
-// since they're set through command-line arguments, and not the in-program settings menu
+// since they're set through command-line arguments, , and not the in-program settings menu
 std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
@@ -77,9 +77,8 @@ void Settings::setDefaults()
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
 	mStringMap["UIMode"] = "Full";
-		
-	//mStringMap["UIMode_passkey"] = "↑↑↓↓←→←→ba";
-	mStringMap["UIMode_passkey"] = "uuddlrlrba";
+	mStringMap["SortMode"] = "filename, ascending";
+	mStringMap["UIMode_passkey"] = "uuddlrlrba";	// "↑↑↓↓←→←→ba"
 }
 
 template <typename K, typename V>

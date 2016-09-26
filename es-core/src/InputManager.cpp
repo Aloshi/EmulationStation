@@ -243,7 +243,6 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 
 bool InputManager::loadInputConfig(InputConfig* config)
 {
-	LOG(LogDebug) << "InputManager::loadInputConfig() ";
 	std::string path = getConfigPath();
 	if(!fs::exists(path))
 		return false;
@@ -266,8 +265,6 @@ bool InputManager::loadInputConfig(InputConfig* config)
 		configNode = root.find_child_by_attribute("inputConfig", "deviceName", config->getDeviceName().c_str());
 	if(!configNode)
 		return false;
-	
-	LOG(LogDebug) << "    Trying to load: " << configNode;
 	config->loadFromXML(configNode);
 	return true;
 }
@@ -276,8 +273,6 @@ bool InputManager::loadInputConfig(InputConfig* config)
 //allows the user to select to reconfigure in menus if this happens without having to delete es_input.cfg manually
 void InputManager::loadDefaultKBConfig()
 {
-	LOG(LogDebug) << "InputManager::loadDefaultKBConfig() ";
-	
 	InputConfig* cfg = getInputConfigByDevice(DEVICE_KEYBOARD);
 
 	cfg->clear();
@@ -296,6 +291,7 @@ void InputManager::loadDefaultKBConfig()
 	cfg->mapInput("pageup", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_RIGHTBRACKET, 1, true));
 	cfg->mapInput("pagedown", Input(DEVICE_KEYBOARD, TYPE_KEY, SDLK_LEFTBRACKET, 1, true));
 }
+
 void InputManager::writeDeviceConfig(InputConfig* config)
 {
 	assert(initialized());

@@ -3,6 +3,7 @@
 #include "FileSorts.h"
 #include "SystemData.h"
 
+
 static const std::string LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiComponent(window), 

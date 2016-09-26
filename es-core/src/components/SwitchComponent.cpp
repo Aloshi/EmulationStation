@@ -3,8 +3,6 @@
 #include "resources/Font.h"
 #include "Window.h"
 
-#include "Log.h"
-
 SwitchComponent::SwitchComponent(Window* window, bool state) : GuiComponent(window), mImage(window), mState(state)
 {
 	mImage.setImage(":/off.svg");
@@ -56,7 +54,6 @@ void SwitchComponent::setState(bool state)
 
 void SwitchComponent::setValue(const std::string& statestring)
 {
-	LOG(LogDebug) << "SwitchComponent::setValue(" << statestring << ")";
 	if (statestring == "true")
 	{
 		mState = true;

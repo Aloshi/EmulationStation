@@ -3,6 +3,7 @@
 #include "SystemData.h"
 #include "Settings.h"
 
+#include "views/SystemView.h"
 #include "views/gamelist/BasicGameListView.h"
 #include "views/gamelist/DetailedGameListView.h"
 #include "views/gamelist/VideoGameListView.h"
@@ -32,8 +33,6 @@ ViewController::ViewController(Window* window)
 	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
 	mState.viewing = NOTHING;
-	mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
-	mKidGamesOnly = Settings::getInstance()->getString("UIMode") == "Kid";
 }
 
 ViewController::~ViewController()
@@ -44,10 +43,7 @@ ViewController::~ViewController()
 
 void ViewController::goToStart()
 {
-	// TODO
-	/* mState.viewing = START_SCREEN;
-	mCurrentView.reset();
-	playViewTransition(); */
+	LOG(LogDebug) << "ViewController::goToStart()";
 	goToSystemView(SystemData::sSystemVector.at(0));
 }
 
@@ -122,17 +118,7 @@ void ViewController::goToGameList(SystemData* system)
 
 	if (mInvalidGameList[system] == true)
 	{
-		updateView(system, getGameListView(system).get()->getCursor());
-		//updateFavorite(system, getGameListView(system).get()->getCursor());
-		//updateKidGame(system, getGameListView(system).get()->getCursor());
-		
-		if ((mFavoritesOnly != Settings::getInstance()->getBool("FavoritesOnly")) ||
-			(mKidGamesOnly != (Settings::getInstance()->getString("UIMode") == "Kid")))
-		{
-			reloadGameListView(system);
-			mFavoritesOnly = Settings::getInstance()->getBool("FavoritesOnly");
-			mKidGamesOnly = Settings::getInstance()->getString("UIMode") == "Kid";
-		}
+		reloadGameListView(system);
 		mInvalidGameList[system] = false;
 	}
 
@@ -151,127 +137,66 @@ void ViewController::goToGameList(SystemData* system)
 	playViewTransition();
 }
 
-void ViewController::goToRandomGame()
-{
-	LOG(LogDebug) << "ViewController::goToRandomGame()";
-	
-	goToGameList(mState.system->getRandom());
-	
-	FileData* selected = mState.system->getRootFolder()->getRandom();
-	
-	IGameListView* view = getGameListView(mState.system).get();
-	view->setCursor(selected);
-
-	//mCurrentView.get()->setCursor(selected);
-	LOG(LogDebug) << "ViewController::goToRandomGame: done.";
-}
 /*
-void ViewController::updateFavorite(SystemData* system, FileData* file)
+// Update the cursor location to the nearest valid location, before re-populating
+// the gamelist to reflect new filter-values.
+void ViewController::updateCursor(SystemData* system, FileData* file)
 {
+	LOG(LogDebug) << "ViewController::nudgeCursor()";
+	// There are two scenario's here: 
+	// 1) a single file's metadata has changed, toggling its
+	// validity in the current view. In this case, some consistency in the cursor location is wanted.
+	// 2) the view itself has changed, changing the visibility of many
+	// items, so the cursor's consistency is not relevant.
+
+	// get the old size of valid items
 	IGameListView* view = getGameListView(system).get();
-	if (Settings::getInstance()->getBool("FavoritesOnly"))
-	{
-		const std::vector<FileData*>& files = system->getRootFolder()->getChildren(true);
-		view->populateList(files);
-		int pos = std::find(files.begin(), files.end(), file) - files.begin();
-		bool found = false;
-		for (auto it = files.begin() + pos; it != files.end(); it++)
+	int nr_old = view->getChildCount();
+	
+	// populate new view
+	const std::vector<FileData*>& newfiles = system->getRootFolder()->getChildren(true);
+	view->populateList(newfiles);
+	
+	// get pos in old list
+	int pos = std::find(fullfiles.begin(), fullfiles.end(), file) - fullfiles.begin();					// save current position in that view
+	// try to reproduce that pos in new list
+	
+	
+	
+	
+	
+	
+	view->populateList(newfilesfiles);														// populate a new view 
+	
+	
+	bool found = false;
+	int count = files.size();
+	for (int i = 0; i < count; i++) 
+	{   
+		// This does an inside-out search from pos, pos+1, pos-1, pos+2, pos-2 etc to find the closest match.
+		int index = (pos + ((i%2==0) ? i/2 : count-(i+1)/2) ) % count;			
+		if (files.at(index)->getType() == GAME)
 		{
-			if ((*it)->getType() == GAME)
-			{
-				if ((*it)->metadata.get("favorite").compare("true") == 0)
-				{
-					view->setCursor(*it);
-					found = true;
-					break;
-				}
-			}
-		}
-
-		if (!found)
-		{
-			for (auto it = files.begin() + pos; it != files.begin(); it--)
-			{
-				if ((*it)->getType() == GAME)
-				{
-					if ((*it)->metadata.get("favorite").compare("true") == 0)
-					{
-						view->setCursor(*it);
-						break;
-					}
-				}
-			}
-		}
-
-		if (!found)
-		{
-			view->setCursor(*(files.begin() + pos));
+			view->setCursor(*it);														// and set the cursor to that one
+			found = true;
+			break;
 		}
 	}
 
-	view->updateInfoPanel();
-}
-
-// presumably, this function tries to shift the focus to the next (or previous) kidgame, when the display
-// mode demands it. This should be solved by reducing the total view/list to contain only valid items.
-void ViewController::updateKidGame(SystemData* system, FileData* file)
-{
-	IGameListView* view = getGameListView(system).get();
-	if (Settings::getInstance()->getString("UIMode") == "Kid")  // if we are in kidsmode
+	if (!found)
 	{
-		const std::vector<FileData*>& files = system->getRootFolder()->getChildren(true);
-		view->populateList(files);																// populate a new view 
-		int pos = std::find(files.begin(), files.end(), file) - files.begin();					// save current position in that view
-		bool found = false;							
-		for (auto it = files.begin() + pos; it != files.end(); it++)							//try to find another kidgame
-		{
-			if ((*it)->getType() == GAME)
-			{
-				if ((*it)->metadata.get("kidgame").compare("true") == 0)
-				{
-					view->setCursor(*it);														// and set the cursor to that one
-					found = true;
-					break;
-				}
-			}
-		}
-
-		if (!found)
-		{
-			for (auto it = files.begin() + pos; it != files.begin(); it--)
-			{
-				if ((*it)->getType() == GAME)
-				{
-					if ((*it)->metadata.get("kidgame").compare("true") == 0)
-					{
-						view->setCursor(*it);
-						break;
-					}
-				}
-			}
-		}
-
-		if (!found)
-		{
-			view->setCursor(*(files.begin() + pos));
-		}
+		//If there is no hit in the current list, move to system selection view (aka start)
+		goToStart();
+		//view->setCursor(*(files.begin() + pos));
+		
 	}
 
 	view->updateInfoPanel(); //update metadata display
+	//view->populateList(files);	
+	//view->setCursor(*(files.begin())); 
+	//view->updateInfoPanel(); 
 }
- ***/
-
-// Update the view after a viewing mode change has occured (fav only, or hide files, or kids only)
-void ViewController::updateView(SystemData* system, FileData* file)
-{
-	IGameListView* view = getGameListView(system).get();
-	const std::vector<FileData*>& files = system->getRootFolder()->getChildren(true);
-	view->populateList(files);	
-	view->setCursor(*(files.begin())); 
-	view->updateInfoPanel(); 
-}
-
-
+*/
 void ViewController::playViewTransition()
 {
 	Eigen::Vector3f target(Eigen::Vector3f::Identity());
@@ -317,11 +242,23 @@ void ViewController::playViewTransition()
 	}
 }
 
+// This function triggers the calls to onFileChanged in BasicGameListView and ISimpleGameListView
 void ViewController::onFileChanged(FileData* file, FileChangeType change)
 {
+	LOG(LogDebug) << "ViewController::onFileChanged()";
+	
+	// check if the file is part of current collection of IGameListViews
 	auto it = mGameListViews.find(file->getSystem());
 	if(it != mGameListViews.end())
+	{
+		if((change == FILE_FILTERED) || (change == FILE_SORTED)) // affects all GameListViews
+		{
+			LOG(LogDebug) << "ViewController::onFileChanged(): change might affect all systems, setting all invalid";
+			reloadSystemListView();
+			setAllInvalidGamesList(file->getSystem());
+		}
 		it->second->onFileChanged(file, change);
+	}
 }
 
 void ViewController::launch(FileData* game, Eigen::Vector3f center)
@@ -371,22 +308,25 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 	}
 }
 
-std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* system)
+// This function populates mGameListViews, which maps systemData to IGameListViews:
+// like this: std::map< SystemData*, std::shared_ptr<IGameListView> >
+std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* system, bool forceReload)
 {
 	//if we already made one, return that one
 	auto exists = mGameListViews.find(system);
-	if(exists != mGameListViews.end())
+	if(exists != mGameListViews.end() && !forceReload)
 		return exists->second;
 
-	//if we didn't, make it, remember it, and return it
+	//if we didn't, or we want to reload anyway, make it, remember it, and return it
 	std::shared_ptr<IGameListView> view;
 
 	bool themeHasVideoView = system->getTheme()->hasView("video");
 
 	//decide type
-	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER, false);
 	bool detailed = false;
 	bool video	  = false;
+	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
+
 	for(auto it = files.begin(); it != files.end(); it++)
 	{
 		if(themeHasVideoView && !(*it)->getVideoPath().empty())
@@ -400,13 +340,11 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 			// Don't break out in case any subsequent files have video
 		}
 	}
-
-
 	if (video)
 		// Create the view
 		view = std::shared_ptr<IGameListView>(new VideoGameListView(mWindow, system->getRootFolder()));
 	else if(detailed)
-		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder(), system)); // TODO: remove this last argument!
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 
@@ -510,35 +448,59 @@ void ViewController::preload()
 	}
 }
 
-void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
+// This function finds the current IGameListView, stores the cursor, loads
+// a new gamelistview for system, and sets the cursor again.
+// TODO: what if the cursor position (file) is no longer valid?
+void ViewController::reloadGameListView(IGameListView* oldview, bool reloadTheme)
 {
+	LOG(LogDebug) << "ViewController::reloadGameListView()";
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
-		if(it->second.get() == view)
+		if(it->second.get() == oldview)
 		{
+			LOG(LogDebug) << "ViewController::reloadGameListView(): found GameListView for " << oldview->getName();
+
 			bool isCurrent = (mCurrentView == it->second);
 			SystemData* system = it->first;
-			FileData* cursor = view->getCursor();
+			FileData* cursor = oldview->getCursor();
 			mGameListViews.erase(it);
 
 			if(reloadTheme)
 				system->loadTheme();
 
-			std::shared_ptr<IGameListView> newView = getGameListView(system);
-			newView->setCursor(cursor);
+			LOG(LogDebug) << "ViewController::reloadGameListView(): getting new GameListView for system: " << system->getName();
 
-			if(isCurrent)
-				mCurrentView = newView;
+			std::shared_ptr<IGameListView> newView = getGameListView(system); // always returns a fresh one, as we just erased the stale one.
+			
+			LOG(LogDebug) << "ViewController::reloadGameListView(): List number of entries = "<< system->getGameCount(true);
+			
+			if (system->getGameCount(true) > 0)
+			{
+				newView->setCursor(cursor);
 
+				if(isCurrent){
+					mCurrentView = newView;
+				}
+			} else
+			{
+				LOG(LogDebug) << "ViewController::reloadGameListView(): No files left in view, go to start.";
+				goToStart();
+				break;
+			}	
+			//newView->updateInfoPanel();
+				
 			break;
 		}
 	}
+
 	// Redisplay the current view
 	if (mCurrentView)
 		mCurrentView->onShow();
-
 }
 
+// This reloads all gameslists. This is an expensive operation!
+// The UI remains much more response when a gameslist is only reloaded when
+// its actually being requested by the user.
 void ViewController::reloadAll()
 {
 	std::map<SystemData*, FileData*> cursorMap;
@@ -574,8 +536,11 @@ void ViewController::reloadAll()
 	updateHelpPrompts();
 }
 
+// This function sets a specific system's gameslist to be invalid,
+// so it is reloaded when requested.
 void ViewController::setInvalidGamesList(SystemData* system)
 {
+	LOG(LogDebug) << "ViewController::setInvalidGamesList()";
 	for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
 		if (system == (it->first))
@@ -586,6 +551,9 @@ void ViewController::setInvalidGamesList(SystemData* system)
 	}
 }
 
+// This function sets the gameslists for all systems (except for the systemExclude one)
+// to invalid, this will cause the gamelist to be reloaded on demand.
+// This is more efficient than calling reloadAll everytime.
 void ViewController::setAllInvalidGamesList(SystemData* systemExclude)
 {
 	for (auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
@@ -615,4 +583,10 @@ HelpStyle ViewController::getHelpStyle()
 		return GuiComponent::getHelpStyle();
 
 	return mCurrentView->getHelpStyle();
+}
+
+// Trigger repopulating the list of valid systems
+void ViewController::reloadSystemListView() const
+{
+	mSystemListView->populate();
 }

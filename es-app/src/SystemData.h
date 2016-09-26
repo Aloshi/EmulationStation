@@ -32,9 +32,12 @@ public:
 
 	std::string getGamelistPath(bool forWrite) const;
 	bool hasGamelist() const;
+
+	bool isValidFilter() const;	// Checks if the current filter setting has any system with valid items left.
+
 	std::string getThemePath() const;
 	
-	unsigned int getGameCount(bool filter) const;
+	unsigned int getGameCount(bool filter = false) const;
 	
 	void launchGame(Window* window, FileData* game);
 
@@ -43,7 +46,8 @@ public:
 	static void writeExampleConfig(const std::string& path);
 	static std::string getConfigPath(bool forWrite); // if forWrite, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 
-	static std::vector<SystemData*> sSystemVector;
+	static std::vector<SystemData*> sSystemVector;		   // the complete set of systems
+	static std::vector<SystemData*> sFilteredSystemVector; // the remaining set of systems, once filtered
 
 	inline std::vector<SystemData*>::const_iterator getIterator() const { return std::find(sSystemVector.begin(), sSystemVector.end(), this); };
 	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.rbegin(), sSystemVector.rend(), this); };
@@ -63,8 +67,6 @@ public:
 		if(it == sSystemVector.rend()) it = sSystemVector.rbegin();
 		return *it;
 	}
-	
-	SystemData* getRandom() const;
 	
 	// Load or re-load theme.
 	void loadTheme();

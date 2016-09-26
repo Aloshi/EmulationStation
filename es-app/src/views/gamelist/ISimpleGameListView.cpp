@@ -48,7 +48,8 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 {
 	// we could be tricky here to be efficient;
-	// but this shouldn't happen very often so we'll just always repopulate
+	// but this shouldn't happen very often so we'll just always repopulate.
+	LOG(LogDebug) << "ISimpleGameLIstView::onFileChanged()";
 	FileData* cursor = getCursor();
 	populateList(cursor->getParent()->getChildren(true));
 	setCursor(cursor);
@@ -74,11 +75,11 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					populateList(cursor->getChildren(true));
 				}
 			}
-				
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{
 			LOG(LogDebug) << "ISimpleGameListView::input(): b detected!";
+			
 			if(mCursorStack.size())
 			{
 				populateList(mCursorStack.top()->getParent()->getChildren(true));
@@ -97,12 +98,10 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}
 
 			return true;
-		}else if (config->isMappedTo("x", input))
+		}else if ((config->isMappedTo("x", input)) ||
+			(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_f && Settings::getInstance()->getBool("Debug"))			)
 		{
 			FileData* cursor = getCursor();
-			LOG(LogDebug) << "ISimpleGameListView::input(): x detected!";
-			if (cursor->getSystem()->getHasFavorites())
-			{
 				if (cursor->getType() == GAME)
 				{
 					mFavoriteChange = true;
@@ -117,17 +116,19 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 						md->set("favorite", "false");
 					}
 					LOG(LogDebug) << "New Favorite value set to: "<< md->get("favorite");
+					if (Settings::getInstance()->getBool("FavoritesOnly"))
+						ViewController::get()->reloadSystemListView();
 					updateInfoPanel();
 				}
-			}
-		}else if (config->isMappedTo("y", input))
+		}else if ((config->isMappedTo("y", input)) ||
+			(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_k && Settings::getInstance()->getBool("Debug")))
 		{
-			LOG(LogDebug) << "ISimpleGameListView::input(): y detected!";
 			FileData* cursor = getCursor();
-			if (cursor->getSystem()->getHasKidGames() && 
-				Settings::getInstance()->getString("UIMode") == "Full") 
+			if(Settings::getInstance()->getString("UIMode") == "Full")
+
 			{ // only when kidgames are supported by system+theme, and when in full UImode
-				if (cursor->getType() == GAME) {
+				if (cursor->getType() == GAME)
+				{
 					mKidGameChange = true;
 					MetaDataList* md = &cursor->metadata;
 					std::string value = md->get("kidgame");

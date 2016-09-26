@@ -21,8 +21,8 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 	virtual void populateList(const std::vector<FileData*>& files) override;
-
 	virtual inline void updateInfoPanel() override {}
+	
 protected:
 	virtual void launch(FileData* game) override;
 	virtual void remove(FileData* game) override;

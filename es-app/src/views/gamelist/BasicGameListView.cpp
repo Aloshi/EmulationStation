@@ -11,11 +11,10 @@
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
 {
-	//LOG(LogDebug) << "BasicGameListView::BasicGameListView()";
 	mList.setSize(mSize.x(), mSize.y() * 0.8f);
 	mList.setPosition(0, mSize.y() * 0.2f);
 	addChild(&mList);
-
+	
 	populateList(root->getChildren(true));  // This returns a filtered list based on UImode
 }
 
@@ -34,21 +33,15 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 		ViewController::get()->reloadGameListView(this);
 		return;
 	}
-
 	ISimpleGameListView::onFileChanged(file, change);
 }
 
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
-	if (files.size() > 0) {
-		LOG(LogDebug) << "BasicGameListView::populateList(): system = " << files.at(0)->getSystem()->getFullName();
-	}
 	mList.clear();
 
-	// TODO: how to handle empty lists??
-
-	// file list can be empty if direct launch item (@@ do we still have those?)
 	if (files.size()==0) {
+		LOG(LogDebug) << "BasicGameListView::populateList(): The current List is empty!";
 		return;
 	}
 	
@@ -61,7 +54,6 @@ void BasicGameListView::populateList(const std::vector<FileData*>& files)
 			mList.add((*it)->getName(), *it, 1);
 		}
 	}
-	LOG(LogDebug)<< "BasicGameListView::populateList(): added " << mList.size() << " items. END";
 }
 
 FileData* BasicGameListView::getCursor()
@@ -73,8 +65,13 @@ void BasicGameListView::setCursor(FileData* cursor)
 {
 	if(!mList.setCursor(cursor))
 	{
-		populateList(cursor->getParent()->getChildren(true));
-		mList.setCursor(cursor);
+		std::vector<FileData*> files = cursor->getParent()->getChildren(true);
+		populateList(files);
+		if (files.size() > 0 && !mList.setCursor(cursor))
+		{
+			// cursor is really no longer in the list, so jump to front
+			mList.setCursor(files.front());
+		}
 
 		// update our cursor stack in case our cursor just got set to some folder we weren't in before
 		if(mCursorStack.empty() || mCursorStack.top() != cursor->getParent())
@@ -105,8 +102,8 @@ void BasicGameListView::launch(FileData* game)
 
 void BasicGameListView::remove(FileData *game)
 {
-	boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
-	if (getCursor() == game)                     // Select next element in list, or prev if none
+	boost::filesystem::remove(game->getPath());		// actually delete the file on the filesystem
+	if (getCursor() == game)						// Select next element in list, or prev if none
 	{
 		std::vector<FileData*> siblings = game->getParent()->getChildren(true);
 		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
@@ -124,8 +121,6 @@ void BasicGameListView::remove(FileData *game)
 	delete game;                                 // remove before repopulating (removes from parent)
 	onFileChanged(game, FILE_REMOVED);           // update the view, with game removed
 }
-
-void BasicGameListView::updateInfoPanel() {}
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 {
