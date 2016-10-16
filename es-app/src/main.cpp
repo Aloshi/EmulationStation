@@ -15,10 +15,19 @@
 #include "Log.h"
 #include "Window.h"
 #include "EmulationStation.h"
+#include "RecalboxSystem.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
+#include "VolumeControl.h"
 #include <sstream>
-#include <boost/locale.hpp>
+#include "Locale.h"
+#include <boost/algorithm/string.hpp>
+#include <RecalboxConf.h>
+#include "resources/Font.h"
+#include "NetworkThread.h"
+#include "RecalboxSystem.h"
+#include "FileSorts.h"
+
 
 #ifdef WIN32
 #include <Windows.h>
@@ -27,6 +36,8 @@
 namespace fs = boost::filesystem;
 
 bool scrape_cmdline = false;
+
+void playSound(std::string name);
 
 bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
 {
@@ -140,9 +151,10 @@ bool loadSystemConfigFile(const char** errorString)
 	{
 		LOG(LogError) << "No systems found! Does at least one system have a game present? (check that extensions match!)\n(Also, make sure you've updated your es_systems.cfg for XML!)";
 		*errorString = "WE CAN'T FIND ANY SYSTEMS!\n"
-			"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, "
-			"AND YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n\n"
-			"VISIT EMULATIONSTATION.ORG FOR MORE INFORMATION.";
+		  "CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+		  "YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+		  "\n"
+		  "VISIT RECALBOX.FR FOR MORE INFORMATION.";
 		return false;
 	}
 
@@ -155,13 +167,54 @@ void onExit()
 	Log::close();
 }
 
+int setLocale(char * argv1)
+{
+ 	char path_save[PATH_MAX];
+  	char abs_exe_path[PATH_MAX];
+  	char *p;
+
+    if(!(p = strrchr(argv1, '/'))) {
+    		getcwd(abs_exe_path, sizeof(abs_exe_path));
+    }
+  	else
+  	{
+    		*p = '\0';
+    		getcwd(path_save, sizeof(path_save));
+    		chdir(argv1);
+    		getcwd(abs_exe_path, sizeof(abs_exe_path));
+    		chdir(path_save);
+  	}
+	boost::locale::localization_backend_manager my = boost::locale::localization_backend_manager::global(); 
+	// Get global backend
+
+    	my.select("std");
+	boost::locale::localization_backend_manager::global(my);
+    	// set this backend globally
+
+    	boost::locale::generator gen;
+
+	std::string localeDir = abs_exe_path;
+	localeDir += "/locale/lang";
+	LOG(LogInfo) << "Setting local directory to " << localeDir;
+    	// Specify location of dictionaries
+    	gen.add_messages_path(localeDir);
+    	gen.add_messages_path("/usr/share/locale");
+    	gen.add_messages_domain("emulationstation2");
+
+    	// Generate locales and imbue them to iostream
+    	std::locale::global(gen(""));
+    	std::cout.imbue(std::locale());
+        LOG(LogInfo) << "Locals set...";
+    return 0;
+}
+
 int main(int argc, char* argv[])
 {
 	unsigned int width = 0;
 	unsigned int height = 0;
 
-	std::locale::global(boost::locale::generator().generate(""));
-	boost::filesystem::path::imbue(std::locale());
+	//std::locale::global(boost::locale::generator().generate(""));
+	//boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv, &width, &height))
 		return 0;
@@ -210,13 +263,21 @@ int main(int argc, char* argv[])
 	//always close the log on exit
 	atexit(&onExit);
 
+	// Set locale
+	setLocale(argv[0]);
+
+	// other init
+	FileSorts::init(); // require locale
+	initMetadata(); // require locale
+	
+    Renderer::init(width, height);
 	Window window;
 	ViewController::init(&window);
 	window.pushGui(ViewController::get());
 
 	if(!scrape_cmdline)
-	{
-		if(!window.init(width, height))
+    {
+        if(!window.init(width, height, false))
 		{
 			LOG(LogError) << "Window failed to initialize!";
 			return 1;
@@ -224,10 +285,16 @@ int main(int argc, char* argv[])
 
 		std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
 		LOG(LogInfo) << "Checking available OpenGL extensions...";
-		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
+		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "OK" : "MISSING");
 
 		window.renderLoadingScreen();
 	}
+
+	// Initialize audio manager
+	VolumeControl::getInstance()->init();
+	AudioManager::getInstance()->init();
+
+	playSound("loading");
 
 	const char* errorMsg = NULL;
 	if(!loadSystemConfigFile(&errorMsg))
@@ -244,11 +311,30 @@ int main(int argc, char* argv[])
 		// we can't handle es_systems.cfg file problems inside ES itself, so display the error message then quit
 		window.pushGui(new GuiMsgBox(&window,
 			errorMsg,
-			"QUIT", [] { 
+					     _("QUIT"), [] { 
 				SDL_Event* quit = new SDL_Event();
 				quit->type = SDL_QUIT;
 				SDL_PushEvent(quit);
 			}));
+	}
+
+	RecalboxConf* recalboxConf = RecalboxConf::getInstance();
+	if(recalboxConf->get("kodi.enabled") == "1" && recalboxConf->get("kodi.atstartup") == "1"){
+		RecalboxSystem::getInstance()->launchKodi(&window);
+	}
+	RecalboxSystem::getInstance()->getIpAdress();
+	// UPDATED VERSION MESSAGE
+	if(RecalboxSystem::getInstance()->needToShowVersionMessage()){
+		 window.pushGui(new GuiMsgBox(&window,
+		RecalboxSystem::getInstance()->getVersionMessage(),
+					      _("OK"), [] {
+					 RecalboxSystem::getInstance()->updateLastVersionFile();
+					},"",nullptr,"",nullptr, ALIGN_LEFT));
+	}
+
+	// UPDATE CHECK THREAD
+	if(recalboxConf->get("updates.enabled") == "1"){
+		NetworkThread * nthread = new NetworkThread(&window);
 	}
 
 	//run the command line scraper then quit
@@ -260,9 +346,11 @@ int main(int argc, char* argv[])
 	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
 	SDL_JoystickEventState(SDL_DISABLE);
 
+
+
 	// preload what we can right away instead of waiting for the user to select it
 	// this makes for no delays when accessing content, but a longer startup time
-	ViewController::get()->preload();
+	//ViewController::get()->preload();
 
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
@@ -280,7 +368,6 @@ int main(int argc, char* argv[])
 
 	int lastTime = SDL_GetTicks();
 	bool running = true;
-
 	while(running)
 	{
 		SDL_Event event;
@@ -302,6 +389,10 @@ int main(int argc, char* argv[])
 					break;
 				case SDL_QUIT:
 					running = false;
+					break;
+				case RecalboxSystem::SDL_FAST_QUIT:
+					running = false;
+					Settings::getInstance()->setBool("IgnoreGamelist", true);
 					break;
 			}
 		}
@@ -330,11 +421,19 @@ int main(int argc, char* argv[])
 
 	while(window.peekGui() != ViewController::get())
 		delete window.peekGui();
-	window.deinit();
 
+	window.renderShutdownScreen();
 	SystemData::deleteSystems();
-
+	window.deinit();
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
 
 	return 0;
+}
+
+void playSound(std::string name) {
+	std::string selectedTheme = Settings::getInstance()->getString("ThemeSet");
+	std::string loadingMusic = getHomePath()+"/.emulationstation/themes/"+selectedTheme+"/fx/"+name+".ogg";
+	if(boost::filesystem::exists(loadingMusic)){
+		Music::get(loadingMusic)->play(false, NULL);
+	}
 }

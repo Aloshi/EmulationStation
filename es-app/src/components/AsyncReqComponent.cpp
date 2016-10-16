@@ -10,7 +10,7 @@ AsyncReqComponent::AsyncReqComponent(Window* window, std::shared_ptr<HttpReq> re
 
 bool AsyncReqComponent::input(InputConfig* config, Input input)
 {
-	if(input.value != 0 && config->isMappedTo("b", input))
+	if(input.value != 0 && config->isMappedTo("a", input))
 	{
 		if(mCancelFunc)
 			mCancelFunc();
@@ -46,6 +46,6 @@ void AsyncReqComponent::render(const Eigen::Affine3f& parentTrans)
 std::vector<HelpPrompt> AsyncReqComponent::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
-	prompts.push_back(HelpPrompt("b", "cancel"));
+	prompts.push_back(HelpPrompt("a", "cancel"));
 	return prompts;
 }

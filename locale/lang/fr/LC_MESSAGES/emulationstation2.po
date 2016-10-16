@@ -1,0 +1,792 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-26 22:02+0100\n"
+"PO-Revision-Date: 2014-09-20 15:00-0500\n"
+"Last-Translator: nadenislamarre <nicolas.adenis.lamarre@gmail.com>\n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "UNE MISE À JOUR EST DISPONIBLE POUR VOTRE RECALBOX"
+
+msgid "CANCEL"
+msgstr "ANNULER"
+
+msgid "Rating"
+msgstr "Note"
+
+msgid "Released"
+msgstr "Sortie"
+
+msgid "Developer"
+msgstr "Développeur"
+
+msgid "Publisher"
+msgstr "Éditeur"
+
+msgid "Genre"
+msgstr "Genre"
+
+msgid "Players"
+msgstr "Joueurs"
+
+msgid "NO GAMES FOUND - SKIP"
+msgstr "AUCUN JEU CORRESPONDANT - PASSER"
+
+msgid "RETRY"
+msgstr "RECOMMENCER"
+
+msgid "SKIP"
+msgstr "PASSER"
+
+msgid "SEARCH FOR"
+msgstr "RECHERCHER"
+
+msgid "SEARCH"
+msgstr "RECHERCHER"
+
+msgid "SCRAPING IN PROGRESS"
+msgstr "SCRAPING EN COURS"
+
+msgid "SYSTEM"
+msgstr "SYSTÈME"
+
+msgid "subtitle text"
+msgstr "sous-titre"
+
+msgid "INPUT"
+msgstr "ÉDITER"
+
+msgid "search"
+msgstr "rechercher"
+
+msgid "STOP"
+msgstr "ARRÊTER"
+
+msgid "stop (progress saved)"
+msgstr "stop (progrès sauvegardé)"
+
+#, c-format
+msgid "GAME %i OF %i"
+msgstr "JEU %i DE %i"
+
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.COM FOR MORE INFORMATION."
+msgstr ""
+"AUCUN JEU N'A ÉTÉ TROUVÉ SUR LE SYSTÈME !\n"
+"VEUILLEZ AJOUTER DES JEUX EN SUIVANT LES INSTRUCTIONS DE LA NOTICE.\n"
+"\n"
+"RENDEZ-VOUS SUR RECALBOX.COM POUR PLUS D'INFORMATIONS"
+
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] "%i JEU SCRAPPÉ !"
+msgstr[1] "%i JEUX SCRAPPÉS !"
+
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] "%i JEU PASSÉ."
+msgstr[1] "%i JEUX PASSÉS."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "EDIT METADATA"
+msgstr "ÉDITER LES DONNÉES"
+
+msgid "SCRAPE"
+msgstr "SCRAPPER"
+
+msgid "SAVE"
+msgstr "SAUVEGARDER"
+
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+"CELA VA EFFACER LE FICHIER\n"
+"ÊTES-VOUS SUR ?"
+
+msgid "YES"
+msgstr "OUI"
+
+msgid "NO"
+msgstr "NON"
+
+msgid "DELETE"
+msgstr "SUPPRIMER"
+
+msgid "SAVE CHANGES?"
+msgstr "SAUVEGARDER ?"
+
+msgid "BACK"
+msgstr "RETOUR"
+
+msgid "CLOSE"
+msgstr "FERMER"
+
+msgid "MAIN MENU"
+msgstr "MENU PRINCIPAL"
+
+msgid "KODI MEDIA CENTER"
+msgstr "KODI MEDIA CENTER"
+
+msgid "SYSTEM SETTINGS"
+msgstr "OPTIONS SYSTÈME"
+
+msgid "VERSION"
+msgstr "VERSION"
+
+msgid "DISK USAGE"
+msgstr "ESPACE DISQUE"
+
+msgid "STORAGE DEVICE"
+msgstr "MÉDIA DE STOCKAGE"
+
+msgid "LANGUAGE"
+msgstr "LANGUE"
+
+msgid "OVERCLOCK"
+msgstr "OVERCLOCK"
+
+msgid "EXTREM (1100Mhz)"
+msgstr "EXTREM (1100Mhz)"
+
+msgid "TURBO (1000Mhz)"
+msgstr "TURBO (1000Mhz)"
+
+msgid "HIGH (950Mhz)"
+msgstr "HIGH (950Mhz)"
+
+msgid "TURBO (1050Mhz)+"
+msgstr "TURBO (1050Mhz)+"
+
+msgid "HIGH (1050Mhz)"
+msgstr "HIGH (1050Mhz)"
+
+msgid "NONE (900Mhz)"
+msgstr "AUCUN (900Mhz)"
+
+msgid "NONE (1200Mhz)"
+msgstr "AUCUN (1200Mhz)"
+
+msgid "NONE"
+msgstr "AUCUN"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "MISES À JOUR"
+
+msgid "AUTO UPDATES"
+msgstr "MISES À JOUR AUTO"
+
+msgid "START UPDATE"
+msgstr "LANCER LA MISE À JOUR"
+
+msgid "KODI SETTINGS"
+msgstr "OPTIONS KODI"
+
+msgid "ENABLE KODI"
+msgstr "ACTIVER KODI"
+
+msgid "KODI AT START"
+msgstr "AUTO DÉMARRAGE DE KODI"
+
+msgid "START KODI WITH X"
+msgstr "X POUR LANCER KODI"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "LE SYSTÈME VA REDÉMARRER"
+
+msgid "GAMES SETTINGS"
+msgstr "OPTIONS DES JEUX"
+
+msgid "GAME RATIO"
+msgstr "FORMAT JEUX"
+
+msgid "SMOOTH GAMES"
+msgstr "LISSER LES JEUX"
+
+msgid "REWIND"
+msgstr "REMBOBINAGE"
+
+msgid "AUTO SAVE/LOAD"
+msgstr "SAUVEGARDE/CHARGEMENT AUTOMATIQUE"
+
+msgid "SHADERS SET"
+msgstr "SHADERS SET"
+
+msgid "SCANLINES"
+msgstr "SCANLINES"
+
+msgid "RETRO"
+msgstr "RETRO"
+
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr "OPTIONS DE RETROACHIEVEMENTS"
+
+msgid "RETROACHIEVEMENTS"
+msgstr "RETROACHIEVEMENTS"
+
+msgid "USERNAME"
+msgstr "NOM UTILISATEUR"
+
+msgid "PASSWORD"
+msgstr "MOT DE PASSE"
+
+msgid "ADVANCED"
+msgstr "AVANCÉES"
+
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "CONFIRMER LA MISE À JOUR DES LISTES DES JEUX ?"
+
+msgid "UPDATE GAMES LISTS"
+msgstr "METTRE À JOUR LES LISTES DES JEUX"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "OPTIONS MANETTES"
+
+msgid "UI SETTINGS"
+msgstr "OPTIONS DE L'INTERFACE"
+
+msgid "OVERSCAN"
+msgstr "OVERSCAN"
+
+msgid "SCREENSAVER AFTER"
+msgstr "ÉCRAN DE VEILLE APRÈS"
+
+msgid "TRANSITION STYLE"
+msgstr "STYLE DE LA TRANSITION"
+
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "COMPORTEMENT DE L'ÉCRAN DE VEILLE"
+
+msgid "SHOW FRAMERATE"
+msgstr "AFFICHER LE FRAMERATE"
+
+msgid "ON-SCREEN HELP"
+msgstr "AFFICHAGE DE L'AIDE"
+
+msgid "QUICK SYSTEM SELECT"
+msgstr "SÉLECTION RAPIDE DU SYSTÈME"
+
+msgid "THEME SET"
+msgstr "THÈME"
+
+msgid "SOUND SETTINGS"
+msgstr "OPTIONS DU SON"
+
+msgid "SYSTEM VOLUME"
+msgstr "VOLUME DU SYSTÈME"
+
+msgid "FRONTEND MUSIC"
+msgstr "MUSIQUE DE FOND"
+
+msgid "OUTPUT DEVICE"
+msgstr "SORTIE AUDIO"
+
+msgid "HDMI"
+msgstr "HDMI"
+
+msgid "JACK"
+msgstr "JACK"
+
+msgid "AUTO"
+msgstr "AUTO"
+
+msgid "NETWORK SETTINGS"
+msgstr "OPTIONS RÉSEAU"
+
+msgid "CONNECTED"
+msgstr "CONNECTÉ"
+
+msgid "NOT CONNECTED"
+msgstr "DÉCONNECTÉ"
+
+msgid "STATUS"
+msgstr "STATUT"
+
+msgid "IP ADDRESS"
+msgstr "ADRESSE IP"
+
+msgid "HOSTNAME"
+msgstr "NOM SUR LE RÉSEAU"
+
+msgid "ENABLE WIFI"
+msgstr "ACTIVER LE WIFI"
+
+msgid "WIFI SSID"
+msgstr "SSID WIFI"
+
+msgid "WIFI KEY"
+msgstr "CLÉ WIFI"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI ACTIVÉ"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "ERREUR DE CONFIGURATION WIFI"
+
+msgid "SCRAPER"
+msgstr "SCRAPPEUR"
+
+msgid "SCRAPE FROM"
+msgstr "SCRAPPER DEPUIS"
+
+msgid "SCRAPE RATINGS"
+msgstr "SCRAPPER LES NOTES"
+
+msgid "SCRAPE NOW"
+msgstr "SCRAPPER MAINTENANT"
+
+msgid "QUIT"
+msgstr "QUITTER"
+
+msgid "REALLY RESTART?"
+msgstr "REDÉMARRER ?"
+
+msgid "RESTART SYSTEM"
+msgstr "REDÉMARRER"
+
+msgid "REALLY SHUTDOWN?"
+msgstr "ÉTEINDRE ?"
+
+msgid "SHUTDOWN SYSTEM"
+msgstr "ÉTEINDRE"
+
+msgid "Emulator"
+msgstr "Émulateur"
+
+msgid "Core"
+msgstr "Core"
+
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
+msgstr ""
+"VOUS ALLEZ CONFIGURER UNE MANETTE. SI VOUS N'AVEZ QU'UN JOYSTICK OU JUSTE "
+"UNE CROIX DIRECTIONNELLE, CONFIGUREZ SEULEMENT LES DIRECTIONS ET PASSEZ LES "
+"JOYSTICKS EN RESTANT APPUYÉ SUR UN BOUTON. SI VOUS N'AVEZ PAS DE BOUTON "
+"SPECIAL POUR HOTKEY, UTILISEZ SELECT. IGNOREZ UN BOUTON QUE VOTRE MANETTE "
+"N'A PAS EN RESTANT APPUYÉ SUR UN BOUTON DÉJÀ CONFIGURÉ. LES NOMS DES BOUTONS "
+"SONT BASÉS SUR LA SUPER NINTENDO"
+
+# GUIMENU
+msgid "CONFIGURE A CONTROLLER"
+msgstr "CONFIGURER UNE MANETTE"
+
+# Bluetooth
+msgid "CONTROLLER PAIRED"
+msgstr "MANETTE ASSOCIÉE"
+
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "IMPOSSIBLE D'ASSOCIER LA MANETTE"
+
+msgid "AN ERROR OCCURED"
+msgstr "UNE ERREUR EST SURVENUE"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "AUCUNE MANETTE DÉTECTÉE"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "ASSOCIER UNE MANETTE BLUETOOTH"
+
+msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
+msgstr "LES LIENS VERS LES MANETTES ONT ÉTÉ SUPPRIMÉS."
+
+msgid "FORGET BLUETOOTH CONTROLLERS"
+msgstr "OUBLIER LES MANETTES BLUETOOTH"
+
+#, c-format
+msgid "INPUT P%i"
+msgstr "JOUEUR %i"
+
+msgid "CHOOSE"
+msgstr "CHOISIR"
+
+msgid "SELECT"
+msgstr "SÉLECTIONNER"
+
+msgid "CUSTOM"
+msgstr "PERSONALISÉ"
+
+msgid "4/3"
+msgstr "4/3"
+
+msgid "16/9"
+msgstr "16/9"
+
+msgid "OPTIONS"
+msgstr "OPTIONS"
+
+msgid "JUMP TO LETTER"
+msgstr "ALLER À LA LETTRE"
+
+msgid "SORT GAMES BY"
+msgstr "TRIER LES JEUX PAR"
+
+#  FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "FAVORIS SEULEMENT"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "ÉDITER LES DONNÉES DU JEU"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "SCRAPPER CES JEUX"
+
+msgid "All Games"
+msgstr "Tous les jeux"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "Seulement images manquantes"
+
+msgid "FILTER"
+msgstr "FILTRE"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "SCRAPPER CES SYSTÈMES"
+
+msgid "SYSTEMS"
+msgstr "SYSTÈMES"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "CHOISIR SI CONFLIT"
+
+msgid "START"
+msgstr "DÉMARRER"
+
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+"ATTENTION: CERTAINS DE VOS SYSTÈMES N'ONT PAS DE PLATEFORME. LES RÉSULTATS "
+"POURRAIENT ÊTRE INATTENDUS!\n"
+"CONTINUER QUAND MÊME?"
+
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr "AUCUN JEU NE CORRESPOND."
+
+msgid "REALLY UPDATE?"
+msgstr "METTRE À JOUR LE SYSTÈME ?"
+
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "VEUILLEZ BRANCHER UN CÂBLE RÉSEAU"
+
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr "MISE À JOUR TÉLÉCHARGÉE, REDÉMARRAGE EN COURS"
+
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "ÉCHEC DE LA MISE À JOUR"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "AUCUNE MISE À JOUR DISPONIBLE"
+
+msgid "enter emulator"
+msgstr "entrer l'émulateur"
+
+msgid "enter core"
+msgstr "entrer le core"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "enter game name"
+msgstr "entrer le nom du jeu"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "enter description"
+msgstr "entrer la description"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "enter path to image"
+msgstr "entrer le chemin vers l'image"
+
+msgid "Thumbnail"
+msgstr "Miniature"
+
+msgid "enter path to thumbnail"
+msgstr "entrer le chemin vers la miniature"
+
+msgid "enter rating"
+msgstr "entrer les votes"
+
+msgid "Release date"
+msgstr "Date de sortie"
+
+msgid "enter release date"
+msgstr "entrer la date de sortie"
+
+msgid "enter game developer"
+msgstr "entrer le développeur du jeu"
+
+msgid "enter game publisher"
+msgstr "entrer l'éditeur du jeu"
+
+msgid "enter game genre"
+msgstr "entrer le genre du jeu"
+
+msgid "enter number of players"
+msgstr "entrer le nombre de joueurs"
+
+msgid "Favorite"
+msgstr "Favori"
+
+msgid "enter favorite"
+msgstr "entrer le favori"
+
+msgid "Region"
+msgstr "Région"
+
+msgid "enter region"
+msgstr "entrer la région"
+
+msgid "Romtype"
+msgstr "Type de rom"
+
+msgid "enter romtype"
+msgstr "entre le type de rom"
+
+msgid "Hidden"
+msgstr "Invisible"
+
+msgid "set hidden"
+msgstr "Mettre caché"
+
+msgid "Play count"
+msgstr "Nb parties"
+
+msgid "enter number of times played"
+msgstr "entrer le nombre de parties"
+
+msgid "Last played"
+msgstr "Dernier jeu"
+
+msgid "enter last played date"
+msgstr "entrer la date de la dernière partie"
+
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] "%i JEU DISPONIBLE"
+msgstr[1] "%i JEUX DISPONIBLES"
+
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] "%i FAVORI"
+msgstr[1] "%i FAVORIS"
+
+msgid "SCROLL"
+msgstr "SCROLLER"
+
+msgid "LAUNCH"
+msgstr "LANCER"
+
+msgid "Times played"
+msgstr "Nb parties"
+
+msgid "MENU"
+msgstr "MENU"
+
+msgid "FILENAME, ASCENDING"
+msgstr "FICHIER, ASCENDANT"
+
+msgid "FILENAME, DESCENDING"
+msgstr "FICHIER, DESCENDANT"
+
+msgid "RATING, ASCENDING"
+msgstr "VOTES, ASCENDANT"
+
+msgid "RATING, DESCENDING"
+msgstr "VOTES, DESCENDANT"
+
+msgid "TIMES PLAYED, ASCENDING"
+msgstr "PARTIES JOUÉES, ASCENDANT"
+
+msgid "TIMES PLAYED, DESCENDING"
+msgstr "PARTIES JOUÉES, DESCENDANT"
+
+msgid "LAST PLAYED, ASCENDING"
+msgstr "DERNIÈRE PARTIE, ASCENDANT"
+
+msgid "LAST PLAYED, DESCENDING"
+msgstr "DERNIÈRE PARTIE, DESCENDANT"
+
+msgid "WORKING..."
+msgstr "EN COURS..."
+
+msgid "CHANGE"
+msgstr "CHANGER"
+
+msgid "never"
+msgstr "jamais"
+
+msgid "just now"
+msgstr "à l'instant"
+
+#, c-format
+msgid "%i sec ago"
+msgid_plural "%i secs ago"
+msgstr[0] "il y a %i sec"
+msgstr[1] "il y a %i secs"
+
+#, c-format
+msgid "%i min ago"
+msgid_plural "%i mins ago"
+msgstr[0] "il y a %i min"
+msgstr[1] "il y a %i mins"
+
+#, c-format
+msgid "%i hour ago"
+msgid_plural "%i hours ago"
+msgstr[0] "il y a %i heure"
+msgstr[1] "il y a %i heures"
+
+#, c-format
+msgid "%i day ago"
+msgid_plural "%i days ago"
+msgstr[0] "il y a %i jour"
+msgstr[1] "il y a %i jours"
+
+msgid "unknown"
+msgstr "inconnu"
+
+msgid "SELECT ALL"
+msgstr "TOUT SÉLECTIONNER"
+
+msgid "SELECT NONE"
+msgstr "AUCUN"
+
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] "%i SÉLECTIONNÉ"
+msgstr[1] "%i SÉLECTIONNÉS"
+
+msgid "UP"
+msgstr "HAUT"
+
+msgid "DOWN"
+msgstr "BAS"
+
+msgid "LEFT"
+msgstr "GAUCHE"
+
+msgid "RIGHT"
+msgstr "DROITE"
+
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 HAUT"
+
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 GAUCHE"
+
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 HAUT"
+
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 GAUCHE"
+
+msgid "PAGE UP"
+msgstr "L1 (PAGE PRECEDENTE)"
+
+msgid "PAGE DOWN"
+msgstr "R1 (PAGE SUIVANTE)"
+
+msgid "HOTKEY"
+msgstr "HOTKEY"
+
+msgid "CONFIGURING"
+msgstr "CONFIGURATION"
+
+msgid "KEYBOARD"
+msgstr "CLAVIER"
+
+#, c-format
+msgid "GAMEPAD %i"
+msgstr "JOYSTICK %i"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "RESTER APPUYÉ SUR UN BOUTON POUR PASSER"
+
+msgid "-NOT DEFINED-"
+msgstr "-NON CONFIGURÉ-"
+
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] "APPUYEZ PENDANT %iS POUR PASSER"
+msgstr[1] "APPUYEZ PENDANT %iS POUR PASSER"
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "APPUYEZ SUR UN BOUTON"
+
+msgid "ALREADY TAKEN"
+msgstr "DÉJÀ PRIS"
+
+msgid "DISCARD CHANGES"
+msgstr "ANNULER LES MODIFICATIONS"
+
+msgid "WELCOME"
+msgstr "BIENVENUE"
+
+msgid "CONFIGURE INPUT"
+msgstr "CONFIGURER LES MANETTES"
+
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i MANETTE DÉTECTÉE"
+msgstr[1] "%i MANETTES DÉTECTÉES"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "AUCUNE MANETTE DÉTECTÉE"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "MAINTENEZ UN BOUTON SUR LA MANETTE POUR LA CONFIGURER"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "APPUYEZ SUR F4 POUR QUITTER À TOUT MOMENT"
+
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "APPUYEZ SUR ECHAP OU LA TOUCHE HOTKEY POUR ANNULER"
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "VOULEZ-VOUS LANCER LE MEDIA CENTER KODI ?"
+
+msgid "LOADING..."
+msgstr "CHARGEMENT..."
+
+msgid "PLEASE WAIT..."
+msgstr "VEUILLEZ PATIENTER..."
+
+#~ msgid "Original"
+#~ msgstr "Original"
+
+msgid "REALLY SHUTDOWN WITHOUT SAVING METADATAS?"
+msgstr "VOULEZ-VOUS VRAIMENT ÉTEINDRE SANS SAUVEGARDER LES METADATAS ?"
+
+msgid "FAST SHUTDOWN SYSTEM"
+msgstr "EXTINCTION RAPIDE"

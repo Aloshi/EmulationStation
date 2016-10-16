@@ -13,9 +13,8 @@ public:
 
 	bool input(InputConfig* config, Input input);
 	void update(int deltaTime);
-
+	virtual void setScrollDir(int dir);
 private:
-	void setScrollDir(int dir);
 	void scroll();
 	void updateGameListCursor();
 	void updateGameListSort();

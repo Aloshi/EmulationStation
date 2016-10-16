@@ -1,7 +1,7 @@
 #include "VolumeControl.h"
 
 #include "Log.h"
-
+#include <math.h>
 
 #if defined(__linux__)
     #ifdef _RPI_
@@ -18,7 +18,7 @@ std::weak_ptr<VolumeControl> VolumeControl::sInstance;
 VolumeControl::VolumeControl()
 	: originalVolume(0), internalVolume(0)
 #if defined (__APPLE__)
-    #error TODO: Not implemented for MacOS yet!!!
+    #warning TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
     , mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
 #elif defined(WIN32) || defined(_WIN32)
@@ -68,7 +68,7 @@ void VolumeControl::init()
 {
 	//initialize audio mixer interface
 #if defined (__APPLE__)
-	#error TODO: Not implemented for MacOS yet!!!
+    #warning TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
 	//try to open mixer device
 	if (mixerHandle == nullptr)
@@ -212,7 +212,7 @@ void VolumeControl::deinit()
 {
 	//deinitialize audio mixer interface
 #if defined (__APPLE__)
-	#error TODO: Not implemented for MacOS yet!!!
+    #warning TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
 	if (mixerHandle != nullptr) {
 		snd_mixer_detach(mixerHandle, mixerCard);
@@ -239,7 +239,7 @@ int VolumeControl::getVolume() const
 	int volume = 0;
 
 #if defined (__APPLE__)
-    #error TODO: Not implemented for MacOS yet!!!
+    #warning TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
 	if (mixerElem != nullptr)
 	{
@@ -256,7 +256,7 @@ int VolumeControl::getVolume() const
 				rawVolume -= minVolume;
 				if (rawVolume > 0)
 				{
-					volume = (rawVolume * 100) / (maxVolume - minVolume);
+				  volume = ceil((rawVolume * 100) / (((double)maxVolume - minVolume)));
 				}
 				//else volume = 0;
 			}
@@ -333,7 +333,7 @@ void VolumeControl::setVolume(int volume)
 	//store values in internal variables
 	internalVolume = volume;
 #if defined (__APPLE__)
-    #error TODO: Not implemented for MacOS yet!!!
+    #warning TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
 	if (mixerElem != nullptr)
 	{

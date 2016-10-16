@@ -3,7 +3,9 @@
 #include "resources/Font.h"
 #include "Window.h"
 #include "Renderer.h"
+
 #include "Util.h"
+#include "Locale.h"
 
 #define TEXT_PADDING_HORIZ 10
 #define TEXT_PADDING_VERT 2
@@ -43,7 +45,7 @@ void TextEditComponent::onSizeChanged()
 
 void TextEditComponent::setValue(const std::string& val)
 {
-	mText = val;
+        mText = val;
 	onTextChanged();
 }
 
@@ -99,7 +101,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 		return false;
 	}
 
-	if(config->isMappedTo("a", input) && mFocused && !mEditing)
+	if(config->isMappedTo("b", input) && mFocused && !mEditing)
 	{
 		startEditing();
 		return true;
@@ -119,7 +121,7 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 			return true;
 		}
 
-		if((config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_ESCAPE) || (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("b", input)))
+		if((config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_ESCAPE) || (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("a", input)))
 		{
 			stopEditing();
 			return true;
@@ -280,9 +282,9 @@ std::vector<HelpPrompt> TextEditComponent::getHelpPrompts()
 	if(mEditing)
 	{
 		prompts.push_back(HelpPrompt("up/down/left/right", "move cursor"));
-		prompts.push_back(HelpPrompt("b", "stop editing"));
+		prompts.push_back(HelpPrompt("a", "stop editing"));
 	}else{
-		prompts.push_back(HelpPrompt("a", "edit"));
+		prompts.push_back(HelpPrompt("b", "edit"));
 	}
 	return prompts;
 }

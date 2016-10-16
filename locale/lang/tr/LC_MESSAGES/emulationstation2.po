@@ -1,0 +1,785 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Emulationstation\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-26 22:02+0100\n"
+"PO-Revision-Date: 2016-03-27 17:46+0300\n"
+"Last-Translator: Ibrahim Gungor <igungor@gmail.com>\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
+"Language-Team: \n"
+
+msgid "AN UPDATE IS AVAILABLE FOR YOUR RECALBOX"
+msgstr "SİSTEMİNİZE AİT GÜNCELLEME MEVCUT"
+
+msgid "CANCEL"
+msgstr "İPTAL"
+
+msgid "Rating"
+msgstr "Puan"
+
+msgid "Released"
+msgstr "Yayın"
+
+msgid "Developer"
+msgstr "Geliştirici"
+
+msgid "Publisher"
+msgstr "Yayıncı"
+
+msgid "Genre"
+msgstr "Tür"
+
+msgid "Players"
+msgstr "Oyuncu"
+
+msgid "NO GAMES FOUND - SKIP"
+msgstr "OYUN BULUNAMADI"
+
+msgid "RETRY"
+msgstr "TEKRAR DENE"
+
+msgid "SKIP"
+msgstr "GEÇ"
+
+msgid "SEARCH FOR"
+msgstr "ARAMA YAP"
+
+msgid "SEARCH"
+msgstr "ARA"
+
+msgid "SCRAPING IN PROGRESS"
+msgstr "ÇEKME İŞLEMİ SÜRÜYOR"
+
+msgid "SYSTEM"
+msgstr "SİSTEM"
+
+msgid "subtitle text"
+msgstr "altyazı metni"
+
+msgid "INPUT"
+msgstr "GİRDİ"
+
+msgid "search"
+msgstr "ara"
+
+msgid "STOP"
+msgstr "DUR"
+
+msgid "stop (progress saved)"
+msgstr "dur"
+
+#, c-format
+msgid "GAME %i OF %i"
+msgstr "OYUN %i/%i"
+
+msgid ""
+"WE CAN'T FIND ANY SYSTEMS!\n"
+"CHECK THAT YOUR PATHS ARE CORRECT IN THE SYSTEMS CONFIGURATION FILE, AND "
+"YOUR GAME DIRECTORY HAS AT LEAST ONE GAME WITH THE CORRECT EXTENSION.\n"
+"\n"
+"VISIT RECALBOX.COM FOR MORE INFORMATION."
+msgstr ""
+"KURULU BİR SİSTEM BULUNAMADI!\n"
+"SİSTEM YAPILANDIRMA DOSYASINDA TANIMLI SİSTEMLERİN KONUMLARINI ve OYUN "
+"KLASÖRÜNDE EN AZ BİR OYUN OLDUĞUNU KONTROL EDİN."
+
+#, c-format
+msgid "%i GAME SUCCESSFULLY SCRAPED!"
+msgid_plural "%i GAMES SUCCESSFULLY SCRAPED!"
+msgstr[0] "%i OYUN BAŞARIYLA ÇEKİLDİ!"
+msgstr[1] "%i OYUN BAŞARIYLA ÇEKİLDİ!"
+
+#, c-format
+msgid "%i GAME SKIPPED."
+msgid_plural "%i GAMES SKIPPED."
+msgstr[0] "%i OYUN ATLANDI."
+msgstr[1] "%i OYUN ATLANDI."
+
+msgid "OK"
+msgstr "TAMAM"
+
+msgid "EDIT METADATA"
+msgstr "DÜZENLE"
+
+msgid "SCRAPE"
+msgstr "ÇEK"
+
+msgid "SAVE"
+msgstr "KAYDET"
+
+msgid ""
+"THIS WILL DELETE A FILE!\n"
+"ARE YOU SURE?"
+msgstr ""
+"BU İŞLEM BİR DOSYA SİLECEK!\n"
+"EMİN MİSİNİZ?"
+
+msgid "YES"
+msgstr "EVET"
+
+msgid "NO"
+msgstr "HAYIR"
+
+msgid "DELETE"
+msgstr "SİL"
+
+msgid "SAVE CHANGES?"
+msgstr "DEĞİŞİKLİKLERİ KAYDET?"
+
+msgid "BACK"
+msgstr "GERİ"
+
+msgid "CLOSE"
+msgstr "KAPAT"
+
+msgid "MAIN MENU"
+msgstr "ANA MENÜ"
+
+msgid "KODI MEDIA CENTER"
+msgstr "KODI MEDIA CENTER"
+
+msgid "SYSTEM SETTINGS"
+msgstr "SİSTEM AYARLARI"
+
+msgid "VERSION"
+msgstr "SÜRÜM"
+
+msgid "DISK USAGE"
+msgstr "KALAN DEPO"
+
+msgid "STORAGE DEVICE"
+msgstr "DEPO CİHAZI"
+
+msgid "LANGUAGE"
+msgstr "DİL"
+
+msgid "OVERCLOCK"
+msgstr "HIZAŞIMI"
+
+msgid "EXTREM (1100Mhz)"
+msgstr "EKSTREM (1100Mhz)"
+
+msgid "TURBO (1000Mhz)"
+msgstr "TURBO (1000Mhz)"
+
+msgid "HIGH (950Mhz)"
+msgstr "YÜKSEK (950Mhz)"
+
+msgid "TURBO (1050Mhz)+"
+msgstr "TURBO (1050Mhz)+"
+
+msgid "HIGH (1050Mhz)"
+msgstr "YÜKSEK (1050Mhz)"
+
+msgid "NONE (900Mhz)"
+msgstr "YOK (900Mhz)"
+
+msgid "NONE (1200Mhz)"
+msgstr "YOK (1200Mhz)"
+
+msgid "NONE"
+msgstr "YOK"
+
+# NEW SETTINGS ORGANIZATION
+msgid "UPDATES"
+msgstr "GÜNCELLEMELER"
+
+msgid "AUTO UPDATES"
+msgstr "OTOMATİK GÜNCELLEME"
+
+msgid "START UPDATE"
+msgstr "GÜNCELLE"
+
+msgid "KODI SETTINGS"
+msgstr "KODI AYARLARI"
+
+msgid "ENABLE KODI"
+msgstr "ETKİNLEŞTİR"
+
+msgid "KODI AT START"
+msgstr "AÇILIŞTA BAŞLASIN"
+
+msgid "START KODI WITH X"
+msgstr "X İLE BAŞLASIN"
+
+msgid "THE SYSTEM WILL NOW REBOOT"
+msgstr "SİSTEM YENİDEN BAŞLATILIYOR"
+
+msgid "GAMES SETTINGS"
+msgstr "OYUN AYARLARI"
+
+msgid "GAME RATIO"
+msgstr "GÖRÜNTÜ ORANI"
+
+msgid "SMOOTH GAMES"
+msgstr "OYUNLARI SMOOTH GÖSTER"
+
+msgid "REWIND"
+msgstr "GERİ SAR"
+
+msgid "AUTO SAVE/LOAD"
+msgstr "OTOMATİK KAYDET/YÜKLE"
+
+msgid "SHADERS SET"
+msgstr "SHADER"
+
+msgid "SCANLINES"
+msgstr "SCANLINES"
+
+msgid "RETRO"
+msgstr "RETRO"
+
+msgid "RETROACHIEVEMENTS SETTINGS"
+msgstr "RETROACHIEVEMENT AYARLARI"
+
+msgid "RETROACHIEVEMENTS"
+msgstr "RETROACHIEVEMENT"
+
+msgid "USERNAME"
+msgstr "KULLANICI ADI"
+
+msgid "PASSWORD"
+msgstr "PAROLA"
+
+msgid "ADVANCED"
+msgstr "GELİŞMİŞ"
+
+msgid "REALLY UPDATE GAMES LISTS ?"
+msgstr "OYUN LİSTESİ GÜNCELLENSİN Mİ?"
+
+msgid "UPDATE GAMES LISTS"
+msgstr "OYUN LİSTESİNİ GÜNCELLE"
+
+msgid "CONTROLLERS SETTINGS"
+msgstr "KUMANDA AYARLARI"
+
+msgid "UI SETTINGS"
+msgstr "ARABİRİM AYARLARI"
+
+msgid "OVERSCAN"
+msgstr "OVERSCAN"
+
+msgid "SCREENSAVER AFTER"
+msgstr "EKRAN KORUYUCU"
+
+msgid "TRANSITION STYLE"
+msgstr "GEÇİŞ STİLİ"
+
+msgid "SCREENSAVER BEHAVIOR"
+msgstr "EKRAN KORUYUCU DAVRANIŞI"
+
+msgid "SHOW FRAMERATE"
+msgstr "FRAMERATE GÖSTER"
+
+msgid "ON-SCREEN HELP"
+msgstr "YARDIMI GÖSTER"
+
+msgid "QUICK SYSTEM SELECT"
+msgstr "HIZLI SİSTEM SEÇİMİ"
+
+msgid "THEME SET"
+msgstr "TEMA"
+
+msgid "SOUND SETTINGS"
+msgstr "SES AYARLARI"
+
+msgid "SYSTEM VOLUME"
+msgstr "SİSTEM SESİ"
+
+msgid "FRONTEND MUSIC"
+msgstr "ARABİRİM MÜZİĞİ"
+
+msgid "OUTPUT DEVICE"
+msgstr "ÇIKTI AYGITI"
+
+msgid "HDMI"
+msgstr "HDMI"
+
+msgid "JACK"
+msgstr "JACK"
+
+msgid "AUTO"
+msgstr "OTOMATİK"
+
+msgid "NETWORK SETTINGS"
+msgstr "AĞ AYARLARI"
+
+msgid "CONNECTED"
+msgstr "BAĞLI"
+
+msgid "NOT CONNECTED"
+msgstr "BAĞLI DEĞİL"
+
+msgid "STATUS"
+msgstr "DURUM"
+
+msgid "IP ADDRESS"
+msgstr "IP ADRESİ"
+
+msgid "HOSTNAME"
+msgstr "SİSTEM ADI"
+
+msgid "ENABLE WIFI"
+msgstr "WIFI ETKİNLEŞTİR"
+
+msgid "WIFI SSID"
+msgstr "WIFI SSID"
+
+msgid "WIFI KEY"
+msgstr "WIFI ANAHTARI"
+
+msgid "WIFI ENABLED"
+msgstr "WIFI ETKİN"
+
+msgid "WIFI CONFIGURATION ERROR"
+msgstr "WIFI YAPILANDIRMA HATASI"
+
+msgid "SCRAPER"
+msgstr "SCRAPER"
+
+msgid "SCRAPE FROM"
+msgstr "ŞURADAN ÇEK"
+
+msgid "SCRAPE RATINGS"
+msgstr "PUANLARI ÇEK"
+
+msgid "SCRAPE NOW"
+msgstr "ŞİMDİ ÇEK"
+
+msgid "QUIT"
+msgstr "ÇIKIŞ"
+
+msgid "REALLY RESTART?"
+msgstr "YENİDEN BAŞLAT"
+
+msgid "RESTART SYSTEM"
+msgstr "YENİDEN BAŞLAT"
+
+msgid "REALLY SHUTDOWN?"
+msgstr "KAPAT"
+
+msgid "SHUTDOWN SYSTEM"
+msgstr "KAPAT"
+
+msgid "Emulator"
+msgstr "Emulator"
+
+msgid "Core"
+msgstr "Core"
+
+msgid ""
+"YOU ARE GOING TO CONFIGURE A CONTROLLER. IF YOU HAVE ONLY ONE JOYSTICK, "
+"CONFIGURE THE DIRECTIONS KEYS AND SKIP JOYSTICK CONFIG BY HOLDING A BUTTON. "
+"IF YOU DO NOT HAVE A SPECIAL KEY FOR HOTKEY, CHOOSE THE SELECT BUTTON. SKIP "
+"ALL BUTTONS YOU DO NOT HAVE BY HOLDING A KEY. BUTTONS NAMES ARE BASED ON THE "
+"SNES CONTROLLER."
+msgstr ""
+"KUMANDA YAPILANDIRIRKEN AYARLAMAK İSTEMEDİĞİNİZ TUŞLAR İÇİN HERHANGİ GİR "
+"TUŞA BASILI TUTARAK BİR SONRAKİ AŞAMAYA GEÇEBİLİRSİNİZ. HOTKEY, FARKLI "
+"TUŞLARLA BİRLİKTE BASILDIĞINDA FARKLI İŞLEMLER YAPMAYI SAĞLAYAN BİR TUŞTUR. "
+"HANGİ TUŞU SEÇMENİZ GEREKTİĞİNİ BİLMİYORSANIZ SELECT TUŞUNA ATAYABİLİRSİNİZ."
+
+# GUIMENU
+msgid "CONFIGURE A CONTROLLER"
+msgstr "KUMANDA YAPILANDIR"
+
+# Bluetooth
+msgid "CONTROLLER PAIRED"
+msgstr "KUMANDA EŞLEŞTİRİLDİ"
+
+msgid "UNABLE TO PAIR CONTROLLER"
+msgstr "KUMANDA EŞLEŞTİRİLEMEDİ"
+
+msgid "AN ERROR OCCURED"
+msgstr "BİR HATA OLUŞTU"
+
+msgid "NO CONTROLLERS FOUND"
+msgstr "KUMANDA BULUNAMADI"
+
+msgid "PAIR A BLUETOOTH CONTROLLER"
+msgstr "BLUETOOTH KUMANDA EŞLEŞTİR"
+
+msgid "CONTROLLERS LINKS HAVE BEEN DELETED."
+msgstr "KUMANDA BAĞLANTILARI SİLİNDİ."
+
+msgid "FORGET BLUETOOTH CONTROLLERS"
+msgstr "BLUETOOTH KUMANDA AYARLARINI UNUT"
+
+#, c-format
+msgid "INPUT P%i"
+msgstr "GİRDİ P%i"
+
+msgid "CHOOSE"
+msgstr "DEĞİŞTİR"
+
+msgid "SELECT"
+msgstr "SEÇ"
+
+msgid "CUSTOM"
+msgstr "ÖZEL"
+
+msgid "4/3"
+msgstr "4/3"
+
+msgid "16/9"
+msgstr "16/9"
+
+msgid "OPTIONS"
+msgstr "SEÇENEKLER"
+
+msgid "JUMP TO LETTER"
+msgstr "ŞU HARFE GİT"
+
+msgid "SORT GAMES BY"
+msgstr "SIRALAMA KRİTERİ"
+
+#  FAVORITES
+msgid "FAVORITES ONLY"
+msgstr "SADECE FAVORİLER"
+
+msgid "EDIT THIS GAME'S METADATA"
+msgstr "OYUN BİLGİLERİNİ DÜZENLE"
+
+msgid "SCRAPE THESE GAMES"
+msgstr "ŞU OYUNLARI ÇEK"
+
+msgid "All Games"
+msgstr "Tüm Oyunlar"
+
+# MISSING SCRAPPER TRANSLATIONS
+msgid "Only missing image"
+msgstr "Sadece eksik resimliler"
+
+msgid "FILTER"
+msgstr "FİLTRE"
+
+msgid "SCRAPE THESE SYSTEMS"
+msgstr "ŞU SİSTEMLERİ ÇEK"
+
+msgid "SYSTEMS"
+msgstr "SİSTEMLER"
+
+msgid "USER DECIDES ON CONFLICTS"
+msgstr "ÇAKIŞMALARDA KULLANICI KARAR VERSİN"
+
+msgid "START"
+msgstr "BAŞLAT"
+
+msgid ""
+"WARNING: SOME OF YOUR SELECTED SYSTEMS DO NOT HAVE A PLATFORM SET. RESULTS "
+"MAY BE EVEN MORE INACCURATE THAN USUAL!\n"
+"CONTINUE ANYWAY?"
+msgstr ""
+"UYARI: SEÇİLİ SİSTEMLERDEN BAZILARININ PLATFORMLARI BULUNAMADI. TARAMA "
+"SONUÇLARI TUTARSIZ OLABİLİR!\n"
+"DEVAM EDİLSİN Mİ?"
+
+msgid "NO GAMES FIT THAT CRITERIA."
+msgstr "BU KRİTERE UYAN OYUN BULUNAMADI."
+
+msgid "REALLY UPDATE?"
+msgstr "GÜNCELLE?"
+
+msgid "NETWORK CONNECTION NEEDED"
+msgstr "AĞ BAĞLANTISI GEREKİYOR"
+
+msgid "UPDATE DOWNLOADED, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME İNDİRİLDİ, SİSTEM YENİDEN BAŞLATILACAK"
+
+msgid "UPDATE FAILED, THE SYSTEM WILL NOW REBOOT"
+msgstr "GÜNCELLEME BAŞARISIZ, SİSTEM YENİDEN BAŞLATILIYOR"
+
+msgid "NO UPDATE AVAILABLE"
+msgstr "YENİ GÜNCELLEME YOK"
+
+msgid "enter emulator"
+msgstr "emulator girin"
+
+msgid "enter core"
+msgstr "core girin"
+
+msgid "Name"
+msgstr "İsim"
+
+msgid "enter game name"
+msgstr "oyun ismi girin"
+
+msgid "Description"
+msgstr "Açıklama"
+
+msgid "enter description"
+msgstr "açıklama girin"
+
+msgid "Image"
+msgstr "Resim"
+
+msgid "enter path to image"
+msgstr "resim adresini girin"
+
+msgid "Thumbnail"
+msgstr "Mini-resim"
+
+msgid "enter path to thumbnail"
+msgstr "mini-resmin adresini girin"
+
+msgid "enter rating"
+msgstr "puan girin"
+
+msgid "Release date"
+msgstr "Yayın tarihi"
+
+msgid "enter release date"
+msgstr "yayınlanma tarihi girin"
+
+msgid "enter game developer"
+msgstr "geliştirici ismini girin"
+
+msgid "enter game publisher"
+msgstr "yayıncı ismini girin"
+
+msgid "enter game genre"
+msgstr "oyun türünü girin"
+
+msgid "enter number of players"
+msgstr "oyuncu sayısını girin"
+
+msgid "Favorite"
+msgstr "Favori"
+
+msgid "enter favorite"
+msgstr "favori girin"
+
+msgid "Region"
+msgstr "Bölge"
+
+msgid "enter region"
+msgstr "bölge girin"
+
+msgid "Romtype"
+msgstr "Rom tipi"
+
+msgid "enter romtype"
+msgstr "rom tipi girin"
+
+msgid "Hidden"
+msgstr "Gizli"
+
+msgid "set hidden"
+msgstr "gizle"
+
+msgid "Play count"
+msgstr "Oynama sayısı"
+
+msgid "enter number of times played"
+msgstr "kaç kez oynandığını girin"
+
+msgid "Last played"
+msgstr "Son oynanma"
+
+msgid "enter last played date"
+msgstr "son oynanma tarihini girin"
+
+#, c-format
+msgid "%i GAME AVAILABLE"
+msgid_plural "%i GAMES AVAILABLE"
+msgstr[0] "%i OYUN"
+msgstr[1] "%i OYUN"
+
+#, c-format
+msgid "%i FAVORITE"
+msgid_plural "%i FAVORITES"
+msgstr[0] "%i FAVORİ"
+msgstr[1] "%i FAVORİ"
+
+msgid "SCROLL"
+msgstr "KAYDIR"
+
+msgid "LAUNCH"
+msgstr "BAŞLAT"
+
+msgid "Times played"
+msgstr "Kaç kez oynandı"
+
+msgid "MENU"
+msgstr "MENÜ"
+
+msgid "FILENAME, ASCENDING"
+msgstr "DOSYA ADI, ARTAN"
+
+msgid "FILENAME, DESCENDING"
+msgstr "DOSYA ADI, AZALAN"
+
+msgid "RATING, ASCENDING"
+msgstr "PUAN, ARTAN"
+
+msgid "RATING, DESCENDING"
+msgstr "PUAN, AZALAN"
+
+msgid "TIMES PLAYED, ASCENDING"
+msgstr "OYNANMA SAYISI, ARTAN"
+
+msgid "TIMES PLAYED, DESCENDING"
+msgstr "OYNANMA SAYISI, AZALAN"
+
+msgid "LAST PLAYED, ASCENDING"
+msgstr "SON OYNANMA, ARTAN"
+
+msgid "LAST PLAYED, DESCENDING"
+msgstr "SON OYNANMA, AZALAN"
+
+msgid "WORKING..."
+msgstr "DEVAM EDİYOR..."
+
+msgid "CHANGE"
+msgstr "DEĞİŞTİR"
+
+msgid "never"
+msgstr "hiç"
+
+msgid "just now"
+msgstr "az önce"
+
+#, c-format
+msgid "%i sec ago"
+msgid_plural "%i secs ago"
+msgstr[0] "%i saniye önce"
+msgstr[1] "%i saniye önce"
+
+#, c-format
+msgid "%i min ago"
+msgid_plural "%i mins ago"
+msgstr[0] "%i dakika önce"
+msgstr[1] "%i dakika önce"
+
+#, c-format
+msgid "%i hour ago"
+msgid_plural "%i hours ago"
+msgstr[0] "%i saat önce"
+msgstr[1] "%i saat önce"
+
+#, c-format
+msgid "%i day ago"
+msgid_plural "%i days ago"
+msgstr[0] "%i gün önce"
+msgstr[1] "%i gün önce"
+
+msgid "unknown"
+msgstr "bilinmiyor"
+
+msgid "SELECT ALL"
+msgstr "TÜMÜ"
+
+msgid "SELECT NONE"
+msgstr "HİÇBİRİ"
+
+#, c-format
+msgid "%i SELECTED"
+msgid_plural "%i SELECTED"
+msgstr[0] "%i SEÇİLİ"
+msgstr[1] "%i SEÇİLİ"
+
+msgid "UP"
+msgstr "YUKARI"
+
+msgid "DOWN"
+msgstr "AŞAĞI"
+
+msgid "LEFT"
+msgstr "SOL"
+
+msgid "RIGHT"
+msgstr "SAĞ"
+
+msgid "JOYSTICK 1 UP"
+msgstr "JOYSTICK 1 YUKARI"
+
+msgid "JOYSTICK 1 LEFT"
+msgstr "JOYSTICK 1 SOL"
+
+msgid "JOYSTICK 2 UP"
+msgstr "JOYSTICK 2 YUKARI"
+
+msgid "JOYSTICK 2 LEFT"
+msgstr "JOYSTICK 2 SOL"
+
+msgid "PAGE UP"
+msgstr "PAGE UP"
+
+msgid "PAGE DOWN"
+msgstr "PAGE DOWN"
+
+msgid "HOTKEY"
+msgstr "HOTKEY"
+
+msgid "CONFIGURING"
+msgstr "YAPILANDIRILIYOR"
+
+msgid "KEYBOARD"
+msgstr "KLAVYE"
+
+#, c-format
+msgid "GAMEPAD %i"
+msgstr "GAMEPAD %i"
+
+msgid "HOLD ANY BUTTON TO SKIP"
+msgstr "GEÇMEK İÇİN BİR TUŞA BASILI TUTUN"
+
+msgid "-NOT DEFINED-"
+msgstr "-TANIMLI DEĞİL-"
+
+#, c-format
+msgid "HOLD FOR %iS TO SKIP"
+msgid_plural "HOLD FOR %iS TO SKIP"
+msgstr[0] "GEÇMEK İÇİN %iS BASILI TUT"
+msgstr[1] "GEÇMEK İÇİN %iS BASILI TUT"
+
+# Config controllers missing translation
+msgid "PRESS ANYTHING"
+msgstr "HERHANGİ BİR TUŞA BASIN"
+
+msgid "ALREADY TAKEN"
+msgstr "ÖNCEDEN TANIMLANMIŞ"
+
+msgid "DISCARD CHANGES"
+msgstr "DEĞİŞİKLİKLERİ KAYDETME"
+
+msgid "WELCOME"
+msgstr "HOŞGELDİN"
+
+msgid "CONFIGURE INPUT"
+msgstr "GİRDİ YAPILANDIR"
+
+#, c-format
+msgid "%i GAMEPAD DETECTED"
+msgid_plural "%i GAMEPADS DETECTED"
+msgstr[0] "%i GAMEPAD ALGILANDI"
+msgstr[1] "%i GAMEPAD ALGILANDI"
+
+msgid "NO GAMEPADS DETECTED"
+msgstr "GAMEPAD BULUNAMADI"
+
+msgid "HOLD A BUTTON ON YOUR DEVICE TO CONFIGURE IT."
+msgstr "CİHAZI YAPILANDIRMAK İÇİN BİR TUŞA BASILI TUT"
+
+msgid "PRESS F4 TO QUIT AT ANY TIME."
+msgstr "ÇIKMAK İÇİN F4 TUŞUNA BAŞ"
+
+msgid "PRESS ESC OR THE HOTKEY TO CANCEL."
+msgstr "İPTAL İÇİN ESC VEYA HOTKEY TUŞUNA BAS."
+
+msgid "DO YOU WANT TO START KODI MEDIA CENTER ?"
+msgstr "KODI SUNUCUSU BAŞLATILSIN MI?"
+
+msgid "LOADING..."
+msgstr "YÜKLENİYOR..."
+
+msgid "PLEASE WAIT..."
+msgstr "LÜTFEN BEKLEYİN..."
+
+#~ msgid "Original"
+#~ msgstr "Orijinal"

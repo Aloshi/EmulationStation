@@ -16,6 +16,8 @@ public:
 
 	bool getState() const;
 	void setState(bool state);
+	std::string getValue() const override;
+	bool changed();
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
@@ -24,4 +26,5 @@ private:
 
 	ImageComponent mImage;
 	bool mState;
+	bool mInitialState;
 };

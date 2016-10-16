@@ -45,9 +45,16 @@ public:
 	virtual const std::string& getThumbnailPath() const;
 
 	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
-
+	std::vector<FileData*> getFavoritesRecursive(unsigned int typeMask) const;
+	void changePath(const boost::filesystem::path& path);
 	void addChild(FileData* file); // Error if mType != FOLDER
 	void removeChild(FileData* file); //Error if mType != FOLDER
+
+	void addAlreadyExisitingChild(FileData *file);
+	void removeAlreadyExisitingChild(FileData *file);
+
+	void clear();
+	void lazyPopulate(const std::vector<std::string>& searchExtensions = std::vector<std::string>(), SystemData* systemData = nullptr);
 
 	// Returns our best guess at the "real" name for this file (will strip parenthesis and attempt to perform MAME name translation)
 	std::string getCleanName() const;
@@ -66,6 +73,9 @@ public:
 	void sort(ComparisonFunction& comparator, bool ascending = true);
 	void sort(const SortType& type);
 
+	static void populateFolder(FileData* folder, const std::vector<std::string>& searchExtensions = std::vector<std::string>(), SystemData* systemData = nullptr);
+	static void populateRecursiveFolder(FileData* folder, const std::vector<std::string>& searchExtensions = std::vector<std::string>(), SystemData* systemData = nullptr);
+
 	MetaDataList metadata;
 
 private:
@@ -74,4 +84,5 @@ private:
 	SystemData* mSystem;
 	FileData* mParent;
 	std::vector<FileData*> mChildren;
+
 };
