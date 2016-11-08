@@ -177,8 +177,10 @@ void SystemView::onCursorChanged(const CursorState& state)
 	setAnimation(infoFadeOut, 0, [this, gameCount] {
 		std::stringstream ss;
 		
+		if (getSelected()->getName() == "retropie")
+			ss << "CONFIGURATION";
 		// only display a game count if there are at least 2 games
-		if(gameCount > 1)
+		else if(gameCount > 1)
 			ss << gameCount << " GAMES AVAILABLE";
 
 		mSystemInfo.setText(ss.str()); 
