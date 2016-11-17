@@ -102,8 +102,13 @@ fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allo
 
 fs::path removeCommonPathUsingStrings(const fs::path& path, const fs::path& relativeTo, bool& contains)
 {
+#ifdef WIN32
+	std::wstring pathStr = path.c_str();
+	std::wstring relativeToStr = relativeTo.c_str();
+#else
 	std::string pathStr = path.c_str();
 	std::string relativeToStr = relativeTo.c_str();
+#endif
 	if (pathStr.find_first_of(relativeToStr) == 0) {
 		contains = true;
 		return pathStr.substr(relativeToStr.size() + 1);

@@ -34,3 +34,6 @@ Makefile
 .cproject
 .project
 .settings/
+
+# WinMerge
+.bak
