@@ -1,4 +1,5 @@
 #include "guis/GuiInputConfig.h"
+#include "guis/GuiMsgBox.h"
 #include "Window.h"
 #include "Log.h"
 #include "components/TextComponent.h"
@@ -15,7 +16,7 @@
 // 											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
 // 											":/help/button_l.svg", ":/help/button_r.svg" };
 
-static const int inputCount = 24;
+static const int inputCount = 25;
 static const char* inputName[inputCount] =
 {
 	"Up",
@@ -41,7 +42,8 @@ static const char* inputName[inputCount] =
 	"RightAnalogUp",
 	"RightAnalogDown",
 	"RightAnalogLeft",
-	"RightAnalogRight"
+	"RightAnalogRight",
+	"HotKeyEnable"
 };
 static const bool inputSkippable[inputCount] =
 {
@@ -52,6 +54,7 @@ static const bool inputSkippable[inputCount] =
 	true,
 	true,
 	false,
+	true,
 	true,
 	true,
 	true,
@@ -95,7 +98,8 @@ static const char* inputDispName[inputCount] =
 	"RIGHT ANALOG UP",
 	"RIGHT ANALOG DOWN",
 	"RIGHT ANALOG LEFT",
-	"RIGHT ANALOG RIGHT"
+	"RIGHT ANALOG RIGHT",
+	"HOTKEY ENABLE"
 };
 static const char* inputIcon[inputCount] =
 {
@@ -122,7 +126,8 @@ static const char* inputIcon[inputCount] =
 	":/help/analog_up.svg",
 	":/help/analog_down.svg",
 	":/help/analog_left.svg",
-	":/help/analog_right.svg"
+	":/help/analog_right.svg",
+	":/help/button_hotkey.svg"
 };
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
@@ -257,11 +262,34 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 	// buttons
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
-	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "OK", "ok", [this, okCallback] { 
+	std::function<void()> okFunction = [this, okCallback] {
 		InputManager::getInstance()->writeDeviceConfig(mTargetConfig); // save
 		if(okCallback)
 			okCallback();
 		delete this; 
+	};
+	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "OK", "ok", [this, okFunction] {
+		// check if the hotkey enable button is set. if not prompt the user to use select or nothing.
+		Input input;
+		if (!mTargetConfig->getInputByName("HotKeyEnable", &input)) {
+			mWindow->pushGui(new GuiMsgBox(mWindow,
+				"YOU DIDN'T CHOOSE A HOTKEY ENABLE BUTTON. THIS IS REQUIRED FOR EXITING GAMES WITH A CONTROLLER. DO YOU WANT TO USE THE SELECT BUTTON DEFAULT ? PLEASE ANSWER YES TO USE SELECT OR NO TO NOT SET A HOTKEY ENABLE BUTTON.",
+				"YES", [this, okFunction] {
+					Input input;
+					mTargetConfig->getInputByName("Select", &input);
+					mTargetConfig->mapInput("HotKeyEnable", input);
+					okFunction();
+					},
+				"NO", [this, okFunction] {
+					// for a disabled hotkey enable button, set to a key with id 0,
+					// so the input configuration script can be backwards compatible.
+					mTargetConfig->mapInput("HotKeyEnable", Input(DEVICE_KEYBOARD, TYPE_KEY, 0, 1, true));
+					okFunction();
+				}
+			));
+		} else {
+			okFunction();
+		}
 	}));
 	mButtonGrid = makeButtonGrid(mWindow, buttons);
 	mGrid.setEntry(mButtonGrid, Vector2i(0, 6), true, false);
@@ -368,7 +396,7 @@ bool GuiInputConfig::assign(Input input, int inputId)
 
 	// if this input is mapped to something other than "nothing" or the current row, error
 	// (if it's the same as what it was before, allow it)
-	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(inputName[inputId], input))
+	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(inputName[inputId], input) && inputName[inputId] != "HotKeyEnable")
 	{
 		error(mMappings.at(inputId), "Already mapped!");
 		return false;

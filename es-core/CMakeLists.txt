@@ -138,6 +138,7 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_hotkey_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
