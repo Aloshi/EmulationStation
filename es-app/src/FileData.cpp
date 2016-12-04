@@ -81,6 +81,32 @@ const std::string& FileData::getThumbnailPath() const
 		return metadata.get("image");
 }
 
+const std::string& FileData::getVideoPath() const
+{
+	if (mType == GAME)
+	{
+		return metadata.get("video");
+	}
+	else
+	{
+		static std::string empty;
+		return empty;
+	}
+}
+
+const std::string& FileData::getMarqueePath() const
+{
+	if (mType == GAME)
+	{
+		return metadata.get("marquee");
+	}
+	else
+	{
+		static std::string empty;
+		return empty;
+	}
+}
+
 
 std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask) const
 {

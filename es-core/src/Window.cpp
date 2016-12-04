@@ -90,6 +90,11 @@ bool Window::init(unsigned int width, unsigned int height)
 
 void Window::deinit()
 {
+	// Hide all GUI elements on uninitialisation - this disable
+	for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+	{
+		(*i)->onHide();
+	}
 	InputManager::getInstance()->deinit();
 	ResourceManager::getInstance()->unloadAll();
 	Renderer::deinit();

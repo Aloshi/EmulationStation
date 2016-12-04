@@ -345,3 +345,17 @@ bool GuiComponent::isProcessing() const
 {
 	return mIsProcessing;
 }
+
+void GuiComponent::onShow()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onShow();
+}
+
+void GuiComponent::onHide()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onHide();
+}
+
+

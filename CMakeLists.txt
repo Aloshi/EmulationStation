@@ -48,6 +48,7 @@ find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system filesystem date_time locale)
 find_package(Eigen3 REQUIRED)
 find_package(CURL REQUIRED)
+find_package(VLC REQUIRED)
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -99,6 +100,7 @@ set(COMMON_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
+    ${VLC_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
 )
@@ -148,6 +150,7 @@ set(COMMON_LIBRARIES
     ${FreeImage_LIBRARIES}
 	${SDL2_LIBRARY}
     ${CURL_LIBRARIES}
+    ${VLC_LIBRARIES}
     pugixml
     nanosvg
 )
