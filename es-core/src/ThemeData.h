@@ -37,6 +37,7 @@ namespace ThemeFlags
 		TEXT = 512,
 		FORCE_UPPERCASE = 1024,
 		LINE_SPACING = 2048,
+		DELAY = 4096,
 
 		ALL = 0xFFFFFFFF
 	};

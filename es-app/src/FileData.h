@@ -45,6 +45,8 @@ public:
 	inline SystemData* getSystem() const { return mSystem; }
 	
 	virtual const std::string& getThumbnailPath() const;
+	virtual const std::string& getVideoPath() const;
+	virtual const std::string& getMarqueePath() const;
 
 	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
 

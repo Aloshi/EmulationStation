@@ -77,6 +77,9 @@ public:
 
 	virtual void onFocusGained() {};
 	virtual void onFocusLost() {};
+	
+	virtual void onShow();
+	virtual void onHide();
 
 	// Default implementation just handles <pos> and <size> tags as normalized float pairs.
 	// You probably want to keep this behavior for any derived classes as well as add your own.
