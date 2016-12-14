@@ -45,6 +45,7 @@ VideoVlcComponent::VideoVlcComponent(Window* window) :
 
 VideoVlcComponent::~VideoVlcComponent()
 {
+	stopVideo();
 }
 
 void VideoVlcComponent::setResize(float width, float height)

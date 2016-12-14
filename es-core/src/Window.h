@@ -11,6 +11,15 @@ class ImageComponent;
 class Window
 {
 public:
+	class ScreenSaver {
+	public:
+		virtual void startScreenSaver() = 0;
+		virtual void stopScreenSaver() = 0;
+		virtual void renderScreenSaver() = 0;
+		virtual bool allowSleep() = 0;
+		virtual void update(int deltaTime) = 0;
+	};
+
 	Window();
 	~Window();
 
@@ -38,6 +47,8 @@ public:
 	void renderHelpPromptsEarly(); // used to render HelpPrompts before a fade
 	void setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpStyle& style);
 
+	void setScreenSaver(ScreenSaver* screenSaver) { mScreenSaver = screenSaver; }
+
 private:
 	void onSleep();
 	void onWake();
@@ -45,9 +56,13 @@ private:
 	// Returns true if at least one component on the stack is processing
 	bool isProcessing();
 	void renderScreenSaver();
+	void startScreenSaver();
+	void cancelScreenSaver();
 
 	HelpComponent* mHelp;
 	ImageComponent* mBackgroundOverlay;
+	ScreenSaver*	mScreenSaver;
+	bool			mRenderScreenSaver;
 
 	std::vector<GuiComponent*> mGuiStack;
 
