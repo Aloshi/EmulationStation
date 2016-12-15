@@ -26,9 +26,11 @@ else()
 endif()
 
 #-------------------------------------------------------------------------------
-#check if we're running on olinuxino
+#check if we're running on olinuxino / odroid / etc
 MESSAGE("Looking for libMali.so")
-if(EXISTS "/usr/lib/libMali.so")
+if(EXISTS "/usr/lib/libMali.so" OR
+   EXISTS "/usr/lib/arm-linux-gnueabihf/libMali.so" OR
+   EXISTS "/usr/lib/aarch64-linux-gnu/libMali.so")
     MESSAGE("libMali.so found")
     set(GLSystem "OpenGL ES")
 else()
