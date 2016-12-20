@@ -139,8 +139,10 @@ boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
 
 bool MetaDataList::isDefault()
 {
+	const std::vector<MetaDataDecl>& mdd = getMDD();
+
 	for (int i = 1; i < mMap.size(); i++) {
-		if (mMap.at(gameDecls[i].key) != gameDecls[i].defaultValue) return false;
+		if (mMap.at(mdd[i].key) != mdd[i].defaultValue) return false;
 	}
 
 	return true;
