@@ -35,6 +35,19 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	};
 	mMenu.addRow(row);
 
+	row.elements.clear();
+	row.addElement(std::make_shared<TextComponent>(mWindow, "SURPRISE ME!", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.input_handler = [&](InputConfig* config, Input input) {
+		if (config->isMappedTo("a", input) && input.value)
+		{
+			ViewController::get()->goToRandomGame();
+			delete this;
+			return true;
+		}
+		return false;
+	};
+	mMenu.addRow(row);
+
 	// sort list by
 	mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
 	for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
