@@ -139,6 +139,8 @@ void parseGamelist(SystemData* system)
 			//make sure name gets set if one didn't exist
 			if(file->metadata.get("name").empty())
 				file->metadata.set("name", defaultName);
+
+			file->metadata.resetChangedFlag();
 		}
 	}
 }
@@ -207,19 +209,23 @@ void updateGamelist(SystemData* system)
 	FileData* rootFolder = system->getRootFolder();
 	if (rootFolder != nullptr)
 	{
+		int numUpdated = 0;
+
 		//get only files, no folders
 		std::vector<FileData*> files = rootFolder->getFilesRecursive(GAME | FOLDER);
 		//iterate through all files, checking if they're already in the XML
-		std::vector<FileData*>::const_iterator fit = files.cbegin();
-		while(fit != files.cend())
+		for(std::vector<FileData*>::const_iterator fit = files.cbegin(); fit != files.cend(); ++fit)
 		{
 			const char* tag = ((*fit)->getType() == GAME) ? "game" : "folder";
 
 			// check if current file has metadata, if no, skip it as it wont be in the gamelist anyway.
 			if ((*fit)->metadata.isDefault()) {
-				++fit;
 				continue;
 			}
+
+			// do not touch if it wasn't changed anyway
+			if (!(*fit)->metadata.wasChanged())
+				continue;
 
 			// check if the file already exists in the XML
 			// if it does, remove it before adding
@@ -244,18 +250,21 @@ void updateGamelist(SystemData* system)
 
 			// it was either removed or never existed to begin with; either way, we can add it now
 			addFileDataNode(root, *fit, tag, system);
-
-			++fit;
+			++numUpdated;
 		}
 
 		//now write the file
 
-		//make sure the folders leading up to this path exist (or the write will fail)
-		boost::filesystem::path xmlWritePath(system->getGamelistPath(true));
-		boost::filesystem::create_directories(xmlWritePath.parent_path());
+		if (numUpdated > 0) {
+			//make sure the folders leading up to this path exist (or the write will fail)
+			boost::filesystem::path xmlWritePath(system->getGamelistPath(true));
+			boost::filesystem::create_directories(xmlWritePath.parent_path());
 
-		if (!doc.save_file(xmlWritePath.c_str())) {
-			LOG(LogError) << "Error saving gamelist.xml to \"" << xmlWritePath << "\" (for system " << system->getName() << ")!";
+			LOG(LogInfo) << "Added/Updated " << numUpdated << " entities in '" << xmlReadPath << "'";
+
+			if (!doc.save_file(xmlWritePath.c_str())) {
+				LOG(LogError) << "Error saving gamelist.xml to \"" << xmlWritePath << "\" (for system " << system->getName() << ")!";
+			}
 		}
 	}else{
 		LOG(LogError) << "Found no root folder for system \"" << system->getName() << "\"!";
