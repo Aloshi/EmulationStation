@@ -4,6 +4,7 @@ esdir="$(dirname $0)"
 while true; do
     rm -f /tmp/es-restart /tmp/es-sysrestart /tmp/es-shutdown
     "$esdir/emulationstation" "$@"
+    ret=$?
     [ -f /tmp/es-restart ] && continue
     if [ -f /tmp/es-sysrestart ]; then
         rm -f /tmp/es-sysrestart
@@ -17,3 +18,4 @@ while true; do
     fi
     break
 done
+exit $ret
