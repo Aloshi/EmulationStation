@@ -115,7 +115,6 @@ void ScraperHttpRequest::update()
 
 
 // metadata resolving stuff
-
 std::unique_ptr<MDResolveHandle> resolveMetaDataAssets(const ScraperSearchResult& result, const ScraperSearchParams& search)
 {
 	return std::unique_ptr<MDResolveHandle>(new MDResolveHandle(result, search));
@@ -128,7 +127,7 @@ MDResolveHandle::MDResolveHandle(const ScraperSearchResult& result, const Scrape
 		std::string imgPath = getSaveAsPath(search, "image", result.imageUrl);
 		mFuncs.push_back(ResolvePair(downloadImageAsync(result.imageUrl, imgPath), [this, imgPath]
 		{
-			mResult.mdl.set("image", imgPath);
+			mResult.metadata.set("image", imgPath);
 			mResult.imageUrl = "";
 		}));
 	}
@@ -271,7 +270,7 @@ bool resizeImage(const std::string& path, int maxWidth, int maxHeight)
 std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& url)
 {
 	const std::string subdirectory = params.system->getName();
-	const std::string name = params.game->getPath().stem().generic_string() + "-" + suffix;
+	const std::string name = params.game.getPath().stem().generic_string() + "-" + suffix;
 
 	std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
 

@@ -188,3 +188,13 @@ boost::posix_time::ptime string_to_ptime(const std::string& str, const std::stri
 
 	return time;
 }
+
+std::string ptime_to_string(const boost::posix_time::ptime& time, const std::string& fmt)
+{
+	std::stringstream ss;
+	boost::posix_time::time_facet* facet = new boost::posix_time::time_facet();
+	facet->format(fmt.c_str());
+	ss.imbue(std::locale(std::locale::classic(), facet)); // std::locale handles deleting the facet
+	ss << time;
+	return ss.str();
+}

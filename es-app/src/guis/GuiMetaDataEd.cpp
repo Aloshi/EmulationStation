@@ -15,15 +15,17 @@
 
 using namespace Eigen;
 
-GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams, 
-	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window), 
-	mScraperParams(scraperParams), 
-
+GuiMetaDataEd::GuiMetaDataEd(Window* window, const FileData& file, 
+	const std::function<void()>& saveCallback, const std::function<void()>& deleteFunc) 
+	: GuiComponent(window), 
+	mFile(file),
+	mMetaData(mFile.get_metadata()),
+	mMetaDataDecl(mMetaData.getMDD()),
+	mScraperParams(mFile.getSystem(), mFile),
+	
 	mBackground(window, ":/frame.png"), 
 	mGrid(window, Vector2i(1, 3)),
 
-	mMetaDataDecl(mdd), 
-	mMetaData(md), 
 	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc)
 {
 	addChild(&mBackground);
@@ -32,7 +34,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mHeaderGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(1, 5));
 	
 	mTitle = std::make_shared<TextComponent>(mWindow, "EDIT METADATA", Font::get(FONT_SIZE_LARGE), 0x555555FF, ALIGN_CENTER);
-	mSubtitle = std::make_shared<TextComponent>(mWindow, strToUpper(scraperParams.game->getPath().filename().generic_string()), 
+	mSubtitle = std::make_shared<TextComponent>(mWindow, strToUpper(mScraperParams.game.getPath().filename().generic_string()), 
 		Font::get(FONT_SIZE_SMALL), 0x777777FF, ALIGN_CENTER);
 	mHeaderGrid->setEntry(mTitle, Vector2i(0, 1), false, true);
 	mHeaderGrid->setEntry(mSubtitle, Vector2i(0, 3), false, true);
@@ -43,7 +45,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mGrid.setEntry(mList, Vector2i(0, 1), true, true);
 
 	// populate list
-	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
+	for(auto iter = mMetaDataDecl.begin(); iter != mMetaDataDecl.end(); iter++)
 	{
 		std::shared_ptr<GuiComponent> ed;
 
@@ -123,13 +125,13 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 		assert(ed);
 		mList->addRow(row);
-		ed->setValue(mMetaData->get(iter->key));
+		ed->setValue(mMetaData.get(iter->key));
 		mEditors.push_back(ed);
 	}
 
 	std::vector< std::shared_ptr<ButtonComponent> > buttons;
 
-	if(!scraperParams.system->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
+	if(!mScraperParams.system->hasPlatformId(PlatformIds::PLATFORM_IGNORE))
 		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SCRAPE", "scrape", std::bind(&GuiMetaDataEd::fetch, this)));
 
 	buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SAVE", "save", [&] { save(); delete this; }));
@@ -175,8 +177,10 @@ void GuiMetaDataEd::save()
 		if(mMetaDataDecl.at(i).isStatistic)
 			continue;
 
-		mMetaData->set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
+		mMetaData.set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
 	}
+
+	mFile.set_metadata(mMetaData);
 
 	if(mSavedCallback)
 		mSavedCallback();
@@ -196,7 +200,7 @@ void GuiMetaDataEd::fetchDone(const ScraperSearchResult& result)
 			continue;
 
 		const std::string& key = mMetaDataDecl.at(i).key;
-		mEditors.at(i)->setValue(result.mdl.get(key));
+		mEditors.at(i)->setValue(result.metadata.get(key));
 	}
 }
 
@@ -207,7 +211,7 @@ void GuiMetaDataEd::close(bool closeAllWindows)
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
 		const std::string& key = mMetaDataDecl.at(i).key;
-		if(mMetaData->get(key) != mEditors.at(i)->getValue())
+		if(mMetaData.get(key) != mEditors.at(i)->getValue())
 		{
 			dirty = true;
 			break;
@@ -225,7 +229,6 @@ void GuiMetaDataEd::close(bool closeAllWindows)
 				delete window->peekGui();
 		};
 	}
-
 
 	if(dirty)
 	{
