@@ -17,8 +17,6 @@
 #include "components/OptionListComponent.h"
 #include "components/MenuComponent.h"
 #include "VolumeControl.h"
-#include "scrapers/GamesDBScraper.h"
-#include "scrapers/TheArchiveScraper.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
