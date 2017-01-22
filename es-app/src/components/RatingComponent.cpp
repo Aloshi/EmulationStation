@@ -2,7 +2,6 @@
 #include "Renderer.h"
 #include "Window.h"
 #include "Util.h"
-#include "resources/SVGResource.h"
 
 RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
 {
@@ -45,16 +44,13 @@ void RatingComponent::onSizeChanged()
 	else if(mSize.x() == 0)
 		mSize[0] = mSize.y() * NUM_RATING_STARS;
 
-	auto filledSVG = dynamic_cast<SVGResource*>(mFilledTexture.get());
-	auto unfilledSVG = dynamic_cast<SVGResource*>(mUnfilledTexture.get());
-
 	if(mSize.y() > 0)
 	{
 		size_t heightPx = (size_t)round(mSize.y());
-		if(filledSVG)
-			filledSVG->rasterizeAt(heightPx, heightPx);
-		if(unfilledSVG)
-			unfilledSVG->rasterizeAt(heightPx, heightPx);
+		if (mFilledTexture)
+			mFilledTexture->rasterizeAt(heightPx, heightPx);
+		if(mUnfilledTexture)
+			mUnfilledTexture->rasterizeAt(heightPx, heightPx);
 	}
 
 	updateVertices();
