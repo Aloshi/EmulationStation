@@ -8,17 +8,9 @@
 #include "ImageComponent.h"
 #include <string>
 #include <memory>
-#include "resources/TextureResource.h"
-#include <vlc/vlc.h>
 #include <SDL.h>
 #include <SDL_mutex.h>
 #include <boost/filesystem.hpp>
-
-struct VideoContext {
-	SDL_Surface*		surface;
-	SDL_mutex*			mutex;
-	bool				valid;
-};
 
 class VideoComponent : public GuiComponent
 {
@@ -32,8 +24,6 @@ class VideoComponent : public GuiComponent
 	};
 
 public:
-	static void setupVLC();
-
 	VideoComponent(Window* window);
 	virtual ~VideoComponent();
 
@@ -44,9 +34,12 @@ public:
 
 	// Configures the component to show the default video
 	void setDefaultVideo();
-	
+
 	virtual void onShow() override;
 	virtual void onHide() override;
+	virtual void onScreenSaverActivate() override;
+	virtual void onScreenSaverDeactivate() override;
+	virtual void topWindow(bool isTop) override;
 
 	//Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
 	void setOrigin(float originX, float originY);
@@ -80,34 +73,23 @@ public:
 	virtual void update(int deltaTime);
 
 private:
-	// Calculates the correct mSize from our resizing information (set by setResize/setMaxSize).
-	// Used internally whenever the resizing parameters or texture change.
-	void resize();
-
 	// Start the video Immediately
-	void startVideo();
+	virtual void startVideo() = 0;
+	// Stop the video
+	virtual void stopVideo() { };
+	// Handle looping the video. Must be called periodically
+	virtual void handleLooping();
+
 	// Start the video after any configured delay
 	void startVideoWithDelay();
-	// Stop the video
-	void stopVideo();
-
-	void setupContext();
-	void freeContext();
 
 	// Handle any delay to the start of playing the video clip. Must be called periodically
 	void handleStartDelay();
 
-	// Handle looping the video. Must be called periodically
-	void handleLooping();
-
 	// Manage the playing state of the component
 	void manageState();
 
-private:
-	static libvlc_instance_t*		mVLC;
-	libvlc_media_t*					mMedia;
-	libvlc_media_player_t*			mMediaPlayer;
-	VideoContext					mContext;
+protected:
 	unsigned						mVideoWidth;
 	unsigned						mVideoHeight;
 	Eigen::Vector2f 				mOrigin;
@@ -123,6 +105,8 @@ private:
 	unsigned						mStartTime;
 	bool							mIsPlaying;
 	bool							mShowing;
+	bool							mDisable;
+	bool							mScreensaverActive;
 	bool							mTargetIsMax;
 
 	Configuration					mConfig;

@@ -5,7 +5,7 @@
 #include "animations/AnimationController.h"
 #include "ThemeData.h"
 
-GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
+GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255),
 	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity()),
 	mIsProcessing(false)
 {
@@ -390,4 +390,20 @@ void GuiComponent::onHide()
 		getChild(i)->onHide();
 }
 
+void GuiComponent::onScreenSaverActivate()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onScreenSaverActivate();
+}
 
+void GuiComponent::onScreenSaverDeactivate()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onScreenSaverDeactivate();
+}
+
+void GuiComponent::topWindow(bool isTop)
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->topWindow(isTop);
+}

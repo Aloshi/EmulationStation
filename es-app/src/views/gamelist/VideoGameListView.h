@@ -30,7 +30,7 @@ private:
 	void initMDValues();
 
 	ImageComponent mMarquee;
-	VideoComponent mVideo;
+	VideoComponent* mVideo;
 	ImageComponent mImage;
 
 	TextComponent mLblRating, mLblReleaseDate, mLblDeveloper, mLblPublisher, mLblGenre, mLblPlayers, mLblLastPlayed, mLblPlayCount;
