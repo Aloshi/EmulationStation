@@ -53,8 +53,9 @@ set(CORE_HEADERS
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureData.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureDataManager.h
 
 	# Embedded assets (needed by ResourceManager)
 	${emulationstation-all_SOURCE_DIR}/data/Resources.h
@@ -108,8 +109,9 @@ set(CORE_SOURCES
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureData.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureDataManager.cpp
 )
 
 set(EMBEDDED_ASSET_SOURCES
