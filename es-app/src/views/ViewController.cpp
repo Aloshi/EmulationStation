@@ -406,9 +406,7 @@ void ViewController::reloadAll()
 		mCurrentView = getGameListView(mState.getSystem());
 	}else if(mState.viewing == SYSTEM_SELECT)
 	{
-		SystemData* system = mState.getSystem();
-		goToSystemView(SystemData::sSystemVector.front());
-		mSystemListView->goToSystem(system, false);
+		mSystemListView->goToSystem(mState.getSystem(), false);
 		mCurrentView = mSystemListView;
 	}else{
 		goToSystemView(SystemData::sSystemVector.front());
