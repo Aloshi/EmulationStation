@@ -6,7 +6,6 @@
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
-#include "resources/SVGResource.h"
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
@@ -22,8 +21,9 @@ Eigen::Vector2f ImageComponent::getCenter() const
 		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
 }
 
-ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
+ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
+	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0.0f), mFading(false)
 {
 	updateColors();
 }
@@ -37,9 +37,7 @@ void ImageComponent::resize()
 	if(!mTexture)
 		return;
 
-	SVGResource* svg = dynamic_cast<SVGResource*>(mTexture.get());
-
-	const Eigen::Vector2f textureSize = svg ? svg->getSourceImageSize() : Eigen::Vector2f((float)mTexture->getSize().x(), (float)mTexture->getSize().y());
+	const Eigen::Vector2f textureSize = mTexture->getSourceImageSize();
 	if(textureSize.isZero())
 		return;
 
@@ -90,12 +88,8 @@ void ImageComponent::resize()
 			}
 		}
 	}
-
-	if(svg)
-	{
-		// mSize.y() should already be rounded
-		svg->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
-	}
+	// mSize.y() should already be rounded
+	mTexture->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
 
 	onSizeChanged();
 }
@@ -110,7 +104,7 @@ void ImageComponent::setImage(std::string path, bool tile)
 	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
 		mTexture.reset();
 	else
-		mTexture = TextureResource::get(path, tile);
+		mTexture = TextureResource::get(path, tile, mForceLoad, mDynamic);
 
 	resize();
 }
@@ -166,6 +160,9 @@ void ImageComponent::setFlipY(bool flip)
 void ImageComponent::setColorShift(unsigned int color)
 {
 	mColorShift = color;
+	// Grab the opacity from the color shift because we may need to apply it if
+	// fading textures in
+	mOpacity = color & 0xff;
 	updateColors();
 }
 
@@ -247,7 +244,10 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 		if(mTexture->isInitialized())
 		{
 			// actually draw the image
-			mTexture->bind();
+			// The bind() function returns false if the texture is not currently loaded. A blank
+			// texture is bound in this case but we want to handle a fade so it doesn't just 'jump' in
+			// when it finally loads
+			fadeIn(mTexture->bind());
 
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_BLEND);
@@ -276,6 +276,47 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 	}
 
 	GuiComponent::renderChildren(trans);
+}
+
+void ImageComponent::fadeIn(bool textureLoaded)
+{
+	if (!mForceLoad)
+	{
+		if (!textureLoaded)
+		{
+			// Start the fade if this is the first time we've encountered the unloaded texture
+			if (!mFading)
+			{
+				// Start with a zero opacity and flag it as fading
+				mFadeOpacity = 0;
+				mFading = true;
+				// Set the colours to be translucent
+				mColorShift = (mColorShift >> 8 << 8) | 0;
+				updateColors();
+			}
+		}
+		else if (mFading)
+		{
+			// The texture is loaded and we need to fade it in. The fade is based on the frame rate
+			// and is 1/4 second if running at 60 frames per second although the actual value is not
+			// that important
+			int opacity = mFadeOpacity + 255 / 15;
+			// See if we've finished fading
+			if (opacity >= 255)
+			{
+				mFadeOpacity = 255;
+				mFading = false;
+			}
+			else
+			{
+				mFadeOpacity = (unsigned char)opacity;
+			}
+			// Apply the combination of the target opacity and current fade
+			float newOpacity = (float)mOpacity * ((float)mFadeOpacity / 255.0f);
+			mColorShift = (mColorShift >> 8 << 8) | (unsigned char)newOpacity;
+			updateColors();
+		}
+	}
 }
 
 bool ImageComponent::hasImage()
