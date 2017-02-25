@@ -343,6 +343,11 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 	}
 }
 
+bool ThemeData::hasView(const std::string& view)
+{
+	auto viewIt = mViews.find(view);
+	return (viewIt != mViews.end());
+}
 
 const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, const std::string& element, const std::string& expectedType) const
 {

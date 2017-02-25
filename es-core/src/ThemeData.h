@@ -135,6 +135,8 @@ public:
 		BOOLEAN
 	};
 
+	bool hasView(const std::string& view);
+
 	// If expectedType is an empty string, will do no type checking.
 	const ThemeElement* getElement(const std::string& view, const std::string& element, const std::string& expectedType) const;
 
