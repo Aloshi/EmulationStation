@@ -149,10 +149,13 @@ public:
 
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
+	static std::vector<std::string> sSupportedFeatures;
+	static std::vector<std::string> sSupportedViews;
 
 	std::deque<boost::filesystem::path> mPaths;
 	float mVersion;
 
+	void parseFeatures(const pugi::xml_node& themeRoot);
 	void parseIncludes(const pugi::xml_node& themeRoot);
 	void parseViews(const pugi::xml_node& themeRoot);
 	void parseView(const pugi::xml_node& viewNode, ThemeView& view);

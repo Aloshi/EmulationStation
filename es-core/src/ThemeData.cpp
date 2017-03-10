@@ -23,6 +23,9 @@ ElementMapType makeMap(const T& mapInit)
 	return m;
 }
 
+std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("video");
+std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video");
+
 std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of
 	("image", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
@@ -181,6 +184,7 @@ void ThemeData::loadFile(const std::string& path)
 
 	parseIncludes(root);
 	parseViews(root);
+	parseFeatures(root);
 }
 
 
@@ -211,8 +215,28 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 
 		parseIncludes(root);
 		parseViews(root);
+		parseFeatures(root);
 
 		mPaths.pop_back();
+	}
+}
+
+void ThemeData::parseFeatures(const pugi::xml_node& root)
+{
+	ThemeException error;
+	error.setFiles(mPaths);
+
+	for(pugi::xml_node node = root.child("feature"); node; node = node.next_sibling("feature"))
+	{
+		if(!node.attribute("supported"))
+			throw error << "Feature missing \"supported\" attribute!";
+
+		const std::string supportedAttr = node.attribute("supported").as_string();
+
+		if (std::find(sSupportedFeatures.begin(), sSupportedFeatures.end(), supportedAttr) != sSupportedFeatures.end())
+		{
+			parseViews(node);
+		}
 	}
 }
 
@@ -238,8 +262,11 @@ void ThemeData::parseViews(const pugi::xml_node& root)
 			prevOff = nameAttr.find_first_not_of(delim, off);
 			off = nameAttr.find_first_of(delim, prevOff);
 			
-			ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
-			parseView(node, view);
+			if (std::find(sSupportedViews.begin(), sSupportedViews.end(), viewKey) != sSupportedViews.end())
+			{
+				ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
+				parseView(node, view);
+			}
 		}
 	}
 }
