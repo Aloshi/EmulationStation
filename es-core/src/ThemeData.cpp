@@ -89,6 +89,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("video", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
+		("maxSize", NORMALIZED_PAIR)
 		("origin", NORMALIZED_PAIR)
 		("default", PATH)
 		("delay", FLOAT)
