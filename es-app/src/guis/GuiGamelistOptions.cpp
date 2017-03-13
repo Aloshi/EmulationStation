@@ -104,7 +104,7 @@ void GuiGamelistOptions::jumpToLetter()
 
 		if(checkLetter < letter)
 			min = mid + 1;
-		else if(checkLetter > letter)
+		else if(checkLetter > letter || (mid > 0 && (letter == toupper(files.at(mid - 1)->getName()[0]))))
 			max = mid - 1;
 		else
 			break; //exact match found
