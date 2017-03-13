@@ -24,7 +24,7 @@ ElementMapType makeMap(const T& mapInit)
 }
 
 std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("video");
-std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video");
+std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video")("carousel");
 
 std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of
 	("image", makeMap(boost::assign::map_list_of
@@ -39,12 +39,14 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("text", STRING)
-		("color", COLOR)
+		("backgroundColor", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)
+		("color", COLOR)
 		("alignment", STRING)
 		("forceUppercase", BOOLEAN)
-		("lineSpacing", FLOAT)))
+		("lineSpacing", FLOAT)
+		("value", STRING)))
 	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
@@ -94,12 +96,20 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("default", PATH)
 		("delay", FLOAT)
 		("showSnapshotNoVideo", BOOLEAN)
-		("showSnapshotDelay", BOOLEAN)));
+		("showSnapshotDelay", BOOLEAN)))
+	("carousel", makeMap(boost::assign::map_list_of
+		("type", STRING)
+		("size", NORMALIZED_PAIR)
+		("pos", NORMALIZED_PAIR)
+		("color", COLOR)
+		("logoScale", FLOAT)
+		("logoSize", NORMALIZED_PAIR)
+		("maxLogoCount", FLOAT)));
 
 namespace fs = boost::filesystem;
 
 #define MINIMUM_THEME_FORMAT_VERSION 3
-#define CURRENT_THEME_FORMAT_VERSION 3
+#define CURRENT_THEME_FORMAT_VERSION 4
 
 // helper
 unsigned int getHexColor(const char* str)
