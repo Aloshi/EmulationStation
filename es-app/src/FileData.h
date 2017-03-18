@@ -11,7 +11,8 @@ class SystemData;
 enum FileType
 {
 	GAME = 1,   // Cannot have children.
-	FOLDER = 2
+	FOLDER = 2,
+	PLACEHOLDER = 3
 };
 
 enum FileChangeType
@@ -48,10 +49,13 @@ public:
 	virtual const std::string& getVideoPath() const;
 	virtual const std::string& getMarqueePath() const;
 
-	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
+	const std::vector<FileData*>& getChildrenListToDisplay();
+	std::vector<FileData*> getFilesRecursive(unsigned int typeMask, bool displayedOnly = false) const;	
 
 	void addChild(FileData* file); // Error if mType != FOLDER
 	void removeChild(FileData* file); //Error if mType != FOLDER
+
+	inline bool isPlaceHolder() { return mType == PLACEHOLDER; };
 
 	// Returns our best guess at the "real" name for this file (will attempt to perform MAME name translation)
 	std::string getDisplayName() const;
@@ -82,4 +86,5 @@ private:
 	FileData* mParent;
 	std::unordered_map<std::string,FileData*> mChildrenByFilename;
 	std::vector<FileData*> mChildren;
+	std::vector<FileData*> mFilteredChildren;
 };

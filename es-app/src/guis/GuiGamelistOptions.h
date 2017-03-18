@@ -1,6 +1,7 @@
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
 #include "components/OptionListComponent.h"
+#include "GuiGamelistFilter.h"
 #include "FileSorts.h"
 
 class IGameListView;
@@ -15,6 +16,7 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
+	void openGamelistFilter();
 	void openMetaDataEd();
 	void jumpToLetter();
 	
@@ -28,4 +30,6 @@ private:
 	
 	SystemData* mSystem;
 	IGameListView* getGamelist();
+	bool fromPlaceholder;
+	bool mFiltersChanged;
 };

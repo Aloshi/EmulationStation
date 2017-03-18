@@ -5,6 +5,7 @@
 #include "ThemeData.h"
 #include "SystemData.h"
 #include "Settings.h"
+#include "FileFilterIndex.h"
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
@@ -13,7 +14,7 @@ BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	mList.setPosition(0, mSize.y() * 0.2f);
 	addChild(&mList);
 
-	populateList(root->getChildren());
+	populateList(root->getChildrenListToDisplay());
 }
 
 void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
@@ -38,12 +39,20 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
-
-	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
-
-	for(auto it = files.begin(); it != files.end(); it++)
+	if (files.size() > 0)
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		mHeaderText.setText(files.at(0)->getSystem()->getFullName());
+
+		for(auto it = files.begin(); it != files.end(); it++)
+		{
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		}
+	}
+	else
+	{
+		// empty list - add a placeholder
+		FileData* placeholder = new FileData(PLACEHOLDER, "<No Results Found for Current Filter Criteria>", this->mRoot->getSystem());
+		mList.add(placeholder->getName(), placeholder, (placeholder->getType() == PLACEHOLDER));
 	}
 }
 
@@ -54,9 +63,11 @@ FileData* BasicGameListView::getCursor()
 
 void BasicGameListView::setCursor(FileData* cursor)
 {
+	if (cursor->isPlaceHolder())
+		return;
 	if(!mList.setCursor(cursor))
 	{
-		populateList(cursor->getParent()->getChildren());
+		populateList(cursor->getParent()->getChildrenListToDisplay());
 		mList.setCursor(cursor);
 
 		// update our cursor stack in case our cursor just got set to some folder we weren't in before
