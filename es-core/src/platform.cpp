@@ -84,7 +84,13 @@ int quitES(const std::string& filename)
 
 void touch(const std::string& filename)
 {
+#ifdef WIN32
+	FILE* fp = fopen(filename.c_str(), "ab+");
+	if (fp != NULL)
+		fclose(fp);
+#else
 	int fd = open(filename.c_str(), O_CREAT|O_WRONLY, 0644);
 	if (fd >= 0)
 		close(fd);
+#endif
 }

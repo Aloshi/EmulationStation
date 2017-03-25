@@ -400,8 +400,12 @@ Reference
 #### system
 * `helpsystem name="help"` - ALL
 	- The help system style for this view.
+* `carousel name="systemcarousel"` -ALL
+	- The system logo carousel
 * `image name="logo"` - PATH
 	- A logo image, to be displayed in the system logo carousel.
+* `text name="systemInfo"` - ALL
+	- Displays details of the system currently selected in the carousel.
 * You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.
 
 
@@ -471,6 +475,7 @@ Can be created as an extra.
 	- `w h` - works like a "text box."  If `h` is non-zero and `h` <= `fontSize` (implying it should be a single line of text), text that goes beyond `w` will be truncated with an elipses (...).
 * `text` - type: STRING.
 * `color` - type: COLOR.
+* `backgroundColor` - type: COLOR;
 * `fontPath` - type: PATH.
 	- Path to a truetype font (.ttf).
 * `fontSize` - type: FLOAT.
@@ -543,6 +548,24 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `iconColor` - type: COLOR.  Default is 777777FF.
 * `fontPath` - type: PATH.
 * `fontSize` - type: FLOAT.
+
+#### carousel
+
+* `type` - type: STRING.
+ * Accepted values are "HORIZONTAL" or "VERTICAL".  Sets the scoll direction of the carousel.
+ * Default is "HORIZONTAL".
+* `size` - type: NORMALIZED_PAIR. Default is "1 0.2325"
+* `pos` - type: NORMALIZED_PAIR.  Default is "0 0.38375".
+* `color` - type: COLOR.
+ * Controls the color of the carousel background.
+ * Default is FFFFFFD8
+* `logoSize` - type: NORMALIZED_PAIR.  Default is "0.25 0.155"
+* `logoScale` - type: FLOAT.
+ * Selected logo is increased in size by this scale
+ * Default is 1.5
+* `maxLogoCount` - type: FLOAT.
+ * Sets the number of logos to display in the carousel.
+  * Default is 3
 
 The help system is a special element that displays a context-sensitive list of actions the user can take at any time.  You should try and keep the position constant throughout every screen.  Keep in mind the "default" settings (including position) are used whenever the user opens a menu.
 
