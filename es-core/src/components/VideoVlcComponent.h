@@ -33,7 +33,22 @@ public:
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 
+
+	// Resize the video to fit this size. If one axis is zero, scale that axis to maintain aspect ratio.
+	// If both are non-zero, potentially break the aspect ratio.  If both are zero, no resizing.
+	// Can be set before or after a video is loaded.
+	// setMaxSize() and setResize() are mutually exclusive.
+	void setResize(float width, float height);
+
+	// Resize the video to be as large as possible but fit within a box of this size.
+	// Can be set before or after a video is loaded.
+	// Never breaks the aspect ratio. setMaxSize() and setResize() are mutually exclusive.
+	void setMaxSize(float width, float height);
+
 private:
+	// Calculates the correct mSize from our resizing information (set by setResize/setMaxSize).
+	// Used internally whenever the resizing parameters or texture change.
+	void resize();
 	// Start the video Immediately
 	virtual void startVideo();
 	// Stop the video

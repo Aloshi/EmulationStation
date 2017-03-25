@@ -2,6 +2,7 @@
 #include "components/VideoPlayerComponent.h"
 #include "Renderer.h"
 #include "ThemeData.h"
+#include "Settings.h"
 #include "Util.h"
 #include <signal.h>
 #include <wait.h>
@@ -22,6 +23,24 @@ VideoPlayerComponent::~VideoPlayerComponent()
 void VideoPlayerComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
+}
+
+void VideoPlayerComponent::setResize(float width, float height)
+{
+	setSize(width, height);
+	mTargetSize << width, height;
+	mTargetIsMax = false;
+	mStaticImage.setSize(width, height);
+	onSizeChanged();
+}
+
+void VideoPlayerComponent::setMaxSize(float width, float height)
+{
+	setSize(width, height);
+	mTargetSize << width, height;
+	mTargetIsMax = true;
+	mStaticImage.setMaxSize(width, height);
+	onSizeChanged();
 }
 
 void VideoPlayerComponent::startVideo()
@@ -49,11 +68,13 @@ void VideoPlayerComponent::startVideo()
 			{
 				mPlayerPid = pid;
 				// Update the playing state
+				signal(SIGCHLD, catch_child);
 				mIsPlaying = true;
 				mFadeIn = 0.0f;
 			}
 			else
 			{
+
 				// Find out the pixel position of the video view and build a command line for
 				// omxplayer to position it in the right place
 				char buf[32];
@@ -62,10 +83,25 @@ void VideoPlayerComponent::startVideo()
 				sprintf(buf, "%d,%d,%d,%d", (int)x, (int)y, (int)(x + mSize.x()), (int)(y + mSize.y()));
 				// We need to specify the layer of 10000 or above to ensure the video is displayed on top
 				// of our SDL display
-				const char* argv[] = { "", "--win", buf, "--layer", "10000", "--loop", "--no-osd", "", NULL };
+
+				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "--win", buf, "-b", "", "", "", "", NULL };
+
+				// check if we want to mute the audio
+				if (!Settings::getInstance()->getBool("VideoAudio"))
+				{
+					argv[8] = "-1000000";
+				}
+
+				// if we are rendering a video gamelist
+				if (!mTargetIsMax)
+				{
+					argv[6] = "stretch";
+				}
+
+				argv[11] = mPlayingVideoPath.c_str();
+
 				const char* env[] = { "LD_LIBRARY_PATH=/opt/vc/libs:/usr/lib/omxplayer", NULL };
-				// Fill in the empty argument with the video path
-				argv[7] = mPlayingVideoPath.c_str();
+
 				// Redirect stdout
 				int fdin = open("/dev/null", O_RDONLY);
 				int fdout = open("/dev/null", O_WRONLY);
@@ -73,10 +109,18 @@ void VideoPlayerComponent::startVideo()
 				dup2(fdout, 1);
 				// Run the omxplayer binary
 				execve("/usr/bin/omxplayer.bin", (char**)argv, (char**)env);
+
 				_exit(EXIT_FAILURE);
 			}
 		}
 	}
+}
+
+void catch_child(int sig_num)
+{
+    /* when we get here, we know there's a zombie child waiting */
+    int child_status;
+    wait(&child_status);
 }
 
 void VideoPlayerComponent::stopVideo()

@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
+#include "Settings.h"
 #ifdef WIN32
 #include <codecvt>
 #endif
@@ -46,6 +47,82 @@ VideoVlcComponent::~VideoVlcComponent()
 {
 }
 
+void VideoVlcComponent::setResize(float width, float height)
+{
+	mTargetSize << width, height;
+	mTargetIsMax = false;
+	mStaticImage.setResize(width, height);
+	resize();
+}
+
+void VideoVlcComponent::setMaxSize(float width, float height)
+{
+	mTargetSize << width, height;
+	mTargetIsMax = true;
+	mStaticImage.setMaxSize(width, height);
+	resize();
+}
+
+void VideoVlcComponent::resize()
+{
+	if(!mTexture)
+		return;
+
+	const Eigen::Vector2f textureSize(mVideoWidth, mVideoHeight);
+
+	if(textureSize.isZero())
+		return;
+
+		// SVG rasterization is determined by height (see SVGResource.cpp), and rasterization is done in terms of pixels
+		// if rounding is off enough in the rasterization step (for images with extreme aspect ratios), it can cause cutoff when the aspect ratio breaks
+		// so, we always make sure the resultant height is an integer to make sure cutoff doesn't happen, and scale width from that
+		// (you'll see this scattered throughout the function)
+		// this is probably not the best way, so if you're familiar with this problem and have a better solution, please make a pull request!
+
+		if(mTargetIsMax)
+		{
+
+			mSize = textureSize;
+
+			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
+
+			if(resizeScale.x() < resizeScale.y())
+			{
+				mSize[0] *= resizeScale.x();
+				mSize[1] *= resizeScale.x();
+			}else{
+				mSize[0] *= resizeScale.y();
+				mSize[1] *= resizeScale.y();
+			}
+
+			// for SVG rasterization, always calculate width from rounded height (see comment above)
+			mSize[1] = round(mSize[1]);
+			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
+
+		}else{
+			// if both components are set, we just stretch
+			// if no components are set, we don't resize at all
+			mSize = mTargetSize.isZero() ? textureSize : mTargetSize;
+
+			// if only one component is set, we resize in a way that maintains aspect ratio
+			// for SVG rasterization, we always calculate width from rounded height (see comment above)
+			if(!mTargetSize.x() && mTargetSize.y())
+			{
+				mSize[1] = round(mTargetSize.y());
+				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
+			}else if(mTargetSize.x() && !mTargetSize.y())
+			{
+				mSize[1] = round((mTargetSize.x() / textureSize.x()) * textureSize.y());
+				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
+			}
+		}
+
+	// mSize.y() should already be rounded
+	mTexture->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
+
+	onSizeChanged();
+}
+
 void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
@@ -55,7 +132,7 @@ void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
 	GuiComponent::renderChildren(trans);
 
 	Renderer::setMatrix(trans);
-	
+
 	if (mIsPlaying && mContext.valid)
 	{
 		float tex_offs_x = 0.0f;
@@ -135,6 +212,7 @@ void VideoVlcComponent::setupContext()
 		mContext.surface = SDL_CreateRGBSurface(SDL_SWSURFACE, (int)mVideoWidth, (int)mVideoHeight, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
 		mContext.mutex = SDL_CreateMutex();
 		mContext.valid = true;
+		resize();
 	}
 }
 
@@ -153,7 +231,9 @@ void VideoVlcComponent::setupVLC()
 	// If VLC hasn't been initialised yet then do it now
 	if (!mVLC)
 	{
-		const char* args[] = { "--quiet" };
+		const char* args[] = { "--quiet", "", "", "" };
+		// check if we want to mute the audio
+
 		mVLC = libvlc_new(sizeof(args) / sizeof(args[0]), args);
 	}
 }
@@ -217,6 +297,11 @@ void VideoVlcComponent::startVideo()
 
 					// Setup the media player
 					mMediaPlayer = libvlc_media_player_new_from_media(mMedia);
+					if (!Settings::getInstance()->getBool("VideoAudio"))
+					{
+						libvlc_audio_set_mute(mMediaPlayer, 1);
+					}
+
 					libvlc_media_player_play(mMediaPlayer);
 					libvlc_video_set_callbacks(mMediaPlayer, lock, unlock, display, (void*)&mContext);
 					libvlc_video_set_format(mMediaPlayer, "RGBA", (int)mVideoWidth, (int)mVideoHeight, (int)mVideoWidth * 4);

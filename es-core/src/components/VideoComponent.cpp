@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
+#include "Window.h"
 #ifdef WIN32
 #include <codecvt>
 #endif
@@ -26,6 +27,10 @@ VideoComponent::VideoComponent(Window* window) :
 	mConfig.showSnapshotDelay 		= false;
 	mConfig.showSnapshotNoVideo		= false;
 	mConfig.startDelay				= 0;
+	if (mWindow->getGuiStackSize() > 1) {
+		topWindow(false);
+	}
+
 }
 
 VideoComponent::~VideoComponent()
@@ -42,88 +47,11 @@ void VideoComponent::setOrigin(float originX, float originY)
 	mStaticImage.setOrigin(originX, originY);
 }
 
-void VideoComponent::setResize(float width, float height)
-{
-	mTargetSize << width, height;
-	mTargetIsMax = false;
-	mStaticImage.setResize(width, height);
-	resize();
-}
-
-void VideoComponent::setMaxSize(float width, float height)
-{
-	mTargetSize << width, height;
-	mTargetIsMax = true;
-	mStaticImage.setMaxSize(width, height);
-	resize();
-}
-
 Eigen::Vector2f VideoComponent::getCenter() const
 {
 	return Eigen::Vector2f(mPosition.x() - (getSize().x() * mOrigin.x()) + getSize().x() / 2,
 		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
 }
-
-void VideoComponent::resize()
-{
-	if(!mTexture)
-		return;
-
-	const Eigen::Vector2f textureSize(mVideoWidth, mVideoHeight);
-
-	if(textureSize.isZero())
-		return;
-
-		// SVG rasterization is determined by height (see SVGResource.cpp), and rasterization is done in terms of pixels
-		// if rounding is off enough in the rasterization step (for images with extreme aspect ratios), it can cause cutoff when the aspect ratio breaks
-		// so, we always make sure the resultant height is an integer to make sure cutoff doesn't happen, and scale width from that
-		// (you'll see this scattered throughout the function)
-		// this is probably not the best way, so if you're familiar with this problem and have a better solution, please make a pull request!
-
-		if(mTargetIsMax)
-		{
-
-			mSize = textureSize;
-
-			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
-
-			if(resizeScale.x() < resizeScale.y())
-			{
-				mSize[0] *= resizeScale.x();
-				mSize[1] *= resizeScale.x();
-			}else{
-				mSize[0] *= resizeScale.y();
-				mSize[1] *= resizeScale.y();
-			}
-
-			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = round(mSize[1]);
-			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
-
-		}else{
-			// if both components are set, we just stretch
-			// if no components are set, we don't resize at all
-			mSize = mTargetSize.isZero() ? textureSize : mTargetSize;
-
-			// if only one component is set, we resize in a way that maintains aspect ratio
-			// for SVG rasterization, we always calculate width from rounded height (see comment above)
-			if(!mTargetSize.x() && mTargetSize.y())
-			{
-				mSize[1] = round(mTargetSize.y());
-				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
-			}else if(mTargetSize.x() && !mTargetSize.y())
-			{
-				mSize[1] = round((mTargetSize.x() / textureSize.x()) * textureSize.y());
-				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
-			}
-		}
-
-	// mSize.y() should already be rounded
-	mTexture->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
-
-	onSizeChanged();
-}
-
 
 void VideoComponent::onSizeChanged()
 {
@@ -161,6 +89,8 @@ void VideoComponent::setImage(std::string path)
 		return;
 
 	mStaticImage.setImage(path);
+	// Make the image stretch to fill the video region
+	mStaticImage.setSize(getSize());
 	mFadeIn = 0.0f;
 	mStaticImagePath = path;
 }

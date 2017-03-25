@@ -61,7 +61,7 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	mVideo->setPosition(mSize.x() * 0.25f, mSize.y() * 0.4f);
 	mVideo->setSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.4f);
 	mVideo->setDefaultZIndex(30);
-	addChild(&mVideo);
+	addChild(mVideo);
 
 	// metadata labels + values
 	mLblRating.setText("Rating: ");
