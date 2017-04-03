@@ -1,6 +1,6 @@
 #include "scrapers/GamesDBScraper.h"
 #include "Log.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include "MetaData.h"
 #include "Settings.h"
 #include "Util.h"

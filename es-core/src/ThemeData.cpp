@@ -5,7 +5,7 @@
 #include "resources/TextureResource.h"
 #include "Log.h"
 #include "Settings.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include <boost/assign.hpp>
 
 #include "components/ImageComponent.h"

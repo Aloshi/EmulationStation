@@ -1,6 +1,6 @@
 #include "Gamelist.h"
 #include "SystemData.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include <boost/filesystem.hpp>
 #include "Log.h"
 #include "Settings.h"

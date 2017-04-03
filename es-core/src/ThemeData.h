@@ -9,7 +9,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
 #include <Eigen/Dense>
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include "GuiComponent.h"
 
 template<typename T>
