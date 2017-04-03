@@ -8,13 +8,13 @@
 #include "Settings.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
-	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT), mLineSpacing(1.5f), mBgColor(NULL)
+	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT), mLineSpacing(1.5f), mBgColor(0)
 {
 }
 
 TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
 	Eigen::Vector3f pos, Eigen::Vector2f size, unsigned int bgcolor) : GuiComponent(window), 
-	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align), mLineSpacing(1.5f), mBgColor(NULL)
+	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align), mLineSpacing(1.5f), mBgColor(0)
 {
 	setFont(font);
 	setColor(color);
