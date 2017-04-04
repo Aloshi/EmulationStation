@@ -3,7 +3,7 @@
 #include "Settings.h"
 #include "Window.h"
 #include "Log.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include <boost/filesystem.hpp>
 #include "platform.h"
 
