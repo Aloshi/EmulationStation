@@ -310,6 +310,9 @@ void  SystemView::getViewElements(const std::shared_ptr<ThemeData>& theme)
 
 	getDefaultElements();
 
+	if (!theme->hasView("system"))
+		return;
+
 	const ThemeData::ThemeElement* carouselElem = theme->getElement("system", "systemcarousel", "carousel");
 	if (carouselElem)
 		getCarouselFromTheme(carouselElem);
