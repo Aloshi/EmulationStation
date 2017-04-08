@@ -1,35 +1,8 @@
 EmulationStation
 ================
 
-A cross-platform graphical front-end for emulators with controller navigation.
-
-Project website: http://emulationstation.org
-
-**Raspberry Pi users:**
-A cool guy named petrockblog made a script which automatically installs many emulators and ES. It also includes options for configuring your RPi and setting it up to boot directly into ES. You can find it here: https://github.com/petrockblog/RetroPie-Setup
-
-Download
-========
-
-Download a pre-compiled version at [emulationstation.org](http://emulationstation.org#download).
-
-
-I found a bug! I have a problem!
-================================
-
-- First, try to check the [issue list](https://github.com/Aloshi/EmulationStation/issues?state=open) for some entries that might match your problem.  Make sure to check closed issues too!
-
-- If you're running EmulationStation on a on Raspberry Pi and have problems with config file changes not taking effect, content missing after editing, etc., check if your SD card is corrupted (see issues [#78](https://github.com/Aloshi/EmulationStation/issues/78) and [#107](https://github.com/Aloshi/EmulationStation/issues/107)). You can do this with free tools like [h2testw](http://www.heise.de/download/h2testw.html) or [F3](http://oss.digirati.com.br/f3/).
-
-- Try to update to the latest version of EmulationStation using git (you might need to delete your `es_input.cfg` and `es_settings.cfg` after that to reset them to default values):
-```bash
-cd YourEmulationStationDirectory
-git pull
-cmake .
-make
-```
-
-- If your problem still isn't gone, the best way to report a bug is to post an issue on GitHub. Try to post the simplest steps possible to reproduce the bug. Include files you think might be related (except for ROMs, of course). If you haven't re-run ES since the crash, the log file `~/.emulationstation/es_log.txt` is also helpful.
+This is a fork of EmulationStation for RetroPie.
+EmulationStation is a cross-platform graphical front-end for emulators with controller navigation.
 
 Building
 ========
