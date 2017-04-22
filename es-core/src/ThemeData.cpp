@@ -24,7 +24,7 @@ ElementMapType makeMap(const T& mapInit)
 }
 
 std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("video");
-std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video")("carousel");
+std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video")("carousel")("z-index");
 
 std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of
 	("image", makeMap(boost::assign::map_list_of
@@ -34,7 +34,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("origin", NORMALIZED_PAIR)
 		("path", PATH)
 		("tile", BOOLEAN)
-		("color", COLOR)))
+		("color", COLOR)
+		("zIndex", FLOAT)))
 	("text", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
@@ -46,7 +47,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("alignment", STRING)
 		("forceUppercase", BOOLEAN)
 		("lineSpacing", FLOAT)
-		("value", STRING)))
+		("value", STRING)
+		("zIndex", FLOAT)))
 	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
@@ -60,26 +62,31 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("alignment", STRING)
 		("horizontalMargin", FLOAT)
 		("forceUppercase", BOOLEAN)
-		("lineSpacing", FLOAT)))
+		("lineSpacing", FLOAT)
+		("zIndex", FLOAT)))
 	("container", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
-		("size", NORMALIZED_PAIR)))
+		("size", NORMALIZED_PAIR)
+		("zIndex", FLOAT)))
 	("ninepatch", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
-		("path", PATH)))
+		("path", PATH)
+		("zIndex", FLOAT)))
 	("datetime", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("color", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)
-		("forceUppercase", BOOLEAN)))
+		("forceUppercase", BOOLEAN)
+		("zIndex", FLOAT)))
 	("rating", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("filledPath", PATH)
-		("unfilledPath", PATH)))
+		("unfilledPath", PATH)
+		("zIndex", FLOAT)))
 	("sound", makeMap(boost::assign::map_list_of
 		("path", PATH)))
 	("helpsystem", makeMap(boost::assign::map_list_of
@@ -95,6 +102,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("origin", NORMALIZED_PAIR)
 		("default", PATH)
 		("delay", FLOAT)
+		("zIndex", FLOAT)
 		("showSnapshotNoVideo", BOOLEAN)
 		("showSnapshotDelay", BOOLEAN)))
 	("carousel", makeMap(boost::assign::map_list_of
@@ -104,7 +112,8 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("color", COLOR)
 		("logoScale", FLOAT)
 		("logoSize", NORMALIZED_PAIR)
-		("maxLogoCount", FLOAT)));
+		("maxLogoCount", FLOAT)
+		("zIndex", FLOAT)));
 
 namespace fs = boost::filesystem;
 
@@ -450,6 +459,7 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 			else if(t == "text")
 				comp = new TextComponent(window);
 
+			comp->setDefaultZIndex(10);
 			comp->applyTheme(theme, view, *it, ThemeFlags::ALL);
 			comps.push_back(comp);
 		}
@@ -457,24 +467,6 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 
 	return comps;
 }
-
-void ThemeExtras::setExtras(const std::vector<GuiComponent*>& extras)
-{
-	// delete old extras (if any)
-	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
-		delete *it;
-
-	mExtras = extras;
-	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
-		addChild(*it);
-}
-
-ThemeExtras::~ThemeExtras()
-{
-	for(auto it = mExtras.begin(); it != mExtras.end(); it++)
-		delete *it;
-}
-
 
 std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 {

@@ -30,6 +30,7 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	mMarquee.setOrigin(0.5f, 0.5f);
 	mMarquee.setPosition(mSize.x() * 0.25f, mSize.y() * 0.10f);
 	mMarquee.setMaxSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.18f);
+	mMarquee.setDefaultZIndex(35);
 	addChild(&mMarquee);
 
 	// Image
@@ -37,24 +38,15 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	// Default to off the screen
 	mImage.setPosition(2.0f, 2.0f);
 	mImage.setMaxSize(1.0f, 1.0f);
+	mImage.setDefaultZIndex(30);
 	addChild(&mImage);
 
 	// video
 	mVideo.setOrigin(0.5f, 0.5f);
 	mVideo.setPosition(mSize.x() * 0.25f, mSize.y() * 0.4f);
 	mVideo.setSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.4f);
+	mVideo.setDefaultZIndex(30);
 	addChild(&mVideo);
-
-	// We want the video to be in front of the background but behind any 'extra' images
-	for (std::vector<GuiComponent*>::iterator it = mChildren.begin(); it != mChildren.end(); ++it)
-	{
-		if (*it == &mThemeExtras)
-		{
-			mChildren.insert(it, &mVideo);
-			mChildren.pop_back();
-			break;
-		}
-	}
 
 	// metadata labels + values
 	mLblRating.setText("Rating: ");
@@ -86,6 +78,7 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	mDescContainer.setPosition(mSize.x() * padding, mSize.y() * 0.65f);
 	mDescContainer.setSize(mSize.x() * (0.50f - 2*padding), mSize.y() - mDescContainer.getPosition().y());
 	mDescContainer.setAutoScroll(true);
+	mDescContainer.setDefaultZIndex(40);
 	addChild(&mDescContainer);
 
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
@@ -105,9 +98,9 @@ void VideoGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	BasicGameListView::onThemeChanged(theme);
 
 	using namespace ThemeFlags;
-	mMarquee.applyTheme(theme, getName(), "md_marquee", POSITION | ThemeFlags::SIZE);
-	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE);
-	mVideo.applyTheme(theme, getName(), "md_video", POSITION | ThemeFlags::SIZE | ThemeFlags::DELAY);
+	mMarquee.applyTheme(theme, getName(), "md_marquee", POSITION | ThemeFlags::SIZE | Z_INDEX);
+	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE | Z_INDEX);
+	mVideo.applyTheme(theme, getName(), "md_video", POSITION | ThemeFlags::SIZE | ThemeFlags::DELAY | Z_INDEX);
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
@@ -136,9 +129,11 @@ void VideoGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 		values[i]->applyTheme(theme, getName(), valElements[i], ALL ^ ThemeFlags::TEXT);
 	}
 
-	mDescContainer.applyTheme(theme, getName(), "md_description", POSITION | ThemeFlags::SIZE);
+	mDescContainer.applyTheme(theme, getName(), "md_description", POSITION | ThemeFlags::SIZE | Z_INDEX);
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescription.applyTheme(theme, getName(), "md_description", ALL ^ (POSITION | ThemeFlags::SIZE | TEXT));
+
+	sortChildren();
 }
 
 void VideoGameListView::initMDLabels()
@@ -170,6 +165,7 @@ void VideoGameListView::initMDLabels()
 
 		components[i]->setFont(Font::get(FONT_SIZE_SMALL));
 		components[i]->setPosition(pos);
+		components[i]->setDefaultZIndex(40);
 	}
 }
 
@@ -198,6 +194,7 @@ void VideoGameListView::initMDValues()
 		const float heightDiff = (labels[i]->getSize().y() - values[i]->getSize().y()) / 2;
 		values[i]->setPosition(labels[i]->getPosition() + Vector3f(labels[i]->getSize().x(), heightDiff, 0));
 		values[i]->setSize(colSize - labels[i]->getSize().x(), values[i]->getSize().y());
+		values[i]->setDefaultZIndex(40);
 
 		float testBot = values[i]->getPosition().y() + values[i]->getSize().y();
 		if(testBot > bottom)
