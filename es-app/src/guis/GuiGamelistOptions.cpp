@@ -74,10 +74,22 @@ void GuiGamelistOptions::openMetaDataEd()
 	ScraperSearchParams p;
 	p.game = file;
 	p.system = file->getSystem();
-	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(), 
-		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), [this, file] { 
+
+	std::function<void()> deleteBtnFunc;
+
+	if (file->getType() == FOLDER)
+	{
+		deleteBtnFunc = NULL;
+	}
+	else
+	{
+		deleteBtnFunc = [this, file] {
 			getGamelist()->remove(file);
-	}));
+		};
+	}
+
+	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(), 
+		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), deleteBtnFunc));
 }
 
 void GuiGamelistOptions::jumpToLetter()
