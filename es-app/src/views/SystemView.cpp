@@ -134,6 +134,11 @@ bool SystemView::input(InputConfig* config, Input input)
 			ViewController::get()->goToGameList(getSelected());
 			return true;
 		}
+		if (config->isMappedTo("x", input))
+		{
+			ViewController::get()->goToRandomGame();
+			return true;
+		}
 	}else{
 		if(config->isMappedTo("left", input) || 
 			config->isMappedTo("right", input) ||
@@ -286,6 +291,7 @@ std::vector<HelpPrompt> SystemView::getHelpPrompts()
 	else
 		prompts.push_back(HelpPrompt("left/right", "choose"));
 	prompts.push_back(HelpPrompt("a", "select"));
+	prompts.push_back(HelpPrompt("x", "random"));
 	return prompts;
 }
 
