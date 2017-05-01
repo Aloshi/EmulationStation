@@ -26,6 +26,7 @@ public:
 	void setAlignment(Alignment align);
 	void setLineSpacing(float spacing);
 	void setBackgroundColor(unsigned int color);
+	void setRenderBackground(bool render);
 
 	void render(const Eigen::Affine3f& parentTrans) override;
 
@@ -49,6 +50,7 @@ private:
 	unsigned int mBgColor;
 	unsigned char mColorOpacity;
 	unsigned char mBgColorOpacity;
+	bool mRenderBackground;
 
 	std::shared_ptr<Font> mFont;
 	bool mUppercase;
