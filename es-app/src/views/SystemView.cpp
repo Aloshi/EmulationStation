@@ -443,8 +443,9 @@ void  SystemView::getDefaultElements(void)
 
 	// System Info Bar
 	mSystemInfo.setSize(mSize.x(), mSystemInfo.getFont()->getLetterHeight()*2.2f);
-	mSystemInfo.setPosition(0, (mCarousel.pos.y() + mCarousel.size.y()));
+	mSystemInfo.setPosition(0, (mCarousel.pos.y() + mCarousel.size.y() - 0.2f));
 	mSystemInfo.setBackgroundColor(0xDDDDDDD8);
+	mSystemInfo.setRenderBackground(true);
 	mSystemInfo.setFont(Font::get((int)(0.035f * mSize.y()), Font::getDefaultPath()));
 	mSystemInfo.setColor(0x000000FF);
 }

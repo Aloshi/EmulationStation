@@ -8,13 +8,13 @@
 #include "Settings.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
-	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT), mLineSpacing(1.5f), mBgColor(0)
+	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(ALIGN_LEFT), mLineSpacing(1.5f), mBgColor(0), mRenderBackground(false)
 {
 }
 
 TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
 	Eigen::Vector3f pos, Eigen::Vector2f size, unsigned int bgcolor) : GuiComponent(window), 
-	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align), mLineSpacing(1.5f), mBgColor(0)
+	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true), mAlignment(align), mLineSpacing(1.5f), mBgColor(0), mRenderBackground(false)
 {
 	setFont(font);
 	setColor(color);
@@ -51,6 +51,11 @@ void TextComponent::setBackgroundColor(unsigned int color)
 	mBgColorOpacity = mBgColor & 0x000000FF;
 }
 
+void TextComponent::setRenderBackground(bool render)
+{
+	mRenderBackground = render;
+}
+
 //  Scale the opacity
 void TextComponent::setOpacity(unsigned char opacity)
 {
@@ -60,10 +65,10 @@ void TextComponent::setOpacity(unsigned char opacity)
 
 	unsigned char o = (unsigned char)((float)opacity / 255.f * (float) mColorOpacity);
 	mColor = (mColor & 0xFFFFFF00) | (unsigned char) o;
-	
+
 	unsigned char bgo = (unsigned char)((float)opacity / 255.f * (float)mBgColorOpacity);
 	mBgColor = (mBgColor & 0xFFFFFF00) | (unsigned char)bgo;
-	
+
 	onColorChanged();
 
 	GuiComponent::setOpacity(opacity);
@@ -90,10 +95,10 @@ void TextComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
 
-	if (mBgColor)
+	if (mRenderBackground)
 	{
-		Renderer::drawRect(getPosition().x(), getPosition().y() - 1,
-			getSize().x(), getSize().y(), mBgColor);
+		Renderer::setMatrix(trans);
+		Renderer::drawRect(0.f, 0.f, mSize.x(), mSize.y(), mBgColor);
 	}
 
 	if(mTextCache)
@@ -233,8 +238,11 @@ void TextComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const st
 	if (properties & COLOR && elem->has("color"))
 		setColor(elem->get<unsigned int>("color"));	
 
-	if (properties & COLOR && elem->has("backgroundColor"))
+	setRenderBackground(false);
+	if (properties & COLOR && elem->has("backgroundColor")) {
 		setBackgroundColor(elem->get<unsigned int>("backgroundColor"));
+		setRenderBackground(true);
+	}
 
 	if(properties & ALIGNMENT && elem->has("alignment"))
 	{
