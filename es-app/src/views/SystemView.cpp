@@ -436,7 +436,7 @@ void  SystemView::getDefaultElements(void)
 	mCarousel.pos.x() = 0.0f;
 	mCarousel.pos.y() = 0.5f * (mSize.y() - mCarousel.size.y());
 	mCarousel.color = 0xFFFFFFD8;
-	mCarousel.logoScale = 1.5f;
+	mCarousel.logoScale = 1.2f;
 	mCarousel.logoSize.x() = 0.25f * mSize.x();
 	mCarousel.logoSize.y() = 0.155f * mSize.y();
 	mCarousel.maxLogoCount = 3;
