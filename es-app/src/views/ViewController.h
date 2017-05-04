@@ -50,6 +50,15 @@ public:
 		GAME_LIST
 	};
 
+	enum GameListViewType
+	{
+		AUTOMATIC,
+		BASIC,
+		DETAILED,
+		VIDEO
+		// GRID TODO!
+	};
+
 	struct State
 	{
 		ViewMode viewing;
