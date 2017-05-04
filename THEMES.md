@@ -562,7 +562,7 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `logoSize` - type: NORMALIZED_PAIR.  Default is "0.25 0.155"
 * `logoScale` - type: FLOAT.
  * Selected logo is increased in size by this scale
- * Default is 1.5
+ * Default is 1.2
 * `maxLogoCount` - type: FLOAT.
  * Sets the number of logos to display in the carousel.
   * Default is 3
