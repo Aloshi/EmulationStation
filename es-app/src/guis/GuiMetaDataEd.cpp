@@ -170,6 +170,9 @@ void GuiMetaDataEd::onSizeChanged()
 
 void GuiMetaDataEd::save()
 {
+	// remove game from index
+	mScraperParams.system->getIndex()->removeFromIndex(mScraperParams.game);
+
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
 		if(mMetaDataDecl.at(i).isStatistic)
@@ -177,6 +180,9 @@ void GuiMetaDataEd::save()
 
 		mMetaData->set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
 	}
+
+	// enter game in index
+	mScraperParams.system->getIndex()->addToIndex(mScraperParams.game);
 
 	if(mSavedCallback)
 		mSavedCallback();

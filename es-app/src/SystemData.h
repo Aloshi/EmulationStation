@@ -7,6 +7,7 @@
 #include "MetaData.h"
 #include "PlatformId.h"
 #include "ThemeData.h"
+#include "FileFilterIndex.h"
 
 class SystemData
 {
@@ -32,6 +33,7 @@ public:
 	std::string getThemePath() const;
 	
 	unsigned int getGameCount() const;
+	unsigned int getDisplayedGameCount() const;
 
 	void launchGame(Window* window, FileData* game);
 
@@ -64,6 +66,8 @@ public:
 	// Load or re-load theme.
 	void loadTheme();
 
+	FileFilterIndex* getIndex() { return mFilterIndex; };
+
 private:
 	std::string mName;
 	std::string mFullName;
@@ -75,6 +79,8 @@ private:
 	std::shared_ptr<ThemeData> mTheme;
 
 	void populateFolder(FileData* folder);
+
+	FileFilterIndex* mFilterIndex;
 
 	FileData* mRootFolder;
 };

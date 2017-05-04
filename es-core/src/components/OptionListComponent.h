@@ -251,6 +251,24 @@ public:
 		onSelectedChanged();
 	}
 
+	void selectAll() 
+	{
+		for(unsigned int i = 0; i < mEntries.size(); i++)
+		{
+			mEntries.at(i).selected = true;			
+		}
+		onSelectedChanged();
+	}
+
+	void selectNone() 
+	{
+		for(unsigned int i = 0; i < mEntries.size(); i++)
+		{
+			mEntries.at(i).selected = false;			
+		}
+		onSelectedChanged();
+	}
+
 private:
 	unsigned int getSelectedId()
 	{
