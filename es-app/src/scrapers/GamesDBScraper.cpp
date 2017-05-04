@@ -70,10 +70,15 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 	std::string path = "thegamesdb.net/api/GetGame.php?";
 
 	std::string cleanName = params.nameOverride;
-	if(cleanName.empty())
+	if (cleanName.empty())
+	{
 		cleanName = params.game->getCleanName();
-
-	path += "name=" + HttpReq::urlEncode(cleanName);
+		path += "name=" + HttpReq::urlEncode(cleanName);
+	}
+	else
+	{
+		path += "exactname=" + HttpReq::urlEncode(cleanName);
+	}
 
 	if(params.system->getPlatformIds().empty())
 	{
