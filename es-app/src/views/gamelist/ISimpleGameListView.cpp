@@ -1,12 +1,15 @@
 #include "views/gamelist/ISimpleGameListView.h"
 #include "ThemeData.h"
+#include "SystemData.h"
 #include "Window.h"
 #include "views/ViewController.h"
 #include "Sound.h"
 #include "Settings.h"
+#include "Gamelist.h"
+#include "Log.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
-	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
+mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window), mFavoriteChange(false), mKidGameChange(false)
 {
 	mHeaderText.setText("Logo Text");
 	mHeaderText.setSize(mSize.x(), 0);
@@ -45,9 +48,10 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 {
 	// we could be tricky here to be efficient;
-	// but this shouldn't happen very often so we'll just always repopulate
+	// but this shouldn't happen very often so we'll just always repopulate.
+	LOG(LogDebug) << "ISimpleGameLIstView::onFileChanged()";
 	FileData* cursor = getCursor();
-	populateList(cursor->getParent()->getChildren());
+	populateList(cursor->getParent()->getChildren(true));
 	setCursor(cursor);
 }
 
@@ -57,6 +61,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 	{
 		if(config->isMappedTo("a", input))
 		{
+			LOG(LogDebug) << "ISimpleGameListView::input(): a detected!";
 			FileData* cursor = getCursor();
 			if(cursor->getType() == GAME)
 			{
@@ -64,33 +69,90 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				launch(cursor);
 			}else{
 				// it's a folder
-				if(cursor->getChildren().size() > 0)
+				if(cursor->getChildren(true).size() > 0)
 				{
 					mCursorStack.push(cursor);
-					populateList(cursor->getChildren());
+					populateList(cursor->getChildren(true));
 				}
 			}
-				
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{
+			LOG(LogDebug) << "ISimpleGameListView::input(): b detected!";
+			
 			if(mCursorStack.size())
 			{
-				populateList(mCursorStack.top()->getParent()->getChildren());
+				populateList(mCursorStack.top()->getParent()->getChildren(true));
 				setCursor(mCursorStack.top());
 				mCursorStack.pop();
 				Sound::getFromTheme(getTheme(), getName(), "back")->play();
 			}else{
 				onFocusLost();
+				if (mFavoriteChange || mKidGameChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+					mKidGameChange = false;
+				}
 				ViewController::get()->goToSystemView(getCursor()->getSystem());
 			}
 
 			return true;
+		}else if ((config->isMappedTo("x", input)) ||
+			(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_f && Settings::getInstance()->getBool("Debug"))			)
+		{
+			FileData* cursor = getCursor();
+				if (cursor->getType() == GAME)
+				{
+					mFavoriteChange = true;
+					MetaDataList* md = &cursor->metadata;
+					std::string value = md->get("favorite");
+					LOG(LogDebug) << "Favorite = "<< value;
+					if (value.compare("false") == 0)
+					{
+						md->set("favorite", "true");
+					}else
+					{
+						md->set("favorite", "false");
+					}
+					LOG(LogDebug) << "New Favorite value set to: "<< md->get("favorite");
+					if (Settings::getInstance()->getBool("FavoritesOnly"))
+						ViewController::get()->reloadSystemListView();
+					updateInfoPanel();
+				}
+		}else if ((config->isMappedTo("y", input)) ||
+			(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_k && Settings::getInstance()->getBool("Debug")))
+		{
+			FileData* cursor = getCursor();
+			if(Settings::getInstance()->getString("UIMode") == "Full")
+
+			{ // only when kidgames are supported by system+theme, and when in full UImode
+				if (cursor->getType() == GAME)
+				{
+					mKidGameChange = true;
+					MetaDataList* md = &cursor->metadata;
+					std::string value = md->get("kidgame");
+					LOG(LogDebug) << "kidgame = "<< value;
+					if (value.compare("false") == 0) {
+						md->set("kidgame", "true");
+					}					else {
+						md->set("kidgame", "false");
+					}
+					LOG(LogDebug) << "New kidgame value set to: "<< md->get("kidgame");
+					updateInfoPanel();
+				}
+			}
 		}else if(config->isMappedTo("right", input))
 		{
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
 				onFocusLost();
+				if (mFavoriteChange || mKidGameChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+					mKidGameChange = false;
+				}
 				ViewController::get()->goToNextGameList();
 				return true;
 			}
@@ -99,6 +161,12 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
 				onFocusLost();
+				if (mFavoriteChange || mKidGameChange)
+				{
+					ViewController::get()->setInvalidGamesList(getCursor()->getSystem());
+					mFavoriteChange = false;
+					mKidGameChange = false;
+				}
 				ViewController::get()->goToPrevGameList();
 				return true;
 			}

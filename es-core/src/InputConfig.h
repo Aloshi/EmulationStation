@@ -6,7 +6,7 @@
 #include <string>
 #include <SDL.h>
 #include <sstream>
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 
 #define DEVICE_KEYBOARD -1
 

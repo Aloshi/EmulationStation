@@ -20,7 +20,7 @@ TextEditComponent::TextEditComponent(Window* window) : GuiComponent(window),
 	
 	onFocusLost();
 
-	setSize(256, mFont->getHeight() + TEXT_PADDING_VERT);
+	setSize(4096, mFont->getHeight() + TEXT_PADDING_VERT);
 }
 
 void TextEditComponent::onFocusGained()
@@ -91,15 +91,20 @@ void TextEditComponent::stopEditing()
 
 bool TextEditComponent::input(InputConfig* config, Input input)
 {
+	bool const cursor_left = (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("left", input)) ||
+		(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_LEFT);
+	bool const cursor_right = (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("right", input)) ||
+		(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_RIGHT);
+
 	if(input.value == 0)
 	{
-		if(config->isMappedTo("left", input) || config->isMappedTo("right", input))
+		if(cursor_left || cursor_right)
 			mCursorRepeatDir = 0;
 
 		return false;
 	}
 
-	if(config->isMappedTo("a", input) && mFocused && !mEditing)
+	if((config->isMappedTo("a", input) || (config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_RETURN)) && mFocused && !mEditing)
 	{
 		startEditing();
 		return true;
@@ -125,17 +130,38 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 			return true;
 		}
 
-		if(config->isMappedTo("up", input))
+		if(config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("up", input))
 		{
 			// TODO
-		}else if(config->isMappedTo("down", input))
+		}else if(config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("down", input))
 		{
 			// TODO
-		}else if(config->isMappedTo("left", input) || config->isMappedTo("right", input))
+		}else if(cursor_left || cursor_right)
 		{
-			mCursorRepeatDir = config->isMappedTo("left", input) ? -1 : 1;
+			mCursorRepeatDir = cursor_left ? -1 : 1;
 			mCursorRepeatTimer = -(CURSOR_REPEAT_START_DELAY - CURSOR_REPEAT_SPEED);
 			moveCursor(mCursorRepeatDir);
+		} else if(config->getDeviceId() == DEVICE_KEYBOARD)
+		{
+			switch(input.id)
+			{
+				case SDLK_HOME:
+					setCursor(0);
+					break;
+
+				case SDLK_END:
+					setCursor(std::string::npos);
+					break;
+
+				case SDLK_DELETE:
+					if(mCursor < mText.length())
+					{
+						// Fake as Backspace one char to the right
+						moveCursor(1);
+						textInput("\b");
+					}
+					break;
+			}
 		}
 
 		//consume all input when editing text

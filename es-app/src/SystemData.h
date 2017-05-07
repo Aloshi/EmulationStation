@@ -21,6 +21,9 @@ public:
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
+	inline bool getHasFavorites() const { return mHasFavorites; }	
+	inline bool getHasKidGames() const { return mHasKidGames; }
+
 
 	inline const std::vector<PlatformIds::PlatformId>& getPlatformIds() const { return mPlatformIds; }
 	inline bool hasPlatformId(PlatformIds::PlatformId id) { return std::find(mPlatformIds.begin(), mPlatformIds.end(), id) != mPlatformIds.end(); }
@@ -29,10 +32,13 @@ public:
 
 	std::string getGamelistPath(bool forWrite) const;
 	bool hasGamelist() const;
+
+	bool isValidFilter() const;	// Checks if the current filter setting has any system with valid items left.
+
 	std::string getThemePath() const;
 	
-	unsigned int getGameCount() const;
-
+	unsigned int getGameCount(bool filter = false) const;
+	
 	void launchGame(Window* window, FileData* game);
 
 	static void deleteSystems();
@@ -40,7 +46,8 @@ public:
 	static void writeExampleConfig(const std::string& path);
 	static std::string getConfigPath(bool forWrite); // if forWrite, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 
-	static std::vector<SystemData*> sSystemVector;
+	static std::vector<SystemData*> sSystemVector;		   // the complete set of systems
+	static std::vector<SystemData*> sFilteredSystemVector; // the remaining set of systems, once filtered
 
 	inline std::vector<SystemData*>::const_iterator getIterator() const { return std::find(sSystemVector.begin(), sSystemVector.end(), this); };
 	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.rbegin(), sSystemVector.rend(), this); };
@@ -60,7 +67,7 @@ public:
 		if(it == sSystemVector.rend()) it = sSystemVector.rbegin();
 		return *it;
 	}
-
+	
 	// Load or re-load theme.
 	void loadTheme();
 
@@ -73,6 +80,9 @@ private:
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+
+	bool mHasFavorites;
+	bool mHasKidGames;
 
 	void populateFolder(FileData* folder);
 

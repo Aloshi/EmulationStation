@@ -2,6 +2,7 @@
 #include "ThemeData.h"
 #include "Window.h"
 #include "views/ViewController.h"
+#include "Settings.h"
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
 	mGrid(window)
@@ -9,7 +10,6 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mGrid.setPosition(0, mSize.y() * 0.2f);
 	mGrid.setSize(mSize.x(), mSize.y() * 0.8f);
 	addChild(&mGrid);
-
 	populateList(root->getChildren());
 }
 

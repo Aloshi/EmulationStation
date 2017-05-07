@@ -14,6 +14,7 @@
 #include "FileSorts.h"
 
 std::vector<SystemData*> SystemData::sSystemVector;
+std::vector<SystemData*> SystemData::sFilteredSystemVector;
 
 namespace fs = boost::filesystem;
 
@@ -53,7 +54,7 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 SystemData::~SystemData()
 {
 	//save changed game data back to xml
-	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
+	if(!Settings::getInstance()->getBool("IgnoreGamelist") && Settings::getInstance()->getBool("SaveGamelistsOnExit"))
 	{
 		updateGamelist(this);
 	}
@@ -123,9 +124,7 @@ void SystemData::launchGame(Window* window, FileData* game)
 	command = strreplace(command, "%ROM_RAW%", rom_raw);
 
 	LOG(LogInfo) << "	" << command;
-	std::cout << "==============================================\n";
 	int exitCode = runSystemCommand(command);
-	std::cout << "==============================================\n";
 
 	if(exitCode != 0)
 	{
@@ -200,7 +199,7 @@ void SystemData::populateFolder(FileData* folder)
 			populateFolder(newFolder);
 
 			//ignore folders that do not contain games
-			if(newFolder->getChildren().size() == 0)
+			if(newFolder->getChildrenByFilename().size() == 0)
 				delete newFolder;
 			else
 				folder->addChild(newFolder);
@@ -313,7 +312,7 @@ bool SystemData::loadConfig()
 		path = genericPath.generic_string();
 
 		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
-		if(newSys->getRootFolder()->getChildren().size() == 0)
+		if(newSys->getRootFolder()->getChildrenByFilename().size() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";
 			delete newSys;
@@ -426,9 +425,9 @@ bool SystemData::hasGamelist() const
 	return (fs::exists(getGamelistPath(false)));
 }
 
-unsigned int SystemData::getGameCount() const
+unsigned int SystemData::getGameCount(bool filter) const
 {
-	return mRootFolder->getFilesRecursive(GAME).size();
+	return mRootFolder->getFilesRecursive(GAME,filter).size();
 }
 
 void SystemData::loadTheme()
@@ -443,9 +442,30 @@ void SystemData::loadTheme()
 	try
 	{
 		mTheme->loadFile(path);
+		mHasFavorites = mTheme->getHasFavoritesInTheme();
+		mHasKidGames = mTheme->getHasKidGamesInTheme();
 	} catch(ThemeException& e)
 	{
 		LOG(LogError) << e.what();
 		mTheme = std::make_shared<ThemeData>(); // reset to empty
 	}
+}
+
+// This function returns true when there is at least a single system with a valid item.
+bool SystemData::isValidFilter() const
+{
+	LOG(LogDebug) << "SystemData::isValidFilter()";
+	bool found = false;
+				
+	for(auto it = sSystemVector.begin(); it != sSystemVector.end(); it++) {
+		if( (*it)->getGameCount(true) > 0 ) {
+			found = true;
+			LOG(LogDebug) << "  Valid system found!";
+			break;
+		}
+	}
+	if (!found){
+		LOG(LogDebug) << "  No valid system found.";
+	}
+	return found;
 }

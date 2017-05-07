@@ -15,10 +15,13 @@ Eigen::Affine3f roundMatrix(const Eigen::Affine3f& mat);
 Eigen::Vector3f roundVector(const Eigen::Vector3f& vec);
 Eigen::Vector2f roundVector(const Eigen::Vector2f& vec);
 
+#if defined(_WIN32) && _MSC_VER < 1800
 float round(float num);
+#endif
 
 std::string getCanonicalPath(const std::string& str);
 
+boost::filesystem::path removeCommonPathUsingStrings(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains);
 // example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
 boost::filesystem::path removeCommonPath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains);
 

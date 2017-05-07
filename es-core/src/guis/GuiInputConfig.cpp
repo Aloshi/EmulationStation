@@ -7,24 +7,126 @@
 #include "components/ButtonComponent.h"
 #include "Util.h"
 
-static const int inputCount = 10;
-static const char* inputName[inputCount] = { "Up", "Down", "Left", "Right", "A", "B", "Start", "Select", "PageUp", "PageDown" };
-static const bool inputSkippable[inputCount] = { false, false, false, false, false, false, false, false, true, true };
-static const char* inputDispName[inputCount] = { "UP", "DOWN", "LEFT", "RIGHT", "A", "B", "START", "SELECT", "PAGE UP", "PAGE DOWN" };
-static const char* inputIcon[inputCount] = { ":/help/dpad_up.svg", ":/help/dpad_down.svg", ":/help/dpad_left.svg", ":/help/dpad_right.svg", 
-											":/help/button_a.svg", ":/help/button_b.svg", ":/help/button_start.svg", ":/help/button_select.svg", 
-											":/help/button_l.svg", ":/help/button_r.svg" };
+static const int inputCount = 24;
+static const char* inputName[inputCount] =
+{
+	"Up",
+	"Down",
+	"Left",
+	"Right",
+	"Start",
+	"Select",
+	"A",
+	"B",
+	"X",
+	"Y",
+	"LeftShoulder",
+	"RightShoulder",
+	"LeftTrigger",
+	"RightTrigger",
+	"LeftThumb",
+	"RightThumb",
+	"LeftAnalogUp",
+	"LeftAnalogDown",
+	"LeftAnalogLeft",
+	"LeftAnalogRight",
+	"RightAnalogUp",
+	"RightAnalogDown",
+	"RightAnalogLeft",
+	"RightAnalogRight"
+};
+static const bool inputSkippable[inputCount] =
+{
+	false,
+	false,
+	false,
+	false,
+	true,
+	true,
+	false,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true,
+	true
+};
+static const char* inputDispName[inputCount] =
+{
+	"D-PAD UP",
+	"D-PAD DOWN",
+	"D-PAD LEFT",
+	"D-PAD RIGHT",
+	"START",
+	"SELECT",
+	"A",
+	"B",
+	"X",
+	"Y",
+	"LEFT SHOULDER",
+	"RIGHT SHOULDER",
+	"LEFT TRIGGER",
+	"RIGHT TRIGGER",
+	"LEFT THUMB",
+	"RIGHT THUMB",
+	"LEFT ANALOG UP",
+	"LEFT ANALOG DOWN",
+	"LEFT ANALOG LEFT",
+	"LEFT ANALOG RIGHT",
+	"RIGHT ANALOG UP",
+	"RIGHT ANALOG DOWN",
+	"RIGHT ANALOG LEFT",
+	"RIGHT ANALOG RIGHT"
+};
+static const char* inputIcon[inputCount] =
+{
+	":/help/dpad_up.svg",
+	":/help/dpad_down.svg",
+	":/help/dpad_left.svg",
+	":/help/dpad_right.svg",
+	":/help/button_start.svg",
+	":/help/button_select.svg",
+	":/help/button_a.svg",
+	":/help/button_b.svg",
+	":/help/button_x.svg",
+	":/help/button_y.svg",
+	":/help/button_l.svg",
+	":/help/button_r.svg",
+	":/help/button_l.svg",
+	":/help/button_r.svg",
+	":/help/analog_thumb.svg",
+	":/help/analog_thumb.svg",
+	":/help/analog_up.svg",
+	":/help/analog_down.svg",
+	":/help/analog_left.svg",
+	":/help/analog_right.svg",
+	":/help/analog_up.svg",
+	":/help/analog_down.svg",
+	":/help/analog_left.svg",
+	":/help/analog_right.svg"
+};
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.
 
 using namespace Eigen;
 
-#define HOLD_TO_SKIP_MS 5000
+#define HOLD_TO_SKIP_MS 1000
 
 GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfigureAll, const std::function<void()>& okCallback) : GuiComponent(window), 
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 7)), 
-	mTargetConfig(target), mHoldingInput(false)
+	mTargetConfig(target), mHoldingInput(false), mBusyAnim(window)
 {
 	LOG(LogInfo) << "Configuring device " << target->getDeviceId() << " (" << target->getDeviceName() << ").";
 
@@ -174,6 +276,8 @@ void GuiInputConfig::onSizeChanged()
 	//mGrid.setRowHeightPerc(4, 0.03f);
 	mGrid.setRowHeightPerc(5, (mList->getRowHeight(0) * 5 + 2) / mSize.y());
 	mGrid.setRowHeightPerc(6, mButtonGrid->getSize().y() / mSize.y());
+
+	mBusyAnim.setSize(mSize);
 }
 
 void GuiInputConfig::update(int deltaTime)

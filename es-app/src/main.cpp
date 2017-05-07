@@ -55,6 +55,9 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--no-exit") == 0)
 		{
 			Settings::getInstance()->setBool("ShowExit", false);
+		}else if(strcmp(argv[i], "--no-splash") == 0)
+		{
+			Settings::getInstance()->setBool("SplashScreen", false);
 		}else if(strcmp(argv[i], "--debug") == 0)
 		{
 			Settings::getInstance()->setBool("Debug", true);
@@ -71,6 +74,10 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--scrape") == 0)
 		{
 			scrape_cmdline = true;
+		}else if(strcmp(argv[i], "--max-vram") == 0)
+		{
+			int maxVRAM = atoi(argv[i + 1]);
+			Settings::getInstance()->setInt("MaxVRAM", maxVRAM);
 		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 #ifdef WIN32
@@ -91,10 +98,12 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n"
 				"--draw-framerate		display the framerate\n"
 				"--no-exit			don't show the exit option in the menu\n"
+				"--no-splash			don't show the splash screen\n"
 				"--debug				more logging, show console on Windows\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
 				"--vsync [1/on or 0/off]		turn vsync on or off (default is on)\n"
+				"--max-vram [size]		Max VRAM to use in Mb before swapping. 0 for unlimited\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help
@@ -225,8 +234,8 @@ int main(int argc, char* argv[])
 		std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
 		LOG(LogInfo) << "Checking available OpenGL extensions...";
 		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
-
-		window.renderLoadingScreen();
+		if(Settings::getInstance()->getBool("SplashScreen"))
+			window.renderLoadingScreen();
 	}
 
 	const char* errorMsg = NULL;

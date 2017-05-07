@@ -1,6 +1,6 @@
 #include "Settings.h"
 #include "Log.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include "platform.h"
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
@@ -8,17 +8,17 @@
 Settings* Settings::sInstance = NULL;
 
 // these values are NOT saved to es_settings.xml
-// since they're set through command-line arguments, and not the in-program settings menu
+// since they're set through command-line arguments, , and not the in-program settings menu
 std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
 	("DebugText")
-	("ParseGamelistOnly")
 	("ShowExit")
 	("Windowed")
 	("VSync")
 	("HideConsole")
-	("IgnoreGamelist");
+	("IgnoreGamelist")
+	("SplashScreen");
 
 Settings::Settings()
 {
@@ -44,6 +44,7 @@ void Settings::setDefaults()
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
 	mBoolMap["Windowed"] = false;
+	mBoolMap["SplashScreen"] = true;
 
 #ifdef _RPI_
 	// don't enable VSync by default on the Pi, since it already 
@@ -59,6 +60,8 @@ void Settings::setDefaults()
 	mBoolMap["IgnoreGamelist"] = false;
 	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
+	mBoolMap["SaveGamelistsOnExit"] = true;
+	mBoolMap["FavoritesOnly"] = false;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
@@ -67,11 +70,15 @@ void Settings::setDefaults()
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
+	mIntMap["MaxVRAM"] = 100;
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
+	mStringMap["UIMode"] = "Full";
+	mStringMap["SortMode"] = "filename, ascending";
+	mStringMap["UIMode_passkey"] = "uuddlrlrba";	// "↑↑↓↓←→←→ba"
 }
 
 template <typename K, typename V>

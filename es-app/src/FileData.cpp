@@ -1,5 +1,7 @@
 #include "FileData.h"
 #include "SystemData.h"
+#include "Log.h"
+#include "Settings.h"
 
 namespace fs = boost::filesystem;
 
@@ -48,7 +50,7 @@ FileData::FileData(FileType type, const fs::path& path, SystemData* system)
 {
 	// metadata needs at least a name field (since that's what getName() will return)
 	if(metadata.get("name").empty())
-		metadata.set("name", getCleanName());
+		metadata.set("name", getDisplayName());
 }
 
 FileData::~FileData()
@@ -56,17 +58,21 @@ FileData::~FileData()
 	if(mParent)
 		mParent->removeChild(this);
 
-	while(mChildren.size())
-		delete mChildren.back();
+		mChildren.clear();
 }
 
-std::string FileData::getCleanName() const
+std::string FileData::getDisplayName() const
 {
 	std::string stem = mPath.stem().generic_string();
 	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
 		stem = PlatformIds::getCleanMameName(stem.c_str());
 
-	return removeParenthesis(stem);
+	return stem;
+}
+
+std::string FileData::getCleanName() const
+{
+	return removeParenthesis(this->getDisplayName());
 }
 
 const std::string& FileData::getThumbnailPath() const
@@ -77,20 +83,84 @@ const std::string& FileData::getThumbnailPath() const
 		return metadata.get("image");
 }
 
+std::vector<FileData*> FileData::getChildren(bool filter) const
+{
+	std::vector<FileData*> fileList = mChildren;
+	if (filter)		//filter out unwanted items from mChildren
+	{
+		bool filterHidden = Settings::getInstance()->getString("UIMode") != "Full";
+		bool filterFav    = Settings::getInstance()->getBool("FavoritesOnly");
+		bool filterKid    = Settings::getInstance()->getString("UIMode") == "Kid";
 
-std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask) const
+		if (filterHidden)
+			fileList = filterFileData(fileList, "hidden", "false");
+		if (filterFav)
+			fileList = filterFileData(fileList, "favorite", "true");
+		if (filterKid)
+			fileList = filterFileData(fileList, "kidgame", "true");
+	}
+
+	return fileList;
+}
+
+const std::string& FileData::getVideoPath() const
+{
+	if (mType == GAME)
+	{
+		return metadata.get("video");
+	}
+	else
+	{
+		static std::string empty;
+		return empty;
+	}
+}
+
+const std::string& FileData::getMarqueePath() const
+{
+	if (mType == GAME)
+	{
+		return metadata.get("marquee");
+	}
+	else
+	{
+		static std::string empty;
+		return empty;
+	}
+}
+
+
+std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool filter) const
+{
+	LOG(LogDebug) << "FileData::getFilesRecursive(" << filter << ")";
+
+	std::vector<FileData*> allfiles = getChildren(filter);
+	std::vector<FileData*> fileList;
+
+	for(auto it = allfiles.begin(); it != allfiles.end(); it++)
+	{
+		if((*it)->getType() & typeMask)
+			fileList.push_back(*it);
+
+		if(((*it)->getType() == FOLDER) && (*it)->getChildren(filter).size() > 1) {
+			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask, filter);
+			fileList.insert(fileList.end(), subchildren.cbegin(), subchildren.cend());
+		}
+	}
+
+	LOG(LogDebug) << "FileData::getFilesRecursive():returning " << fileList.size() << " games";
+	return fileList;
+}
+
+std::vector<FileData*> FileData::filterFileData(std::vector<FileData*> in, std::string filtername, std::string passString) const
 {
 	std::vector<FileData*> out;
 
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	for (auto it = in.begin(); it != in.end(); it++)
 	{
-		if((*it)->getType() & typeMask)
-			out.push_back(*it);
-		
-		if((*it)->getChildren().size() > 0)
+		if (((*it)->getType() == FOLDER) || ((*it)->metadata.get(filtername).compare(passString) == 0))
 		{
-			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask);
-			out.insert(out.end(), subchildren.cbegin(), subchildren.cend());
+			out.push_back(*it);
 		}
 	}
 
@@ -102,15 +172,20 @@ void FileData::addChild(FileData* file)
 	assert(mType == FOLDER);
 	assert(file->getParent() == NULL);
 
-	mChildren.push_back(file);
-	file->mParent = this;
+	const std::string key = file->getPath().filename().string();
+	if (mChildrenByFilename.find(key) == mChildrenByFilename.end())
+	{
+		mChildrenByFilename[key] = file;
+		mChildren.push_back(file);
+		file->mParent = this;
+	}
 }
 
 void FileData::removeChild(FileData* file)
 {
 	assert(mType == FOLDER);
 	assert(file->getParent() == this);
-
+	mChildrenByFilename.erase(file->getPath().filename().string());
 	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
 	{
 		if(*it == file)
@@ -122,8 +197,10 @@ void FileData::removeChild(FileData* file)
 
 	// File somehow wasn't in our children.
 	assert(false);
+
 }
 
+// This function recursively sorts the Filelist, based on the selected sort type
 void FileData::sort(ComparisonFunction& comparator, bool ascending)
 {
 	std::sort(mChildren.begin(), mChildren.end(), comparator);

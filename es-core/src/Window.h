@@ -41,6 +41,10 @@ private:
 	void onSleep();
 	void onWake();
 
+	// Returns true if at least one component on the stack is processing
+	bool isProcessing();
+	void renderScreenSaver();
+
 	HelpComponent* mHelp;
 	ImageComponent* mBackgroundOverlay;
 
@@ -61,4 +65,8 @@ private:
 	unsigned int mTimeSinceLastInput;
 
 	bool mRenderedHelpPrompts;
+	
+	void ListenForPassKeySequence(InputConfig* config, Input input);
+	unsigned int mPasskeyCounter;
+	bool mRestartNeeded;
 };

@@ -42,9 +42,9 @@ public:
 	virtual void onPositionChanged() {};
 
 	Eigen::Vector2f getSize() const;
-    void setSize(const Eigen::Vector2f& size);
-    void setSize(float w, float h);
-    virtual void onSizeChanged() {};
+	void setSize(const Eigen::Vector2f& size);
+	void setSize(float w, float h);
+	virtual void onSizeChanged() {};
 	
 	void setParent(GuiComponent* parent);
 	GuiComponent* getParent() const;
@@ -77,6 +77,9 @@ public:
 
 	virtual void onFocusGained() {};
 	virtual void onFocusLost() {};
+	
+	virtual void onShow();
+	virtual void onHide();
 
 	// Default implementation just handles <pos> and <size> tags as normalized float pairs.
 	// You probably want to keep this behavior for any derived classes as well as add your own.
@@ -89,6 +92,11 @@ public:
 	void updateHelpPrompts();
 	
 	virtual HelpStyle getHelpStyle();
+
+	// Returns true if the component is busy doing background processing (e.g. HTTP downloads)
+	bool isProcessing() const;
+
+	virtual inline void setScrollDir(int dir) {}
 
 protected:
 	void renderChildren(const Eigen::Affine3f& transform) const;
@@ -103,6 +111,8 @@ protected:
 
 	Eigen::Vector3f mPosition;
 	Eigen::Vector2f mSize;
+
+	bool mIsProcessing;
 
 public:
 	const static unsigned char MAX_ANIMATIONS = 4;

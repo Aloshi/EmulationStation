@@ -6,7 +6,8 @@
 #include "ThemeData.h"
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
-	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity())
+	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity()),
+	mIsProcessing(false)
 {
 	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
 		mAnimationMap[i] = NULL;
@@ -94,14 +95,14 @@ Eigen::Vector2f GuiComponent::getSize() const
 
 void GuiComponent::setSize(const Eigen::Vector2f& size)
 {
-    mSize = size;
-    onSizeChanged();
+	mSize = size;
+	onSizeChanged();
 }
 
 void GuiComponent::setSize(float w, float h)
 {
 	mSize << w, h;
-    onSizeChanged();
+	onSizeChanged();
 }
 
 //Children stuff.
@@ -185,6 +186,7 @@ const Eigen::Affine3f& GuiComponent::getTransform()
 
 void GuiComponent::setValue(const std::string& value)
 {
+	LOG(LogDebug)<< "GuiComponent::setValue(), this is an empty function, use overrides instead!";
 }
 
 std::string GuiComponent::getValue() const
@@ -338,4 +340,21 @@ void GuiComponent::updateHelpPrompts()
 HelpStyle GuiComponent::getHelpStyle()
 {
 	return HelpStyle();
+}
+
+bool GuiComponent::isProcessing() const
+{
+	return mIsProcessing;
+}
+
+void GuiComponent::onShow()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onShow();
+}
+
+void GuiComponent::onHide()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onHide();
 }

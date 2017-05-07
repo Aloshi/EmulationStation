@@ -42,6 +42,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoComponent.h
 
 	# Guis
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.h
@@ -52,8 +53,9 @@ set(CORE_HEADERS
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureData.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureDataManager.h
 
 	# Embedded assets (needed by ResourceManager)
 	${emulationstation-all_SOURCE_DIR}/data/Resources.h
@@ -96,6 +98,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoComponent.cpp
 
 	# Guis
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.cpp
@@ -106,8 +109,9 @@ set(CORE_SOURCES
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureData.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureDataManager.cpp
 )
 
 set(EMBEDDED_ASSET_SOURCES
@@ -121,6 +125,11 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/frame_png.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
 
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_thumb_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_x_svg.cpp

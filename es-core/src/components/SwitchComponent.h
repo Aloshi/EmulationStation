@@ -15,11 +15,12 @@ public:
 	void onSizeChanged() override;
 
 	bool getState() const;
+	std::string getValue() const;
 	void setState(bool state);
+	void setValue(const std::string& statestring) override;
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
-
-private:
+	private:
 	void onStateChanged();
 
 	ImageComponent mImage;

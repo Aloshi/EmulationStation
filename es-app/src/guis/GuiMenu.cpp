@@ -17,8 +17,6 @@
 #include "components/OptionListComponent.h"
 #include "components/MenuComponent.h"
 #include "VolumeControl.h"
-#include "scrapers/GamesDBScraper.h"
-#include "scrapers/TheArchiveScraper.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
@@ -33,7 +31,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// [version]
 
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
-	addEntry("SCRAPER", 0x777777FF, true, 
+	
+	if(Settings::getInstance()->getString("UIMode") == "Full")
+	{
+		addEntry("SCRAPER", 0x777777FF, true, 
 		[this, openScrapeNow] { 
 			auto s = new GuiSettings(mWindow, "SCRAPER");
 
@@ -65,30 +66,74 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addRow(row);
 
 			mWindow->pushGui(s);
-	});
+		});
+	}
 
 	addEntry("SOUND SETTINGS", 0x777777FF, true, 
-		[this] {
-			auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
+	[this] {
+		auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
 
-			// volume
-			auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
-			volume->setValue((float)VolumeControl::getInstance()->getVolume());
-			s->addWithLabel("SYSTEM VOLUME", volume);
-			s->addSaveFunc([volume] { VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); });
-			
-			// disable sounds
+		// volume
+		auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
+		volume->setValue((float)VolumeControl::getInstance()->getVolume());
+		s->addWithLabel("SYSTEM VOLUME", volume);
+		s->addSaveFunc([volume] { VolumeControl::getInstance()->setVolume((int)round(volume->getValue())); });
+
+		if(Settings::getInstance()->getString("UIMode") == "Full")
+		{
+			// enable / disable sounds
 			auto sounds_enabled = std::make_shared<SwitchComponent>(mWindow);
 			sounds_enabled->setState(Settings::getInstance()->getBool("EnableSounds"));
 			s->addWithLabel("ENABLE SOUNDS", sounds_enabled);
 			s->addSaveFunc([sounds_enabled] { Settings::getInstance()->setBool("EnableSounds", sounds_enabled->getState()); });
-
-			mWindow->pushGui(s);
+		}
+		mWindow->pushGui(s);
 	});
 
-	addEntry("UI SETTINGS", 0x777777FF, true,
-		[this] {
+	if (Settings::getInstance()->getString("UIMode") == "Full")
+	{
+		addEntry("UI SETTINGS", 0x777777FF, true,
+			[this] {
 			auto s = new GuiSettings(mWindow, "UI SETTINGS");
+
+			auto UImodeSelection = std::make_shared< OptionListComponent<std::string> >(mWindow, "UI MODE", false);
+			std::vector<std::string> UImodes;
+			UImodes.push_back("Full");
+			UImodes.push_back("Kiosk");
+			UImodes.push_back("Kid");
+			for (auto it = UImodes.begin(); it != UImodes.end(); it++)
+				UImodeSelection->add(*it, *it, Settings::getInstance()->getString("UIMode") == *it);
+			s->addWithLabel("UI MODE", UImodeSelection);
+			Window* window = mWindow;
+			s->addSaveFunc([UImodeSelection, window]
+			{
+				LOG(LogDebug) << "Changing UI mode to" << UImodeSelection->getSelected();
+
+				bool needReload = false;
+				if (Settings::getInstance()->getString("UIMode") != UImodeSelection->getSelected())
+				{
+					needReload = true;
+
+					// First write to settings, in order for filtering to work
+					Settings::getInstance()->setString("UIMode", UImodeSelection->getSelected());
+					Settings::getInstance()->setBool("FavoritesOnly", false); // reset favoritesOnly option upon mode change
+
+					LOG(LogDebug) << "Checking if the proposed UI mode has anything at all to show:";
+					if (!SystemData::sSystemVector.at(0)->isValidFilter()) // check if there is anything at all to show in any system, otherwise revert
+					{
+						LOG(LogDebug) << "Nothing to show in selected mode (" << UImodeSelection->getSelected() << "), resetting to full";
+						window->pushGui(new GuiMsgBox(window, "The selected view mode has nothing to show,\n returning to UI mode = FULL",
+							"OK", nullptr));
+						Settings::getInstance()->setString("UIMode", "Full");
+						needReload = false;
+					}
+				}
+				if (needReload)
+				{
+					ViewController::get()->reloadAll();
+					ViewController::get()->goToStart();
+				}
+			});
 
 			// screensaver time
 			auto screensaver_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
@@ -101,9 +146,9 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			std::vector<std::string> screensavers;
 			screensavers.push_back("dim");
 			screensavers.push_back("black");
-			for(auto it = screensavers.begin(); it != screensavers.end(); it++)
+			for (auto it = screensavers.begin(); it != screensavers.end(); it++)
 				screensaver_behavior->add(*it, *it, Settings::getInstance()->getString("ScreenSaverBehavior") == *it);
-			s->addWithLabel("SCREENSAVER BEHAVIOR", screensaver_behavior);
+			s->addWithLabel("SCREENSAVER TYPE", screensaver_behavior);
 			s->addSaveFunc([screensaver_behavior] { Settings::getInstance()->setString("ScreenSaverBehavior", screensaver_behavior->getSelected()); });
 
 			// framerate
@@ -129,7 +174,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			std::vector<std::string> transitions;
 			transitions.push_back("fade");
 			transitions.push_back("slide");
-			for(auto it = transitions.begin(); it != transitions.end(); it++)
+			for (auto it = transitions.begin(); it != transitions.end(); it++)
 				transition_style->add(*it, *it, Settings::getInstance()->getString("TransitionStyle") == *it);
 			s->addWithLabel("TRANSITION STYLE", transition_style);
 			s->addSaveFunc([transition_style] { Settings::getInstance()->setString("TransitionStyle", transition_style->getSelected()); });
@@ -137,84 +182,128 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			// theme set
 			auto themeSets = ThemeData::getThemeSets();
 
-			if(!themeSets.empty())
+			if (!themeSets.empty())
 			{
 				auto selectedSet = themeSets.find(Settings::getInstance()->getString("ThemeSet"));
-				if(selectedSet == themeSets.end())
+				if (selectedSet == themeSets.end())
 					selectedSet = themeSets.begin();
 
 				auto theme_set = std::make_shared< OptionListComponent<std::string> >(mWindow, "THEME SET", false);
-				for(auto it = themeSets.begin(); it != themeSets.end(); it++)
+				for (auto it = themeSets.begin(); it != themeSets.end(); it++)
 					theme_set->add(it->first, it->first, it == selectedSet);
 				s->addWithLabel("THEME SET", theme_set);
 
 				Window* window = mWindow;
-				s->addSaveFunc([window, theme_set] 
+				s->addSaveFunc([window, theme_set]
 				{
 					bool needReload = false;
-					if(Settings::getInstance()->getString("ThemeSet") != theme_set->getSelected())
+					if (Settings::getInstance()->getString("ThemeSet") != theme_set->getSelected())
 						needReload = true;
 
 					Settings::getInstance()->setString("ThemeSet", theme_set->getSelected());
 
-					if(needReload)
+					if (needReload)
 						ViewController::get()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
 				});
 			}
+			mWindow->pushGui(s);
+		});
+
+		addEntry("OTHER SETTINGS", 0x777777FF, true,
+			[this] {
+			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
+
+			// Save GameList.xml files when exiting ES
+			auto save_gamelists = std::make_shared<SwitchComponent>(mWindow);
+			save_gamelists->setState(Settings::getInstance()->getBool("SaveGamelistsOnExit"));
+			s->addWithLabel("SAVE METADATA ON EXIT", save_gamelists);
+			s->addSaveFunc([save_gamelists] { Settings::getInstance()->setBool("SaveGamelistsOnExit", save_gamelists->getState()); });
+
+			// Only read in GameList.xml files, skip file parsing.
+			auto parse_gamelists = std::make_shared<SwitchComponent>(mWindow);
+			parse_gamelists->setState(Settings::getInstance()->getBool("ParseGamelistOnly"));
+			s->addWithLabel("PARSE GAMESLISTS ONLY", parse_gamelists);
+			s->addSaveFunc([parse_gamelists] { Settings::getInstance()->setBool("ParseGamelistOnly", parse_gamelists->getState()); });
+
+			// Set maximum VRAM
+			auto max_vram = std::make_shared<SliderComponent>(mWindow, 0.f, 1000.f, 10.f, "Mb");
+			max_vram->setValue((float)(Settings::getInstance()->getInt("MaxVRAM")));
+			s->addWithLabel("VRAM LIMIT", max_vram);
+			s->addSaveFunc([max_vram] { Settings::getInstance()->setInt("MaxVRAM", (int)round(max_vram->getValue())); });
 
 			mWindow->pushGui(s);
-	});
+		});
 
-	addEntry("CONFIGURE INPUT", 0x777777FF, true, 
-		[this] { 
-			mWindow->pushGui(new GuiDetectDevice(mWindow, false, nullptr));
-	});
-
-	addEntry("QUIT", 0x777777FF, true, 
-		[this] {
-			auto s = new GuiSettings(mWindow, "QUIT");
-			
+		addEntry("CONFIGURE INPUT", 0x777777FF, true,
+			[this] {
 			Window* window = mWindow;
+			window->pushGui(new GuiMsgBox(window, "ARE YOU SURE YOU WANT TO CONFIGURE INPUT?", "YES",
+				[window] {
+				window->pushGui(new GuiDetectDevice(window, false, nullptr));
+			}, "NO", nullptr)
+			);
+		});
+	}
 
-			ComponentListRow row;
-			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES", 
-				[] { 
-					if(runRestartCommand() != 0)
-						LOG(LogWarning) << "Restart terminated with non-zero result!";
-				}, "NO", nullptr));
-			});
-			row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-			s->addRow(row);
+	addEntry("QUIT", 0x777777FF, true,
+		[this] {
+		auto s = new GuiSettings(mWindow, "QUIT");
 
+		Window* window = mWindow;
+
+		ComponentListRow row;
+		row.makeAcceptInputHandler([window] {
+			window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
+				[] {
+				if (quitES("/tmp/es-restart") != 0)
+					LOG(LogWarning) << "Restart terminated with non-zero result!";
+			}, "NO", nullptr));
+		});
+		row.addElement(std::make_shared<TextComponent>(window, "RESTART EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		s->addRow(row);
+
+		row.elements.clear();
+		row.makeAcceptInputHandler([window] {
+			window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
+				[] {
+				if (quitES("/tmp/es-sysrestart") != 0)
+					LOG(LogWarning) << "Restart terminated with non-zero result!";
+			}, "NO", nullptr));
+		});
+		row.addElement(std::make_shared<TextComponent>(window, "RESTART SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		s->addRow(row);
+
+		row.elements.clear();
+		row.makeAcceptInputHandler([window] {
+			window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
+				[] {
+				if (quitES("/tmp/es-shutdown") != 0)
+					LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+			}, "NO", nullptr));
+		});
+		row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		s->addRow(row);
+
+		if (Settings::getInstance()->getBool("ShowExit") &&
+			((Settings::getInstance()->getString("UIMode") == "Full") ||
+			(Settings::getInstance()->getBool("Debug"))))
+		{
 			row.elements.clear();
 			row.makeAcceptInputHandler([window] {
-				window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES", 
-				[] { 
-					if(runShutdownCommand() != 0)
-						LOG(LogWarning) << "Shutdown terminated with non-zero result!";
+				window->pushGui(new GuiMsgBox(window, "REALLY QUIT?", "YES",
+					[] {
+					SDL_Event ev;
+					ev.type = SDL_QUIT;
+					SDL_PushEvent(&ev);
 				}, "NO", nullptr));
 			});
-			row.addElement(std::make_shared<TextComponent>(window, "SHUTDOWN SYSTEM", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			s->addRow(row);
+		}
 
-			if(Settings::getInstance()->getBool("ShowExit"))
-			{
-				row.elements.clear();
-				row.makeAcceptInputHandler([window] {
-					window->pushGui(new GuiMsgBox(window, "REALLY QUIT?", "YES", 
-					[] { 
-						SDL_Event ev;
-						ev.type = SDL_QUIT;
-						SDL_PushEvent(&ev);
-					}, "NO", nullptr));
-				});
-				row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-				s->addRow(row);
-			}
-
-			mWindow->pushGui(s);
+		mWindow->pushGui(s);
 	});
+
 
 	mVersion.setFont(Font::get(FONT_SIZE_SMALL));
 	mVersion.setColor(0xC6C6C6FF);

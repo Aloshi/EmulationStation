@@ -4,16 +4,19 @@
 #include "AudioManager.h"
 #include "Log.h"
 #include "Settings.h"
+#include <algorithm>
 #include <iomanip>
 #include "components/HelpComponent.h"
 #include "components/ImageComponent.h"
+#include "platform.h"
+
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
-	mBackgroundOverlay->setImage(":/scroll_gradient.png");
+	mPasskeyCounter = 0;
 }
 
 Window::~Window()
@@ -65,6 +68,8 @@ bool Window::init(unsigned int width, unsigned int height)
 		return false;
 	}
 
+	mBackgroundOverlay->setImage(":/scroll_gradient.png");
+	
 	InputManager::getInstance()->init();
 
 	ResourceManager::getInstance()->reloadAll();
@@ -88,6 +93,11 @@ bool Window::init(unsigned int width, unsigned int height)
 
 void Window::deinit()
 {
+	// Hide all GUI elements on uninitialisation - this disable
+	for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+	{
+		(*i)->onHide();
+	}
 	InputManager::getInstance()->deinit();
 	ResourceManager::getInstance()->unloadAll();
 	Renderer::deinit();
@@ -127,6 +137,8 @@ void Window::input(InputConfig* config, Input input)
 		if(peekGui())
 			this->peekGui()->input(config, input);
 	}
+	
+	ListenForPassKeySequence(config, input);
 }
 
 void Window::update(int deltaTime)
@@ -153,11 +165,12 @@ void Window::update(int deltaTime)
 			ss << std::fixed << std::setprecision(2) << ((float)mFrameTimeElapsed / (float)mFrameCountElapsed) << "ms";
 
 			// vram
-			float textureVramUsageMb = TextureResource::getTotalMemUsage() / 1000.0f / 1000.0f;;
+			float textureVramUsageMb = TextureResource::getTotalMemUsage() / 1000.0f / 1000.0f;
+			float textureTotalUsageMb = TextureResource::getTotalTextureSize() / 1000.0f / 1000.0f;
 			float fontVramUsageMb = Font::getTotalMemUsage() / 1000.0f / 1000.0f;;
-			float totalVramUsageMb = textureVramUsageMb + fontVramUsageMb;
-			ss << "\nVRAM: " << totalVramUsageMb << "mb (texs: " << textureVramUsageMb << "mb, fonts: " << fontVramUsageMb << "mb)";
 
+			ss << "\nFont VRAM: " << fontVramUsageMb << " Tex VRAM: " << textureVramUsageMb <<
+				  " Tex Max: " << textureTotalUsageMb;
 			mFrameDataText = std::unique_ptr<TextCache>(mDefaultFonts.at(1)->buildTextCache(ss.str(), 50.f, 50.f, 0xFF00FFFF));
 		}
 
@@ -201,11 +214,16 @@ void Window::render()
 	}
 
 	unsigned int screensaverTime = (unsigned int)Settings::getInstance()->getInt("ScreenSaverTime");
-	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0 && mAllowSleep)
+	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 	{
-		// go to sleep
-		mSleeping = true;
-		onSleep();
+		renderScreenSaver();
+
+		if (!isProcessing() && mAllowSleep)
+		{
+			// go to sleep
+			mSleeping = true;
+			onSleep();
+		}
 	}
 }
 
@@ -230,7 +248,7 @@ void Window::renderLoadingScreen()
 	Renderer::setMatrix(trans);
 	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFFFF);
 
-	ImageComponent splash(this);
+	ImageComponent splash(this, true);
 	splash.setResize(Renderer::getScreenWidth() * 0.6f, 0.0f);
 	splash.setImage(":/splash.svg");
 	splash.setPosition((Renderer::getScreenWidth() - splash.getSize().x()) / 2, (Renderer::getScreenHeight() - splash.getSize().y()) / 2 * 0.6f);
@@ -325,12 +343,85 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 
 void Window::onSleep()
 {
-	Renderer::setMatrix(Eigen::Affine3f::Identity());
-	unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
-	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
 }
 
 void Window::onWake()
 {
 
+}
+
+bool Window::isProcessing()
+{
+	return count_if(mGuiStack.begin(), mGuiStack.end(), [](GuiComponent* c) { return c->isProcessing(); }) > 0;
+}
+
+void Window::renderScreenSaver()
+{
+	Renderer::setMatrix(Eigen::Affine3f::Identity());
+	unsigned char opacity = Settings::getInstance()->getString("ScreenSaverBehavior") == "dim" ? 0xA0 : 0xFF;
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x00000000 | opacity);
+}
+
+// This function reads the current input to listen for the passkey
+// sequence to unlock the UI mode.
+// the progress is saved in mPasskeyCounter
+// supported inputs: 
+// ↑ = u, ↓ = d, ← = l, → = r, A, B, X, Y		  
+// default passkeyseq = "↑↑↓↓←→←→ba";
+void Window::ListenForPassKeySequence(InputConfig* config, Input input)
+{
+	//LOG(LogDebug) << "Window::ListenForPassKeySequence(), mPasskeyCounter ="<< mPasskeyCounter;
+	std::string passkeyseq = Settings::getInstance()->getString("UIMode_passkey");
+	
+	if(!input.value){
+		return; // its an event, but prob the keyup/release: change nothing
+	}
+		
+	if(config->isMappedTo("down", input) && (passkeyseq[ mPasskeyCounter ] == 'd'))
+	{
+		++mPasskeyCounter;
+	}else if(config->isMappedTo("up", input) && (passkeyseq[mPasskeyCounter] == 'u'))
+	{
+		++mPasskeyCounter;
+	}else if(config->isMappedTo("left", input) && (passkeyseq[mPasskeyCounter] == 'l'))
+	{
+		++mPasskeyCounter;
+	}else if(config->isMappedTo("right", input) && (passkeyseq[mPasskeyCounter] == 'r'))
+	{
+		++mPasskeyCounter;
+	}else if(config->isMappedTo("a", input) && (passkeyseq[mPasskeyCounter] == 'a'))
+	{
+		++mPasskeyCounter;
+	}else if(config->isMappedTo("b", input) && (passkeyseq[mPasskeyCounter] == 'b'))
+	{
+		++mPasskeyCounter;
+	}else if(config->isMappedTo("x", input) && (passkeyseq[mPasskeyCounter] == 'x'))
+	{
+		++mPasskeyCounter;
+	}else if(config->isMappedTo("y", input) && (passkeyseq[mPasskeyCounter] == 'y'))
+	{
+		++mPasskeyCounter;
+	}else
+	{
+		mPasskeyCounter = 0; // current input is incorrect, reset counter
+	}
+		
+	if (mPasskeyCounter >= (passkeyseq.length()))
+	{
+		// When we have reached the end of the list, trigger UI_mode unlock
+		LOG(LogDebug) << "Window::ListenForPassKeySequence(): Passkey sequence completed, switching UIMode to full";
+		Settings::getInstance()->setString("UIMode", "Full");
+		Settings::getInstance()->saveFile();
+		//mRestartNeeded = true;
+		mPasskeyCounter = 0;
+		while (true)
+		{
+		if(Settings::getInstance()->getString("UIMode") == "Full")
+			break;
+		}
+		
+		if(quitES("/tmp/es-restart") != 0)
+			LOG(LogWarning) << "Restart terminated with non-zero result!";
+
+	}
 }

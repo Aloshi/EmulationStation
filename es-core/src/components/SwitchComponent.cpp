@@ -41,9 +41,26 @@ bool SwitchComponent::getState() const
 	return mState;
 }
 
+std::string SwitchComponent::getValue() const
+{
+	return mState ?  "true" : "false";
+}
+
 void SwitchComponent::setState(bool state)
 {
 	mState = state;
+	onStateChanged();
+}
+
+void SwitchComponent::setValue(const std::string& statestring)
+{
+	if (statestring == "true")
+	{
+		mState = true;
+	}else
+	{
+		mState = false;
+	}
 	onStateChanged();
 }
 

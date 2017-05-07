@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
+#include <unordered_map>
 #include <string>
+#include <vector>
 #include <boost/filesystem.hpp>
 #include "MetaData.h"
 
@@ -18,7 +19,8 @@ enum FileChangeType
 	FILE_ADDED,
 	FILE_METADATA_CHANGED,
 	FILE_REMOVED,
-	FILE_SORTED
+	FILE_SORTED,
+	FILE_FILTERED
 };
 
 // Used for loading/saving gamelist.xml.
@@ -39,17 +41,24 @@ public:
 	inline FileType getType() const { return mType; }
 	inline const boost::filesystem::path& getPath() const { return mPath; }
 	inline FileData* getParent() const { return mParent; }
-	inline const std::vector<FileData*>& getChildren() const { return mChildren; }
+	inline const std::unordered_map<std::string, FileData*>& getChildrenByFilename() const { return mChildrenByFilename; }
 	inline SystemData* getSystem() const { return mSystem; }
 	
 	virtual const std::string& getThumbnailPath() const;
+	virtual const std::string& getVideoPath() const;
+	virtual const std::string& getMarqueePath() const;
 
-	std::vector<FileData*> getFilesRecursive(unsigned int typeMask) const;
-
+	std::vector<FileData*> getChildren(bool filter = false) const;
+	std::vector<FileData*> getFilesRecursive(unsigned int typeMask, bool filter = false) const;
+	std::vector<FileData*> filterFileData(std::vector<FileData*> in, std::string filtername, std::string passString) const;
+	
 	void addChild(FileData* file); // Error if mType != FOLDER
 	void removeChild(FileData* file); //Error if mType != FOLDER
 
-	// Returns our best guess at the "real" name for this file (will strip parenthesis and attempt to perform MAME name translation)
+	// Returns our best guess at the "real" name for this file (will attempt to perform MAME name translation)
+	std::string getDisplayName() const;
+
+	// As above, but also remove parenthesis
 	std::string getCleanName() const;
 
 	typedef bool ComparisonFunction(const FileData* a, const FileData* b);
@@ -73,5 +82,6 @@ private:
 	boost::filesystem::path mPath;
 	SystemData* mSystem;
 	FileData* mParent;
+	std::unordered_map<std::string,FileData*> mChildrenByFilename;
 	std::vector<FileData*> mChildren;
 };

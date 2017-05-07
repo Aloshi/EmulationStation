@@ -21,8 +21,12 @@ public:
 	// If a basic view detected a metadata change, it can request to recreate
 	// the current gamelist view (as it may change to be detailed).
 	void reloadGameListView(IGameListView* gamelist, bool reloadTheme = false);
-	inline void reloadGameListView(SystemData* system, bool reloadTheme = false) { reloadGameListView(getGameListView(system).get(), reloadTheme); }
+	inline void reloadGameListView(SystemData* system, bool reloadTheme = false) { reloadGameListView(getGameListView(system, true).get(), reloadTheme); }
+
+	void reloadSystemListView() const; 
 	void reloadAll(); // Reload everything with a theme.  Used when the "ThemeSet" setting changes.
+	void setInvalidGamesList(SystemData* system);
+	void setAllInvalidGamesList(SystemData* systemExclude);
 
 	// Navigation.
 	void goToNextGameList();
@@ -33,6 +37,7 @@ public:
 
 	void onFileChanged(FileData* file, FileChangeType change);
 
+	
 	// Plays a nice launch effect and launches the game at the end of it.
 	// Once the game terminates, plays a return effect.
 	void launch(FileData* game, Eigen::Vector3f centerCameraOn = Eigen::Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0));
@@ -65,7 +70,7 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 	virtual HelpStyle getHelpStyle() override;
 
-	std::shared_ptr<IGameListView> getGameListView(SystemData* system);
+	std::shared_ptr<IGameListView> getGameListView(SystemData* system, bool forceReload = false);
 	std::shared_ptr<SystemView> getSystemListView();
 
 private:
@@ -77,11 +82,14 @@ private:
 	
 	std::shared_ptr<GuiComponent> mCurrentView;
 	std::map< SystemData*, std::shared_ptr<IGameListView> > mGameListViews;
+	std::map<SystemData*, bool> mInvalidGameList;
 	std::shared_ptr<SystemView> mSystemListView;
 	
 	Eigen::Affine3f mCamera;
 	float mFadeOpacity;
 	bool mLockInput;
+	bool mFavoritesOnly;
+	bool mKidGamesOnly;
 
 	State mState;
 };

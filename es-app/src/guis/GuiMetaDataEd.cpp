@@ -7,10 +7,12 @@
 #include "guis/GuiGameScraper.h"
 #include "guis/GuiMsgBox.h"
 #include <boost/filesystem.hpp>
+#include "Gamelist.h"
 
 #include "components/TextEditComponent.h"
 #include "components/DateTimeComponent.h"
 #include "components/RatingComponent.h"
+#include "components/SwitchComponent.h"
 #include "guis/GuiTextEditPopup.h"
 
 using namespace Eigen;
@@ -59,6 +61,12 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 		switch(iter->type)
 		{
+		case MD_BOOL:
+			{
+				ed = std::make_shared<SwitchComponent>(window);
+				row.addElement(ed, false, true);
+				break;
+			}	
 		case MD_RATING:
 			{
 				ed = std::make_shared<RatingComponent>(window);
@@ -170,14 +178,16 @@ void GuiMetaDataEd::onSizeChanged()
 
 void GuiMetaDataEd::save()
 {
+	LOG(LogDebug) << "Starting Save Function"; 
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
 		if(mMetaDataDecl.at(i).isStatistic)
 			continue;
-
 		mMetaData->set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
 	}
-
+	LOG(LogError) << "updating XML";
+	updateGamelist(mScraperParams.system);
+			
 	if(mSavedCallback)
 		mSavedCallback();
 }
@@ -204,6 +214,7 @@ void GuiMetaDataEd::close(bool closeAllWindows)
 {
 	// find out if the user made any changes
 	bool dirty = false;
+	LOG(LogDebug) << "GuiMetaDataEd::close()";
 	for(unsigned int i = 0; i < mEditors.size(); i++)
 	{
 		const std::string& key = mMetaDataDecl.at(i).key;

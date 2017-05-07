@@ -259,6 +259,12 @@ Which is equivalent to:
     	<text name="md_lbl_playcount">
     		<color>48474D</color>
     	</text>
+    	<text name="md_lbl_favorite">
+    		<color>48474D</color>
+    	</text>
+    	<text name="md_lbl_kidgame">
+    		<color>48474D</color>
+    	</text>
     </view>
 </theme>
 ```
@@ -307,6 +313,7 @@ Reference
 		* `text name="md_lbl_players"` - ALL
 		* `text name="md_lbl_lastplayed"` - ALL
 		* `text name="md_lbl_playcount"` - ALL
+		* `text name="md_lbl_favorite"` - ALL
 
 	* Values
 		* All values will follow to the right of their labels if a position isn't specified.
@@ -329,9 +336,62 @@ Reference
 			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
 		* `text name="md_playcount"` - ALL
 			- The "playcount" metadata (number of times the game has been played).
+		* `text name="md_favorite"` - ALL
+			- The "favorite" metadata (is this game a favorite).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR
 			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
 
+#### video
+* `helpsystem name="help"` - ALL
+	- The help system style for this view.
+* `image name="background"` - ALL
+	- This is a background image that exists for convenience. It goes from (0, 0) to (1, 1).
+* `text name="logoText"` - ALL
+	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
+* `image name="logo"` - ALL
+	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
+* `textlist name="gamelist"` - ALL
+	- The gamelist.  `primaryColor` is for games, `secondaryColor` is for folders.  Left aligned by default.
+
+* Metadata
+	* Labels
+		* `text name="md_lbl_rating"` - ALL
+		* `text name="md_lbl_releasedate"` - ALL
+		* `text name="md_lbl_developer"` - ALL
+		* `text name="md_lbl_publisher"` - ALL
+		* `text name="md_lbl_genre"` - ALL
+		* `text name="md_lbl_players"` - ALL
+		* `text name="md_lbl_lastplayed"` - ALL
+		* `text name="md_lbl_playcount"` - ALL
+
+	* Values
+		* All values will follow to the right of their labels if a position isn't specified.
+
+		* `image name="md_image"` - POSITION | SIZE
+			- Path is the "image" metadata for the currently selected game.
+		* `image name="md_marquee"` - POSITION | SIZE
+			- Path is the "marquee" metadata for the currently selected game.
+		* `video name="md_video"` - POSITION | SIZE
+			- Path is the "video" metadata for the currently selected game.
+		* `rating name="md_rating"` - ALL
+			- The "rating" metadata.
+		* `datetime name="md_releasedate"` - ALL
+			- The "releasedate" metadata.
+		* `text name="md_developer"` - ALL
+			- The "developer" metadata.
+		* `text name="md_publisher"` - ALL
+			- The "publisher" metadata.
+		* `text name="md_genre"` - ALL
+			- The "genre" metadata.
+		* `text name="md_players"` - ALL
+			- The "players" metadata (number of players the game supports).
+		* `datetime name="md_lastplayed"` - ALL
+			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
+		* `text name="md_playcount"` - ALL
+			- The "playcount" metadata (number of times the game has been played).
+		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR
+			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+			
 ---
 
 #### grid
@@ -349,8 +409,12 @@ Reference
 #### system
 * `helpsystem name="help"` - ALL
 	- The help system style for this view.
+* `carousel name="systemcarousel"` -ALL
+	- The system logo carousel
 * `image name="logo"` - PATH
 	- A logo image, to be displayed in the system logo carousel.
+* `text name="systemInfo"` - ALL
+	- Displays details of the system currently selected in the carousel.
 * You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.
 
 
@@ -389,6 +453,24 @@ Can be created as an extra.
 	- If true, the image will be tiled instead of stretched to fit its size.  Useful for backgrounds.
 * `color` - type: COLOR.
 	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.  You can also control the transparency of an image with `<color>FFFFFFAA</color>` - keeping all the pixels their normal color and only affecting the alpha channel.
+	
+#### video
+
+* `pos` - type: NORMALIZED_PAIR.
+* `size` - type: NORMALIZED_PAIR.
+	- If only one axis is specified (and the other is zero), the other will be automatically calculated in accordance with the video's aspect ratio.
+* `maxSize` - type: NORMALIZED_PAIR.
+	- The video will be resized as large as possible so that it fits within this size and maintains its aspect ratio.  Use this instead of `size` when you don't know what kind of video you're using so it doesn't get grossly oversized on one axis (e.g. with a game's video metadata).
+* `origin` - type: NORMALIZED_PAIR.
+	- Where on the image `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the image exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
+* `delay` - type: FLOAT.  Default is false.
+	- Delay in seconds before video will start playing.
+* `default` - type: PATH.
+	- Path to default video file.  Default video will be played when selected game does not have a video.
+* `showSnapshotNoVideo` - type: BOOLEAN
+	- If true, image will be shown when selected game does not have a video and no `default` video is configured.
+* `showSnapshotDelay` - type: BOOLEAN
+	- If true, playing of video will be delayed for `delayed` seconds, when game is selected.
 
 #### text
 
@@ -402,6 +484,7 @@ Can be created as an extra.
 	- `w h` - works like a "text box."  If `h` is non-zero and `h` <= `fontSize` (implying it should be a single line of text), text that goes beyond `w` will be truncated with an elipses (...).
 * `text` - type: STRING.
 * `color` - type: COLOR.
+* `backgroundColor` - type: COLOR;
 * `fontPath` - type: PATH.
 	- Path to a truetype font (.ttf).
 * `fontSize` - type: FLOAT.
@@ -474,6 +557,24 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `iconColor` - type: COLOR.  Default is 777777FF.
 * `fontPath` - type: PATH.
 * `fontSize` - type: FLOAT.
+
+#### carousel
+
+* `type` - type: STRING.
+ * Accepted values are "HORIZONTAL" or "VERTICAL".  Sets the scoll direction of the carousel.
+ * Default is "HORIZONTAL".
+* `size` - type: NORMALIZED_PAIR. Default is "1 0.2325"
+* `pos` - type: NORMALIZED_PAIR.  Default is "0 0.38375".
+* `color` - type: COLOR.
+ * Controls the color of the carousel background.
+ * Default is FFFFFFD8
+* `logoSize` - type: NORMALIZED_PAIR.  Default is "0.25 0.155"
+* `logoScale` - type: FLOAT.
+ * Selected logo is increased in size by this scale
+ * Default is 1.5
+* `maxLogoCount` - type: FLOAT.
+ * Sets the number of logos to display in the carousel.
+  * Default is 3
 
 The help system is a special element that displays a context-sensitive list of actions the user can take at any time.  You should try and keep the position constant throughout every screen.  Keep in mind the "default" settings (including position) are used whenever the user opens a menu.
 

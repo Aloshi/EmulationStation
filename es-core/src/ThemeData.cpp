@@ -5,7 +5,7 @@
 #include "resources/TextureResource.h"
 #include "Log.h"
 #include "Settings.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include <boost/assign.hpp>
 
 #include "components/ImageComponent.h"
@@ -23,6 +23,9 @@ ElementMapType makeMap(const T& mapInit)
 	return m;
 }
 
+std::vector<std::string> ThemeData::sSupportedViews = boost::assign::list_of("system")("basic")("detailed")("video");
+std::vector<std::string> ThemeData::sSupportedFeatures = boost::assign::list_of("video")("carousel");
+
 std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of
 	("image", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
@@ -36,12 +39,14 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("text", STRING)
-		("color", COLOR)
+		("backgroundColor", COLOR)
 		("fontPath", PATH)
 		("fontSize", FLOAT)
+		("color", COLOR)
 		("alignment", STRING)
 		("forceUppercase", BOOLEAN)
-		("lineSpacing", FLOAT)))
+		("lineSpacing", FLOAT)
+		("value", STRING)))
 	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
@@ -82,12 +87,29 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("textColor", COLOR)
 		("iconColor", COLOR)
 		("fontPath", PATH)
-		("fontSize", FLOAT)));
+		("fontSize", FLOAT)))
+	("video", makeMap(boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("maxSize", NORMALIZED_PAIR)
+		("origin", NORMALIZED_PAIR)
+		("default", PATH)
+		("delay", FLOAT)
+		("showSnapshotNoVideo", BOOLEAN)
+		("showSnapshotDelay", BOOLEAN)))
+	("carousel", makeMap(boost::assign::map_list_of
+		("type", STRING)
+		("size", NORMALIZED_PAIR)
+		("pos", NORMALIZED_PAIR)
+		("color", COLOR)
+		("logoScale", FLOAT)
+		("logoSize", NORMALIZED_PAIR)
+		("maxLogoCount", FLOAT)));
 
 namespace fs = boost::filesystem;
 
 #define MINIMUM_THEME_FORMAT_VERSION 3
-#define CURRENT_THEME_FORMAT_VERSION 3
+#define CURRENT_THEME_FORMAT_VERSION 4
 
 // helper
 unsigned int getHexColor(const char* str)
@@ -173,6 +195,7 @@ void ThemeData::loadFile(const std::string& path)
 
 	parseIncludes(root);
 	parseViews(root);
+	parseFeatures(root);
 }
 
 
@@ -203,8 +226,28 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 
 		parseIncludes(root);
 		parseViews(root);
+		parseFeatures(root);
 
 		mPaths.pop_back();
+	}
+}
+
+void ThemeData::parseFeatures(const pugi::xml_node& root)
+{
+	ThemeException error;
+	error.setFiles(mPaths);
+
+	for(pugi::xml_node node = root.child("feature"); node; node = node.next_sibling("feature"))
+	{
+		if(!node.attribute("supported"))
+			throw error << "Feature missing \"supported\" attribute!";
+
+		const std::string supportedAttr = node.attribute("supported").as_string();
+
+		if (std::find(sSupportedFeatures.begin(), sSupportedFeatures.end(), supportedAttr) != sSupportedFeatures.end())
+		{
+			parseViews(node);
+		}
 	}
 }
 
@@ -230,8 +273,11 @@ void ThemeData::parseViews(const pugi::xml_node& root)
 			prevOff = nameAttr.find_first_not_of(delim, off);
 			off = nameAttr.find_first_of(delim, prevOff);
 			
-			ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
-			parseView(node, view);
+			if (std::find(sSupportedViews.begin(), sSupportedViews.end(), viewKey) != sSupportedViews.end())
+			{
+				ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
+				parseView(node, view);
+			}
 		}
 	}
 }
@@ -335,6 +381,11 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 	}
 }
 
+bool ThemeData::hasView(const std::string& view)
+{
+	auto viewIt = mViews.find(view);
+	return (viewIt != mViews.end());
+}
 
 const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, const std::string& element, const std::string& expectedType) const
 {
@@ -473,4 +524,14 @@ fs::path ThemeData::getThemeFromCurrentSet(const std::string& system)
 	}
 
 	return set->second.getThemePath(system);
+}
+
+bool ThemeData::getHasFavoritesInTheme()
+{
+	return (mVersion >= CURRENT_THEME_FORMAT_VERSION);
+}
+
+bool ThemeData::getHasKidGamesInTheme()
+{
+	return (mVersion >= CURRENT_THEME_FORMAT_VERSION);
 }
