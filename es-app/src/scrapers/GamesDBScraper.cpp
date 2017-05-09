@@ -56,7 +56,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(PLAYSTATION_3, "Sony Playstation 3")
 	(PLAYSTATION_4, "Sony Playstation 4")
 	(PLAYSTATION_VITA, "Sony Playstation Vita")
-	(PLAYSTATION_PORTABLE, "Sony PSP")
+	(PLAYSTATION_PORTABLE, "Sony Playstation Portable")
 	(SUPER_NINTENDO, "Super Nintendo (SNES)")
 	(TURBOGRAFX_16, "TurboGrafx 16")
 	(WONDERSWAN, "WonderSwan")
