@@ -6,7 +6,7 @@ EmulationStation allows each system to have its own "theme." A theme is a collec
 The first place ES will check for a theme is in the system's `<path>` folder, for a theme.xml file:
 * `[SYSTEM_PATH]/theme.xml`
 
-If that file doesn't exist, ES will try to find the theme in the current **theme set**.  Theme sets are just a collection of individual system themes arranged in the "themes" folder under some name.  Here's an example:
+If that file doesn't exist, ES will try to find the theme in the current **theme set**.  Theme sets are just a collection of individual system themes arranged in the "themes" folder under some name.  A theme set can provide a default theme that will be used if there is no matching system theme.  Here's an example:
 
 ```
 ...
@@ -23,6 +23,7 @@ If that file doesn't exist, ES will try to find the theme in the current **theme
          common_resources/
             scroll_sound.wav
 
+         theme.xml (Default theme)
       another_theme_set/
          snes/
             theme.xml
@@ -308,6 +309,40 @@ You can now change the order in which elements are rendered by setting `zIndex` 
 	* `text name="logoText"`
 	* `image name="logo"`
 
+### Theme variables
+
+Theme variables can be used to simplify theme construction.  There are 2 types of variables available.
+* System Variables
+* Theme Defined Variables
+
+#### System Variables
+
+System variables are system specific and are derived from the values in es_systems.cfg.
+* `system.name`
+* `system.fullName`
+* `system.theme`
+
+#### Theme Defined Variables
+Variables can also be defined in the theme.
+```
+<variables>
+	<themeColor>8b0000</themeColor>
+</variables>
+```
+
+#### Usage in themes
+Variables can be used to specify the value of a theme property:
+```
+<color>${themeColor}</color>
+```
+
+or to specify only a portion of the value of a theme property:
+
+```
+<color>${themeColor}c0</color>
+<path>./art/logo/${system.theme}.svg</path>
+````
+
 Reference
 =========
 
@@ -444,8 +479,10 @@ Reference
 	- The help system style for this view.
 * `carousel name="systemcarousel"` -ALL
 	- The system logo carousel
-* `image name="logo"` - PATH
+* `image name="logo"` - PATH | COLOR
 	- A logo image, to be displayed in the system logo carousel.
+* `text name="logoText"` - FONT_PATH | COLOR | FORCE_UPPERCASE
+	- A logo text, to be displayed system name in the system logo carousel when no logo is available.
 * `text name="systemInfo"` - ALL
 	- Displays details of the system currently selected in the carousel.
 * You can use extra elements (elements with `extra="true"`) to add your own backgrounds, etc.  They will be displayed behind the carousel, and scroll relative to the carousel.

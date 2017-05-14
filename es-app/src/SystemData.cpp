@@ -411,15 +411,24 @@ std::string SystemData::getThemePath() const
 {
 	// where we check for themes, in order:
 	// 1. [SYSTEM_PATH]/theme.xml
-	// 2. currently selected theme set
+	// 2. system theme from currently selected theme set [CURRENT_THEME_PATH]/[SYSTEM]/theme.xml
+	// 3. default system theme from currently selected theme set [CURRENT_THEME_PATH]/theme.xml
 
 	// first, check game folder
 	fs::path localThemePath = mRootFolder->getPath() / "theme.xml";
 	if(fs::exists(localThemePath))
 		return localThemePath.generic_string();
 
-	// not in game folder, try theme sets
-	return ThemeData::getThemeFromCurrentSet(mThemeFolder).generic_string();
+	// not in game folder, try system theme in theme sets
+	localThemePath = ThemeData::getThemeFromCurrentSet(mThemeFolder);
+
+	if (fs::exists(localThemePath))
+		return localThemePath.generic_string();
+
+	// not system theme, try default system theme in theme set
+	localThemePath = localThemePath.parent_path().parent_path() / "theme.xml";
+
+	return localThemePath.generic_string();
 }
 
 bool SystemData::hasGamelist() const
@@ -448,7 +457,13 @@ void SystemData::loadTheme()
 
 	try
 	{
-		mTheme->loadFile(path);
+		// build map with system variables for theme to use,
+		std::map<std::string, std::string> sysData;
+		sysData.insert(std::pair<std::string, std::string>("system.name", getName()));
+		sysData.insert(std::pair<std::string, std::string>("system.theme", getThemeFolder()));
+		sysData.insert(std::pair<std::string, std::string>("system.fullName", getFullName()));
+		
+		mTheme->loadFile(sysData, path);
 	} catch(ThemeException& e)
 	{
 		LOG(LogError) << e.what();

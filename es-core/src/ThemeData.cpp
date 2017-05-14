@@ -7,6 +7,7 @@
 #include "Settings.h"
 #include "pugixml/src/pugixml.hpp"
 #include <boost/assign.hpp>
+#include <boost/xpressive/xpressive.hpp>
 
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
@@ -123,7 +124,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 namespace fs = boost::filesystem;
 
 #define MINIMUM_THEME_FORMAT_VERSION 3
-#define CURRENT_THEME_FORMAT_VERSION 4
+#define CURRENT_THEME_FORMAT_VERSION 5
 
 // helper
 unsigned int getHexColor(const char* str)
@@ -170,14 +171,34 @@ std::string resolvePath(const char* in, const fs::path& relative)
 	return path.generic_string();
 }
 
+std::map<std::string, std::string> mVariables;
 
+std::string &format_variables(const boost::xpressive::smatch &what)
+{
+	return mVariables[what[1].str()];
+}
+
+std::string resolvePlaceholders(const char* in)
+{
+	if(!in || in[0] == '\0')
+		return std::string(in);
+		
+	std::string inStr(in);
+	
+	using namespace boost::xpressive;
+	sregex rex = "${" >> (s1 = +('.' | _w)) >> '}';
+    
+	std::string output = regex_replace(inStr, rex, format_variables);
+
+	return output;
+}
 
 ThemeData::ThemeData()
 {
 	mVersion = 0;
 }
 
-void ThemeData::loadFile(const std::string& path)
+void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const std::string& path)
 {
 	mPaths.push_back(path);
 
@@ -189,6 +210,9 @@ void ThemeData::loadFile(const std::string& path)
 
 	mVersion = 0;
 	mViews.clear();
+	mVariables.clear();
+
+	mVariables.insert(sysDataMap.begin(), sysDataMap.end());
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result res = doc.load_file(path.c_str());
@@ -207,11 +231,11 @@ void ThemeData::loadFile(const std::string& path)
 	if(mVersion < MINIMUM_THEME_FORMAT_VERSION)
 		throw error << "Theme uses format version " << mVersion << ". Minimum supported version is " << MINIMUM_THEME_FORMAT_VERSION << ".";
 
+	parseVariables(root);
 	parseIncludes(root);
 	parseViews(root);
 	parseFeatures(root);
 }
-
 
 void ThemeData::parseIncludes(const pugi::xml_node& root)
 {
@@ -238,6 +262,7 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 		if(!root)
 			throw error << "Missing <theme> tag!";
 
+		parseVariables(root);
 		parseIncludes(root);
 		parseViews(root);
 		parseFeatures(root);
@@ -262,6 +287,26 @@ void ThemeData::parseFeatures(const pugi::xml_node& root)
 		{
 			parseViews(node);
 		}
+	}
+}
+
+void ThemeData::parseVariables(const pugi::xml_node& root)
+{
+	ThemeException error;
+	error.setFiles(mPaths);
+    
+	pugi::xml_node variables = root.child("variables");
+
+	if(!variables)
+		return;
+    
+	for(pugi::xml_node_iterator it = variables.begin(); it != variables.end(); ++it)
+	{
+		std::string key = it->name();
+		std::string val = it->text().as_string();
+
+		if (!val.empty())
+			mVariables.insert(std::pair<std::string, std::string>(key, val));
 	}
 }
 
@@ -344,12 +389,12 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 		if(typeIt == typeMap.end())
 			throw error << "Unknown property type \"" << node.name() << "\" (for element of type " << root.name() << ").";
 
+		std::string str = resolvePlaceholders(node.text().as_string());
+
 		switch(typeIt->second)
 		{
 		case NORMALIZED_PAIR:
 		{
-			std::string str = std::string(node.text().as_string());
-
 			size_t divider = str.find(' ');
 			if(divider == std::string::npos) 
 				throw error << "invalid normalized pair (property \"" << node.name() << "\", value \"" << str.c_str() << "\")";
@@ -363,11 +408,11 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			break;
 		}
 		case STRING:
-			element.properties[node.name()] = std::string(node.text().as_string());
+			element.properties[node.name()] = str;
 			break;
 		case PATH:
 		{
-			std::string path = resolvePath(node.text().as_string(), mPaths.back().string());
+			std::string path = resolvePath(str.c_str(), mPaths.back().string());
 			if(!ResourceManager::getInstance()->fileExists(path))
 			{
 				std::stringstream ss;
@@ -381,14 +426,25 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			break;
 		}
 		case COLOR:
-			element.properties[node.name()] = getHexColor(node.text().as_string());
+			element.properties[node.name()] = getHexColor(str.c_str());
 			break;
 		case FLOAT:
-			element.properties[node.name()] = node.text().as_float();
+		{
+			float floatVal = static_cast<float>(strtod(str.c_str(), 0));
+			element.properties[node.name()] = floatVal;
 			break;
+		}
+
 		case BOOLEAN:
-			element.properties[node.name()] = node.text().as_bool();
+		{
+			// only look at first char
+			char first = str[0];
+			// 1*, t* (true), T* (True), y* (yes), Y* (YES)
+			bool boolVal = (first == '1' || first == 't' || first == 'T' || first == 'y' || first == 'Y');
+
+			element.properties[node.name()] = boolVal;
 			break;
+		}
 		default:
 			throw error << "Unknown ElementPropertyType for \"" << root.attribute("name").as_string() << "\", property " << node.name();
 		}
@@ -432,7 +488,8 @@ const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 		{
 			try
 			{
-				theme->loadFile(path);
+				std::map<std::string, std::string> emptyMap;
+				theme->loadFile(emptyMap, path);
 			} catch(ThemeException& e)
 			{
 				LOG(LogError) << e.what();

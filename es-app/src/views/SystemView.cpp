@@ -43,21 +43,27 @@ void SystemView::populate()
 		// make logo
 		if(theme->getElement("system", "logo", "image"))
 		{
-			ImageComponent* logo = new ImageComponent(mWindow, false, false);
-			logo->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x(), mCarousel.logoSize.y()));
-			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
-			logo->setPosition((mCarousel.logoSize.x() - logo->getSize().x()) / 2,
-				(mCarousel.logoSize.y() - logo->getSize().y()) / 2); // center
-			e.data.logo = std::shared_ptr<GuiComponent>(logo);
+			std::string path = theme->getElement("system", "logo", "image")->get<std::string>("path");
 
-			ImageComponent* logoSelected = new ImageComponent(mWindow, false, false);
-			logoSelected->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x() * mCarousel.logoScale, mCarousel.logoSize.y() * mCarousel.logoScale));
-			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
-			logoSelected->setPosition((mCarousel.logoSize.x() - logoSelected->getSize().x()) / 2,
-				(mCarousel.logoSize.y() - logoSelected->getSize().y()) / 2); // center
-			e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
+			if(!path.empty() && ResourceManager::getInstance()->fileExists(path))
+			{
+				ImageComponent* logo = new ImageComponent(mWindow, false, false);
+				logo->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x(), mCarousel.logoSize.y()));
+				logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
+				logo->setPosition((mCarousel.logoSize.x() - logo->getSize().x()) / 2,
+					(mCarousel.logoSize.y() - logo->getSize().y()) / 2); // center
+				e.data.logo = std::shared_ptr<GuiComponent>(logo);
 
-		}else{
+				ImageComponent* logoSelected = new ImageComponent(mWindow, false, false);
+				logoSelected->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x() * mCarousel.logoScale, mCarousel.logoSize.y() * mCarousel.logoScale));
+				logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
+				logoSelected->setPosition((mCarousel.logoSize.x() - logoSelected->getSize().x()) / 2,
+					(mCarousel.logoSize.y() - logoSelected->getSize().y()) / 2); // center
+				e.data.logoSelected = std::shared_ptr<GuiComponent>(logoSelected);
+			}
+		}
+		if (!e.data.logo)
+		{
 			// no logo in theme; use text
 			TextComponent* text = new TextComponent(mWindow,
 				(*it)->getName(),
@@ -65,14 +71,16 @@ void SystemView::populate()
 				0x000000FF,
 				ALIGN_CENTER);
 			text->setSize(mCarousel.logoSize);
+			text->applyTheme((*it)->getTheme(), "system", "logoText", ThemeFlags::FONT_PATH | ThemeFlags::COLOR | ThemeFlags::FORCE_UPPERCASE);
 			e.data.logo = std::shared_ptr<GuiComponent>(text);
 
-			TextComponent* textSelected = new TextComponent(mWindow,
-				(*it)->getName(),
-				Font::get((int)(FONT_SIZE_LARGE * 1.5)),
+			TextComponent* textSelected = new TextComponent(mWindow, 
+				(*it)->getName(), 
+				Font::get((int)(FONT_SIZE_LARGE * mCarousel.logoScale)),
 				0x000000FF,
 				ALIGN_CENTER);
 			textSelected->setSize(mCarousel.logoSize);
+			textSelected->applyTheme((*it)->getTheme(), "system", "logoText", ThemeFlags::FONT_PATH | ThemeFlags::COLOR | ThemeFlags::FORCE_UPPERCASE);
 			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
 		}
 
