@@ -151,7 +151,7 @@ namespace Renderer
 		glMatrixMode(GL_PROJECTION);
 		glOrtho(0, display_width, display_height, 0, -1.0, 1.0);
 		glMatrixMode(GL_MODELVIEW);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		return true;
 	}

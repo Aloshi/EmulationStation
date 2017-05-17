@@ -9,6 +9,10 @@
 #include "Settings.h"
 #include "Util.h"
 
+// buffer values for scrolling velocity (left, stopped, right)
+const int logoBuffersLeft[] = { -5, -2, -1 };
+const int logoBuffersRight[] = { 1, 2, 5 };
+
 SystemView::SystemView(Window* window) : IList<SystemViewData, SystemData*>(window, LIST_SCROLL_STYLE_SLOW, LIST_ALWAYS_LOOP),
 										 mViewNeedsReload(true),
 										 mSystemInfo(window, "SYSTEM INFO", Font::get(FONT_SIZE_SMALL), 0x33333300, ALIGN_CENTER)
@@ -39,14 +43,14 @@ void SystemView::populate()
 		// make logo
 		if(theme->getElement("system", "logo", "image"))
 		{
-			ImageComponent* logo = new ImageComponent(mWindow);
+			ImageComponent* logo = new ImageComponent(mWindow, false, false);
 			logo->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x(), mCarousel.logoSize.y()));
 			logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH);
 			logo->setPosition((mCarousel.logoSize.x() - logo->getSize().x()) / 2,
 				(mCarousel.logoSize.y() - logo->getSize().y()) / 2); // center
 			e.data.logo = std::shared_ptr<GuiComponent>(logo);
 
-			ImageComponent* logoSelected = new ImageComponent(mWindow);
+			ImageComponent* logoSelected = new ImageComponent(mWindow, false, false);
 			logoSelected->setMaxSize(Eigen::Vector2f(mCarousel.logoSize.x() * mCarousel.logoScale, mCarousel.logoSize.y() * mCarousel.logoScale));
 			logoSelected->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
 			logoSelected->setPosition((mCarousel.logoSize.x() - logoSelected->getSize().x()) / 2,
@@ -364,9 +368,12 @@ void SystemView::renderCarousel(const Eigen::Affine3f& trans)
 
 	Eigen::Affine3f logoTrans = trans;
 	int center = (int)(mCamOffset);
-	int logoCount = std::min(mCarousel.maxLogoCount, (int)mEntries.size()) + 2;
+	int logoCount = std::min(mCarousel.maxLogoCount, (int)mEntries.size());
 
-	for (int i = center - logoCount / 2; i < center + logoCount / 2 + 1; i++)
+	// Adding texture loading buffers depending on scrolling speed and status	
+	int bufferIndex = getScrollingVelocity() + 1;	
+	
+	for (int i = center - logoCount / 2 + logoBuffersLeft[bufferIndex]; i <= center + logoCount / 2 + logoBuffersRight[bufferIndex]; i++)
 	{
 		int index = i;
 		while (index < 0)
@@ -402,7 +409,11 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans)
 {
 	Eigen::Affine3f extrasTrans = trans;
 	int extrasCenter = (int)mExtrasCamOffset;
-	for (int i = extrasCenter - 1; i < extrasCenter + 2; i++)
+	
+	// Adding texture loading buffers depending on scrolling speed and status
+	int bufferIndex = getScrollingVelocity() + 1;
+	
+	for (int i = extrasCenter + logoBuffersLeft[bufferIndex]; i <= extrasCenter + logoBuffersRight[bufferIndex]; i++)
 	{
 		int index = i;
 		while (index < 0)
