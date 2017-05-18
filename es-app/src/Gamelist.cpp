@@ -68,7 +68,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 				LOG(LogWarning) << "gameList: folder doesn't already exist, won't create";
 				return NULL;
 			}
-			
+
 			// create missing folder
 			FileData* folder = new FileData(FOLDER, treeNode->getPath().stem() / *path_it, system);
 			treeNode->addChild(folder);
@@ -118,7 +118,7 @@ void parseGamelist(SystemData* system)
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
 			fs::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
-			
+
 			if(!trustGamelist && !boost::filesystem::exists(path))
 			{
 				LOG(LogWarning) << "File \"" << path << "\" does not exist! Ignoring.";
@@ -160,7 +160,7 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 
 	//write metadata
 	file->metadata.appendToXML(newNode, true, system->getStartPath());
-	
+
 	if(newNode.children().begin() == newNode.child("name") //first element is name
 		&& ++newNode.children().begin() == newNode.children().end() //theres only one element
 		&& newNode.child("name").text().get() == file->getDisplayName()) //the name is the default
@@ -194,7 +194,7 @@ void updateGamelist(SystemData* system)
 	{
 		//parse an existing file first
 		pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
-		
+
 		if(!result)
 		{
 			LOG(LogError) << "Error parsing XML file \"" << xmlReadPath << "\"!\n	" << result.description();
