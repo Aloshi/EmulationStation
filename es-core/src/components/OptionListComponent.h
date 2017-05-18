@@ -138,7 +138,7 @@ private:
 	};
 
 public:
-	OptionListComponent(Window* window, const std::string& name, bool multiSelect = false) : GuiComponent(window), mMultiSelect(multiSelect), mName(name), 
+	OptionListComponent(Window* window, const std::string& name, bool multiSelect = false) : GuiComponent(window), mMultiSelect(multiSelect), mName(name),
 		 mText(window), mLeftArrow(window), mRightArrow(window)
 	{
 		auto font = Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT);
@@ -251,20 +251,20 @@ public:
 		onSelectedChanged();
 	}
 
-	void selectAll() 
+	void selectAll()
 	{
 		for(unsigned int i = 0; i < mEntries.size(); i++)
 		{
-			mEntries.at(i).selected = true;			
+			mEntries.at(i).selected = true;
 		}
 		onSelectedChanged();
 	}
 
-	void selectNone() 
+	void selectNone()
 	{
 		for(unsigned int i = 0; i < mEntries.size(); i++)
 		{
-			mEntries.at(i).selected = false;			
+			mEntries.at(i).selected = false;
 		}
 		onSelectedChanged();
 	}
@@ -322,7 +322,7 @@ private:
 		std::vector<HelpPrompt> prompts;
 		if(!mMultiSelect)
 			prompts.push_back(HelpPrompt("left/right", "change"));
-		
+
 		prompts.push_back(HelpPrompt("a", "select"));
 		return prompts;
 	}

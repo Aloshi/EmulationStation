@@ -108,7 +108,7 @@ target_link_libraries(emulationstation ${COMMON_LIBRARIES} es-core)
 
 # special properties for Windows builds
 if(MSVC)
-    # Always compile with the "WINDOWS" subsystem to avoid console window flashing at startup 
+    # Always compile with the "WINDOWS" subsystem to avoid console window flashing at startup
     # when --debug is not set (see es-core/src/main.cpp for explanation).
     # The console will still be shown if launched with --debug.
     # Note that up to CMake 2.8.10 this feature is broken: http://public.kitware.com/Bug/view.php?id=12566

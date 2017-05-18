@@ -82,7 +82,7 @@ const std::string& FileData::getThumbnailPath() const
 }
 
 const std::vector<FileData*>& FileData::getChildrenListToDisplay() {
-	
+
 	FileFilterIndex* idx = mSystem->getIndex();
 	if (idx->isFiltered()) {
 		mFilteredChildren.clear();
@@ -95,7 +95,7 @@ const std::vector<FileData*>& FileData::getChildrenListToDisplay() {
 
 		return mFilteredChildren;
 	}
-	else 
+	else
 	{
 		return mChildren;
 	}
@@ -123,7 +123,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool d
 			if (!displayedOnly || !idx->isFiltered() || idx->showFile(*it))
 				out.push_back(*it);
 		}
-		
+
 		if((*it)->getChildren().size() > 0)
 		{
 			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask, displayedOnly);

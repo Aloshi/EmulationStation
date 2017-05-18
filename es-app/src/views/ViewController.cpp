@@ -127,10 +127,10 @@ void ViewController::goToRandomGame()
 		if ((*it)->getName() != "retropie")
 			total += (*it)->getDisplayedGameCount();
 	}
-	
+
 	// get random number in range
 	int target = std::round(((double)std::rand() / (double)RAND_MAX) * total);
-	
+
 	for (auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
 		if ((*it)->getName() != "retropie")
@@ -153,7 +153,7 @@ void ViewController::goToRandomGame()
 void ViewController::playViewTransition()
 {
 	Eigen::Vector3f target(Eigen::Vector3f::Identity());
-	if(mCurrentView) 
+	if(mCurrentView)
 		target = mCurrentView->getPosition();
 
 	// no need to animate, we're not going anywhere (probably goToNextGamelist() or goToPrevGamelist() when there's only 1 system)
@@ -238,7 +238,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 		});
 	}else{
 		// move camera to zoom in on center + fade out, launch game, come back in
-		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game] 
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game]
 		{
 			game->getSystem()->launchGame(mWindow, game);
 			mCamera = origCamera;
@@ -372,7 +372,7 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 	// draw systemview
 	getSystemListView()->render(trans);
-	
+
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -477,7 +477,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 	if(!mCurrentView)
 		return prompts;
-	
+
 	prompts = mCurrentView->getHelpPrompts();
 	prompts.push_back(HelpPrompt("start", "menu"));
 

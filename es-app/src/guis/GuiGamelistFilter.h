@@ -25,7 +25,7 @@ private:
 	void applyFilters();
 	void resetAllFilters();
 	void addFiltersToMenu();
-	
+
 	std::map<FilterIndexType, std::shared_ptr< OptionListComponent<std::string> >> mFilterOptions;
 
 	MenuComponent mMenu;

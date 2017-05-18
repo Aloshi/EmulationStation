@@ -12,7 +12,7 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 	mHeaderText.setSize(mSize.x(), 0);
 	mHeaderText.setPosition(0, 0);
 	mHeaderText.setAlignment(ALIGN_CENTER);
-	
+
 	mHeaderImage.setResize(0, mSize.y() * 0.185f);
 	mHeaderImage.setOrigin(0.5f, 0.0f);
 	mHeaderImage.setPosition(mSize.x() / 2, 0);
@@ -51,7 +51,7 @@ void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
 		populateList(cursor->getParent()->getChildrenListToDisplay());
 		setCursor(cursor);
 	}
-	else 
+	else
 	{
 		populateList(mRoot->getChildrenListToDisplay());
 		setCursor(cursor);
@@ -77,7 +77,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 					populateList(cursor->getChildrenListToDisplay());
 				}
 			}
-				
+
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{
