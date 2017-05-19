@@ -265,6 +265,48 @@ Which is equivalent to:
 
 Just remember, *this only works if the elements have the same type!*
 
+### Element rendering order with z-index
+
+You can now change the order in which elements are rendered by setting `zIndex` values.  Default values correspond to the default rendering order while allowing elements to easily be shifted without having to set `zIndex` values for every element.  Elements will be rendered in order from smallest z-index to largest.
+
+#### Defaults
+
+##### system
+* Extra Elements `extra="true"` - 10
+* `carousel name="systemcarousel"` - 40
+* `text name="systemInfo"` - 50
+
+##### basic, detailed, video
+* `image name="background"` - 0
+* Extra Elements `extra="true"` - 10
+* `textlist name="gamelist"` - 20
+* Media
+	* `image name="md_image"` - 30
+	* `video name="md_video"` - 30
+	* `image name="md_marquee"` - 35
+* Metadata - 40
+	* Labels
+		* `text name="md_lbl_rating"`
+		* `text name="md_lbl_releasedate"`
+		* `text name="md_lbl_developer"`
+		* `text name="md_lbl_publisher"`
+		* `text name="md_lbl_genre"`
+		* `text name="md_lbl_players"`
+		* `text name="md_lbl_lastplayed"`
+		* `text name="md_lbl_playcount"`
+	* Values
+		* `rating name="md_rating"`
+		* `datetime name="md_releasedate"`
+		* `text name="md_developer"`
+		* `text name="md_publisher"`
+		* `text name="md_genre"`
+		* `text name="md_players"`
+		* `datetime name="md_lastplayed"`
+		* `text name="md_playcount"`
+		* `text name="md_description"`
+* System Logo/Text - 50
+	* `text name="logoText"`
+	* `image name="logo"`
 
 Reference
 =========
@@ -311,7 +353,7 @@ Reference
 	* Values
 		* All values will follow to the right of their labels if a position isn't specified.
 
-		* `image name="md_image"` - POSITION | SIZE
+		* `image name="md_image"` - POSITION | SIZE | Z_INDEX
 			- Path is the "image" metadata for the currently selected game.
 		* `rating name="md_rating"` - ALL
 			- The "rating" metadata.
@@ -329,7 +371,7 @@ Reference
 			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
 		* `text name="md_playcount"` - ALL
 			- The "playcount" metadata (number of times the game has been played).
-		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR
+		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
 			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
 
 #### video
@@ -358,11 +400,11 @@ Reference
 	* Values
 		* All values will follow to the right of their labels if a position isn't specified.
 
-		* `image name="md_image"` - POSITION | SIZE
+		* `image name="md_image"` - POSITION | SIZE | Z_INDEX
 			- Path is the "image" metadata for the currently selected game.
-		* `image name="md_marquee"` - POSITION | SIZE
+		* `image name="md_marquee"` - POSITION | SIZE | Z_INDEX
 			- Path is the "marquee" metadata for the currently selected game.
-		* `video name="md_video"` - POSITION | SIZE
+		* `video name="md_video"` - POSITION | SIZE | Z_INDEX
 			- Path is the "video" metadata for the currently selected game.
 		* `rating name="md_rating"` - ALL
 			- The "rating" metadata.
@@ -380,7 +422,7 @@ Reference
 			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
 		* `text name="md_playcount"` - ALL
 			- The "playcount" metadata (number of times the game has been played).
-		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR
+		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
 			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
 			
 ---
@@ -444,6 +486,8 @@ Can be created as an extra.
 	- If true, the image will be tiled instead of stretched to fit its size.  Useful for backgrounds.
 * `color` - type: COLOR.
 	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.  You can also control the transparency of an image with `<color>FFFFFFAA</color>` - keeping all the pixels their normal color and only affecting the alpha channel.
+* `zIndex` - type: FLOAT.
+	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 	
 #### video
 
@@ -462,6 +506,8 @@ Can be created as an extra.
 	- If true, image will be shown when selected game does not have a video and no `default` video is configured.
 * `showSnapshotDelay` - type: BOOLEAN
 	- If true, playing of video will be delayed for `delayed` seconds, when game is selected.
+* `zIndex` - type: FLOAT.
+	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
 #### text
 
@@ -484,6 +530,8 @@ Can be created as an extra.
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.  "center" will also align vertically.
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 * `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
+* `zIndex` - type: FLOAT.
+	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
 #### textlist
 
@@ -507,6 +555,8 @@ Can be created as an extra.
 	- Horizontal offset for text from the alignment point.  If `alignment` is "left", offsets the text to the right.  If `alignment` is "right", offsets text to the left.  No effect if `alignment` is "center".  Given as a percentage of the element's parent's width (same unit as `size`'s X value).
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 * `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
+* `zIndex` - type: FLOAT.
+	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
 #### ninepatch
 
@@ -515,6 +565,8 @@ Can be created as an extra.
 * `path` - type: PATH.
 
 EmulationStation borrows the concept of "nine patches" from Android (or "9-Slices"). Currently the implementation is very simple and hard-coded to only use 48x48px images (16x16px for each "patch"). Check the `data/resources` directory for some examples (button.png, frame.png).
+* `zIndex` - type: FLOAT.
+	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
 #### rating
 
@@ -525,6 +577,8 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 	- Path to the "filled star" image.  Image must be square (width equals height).
 * `unfilledPath` - type: PATH.
 	- Path to the "unfilled star" image.  Image must be square (width equals height).
+* `zIndex` - type: FLOAT.
+	- z-index value for component.  Components will be rendered in order of z-index value from low to high.	
 
 #### datetime
 
@@ -552,20 +606,22 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 #### carousel
 
 * `type` - type: STRING.
- * Accepted values are "HORIZONTAL" or "VERTICAL".  Sets the scoll direction of the carousel.
- * Default is "HORIZONTAL".
+	- Accepted values are "horizontal" or "vertical".  Sets the scoll direction of the carousel.
+ 	- Default is "horizontal".
 * `size` - type: NORMALIZED_PAIR. Default is "1 0.2325"
 * `pos` - type: NORMALIZED_PAIR.  Default is "0 0.38375".
 * `color` - type: COLOR.
- * Controls the color of the carousel background.
- * Default is FFFFFFD8
+	- Controls the color of the carousel background.
+	- Default is FFFFFFD8
 * `logoSize` - type: NORMALIZED_PAIR.  Default is "0.25 0.155"
 * `logoScale` - type: FLOAT.
  * Selected logo is increased in size by this scale
  * Default is 1.2
 * `maxLogoCount` - type: FLOAT.
- * Sets the number of logos to display in the carousel.
-  * Default is 3
+	- Sets the number of logos to display in the carousel.
+	- Default is 3
+* `zIndex` - type: FLOAT.
+	- z-index value for component.  Components will be rendered in order of z-index value from low to high.  
 
 The help system is a special element that displays a context-sensitive list of actions the user can take at any time.  You should try and keep the position constant throughout every screen.  Keep in mind the "default" settings (including position) are used whenever the user opens a menu.
 

@@ -362,6 +362,11 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 
 	if(properties & COLOR && elem->has("color"))
 		setColorShift(elem->get<unsigned int>("color"));
+
+	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
+		setZIndex(elem->get<float>("zIndex"));
+	else
+		setZIndex(getDefaultZIndex());
 }
 
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()

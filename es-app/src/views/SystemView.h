@@ -20,7 +20,7 @@ struct SystemViewData
 {
 	std::shared_ptr<GuiComponent> logo;
 	std::shared_ptr<GuiComponent> logoSelected;
-	std::shared_ptr<ThemeExtras> backgroundExtras;
+	std::vector<GuiComponent*> backgroundExtras;
 };
 
 struct SystemViewCarousel
@@ -33,6 +33,7 @@ struct SystemViewCarousel
 	unsigned int color;
 	int maxLogoCount; // number of logos shown on the carousel
 	Eigen::Vector2f logoSize;
+	float zIndex;
 };
 
 class SystemView : public IList<SystemViewData, SystemData*>
@@ -61,8 +62,10 @@ private:
 	void getCarouselFromTheme(const ThemeData::ThemeElement* elem);
 
 	void renderCarousel(const Eigen::Affine3f& parentTrans);
-	void renderExtras(const Eigen::Affine3f& parentTrans);
+	void renderExtras(const Eigen::Affine3f& parentTrans, float lower, float upper);
 	void renderInfoBar(const Eigen::Affine3f& trans);
+	void renderFade(const Eigen::Affine3f& trans);
+
 
 	SystemViewCarousel mCarousel;
 	TextComponent mSystemInfo;

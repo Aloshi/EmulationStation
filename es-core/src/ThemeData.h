@@ -38,6 +38,7 @@ namespace ThemeFlags
 		FORCE_UPPERCASE = 1024,
 		LINE_SPACING = 2048,
 		DELAY = 4096,
+		Z_INDEX = 8192,
 
 		ALL = 0xFFFFFFFF
 	};
@@ -70,19 +71,6 @@ ThemeException& operator<<(ThemeException& e, T appendMsg)
 	e.msg = ss.str();
 	return e;
 }
-
-class ThemeExtras : public GuiComponent
-{
-public:
-	ThemeExtras(Window* window) : GuiComponent(window) {};
-	virtual ~ThemeExtras();
-
-	// will take ownership of the components within extras (delete them in destructor or when setExtras is called again)
-	void setExtras(const std::vector<GuiComponent*>& extras);
-
-private:
-	std::vector<GuiComponent*> mExtras;
-};
 
 struct ThemeSet
 {

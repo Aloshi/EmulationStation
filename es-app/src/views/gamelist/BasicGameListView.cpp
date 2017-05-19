@@ -12,6 +12,7 @@ BasicGameListView::BasicGameListView(Window* window, FileData* root)
 {
 	mList.setSize(mSize.x(), mSize.y() * 0.8f);
 	mList.setPosition(0, mSize.y() * 0.2f);
+	mList.setDefaultZIndex(20);
 	addChild(&mList);
 
 	populateList(root->getChildrenListToDisplay());
@@ -22,6 +23,8 @@ void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	ISimpleGameListView::onThemeChanged(theme);
 	using namespace ThemeFlags;
 	mList.applyTheme(theme, getName(), "gamelist", ALL);
+
+	sortChildren();
 }
 
 void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)

@@ -76,9 +76,18 @@ void SystemView::populate()
 			e.data.logoSelected = std::shared_ptr<GuiComponent>(textSelected);
 		}
 
+		// delete any existing extras
+		for (auto extra : e.data.backgroundExtras)
+			delete extra;
+		e.data.backgroundExtras.clear();
+
 		// make background extras
-		e.data.backgroundExtras = std::shared_ptr<ThemeExtras>(new ThemeExtras(mWindow));
-		e.data.backgroundExtras->setExtras(ThemeData::makeExtras((*it)->getTheme(), "system", mWindow));
+		e.data.backgroundExtras = ThemeData::makeExtras((*it)->getTheme(), "system", mWindow);
+
+		// sort the extras by z-index
+		std:stable_sort(e.data.backgroundExtras.begin(), e.data.backgroundExtras.end(),  [](GuiComponent* a, GuiComponent* b) {
+			return b->getZIndex() > a->getZIndex();
+		});
 
 		this->add(e);
 	}
@@ -282,9 +291,27 @@ void SystemView::render(const Eigen::Affine3f& parentTrans)
 	
 	Eigen::Affine3f trans = getTransform() * parentTrans;
 
-	renderExtras(trans);
-	renderCarousel(trans);
-	renderInfoBar(trans);
+	auto systemInfoZIndex = mSystemInfo.getZIndex();
+	auto minMax = std::minmax(mCarousel.zIndex, systemInfoZIndex);
+
+	renderExtras(trans, INT16_MIN, minMax.first);
+	renderFade(trans);
+
+	if (mCarousel.zIndex > mSystemInfo.getZIndex()) {
+		renderInfoBar(trans);
+	} else {
+		renderCarousel(trans);
+	}
+
+	renderExtras(trans, minMax.first, minMax.second);
+
+	if (mCarousel.zIndex > mSystemInfo.getZIndex()) {
+		renderCarousel(trans);
+	} else {
+		renderInfoBar(trans);
+	}
+
+	renderExtras(trans, minMax.second, INT16_MAX);
 }
 
 std::vector<HelpPrompt> SystemView::getHelpPrompts()
@@ -405,7 +432,7 @@ void SystemView::renderInfoBar(const Eigen::Affine3f& trans)
 }
 
 // Draw background extras
-void SystemView::renderExtras(const Eigen::Affine3f& trans)
+void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float upper)
 {
 	Eigen::Affine3f extrasTrans = trans;
 	int extrasCenter = (int)mExtrasCamOffset;
@@ -425,10 +452,22 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans)
 
 		Eigen::Vector2i clipRect = Eigen::Vector2i((int)((i - mExtrasCamOffset) * mSize.x()), 0);
 		Renderer::pushClipRect(clipRect, mSize.cast<int>());
-		mEntries.at(index).data.backgroundExtras->render(extrasTrans);
+
+		SystemViewData data = mEntries.at(index).data;
+		for(unsigned int j = 0; j < data.backgroundExtras.size(); j++)
+		{
+			GuiComponent* extra = data.backgroundExtras[j];
+			if (extra->getZIndex() >= lower && extra->getZIndex() < upper) {
+				extra->render(extrasTrans);
+			}
+		}
+
 		Renderer::popClipRect();
 	}
+}
 
+void SystemView::renderFade(const Eigen::Affine3f& trans)
+{
 	// fade extras if necessary
 	if (mExtrasFadeOpacity)
 	{
@@ -451,6 +490,7 @@ void  SystemView::getDefaultElements(void)
 	mCarousel.logoSize.x() = 0.25f * mSize.x();
 	mCarousel.logoSize.y() = 0.155f * mSize.y();
 	mCarousel.maxLogoCount = 3;
+	mCarousel.zIndex = 40;
 
 	// System Info Bar
 	mSystemInfo.setSize(mSize.x(), mSystemInfo.getFont()->getLetterHeight()*2.2f);
@@ -459,6 +499,8 @@ void  SystemView::getDefaultElements(void)
 	mSystemInfo.setRenderBackground(true);
 	mSystemInfo.setFont(Font::get((int)(0.035f * mSize.y()), Font::getDefaultPath()));
 	mSystemInfo.setColor(0x000000FF);
+	mSystemInfo.setZIndex(50);
+	mSystemInfo.setDefaultZIndex(50);
 }
 
 void SystemView::getCarouselFromTheme(const ThemeData::ThemeElement* elem)
@@ -477,4 +519,6 @@ void SystemView::getCarouselFromTheme(const ThemeData::ThemeElement* elem)
 		mCarousel.logoSize = elem->get<Eigen::Vector2f>("logoSize").cwiseProduct(mSize);
 	if (elem->has("maxLogoCount"))
 		mCarousel.maxLogoCount = std::round(elem->get<float>("maxLogoCount"));
+	if (elem->has("zIndex"))
+		mCarousel.zIndex = elem->get<float>("zIndex");
 }

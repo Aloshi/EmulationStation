@@ -6,22 +6,24 @@
 #include "Settings.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
-	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
+	mHeaderText(window), mHeaderImage(window), mBackground(window)
 {
 	mHeaderText.setText("Logo Text");
 	mHeaderText.setSize(mSize.x(), 0);
 	mHeaderText.setPosition(0, 0);
 	mHeaderText.setAlignment(ALIGN_CENTER);
-
+	mHeaderText.setDefaultZIndex(50);
+	
 	mHeaderImage.setResize(0, mSize.y() * 0.185f);
 	mHeaderImage.setOrigin(0.5f, 0.0f);
 	mHeaderImage.setPosition(mSize.x() / 2, 0);
+	mHeaderImage.setDefaultZIndex(50);
 
 	mBackground.setResize(mSize.x(), mSize.y());
+	mBackground.setDefaultZIndex(0);
 
 	addChild(&mHeaderText);
 	addChild(&mBackground);
-	addChild(&mThemeExtras);
 }
 
 void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
@@ -30,7 +32,21 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 	mBackground.applyTheme(theme, getName(), "background", ALL);
 	mHeaderImage.applyTheme(theme, getName(), "logo", ALL);
 	mHeaderText.applyTheme(theme, getName(), "logoText", ALL);
-	mThemeExtras.setExtras(ThemeData::makeExtras(theme, getName(), mWindow));
+
+	// Remove old theme extras
+	for (auto extra : mThemeExtras)
+	{
+		removeChild(extra);
+		delete extra;
+	}
+	mThemeExtras.clear();
+
+	// Add new theme extras
+	mThemeExtras = ThemeData::makeExtras(theme, getName(), mWindow);
+	for (auto extra : mThemeExtras)
+	{
+		addChild(extra);
+	}
 
 	if(mHeaderImage.hasImage())
 	{
