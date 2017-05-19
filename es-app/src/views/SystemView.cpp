@@ -434,12 +434,13 @@ void SystemView::renderInfoBar(const Eigen::Affine3f& trans)
 // Draw background extras
 void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float upper)
 {
-	Eigen::Affine3f extrasTrans = trans;
 	int extrasCenter = (int)mExtrasCamOffset;
 	
 	// Adding texture loading buffers depending on scrolling speed and status
 	int bufferIndex = getScrollingVelocity() + 1;
-	
+
+	Renderer::pushClipRect(Eigen::Vector2i(0, 0), mSize.cast<int>());
+
 	for (int i = extrasCenter + logoBuffersLeft[bufferIndex]; i <= extrasCenter + logoBuffersRight[bufferIndex]; i++)
 	{
 		int index = i;
@@ -448,10 +449,11 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float u
 		while (index >= (int)mEntries.size())
 			index -= mEntries.size();
 
-		extrasTrans.translation() = trans.translation() + Eigen::Vector3f((i - mExtrasCamOffset) * mSize.x(), 0, 0);
-
-		Eigen::Vector2i clipRect = Eigen::Vector2i((int)((i - mExtrasCamOffset) * mSize.x()), 0);
-		Renderer::pushClipRect(clipRect, mSize.cast<int>());
+		Eigen::Affine3f extrasTrans = trans;
+		if (mCarousel.type == HORIZONTAL)
+			extrasTrans.translate(Eigen::Vector3f((i - mExtrasCamOffset) * mSize.x(), 0, 0));
+		else
+			extrasTrans.translate(Eigen::Vector3f(0, (i - mExtrasCamOffset) * mSize.y(), 0));
 
 		SystemViewData data = mEntries.at(index).data;
 		for(unsigned int j = 0; j < data.backgroundExtras.size(); j++)
@@ -461,9 +463,8 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float u
 				extra->render(extrasTrans);
 			}
 		}
-
-		Renderer::popClipRect();
 	}
+	Renderer::popClipRect();
 }
 
 void SystemView::renderFade(const Eigen::Affine3f& trans)
