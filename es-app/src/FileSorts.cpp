@@ -13,7 +13,22 @@ namespace FileSorts
 		FileData::SortType(&compareTimesPlayed, false, "times played, descending"),
 
 		FileData::SortType(&compareLastPlayed, true, "last played, ascending"),
-		FileData::SortType(&compareLastPlayed, false, "last played, descending")
+		FileData::SortType(&compareLastPlayed, false, "last played, descending"),
+
+		FileData::SortType(&compareNumPlayers, true, "number players, ascending"),
+		FileData::SortType(&compareNumPlayers, false, "number players, descending"),
+
+		FileData::SortType(&compareReleaseDate, true, "release date, ascending"),
+		FileData::SortType(&compareReleaseDate, false, "release date, descending"),
+
+		FileData::SortType(&compareGenre, true, "genre, ascending"),
+		FileData::SortType(&compareGenre, false, "genre, descending"),
+
+		FileData::SortType(&compareDeveloper, true, "developer, ascending"),
+		FileData::SortType(&compareDeveloper, false, "developer, descending"),
+
+		FileData::SortType(&comparePublisher, true, "publisher, ascending"),
+		FileData::SortType(&comparePublisher, false, "publisher, descending")
 	};
 
 	const std::vector<FileData::SortType> SortTypes(typesArr, typesArr + sizeof(typesArr)/sizeof(typesArr[0]));
@@ -23,29 +38,14 @@ namespace FileSorts
 	{
 		std::string name1 = file1->getName();
 		std::string name2 = file2->getName();
-
-		//min of name1/name2 .length()s
-		unsigned int count = name1.length() > name2.length() ? name2.length() : name1.length();
-		for(unsigned int i = 0; i < count; i++)
-		{
-			if(toupper(name1[i]) != toupper(name2[i]))
-			{
-				return toupper(name1[i]) < toupper(name2[i]);
-			}
-		}
-
-		return name1.length() < name2.length();
+		transform(name1.begin(), name1.end(), name1.begin(), ::toupper);
+		transform(name2.begin(), name2.end(), name2.begin(), ::toupper);
+		return name1.compare(name2) < 0;
 	}
 
 	bool compareRating(const FileData* file1, const FileData* file2)
 	{
-		//only games have rating metadata
-		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
-		{
-			return file1->metadata.getFloat("rating") < file2->metadata.getFloat("rating");
-		}
-
-		return false;
+		return file1->metadata.getFloat("rating") < file2->metadata.getFloat("rating");
 	}
 
 	bool compareTimesPlayed(const FileData* file1, const FileData* file2)
@@ -68,5 +68,42 @@ namespace FileSorts
 		}
 
 		return false;
+	}
+
+	bool compareNumPlayers(const FileData* file1, const FileData* file2)
+	{
+		return (file1)->metadata.getInt("players") < (file2)->metadata.getInt("players");
+	}
+
+	bool compareReleaseDate(const FileData* file1, const FileData* file2)
+	{
+		return (file1)->metadata.getTime("releasedate") < (file2)->metadata.getTime("releasedate");
+	}
+
+	bool compareGenre(const FileData* file1, const FileData* file2)
+	{
+		std::string genre1 = file1->metadata.get("genre");
+		std::string genre2 = file2->metadata.get("genre");
+		transform(genre1.begin(), genre1.end(), genre1.begin(), ::toupper);
+		transform(genre2.begin(), genre2.end(), genre2.begin(), ::toupper);
+		return genre1.compare(genre2) < 0;
+	}
+
+	bool compareDeveloper(const FileData* file1, const FileData* file2)
+	{
+		std::string developer1 = file1->metadata.get("developer");
+		std::string developer2 = file2->metadata.get("developer");
+		transform(developer1.begin(), developer1.end(), developer1.begin(), ::toupper);
+		transform(developer2.begin(), developer2.end(), developer2.begin(), ::toupper);
+		return developer1.compare(developer2) < 0;
+	}
+
+	bool comparePublisher(const FileData* file1, const FileData* file2)
+	{
+		std::string publisher1 = file1->metadata.get("publisher");
+		std::string publisher2 = file2->metadata.get("publisher");
+		transform(publisher1.begin(), publisher1.end(), publisher1.begin(), ::toupper);
+		transform(publisher2.begin(), publisher2.end(), publisher2.begin(), ::toupper);
+		return publisher1.compare(publisher2) < 0;
 	}
 };
