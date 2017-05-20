@@ -241,7 +241,7 @@ void Window::renderLoadingScreen()
 {
 	Eigen::Affine3f trans = Eigen::Affine3f::Identity();
 	Renderer::setMatrix(trans);
-	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0xFFFFFFFF);
+	Renderer::drawRect(0, 0, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF);
 
 	ImageComponent splash(this, true);
 	splash.setResize(Renderer::getScreenWidth() * 0.6f, 0.0f);
