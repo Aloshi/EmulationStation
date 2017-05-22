@@ -35,6 +35,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(NINTENDO_3DS, "Nintendo 3DS")
 	(NINTENDO_64, "Nintendo 64")
 	(NINTENDO_DS, "Nintendo DS")
+	(FAMICOM_DISK_SYSTEM, "Famicom Disk System")
 	(NINTENDO_ENTERTAINMENT_SYSTEM, "Nintendo Entertainment System (NES)")
 	(GAME_BOY, "Nintendo Game Boy")
 	(GAME_BOY_ADVANCE, "Nintendo Game Boy Advance")

@@ -35,6 +35,7 @@ namespace PlatformIds
 		"n3ds", // nintendo 3DS
 		"n64", // nintendo 64
 		"nds", // nintendo DS
+		"fds", // Famicom Disk System
 		"nes", // nintendo entertainment system
 		"gb", // game boy
 		"gba", // game boy advance
