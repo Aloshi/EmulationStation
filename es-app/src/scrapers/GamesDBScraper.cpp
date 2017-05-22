@@ -69,6 +69,7 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 	std::vector<ScraperSearchResult>& results)
 {
 	std::string path = "thegamesdb.net/api/GetGame.php?";
+	bool usingGameID = false;
 
 	std::string cleanName = params.nameOverride;
 	if (cleanName.empty())
@@ -78,10 +79,17 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 	}
 	else
 	{
-		path += "exactname=" + HttpReq::urlEncode(cleanName);
+		if (cleanName.substr(0,3) == "id:") {
+			std::string gameID = cleanName.substr(3,-1);
+			path += "id=" + HttpReq::urlEncode(gameID);
+			usingGameID = true;
+		}
+		else {
+			path += "exactname=" + HttpReq::urlEncode(cleanName);
+		}
 	}
 
-	if(params.system->getPlatformIds().empty())
+	if(params.system->getPlatformIds().empty() || usingGameID)
 	{
 		// no platform specified, we're done
 		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
