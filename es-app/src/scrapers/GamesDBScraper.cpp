@@ -35,6 +35,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(NINTENDO_3DS, "Nintendo 3DS")
 	(NINTENDO_64, "Nintendo 64")
 	(NINTENDO_DS, "Nintendo DS")
+	(FAMICOM_DISK_SYSTEM, "Famicom Disk System")
 	(NINTENDO_ENTERTAINMENT_SYSTEM, "Nintendo Entertainment System (NES)")
 	(GAME_BOY, "Nintendo Game Boy")
 	(GAME_BOY_ADVANCE, "Nintendo Game Boy Advance")
@@ -68,6 +69,7 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 	std::vector<ScraperSearchResult>& results)
 {
 	std::string path = "thegamesdb.net/api/GetGame.php?";
+	bool usingGameID = false;
 
 	std::string cleanName = params.nameOverride;
 	if (cleanName.empty())
@@ -77,10 +79,17 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 	}
 	else
 	{
-		path += "exactname=" + HttpReq::urlEncode(cleanName);
+		if (cleanName.substr(0,3) == "id:") {
+			std::string gameID = cleanName.substr(3,-1);
+			path += "id=" + HttpReq::urlEncode(gameID);
+			usingGameID = true;
+		}
+		else {
+			path += "exactname=" + HttpReq::urlEncode(cleanName);
+		}
 	}
 
-	if(params.system->getPlatformIds().empty())
+	if(params.system->getPlatformIds().empty() || usingGameID)
 	{
 		// no platform specified, we're done
 		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
