@@ -43,6 +43,8 @@ namespace PlatformIds
 		"gc", // gamecube
 		"wii",
 		"wiiu",
+		"virtualboy",
+		"gameandwatch",
 		"pc",
 		"sega32x",
 		"segacd",
@@ -52,6 +54,7 @@ namespace PlatformIds
 		"mastersystem", // sega master system
 		"megadrive", // sega megadrive
 		"saturn", // sega saturn
+		"sg-1000",
 		"psx",
 		"ps2",
 		"ps3",
@@ -63,6 +66,10 @@ namespace PlatformIds
 		"wonderswan",
 		"wonderswancolor",
 		"zxspectrum",
+		"videopac",
+		"vectrex",
+		"trs-80",
+		"coco",
 
 		"ignore", // do not allow scraping for this system
 		"invalid"

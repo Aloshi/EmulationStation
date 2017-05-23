@@ -28,7 +28,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(MAC_OS, "Mac OS")
 	(XBOX, "Microsoft Xbox")
 	(XBOX_360, "Microsoft Xbox 360")
-	// missing MSX
+	(MSX, "MSX")
 	(NEOGEO, "Neo Geo")
 	(NEOGEO_POCKET, "Neo Geo Pocket")
 	(NEOGEO_POCKET_COLOR, "Neo Geo Pocket Color")
@@ -43,6 +43,8 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(NINTENDO_GAMECUBE, "Nintendo GameCube")
 	(NINTENDO_WII, "Nintendo Wii")
 	(NINTENDO_WII_U, "Nintendo Wii U")
+	(NINTENDO_VIRTUAL_BOY, "Nintendo Virtual Boy")
+	(NINTENDO_GAME_AND_WATCH, "Game & Watch")
 	(PC, "PC")
 	(SEGA_32X, "Sega 32X")
 	(SEGA_CD, "Sega CD")
@@ -52,6 +54,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(SEGA_MASTER_SYSTEM, "Sega Master System")
 	(SEGA_MEGA_DRIVE, "Sega Mega Drive")
 	(SEGA_SATURN, "Sega Saturn")
+	(SEGA_SG1000, "SEGA SG-1000")	
 	(PLAYSTATION, "Sony Playstation")
 	(PLAYSTATION_2, "Sony Playstation 2")
 	(PLAYSTATION_3, "Sony Playstation 3")
@@ -62,8 +65,11 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(TURBOGRAFX_16, "TurboGrafx 16")
 	(WONDERSWAN, "WonderSwan")
 	(WONDERSWAN_COLOR, "WonderSwan Color")
-	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
-
+	(ZX_SPECTRUM, "Sinclair ZX Spectrum")
+	(VIDEOPAC_ODYSSEY2, "Magnavox Odyssey 2")
+	(VECTREX, "Vectrex")
+	(TRS80_COLOR_COMPUTER, "TRS-80 Color Computer")
+	(TANDY, "TRS-80 Color Computer");
 
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
 	std::vector<ScraperSearchResult>& results)
