@@ -264,10 +264,10 @@ void SystemView::onCursorChanged(const CursorState& state)
 				this->mExtrasCamOffset = endPos;
 
 		}, 500);
-	}
-	else{ // slide
+	} else if (Settings::getInstance()->getString("TransitionStyle") == "slide") {
+		// slide
 		anim = new LambdaAnimation(
-			[startPos, endPos, posMax, this](float t)
+			[this, startPos, endPos, posMax](float t)
 		{
 			t -= 1;
 			float f = lerp<float>(startPos, endPos, t*t*t + 1);
@@ -279,7 +279,16 @@ void SystemView::onCursorChanged(const CursorState& state)
 			this->mCamOffset = f;
 			this->mExtrasCamOffset = f;
 		}, 500);
+	} else {
+		// None
+		anim = new LambdaAnimation(
+			[this, endPos](float t)
+		{
+			this->mCamOffset = endPos;
+			this->mExtrasCamOffset = endPos;
+		}, 1);
 	}
+
 
 	setAnimation(anim, 0, nullptr, false, 0);
 }
