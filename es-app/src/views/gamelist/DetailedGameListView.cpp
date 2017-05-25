@@ -143,6 +143,7 @@ void DetailedGameListView::initMDLabels()
 
 		components[i]->setFont(Font::get(FONT_SIZE_SMALL));
 		components[i]->setPosition(pos);
+		components[i]->setDefaultZIndex(40);
 	}
 }
 
@@ -171,6 +172,7 @@ void DetailedGameListView::initMDValues()
 		const float heightDiff = (labels[i]->getSize().y() - values[i]->getSize().y()) / 2;
 		values[i]->setPosition(labels[i]->getPosition() + Vector3f(labels[i]->getSize().x(), heightDiff, 0));
 		values[i]->setSize(colSize - labels[i]->getSize().x(), values[i]->getSize().y());
+		values[i]->setDefaultZIndex(40);
 
 		float testBot = values[i]->getPosition().y() + values[i]->getSize().y();
 		if(testBot > bottom)
