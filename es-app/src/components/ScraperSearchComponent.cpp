@@ -205,6 +205,8 @@ void ScraperSearchComponent::updateViewStyle()
 
 void ScraperSearchComponent::search(const ScraperSearchParams& params)
 {
+	mBlockAccept = true;
+
 	mResultList->clear();
 	mScraperResults.clear();
 	mThumbnailReq.reset();

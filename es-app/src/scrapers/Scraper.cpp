@@ -41,7 +41,7 @@ void ScraperSearchHandle::update()
 	if(mStatus == ASYNC_DONE)
 		return;
 
-	while(!mRequestQueue.empty())
+	if(!mRequestQueue.empty())
 	{
 		auto& req = mRequestQueue.front();
 		AsyncHandleStatus status = req->status();
@@ -62,7 +62,6 @@ void ScraperSearchHandle::update()
 		if(status == ASYNC_DONE)
 		{
 			mRequestQueue.pop();
-			continue;
 		}
 
 		// status == ASYNC_IN_PROGRESS
