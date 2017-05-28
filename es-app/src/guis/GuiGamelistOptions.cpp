@@ -190,6 +190,13 @@ bool GuiGamelistOptions::input(InputConfig* config, Input input)
 	return mMenu.input(config, input);
 }
 
+HelpStyle GuiGamelistOptions::getHelpStyle()
+{
+	HelpStyle style = HelpStyle();
+	style.applyTheme(mSystem->getTheme(), "system");
+	return style;
+}
+
 std::vector<HelpPrompt> GuiGamelistOptions::getHelpPrompts()
 {
 	auto prompts = mMenu.getHelpPrompts();

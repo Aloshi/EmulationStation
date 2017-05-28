@@ -12,6 +12,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void onSizeChanged() override;
 	std::vector<HelpPrompt> getHelpPrompts() override;
+	HelpStyle getHelpStyle() override;
 
 private:
 	void addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func);
