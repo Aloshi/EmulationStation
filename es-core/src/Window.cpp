@@ -65,8 +65,6 @@ bool Window::init(unsigned int width, unsigned int height)
 		return false;
 	}
 
-	mBackgroundOverlay->setImage(":/scroll_gradient.png");
-	
 	InputManager::getInstance()->init();
 
 	ResourceManager::getInstance()->reloadAll();
@@ -79,6 +77,7 @@ bool Window::init(unsigned int width, unsigned int height)
 		mDefaultFonts.push_back(Font::get(FONT_SIZE_LARGE));
 	}
 
+	mBackgroundOverlay->setImage(":/scroll_gradient.png");
 	mBackgroundOverlay->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	// update our help because font sizes probably changed
