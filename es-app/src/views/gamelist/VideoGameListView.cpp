@@ -4,13 +4,18 @@
 #include "animations/LambdaAnimation.h"
 #include <sys/stat.h>
 #include <fcntl.h>
+#ifdef _RPI_
+#include "components/VideoPlayerComponent.h"
+#include "Settings.h"
+#endif
+#include "components/VideoVlcComponent.h"
 
 VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),
 	mDescContainer(window), mDescription(window),
 	mMarquee(window),
 	mImage(window),
-	mVideo(window),
+	mVideo(nullptr),
 	mVideoPlaying(false),
 
 	mLblRating(window), mLblReleaseDate(window), mLblDeveloper(window), mLblPublisher(window),
@@ -20,6 +25,16 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	mGenre(window), mPlayers(window), mLastPlayed(window), mPlayCount(window)
 {
 	const float padding = 0.01f;
+
+	// Create the correct type of video window
+#ifdef _RPI_
+	if (Settings::getInstance()->getBool("VideoOmxPlayer"))
+		mVideo = new VideoPlayerComponent(window);
+	else
+		mVideo = new VideoVlcComponent(window);
+#else
+	mVideo = new VideoVlcComponent(window);
+#endif
 
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
 	mList.setSize(mSize.x() * (0.50f - padding), mList.getSize().y());
@@ -42,11 +57,11 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	addChild(&mImage);
 
 	// video
-	mVideo.setOrigin(0.5f, 0.5f);
-	mVideo.setPosition(mSize.x() * 0.25f, mSize.y() * 0.4f);
-	mVideo.setSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.4f);
-	mVideo.setDefaultZIndex(30);
-	addChild(&mVideo);
+	mVideo->setOrigin(0.5f, 0.5f);
+	mVideo->setPosition(mSize.x() * 0.25f, mSize.y() * 0.4f);
+	mVideo->setSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.4f);
+	mVideo->setDefaultZIndex(30);
+	addChild(mVideo);
 
 	// metadata labels + values
 	mLblRating.setText("Rating: ");
@@ -91,6 +106,7 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 
 VideoGameListView::~VideoGameListView()
 {
+	delete mVideo;
 }
 
 void VideoGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
@@ -100,7 +116,7 @@ void VideoGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	using namespace ThemeFlags;
 	mMarquee.applyTheme(theme, getName(), "md_marquee", POSITION | ThemeFlags::SIZE | Z_INDEX);
 	mImage.applyTheme(theme, getName(), "md_image", POSITION | ThemeFlags::SIZE | Z_INDEX);
-	mVideo.applyTheme(theme, getName(), "md_video", POSITION | ThemeFlags::SIZE | ThemeFlags::DELAY | Z_INDEX);
+	mVideo->applyTheme(theme, getName(), "md_video", POSITION | ThemeFlags::SIZE | ThemeFlags::DELAY | Z_INDEX);
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();
@@ -214,8 +230,8 @@ void VideoGameListView::updateInfoPanel()
 	bool fadingOut;
 	if(file == NULL)
 	{
-		mVideo.setVideo("");
-		mVideo.setImage("");
+		mVideo->setVideo("");
+		mVideo->setImage("");
 		mVideoPlaying = false;
 		//mMarquee.setImage("");
 		//mDescription.setText("");
@@ -244,13 +260,13 @@ void VideoGameListView::updateInfoPanel()
 			thumbnail_path.erase(0, 1);
 			thumbnail_path.insert(0, getHomePath());
 		}
-		if (!mVideo.setVideo(video_path))
+		if (!mVideo->setVideo(video_path))
 		{
-			mVideo.setDefaultVideo();
+			mVideo->setDefaultVideo();
 		}
 		mVideoPlaying = true;
 
-		mVideo.setImage(thumbnail_path);
+		mVideo->setImage(thumbnail_path);
 		mMarquee.setImage(marquee_path);
 		mImage.setImage(thumbnail_path);
 
@@ -275,7 +291,7 @@ void VideoGameListView::updateInfoPanel()
 
 	std::vector<GuiComponent*> comps = getMDValues();
 	comps.push_back(&mMarquee);
-	comps.push_back(&mVideo);
+	comps.push_back(mVideo);
 	comps.push_back(&mDescription);
 	comps.push_back(&mImage);
 	std::vector<TextComponent*> labels = getMDLabels();
@@ -304,7 +320,7 @@ void VideoGameListView::launch(FileData* game)
 {
 	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
 	if(mMarquee.hasImage())
-		target << mVideo.getCenter().x(), mVideo.getCenter().y(), 0;
+		target << mVideo->getCenter().x(), mVideo->getCenter().y(), 0;
 
 	ViewController::get()->launch(game, target);
 }
@@ -340,7 +356,7 @@ std::vector<GuiComponent*> VideoGameListView::getMDValues()
 void VideoGameListView::update(int deltaTime)
 {
 	BasicGameListView::update(deltaTime);
-	mVideo.update(deltaTime);
+	mVideo->update(deltaTime);
 }
 
 void VideoGameListView::onShow()

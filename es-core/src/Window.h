@@ -17,6 +17,7 @@ public:
 	void pushGui(GuiComponent* gui);
 	void removeGui(GuiComponent* gui);
 	GuiComponent* peekGui();
+	inline int getGuiStackSize() { return mGuiStack.size(); }
 
 	void textInput(const char* text);
 	void input(InputConfig* config, Input input);
@@ -31,7 +32,7 @@ public:
 	inline bool isSleeping() const { return mSleeping; }
 	bool getAllowSleep();
 	void setAllowSleep(bool sleep);
-	
+
 	void renderLoadingScreen();
 
 	void renderHelpPromptsEarly(); // used to render HelpPrompts before a fade
@@ -55,6 +56,7 @@ private:
 	int mFrameTimeElapsed;
 	int mFrameCountElapsed;
 	int mAverageDeltaTime;
+	bool mRenderScreenSaver;
 
 	std::unique_ptr<TextCache> mFrameDataText;
 
