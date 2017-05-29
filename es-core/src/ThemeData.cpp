@@ -52,7 +52,11 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("textlist", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
+		("selectorHeight", FLOAT)
+		("selectorOffsetY", FLOAT)
 		("selectorColor", COLOR)
+		("selectorImagePath", PATH)
+		("selectorImageTile", BOOLEAN)
 		("selectedColor", COLOR)
 		("primaryColor", COLOR)
 		("secondaryColor", COLOR)

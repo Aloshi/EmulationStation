@@ -72,6 +72,8 @@ public:
 			it->data.textCache.reset();
 	}
 
+	inline void setSelectorHeight(float selectorScale) { mSelectorHeight = selectorScale; }
+	inline void setSelectorOffsetY(float selectorOffsetY) { mSelectorOffsetY = selectorOffsetY; }
 	inline void setSelectorColor(unsigned int color) { mSelectorColor = color; }
 	inline void setSelectedColor(unsigned int color) { mSelectedColor = color; }
 	inline void setScrollSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
@@ -99,16 +101,20 @@ private:
 	std::shared_ptr<Font> mFont;
 	bool mUppercase;
 	float mLineSpacing;
+	float mSelectorHeight;
+	float mSelectorOffsetY;
 	unsigned int mSelectorColor;
 	unsigned int mSelectedColor;
 	std::shared_ptr<Sound> mScrollSound;
 	static const unsigned int COLOR_ID_COUNT = 2;
 	unsigned int mColors[COLOR_ID_COUNT];
+
+	ImageComponent mSelectorImage;
 };
 
 template <typename T>
 TextListComponent<T>::TextListComponent(Window* window) : 
-	IList<TextListData, T>(window)
+	IList<TextListData, T>(window), mSelectorImage(window)
 {
 	mMarqueeOffset = 0;
 	mMarqueeTime = -MARQUEE_DELAY;
@@ -119,6 +125,8 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mFont = Font::get(FONT_SIZE_MEDIUM);
 	mUppercase = false;
 	mLineSpacing = 1.5f;
+	mSelectorHeight = mFont->getSize() * 1.5f;
+	mSelectorOffsetY = 0;
 	mSelectorColor = 0x000000FF;
 	mSelectedColor = 0;
 	mColors[0] = 0x0000FFFF;
@@ -135,7 +143,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	if(size() == 0)
 		return;
 
-	const float entrySize = round(font->getHeight(mLineSpacing));
+	const float entrySize = font->getSize() * mLineSpacing;
 
 	int startEntry = 0;
 
@@ -160,8 +168,13 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	// draw selector bar
 	if(startEntry < listCutoff)
 	{
-		Renderer::setMatrix(trans);
-		Renderer::drawRect(0.f, (mCursor - startEntry)*entrySize + (entrySize - font->getHeight())/2, mSize.x(), font->getHeight(), mSelectorColor);
+		if (mSelectorImage.hasImage()) {
+			mSelectorImage.setPosition(0.f, (mCursor - startEntry)*entrySize + mSelectorOffsetY, 0.f);
+			mSelectorImage.render(trans);
+		} else {
+			Renderer::setMatrix(trans);
+			Renderer::drawRect(0.f, (mCursor - startEntry)*entrySize + mSelectorOffsetY, mSize.x(), mSelectorHeight, mSelectorColor);
+		}
 	}
 
 	// clip to inside margins
@@ -194,14 +207,14 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 			break;
 		case ALIGN_CENTER:
 			offset[0] = (mSize.x() - entry.data.textCache->metrics.size.x()) / 2;
-			if(offset[0] < 0)
-				offset[0] = 0;
+			if(offset[0] < mHorizontalMargin)
+				offset[0] = mHorizontalMargin;
 			break;
 		case ALIGN_RIGHT:
 			offset[0] = (mSize.x() - entry.data.textCache->metrics.size.x());
 			offset[0] -= mHorizontalMargin;
-			if(offset[0] < 0)
-				offset[0] = 0;
+			if(offset[0] < mHorizontalMargin)
+				offset[0] = mHorizontalMargin;
 			break;
 		}
 		
@@ -277,7 +290,7 @@ void TextListComponent<T>::update(int deltaTime)
 		Eigen::Vector2f textSize = mFont->sizeText(text);
 
 		//it's long enough to marquee
-		if(textSize.x() - mMarqueeOffset > mSize.x() - 12 - (mAlignment != ALIGN_CENTER ? mHorizontalMargin : 0))
+		if(textSize.x() - mMarqueeOffset > mSize.x() - 12 - mHorizontalMargin * 2)
 		{
 			mMarqueeTime += deltaTime;
 			while(mMarqueeTime > MARQUEE_SPEED)
@@ -364,6 +377,33 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	if(properties & FORCE_UPPERCASE && elem->has("forceUppercase"))
 		setUppercase(elem->get<bool>("forceUppercase"));
 
-	if(properties & LINE_SPACING && elem->has("lineSpacing"))
-		setLineSpacing(elem->get<float>("lineSpacing"));
+	if(properties & LINE_SPACING)
+	{
+		if(elem->has("lineSpacing"))
+			setLineSpacing(elem->get<float>("lineSpacing"));
+		if(elem->has("selectorHeight"))
+		{
+			setSelectorHeight(elem->get<float>("selectorHeight") * Renderer::getScreenHeight());
+		} else {
+			setSelectorHeight(mFont->getSize() * 1.5);
+		}
+		if(elem->has("selectorOffsetY"))
+		{
+			float scale = this->mParent ? this->mParent->getSize().y() : (float)Renderer::getScreenHeight();
+			setSelectorOffsetY(elem->get<float>("selectorOffsetY") * scale);
+		} else {
+			setSelectorOffsetY(0.0);
+		}
+	}
+
+	if (elem->has("selectorImagePath"))
+	{
+		std::string path = elem->get<std::string>("selectorImagePath");
+		bool tile = elem->has("selectorImageTile") && elem->get<bool>("selectorImageTile");
+		mSelectorImage.setImage(path, tile);
+		mSelectorImage.setSize(mSize.x(), mSelectorHeight);
+		mSelectorImage.setColorShift(mSelectorColor);
+	} else {
+		mSelectorImage.setImage("");
+	}
 }
