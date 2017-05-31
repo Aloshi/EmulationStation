@@ -99,16 +99,16 @@ public:
 	//Returns a list of names this input is mapped to.
 	std::vector<std::string> getMappedTo(Input input);
 
+	// Returns true if there is an Input mapped to this name, false otherwise.
+	// Writes Input mapped to this name to result if true.
+	bool getInputByName(const std::string& name, Input* result);
+
 	void loadFromXML(pugi::xml_node root);
 	void writeToXML(pugi::xml_node parent);
 
 	bool isConfigured();
 
 private:
-	// Returns true if there is an Input mapped to this name, false otherwise.
-	// Writes Input mapped to this name to result if true.
-	bool getInputByName(const std::string& name, Input* result);
-
 	std::map<std::string, Input> mNameMap;
 	const int mDeviceId;
 	const std::string mDeviceName;
