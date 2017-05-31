@@ -89,8 +89,6 @@ void VideoComponent::setImage(std::string path)
 		return;
 
 	mStaticImage.setImage(path);
-	// Make the image stretch to fill the video region
-	mStaticImage.setSize(getSize());
 	mFadeIn = 0.0f;
 	mStaticImagePath = path;
 }

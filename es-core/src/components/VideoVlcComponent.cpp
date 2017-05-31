@@ -231,9 +231,7 @@ void VideoVlcComponent::setupVLC()
 	// If VLC hasn't been initialised yet then do it now
 	if (!mVLC)
 	{
-		const char* args[] = { "--quiet", "", "", "" };
-		// check if we want to mute the audio
-
+		const char* args[] = { "--quiet" };
 		mVLC = libvlc_new(sizeof(args) / sizeof(args[0]), args);
 	}
 }
