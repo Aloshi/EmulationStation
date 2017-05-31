@@ -49,6 +49,13 @@ bool GuiSettings::input(InputConfig* config, Input input)
 	return GuiComponent::input(config, input);
 }
 
+HelpStyle GuiSettings::getHelpStyle()
+{
+	HelpStyle style = HelpStyle();
+	style.applyTheme(ViewController::get()->getState().getSystem()->getTheme(), "system");
+	return style;
+}
+
 std::vector<HelpPrompt> GuiSettings::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts = mMenu.getHelpPrompts();
