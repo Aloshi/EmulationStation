@@ -455,6 +455,7 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float u
 		else
 			extrasTrans.translate(Eigen::Vector3f(0, (i - mExtrasCamOffset) * mSize.y(), 0));
 
+		Renderer::pushClipRect(Eigen::Vector2i(extrasTrans.translation()[0], extrasTrans.translation()[1]), mSize.cast<int>());
 		SystemViewData data = mEntries.at(index).data;
 		for(unsigned int j = 0; j < data.backgroundExtras.size(); j++)
 		{
@@ -463,6 +464,7 @@ void SystemView::renderExtras(const Eigen::Affine3f& trans, float lower, float u
 				extra->render(extrasTrans);
 			}
 		}
+		Renderer::popClipRect();
 	}
 	Renderer::popClipRect();
 }

@@ -41,3 +41,11 @@ HelpStyle IGameListView::getHelpStyle()
 	style.applyTheme(mTheme, getName());
 	return style;
 }
+
+void IGameListView::render(const Eigen::Affine3f& parentTrans)
+{
+	Eigen::Affine3f trans = parentTrans * getTransform();
+	Renderer::pushClipRect(Eigen::Vector2i(trans.translation()[0],trans.translation()[1]), Eigen::Vector2i(Renderer::getScreenWidth(), Renderer::getScreenHeight()));
+	renderChildren(trans);
+	Renderer::popClipRect();
+}
