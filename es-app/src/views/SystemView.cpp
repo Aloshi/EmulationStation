@@ -280,8 +280,8 @@ void SystemView::onCursorChanged(const CursorState& state)
 			this->mCamOffset = f;
 			this->mExtrasCamOffset = f;
 		}, 500);
-	} else if (transition_style == "instant") {
-		// instant
+	} else if (transition_style == "simple slide") {
+		// simple slide
 		anim = new LambdaAnimation(
 			[this, startPos, endPos, posMax](float t)
 		{
@@ -296,7 +296,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 			this->mExtrasCamOffset = endPos;
 		}, 500);
 	} else {
-		// None
+		// instant
 		anim = new LambdaAnimation(
 			[this, endPos](float t)
 		{

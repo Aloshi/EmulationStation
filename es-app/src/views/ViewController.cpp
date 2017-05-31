@@ -189,12 +189,12 @@ void ViewController::playViewTransition()
 		}else{
 			advanceAnimation(0, (int)(mFadeOpacity * FADE_DURATION));
 		}
-	} else if (transition_style == "slide" || transition_style == "instant"){
-		// slide
+	} else if (transition_style == "slide" || transition_style == "simple slide"){
+		// slide or simple slide
 		setAnimation(new MoveCameraAnimation(mCamera, target));
 		updateHelpPrompts(); // update help prompts immediately
 	} else {
-		// none
+		// instant
 		setAnimation(new LambdaAnimation(
 			[this, target](float t)
 		{
@@ -246,7 +246,7 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, nullptr, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
 		});
-	} else if (transition_style == "slide" || transition_style == "instant"){
+	} else if (transition_style == "slide" || transition_style == "simple slide"){
 		// move camera to zoom in on center + fade out, launch game, come back in
 		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game]
 		{
