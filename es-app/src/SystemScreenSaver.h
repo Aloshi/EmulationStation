@@ -13,13 +13,20 @@ public:
 
 	virtual void startScreenSaver();
 	virtual void stopScreenSaver();
+	virtual void nextVideo();
 	virtual void renderScreenSaver();
 	virtual bool allowSleep();
 	virtual void update(int deltaTime);
+	virtual bool isScreenSaverActive();
+
+	virtual FileData* getCurrentGame();
+	virtual void launchGame();
 
 private:
 	void	countVideos();
 	void	pickRandomVideo(std::string& path);
+
+	void input(InputConfig* config, Input input);
 
 	enum STATE {
 		STATE_INACTIVE,
@@ -36,4 +43,7 @@ private:
 	STATE			mState;
 	float			mOpacity;
 	int				mTimer;
+	FileData*		mCurrentGame;
+	std::string		mGameName;
+	std::string		mSystemName;	
 };

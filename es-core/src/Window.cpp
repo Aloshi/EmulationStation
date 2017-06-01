@@ -115,13 +115,34 @@ void Window::textInput(const char* text)
 
 void Window::input(InputConfig* config, Input input)
 {
-	if (mRenderScreenSaver)
-	{
-		mRenderScreenSaver = false;
-
-		// Tell the GUI components the screensaver has stopped
-		for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
-			(*i)->onScreenSaverDeactivate();
+	if (mScreenSaver) {
+		if(mScreenSaver->isScreenSaverActive() && Settings::getInstance()->getBool("ScreenSaverControls") &&
+		   (Settings::getInstance()->getString("ScreenSaverBehavior") == "random video"))
+		{
+			if(mScreenSaver->getCurrentGame() != NULL && (config->isMappedTo("right", input) || config->isMappedTo("start", input) || config->isMappedTo("select", input)))
+			{
+				if(config->isMappedTo("right", input) || config->isMappedTo("select", input))
+				{
+					if (input.value != 0) {
+						// handle screensaver control
+						mScreenSaver->nextVideo();
+					}
+					return;
+				}
+				else if(config->isMappedTo("start", input))
+				{
+					// launch game!
+					cancelScreenSaver();
+					mScreenSaver->launchGame();
+					// to force handling the wake up process
+					mSleeping = true;
+				}
+			}
+			else if(input.value != 0)
+			{
+				return;
+			}
+		}
 	}
 
 	if(mSleeping)
@@ -377,35 +398,35 @@ bool Window::isProcessing()
 	return count_if(mGuiStack.begin(), mGuiStack.end(), [](GuiComponent* c) { return c->isProcessing(); }) > 0;
 }
 
-void Window::startScreenSaver()		
- {		
- 	if (mScreenSaver && !mRenderScreenSaver)		
- 	{		
- 		// Tell the GUI components the screensaver is starting		
- 		for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)		
- 			(*i)->onScreenSaverActivate();		
- 		
- 		mScreenSaver->startScreenSaver();		
- 		mRenderScreenSaver = true;		
- 	}		
- }		
- 		
- void Window::cancelScreenSaver()		
- {		
- 	if (mScreenSaver && mRenderScreenSaver)		
- 	{		
- 		mScreenSaver->stopScreenSaver();		
- 		mRenderScreenSaver = false;		
- 		
- 		// Tell the GUI components the screensaver has stopped		
- 		for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)		
- 			(*i)->onScreenSaverDeactivate();		
- 	}		
- }		
- 		
- void Window::renderScreenSaver()		
- {		
- 	if (mScreenSaver)		
- 		mScreenSaver->renderScreenSaver();		
+void Window::startScreenSaver()
+ {
+ 	if (mScreenSaver && !mRenderScreenSaver)
+ 	{
+ 		// Tell the GUI components the screensaver is starting
+ 		for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+ 			(*i)->onScreenSaverActivate();
+
+ 		mScreenSaver->startScreenSaver();
+ 		mRenderScreenSaver = true;
+ 	}
  }
- 
+
+ void Window::cancelScreenSaver()
+ {
+ 	if (mScreenSaver && mRenderScreenSaver)
+ 	{
+ 		mScreenSaver->stopScreenSaver();
+ 		mRenderScreenSaver = false;
+
+ 		// Tell the GUI components the screensaver has stopped
+ 		for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+ 			(*i)->onScreenSaverDeactivate();
+ 	}
+ }
+
+ void Window::renderScreenSaver()
+ {
+ 	if (mScreenSaver)
+ 		mScreenSaver->renderScreenSaver();
+ }
+
