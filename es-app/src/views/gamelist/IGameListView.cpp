@@ -45,7 +45,14 @@ HelpStyle IGameListView::getHelpStyle()
 void IGameListView::render(const Eigen::Affine3f& parentTrans)
 {
 	Eigen::Affine3f trans = parentTrans * getTransform();
-	Renderer::pushClipRect(Eigen::Vector2i(trans.translation()[0],trans.translation()[1]), Eigen::Vector2i(Renderer::getScreenWidth(), Renderer::getScreenHeight()));
+
+	float scaleX = trans.linear()(0,0);
+	float scaleY = trans.linear()(1,1);
+
+	Eigen::Vector2i pos(trans.translation()[0], trans.translation()[1]);
+	Eigen::Vector2i size(mSize.x() * scaleX, mSize.y() * scaleY);
+
+	Renderer::pushClipRect(pos, size);
 	renderChildren(trans);
 	Renderer::popClipRect();
 }
