@@ -1,4 +1,5 @@
 #include "VolumeControl.h"
+#include "Settings.h"
 
 #include "Log.h"
 
@@ -73,6 +74,10 @@ void VolumeControl::init()
 	//try to open mixer device
 	if (mixerHandle == nullptr)
 	{
+		#ifdef _RPI_
+		mixerName = Settings::getInstance()->getString("AudioDevice").c_str();
+		#endif
+
 		snd_mixer_selem_id_alloca(&mixerSelemId);
 		//sets simple-mixer index and name
 		snd_mixer_selem_id_set_index(mixerSelemId, mixerIndex);

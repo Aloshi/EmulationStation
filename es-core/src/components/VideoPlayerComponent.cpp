@@ -1,5 +1,6 @@
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
+#include "AudioManager.h"
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Settings.h"
@@ -57,6 +58,9 @@ void VideoPlayerComponent::startVideo()
 			// Set the video that we are going to be playing so we don't attempt to restart it
 			mPlayingVideoPath = mVideoPath;
 
+			// Disable AudioManager so video can play
+			AudioManager::getInstance()->deinit();
+
 			// Start the player process
 			pid_t pid = fork();
 			if (pid == -1)
@@ -84,7 +88,7 @@ void VideoPlayerComponent::startVideo()
 				// We need to specify the layer of 10000 or above to ensure the video is displayed on top
 				// of our SDL display
 
-				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "--win", buf, "-b", "", "", "", "", NULL };
+				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf, "-b", "", "", "", "", NULL };
 
 				// check if we want to mute the audio
 				if (!Settings::getInstance()->getBool("VideoAudio"))
@@ -98,7 +102,9 @@ void VideoPlayerComponent::startVideo()
 					argv[6] = "stretch";
 				}
 
-				argv[11] = mPlayingVideoPath.c_str();
+				argv[10] = Settings::getInstance()->getString("OMXAudioDev").c_str();
+
+				argv[13] = mPlayingVideoPath.c_str();
 
 				const char* env[] = { "LD_LIBRARY_PATH=/opt/vc/libs:/usr/lib/omxplayer", NULL };
 
@@ -134,6 +140,8 @@ void VideoPlayerComponent::stopVideo()
 		int status;
 		kill(mPlayerPid, SIGKILL);
 		waitpid(mPlayerPid, &status, WNOHANG);
+		// Restart AudioManager
+		AudioManager::getInstance()->init();
 		mPlayerPid = -1;
 	}
 }
