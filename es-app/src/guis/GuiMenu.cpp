@@ -69,6 +69,23 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		[this] {
 			auto s = new GuiSettings(mWindow, "SOUND SETTINGS");
 
+			#ifdef _RPI_
+				// volume control device
+				auto vol_dev = std::make_shared< OptionListComponent<std::string> >(mWindow, "AUDIO DEVICE", false);
+				std::vector<std::string> transitions;
+				transitions.push_back("PCM");
+				transitions.push_back("Speaker");
+				transitions.push_back("Master");
+				for(auto it = transitions.begin(); it != transitions.end(); it++)
+					vol_dev->add(*it, *it, Settings::getInstance()->getString("AudioDevice") == *it);
+				s->addWithLabel("AUDIO DEVICE", vol_dev);
+				s->addSaveFunc([vol_dev] { 
+					Settings::getInstance()->setString("AudioDevice", vol_dev->getSelected());
+					VolumeControl::getInstance()->deinit();
+					VolumeControl::getInstance()->init();
+				});
+			#endif
+
 			// volume
 			auto volume = std::make_shared<SliderComponent>(mWindow, 0.f, 100.f, 1.f, "%");
 			volume->setValue((float)VolumeControl::getInstance()->getVolume());
@@ -203,6 +220,23 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 
 				if(needReload)
 					ViewController::get()->reloadAll();
+			});
+			
+			// OMX player Audio Device
+			auto omx_audio_dev = std::make_shared< OptionListComponent<std::string> >(mWindow, "OMX PLAYER AUDIO DEVICE", false);
+			std::vector<std::string> devices;
+			devices.push_back("local");
+			devices.push_back("hdmi");
+			devices.push_back("both");
+			// USB audio
+			devices.push_back("alsa:hw:0,0");
+			devices.push_back("alsa:hw:1,0");
+			for (auto it = devices.begin(); it != devices.end(); it++)
+				omx_audio_dev->add(*it, *it, Settings::getInstance()->getString("OMXAudioDev") == *it);
+			s->addWithLabel("OMX PLAYER AUDIO DEVICE", omx_audio_dev);
+			s->addSaveFunc([omx_audio_dev] {
+				if (Settings::getInstance()->getString("OMXAudioDev") != omx_audio_dev->getSelected())
+					Settings::getInstance()->setString("OMXAudioDev", omx_audio_dev->getSelected());
 			});
 #endif
 			auto video_audio = std::make_shared<SwitchComponent>(mWindow);

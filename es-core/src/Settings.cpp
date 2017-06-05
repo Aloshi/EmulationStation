@@ -81,6 +81,15 @@ void Settings::setDefaults()
 	// we don't get a warning if we encounter it on a different platform
 	mBoolMap["VideoOmxPlayer"] = false;
 	mBoolMap["VideoAudio"] = true;
+	// Audio out device for Video playback using OMX player.
+	mStringMap["OMXAudioDev"] = "both";
+
+	// Audio out device for volume control
+	#ifdef _RPI_
+		mStringMap["AudioDevice"] = "PCM";
+	#else
+		mStringMap["AudioDevice"] = "Master";
+	#endif
 
 }
 
