@@ -539,6 +539,14 @@ Can be created as an extra.
 * `size` - type: NORMALIZED_PAIR.
 * `selectorColor` - type: COLOR.
 	- Color of the "selector bar."
+* `selectorImagePath` - type: PATH.
+	- Path to image to render in place of "selector bar."
+* `selectorImageTile` - type: BOOLEAN.
+	- If true, the selector image will be tiled instead of stretched to fit its size.
+* `selectorHeight` - type: FLOAT.
+	- Height of the "selector bar".
+* `selectorOffsetY` - type: FLOAT.
+	- Allows moving of the "selector bar" up or down from its computed position.  Useful for fine tuning the position of the "selector bar" relative to the text.
 * `selectedColor` - type: COLOR.
 	- Color of the highlighted entry text.
 * `primaryColor` - type: COLOR.
