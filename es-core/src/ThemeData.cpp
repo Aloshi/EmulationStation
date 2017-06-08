@@ -88,6 +88,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	("rating", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
+		("color", COLOR)
 		("filledPath", PATH)
 		("unfilledPath", PATH)
 		("zIndex", FLOAT)))
