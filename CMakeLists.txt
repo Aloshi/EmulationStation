@@ -31,7 +31,8 @@ MESSAGE("Looking for libMali.so")
 if(EXISTS "/usr/lib/libMali.so" OR
    EXISTS "/usr/lib/arm-linux-gnueabihf/libMali.so" OR
    EXISTS "/usr/lib/aarch64-linux-gnu/libMali.so" OR
-   EXISTS "/usr/lib/arm-linux-gnueabihf/mali-egl/libmali.so")
+   EXISTS "/usr/lib/arm-linux-gnueabihf/mali-egl/libmali.so" OR
+   EXISTS "/usr/lib/arm-linux-gnueabihf/libmali.so")
     MESSAGE("libMali.so found")
     set(GLSystem "OpenGL ES")
 else()
