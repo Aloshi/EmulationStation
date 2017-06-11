@@ -23,12 +23,18 @@ public:
 
 	void onSizeChanged() override;
 
+	void setOpacity(unsigned char opacity) override;
+
+	// Multiply all pixels in the image by this color when rendering.
+	void setColorShift(unsigned int color);
+
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:
 	void updateVertices();
+	void updateColors();
 
 	float mValue;
 
@@ -37,6 +43,11 @@ private:
 		Eigen::Vector2f pos;
 		Eigen::Vector2f tex;
 	} mVertices[12];
+
+
+	GLubyte mColors[12*4];
+
+	unsigned int mColorShift;
 
 	std::shared_ptr<TextureResource> mFilledTexture;
 	std::shared_ptr<TextureResource> mUnfilledTexture;
