@@ -29,11 +29,11 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	// Create the correct type of video window
 #ifdef _RPI_
 	if (Settings::getInstance()->getBool("VideoOmxPlayer"))
-		mVideo = new VideoPlayerComponent(window);
+		mVideo = new VideoPlayerComponent(window, "");
 	else
-		mVideo = new VideoVlcComponent(window);
+		mVideo = new VideoVlcComponent(window, getTitlePath());
 #else
-	mVideo = new VideoVlcComponent(window);
+	mVideo = new VideoVlcComponent(window, getTitlePath());
 #endif
 
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
@@ -226,6 +226,8 @@ void VideoGameListView::initMDValues()
 void VideoGameListView::updateInfoPanel()
 {
 	FileData* file = (mList.size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
+
+	boost::filesystem::remove(getTitlePath().c_str());
 
 	bool fadingOut;
 	if(file == NULL)

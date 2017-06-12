@@ -1,5 +1,6 @@
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
+#include <boost/algorithm/string/predicate.hpp>
 #include "AudioManager.h"
 #include "Renderer.h"
 #include "ThemeData.h"
@@ -11,14 +12,16 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-VideoPlayerComponent::VideoPlayerComponent(Window* window) :
+VideoPlayerComponent::VideoPlayerComponent(Window* window, std::string path) :
 	VideoComponent(window),
-	mPlayerPid(-1)
+	mPlayerPid(-1),
+	subtitlePath(path)
 {
 }
 
 VideoPlayerComponent::~VideoPlayerComponent()
 {
+	stopVideo();
 }
 
 void VideoPlayerComponent::render(const Eigen::Affine3f& parentTrans)
@@ -46,7 +49,8 @@ void VideoPlayerComponent::setMaxSize(float width, float height)
 
 void VideoPlayerComponent::startVideo()
 {
-	if (!mIsPlaying) {
+	if (!mIsPlaying)
+	{
 		mVideoWidth = 0;
 		mVideoHeight = 0;
 
@@ -58,8 +62,11 @@ void VideoPlayerComponent::startVideo()
 			// Set the video that we are going to be playing so we don't attempt to restart it
 			mPlayingVideoPath = mVideoPath;
 
-			// Disable AudioManager so video can play
-			AudioManager::getInstance()->deinit();
+			// Disable AudioManager so video can play, in case we're requesting ALSA
+			if (boost::starts_with(Settings::getInstance()->getString("OMXAudioDev").c_str(), "alsa"))
+			{
+				AudioManager::getInstance()->deinit();
+			}
 
 			// Start the player process
 			pid_t pid = fork();
@@ -88,7 +95,7 @@ void VideoPlayerComponent::startVideo()
 				// We need to specify the layer of 10000 or above to ensure the video is displayed on top
 				// of our SDL display
 
-				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf, "-b", "", "", "", "", NULL };
+				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf, "--no-ghost-box", "", "", "", "", NULL };
 
 				// check if we want to mute the audio
 				if (!Settings::getInstance()->getBool("VideoAudio"))
@@ -96,16 +103,43 @@ void VideoPlayerComponent::startVideo()
 					argv[8] = "-1000000";
 				}
 
-				// if we are rendering a video gamelist
-				if (!mTargetIsMax)
+				// test if there's a path for possible subtitles, meaning we're a screensaver video
+				if (!subtitlePath.empty())
 				{
-					argv[6] = "stretch";
+					// if we are rendering a screensaver
+
+					// check if we want to stretch the image
+					if (Settings::getInstance()->getBool("StretchVideoOnScreenSaver"))
+					{
+						argv[6] = "stretch";
+					}
+
+					if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
+					{
+						// if we have chosen to render subtitles
+						argv[13] = "--subtitles";
+						argv[14] = subtitlePath.c_str();
+						argv[15] = mPlayingVideoPath.c_str();
+					}
+					else
+					{
+						// if we have chosen NOT to render subtitles in the screensaver
+						argv[13] = mPlayingVideoPath.c_str();
+					}
+				}
+				else
+				{
+					// if we are rendering a video gamelist
+					if (!mTargetIsMax)
+					{
+						argv[6] = "stretch";
+					}
+					argv[13] = mPlayingVideoPath.c_str();
 				}
 
 				argv[10] = Settings::getInstance()->getString("OMXAudioDev").c_str();
 
-				argv[13] = mPlayingVideoPath.c_str();
-
+				//const char* argv[] = args;
 				const char* env[] = { "LD_LIBRARY_PATH=/opt/vc/libs:/usr/lib/omxplayer", NULL };
 
 				// Redirect stdout
@@ -141,7 +175,10 @@ void VideoPlayerComponent::stopVideo()
 		kill(mPlayerPid, SIGKILL);
 		waitpid(mPlayerPid, &status, WNOHANG);
 		// Restart AudioManager
-		AudioManager::getInstance()->init();
+		if (boost::starts_with(Settings::getInstance()->getString("OMXAudioDev").c_str(), "alsa"))
+		{
+			AudioManager::getInstance()->init();
+		}
 		mPlayerPid = -1;
 	}
 }

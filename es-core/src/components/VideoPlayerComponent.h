@@ -12,7 +12,7 @@ void catch_child(int sig_num);
 class VideoPlayerComponent : public VideoComponent
 {
 public:
-	VideoPlayerComponent(Window* window);
+	VideoPlayerComponent(Window* window, std::string path);
 	virtual ~VideoPlayerComponent();
 
 	void render(const Eigen::Affine3f& parentTrans) override;
@@ -36,6 +36,7 @@ private:
 
 private:
 	pid_t							mPlayerPid;
+	std::string						subtitlePath;
 };
 
 #endif

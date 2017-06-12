@@ -35,6 +35,7 @@ public:
 	virtual void remove(FileData* game) = 0;
 
 	virtual const char* getName() const = 0;
+	virtual void launch(FileData* game) = 0;
 
 	virtual HelpStyle getHelpStyle() override;
 

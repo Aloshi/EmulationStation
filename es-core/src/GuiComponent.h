@@ -87,6 +87,7 @@ public:
 
 	virtual void onShow();
 	virtual void onHide();
+
 	virtual void onScreenSaverActivate();
 	virtual void onScreenSaverDeactivate();
 	virtual void topWindow(bool isTop);

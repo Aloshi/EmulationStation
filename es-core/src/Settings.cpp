@@ -77,10 +77,22 @@ void Settings::setDefaults()
 	mStringMap["Scraper"] = "TheGamesDB";
 	mStringMap["GamelistViewStyle"] = "automatic";
 
+	mBoolMap["ScreenSaverControls"] = true;
+	mStringMap["ScreenSaverGameInfo"] = "never";
+	mBoolMap["StretchVideoOnScreenSaver"] = false;
+
 	// This setting only applies to raspberry pi but set it for all platforms so
 	// we don't get a warning if we encounter it on a different platform
 	mBoolMap["VideoOmxPlayer"] = false;
+	#ifdef _RPI_
+		// we're defaulting to OMX Player for full screen video on the Pi
+		mBoolMap["ScreenSaverOmxPlayer"] = true;
+	#else
+		mBoolMap["ScreenSaverOmxPlayer"] = false;
+	#endif
+
 	mBoolMap["VideoAudio"] = true;
+	mBoolMap["CaptionsCompatibility"] = true;
 	// Audio out device for Video playback using OMX player.
 	mStringMap["OMXAudioDev"] = "both";
 

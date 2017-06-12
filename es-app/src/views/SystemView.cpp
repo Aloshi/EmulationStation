@@ -158,6 +158,12 @@ bool SystemView::input(InputConfig* config, Input input)
 			config->isMappedTo("up", input) ||
 			config->isMappedTo("down", input))
 			listInput(0);
+		if(config->isMappedTo("select", input) && Settings::getInstance()->getBool("ScreenSaverControls"))
+		{
+			mWindow->startScreenSaver();
+			mWindow->renderScreenSaver();
+			return true;
+		}
 	}
 
 	return GuiComponent::input(config, input);
@@ -348,6 +354,10 @@ std::vector<HelpPrompt> SystemView::getHelpPrompts()
 		prompts.push_back(HelpPrompt("left/right", "choose"));
 	prompts.push_back(HelpPrompt("a", "select"));
 	prompts.push_back(HelpPrompt("x", "random"));
+
+	if (Settings::getInstance()->getBool("ScreenSaverControls"))
+		prompts.push_back(HelpPrompt("select", "launch screensaver"));
+
 	return prompts;
 }
 
