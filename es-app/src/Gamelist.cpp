@@ -54,7 +54,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 				return NULL;
 			}
 
-			FileData* file = new FileData(type, path, system);
+			FileData* file = new FileData(type, path, system->getSystemEnvData(), system);
 			treeNode->addChild(file);
 			return file;
 		}
@@ -70,7 +70,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 			}
 
 			// create missing folder
-			FileData* folder = new FileData(FOLDER, treeNode->getPath().stem() / *path_it, system);
+			FileData* folder = new FileData(FOLDER, treeNode->getPath().stem() / *path_it, system->getSystemEnvData(), system);
 			treeNode->addChild(folder);
 			treeNode = folder;
 		}

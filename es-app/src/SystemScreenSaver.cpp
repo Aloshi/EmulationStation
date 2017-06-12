@@ -148,23 +148,26 @@ void SystemScreenSaver::countVideos()
 		std::vector<SystemData*>:: iterator it;
 		for (it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); ++it)
 		{
-			pugi::xml_document doc;
-			pugi::xml_node root;
-			std::string xmlReadPath = (*it)->getGamelistPath(false);
-
-			if(boost::filesystem::exists(xmlReadPath))
+			if (!(*it)->isCollection())
 			{
-				pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
-				if (!result)
-					continue;
-				root = doc.child("gameList");
-				if (!root)
-					continue;
-				for(pugi::xml_node fileNode = root.child("game"); fileNode; fileNode = fileNode.next_sibling("game"))
+				pugi::xml_document doc;
+				pugi::xml_node root;
+				std::string xmlReadPath = (*it)->getGamelistPath(false);
+
+				if(boost::filesystem::exists(xmlReadPath))
 				{
-					pugi::xml_node videoNode = fileNode.child("video");
-					if (videoNode)
-						++mVideoCount;
+					pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
+					if (!result)
+						continue;
+					root = doc.child("gameList");
+					if (!root)
+						continue;
+					for(pugi::xml_node fileNode = root.child("game"); fileNode; fileNode = fileNode.next_sibling("game"))
+					{
+						pugi::xml_node videoNode = fileNode.child("video");
+						if (videoNode)
+							++mVideoCount;
+					}
 				}
 			}
 		}

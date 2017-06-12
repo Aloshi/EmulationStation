@@ -225,6 +225,7 @@ int main(int argc, char* argv[])
 	Window window;
 	SystemScreenSaver screensaver(&window);
 	ViewController::init(&window);
+	CollectionSystemManager::init(&window);
 	window.pushGui(ViewController::get());
 
 	if(!scrape_cmdline)

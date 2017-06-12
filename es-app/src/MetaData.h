@@ -13,6 +13,7 @@ enum MetaDataType
 	MD_STRING,
 	MD_INT,
 	MD_FLOAT,
+	MD_BOOL,
 
 	//specialized types
 	MD_MULTILINE_STRING,

@@ -7,6 +7,7 @@
 #include "MetaData.h"
 
 class SystemData;
+struct SystemEnvironmentData;
 
 enum FileType
 {
@@ -27,24 +28,21 @@ enum FileChangeType
 const char* fileTypeToString(FileType type);
 FileType stringToFileType(const char* str);
 
-// Remove (.*) and [.*] from str
-std::string removeParenthesis(const std::string& str);
-
 // A tree node that holds information for a file.
 class FileData
 {
 public:
-	FileData(FileType type, const boost::filesystem::path& path, SystemData* system);
+	FileData(FileType type, const boost::filesystem::path& path, SystemEnvironmentData* envData, SystemData* system);
 	virtual ~FileData();
 
-	inline const std::string& getName() const { return metadata.get("name"); }
+	virtual const std::string& getName();
 	inline FileType getType() const { return mType; }
 	inline const boost::filesystem::path& getPath() const { return mPath; }
 	inline FileData* getParent() const { return mParent; }
 	inline const std::unordered_map<std::string, FileData*>& getChildrenByFilename() const { return mChildrenByFilename; }
 	inline const std::vector<FileData*>& getChildren() const { return mChildren; }
 	inline SystemData* getSystem() const { return mSystem; }
-
+	inline SystemEnvironmentData* getSystemEnvData() const { return mEnvData; }
 	virtual const std::string& getThumbnailPath() const;
 	virtual const std::string& getVideoPath() const;
 	virtual const std::string& getMarqueePath() const;
@@ -57,11 +55,21 @@ public:
 
 	inline bool isPlaceHolder() { return mType == PLACEHOLDER; };
 
+	virtual inline void refreshMetadata() { return; };
+
+	virtual std::string getKey();
+	inline std::string getFullPath() { return getPath().string(); };
+	inline std::string getFileName() { return getPath().filename().string(); };
+	virtual FileData* getSourceFileData();
+	inline std::string getSystemName() const { return mSystemName; };
+
 	// Returns our best guess at the "real" name for this file (will attempt to perform MAME name translation)
 	std::string getDisplayName() const;
 
 	// As above, but also remove parenthesis
 	std::string getCleanName() const;
+
+	void launchGame(Window* window);
 
 	typedef bool ComparisonFunction(const FileData* a, const FileData* b);
 	struct SortType
@@ -76,15 +84,34 @@ public:
 
 	void sort(ComparisonFunction& comparator, bool ascending = true);
 	void sort(const SortType& type);
-
 	MetaDataList metadata;
+
+protected:
+	FileData* mSourceFileData;
+	FileData* mParent;
+	std::string mSystemName;
 
 private:
 	FileType mType;
 	boost::filesystem::path mPath;
+	SystemEnvironmentData* mEnvData;
 	SystemData* mSystem;
-	FileData* mParent;
 	std::unordered_map<std::string,FileData*> mChildrenByFilename;
 	std::vector<FileData*> mChildren;
 	std::vector<FileData*> mFilteredChildren;
+};
+
+class CollectionFileData : public FileData
+{
+public:
+	CollectionFileData(FileData* file, SystemData* system);
+	~CollectionFileData();
+	const std::string& getName();
+	void refreshMetadata();
+	FileData* getSourceFileData();
+	std::string getKey();
+private:
+	// needs to be updated when metadata changes
+	std::string mCollectionFileName;
+	bool mDirty;
 };

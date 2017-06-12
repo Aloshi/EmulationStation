@@ -7,6 +7,7 @@
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
 #include "guis/GuiScreensaverOptions.h"
+#include "guis/GuiCollectionSystemsOptions.h"
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
 #include "views/ViewController.h"
@@ -238,6 +239,9 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			mWindow->pushGui(s);
 	});
 
+	addEntry("GAME COLLECTION SETTINGS", 0x777777FF, true,
+		[this] { openCollectionSystemSettings();
+		});
 	addEntry("OTHER SETTINGS", 0x777777FF, true,
 		[this] {
 			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
@@ -364,13 +368,20 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	addChild(&mMenu);
 	addChild(&mVersion);
 
+	/*int menuWidth = Renderer::getScreenWidth() * 0.4f;
+	int menuHeight = Renderer::getScreenHeight() * 0.74f;
+	mMenu.setSize(menuWidth, menuHeight);*/
+
 	setSize(mMenu.getSize());
-	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.15f);
+	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, Renderer::getScreenHeight() * 0.13f);
 }
 
 void GuiMenu::openScreensaverOptions() {
-	GuiScreensaverOptions* ggf = new GuiScreensaverOptions(mWindow, "VIDEO SCREENSAVER");
-	mWindow->pushGui(ggf);
+	mWindow->pushGui(new GuiScreensaverOptions(mWindow, "VIDEO SCREENSAVER"));
+}
+
+void GuiMenu::openCollectionSystemSettings() {
+	mWindow->pushGui(new GuiCollectionSystemsOptions(mWindow));
 }
 
 void GuiMenu::onSizeChanged()
