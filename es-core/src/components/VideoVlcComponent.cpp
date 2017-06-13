@@ -202,6 +202,8 @@ void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
 		glDisableClientState(GL_COLOR_ARRAY);
 
 		glDisable(GL_TEXTURE_2D);
+	} else {
+		VideoComponent::renderSnapshot(parentTrans);
 	}
 }
 

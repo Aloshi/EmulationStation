@@ -56,6 +56,7 @@ public:
 	void setOpacity(unsigned char opacity) override;
 
 	void render(const Eigen::Affine3f& parentTrans) override;
+	void renderSnapshot(const Eigen::Affine3f& parentTrans);
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 

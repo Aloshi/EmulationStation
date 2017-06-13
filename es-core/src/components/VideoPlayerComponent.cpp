@@ -27,6 +27,9 @@ VideoPlayerComponent::~VideoPlayerComponent()
 void VideoPlayerComponent::render(const Eigen::Affine3f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
+
+	if (!mIsPlaying || mPlayerPid == -1)
+		VideoComponent::renderSnapshot(parentTrans);
 }
 
 void VideoPlayerComponent::setResize(float width, float height)
