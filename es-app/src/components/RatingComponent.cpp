@@ -10,6 +10,7 @@ RatingComponent::RatingComponent(Window* window) : GuiComponent(window), mColorS
 	mValue = 0.5f;
 	mSize << 64 * NUM_RATING_STARS, 64;
 	updateVertices();
+	updateColors();
 }
 
 void RatingComponent::setValue(const std::string& value)
