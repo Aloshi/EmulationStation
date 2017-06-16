@@ -164,19 +164,18 @@ void VideoComponent::render(const Eigen::Affine3f& parentTrans)
 
 	// Handle looping of the video
 	handleLooping();
+}
 
-	if (!mIsPlaying)
+void VideoComponent::renderSnapshot(const Eigen::Affine3f& parentTrans)
+{
+	// This is the case where the video is not currently being displayed. Work out
+	// if we need to display a static image
+	if ((mConfig.showSnapshotNoVideo && mVideoPath.empty()) || (mStartDelayed && mConfig.showSnapshotDelay))
 	{
-		// This is the case where the video is not currently being displayed. Work out
-		// if we need to display a static image
-		if ((mConfig.showSnapshotNoVideo && mVideoPath.empty()) || (mStartDelayed && mConfig.showSnapshotDelay))
-		{
-			// Display the static image instead
-			mStaticImage.setOpacity((unsigned char)(mFadeIn * 255.0f));
-			mStaticImage.render(parentTrans);
-		}
+		// Display the static image instead
+		mStaticImage.setOpacity((unsigned char)(mFadeIn * 255.0f));
+		mStaticImage.render(parentTrans);
 	}
-
 }
 
 void VideoComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
