@@ -143,7 +143,7 @@ void TextListComponent<T>::render(const Eigen::Affine3f& parentTrans)
 	if(size() == 0)
 		return;
 
-	const float entrySize = font->getSize() * mLineSpacing;
+	const float entrySize = std::max(font->getHeight(1.0), (float)font->getSize()) * mLineSpacing;
 
 	int startEntry = 0;
 
@@ -350,7 +350,9 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	}
 
 	setFont(Font::getFromTheme(elem, properties, mFont));
-	
+	const float selectorHeight = std::max(mFont->getHeight(1.0), (float)mFont->getSize()) * mLineSpacing;
+	setSelectorHeight(selectorHeight);
+
 	if(properties & SOUND && elem->has("scrollSound"))
 		setSound(Sound::get(elem->get<std::string>("scrollSound")));
 
@@ -384,8 +386,6 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 		if(elem->has("selectorHeight"))
 		{
 			setSelectorHeight(elem->get<float>("selectorHeight") * Renderer::getScreenHeight());
-		} else {
-			setSelectorHeight(mFont->getSize() * 1.5);
 		}
 		if(elem->has("selectorOffsetY"))
 		{
