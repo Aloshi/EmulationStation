@@ -14,26 +14,6 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	bool isFiltered = system->getIndex()->isFiltered();
 	ComponentListRow row;
 
-	// show filtered menu
-	row.elements.clear();
-	row.addElement(std::make_shared<TextComponent>(mWindow, "FILTER GAMELIST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-	row.addElement(makeArrow(mWindow), false);
-	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openGamelistFilter, this));
-	mMenu.addRow(row);
-
-	row.elements.clear();
-	row.addElement(std::make_shared<TextComponent>(mWindow, "SURPRISE ME!", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-	row.input_handler = [&](InputConfig* config, Input input) {
-		if (config->isMappedTo("a", input) && input.value)
-		{
-			ViewController::get()->goToRandomGame();
-			delete this;
-			return true;
-		}
-		return false;
-	};
-	mMenu.addRow(row);
-
 	if (!fromPlaceholder) {
 
 		if (!isFiltered) {
@@ -80,6 +60,26 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 		mMenu.addRow(row);
 	}
+
+	// show filtered menu
+	row.elements.clear();
+	row.addElement(std::make_shared<TextComponent>(mWindow, "FILTER GAMELIST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.addElement(makeArrow(mWindow), false);
+	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openGamelistFilter, this));
+	mMenu.addRow(row);
+
+	row.elements.clear();
+	row.addElement(std::make_shared<TextComponent>(mWindow, "SURPRISE ME!", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.input_handler = [&](InputConfig* config, Input input) {
+		if (config->isMappedTo("a", input) && input.value)
+		{
+			ViewController::get()->goToRandomGame();
+			delete this;
+			return true;
+		}
+		return false;
+	};
+	mMenu.addRow(row);
 
 	// center the menu
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
