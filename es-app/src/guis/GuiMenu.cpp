@@ -170,12 +170,17 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("QUICK SYSTEM SELECT", quick_sys_select);
 			s->addSaveFunc([quick_sys_select] { Settings::getInstance()->setBool("QuickSystemSelect", quick_sys_select->getState()); });
 
+			// carousel transition option
+			auto move_carousel = std::make_shared<SwitchComponent>(mWindow);
+			move_carousel->setState(Settings::getInstance()->getBool("MoveCarousel"));
+			s->addWithLabel("CAROUSEL TRANSITIONS", move_carousel);
+			s->addSaveFunc([move_carousel] { Settings::getInstance()->setBool("MoveCarousel", move_carousel->getState()); });
+
 			// transition style
 			auto transition_style = std::make_shared< OptionListComponent<std::string> >(mWindow, "TRANSITION STYLE", false);
 			std::vector<std::string> transitions;
 			transitions.push_back("fade");
 			transitions.push_back("slide");
-			transitions.push_back("simple slide");
 			transitions.push_back("instant");
 			for(auto it = transitions.begin(); it != transitions.end(); it++)
 				transition_style->add(*it, *it, Settings::getInstance()->getString("TransitionStyle") == *it);
