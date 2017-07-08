@@ -15,7 +15,8 @@ enum FilterIndexType
 	GENRE_FILTER,
 	PLAYER_FILTER,
 	PUBDEV_FILTER,
-	RATINGS_FILTER
+	RATINGS_FILTER,
+	FAVORITES_FILTER
 };
 
 struct FilterDataDecl
@@ -41,10 +42,8 @@ public:
 	void clearAllFilters();
 	void debugPrintIndexes();
 	bool showFile(FileData* game);
-	bool isFiltered() { return (filterByGenre || filterByPlayers || filterByPubDev || filterByRatings); };
+	bool isFiltered() { return (filterByGenre || filterByPlayers || filterByPubDev || filterByRatings || filterByFavorites); };
 	bool isKeyBeingFilteredBy(std::string key, FilterIndexType type);
-	std::map<std::string, int>* getGenreAllIndexedKeys() { return &genreIndexAllKeys; };
-	std::vector<std::string>* getGenreFilteredKeys() { return &genreIndexFilteredKeys; };
 	std::vector<FilterDataDecl>& getFilterDataDecls();
 private:
 	std::vector<FilterDataDecl> filterDataDecl;
@@ -54,6 +53,7 @@ private:
 	void managePlayerEntryInIndex(FileData* game, bool remove = false);
 	void managePubDevEntryInIndex(FileData* game, bool remove = false);
 	void manageRatingsEntryInIndex(FileData* game, bool remove = false);
+	void manageFavoritesEntryInIndex(FileData* game, bool remove = false);
 
 	void manageIndexEntry(std::map<std::string, int>* index, std::string key, bool remove);
 
@@ -63,16 +63,19 @@ private:
 	bool filterByPlayers;
 	bool filterByPubDev;
 	bool filterByRatings;
+	bool filterByFavorites;
 
 	std::map<std::string, int> genreIndexAllKeys;
 	std::map<std::string, int> playersIndexAllKeys;
 	std::map<std::string, int> pubDevIndexAllKeys;
 	std::map<std::string, int> ratingsIndexAllKeys;
+	std::map<std::string, int> favoritesIndexAllKeys;
 
 	std::vector<std::string> genreIndexFilteredKeys;
 	std::vector<std::string> playersIndexFilteredKeys;
 	std::vector<std::string> pubDevIndexFilteredKeys;
 	std::vector<std::string> ratingsIndexFilteredKeys;
+	std::vector<std::string> favoritesIndexFilteredKeys;
 
 	FileData* mRootFolder;
 

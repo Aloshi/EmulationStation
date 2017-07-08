@@ -2,6 +2,7 @@
 #include "GuiMetaDataEd.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
+#include "CollectionSystemManager.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window),
 	mSystem(system), mMenu(window, "OPTIONS"), fromPlaceholder(false), mFiltersChanged(false)
@@ -122,7 +123,8 @@ void GuiGamelistOptions::openGamelistFilter()
 void GuiGamelistOptions::openMetaDataEd()
 {
 	// open metadata editor
-	FileData* file = getGamelist()->getCursor();
+	// get the FileData that hosts the original metadata
+	FileData* file = getGamelist()->getCursor()->getSourceFileData();
 	ScraperSearchParams p;
 	p.game = file;
 	p.system = file->getSystem();
@@ -136,12 +138,13 @@ void GuiGamelistOptions::openMetaDataEd()
 	else
 	{
 		deleteBtnFunc = [this, file] {
-			getGamelist()->remove(file);
+			CollectionSystemManager::get()->deleteCollectionFiles(file);
+			ViewController::get()->getGameListView(file->getSystem()).get()->remove(file, true);
 		};
 	}
 
 	mWindow->pushGui(new GuiMetaDataEd(mWindow, &file->metadata, file->metadata.getMDD(), p, file->getPath().filename().string(),
-		std::bind(&IGameListView::onFileChanged, getGamelist(), file, FILE_METADATA_CHANGED), deleteBtnFunc));
+		std::bind(&IGameListView::onFileChanged, ViewController::get()->getGameListView(file->getSystem()).get(), file, FILE_METADATA_CHANGED), deleteBtnFunc));
 }
 
 void GuiGamelistOptions::jumpToLetter()

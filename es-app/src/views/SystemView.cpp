@@ -157,7 +157,10 @@ bool SystemView::input(InputConfig* config, Input input)
 		}
 		if (config->isMappedTo("x", input))
 		{
-			ViewController::get()->goToRandomGame();
+			// get random system
+			// go to system
+			setCursor(SystemData::getRandomSystem());
+			//ViewController::get()->goToRandomGame();
 			return true;
 		}
 	}else{
@@ -224,7 +227,7 @@ void SystemView::onCursorChanged(const CursorState& state)
 	setAnimation(infoFadeOut, 0, [this, gameCount] {
 		std::stringstream ss;
 
-		if (getSelected()->getName() == "retropie")
+		if (!getSelected()->isGameSystem())
 			ss << "CONFIGURATION";
 		// only display a game count if there are at least 2 games
 		else if(gameCount > 1)

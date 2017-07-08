@@ -145,7 +145,7 @@ void GuiFastSelect::updateGameListCursor()
 
 	// only skip by letter when the sort mode is alphabetical
 	const FileData::SortType& sort = FileSorts::SortTypes.at(mSortId);
-	if(sort.comparisonFunction != &FileSorts::compareFileName)
+	if(sort.comparisonFunction != &FileSorts::compareName)
 		return;
 
 	// find the first entry in the list that either exactly matches our target letter or is beyond our target letter

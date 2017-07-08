@@ -10,7 +10,7 @@
 #include "components/ImageComponent.h"
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10),
-	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0), mScreenSaver(NULL), mRenderScreenSaver(false)
+	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0), mScreenSaver(NULL), mRenderScreenSaver(false), mInfoPopup(NULL)
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
@@ -129,7 +129,7 @@ void Window::input(InputConfig* config, Input input)
 					}
 					return;
 				}
-				else if(config->isMappedTo("start", input))
+				else if(config->isMappedTo("start", input) && input.value != 0)
 				{
 					// launch game!
 					cancelScreenSaver();
@@ -138,10 +138,10 @@ void Window::input(InputConfig* config, Input input)
 					mSleeping = true;
 				}
 			}
-			else if(input.value != 0)
+			/*else if(input.value != 0)
 			{
 				return;
-			}
+			}*/
 		}
 	}
 
@@ -258,6 +258,11 @@ void Window::render()
 	// Always call the screensaver render function regardless of whether the screensaver is active
 	// or not because it may perform a fade on transition
 	renderScreenSaver();
+
+	if(!mRenderScreenSaver && mInfoPopup)
+	{
+		mInfoPopup->render(transform);
+	}
 	
 	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 	{

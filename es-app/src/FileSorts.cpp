@@ -3,8 +3,8 @@
 namespace FileSorts
 {
 	const FileData::SortType typesArr[] = {
-		FileData::SortType(&compareFileName, true, "filename, ascending"),
-		FileData::SortType(&compareFileName, false, "filename, descending"),
+		FileData::SortType(&compareName, true, "filename, ascending"),
+		FileData::SortType(&compareName, false, "filename, descending"),
 
 		FileData::SortType(&compareRating, true, "rating, ascending"),
 		FileData::SortType(&compareRating, false, "rating, descending"),
@@ -28,16 +28,20 @@ namespace FileSorts
 		FileData::SortType(&compareDeveloper, false, "developer, descending"),
 
 		FileData::SortType(&comparePublisher, true, "publisher, ascending"),
-		FileData::SortType(&comparePublisher, false, "publisher, descending")
+		FileData::SortType(&comparePublisher, false, "publisher, descending"),
+
+		FileData::SortType(&compareSystem, true, "system, ascending"),
+		FileData::SortType(&compareSystem, false, "system, descending")
 	};
 
 	const std::vector<FileData::SortType> SortTypes(typesArr, typesArr + sizeof(typesArr)/sizeof(typesArr[0]));
 
 	//returns if file1 should come before file2
-	bool compareFileName(const FileData* file1, const FileData* file2)
+	bool compareName(const FileData* file1, const FileData* file2)
 	{
-		std::string name1 = file1->getName();
-		std::string name2 = file2->getName();
+		// we compare the actual metadata name, as collection files have the system appended which messes up the order
+		std::string name1 = file1->metadata.get("name");
+		std::string name2 = file2->metadata.get("name");
 		transform(name1.begin(), name1.end(), name1.begin(), ::toupper);
 		transform(name2.begin(), name2.end(), name2.begin(), ::toupper);
 		return name1.compare(name2) < 0;
@@ -62,9 +66,11 @@ namespace FileSorts
 	bool compareLastPlayed(const FileData* file1, const FileData* file2)
 	{
 		//only games have lastplayed metadata
+		// since it's stored as a POSIX string (YYYYMMDDTHHMMSS,fffffffff), we can compare as a string
+		// as it's a lot faster than the time casts and then time comparisons
 		if(file1->metadata.getType() == GAME_METADATA && file2->metadata.getType() == GAME_METADATA)
 		{
-			return (file1)->metadata.getTime("lastplayed") < (file2)->metadata.getTime("lastplayed");
+			return (file1)->metadata.get("lastplayed") < (file2)->metadata.get("lastplayed");
 		}
 
 		return false;
@@ -105,5 +111,14 @@ namespace FileSorts
 		transform(publisher1.begin(), publisher1.end(), publisher1.begin(), ::toupper);
 		transform(publisher2.begin(), publisher2.end(), publisher2.begin(), ::toupper);
 		return publisher1.compare(publisher2) < 0;
+	}
+
+	bool compareSystem(const FileData* file1, const FileData* file2)
+	{
+		std::string system1 = file1->getSystemName();
+		std::string system2 = file2->getSystemName();
+		transform(system1.begin(), system1.end(), system1.begin(), ::toupper);
+		transform(system2.begin(), system2.end(), system2.begin(), ::toupper);
+		return system1.compare(system2) < 0;
 	}
 };

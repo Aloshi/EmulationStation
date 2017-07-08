@@ -11,6 +11,7 @@
 #include "components/TextEditComponent.h"
 #include "components/DateTimeComponent.h"
 #include "components/RatingComponent.h"
+#include "components/SwitchComponent.h"
 #include "guis/GuiTextEditPopup.h"
 
 using namespace Eigen;
@@ -59,6 +60,12 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 		switch(iter->type)
 		{
+		case MD_BOOL:
+			{
+				ed = std::make_shared<SwitchComponent>(window);
+				row.addElement(ed, false, true);
+				break;
+			}
 		case MD_RATING:
 			{
 				ed = std::make_shared<RatingComponent>(window);
@@ -177,7 +184,6 @@ void GuiMetaDataEd::save()
 	{
 		if(mMetaDataDecl.at(i).isStatistic)
 			continue;
-
 		mMetaData->set(mMetaDataDecl.at(i).key, mEditors.at(i)->getValue());
 	}
 
@@ -186,6 +192,9 @@ void GuiMetaDataEd::save()
 
 	if(mSavedCallback)
 		mSavedCallback();
+
+	// update respective Collection Entries
+	CollectionSystemManager::get()->updateCollectionSystems(mScraperParams.game);
 }
 
 void GuiMetaDataEd::fetch()

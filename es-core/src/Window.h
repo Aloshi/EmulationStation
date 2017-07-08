@@ -25,6 +25,13 @@ public:
 		virtual void launchGame() = 0;
 	};
 
+	class InfoPopup {
+	public:
+		virtual void render(const Eigen::Affine3f& parentTrans) = 0;
+		virtual void stop() = 0;
+		virtual ~InfoPopup() {};
+	};
+
 	Window();
 	~Window();
 
@@ -53,6 +60,8 @@ public:
 	void setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpStyle& style);
 
 	void setScreenSaver(ScreenSaver* screenSaver) { mScreenSaver = screenSaver; }
+	void setInfoPopup(InfoPopup* infoPopup) { delete mInfoPopup; mInfoPopup = infoPopup; }
+	inline void stopInfoPopup() { if (mInfoPopup) mInfoPopup->stop(); };
 
 	void startScreenSaver();
 	void cancelScreenSaver();
@@ -68,6 +77,7 @@ private:
 	HelpComponent* mHelp;
 	ImageComponent* mBackgroundOverlay;
 	ScreenSaver*	mScreenSaver;
+	InfoPopup*		mInfoPopup;
 	bool			mRenderScreenSaver;
 
 	std::vector<GuiComponent*> mGuiStack;

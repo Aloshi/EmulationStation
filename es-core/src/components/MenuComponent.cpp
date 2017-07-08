@@ -46,7 +46,7 @@ float MenuComponent::getButtonGridHeight() const
 
 void MenuComponent::updateSize()
 {
-	const float maxHeight = Renderer::getScreenHeight() * 0.7f;
+	const float maxHeight = Renderer::getScreenHeight() * 0.75f;
 	float height = TITLE_HEIGHT + mList->getTotalRowHeight() + getButtonGridHeight() + 2;
 	if(height > maxHeight)
 	{

@@ -3,7 +3,9 @@
 #include "Window.h"
 #include "views/ViewController.h"
 #include "Sound.h"
+#include "Log.h"
 #include "Settings.h"
+#include "CollectionSystemManager.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window)
@@ -127,10 +129,31 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}
 		}else if (config->isMappedTo("x", input))
 		{
-			ViewController::get()->goToRandomGame();
+			// go to random system game
+			setCursor(mRoot->getSystem()->getRandomGame());
+			//ViewController::get()->goToRandomGame();
 			return true;
+		}else if (config->isMappedTo("y", input))
+		{
+			if(Settings::getInstance()->getString("CollectionSystemsAuto").find("favorites") != std::string::npos && mRoot->getSystem()->isGameSystem())
+			{
+				if(CollectionSystemManager::get()->toggleGameInCollection(getCursor(), "favorites"))
+				{
+					return true;
+				}
+			}
 		}
 	}
 
 	return IGameListView::input(config, input);
 }
+
+
+
+
+
+
+
+
+
+

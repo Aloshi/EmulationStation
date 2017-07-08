@@ -11,6 +11,7 @@
 
 class TextCache;
 
+#define FONT_SIZE_MINI ((unsigned int)(0.030f * Renderer::getScreenHeight()))
 #define FONT_SIZE_SMALL ((unsigned int)(0.035f * Renderer::getScreenHeight()))
 #define FONT_SIZE_MEDIUM ((unsigned int)(0.045f * Renderer::getScreenHeight()))
 #define FONT_SIZE_LARGE ((unsigned int)(0.085f * Renderer::getScreenHeight()))
