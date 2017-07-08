@@ -320,9 +320,34 @@ void VideoGameListView::updateInfoPanel()
 
 void VideoGameListView::launch(FileData* game)
 {
-	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
-	if(mMarquee.hasImage())
+	float screenWidth = Renderer::getScreenWidth();
+	float screenHeight = Renderer::getScreenHeight();
+
+	Eigen::Vector3f target(screenWidth / 2.0f, screenHeight / 2.0f, 0);
+
+	if(mMarquee.hasImage() &&
+		(mMarquee.getPosition().x() < screenWidth && mMarquee.getPosition().x() > 0.0f &&
+		 mMarquee.getPosition().y() < screenHeight && mMarquee.getPosition().y() > 0.0f))
+	{
+		target << mMarquee.getCenter().x(), mMarquee.getCenter().y(), 0;
+	}
+	else if(mImage.hasImage() &&
+		(mImage.getPosition().x() < screenWidth && mImage.getPosition().x() > 2.0f &&
+		 mImage.getPosition().y() < screenHeight && mImage.getPosition().y() > 2.0f))
+	{
+		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
+	}
+	else if(mHeaderImage.hasImage() &&
+		(mHeaderImage.getPosition().x() < screenWidth && mHeaderImage.getPosition().x() > 0.0f &&
+		 mHeaderImage.getPosition().y() < screenHeight && mHeaderImage.getPosition().y() > 0.0f))
+	{
+		target << mHeaderImage.getCenter().x(), mHeaderImage.getCenter().y(), 0;
+	}
+	else if(mVideo->getPosition().x() < screenWidth && mVideo->getPosition().x() > 0.0f &&
+		 mVideo->getPosition().y() < screenHeight && mVideo->getPosition().y() > 0.0f)
+	{
 		target << mVideo->getCenter().x(), mVideo->getCenter().y(), 0;
+	}
 
 	ViewController::get()->launch(game, target);
 }
