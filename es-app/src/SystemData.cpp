@@ -383,13 +383,12 @@ SystemData* SystemData::getRandomSystem()
 	}
 
 	// get random number in range
-	int target = std::round(((double)std::rand() / (double)RAND_MAX) * total);
-
+	int target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
 	for (auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
 	{
 		if ((*it)->isGameSystem())
 		{
-			if (target >= 0)
+			if (target > 0)
 			{
 				target--;
 			}
@@ -406,7 +405,7 @@ FileData* SystemData::getRandomGame()
 	std::vector<FileData*> list = mRootFolder->getFilesRecursive(GAME, true);
 	unsigned int total = list.size();
 	// get random number in range
-	int target = std::round(((double)std::rand() / (double)RAND_MAX) * total);
+	int target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
 	return list.at(target);
 }
 
