@@ -12,17 +12,11 @@ Eigen::Vector2i ImageComponent::getTextureSize() const
 	if(mTexture)
 		return mTexture->getSize();
 	else
-		return Eigen::Vector2i(0, 0);
-}
-
-Eigen::Vector2f ImageComponent::getCenter() const
-{
-	return Eigen::Vector2f(mPosition.x() - (getSize().x() * mOrigin.x()) + getSize().x() / 2, 
-		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
+		return Eigen::Vector2i::Zero();
 }
 
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
 	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0.0f), mFading(false)
 {
 	updateColors();
@@ -125,12 +119,6 @@ void ImageComponent::setImage(const std::shared_ptr<TextureResource>& texture)
 	resize();
 }
 
-void ImageComponent::setOrigin(float originX, float originY)
-{
-	mOrigin << originX, originY;
-	updateVertices();
-}
-
 void ImageComponent::setResize(float width, float height)
 {
 	mTargetSize << width, height;
@@ -180,16 +168,8 @@ void ImageComponent::updateVertices()
 
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
-	Eigen::Vector2f topLeft(-mSize.x() * mOrigin.x(), -mSize.y() * mOrigin.y());
-	Eigen::Vector2f bottomRight(mSize.x() * (1 -mOrigin.x()), mSize.y() * (1 - mOrigin.y()));
-
-	const float width = round(bottomRight.x() - topLeft.x());
-	const float height = round(bottomRight.y() - topLeft.y());
-
-	topLeft[0] = floor(topLeft[0]);
-	topLeft[1] = floor(topLeft[1]);
-	bottomRight[0] = topLeft[0] + width;
-	bottomRight[1] = topLeft[1] + height;
+	Eigen::Vector2f topLeft(0.0, 0.0);
+	Eigen::Vector2f bottomRight(round(mSize.x()), round(mSize.y()));
 
 	mVertices[0].pos << topLeft.x(), topLeft.y();
 	mVertices[1].pos << topLeft.x(), bottomRight.y();
@@ -236,9 +216,9 @@ void ImageComponent::updateColors()
 
 void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Eigen::Affine3f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
-	
+
 	if(mTexture && mOpacity > 0)
 	{
 		if(mTexture->isInitialized())
@@ -362,6 +342,13 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 
 	if(properties & COLOR && elem->has("color"))
 		setColorShift(elem->get<unsigned int>("color"));
+
+	if(properties & ThemeFlags::ROTATION) {
+		if(elem->has("rotation"))
+			setRotationDegrees(elem->get<float>("rotation"));
+		if(elem->has("rotationOrigin"))
+			setRotationOrigin(elem->get<Eigen::Vector2f>("rotationOrigin"));
+	}
 
 	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
 		setZIndex(elem->get<float>("zIndex"));

@@ -48,10 +48,7 @@ public:
 	virtual void onScreenSaverDeactivate() override;
 	virtual void topWindow(bool isTop) override;
 
-	//Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
-	void setOrigin(float originX, float originY);
-	inline void setOrigin(Eigen::Vector2f origin) { setOrigin(origin.x(), origin.y()); }
-
+	void onOriginChanged() override;
 	void onSizeChanged() override;
 	void setOpacity(unsigned char opacity) override;
 
@@ -61,9 +58,6 @@ public:
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
-
-	// Returns the center point of the video (takes origin into account).
-	Eigen::Vector2f getCenter() const;
 
 	virtual void update(int deltaTime);
 
@@ -100,7 +94,6 @@ private:
 protected:
 	unsigned						mVideoWidth;
 	unsigned						mVideoHeight;
-	Eigen::Vector2f 				mOrigin;
 	Eigen::Vector2f					mTargetSize;
 	std::shared_ptr<TextureResource> mTexture;
 	float							mFadeIn;
