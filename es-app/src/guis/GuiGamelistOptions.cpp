@@ -1,5 +1,6 @@
 #include "GuiGamelistOptions.h"
 #include "GuiMetaDataEd.h"
+#include "Util.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
@@ -54,6 +55,33 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		}
 
 		mMenu.addWithLabel("SORT GAMES BY", mListSort);
+	}
+	// show filtered menu
+	row.elements.clear();
+	row.addElement(std::make_shared<TextComponent>(mWindow, "FILTER GAMELIST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+	row.addElement(makeArrow(mWindow), false);
+	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openGamelistFilter, this));
+	mMenu.addRow(row);
+
+	std::map<std::string, CollectionSystemData> customCollections = CollectionSystemManager::get()->getCustomCollectionSystems();
+	if((customCollections.find(system->getName()) != customCollections.end() && CollectionSystemManager::get()->getEditingCollection() != system->getName()) ||
+		CollectionSystemManager::get()->getCustomCollectionsBundle()->getName() == system->getName())
+	{
+		row.elements.clear();
+		row.addElement(std::make_shared<TextComponent>(mWindow, "ADD/REMOVE GAMES TO THIS GAME COLLECTION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::startEditMode, this));
+		mMenu.addRow(row);
+	}
+
+	if(CollectionSystemManager::get()->isEditing())
+	{
+		row.elements.clear();
+		row.addElement(std::make_shared<TextComponent>(mWindow, "FINISH EDITING '" + strToUpper(CollectionSystemManager::get()->getEditingCollection()) + "' COLLECTION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::exitEditMode, this));
+		mMenu.addRow(row);
+	}
+
+	if (!fromPlaceholder && !(mSystem->isCollection() && file->getType() == FOLDER)) {
 
 		row.elements.clear();
 		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
@@ -61,13 +89,6 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 		mMenu.addRow(row);
 	}
-
-	// show filtered menu
-	row.elements.clear();
-	row.addElement(std::make_shared<TextComponent>(mWindow, "FILTER GAMELIST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-	row.addElement(makeArrow(mWindow), false);
-	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openGamelistFilter, this));
-	mMenu.addRow(row);
 
 	// center the menu
 	setSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
@@ -78,7 +99,7 @@ GuiGamelistOptions::~GuiGamelistOptions()
 {
 	// apply sort
 	if (!fromPlaceholder) {
-		FileData* root = getGamelist()->getCursor()->getSystem()->getRootFolder();
+		FileData* root = mSystem->getRootFolder();
 		root->sort(*mListSort->getSelected()); // will also recursively sort children
 
 		// notify that the root folder was sorted
@@ -86,17 +107,10 @@ GuiGamelistOptions::~GuiGamelistOptions()
 	}
 	if (mFiltersChanged)
 	{
-		if (!fromPlaceholder) {
-			FileData* root = getGamelist()->getCursor()->getSystem()->getRootFolder();
-			getGamelist()->onFileChanged(root, FILE_SORTED);
-		}
-		else
-		{
-			// only reload full view if we came from a placeholder
-			// as we need to re-display the remaining elements for whatever new
-			// game is selected
-			ViewController::get()->reloadGameListView(mSystem);
-		}
+		// only reload full view if we came from a placeholder
+		// as we need to re-display the remaining elements for whatever new
+		// game is selected
+		ViewController::get()->reloadGameListView(mSystem);
 	}
 }
 
@@ -105,6 +119,34 @@ void GuiGamelistOptions::openGamelistFilter()
 	mFiltersChanged = true;
 	GuiGamelistFilter* ggf = new GuiGamelistFilter(mWindow, mSystem);
 	mWindow->pushGui(ggf);
+}
+
+void GuiGamelistOptions::startEditMode()
+{
+	std::string editingSystem = mSystem->getName();
+	// need to check if we're editing the collections bundle, as we will want to edit the selected collection within
+	if(editingSystem == CollectionSystemManager::get()->getCustomCollectionsBundle()->getName())
+	{
+		FileData* file = getGamelist()->getCursor();
+		// do we have the cursor on a specific collection?
+		if (file->getType() == FOLDER)
+		{
+			editingSystem = file->getName();
+		}
+		else
+		{
+			// we are inside a specific collection. We want to edit that one.
+			editingSystem = file->getSystem()->getName();
+		}
+	}
+	CollectionSystemManager::get()->setEditMode(editingSystem);
+	delete this;
+}
+
+void GuiGamelistOptions::exitEditMode()
+{
+	CollectionSystemManager::get()->exitEditMode();
+	delete this;
 }
 
 void GuiGamelistOptions::openMetaDataEd()

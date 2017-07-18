@@ -42,10 +42,9 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
+	mHeaderText.setText(mRoot->getSystem()->getFullName());
 	if (files.size() > 0)
 	{
-		mHeaderText.setText(files.at(0)->getSystem()->getFullName());
-
 		for(auto it = files.begin(); it != files.end(); it++)
 		{
 			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
@@ -143,7 +142,10 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("b", "back"));
 	prompts.push_back(HelpPrompt("select", "options"));
 	prompts.push_back(HelpPrompt("x", "random"));
-	if(Settings::getInstance()->getString("CollectionSystemsAuto").find("favorites") != std::string::npos && mRoot->getSystem()->isGameSystem())
-		prompts.push_back(HelpPrompt("y", "favorite"));
+	if(mRoot->getSystem()->isGameSystem())
+	{
+		const char* prompt = CollectionSystemManager::get()->getEditingCollection().c_str();
+		prompts.push_back(HelpPrompt("y", prompt));
+	}
 	return prompts;
 }

@@ -45,6 +45,9 @@ public:
 	bool isFiltered() { return (filterByGenre || filterByPlayers || filterByPubDev || filterByRatings || filterByFavorites); };
 	bool isKeyBeingFilteredBy(std::string key, FilterIndexType type);
 	std::vector<FilterDataDecl>& getFilterDataDecls();
+
+	void importIndex(FileFilterIndex* indexToImport);
+	void resetIndex();
 private:
 	std::vector<FilterDataDecl> filterDataDecl;
 	std::string getIndexableKey(FileData* game, FilterIndexType type, bool getSecondary);

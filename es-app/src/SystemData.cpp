@@ -426,8 +426,11 @@ FileData* SystemData::getRandomGame()
 {
 	std::vector<FileData*> list = mRootFolder->getFilesRecursive(GAME, true);
 	unsigned int total = list.size();
+	int target = 0;
 	// get random number in range
-	int target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
+	if (total == 0)
+		return NULL;
+	target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
 	return list.at(target);
 }
 

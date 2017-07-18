@@ -115,3 +115,5 @@ private:
 	std::string mCollectionFileName;
 	bool mDirty;
 };
+
+FileData::SortType getSortTypeFromString(std::string desc);

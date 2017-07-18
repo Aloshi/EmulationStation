@@ -34,6 +34,8 @@ struct CollectionSystemData
 	SystemData* system;
 	CollectionSystemDecl decl;
 	bool isEnabled;
+	bool isPopulated;
+	bool needsSave;
 };
 
 class CollectionSystemManager
@@ -41,34 +43,73 @@ class CollectionSystemManager
 public:
 	CollectionSystemManager(Window* window);
 	~CollectionSystemManager();
-	static void init(Window* window);
+
 	static CollectionSystemManager* get();
-	void loadEnabledListFromSettings();
+	static void init(Window* window);
+	static void deinit();
+	void saveCustomCollection(SystemData* sys);
+
 	void loadCollectionSystems();
-	void updateCollectionSystems(FileData* file);
-	void deleteCollectionFiles(FileData* file);
-	inline std::map<std::string, CollectionSystemData> getCollectionSystems() { return mAllCollectionSystems; };
+	void loadEnabledListFromSettings();
 	void updateSystemsList();
-	bool isThemeAutoCompatible();
-	bool toggleGameInCollection(FileData* file, std::string collection);
+
+	void refreshCollectionSystems(FileData* file);
+	void updateCollectionSystem(FileData* file, CollectionSystemData sysData);
+	void deleteCollectionFiles(FileData* file);
+
+	inline std::map<std::string, CollectionSystemData> getAutoCollectionSystems() { return mAutoCollectionSystemsData; };
+	inline std::map<std::string, CollectionSystemData> getCustomCollectionSystems() { return mCustomCollectionSystemsData; };
+	inline SystemData* getCustomCollectionsBundle() { return mCustomCollectionsBundle; };
+	std::vector<std::string> getUnusedSystemsFromTheme();
+	SystemData* addNewCustomCollection(std::string name);
+
+	bool isThemeGenericCollectionCompatible(bool genericCustomCollections);
+	bool isThemeCustomCollectionCompatible(std::vector<std::string> stringVector);
+	std::string getValidNewCollectionName(std::string name, int index = 0);
+
+	void setEditMode(std::string collectionName);
+	void exitEditMode();
+	inline bool isEditing() { return mIsEditingCustom; };
+	inline std::string getEditingCollection() { std::string res = mEditingCollection; return res; };
+	bool toggleGameInCollection(FileData* file);
+
+	SystemData* getSystemToView(SystemData* sys);
+	void updateCollectionFolderMetadata(SystemData* sys);
 
 private:
 	static CollectionSystemManager* sInstance;
-	std::map<std::string, CollectionSystemDecl> mCollectionSystemDecls;
 	SystemEnvironmentData* mCollectionEnvData;
-	static FileData::SortType getSortType(std::string desc);
-	void initAvailableSystemsList();
+	std::map<std::string, CollectionSystemDecl> mCollectionSystemDeclsIndex;
+	std::map<std::string, CollectionSystemData> mAutoCollectionSystemsData;
+	std::map<std::string, CollectionSystemData> mCustomCollectionSystemsData;
+	Window* mWindow;
+	bool mIsEditingCustom;
+	std::string mEditingCollection;
+	CollectionSystemData* mEditingCollectionSystemData;
+
+	void initAutoCollectionSystems();
+	void initCustomCollectionSystems();
+	SystemData* getAllGamesCollection();
+	SystemData* createNewCollectionEntry(std::string name, CollectionSystemDecl sysDecl, bool index = true);
+	void populateAutoCollection(CollectionSystemData* sysData);
+	void populateCustomCollection(CollectionSystemData* sysData);
+
+	void removeCollectionsFromDisplayedSystems();
+	void addEnabledCollectionsToDisplayedSystems(std::map<std::string, CollectionSystemData>* colSystemData);
+
 	std::vector<std::string> getSystemsFromConfig();
 	std::vector<std::string> getSystemsFromTheme();
-	std::vector<std::string> getUnusedSystemsFromTheme();
-	std::vector<std::string> getAutoThemeFolders();
+	std::vector<std::string> getCollectionsFromConfigFolder();
+	std::vector<std::string> getCollectionThemeFolders(bool custom);
+	std::vector<std::string> getUserCollectionThemeFolders();
+
 	bool themeFolderExists(std::string folder);
-	void loadAutoCollectionSystems();
-	void loadCustomCollectionSystems(); // TO DO NEXT
-	SystemData* findCollectionSystem(std::string name);
+
 	bool includeFileInAutoCollections(FileData* file);
-	std::map<std::string, CollectionSystemData> mAllCollectionSystems;
-	std::vector<SystemData*> mAutoCollectionSystems;
-	std::vector<SystemData*> mCustomCollectionSystems;
-	Window* mWindow;
+
+	SystemData* mCustomCollectionsBundle;
 };
+
+std::string getCustomCollectionConfigPath(std::string collectionName);
+std::string getCollectionsFolder();
+bool systemSort(SystemData* sys1, SystemData* sys2);

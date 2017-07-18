@@ -271,6 +271,17 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 	}
 }
 
+void ViewController::removeGameListView(SystemData* system)
+{
+	//if we already made one, return that one
+	auto exists = mGameListViews.find(system);
+	if(exists != mGameListViews.end())
+	{
+		exists->second.reset();
+		mGameListViews.erase(system);
+	}
+}
+
 std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* system)
 {
 	//if we already made one, return that one

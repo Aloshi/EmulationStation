@@ -4,6 +4,7 @@
 #include "SystemData.h"
 #include "components/MenuComponent.h"
 #include "CollectionSystemManager.h"
+#include "components/SwitchComponent.h"
 #include "Log.h"
 
 
@@ -24,8 +25,14 @@ private:
 	void initializeMenu();
 	void applySettings();
 	void addSystemsToMenu();
-	void updateSettings(std::string newSettings);
+	void addEntry(const char* name, unsigned int color, bool add_arrow, const std::function<void()>& func);
+	void updateSettings(std::string newAutoSettings, std::string newCustomSettings);
+	void createCollection(std::string inName);
+	void exitEditMode();
 	std::shared_ptr< OptionListComponent<std::string> > autoOptionList;
+	std::shared_ptr< OptionListComponent<std::string> > customOptionList;
+	std::shared_ptr<SwitchComponent> sortAllSystemsSwitch;
+	std::shared_ptr<SwitchComponent> bundleCustomCollections;
 	MenuComponent mMenu;
 	SystemData* mSystem;
 };
