@@ -86,7 +86,7 @@ protected:
 	virtual void onCursorChanged(const CursorState& state);
 
 private:
-	static const int MARQUEE_DELAY = 2000;
+	static const int MARQUEE_DELAY = 1000;
 	static const int MARQUEE_SPEED = 8;
 	static const int MARQUEE_RATE = 1;
 

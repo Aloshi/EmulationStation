@@ -6,6 +6,7 @@
 #include "scrapers/Scraper.h"
 #include "Renderer.h"
 #include "Log.h"
+#include "PowerSaver.h"
 #include "Settings.h"
 
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc) : GuiComponent(window), 
@@ -14,6 +15,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	mSearchParams(params),
 	mClose(false)
 {
+	PowerSaver::setState(false);
 	addChild(&mBox);
 	addChild(&mGrid);
 
@@ -96,6 +98,7 @@ bool GuiGameScraper::input(InputConfig* config, Input input)
 {
 	if(config->isMappedTo("b", input) && input.value)
 	{
+		PowerSaver::setState(true);
 		delete this;
 		return true;
 	}

@@ -16,6 +16,7 @@
 #include "Window.h"
 #include "SystemScreenSaver.h"
 #include "EmulationStation.h"
+#include "PowerSaver.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include <sstream>
@@ -224,6 +225,7 @@ int main(int argc, char* argv[])
 
 	Window window;
 	SystemScreenSaver screensaver(&window);
+	PowerSaver::init();
 	ViewController::init(&window);
 	CollectionSystemManager::init(&window);
 	window.pushGui(ViewController::get());
@@ -293,31 +295,50 @@ int main(int argc, char* argv[])
 	SDL_JoystickEventState(SDL_ENABLE);
 
 	int lastTime = SDL_GetTicks();
+	int ps_time = SDL_GetTicks();
+	
 	bool running = true;
+	bool ps_standby = false;
+
+	// assuming screensaver timeout is not updated regularly.
+	int timeout = (unsigned int) Settings::getInstance()->getInt("ScreenSaverTime");
 
 	while(running)
 	{
 		SDL_Event event;
-		while(SDL_PollEvent(&event))
+		bool ps_standby = PowerSaver::getState() && SDL_GetTicks() - ps_time > PowerSaver::getTimeout();
+		
+		if(ps_standby ? SDL_WaitEventTimeout(&event, timeout - 100) : SDL_PollEvent(&event))
 		{
-			switch(event.type)
+			do
 			{
-				case SDL_JOYHATMOTION:
-				case SDL_JOYBUTTONDOWN:
-				case SDL_JOYBUTTONUP:
-				case SDL_KEYDOWN:
-				case SDL_KEYUP:
-				case SDL_JOYAXISMOTION:
-				case SDL_TEXTINPUT:
-				case SDL_TEXTEDITING:
-				case SDL_JOYDEVICEADDED:
-				case SDL_JOYDEVICEREMOVED:
-					InputManager::getInstance()->parseEvent(event, &window);
-					break;
-				case SDL_QUIT:
-					running = false;
-					break;
-			}
+				switch(event.type)
+				{
+					case SDL_JOYHATMOTION:
+					case SDL_JOYBUTTONDOWN:
+					case SDL_JOYBUTTONUP:
+					case SDL_KEYDOWN:
+					case SDL_KEYUP:
+					case SDL_JOYAXISMOTION:
+					case SDL_TEXTINPUT:
+					case SDL_TEXTEDITING:
+					case SDL_JOYDEVICEADDED:
+					case SDL_JOYDEVICEREMOVED:
+						InputManager::getInstance()->parseEvent(event, &window);
+						break;
+					case SDL_QUIT:
+						running = false;
+						break;
+				}
+			} while(SDL_PollEvent(&event));
+			
+			// triggered if exiting from SDL_WaitEvent
+			if (ps_standby)
+				// show as if continuing from last event
+				lastTime = SDL_GetTicks();
+			
+			// reset counter
+			ps_time = SDL_GetTicks();
 		}
 
 		if(window.isSleeping())
@@ -331,8 +352,8 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
-		// cap deltaTime at 1000
-		if(deltaTime > 1000 || deltaTime < 0)
+		// cap deltaTime
+		if(deltaTime > timeout || deltaTime < 0)
 			deltaTime = 1000;
 
 		window.update(deltaTime);

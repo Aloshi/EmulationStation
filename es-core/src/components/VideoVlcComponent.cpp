@@ -3,11 +3,13 @@
 #include "ThemeData.h"
 #include "Util.h"
 #include "Settings.h"
+#include "PowerSaver.h"
+
 #ifdef WIN32
 #include <codecvt>
 #endif
 
-libvlc_instance_t*		VideoVlcComponent::mVLC = NULL;
+libvlc_instance_t* VideoVlcComponent::mVLC = NULL;
 
 // VLC prepares to render a video frame.
 static void *lock(void *data, void **p_pixels) {
@@ -289,7 +291,7 @@ void VideoVlcComponent::startVideo()
 			mMedia = libvlc_media_new_path(mVLC, path.c_str());
 			if (mMedia)
 			{
-				unsigned 	track_count;
+				unsigned track_count;
 				// Get the media metadata so we can find the aspect ratio
 				libvlc_media_parse(mMedia);
 				libvlc_media_track_t** tracks;
@@ -328,6 +330,7 @@ void VideoVlcComponent::startVideo()
 						}
 					}
 #endif
+					PowerSaver::setState(false);
 					setupContext();
 
 					// Setup the media player
@@ -358,6 +361,7 @@ void VideoVlcComponent::stopVideo()
 	// Release the media player so it stops calling back to us
 	if (mMediaPlayer)
 	{
+		PowerSaver::setState(true);
 		libvlc_media_player_stop(mMediaPlayer);
 		libvlc_media_player_release(mMediaPlayer);
 		libvlc_media_release(mMedia);
