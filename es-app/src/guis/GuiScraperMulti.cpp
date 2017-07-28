@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "views/ViewController.h"
 #include "Gamelist.h"
+#include "PowerSaver.h"
 
 #include "components/TextComponent.h"
 #include "components/ButtonComponent.h"
@@ -18,6 +19,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 {
 	assert(mSearchQueue.size());
 
+	PowerSaver::setState(false);
 	addChild(&mBackground);
 	addChild(&mGrid);
 
@@ -93,6 +95,7 @@ void GuiScraperMulti::doNextSearch()
 {
 	if(mSearchQueue.empty())
 	{
+		PowerSaver::setState(true);
 		finish();
 		return;
 	}

@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "views/ViewController.h"
 #include "animations/LambdaAnimation.h"
+#include "PowerSaver.h"
 #include "SystemData.h"
 #include "Settings.h"
 #include "Util.h"
@@ -213,13 +214,15 @@ void SystemView::onCursorChanged(const CursorState& state)
 	cancelAnimation(1);
 	cancelAnimation(2);
 
+	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
+	bool goFast = transition_style == "instant";
 	const float infoStartOpacity = mSystemInfo.getOpacity() / 255.f;
 
 	Animation* infoFadeOut = new LambdaAnimation(
 		[infoStartOpacity, this] (float t)
 	{
 		mSystemInfo.setOpacity((unsigned char)(lerp<float>(infoStartOpacity, 0.f, t) * 255));
-	}, (int)(infoStartOpacity * 150));
+	}, (int)(infoStartOpacity * (goFast ? 10 : 150)));
 
 	unsigned int gameCount = getSelected()->getDisplayedGameCount();
 
@@ -229,25 +232,20 @@ void SystemView::onCursorChanged(const CursorState& state)
 
 		if (!getSelected()->isGameSystem())
 			ss << "CONFIGURATION";
-		// only display a game count if there are at least 2 games
-		else if(gameCount > 1)
+		else
 			ss << gameCount << " GAMES AVAILABLE";
 
 		mSystemInfo.setText(ss.str());
 	}, false, 1);
 
-	// only display a game count if there are at least 2 games
-	if(gameCount > 1)
+	Animation* infoFadeIn = new LambdaAnimation(
+		[this](float t)
 	{
-		Animation* infoFadeIn = new LambdaAnimation(
-			[this](float t)
-		{
-			mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
-		}, 300);
+		mSystemInfo.setOpacity((unsigned char)(lerp<float>(0.f, 1.f, t) * 255));
+	}, goFast ? 10 : 300);
 
-		// wait 600ms to fade in
-		setAnimation(infoFadeIn, 2000, nullptr, false, 2);
-	}
+	// wait 600ms to fade in
+	setAnimation(infoFadeIn, goFast ? 0 : 2000, nullptr, false, 2);
 
 	// no need to animate transition, we're not going anywhere (probably mEntries.size() == 1)
 	if(endPos == mCamOffset && endPos == mExtrasCamOffset)
@@ -255,7 +253,6 @@ void SystemView::onCursorChanged(const CursorState& state)
 
 	Animation* anim;
 	bool move_carousel = Settings::getInstance()->getBool("MoveCarousel");
-	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
 	if(transition_style == "fade")
 	{
 		float startExtrasFade = mExtrasFadeOpacity;

@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "SystemData.h"
 #include "Settings.h"
+#include "PowerSaver.h"
 
 #include "views/gamelist/BasicGameListView.h"
 #include "views/gamelist/DetailedGameListView.h"
@@ -71,6 +72,7 @@ void ViewController::goToSystemView(SystemData* system)
 
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
+	PowerSaver::setState(true);
 
 	playViewTransition();
 }

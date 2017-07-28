@@ -4,6 +4,7 @@
 #include "Sound.h"
 #include "Log.h"
 #include "Settings.h"
+#include "PowerSaver.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
 #include "guis/GuiScreensaverOptions.h"
@@ -175,7 +176,16 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto move_carousel = std::make_shared<SwitchComponent>(mWindow);
 			move_carousel->setState(Settings::getInstance()->getBool("MoveCarousel"));
 			s->addWithLabel("CAROUSEL TRANSITIONS", move_carousel);
-			s->addSaveFunc([move_carousel] { Settings::getInstance()->setBool("MoveCarousel", move_carousel->getState()); });
+			s->addSaveFunc([move_carousel] {
+				if (move_carousel->getState()
+					&& !Settings::getInstance()->getBool("MoveCarousel")
+					&& PowerSaver::ps_instant == PowerSaver::getTimeout())
+				{
+					Settings::getInstance()->setString("PowerSaverMode", "default");
+					PowerSaver::init();
+				}
+				Settings::getInstance()->setBool("MoveCarousel", move_carousel->getState());
+			});
 
 			// transition style
 			auto transition_style = std::make_shared< OptionListComponent<std::string> >(mWindow, "TRANSITION STYLE", false);
@@ -186,7 +196,16 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			for(auto it = transitions.begin(); it != transitions.end(); it++)
 				transition_style->add(*it, *it, Settings::getInstance()->getString("TransitionStyle") == *it);
 			s->addWithLabel("TRANSITION STYLE", transition_style);
-			s->addSaveFunc([transition_style] { Settings::getInstance()->setString("TransitionStyle", transition_style->getSelected()); });
+			s->addSaveFunc([transition_style] {
+				if (Settings::getInstance()->getString("TransitionStyle") == "instant"
+					&& transition_style->getSelected() != "instant"
+					&& PowerSaver::ps_instant == PowerSaver::getTimeout())
+				{
+					Settings::getInstance()->setString("PowerSaverMode", "default");
+					PowerSaver::init();
+				}
+				Settings::getInstance()->setString("TransitionStyle", transition_style->getSelected());
+			});
 
 			// theme set
 			auto themeSets = ThemeData::getThemeSets();
@@ -247,6 +266,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	addEntry("GAME COLLECTION SETTINGS", 0x777777FF, true,
 		[this] { openCollectionSystemSettings();
 		});
+		
 	addEntry("OTHER SETTINGS", 0x777777FF, true,
 		[this] {
 			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
@@ -257,6 +277,32 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addWithLabel("VRAM LIMIT", max_vram);
 			s->addSaveFunc([max_vram] { Settings::getInstance()->setInt("MaxVRAM", (int)round(max_vram->getValue())); });
 
+			// power saver
+			auto power_saver = std::make_shared< OptionListComponent<std::string> >(mWindow, "POWER SAVER MODES", false);
+			std::vector<std::string> modes;
+			modes.push_back("disabled");
+			modes.push_back("default");
+			modes.push_back("enhanced");
+			modes.push_back("instant");
+			for (auto it = modes.begin(); it != modes.end(); it++)
+				power_saver->add(*it, *it, Settings::getInstance()->getString("PowerSaverMode") == *it);
+			s->addWithLabel("POWER SAVER MODES", power_saver);
+			s->addSaveFunc([this, power_saver] {
+				if (Settings::getInstance()->getString("PowerSaverMode") != "instant" && power_saver->getSelected() == "instant"){
+					mWindow->pushGui(new GuiMsgBox(mWindow, "Setting Power Saver to Instant Mode disables Carousel transition and sets Transition Style to Instant. Would you like to continue?"
+						, "YES", [] {
+							Settings::getInstance()->setString("TransitionStyle", "instant");
+							Settings::getInstance()->setString("PowerSaverMode", "instant");
+							Settings::getInstance()->setBool("MoveCarousel", false);
+							PowerSaver::init();
+						}, "NO", nullptr)
+					);
+				} else {
+					Settings::getInstance()->setString("PowerSaverMode", power_saver->getSelected());
+					PowerSaver::init();
+				}
+			});
+			
 			// gamelists
 			auto save_gamelists = std::make_shared<SwitchComponent>(mWindow);
 			save_gamelists->setState(Settings::getInstance()->getBool("SaveGamelistsOnExit"));
@@ -366,7 +412,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	});
 
 	mVersion.setFont(Font::get(FONT_SIZE_SMALL));
-	mVersion.setColor(0xC6C6C6FF);
+	mVersion.setColor(0x5E5E5EFF);
 	mVersion.setText("EMULATIONSTATION V" + strToUpper(PROGRAM_VERSION_STRING));
 	mVersion.setAlignment(ALIGN_CENTER);
 
