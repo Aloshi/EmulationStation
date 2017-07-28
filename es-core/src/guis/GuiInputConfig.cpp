@@ -396,7 +396,7 @@ bool GuiInputConfig::assign(Input input, int inputId)
 
 	// if this input is mapped to something other than "nothing" or the current row, error
 	// (if it's the same as what it was before, allow it)
-	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(inputName[inputId], input) && inputName[inputId] != "HotKeyEnable")
+	if(mTargetConfig->getMappedTo(input).size() > 0 && !mTargetConfig->isMappedTo(inputName[inputId], input) && strcmp(inputName[inputId], "HotKeyEnable") != 0)
 	{
 		error(mMappings.at(inputId), "Already mapped!");
 		return false;

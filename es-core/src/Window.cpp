@@ -340,8 +340,8 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 				// yes, it has!
 
 				// can we combine? (dpad only)
-				if((it->first == "up/down" && addPrompts.at(mappedTo->second).first == "left/right") ||
-					(it->first == "left/right" && addPrompts.at(mappedTo->second).first == "up/down"))
+				if((strcmp(it->first, "up/down") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "left/right")) ||
+					(strcmp(it->first, "left/right") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "up/down")))
 				{
 					// yes!
 					addPrompts.at(mappedTo->second).first = "up/down/left/right";
