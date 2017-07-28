@@ -21,7 +21,7 @@ VolumeControl::VolumeControl()
 #if defined (__APPLE__)
     #error TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
-    , mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
 #elif defined(WIN32) || defined(_WIN32)
 	, mixerHandle(nullptr), endpointVolume(nullptr)
 #endif
@@ -32,7 +32,15 @@ VolumeControl::VolumeControl()
 	originalVolume = getVolume();
 }
 
-VolumeControl::VolumeControl(const VolumeControl & right)
+VolumeControl::VolumeControl(const VolumeControl & right):
+  originalVolume(0), internalVolume(0)
+#if defined (__APPLE__)
+    #error TODO: Not implemented for MacOS yet!!!
+#elif defined(__linux__)
+	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+#elif defined(WIN32) || defined(_WIN32)
+	, mixerHandle(nullptr), endpointVolume(nullptr)
+#endif
 {
 	sInstance = right.sInstance;
 }

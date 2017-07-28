@@ -8,6 +8,8 @@ class LambdaAnimation : public Animation
 public:
 	LambdaAnimation(const std::function<void(float t)>& func, int duration) : mFunction(func), mDuration(duration) {}
 
+	virtual ~LambdaAnimation() = default;
+
 	int getDuration() const override { return mDuration; }
 
 	void apply(float t) override
