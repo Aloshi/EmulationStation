@@ -51,6 +51,11 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
 		{
 			Settings::getInstance()->setBool("IgnoreGamelist", true);
+#ifndef WIN32
+		}else if(strcmp(argv[i], "--show-hidden-files") == 0)
+		{
+			Settings::getInstance()->setBool("ShowHiddenFiles", true);			
+#endif
 		}else if(strcmp(argv[i], "--draw-framerate") == 0)
 		{
 			Settings::getInstance()->setBool("DrawFramerate", true);
