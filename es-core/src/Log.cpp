@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include <stdio.h>
 #include "platform.h"
 
 LogLevel Log::reportingLevel = LogInfo;
@@ -21,6 +22,14 @@ std::string Log::getLogPath()
 void Log::setReportingLevel(LogLevel level)
 {
 	reportingLevel = level;
+}
+
+void Log::init()
+{
+	remove((getLogPath() + ".bak").c_str());
+	// rename previous log file
+	rename(getLogPath().c_str(), (getLogPath() + ".bak").c_str());
+	return;
 }
 
 void Log::open()

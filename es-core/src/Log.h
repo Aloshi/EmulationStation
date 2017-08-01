@@ -24,6 +24,7 @@ public:
 	static std::string getLogPath();
 
 	static void flush();
+	static void init();
 	static void open();
 	static void close();
 protected:
