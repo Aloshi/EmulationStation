@@ -222,6 +222,7 @@ int main(int argc, char* argv[])
 		return 1;
 
 	//start the logger
+	Log::init();
 	Log::open();
 	LOG(LogInfo) << "EmulationStation - v" << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING;
 
