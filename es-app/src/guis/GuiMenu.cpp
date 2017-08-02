@@ -88,7 +88,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 				for(auto it = transitions.begin(); it != transitions.end(); it++)
 					vol_dev->add(*it, *it, Settings::getInstance()->getString("AudioDevice") == *it);
 				s->addWithLabel("AUDIO DEVICE", vol_dev);
-				s->addSaveFunc([vol_dev] { 
+				s->addSaveFunc([vol_dev] {
 					Settings::getInstance()->setString("AudioDevice", vol_dev->getSelected());
 					VolumeControl::getInstance()->deinit();
 					VolumeControl::getInstance()->init();
@@ -136,7 +136,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto screensaver_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
 			screensaver_time->setValue((float)(Settings::getInstance()->getInt("ScreenSaverTime") / (1000 * 60)));
 			s->addWithLabel("SCREENSAVER AFTER", screensaver_time);
-			s->addSaveFunc([screensaver_time] { Settings::getInstance()->setInt("ScreenSaverTime", (int)round(screensaver_time->getValue()) * (1000 * 60)); });
+			s->addSaveFunc([screensaver_time] {
+				Settings::getInstance()->setInt("ScreenSaverTime", (int)round(screensaver_time->getValue()) * (1000 * 60));
+				PowerSaver::updateTimeouts();
+			});
 
 			// screensaver behavior
 			auto screensaver_behavior = std::make_shared< OptionListComponent<std::string> >(mWindow, "SCREENSAVER BEHAVIOR", false);
@@ -179,7 +182,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addSaveFunc([move_carousel] {
 				if (move_carousel->getState()
 					&& !Settings::getInstance()->getBool("MoveCarousel")
-					&& PowerSaver::ps_instant == PowerSaver::getTimeout())
+					&& PowerSaver::getMode() == PowerSaver::INSTANT)
 				{
 					Settings::getInstance()->setString("PowerSaverMode", "default");
 					PowerSaver::init();
@@ -199,7 +202,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			s->addSaveFunc([transition_style] {
 				if (Settings::getInstance()->getString("TransitionStyle") == "instant"
 					&& transition_style->getSelected() != "instant"
-					&& PowerSaver::ps_instant == PowerSaver::getTimeout())
+					&& PowerSaver::getMode() == PowerSaver::INSTANT)
 				{
 					Settings::getInstance()->setString("PowerSaverMode", "default");
 					PowerSaver::init();
@@ -266,7 +269,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	addEntry("GAME COLLECTION SETTINGS", 0x777777FF, true,
 		[this] { openCollectionSystemSettings();
 		});
-		
+
 	addEntry("OTHER SETTINGS", 0x777777FF, true,
 		[this] {
 			auto s = new GuiSettings(mWindow, "OTHER SETTINGS");
@@ -288,21 +291,14 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 				power_saver->add(*it, *it, Settings::getInstance()->getString("PowerSaverMode") == *it);
 			s->addWithLabel("POWER SAVER MODES", power_saver);
 			s->addSaveFunc([this, power_saver] {
-				if (Settings::getInstance()->getString("PowerSaverMode") != "instant" && power_saver->getSelected() == "instant"){
-					mWindow->pushGui(new GuiMsgBox(mWindow, "Setting Power Saver to Instant Mode disables Carousel transition and sets Transition Style to Instant. Would you like to continue?"
-						, "YES", [] {
-							Settings::getInstance()->setString("TransitionStyle", "instant");
-							Settings::getInstance()->setString("PowerSaverMode", "instant");
-							Settings::getInstance()->setBool("MoveCarousel", false);
-							PowerSaver::init();
-						}, "NO", nullptr)
-					);
-				} else {
-					Settings::getInstance()->setString("PowerSaverMode", power_saver->getSelected());
-					PowerSaver::init();
+				if (Settings::getInstance()->getString("PowerSaverMode") != "instant" && power_saver->getSelected() == "instant") {
+					Settings::getInstance()->setString("TransitionStyle", "instant");
+					Settings::getInstance()->setBool("MoveCarousel", false);
 				}
+				Settings::getInstance()->setString("PowerSaverMode", power_saver->getSelected());
+				PowerSaver::init();
 			});
-			
+
 			// gamelists
 			auto save_gamelists = std::make_shared<SwitchComponent>(mWindow);
 			save_gamelists->setState(Settings::getInstance()->getBool("SaveGamelistsOnExit"));
