@@ -54,7 +54,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 #ifndef WIN32
 		}else if(strcmp(argv[i], "--show-hidden-files") == 0)
 		{
-			Settings::getInstance()->setBool("ShowHiddenFiles", true);			
+			Settings::getInstance()->setBool("ShowHiddenFiles", true);
 #endif
 		}else if(strcmp(argv[i], "--draw-framerate") == 0)
 		{
@@ -95,7 +95,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			AttachConsole(ATTACH_PARENT_PROCESS);
 			freopen("CONOUT$", "wb", stdout);
 #endif
-			std::cout << 
+			std::cout <<
 				"EmulationStation, a graphical front-end for ROM browsing.\n"
 				"Written by Alec \"Aloshi\" Lofquist.\n"
 				"Version " << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING << "\n\n"
@@ -139,7 +139,7 @@ bool verifyHomeFolderExists()
 	return true;
 }
 
-// Returns true if everything is OK, 
+// Returns true if everything is OK,
 bool loadSystemConfigFile(const char** errorString)
 {
 	*errorString = NULL;
@@ -187,8 +187,8 @@ int main(int argc, char* argv[])
 	// only show the console on Windows if HideConsole is false
 #ifdef WIN32
 	// MSVC has a "SubSystem" option, with two primary options: "WINDOWS" and "CONSOLE".
-	// In "WINDOWS" mode, no console is automatically created for us.  This is good, 
-	// because we can choose to only create the console window if the user explicitly 
+	// In "WINDOWS" mode, no console is automatically created for us.  This is good,
+	// because we can choose to only create the console window if the user explicitly
 	// asks for it, preventing it from flashing open and then closing.
 	// In "CONSOLE" mode, a console is always automatically created for us before we
 	// enter main. In this case, we can only hide the console after the fact, which
@@ -210,7 +210,7 @@ int main(int argc, char* argv[])
 	}else{
 		// we want to hide the console
 		// if we're compiled with the "WINDOWS" subsystem, this is already done.
-		// if we're compiled with the "CONSOLE" subsystem, a console is already created; 
+		// if we're compiled with the "CONSOLE" subsystem, a console is already created;
 		// it'll flash open, but we hide it nearly immediately
 		if(GetConsoleWindow()) // should only pass in "CONSOLE" mode
 			ShowWindow(GetConsoleWindow(), SW_HIDE);
@@ -266,7 +266,7 @@ int main(int argc, char* argv[])
 		// we can't handle es_systems.cfg file problems inside ES itself, so display the error message then quit
 		window.pushGui(new GuiMsgBox(&window,
 			errorMsg,
-			"QUIT", [] { 
+			"QUIT", [] {
 				SDL_Event* quit = new SDL_Event();
 				quit->type = SDL_QUIT;
 				SDL_PushEvent(quit);
@@ -302,19 +302,16 @@ int main(int argc, char* argv[])
 
 	int lastTime = SDL_GetTicks();
 	int ps_time = SDL_GetTicks();
-	
+
 	bool running = true;
 	bool ps_standby = false;
-
-	// assuming screensaver timeout is not updated regularly.
-	int timeout = (unsigned int) Settings::getInstance()->getInt("ScreenSaverTime");
 
 	while(running)
 	{
 		SDL_Event event;
-		bool ps_standby = PowerSaver::getState() && SDL_GetTicks() - ps_time > PowerSaver::getTimeout();
-		
-		if(ps_standby ? SDL_WaitEventTimeout(&event, timeout - 100) : SDL_PollEvent(&event))
+		bool ps_standby = PowerSaver::getState() && SDL_GetTicks() - ps_time > PowerSaver::getMode();
+
+		if(ps_standby ? SDL_WaitEventTimeout(&event, PowerSaver::getTimeout()) : SDL_PollEvent(&event))
 		{
 			do
 			{
@@ -337,12 +334,12 @@ int main(int argc, char* argv[])
 						break;
 				}
 			} while(SDL_PollEvent(&event));
-			
+
 			// triggered if exiting from SDL_WaitEvent
 			if (ps_standby)
 				// show as if continuing from last event
 				lastTime = SDL_GetTicks();
-			
+
 			// reset counter
 			ps_time = SDL_GetTicks();
 		}
@@ -359,7 +356,7 @@ int main(int argc, char* argv[])
 		lastTime = curTime;
 
 		// cap deltaTime
-		if(deltaTime > timeout || deltaTime < 0)
+		if((deltaTime > PowerSaver::getTimeout() && PowerSaver::getTimeout() > 0) || deltaTime < 0)
 			deltaTime = 1000;
 
 		window.update(deltaTime);

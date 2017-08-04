@@ -4,6 +4,7 @@
 #endif
 #include "components/VideoVlcComponent.h"
 #include "platform.h"
+#include "PowerSaver.h"
 #include "Renderer.h"
 #include "Settings.h"
 #include "SystemData.h"
@@ -100,6 +101,7 @@ void SystemScreenSaver::startScreenSaver()
 			mVideoScreensaver->setVideo(path);
 			mVideoScreensaver->setScreensaverMode(true);
 			mVideoScreensaver->onShow();
+			PowerSaver::runningScreenSaver(true);
 			mTimer = 0;
 			return;
 		}
@@ -114,6 +116,7 @@ void SystemScreenSaver::stopScreenSaver()
 	delete mVideoScreensaver;
 	mVideoScreensaver = NULL;
 	mState = STATE_INACTIVE;
+	PowerSaver::runningScreenSaver(false);
 }
 
 void SystemScreenSaver::renderScreenSaver()
