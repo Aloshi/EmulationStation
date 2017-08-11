@@ -330,7 +330,7 @@ void VideoVlcComponent::startVideo()
 						}
 					}
 #endif
-					PowerSaver::setState(false);
+					PowerSaver::pause();
 					setupContext();
 
 					// Setup the media player
@@ -361,12 +361,11 @@ void VideoVlcComponent::stopVideo()
 	// Release the media player so it stops calling back to us
 	if (mMediaPlayer)
 	{
-		PowerSaver::setState(true);
 		libvlc_media_player_stop(mMediaPlayer);
 		libvlc_media_player_release(mMediaPlayer);
 		libvlc_media_release(mMedia);
 		mMediaPlayer = NULL;
 		freeContext();
+		PowerSaver::resume();
 	}
 }
-

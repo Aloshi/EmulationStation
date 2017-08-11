@@ -3,6 +3,7 @@
 #include "ThemeData.h"
 #include "Util.h"
 #include "Window.h"
+#include "PowerSaver.h"
 #ifdef WIN32
 #include <codecvt>
 #endif
@@ -264,7 +265,7 @@ void VideoComponent::startVideoWithDelay()
 		// Set the video that we are going to be playing so we don't attempt to restart it
 		mPlayingVideoPath = mVideoPath;
 
-		if (mConfig.startDelay == 0)
+		if (mConfig.startDelay == 0 || PowerSaver::getMode() == PowerSaver::INSTANT)
 		{
 			// No delay. Just start the video
 			mStartDelayed = false;
