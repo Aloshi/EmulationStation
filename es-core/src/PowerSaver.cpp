@@ -12,20 +12,20 @@ PowerSaver::mode PowerSaver::mMode = PowerSaver::DISABLED;
 void PowerSaver::init()
 {
 	setState(true);
-	updateTimeouts();
 	updateMode();
 }
 
 int PowerSaver::getTimeout()
 {
+	// Used only for SDL_WaitEventTimeout. Use `getMode()` for modes.
 	return mRunningScreenSaver ? mPlayNextTimeout : mScreenSaverTimeout;
 }
 
 void PowerSaver::updateTimeouts()
 {
 	mScreenSaverTimeout = (unsigned int) Settings::getInstance()->getInt("ScreenSaverTime");
-	mScreenSaverTimeout = mScreenSaverTimeout > 0 ? mScreenSaverTimeout - 100 : -1;
-	mPlayNextTimeout = 30000;
+	mScreenSaverTimeout = mScreenSaverTimeout > 0 ? mScreenSaverTimeout - getMode() : -1;
+	mPlayNextTimeout = 30000 - getMode();
 }
 
 PowerSaver::mode PowerSaver::getMode()
@@ -46,6 +46,7 @@ void PowerSaver::updateMode()
 	} else {
 		mMode = DEFAULT;
 	}
+	updateTimeouts();
 }
 
 bool PowerSaver::getState()
@@ -62,4 +63,9 @@ void PowerSaver::setState(bool state)
 void PowerSaver::runningScreenSaver(bool state)
 {
 	mRunningScreenSaver = state;
+}
+
+bool PowerSaver::isScreenSaverActive()
+{
+	return mRunningScreenSaver;
 }

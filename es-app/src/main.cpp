@@ -335,12 +335,18 @@ int main(int argc, char* argv[])
 				}
 			} while(SDL_PollEvent(&event));
 
-			// triggered if exiting from SDL_WaitEvent
+			// triggered if exiting from SDL_WaitEvent due to event
 			if (ps_standby)
 				// show as if continuing from last event
 				lastTime = SDL_GetTicks();
 
 			// reset counter
+			ps_time = SDL_GetTicks();
+		}
+		else if (ps_standby)
+		{
+			// If exitting SDL_WaitEventTimeout due to timeout. Trail considering
+			// timeout as an event
 			ps_time = SDL_GetTicks();
 		}
 
@@ -355,8 +361,8 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
-		// cap deltaTime
-		if((deltaTime > PowerSaver::getTimeout() && PowerSaver::getTimeout() > 0) || deltaTime < 0)
+		// cap deltaTime if it ever goes negative
+		if(deltaTime < 0)
 			deltaTime = 1000;
 
 		window.update(deltaTime);

@@ -59,8 +59,10 @@ void SystemScreenSaver::startScreenSaver()
 {
 	if (!mVideoScreensaver && (Settings::getInstance()->getString("ScreenSaverBehavior") == "random video"))
 	{
-		// Configure to fade out the windows
-		mState = STATE_FADE_OUT_WINDOW;
+		// Configure to fade out the windows, Skip Fading if Instant mode
+		mState =  PowerSaver::getMode() == PowerSaver::INSTANT
+					? STATE_SCREENSAVER_ACTIVE
+					: STATE_FADE_OUT_WINDOW;
 		mOpacity = 0.0f;
 
 		// Load a random video
@@ -316,9 +318,9 @@ void SystemScreenSaver::launchGame()
 	// launching Game
 	ViewController::get()->goToGameList(mCurrentGame->getSystem());
 	IGameListView* view = ViewController::get()->getGameListView(mCurrentGame->getSystem()).get();
- 	view->setCursor(mCurrentGame);
- 	if (Settings::getInstance()->getBool("ScreenSaverControls"))
- 	{
- 		view->launch(mCurrentGame);
- 	}
+	view->setCursor(mCurrentGame);
+	if (Settings::getInstance()->getBool("ScreenSaverControls"))
+	{
+		view->launch(mCurrentGame);
+	}
 }
