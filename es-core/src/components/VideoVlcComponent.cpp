@@ -143,10 +143,10 @@ void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
 		float x2;
 		float y2;
 
-		x = -(float)mSize.x() * mOrigin.x();
-		y = -(float)mSize.y() * mOrigin.y();
-		x2 = x+mSize.x();
-		y2 = y+mSize.y();
+		x = 0.0;
+		y = 0.0;
+		x2 = mSize.x();
+		y2 = mSize.y();
 
 		// Define a structure to contain the data for each vertex
 		struct Vertex
