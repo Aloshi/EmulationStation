@@ -132,7 +132,6 @@ float GuiComponent::getScale() const
 void GuiComponent::setScale(float scale)
 {
 	mScale = scale;
-	onSizeChanged();
 }
 
 float GuiComponent::getZIndex() const
