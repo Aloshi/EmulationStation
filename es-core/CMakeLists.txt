@@ -131,27 +131,27 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/frame_png.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
 
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_left_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_right_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_up_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_down_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_analog_thumb_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_x_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_y_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_hotkey_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_right_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_updown_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_leftright_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_all_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_thumb_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_a_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_b_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_x_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_y_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_l_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_r_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_start_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_select_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_hotkey_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_updown_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_leftright_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_all_svg.cpp
 
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp

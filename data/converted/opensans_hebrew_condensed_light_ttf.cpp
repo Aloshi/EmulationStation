@@ -1,9 +1,9 @@
-//this file was auto-generated from "opensans_hebrew_condensed_light.ttf" by res2h
+// this file was auto-generated from "opensans_hebrew_condensed_light.ttf" by res2h
 
 #include "../Resources.h"
 
-const size_t opensans_hebrew_condensed_light_ttf_size = 32868;
-const unsigned char opensans_hebrew_condensed_light_ttf_data[32868] = {
+const uint16_t opensans_hebrew_condensed_light_ttf_size = 32868;
+const uint8_t opensans_hebrew_condensed_light_ttf_data[32868] = {
     0x00,0x01,0x00,0x00,0x00,0x10,0x01,0x00,0x00,0x04,
     0x00,0x00,0x46,0x46,0x54,0x4d,0x67,0x7f,0x0d,0x13,
     0x00,0x00,0x7c,0xb4,0x00,0x00,0x00,0x1c,0x47,0x44,
