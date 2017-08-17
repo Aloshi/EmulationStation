@@ -1,9 +1,9 @@
-//this file was auto-generated from "textinput_ninepatch_active.png" by res2h
+// this file was auto-generated from "textinput_ninepatch_active.png" by res2h
 
 #include "../Resources.h"
 
-const size_t textinput_ninepatch_active_png_size = 3084;
-const unsigned char textinput_ninepatch_active_png_data[3084] = {
+const uint16_t textinput_ninepatch_active_png_size = 3084;
+const uint8_t textinput_ninepatch_active_png_data[3084] = {
     0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a,0x00,0x00,
     0x00,0x0d,0x49,0x48,0x44,0x52,0x00,0x00,0x00,0x30,
     0x00,0x00,0x00,0x30,0x08,0x06,0x00,0x00,0x00,0x57,
