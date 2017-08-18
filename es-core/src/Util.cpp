@@ -296,12 +296,14 @@ std::vector<std::string> commaStringToVector(std::string commaString)
 	// from a comma separated string, get a vector of strings
 	std::vector<std::string> strs;
 	boost::split(strs, commaString, boost::is_any_of(","));
+	std::sort(strs.begin(), strs.end());
 	return strs;
 }
 
-std::string commaStringToVector(std::vector<std::string> stringVector)
+std::string vectorToCommaString(std::vector<std::string> stringVector)
 {
 	std::string out = "";
+	std::sort(stringVector.begin(), stringVector.end());
 	// from a vector of system names get comma separated string
 	for(std::vector<std::string>::iterator it = stringVector.begin() ; it != stringVector.end() ; it++ )
 	{

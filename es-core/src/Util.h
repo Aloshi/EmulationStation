@@ -46,4 +46,4 @@ std::string removeParenthesis(const std::string& str);
 std::vector<std::string> commaStringToVector(std::string commaString);
 
 // turn a vector of strings into a comma-separated string
-std::string commaStringToVector(std::vector<std::string> stringVector);
+std::string vectorToCommaString(std::vector<std::string> stringVector);

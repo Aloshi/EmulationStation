@@ -234,7 +234,10 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 					Settings::getInstance()->setString("ThemeSet", theme_set->getSelected());
 
 					if(needReload)
+					{
+						CollectionSystemManager::get()->updateSystemsList();
 						ViewController::get()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
+					}
 				});
 			}
 

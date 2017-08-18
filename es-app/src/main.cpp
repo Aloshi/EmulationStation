@@ -376,6 +376,7 @@ int main(int argc, char* argv[])
 		delete window.peekGui();
 	window.deinit();
 
+	CollectionSystemManager::deinit();
 	SystemData::deleteSystems();
 
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";
