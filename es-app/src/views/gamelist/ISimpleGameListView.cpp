@@ -13,7 +13,7 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 	mHeaderText.setText("Logo Text");
 	mHeaderText.setSize(mSize.x(), 0);
 	mHeaderText.setPosition(0, 0);
-	mHeaderText.setAlignment(ALIGN_CENTER);
+	mHeaderText.setHorizontalAlignment(ALIGN_CENTER);
 	mHeaderText.setDefaultZIndex(50);
 	
 	mHeaderImage.setResize(0, mSize.y() * 0.185f);

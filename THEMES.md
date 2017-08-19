@@ -673,17 +673,32 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 #### carousel
 
 * `type` - type: STRING.
-	- Accepted values are "horizontal" or "vertical".  Sets the scoll direction of the carousel.
- 	- Default is "horizontal".
+	- Sets the scoll direction of the carousel.
+	- Accepted values are "horizontal", "vertical" or "vertical_wheel".
+	- Default is "horizontal".
 * `size` - type: NORMALIZED_PAIR. Default is "1 0.2325"
 * `pos` - type: NORMALIZED_PAIR.  Default is "0 0.38375".
+* `origin` - type: NORMALIZED_PAIR.
+	- Where on the carousel `pos` refers to.  For example, an origin of `0.5 0.5` and a `pos` of `0.5 0.5` would place the carousel exactly in the middle of the screen.  If the "POSITION" and "SIZE" attributes are themable, "ORIGIN" is implied.
 * `color` - type: COLOR.
 	- Controls the color of the carousel background.
 	- Default is FFFFFFD8
 * `logoSize` - type: NORMALIZED_PAIR.  Default is "0.25 0.155"
 * `logoScale` - type: FLOAT.
- * Selected logo is increased in size by this scale
- * Default is 1.2
+	- Selected logo is increased in size by this scale
+	- Default is 1.2
+* `logoRotation` - type: FLOAT.
+	- Angle in degrees that the logos should be rotated.  Value should be positive.
+	- Default is 7.5
+	- This property only applies when `type` is "vertical_wheel".
+* `logoRotationOrigin` - type: NORMALIZED_PAIR.
+	- Point around which the logos will be rotated. Defaults to `-5 0.5`.
+	- This property only applies when `type` is "vertical_wheel".
+* `logoAlignment` - type: STRING.
+	- Sets the alignment of the logos relative to the carousel.
+	- Accepted values are "top", "bottom" or "center" when `type` is "horizontal".
+	- Accepted values are "left", "right" or "center" when `type` is "vertical" or "vertical_wheel".
+	- Default is "center"
 * `maxLogoCount` - type: FLOAT.
 	- Sets the number of logos to display in the carousel.
 	- Default is 3

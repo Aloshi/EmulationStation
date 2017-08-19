@@ -144,7 +144,7 @@ public:
 		auto font = Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT);
 		mText.setFont(font);
 		mText.setColor(0x777777FF);
-		mText.setAlignment(ALIGN_CENTER);
+		mText.setHorizontalAlignment(ALIGN_CENTER);
 		addChild(&mText);
 
 		if(mMultiSelect)
