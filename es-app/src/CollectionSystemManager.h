@@ -70,7 +70,7 @@ public:
 	void setEditMode(std::string collectionName);
 	void exitEditMode();
 	inline bool isEditing() { return mIsEditingCustom; };
-	inline std::string getEditingCollection() { std::string res = mEditingCollection; return res; };
+	inline std::string getEditingCollection() { return mEditingCollection; };
 	bool toggleGameInCollection(FileData* file);
 
 	SystemData* getSystemToView(SystemData* sys);

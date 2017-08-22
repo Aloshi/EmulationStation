@@ -2,6 +2,7 @@
 
 #include "InputConfig.h"
 #include <memory>
+#include <string>
 #include <Eigen/Dense>
 #include "HelpStyle.h"
 
@@ -11,7 +12,7 @@ class AnimationController;
 class ThemeData;
 class Font;
 
-typedef std::pair<const char*, const char*> HelpPrompt;
+typedef std::pair<std::string, std::string> HelpPrompt;
 
 class GuiComponent
 {

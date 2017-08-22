@@ -319,7 +319,7 @@ std::vector<HelpPrompt> ComponentList::getHelpPrompts()
 		bool addMovePrompt = true;
 		for(auto it = prompts.begin(); it != prompts.end(); it++)
 		{
-			if(strcmp(it->first, "up/down") == 0 || strcmp(it->first, "up/down/left/right") == 0)
+			if(it->first == "up/down" || it->first == "up/down/left/right")
 			{
 				addMovePrompt = false;
 				break;
