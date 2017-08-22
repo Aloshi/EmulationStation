@@ -11,6 +11,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <math.h>
+
+class VolumeControl
+{
+public:
+	static std::shared_ptr<VolumeControl> & getInstance();
+	int getVolume() const;
+};
 
 VideoPlayerComponent::VideoPlayerComponent(Window* window, std::string path) :
 	VideoComponent(window),
@@ -101,9 +109,15 @@ void VideoPlayerComponent::startVideo()
 				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf, "--no-ghost-box", "", "", "", "", NULL };
 
 				// check if we want to mute the audio
-				if (!Settings::getInstance()->getBool("VideoAudio"))
+				if (!Settings::getInstance()->getBool("VideoAudio") || (float)VolumeControl::getInstance()->getVolume() == 0)
 				{
 					argv[8] = "-1000000";
+				}
+				else
+				{
+					float percentVolume = (float)VolumeControl::getInstance()->getVolume();
+					int OMXVolume = (int)(log(percentVolume/100)*2000);
+					argv[8] = std::to_string(OMXVolume).c_str();
 				}
 
 				// test if there's a path for possible subtitles, meaning we're a screensaver video
