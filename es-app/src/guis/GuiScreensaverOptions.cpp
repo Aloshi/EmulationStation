@@ -10,10 +10,20 @@
 #include "components/OptionListComponent.h"
 #include "components/MenuComponent.h"
 #include "guis/GuiMsgBox.h"
+#include "PowerSaver.h"
 
 GuiScreensaverOptions::GuiScreensaverOptions(Window* window, const char* title) : GuiComponent(window), mMenu(window, title)
 {
 	addChild(&mMenu);
+
+	// timeout to swap videos
+	auto swap = std::make_shared<SliderComponent>(mWindow, 10.f, 1000.f, 1.f, "s");
+	swap->setValue((float)(Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") / (1000)));
+	addWithLabel("SWAP VIDEO AFTER (SECS)", swap);
+	addSaveFunc([swap] {
+		Settings::getInstance()->setInt("ScreenSaverSwapVideoTimeout", (int)round(swap->getValue()) * (1000));
+		PowerSaver::updateTimeouts();
+	});
 
 #ifdef _RPI_
 	auto ss_omx = std::make_shared<SwitchComponent>(mWindow);

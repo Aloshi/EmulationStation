@@ -46,4 +46,5 @@ private:
 	FileData*		mCurrentGame;
 	std::string		mGameName;
 	std::string		mSystemName;
+	int 			mVideoChangeTime;
 };

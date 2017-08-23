@@ -1,6 +1,7 @@
 #include "components/VideoComponent.h"
 #include "Renderer.h"
 #include "ThemeData.h"
+#include "Settings.h"
 #include "Util.h"
 #include "Window.h"
 #include "PowerSaver.h"
@@ -23,8 +24,11 @@ std::string getTitleFolder() {
 void writeSubtitle(const char* gameName, const char* systemName, bool always)
 {
 	FILE* file = fopen(getTitlePath().c_str(), "w");
+	int end = (int)(Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") / (1000));
 	if (always) {
-		fprintf(file, "1\n00:00:01,000 --> 00:00:30,000\n");
+		fprintf(file, "1\n00:00:01,000 --> 00:00:");
+		fprintf(file, std::to_string(end).c_str());
+		fprintf(file, ",000\n");
 	}
 	else
 	{
@@ -34,9 +38,16 @@ void writeSubtitle(const char* gameName, const char* systemName, bool always)
 	fprintf(file, "<i>%s</i>\n\n", systemName);
 
 	if (!always) {
-		fprintf(file, "2\n00:00:26,000 --> 00:00:30,000\n");
-		fprintf(file, "%s\n", gameName);
-		fprintf(file, "<i>%s</i>\n", systemName);
+		if (end > 12)
+		{
+			fprintf(file, "2\n00:00:");
+			fprintf(file, std::to_string(end - 4).c_str());
+			fprintf(file, ",000 --> 00:00:");
+			fprintf(file, std::to_string(end).c_str());
+			fprintf(file, ",000\n");
+			fprintf(file, "%s\n", gameName);
+			fprintf(file, "<i>%s</i>\n", systemName);
+		}
 	}
 
 	fflush(file);
