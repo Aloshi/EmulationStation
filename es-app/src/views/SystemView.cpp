@@ -466,8 +466,15 @@ void SystemView::renderCarousel(const Eigen::Affine3f& trans)
 
 	// Adding texture loading buffers depending on scrolling speed and status
 	int bufferIndex = getScrollingVelocity() + 1;
+	int bufferLeft = logoBuffersLeft[bufferIndex];
+	int bufferRight = logoBuffersRight[bufferIndex];
+	if (logoCount == 1)
+	{
+		bufferLeft = 0;
+		bufferRight = 0;
+	}
 
-	for (int i = center - logoCount / 2 + logoBuffersLeft[bufferIndex]; i <= center + logoCount / 2 + logoBuffersRight[bufferIndex]; i++)
+	for (int i = center - logoCount / 2 + bufferLeft; i <= center + logoCount / 2 + bufferRight; i++)
 	{
 		int index = i;
 		while (index < 0)
