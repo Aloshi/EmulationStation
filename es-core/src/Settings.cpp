@@ -71,7 +71,11 @@ void Settings::setDefaults()
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
-	mIntMap["MaxVRAM"] = 100;
+	#ifdef _RPI_
+		mIntMap["MaxVRAM"] = 80;
+	#else
+		mIntMap["MaxVRAM"] = 100;
+	#endif
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
