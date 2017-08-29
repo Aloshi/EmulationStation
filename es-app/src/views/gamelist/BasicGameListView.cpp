@@ -144,8 +144,7 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("x", "random"));
 	if(mRoot->getSystem()->isGameSystem())
 	{
-		const char* prompt = CollectionSystemManager::get()->getEditingCollection().c_str();
-		prompts.push_back(HelpPrompt("y", prompt));
+		prompts.push_back(HelpPrompt("y", "toggle"));
 	}
 	return prompts;
 }
