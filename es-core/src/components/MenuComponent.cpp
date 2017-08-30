@@ -8,9 +8,9 @@
 
 using namespace Eigen;
 
-MenuComponent::MenuComponent(Window* window, const char* title, const std::shared_ptr<Font>& titleFont) : GuiComponent(window), 
+MenuComponent::MenuComponent(Window* window, const char* title, const std::shared_ptr<Font>& titleFont) : GuiComponent(window),
 	mBackground(window), mGrid(window, Vector2i(1, 3))
-{	
+{
 	addChild(&mBackground);
 	addChild(&mGrid);
 
@@ -63,7 +63,8 @@ void MenuComponent::updateSize()
 		}
 	}
 
-	setSize(Renderer::getScreenWidth() * 0.5f, height);
+	float width = std::min(Renderer::getScreenHeight(), (unsigned int) (Renderer::getScreenWidth() * 0.90f));
+	setSize(width, height);
 }
 
 void MenuComponent::onSizeChanged()
@@ -73,7 +74,7 @@ void MenuComponent::onSizeChanged()
 	// update grid row/col sizes
 	mGrid.setRowHeightPerc(0, TITLE_HEIGHT / mSize.y());
 	mGrid.setRowHeightPerc(2, getButtonGridHeight() / mSize.y());
-	
+
 	mGrid.setSize(mSize);
 }
 
@@ -117,7 +118,7 @@ std::shared_ptr<ComponentGrid> makeButtonGrid(Window* window, const std::vector<
 	{
 		buttonGrid->setColWidthPerc(i, (buttons.at(i)->getSize().x() + BUTTON_GRID_HORIZ_PADDING) / buttonGridWidth);
 	}
-	
+
 	buttonGrid->setSize(buttonGridWidth, buttons.at(0)->getSize().y() + BUTTON_GRID_VERT_PADDING + 2);
 	buttonGrid->setRowHeightPerc(1, 2 / buttonGrid->getSize().y()); // spacer row to deal with dropshadow to make buttons look centered
 
