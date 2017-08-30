@@ -331,7 +331,7 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 	for(auto it = prompts.begin(); it != prompts.end(); it++)
 	{
 		// only add it if the same icon hasn't already been added
-		if(inputSeenMap.insert(std::make_pair<std::string, bool>(it->first, true)).second)
+		if(inputSeenMap.emplace(it->first, true).second)
 		{
 			// this symbol hasn't been seen yet, what about the action name?
 			auto mappedTo = mappedToSeenMap.find(it->second);
@@ -340,8 +340,8 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 				// yes, it has!
 
 				// can we combine? (dpad only)
-				if((strcmp(it->first, "up/down") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "left/right")) ||
-					(strcmp(it->first, "left/right") == 0 && strcmp(addPrompts.at(mappedTo->second).first, "up/down")))
+				if((it->first == "up/down" && addPrompts.at(mappedTo->second).first != "left/right") ||
+					(it->first == "left/right" && addPrompts.at(mappedTo->second).first != "up/down"))
 				{
 					// yes!
 					addPrompts.at(mappedTo->second).first = "up/down/left/right";
@@ -352,7 +352,7 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 				}
 			}else{
 				// no, it hasn't!
-				mappedToSeenMap.insert(std::pair<std::string, int>(it->second, addPrompts.size()));
+				mappedToSeenMap.emplace(it->second, addPrompts.size());
 				addPrompts.push_back(*it);
 			}
 		}
