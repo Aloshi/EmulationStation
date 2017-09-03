@@ -231,11 +231,9 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 
 	mScraperResults = results;
 
-	const int end = results.size() > MAX_SCRAPER_RESULTS ? MAX_SCRAPER_RESULTS : results.size(); // at max display 5
-
 	auto font = Font::get(FONT_SIZE_MEDIUM);
 	unsigned int color = 0x777777FF;
-	if(end == 0)
+	if(results.empty())
 	{
 		ComponentListRow row;
 		row.addElement(std::make_shared<TextComponent>(mWindow, "NO GAMES FOUND - SKIP", font, color), true);
@@ -247,7 +245,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 		mGrid.resetCursor();
 	}else{
 		ComponentListRow row;
-		for(int i = 0; i < end; i++)
+		for(size_t i = 0; i < results.size(); i++)
 		{
 			row.elements.clear();
 			row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(results.at(i).mdl.get("name")), font, color), true);
