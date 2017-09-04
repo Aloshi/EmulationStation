@@ -37,6 +37,8 @@ private:
 	static bool mRunningScreenSaver;
 
 	static mode mMode;
-	static int mPlayNextTimeout;
+	static int mWakeupTimeout;
 	static int mScreenSaverTimeout;
+
+	static void loadWakeupTime();
 };
