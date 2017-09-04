@@ -5,7 +5,7 @@
 bool PowerSaver::mState = false;
 bool PowerSaver::mRunningScreenSaver = false;
 
-int PowerSaver::mPlayNextTimeout = -1;
+int PowerSaver::mWakeupTimeout = -1;
 int PowerSaver::mScreenSaverTimeout = -1;
 PowerSaver::mode PowerSaver::mMode = PowerSaver::DISABLED;
 
@@ -18,14 +18,24 @@ void PowerSaver::init()
 int PowerSaver::getTimeout()
 {
 	// Used only for SDL_WaitEventTimeout. Use `getMode()` for modes.
-	return mRunningScreenSaver ? mPlayNextTimeout : mScreenSaverTimeout;
+	return mRunningScreenSaver ? mWakeupTimeout : mScreenSaverTimeout;
+}
+
+void PowerSaver::loadWakeupTime()
+{
+	// TODO : Move this to Screensaver Class
+	std::string behaviour = Settings::getInstance()->getString("ScreenSaverBehavior");
+	if (behaviour == "random video")
+		mWakeupTimeout = Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") - getMode();
+	else // Dim and Blank
+		mWakeupTimeout = -1;
 }
 
 void PowerSaver::updateTimeouts()
 {
 	mScreenSaverTimeout = (unsigned int) Settings::getInstance()->getInt("ScreenSaverTime");
 	mScreenSaverTimeout = mScreenSaverTimeout > 0 ? mScreenSaverTimeout - getMode() : -1;
-	mPlayNextTimeout = Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") - getMode();
+	loadWakeupTime();
 }
 
 PowerSaver::mode PowerSaver::getMode()
@@ -63,6 +73,11 @@ void PowerSaver::setState(bool state)
 void PowerSaver::runningScreenSaver(bool state)
 {
 	mRunningScreenSaver = state;
+	if (mWakeupTimeout < mMode)
+	{
+		// Disable PS if wake up time is less than mode as PS will never trigger
+		setState(!state);
+	}
 }
 
 bool PowerSaver::isScreenSaverActive()
