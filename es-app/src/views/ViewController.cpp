@@ -9,6 +9,7 @@
 #include "views/gamelist/IGameListView.h"
 #include "views/gamelist/VideoGameListView.h"
 #include "views/SystemView.h"
+#include "FileFilterIndex.h"
 #include "Log.h"
 #include "Settings.h"
 #include "SystemData.h"
@@ -393,7 +394,7 @@ void ViewController::render(const Transform4x4f& parentTrans)
 
 		if(guiEnd.x() >= viewStart.x() && guiEnd.y() >= viewStart.y() &&
 			guiStart.x() <= viewEnd.x() && guiStart.y() <= viewEnd.y())
-				it->second->render(trans);
+			it->second->render(trans);
 	}
 
 	if(mWindow->peekGui() == this)
@@ -411,6 +412,7 @@ void ViewController::preload()
 {
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
+		(*it)->getIndex()->resetFilters();
 		getGameListView(*it);
 	}
 }
@@ -448,6 +450,7 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 
 void ViewController::reloadAll()
 {
+	// clear all gamelistviews
 	std::map<SystemData*, FileData*> cursorMap;
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -455,12 +458,16 @@ void ViewController::reloadAll()
 	}
 	mGameListViews.clear();
 
+
+	// load themes, create gamelistviews and reset filters
 	for(auto it = cursorMap.begin(); it != cursorMap.end(); it++)
 	{
 		it->first->loadTheme();
+		it->first->getIndex()->resetFilters();
 		getGameListView(it->first)->setCursor(it->second);
 	}
 
+	// Rebuild SystemListView
 	mSystemListView.reset();
 	getSystemListView();
 
@@ -486,6 +493,7 @@ void ViewController::monitorUIMode()
 	std::string uimode = Settings::getInstance()->getString("UIMode");
 	if (uimode != mCurUIMode) // UIMODE HAS CHANGED
 	{
+		mWindow->renderLoadingScreen();
 		mCurUIMode = uimode;
 		reloadAll();
 		goToStart();
@@ -495,6 +503,12 @@ void ViewController::monitorUIMode()
 bool ViewController::isUIModeFull()
 {
 	return ((mCurUIMode == "Full") && ! Settings::getInstance()->getBool("ForceKiosk"));
+}
+
+bool ViewController::isUIModeKid()
+{
+	return (Settings::getInstance()->getBool("ForceKid") ||
+		((mCurUIMode == "Kid") && !Settings::getInstance()->getBool("ForceKiosk")));
 }
 
 std::vector<HelpPrompt> ViewController::getHelpPrompts()

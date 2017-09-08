@@ -86,7 +86,12 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		else if (strcmp(argv[i], "--force-kiosk") == 0)
 		{
 			Settings::getInstance()->setBool("ForceKiosk", true);
-		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+		}
+		else if (strcmp(argv[i], "--force-kid") == 0)
+		{
+			Settings::getInstance()->setBool("ForceKid", true);
+		}
+		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 #ifdef WIN32
 			// This is a bit of a hack, but otherwise output will go to nowhere
