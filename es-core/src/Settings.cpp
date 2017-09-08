@@ -13,12 +13,13 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
 	("DebugText")
-	("ShowExit")
-	("Windowed")
-	("VSync")
-	("HideConsole")
+	("ForceKiosk")
 	("IgnoreGamelist")
-	("SplashScreen");
+	("HideConsole")
+	("ShowExit")
+	("SplashScreen")
+	("VSync")
+	("Windowed");
 
 Settings::Settings()
 {
@@ -124,6 +125,9 @@ void Settings::setDefaults()
 		mStringMap["AudioDevice"] = "Master";
 	#endif
 
+	mStringMap["UIMode"] = "Full";
+	mStringMap["UIMode_passkey"] = "uuddlrlrba";
+	mBoolMap["ForceKiosk"] = false;
 }
 
 template <typename K, typename V>

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "GuiComponent.h"
+#include "InputManager.h"
+#include "Settings.h"
 #include <vector>
 #include "resources/Font.h"
-#include "InputManager.h"
 
 class FileData;
 class HelpComponent;
@@ -30,6 +31,20 @@ public:
 		virtual void render(const Eigen::Affine3f& parentTrans) = 0;
 		virtual void stop() = 0;
 		virtual ~InfoPopup() {};
+	};
+
+	class PassKeyListener {
+	public:
+		bool isUIModeChanged(InputConfig* config, Input input, Window* window);
+		PassKeyListener()
+		{
+			mPassKeySequence = Settings::getInstance()->getString("UIMode_passkey");
+			mPassKeyCounter = 0;
+		}
+	private:
+		std::string mPassKeySequence;
+		int mPassKeyCounter;
+		const std::vector<std::string> mInputVals = { "up", "down", "left", "right", "a", "b", "x", "y" };
 	};
 
 	Window();
@@ -79,6 +94,7 @@ private:
 	ScreenSaver*	mScreenSaver;
 	InfoPopup*		mInfoPopup;
 	bool			mRenderScreenSaver;
+	PassKeyListener* mPassKeyListener;
 
 	std::vector<GuiComponent*> mGuiStack;
 
