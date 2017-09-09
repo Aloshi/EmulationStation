@@ -1,3 +1,6 @@
+#ifndef _GUI_SCREENSAVER_OPTIONS_H_
+#define _GUI_SCREENSAVER_OPTIONS_H_
+
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
 #include "SystemData.h"
@@ -9,7 +12,7 @@ public:
 	GuiScreensaverOptions(Window* window, const char* title);
 	virtual ~GuiScreensaverOptions(); // just calls save();
 
-	void save();
+	virtual void save();
 	inline void addRow(const ComponentListRow& row) { mMenu.addRow(row); };
 	inline void addWithLabel(const std::string& label, const std::shared_ptr<GuiComponent>& comp) { mMenu.addWithLabel(label, comp); };
 	inline void addSaveFunc(const std::function<void()>& func) { mSaveFuncs.push_back(func); };
@@ -18,7 +21,9 @@ public:
 	std::vector<HelpPrompt> getHelpPrompts() override;
 	HelpStyle getHelpStyle() override;
 
-private:
+protected:
 	MenuComponent mMenu;
 	std::vector< std::function<void()> > mSaveFuncs;
 };
+
+#endif // _GUI_SCREENSAVER_OPTIONS_H_

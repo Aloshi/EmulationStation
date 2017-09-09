@@ -3,6 +3,8 @@
 #include "Window.h"
 
 class VideoComponent;
+class ImageComponent;
+class Sound;
 
 // Screensaver implementation for main window
 class SystemScreenSaver : public Window::ScreenSaver
@@ -23,8 +25,13 @@ public:
 	virtual void launchGame();
 
 private:
-	void	countVideos();
-	void	pickRandomVideo(std::string& path);
+	unsigned long countGameListNodes(const char *nodeName);
+	void countVideos();
+	void countImages();
+	void pickGameListNode(unsigned long index, const char *nodeName, std::string& path);
+	void pickRandomVideo(std::string& path);
+	void pickRandomGameListImage(std::string& path);
+	void pickRandomCustomImage(std::string& path);
 
 	void input(InputConfig* config, Input input);
 
@@ -36,9 +43,12 @@ private:
 	};
 
 private:
-	bool			mCounted;
-	unsigned long	mVideoCount;
-	VideoComponent* mVideoScreensaver;
+	bool			mVideosCounted;
+	unsigned long		mVideoCount;
+	VideoComponent*		mVideoScreensaver;
+	bool			mImagesCounted;
+	unsigned long		mImageCount;
+	ImageComponent*		mImageScreensaver;
 	Window*			mWindow;
 	STATE			mState;
 	float			mOpacity;
@@ -47,4 +57,6 @@ private:
 	std::string		mGameName;
 	std::string		mSystemName;
 	int 			mVideoChangeTime;
+	std::shared_ptr<Sound>	mBackgroundAudio;
+	bool			mStopBackgroundAudio;
 };
