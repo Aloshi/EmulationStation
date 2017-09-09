@@ -7,7 +7,7 @@
 #include "PowerSaver.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSettings.h"
-#include "guis/GuiScreensaverOptions.h"
+#include "guis/GuiGeneralScreensaverOptions.h"
 #include "guis/GuiCollectionSystemsOptions.h"
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
@@ -132,42 +132,12 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 		[this] {
 			auto s = new GuiSettings(mWindow, "UI SETTINGS");
 
-			// screensaver time
-			auto screensaver_time = std::make_shared<SliderComponent>(mWindow, 0.f, 30.f, 1.f, "m");
-			screensaver_time->setValue((float)(Settings::getInstance()->getInt("ScreenSaverTime") / (1000 * 60)));
-			s->addWithLabel("SCREENSAVER AFTER", screensaver_time);
-			s->addSaveFunc([screensaver_time] {
-				Settings::getInstance()->setInt("ScreenSaverTime", (int)round(screensaver_time->getValue()) * (1000 * 60));
-				PowerSaver::updateTimeouts();
-			});
-
-			// screensaver behavior
-			auto screensaver_behavior = std::make_shared< OptionListComponent<std::string> >(mWindow, "SCREENSAVER BEHAVIOR", false);
-			std::vector<std::string> screensavers;
-			screensavers.push_back("dim");
-			screensavers.push_back("black");
-			screensavers.push_back("random video");
-			for(auto it = screensavers.begin(); it != screensavers.end(); it++)
-				screensaver_behavior->add(*it, *it, Settings::getInstance()->getString("ScreenSaverBehavior") == *it);
-			s->addWithLabel("SCREENSAVER BEHAVIOR", screensaver_behavior);
-			s->addSaveFunc([this, screensaver_behavior] {
-				if (Settings::getInstance()->getString("ScreenSaverBehavior") != "random video" && screensaver_behavior->getSelected() == "random video") {
-					// if before it wasn't risky but now there's a risk of problems, show warning
-					mWindow->pushGui(new GuiMsgBox(mWindow,
-					"The \"Random Video\" screensaver shows videos from your gamelist.\n\nIf you do not have videos, or if in several consecutive attempts the games it selects don't have videos it will default to black.\n\nMore options in the \"UI Settings\" > \"Video Screensaver\" menu.",
-						"OK", [] { return; }));
-				}
-				Settings::getInstance()->setString("ScreenSaverBehavior", screensaver_behavior->getSelected());
-			});
-
-			ComponentListRow row;
-
-			// show filtered menu
-			row.elements.clear();
-			row.addElement(std::make_shared<TextComponent>(mWindow, "VIDEO SCREENSAVER SETTINGS", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-			row.addElement(makeArrow(mWindow), false);
-			row.makeAcceptInputHandler(std::bind(&GuiMenu::openScreensaverOptions, this));
-			s->addRow(row);
+			ComponentListRow screensaver_row;
+			screensaver_row.elements.clear();
+			screensaver_row.addElement(std::make_shared<TextComponent>(mWindow, "SCREENSAVER SETTINGS", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			screensaver_row.addElement(makeArrow(mWindow), false);
+			screensaver_row.makeAcceptInputHandler(std::bind(&GuiMenu::openScreensaverOptions, this));
+			s->addRow(screensaver_row);
 
 			// quick system select (left/right in game list view)
 			auto quick_sys_select = std::make_shared<SwitchComponent>(mWindow);
@@ -431,7 +401,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 }
 
 void GuiMenu::openScreensaverOptions() {
-	mWindow->pushGui(new GuiScreensaverOptions(mWindow, "VIDEO SCREENSAVER"));
+	mWindow->pushGui(new GuiGeneralScreensaverOptions(mWindow, "SCREENSAVER SETTINGS"));
 }
 
 void GuiMenu::openCollectionSystemSettings() {
