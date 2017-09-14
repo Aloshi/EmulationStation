@@ -76,13 +76,11 @@ public:
 	inline void setSelectorOffsetY(float selectorOffsetY) { mSelectorOffsetY = selectorOffsetY; }
 	inline void setSelectorColor(unsigned int color) { mSelectorColor = color; }
 	inline void setSelectedColor(unsigned int color) { mSelectedColor = color; }
-	inline void setScrollSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
 	inline void setColor(unsigned int id, unsigned int color) { mColors[id] = color; }
-	inline void setSound(const std::shared_ptr<Sound>& sound) { mScrollSound = sound; }
 	inline void setLineSpacing(float lineSpacing) { mLineSpacing = lineSpacing; }
 
 protected:
-	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
+	virtual void onScroll(int amt) { if(!mScrollSound.empty()) Sound::get(mScrollSound)->play(); }
 	virtual void onCursorChanged(const CursorState& state);
 
 private:
@@ -105,7 +103,7 @@ private:
 	float mSelectorOffsetY;
 	unsigned int mSelectorColor;
 	unsigned int mSelectedColor;
-	std::shared_ptr<Sound> mScrollSound;
+	std::string mScrollSound;
 	static const unsigned int COLOR_ID_COUNT = 2;
 	unsigned int mColors[COLOR_ID_COUNT];
 
@@ -354,7 +352,7 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	setSelectorHeight(selectorHeight);
 
 	if(properties & SOUND && elem->has("scrollSound"))
-		setSound(Sound::get(elem->get<std::string>("scrollSound")));
+		mScrollSound = elem->get<std::string>("scrollSound");
 
 	if(properties & ALIGNMENT)
 	{
