@@ -106,6 +106,7 @@ void AudioManager::deinit()
 	//completely tear down SDL audio. else SDL hogs audio resources and emulators might fail to start...
 	SDL_CloseAudio();
 	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	sInstance = NULL;
 }
 
 void AudioManager::registerSound(std::shared_ptr<Sound> & sound)

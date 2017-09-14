@@ -114,6 +114,8 @@ void Sound::play()
 	if(!Settings::getInstance()->getBool("EnableSounds"))
 		return;
 
+	AudioManager::getInstance();
+
 	SDL_LockAudio();
 	if (playing)
 	{
