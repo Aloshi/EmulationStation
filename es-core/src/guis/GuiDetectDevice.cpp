@@ -1,6 +1,7 @@
 #include "guis/GuiDetectDevice.h"
 #include "Window.h"
 #include "Renderer.h"
+#include "PowerSaver.h"
 #include "resources/Font.h"
 #include "guis/GuiInputConfig.h"
 #include "components/TextComponent.h"
@@ -74,9 +75,12 @@ void GuiDetectDevice::onSizeChanged()
 
 bool GuiDetectDevice::input(InputConfig* config, Input input)
 {
+	PowerSaver::pause();
+
 	if(!mFirstRun && input.device == DEVICE_KEYBOARD && input.type == TYPE_KEY && input.value && input.id == SDLK_ESCAPE)
 	{
 		// cancel configuring
+		PowerSaver::resume();
 		delete this;
 		return true;
 	}
@@ -109,6 +113,7 @@ void GuiDetectDevice::update(int deltaTime)
 		{
 			if(mDoneCallback)
 				mDoneCallback();
+			PowerSaver::resume();
 			delete this; // delete GUI element
 		}
 		else
@@ -121,6 +126,7 @@ void GuiDetectDevice::update(int deltaTime)
 			{
 				// picked one!
 				mWindow->pushGui(new GuiInputConfig(mWindow, mHoldingConfig, true, mDoneCallback));
+				PowerSaver::resume();
 				delete this;
 			}
 		}
