@@ -27,38 +27,72 @@ struct CollectionSystemDecl
 	std::string defaultSort;
 	std::string themeFolder;
 	bool isCustom;
+	bool isEditable;
 };
 
-struct CollectionSystemData
-{
-	SystemData* system;
-	CollectionSystemDecl decl;
-	bool isEnabled;
-	bool isPopulated;
-	bool needsSave;
-};
+
 
 class CollectionSystemManager
 {
 public:
+
+	class CollectionSystem
+	{
+	public:
+		virtual bool toggleGameInCollection(FileData* file);
+		virtual void populateCollection(CollectionSystem* sysData);
+		virtual void saveCollection(SystemData* sys) {};
+		SystemData* system;
+		CollectionSystemDecl decl;
+		bool isEnabled;
+		bool isPopulated;
+		bool needsSave;
+	};
+
+	class AutoCollectionSystem : public CollectionSystem
+	{
+	public:
+		bool toggleGameInCollection(FileData* file) override;
+		void populateCollection(CollectionSystem* sysData) override;
+		void init();
+		void saveCollection(SystemData* sys) override;
+		//private:
+
+	};
+
+	class CustomCollectionSystem : public CollectionSystem
+	{
+	public:
+		bool toggleGameInCollection(FileData* file) override;
+		void populateCollection(CollectionSystem* sysData) override;
+		void init();
+		void saveCollection(SystemData* sys);
+		//private:
+
+	};
+
 	CollectionSystemManager(Window* window);
 	~CollectionSystemManager();
 
 	static CollectionSystemManager* get();
 	static void init(Window* window);
 	static void deinit();
-	void saveCustomCollection(SystemData* sys);
+	
 
 	void loadCollectionSystems();
 	void loadEnabledListFromSettings();
 	void updateSystemsList();
 
 	void refreshCollectionSystems(FileData* file);
-	void updateCollectionSystem(FileData* file, CollectionSystemData sysData);
+	void updateCollectionSystem(FileData* file, CollectionSystem sysData);
 	void deleteCollectionFiles(FileData* file);
 
-	inline std::map<std::string, CollectionSystemData> getAutoCollectionSystems() { return mAutoCollectionSystemsData; };
-	inline std::map<std::string, CollectionSystemData> getCustomCollectionSystems() { return mCustomCollectionSystemsData; };
+	//inline std::map<std::string, CollectionSystem> getAutoCollectionSystems() { return mAutoCollectionSystemsData; };
+	//inline std::map<std::string, CollectionSystem> getCustomCollectionSystems() { return mCustomCollectionSystemsData; };
+	inline std::map<std::string, CollectionSystem> getCollectionSystems() { return mCollectionSystems; };
+
+	std::vector<std::string> getEditableCollectionsNames();
+
 	inline SystemData* getCustomCollectionsBundle() { return mCustomCollectionsBundle; };
 	std::vector<std::string> getUnusedSystemsFromTheme();
 	SystemData* addNewCustomCollection(std::string name);
@@ -80,22 +114,25 @@ private:
 	static CollectionSystemManager* sInstance;
 	SystemEnvironmentData* mCollectionEnvData;
 	std::map<std::string, CollectionSystemDecl> mCollectionSystemDeclsIndex;
-	std::map<std::string, CollectionSystemData> mAutoCollectionSystemsData;
-	std::map<std::string, CollectionSystemData> mCustomCollectionSystemsData;
-	Window* mWindow;
-	bool mIsEditingCustom;
-	std::string mEditingCollection;
-	CollectionSystemData* mEditingCollectionSystemData;
+//	std::map<std::string, CollectionSystem> mAutoCollectionSystemsData;
+//	std::map<std::string, CollectionSystem> mCustomCollectionSystemsData;
+	std::map<std::string, CollectionSystem> mCollectionSystems;
 
-	void initAutoCollectionSystems();
+	std::map<std::string, CollectionSystem> mEditableCollectionSystemsData;
+
+	Window* mWindow;
+	bool mIsEditingCustom;  // This bool denotes if user is editing any editable collection other than favs.
+	std::string mEditingCollection;
+	CollectionSystem* mEditingCollectionSystemData;
+
+	void init();
 	void initCustomCollectionSystems();
 	SystemData* getAllGamesCollection();
 	SystemData* createNewCollectionEntry(std::string name, CollectionSystemDecl sysDecl, bool index = true);
-	void populateAutoCollection(CollectionSystemData* sysData);
-	void populateCustomCollection(CollectionSystemData* sysData);
+	void populateCustomCollection(CollectionSystem* sysData);
 
 	void removeCollectionsFromDisplayedSystems();
-	void addEnabledCollectionsToDisplayedSystems(std::map<std::string, CollectionSystemData>* colSystemData);
+	void addEnabledCollectionsToDisplayedSystems();
 
 	std::vector<std::string> getSystemsFromConfig();
 	std::vector<std::string> getSystemsFromTheme();

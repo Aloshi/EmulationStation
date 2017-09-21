@@ -137,23 +137,23 @@ GuiCollectionSystemsOptions::~GuiCollectionSystemsOptions()
 void GuiCollectionSystemsOptions::addSystemsToMenu()
 {
 
-	std::map<std::string, CollectionSystemData> autoSystems = CollectionSystemManager::get()->getAutoCollectionSystems();
+	std::map<std::string, CollectionSystem> autoSystems = CollectionSystemManager::get()->getAutoCollectionSystems();
 
 	autoOptionList = std::make_shared< OptionListComponent<std::string> >(mWindow, "SELECT COLLECTIONS", true);
 
 	// add Auto Systems
-	for(std::map<std::string, CollectionSystemData>::iterator it = autoSystems.begin() ; it != autoSystems.end() ; it++ )
+	for(std::map<std::string, CollectionSystem>::iterator it = autoSystems.begin() ; it != autoSystems.end() ; it++ )
 	{
 		autoOptionList->add(it->second.decl.longName, it->second.decl.name, it->second.isEnabled);
 	}
 	mMenu.addWithLabel("AUTOMATIC GAME COLLECTIONS", autoOptionList);
 
-	std::map<std::string, CollectionSystemData> customSystems = CollectionSystemManager::get()->getCustomCollectionSystems();
+	std::map<std::string, CollectionSystem> customSystems = CollectionSystemManager::get()->getCustomCollectionSystems();
 
 	customOptionList = std::make_shared< OptionListComponent<std::string> >(mWindow, "SELECT COLLECTIONS", true);
 
 	// add Custom Systems
-	for(std::map<std::string, CollectionSystemData>::iterator it = customSystems.begin() ; it != customSystems.end() ; it++ )
+	for(std::map<std::string, CollectionSystem>::iterator it = customSystems.begin() ; it != customSystems.end() ; it++ )
 	{
 		customOptionList->add(it->second.decl.longName, it->second.decl.name, it->second.isEnabled);
 	}

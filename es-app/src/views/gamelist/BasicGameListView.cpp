@@ -145,6 +145,7 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	if(mRoot->getSystem()->isGameSystem())
 	{
 		std::string prompt = CollectionSystemManager::get()->getEditingCollection();
+		//TODO: fix this for non-std auto systems
 		prompts.push_back(HelpPrompt("y", prompt));
 	}
 	return prompts;
