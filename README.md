@@ -20,6 +20,20 @@ sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev lib
   libvlc-dev libvlccore-dev vlc-nox
 ```
 
+Note this Repository uses a git submodule - to checkout the source and all submodules, use
+
+```bash
+git clone --recursive https://github.com/RetroPie/EmulationStation.git
+```
+
+or 
+
+```bash
+git clone https://github.com/RetroPie/EmulationStation.git
+cd EmulationStation
+git submodule init --update
+```
+
 Then, generate and build the Makefile with CMake:
 ```bash
 cd YourEmulationStationDirectory
