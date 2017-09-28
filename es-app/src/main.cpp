@@ -85,6 +85,10 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		{
 			int maxVRAM = atoi(argv[i + 1]);
 			Settings::getInstance()->setInt("MaxVRAM", maxVRAM);
+		}
+		else if (strcmp(argv[i], "--force-kiosk") == 0)
+		{
+			Settings::getInstance()->setBool("ForceKiosk", true);
 		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 #ifdef WIN32
@@ -111,6 +115,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--windowed			not fullscreen, should be used with --resolution\n"
 				"--vsync [1/on or 0/off]		turn vsync on or off (default is on)\n"
 				"--max-vram [size]		Max VRAM to use in Mb before swapping. 0 for unlimited\n"
+				"--force-kiosk		Force the UI mode to be Kiosk\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help

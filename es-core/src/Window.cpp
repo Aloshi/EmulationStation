@@ -14,6 +14,7 @@ Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCoun
 {
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
+	mPassKeyListener = new PassKeyListener;
 }
 
 Window::~Window()
@@ -170,8 +171,11 @@ void Window::input(InputConfig* config, Input input)
 	}
 	else
 	{
-		if(peekGui())
-			this->peekGui()->input(config, input);
+		if (!mPassKeyListener->isUIModeChanged(config, input, this) && // check if UI mode has changed due to passphrase completion
+			peekGui())
+		{
+			this->peekGui()->input(config, input); // this is where the majority of inputs will be consumed: the GuiComponent Stack
+		}
 	}
 }
 
@@ -435,3 +439,43 @@ void Window::startScreenSaver()
  		mScreenSaver->renderScreenSaver();
  }
 
+bool Window::PassKeyListener::isUIModeChanged(InputConfig * config, Input input, Window* window)
+{
+	// This function reads the current input to listen for the passkey
+	// sequence to unlock the UI mode. The progress is saved in mPassKeyCounter
+	// supported sequence-inputs: u (up), d (down), l (left), r (right), a, b, x, y
+	// default passkeyseq = "uuddlrlrba", as defined in the setting 'UIMode_passkey'.
+	
+	if ((Settings::getInstance()->getString("UIMode") == "Full") || (!input.value))
+	{
+		return false; // Already unlocked, or no keydown, nothing to do here.
+	}
+
+	bool foundMatch = false;
+
+	for (auto valstring : mInputVals)
+	{
+		if (config->isMappedTo(valstring, input) &&
+			(this->mPassKeySequence[this->mPassKeyCounter] == valstring[0]))
+		{
+			this->mPassKeyCounter ++;
+			foundMatch = true;
+		}
+	}
+
+	if (!foundMatch)
+	{
+		this->mPassKeyCounter = 0; // current input is incorrect, reset counter
+	}
+
+	if (this->mPassKeyCounter == (this->mPassKeySequence.length()))
+	{
+		// When we have reached the end of the list, trigger UI_mode unlock
+		LOG(LogDebug) << " Window::PassKeyListener::isUIModeChanged(): Passkey sequence completed, switching UIMode to full";
+		Settings::getInstance()->setString("UIMode", "Full");
+		Settings::getInstance()->saveFile();
+		this->mPassKeyCounter = 0;
+		return true;
+	}
+	return false;
+}

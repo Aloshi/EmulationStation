@@ -33,6 +33,7 @@ ViewController::ViewController(Window* window)
 	: GuiComponent(window), mCurrentView(nullptr), mCamera(Eigen::Affine3f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
 	mState.viewing = NOTHING;
+	mCurUIMode = Settings::getInstance()->getString("UIMode");
 }
 
 ViewController::~ViewController()
@@ -43,10 +44,6 @@ ViewController::~ViewController()
 
 void ViewController::goToStart()
 {
-	// TODO
-	/* mState.viewing = START_SCREEN;
-	mCurrentView.reset();
-	playViewTransition(); */
 	goToSystemView(SystemData::sSystemVector.at(0));
 }
 
@@ -399,6 +396,9 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Vector3f viewStart = trans.inverse().translation();
 	Eigen::Vector3f viewEnd = trans.inverse() * Eigen::Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
 
+	// Keep track of UI mode changes.
+	monitorUIMode();
+
 	// draw systemview
 	getSystemListView()->render(trans);
 
@@ -497,6 +497,22 @@ void ViewController::reloadAll()
 	}
 
 	updateHelpPrompts();
+}
+
+void ViewController::monitorUIMode()
+{
+	std::string uimode = Settings::getInstance()->getString("UIMode");
+	if (uimode != mCurUIMode) // UIMODE HAS CHANGED
+	{	
+		mCurUIMode = uimode;
+		reloadAll();
+		goToStart();
+	}
+}
+
+bool ViewController::isUIModeFull()
+{
+	return ((mCurUIMode == "Full") && ! Settings::getInstance()->getBool("ForceKiosk"));
 }
 
 std::vector<HelpPrompt> ViewController::getHelpPrompts()

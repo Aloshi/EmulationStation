@@ -5,6 +5,8 @@
 
 class SystemData;
 
+const std::vector<std::string> UIModes = { "Full", "Kiosk" };
+
 // Used to smoothly transition the camera between multiple views (e.g. from system to system, from gamelist to gamelist).
 class ViewController : public GuiComponent
 {
@@ -23,6 +25,10 @@ public:
 	void reloadGameListView(IGameListView* gamelist, bool reloadTheme = false);
 	inline void reloadGameListView(SystemData* system, bool reloadTheme = false) { reloadGameListView(getGameListView(system).get(), reloadTheme); }
 	void reloadAll(); // Reload everything with a theme.  Used when the "ThemeSet" setting changes.
+
+	void monitorUIMode();
+	bool isUIModeFull();
+	inline std::vector<std::string> getUIModes() { return UIModes; };
 
 	// Navigation.
 	void goToNextGameList();
@@ -95,4 +101,5 @@ private:
 	bool mLockInput;
 
 	State mState;
+	std::string mCurUIMode;
 };
