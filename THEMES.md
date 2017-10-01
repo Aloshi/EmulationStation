@@ -523,6 +523,8 @@ Can be created as an extra.
 	- Point around which the image will be rotated. Defaults to `0.5 0.5`.
 * `path` - type: PATH.
 	- Path to the image file.  Most common extensions are supported (including .jpg, .png, and unanimated .gif).
+* `default` - type: PATH.
+	- Path to default image file.  Default image will be displayed when selected game does not have an image.
 * `tile` - type: BOOLEAN.
 	- If true, the image will be tiled instead of stretched to fit its size.  Useful for backgrounds.
 * `color` - type: COLOR.

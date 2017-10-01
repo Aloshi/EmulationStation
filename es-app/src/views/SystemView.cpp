@@ -42,15 +42,17 @@ void SystemView::populate()
 		e.object = *it;
 
 		// make logo
-		if(theme->getElement("system", "logo", "image"))
+		const ThemeData::ThemeElement* logoElem = theme->getElement("system", "logo", "image");
+		if(logoElem)
 		{
-			std::string path = theme->getElement("system", "logo", "image")->get<std::string>("path");
-
-			if(!path.empty() && ResourceManager::getInstance()->fileExists(path))
+			std::string path = logoElem->get<std::string>("path");
+			std::string defaultPath = logoElem->has("default") ? logoElem->get<std::string>("default") : "";
+			if((!path.empty() && ResourceManager::getInstance()->fileExists(path))
+			   || (!defaultPath.empty() && ResourceManager::getInstance()->fileExists(defaultPath)))
 			{
 				ImageComponent* logo = new ImageComponent(mWindow, false, false);
 				logo->setMaxSize(mCarousel.logoSize * mCarousel.logoScale);
-				logo->applyTheme((*it)->getTheme(), "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
+				logo->applyTheme(theme, "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
 
 				e.data.logo = std::shared_ptr<GuiComponent>(logo);
 			}

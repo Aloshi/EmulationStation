@@ -93,12 +93,22 @@ void ImageComponent::onSizeChanged()
 	updateVertices();
 }
 
+void ImageComponent::setDefaultImage(std::string path)
+{
+	mDefaultPath = path;
+}
+
 void ImageComponent::setImage(std::string path, bool tile)
 {
 	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
-		mTexture.reset();
-	else
+	{
+		if(mDefaultPath.empty() || !ResourceManager::getInstance()->fileExists(mDefaultPath))
+			mTexture.reset();
+		else
+			mTexture = TextureResource::get(mDefaultPath, tile, mForceLoad, mDynamic);
+	} else {
 		mTexture = TextureResource::get(path, tile, mForceLoad, mDynamic);
+	}
 
 	resize();
 }
@@ -333,6 +343,10 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	// position + size also implies origin
 	if((properties & ORIGIN || (properties & POSITION && properties & ThemeFlags::SIZE)) && elem->has("origin"))
 		setOrigin(elem->get<Eigen::Vector2f>("origin"));
+
+	if(elem->has("default")) {
+		setDefaultImage(elem->get<std::string>("default"));
+	}
 
 	if(properties & PATH && elem->has("path"))
 	{
