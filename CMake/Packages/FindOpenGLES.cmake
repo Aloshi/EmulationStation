@@ -42,21 +42,33 @@ ELSE (WIN32)
 
   ELSE(APPLE)
 
-    FIND_PATH(OPENGLES_INCLUDE_DIR GLES/gl.h
-      /usr/openwin/share/include
-      /opt/graphics/OpenGL/include /usr/X11R6/include
-      /usr/include
-      /opt/vc/include
-    )
+    IF (DEFINED BCMHOST)
+      FIND_PATH(OPENGLES_INCLUDE_DIR GLES/gl.h
+        /opt/vc/include
+        NO_DEFAULT_PATH
+      )
 
-    FIND_LIBRARY(OPENGLES_gl_LIBRARY
-      NAMES GLES_CM GLESv1_CM
-      PATHS /opt/graphics/OpenGL/lib
-            /usr/openwin/lib
-            /usr/shlib /usr/X11R6/lib
-            /usr/lib
-            /opt/vc/lib
-    )
+      FIND_LIBRARY(OPENGLES_gl_LIBRARY
+        NAMES brcmGLESv2
+        PATHS /opt/vc/lib
+      )
+
+    ELSE (DEFINED BCMHOST)
+
+      FIND_PATH(OPENGLES_INCLUDE_DIR GLES/gl.h
+        /usr/openwin/share/include
+        /opt/graphics/OpenGL/include /usr/X11R6/include
+        /usr/include
+      )
+
+      FIND_LIBRARY(OPENGLES_gl_LIBRARY
+        NAMES GLES_CM GLESv1_CM
+        PATHS /opt/graphics/OpenGL/lib
+              /usr/openwin/lib
+              /usr/shlib /usr/X11R6/lib
+              /usr/lib
+      )
+    ENDIF (DEFINED BCMHOST)
 
     # On Unix OpenGL most certainly always requires X11.
     # Feel free to tighten up these conditions if you don't 
