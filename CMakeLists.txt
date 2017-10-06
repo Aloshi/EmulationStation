@@ -178,7 +178,7 @@ endif()
 if(DEFINED BCMHOST)
     LIST(APPEND COMMON_LIBRARIES
         bcm_host
-        EGL
+        brcmEGL
         ${OPENGLES_LIBRARIES}
     )
 else()
