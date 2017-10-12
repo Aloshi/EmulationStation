@@ -36,6 +36,7 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 	 	("rotation", FLOAT)
 		("rotationOrigin", NORMALIZED_PAIR)
 		("path", PATH)
+		("default", PATH)
 		("tile", BOOLEAN)
 		("color", COLOR)
 		("zIndex", FLOAT)))
