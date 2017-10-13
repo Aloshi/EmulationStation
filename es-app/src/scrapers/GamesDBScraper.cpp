@@ -74,31 +74,28 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
 	std::vector<ScraperSearchResult>& results)
 {
-	std::string path = "thegamesdb.net/api/GetGame.php?";
+	std::string path;
 	bool usingGameID = false;
 
 	std::string cleanName = params.nameOverride;
-	if (cleanName.empty())
+	if (!cleanName.empty() && cleanName.substr(0,3) == "id:")
 	{
-		cleanName = params.game->getCleanName();
-		path += "name=" + HttpReq::urlEncode(cleanName);
-	}
-	else
-	{
-		if (cleanName.substr(0,3) == "id:") {
-			std::string gameID = cleanName.substr(3,-1);
-			path += "id=" + HttpReq::urlEncode(gameID);
-			usingGameID = true;
-		}
-		else {
-			path += "exactname=" + HttpReq::urlEncode(cleanName);
-		}
+		std::string gameID = cleanName.substr(3);
+		path = "thegamesdb.net/api/GetGame.php?id=" + HttpReq::urlEncode(gameID);
+		usingGameID = true;
+	}else{
+		if (cleanName.empty())
+			cleanName = params.game->getCleanName();
+		path += "thegamesdb.net/api/GetGamesList.php?name=" + HttpReq::urlEncode(cleanName);
 	}
 
-	if(params.system->getPlatformIds().empty() || usingGameID)
+	if(usingGameID)
 	{
-		// no platform specified, we're done
+		// if we have the ID already, we don't need the GetGameList request
 		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
+	}else if(params.system->getPlatformIds().empty()){
+		// no platform specified, we're done
+		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(requests, results, path)));
 	}else{
 		// go through the list, we need to split this into multiple requests 
 		// because TheGamesDB API either sucks or I don't know how to use it properly...
@@ -116,7 +113,7 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 				LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(*platformIt);
 			}
 
-			requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
+			requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(requests, results, path)));
 		}
 	}
 }
@@ -130,19 +127,27 @@ void TheGamesDBRequest::process(const std::unique_ptr<HttpReq>& req, std::vector
 	if(!parseResult)
 	{
 		std::stringstream ss;
-		ss << "GamesDBRequest - Error parsing XML. \n\t" << parseResult.description() << "";
+		ss << "TheGamesDBRequest - Error parsing XML. \n\t" << parseResult.description() << "";
 		std::string err = ss.str();
 		setError(err);
 		LOG(LogError) << err;
 		return;
 	}
 
-	pugi::xml_node data = doc.child("Data");
+	if (isGameRequest())
+		processGame(doc, results);
+	else
+		processList(doc, results);
+}
+
+void TheGamesDBRequest::processGame(const pugi::xml_document& xmldoc, std::vector<ScraperSearchResult>& results)
+{
+	pugi::xml_node data = xmldoc.child("Data");
 
 	std::string baseImageUrl = data.child("baseImgUrl").text().get();
 
 	pugi::xml_node game = data.child("Game");
-	while(game && results.size() < MAX_SCRAPER_RESULTS)
+	if(game)
 	{
 		ScraperSearchResult result;
 
@@ -179,6 +184,27 @@ void TheGamesDBRequest::process(const std::unique_ptr<HttpReq>& req, std::vector
 		}
 
 		results.push_back(result);
+	}
+}
+
+void TheGamesDBRequest::processList(const pugi::xml_document& xmldoc, std::vector<ScraperSearchResult>& results)
+{
+	assert(mRequestQueue != nullptr);
+
+	pugi::xml_node data = xmldoc.child("Data");
+	pugi::xml_node game = data.child("Game");
+
+	// limit the number of results per platform, not in total.
+	// otherwise if the first platform returns >= 7 games
+	// but the second platform contains the relevant game,
+	// the relevant result would not be shown.
+	for(int i = 0; game && i < MAX_SCRAPER_RESULTS; i++)
+	{
+		std::string id = game.child("id").text().get();
+		std::string path = "thegamesdb.net/api/GetGame.php?id=" + id;
+
+		mRequestQueue->push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
+
 		game = game.next_sibling("Game");
 	}
 }
