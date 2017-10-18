@@ -32,8 +32,8 @@ GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :
 	}
 
 	// add a padding to the box
-	int paddingX = Renderer::getScreenWidth() * 0.03f;
-	int paddingY = Renderer::getScreenHeight() * 0.02f;
+	int paddingX = (int) (Renderer::getScreenWidth() * 0.03f);
+	int paddingY = (int) (Renderer::getScreenHeight() * 0.02f);
 	mSize[0] = mSize.x() + paddingX;
 	mSize[1] = mSize.y() + paddingY;
 

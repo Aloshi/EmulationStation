@@ -405,7 +405,7 @@ SystemData* SystemData::getRandomSystem()
 	}
 
 	// get random number in range
-	int target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
+	int target = (int) std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
 	for (auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
 	{
 		if ((*it)->isGameSystem())
@@ -420,6 +420,9 @@ SystemData* SystemData::getRandomSystem()
 			}
 		}
 	}
+
+	// if we end up here, there is no valid system
+	return NULL;
 }
 
 FileData* SystemData::getRandomGame()
@@ -430,7 +433,7 @@ FileData* SystemData::getRandomGame()
 	// get random number in range
 	if (total == 0)
 		return NULL;
-	target = std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
+	target = (int) std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
 	return list.at(target);
 }
 

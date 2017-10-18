@@ -49,7 +49,7 @@ private:
 	std::string mText;
 	bool mFocused;
 	bool mEditing;
-	int mCursor; // cursor position in characters
+	unsigned int mCursor; // cursor position in characters
 
 	int mCursorRepeatTimer;
 	int mCursorRepeatDir;

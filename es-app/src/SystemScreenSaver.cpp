@@ -99,7 +99,7 @@ void SystemScreenSaver::startScreenSaver()
 #endif
 
 			mVideoScreensaver->setOrigin(0.5f, 0.5f);
-			mVideoScreensaver->setPosition(Renderer::getScreenWidth()/2, Renderer::getScreenHeight()/2);
+			mVideoScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
 
 			if (Settings::getInstance()->getBool("StretchVideoOnScreenSaver"))
 			{
@@ -148,7 +148,7 @@ void SystemScreenSaver::startScreenSaver()
 
 		mImageScreensaver->setImage(path);
 		mImageScreensaver->setOrigin(0.5f, 0.5f);
-		mImageScreensaver->setPosition(Renderer::getScreenWidth()/2, Renderer::getScreenHeight()/2);
+		mImageScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
 
 		if (Settings::getInstance()->getBool("SlideshowScreenSaverStretch"))
 		{
@@ -230,7 +230,7 @@ void SystemScreenSaver::renderScreenSaver()
 		{
 			if (mImageScreensaver->hasImage())
 			{
-				mImageScreensaver->setOpacity(255-mOpacity);
+				mImageScreensaver->setOpacity(255- (unsigned char) (mOpacity * 255));
 
 				Eigen::Affine3f transform = Eigen::Affine3f::Identity();
 				mImageScreensaver->render(transform);

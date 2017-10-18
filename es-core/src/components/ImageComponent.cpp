@@ -17,7 +17,7 @@ Eigen::Vector2i ImageComponent::getTextureSize() const
 
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
 	mTargetIsMax(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
-	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0.0f), mFading(false)
+	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0), mFading(false)
 {
 	updateColors();
 }

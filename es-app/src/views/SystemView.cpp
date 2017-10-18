@@ -172,7 +172,6 @@ bool SystemView::input(InputConfig* config, Input input)
 			// get random system
 			// go to system
 			setCursor(SystemData::getRandomSystem());
-			//ViewController::get()->goToRandomGame();
 			return true;
 		}
 	}else{
@@ -430,36 +429,36 @@ void SystemView::renderCarousel(const Eigen::Affine3f& trans)
 	switch (mCarousel.type)
 	{
 		case VERTICAL_WHEEL:
-			yOff = (mCarousel.size.y() - mCarousel.logoSize.y()) / 2 - (mCamOffset * logoSpacing[1]);
+			yOff = (mCarousel.size.y() - mCarousel.logoSize.y()) / 2.f - (mCamOffset * logoSpacing[1]);
 			if (mCarousel.logoAlignment == ALIGN_LEFT)
-				xOff = mCarousel.logoSize.x() / 10;
+				xOff = mCarousel.logoSize.x() / 10.f;
 			else if (mCarousel.logoAlignment == ALIGN_RIGHT)
-				xOff = mCarousel.size.x() - (mCarousel.logoSize.x() * 1.1);
+				xOff = mCarousel.size.x() - (mCarousel.logoSize.x() * 1.1f);
 			else
-				xOff = (mCarousel.size.x() - mCarousel.logoSize.x()) / 2;
+				xOff = (mCarousel.size.x() - mCarousel.logoSize.x()) / 2.f;
 			break;
 		case VERTICAL:
 			logoSpacing[1] = ((mCarousel.size.y() - (mCarousel.logoSize.y() * mCarousel.maxLogoCount)) / (mCarousel.maxLogoCount)) + mCarousel.logoSize.y();
-			yOff = (mCarousel.size.y() - mCarousel.logoSize.y()) / 2 - (mCamOffset * logoSpacing[1]);
+			yOff = (mCarousel.size.y() - mCarousel.logoSize.y()) / 2.f - (mCamOffset * logoSpacing[1]);
 
 			if (mCarousel.logoAlignment == ALIGN_LEFT)
-				xOff = mCarousel.logoSize.x() / 10;
+				xOff = mCarousel.logoSize.x() / 10.f;
 			else if (mCarousel.logoAlignment == ALIGN_RIGHT)
-				xOff = mCarousel.size.x() - (mCarousel.logoSize.x() * 1.1);
+				xOff = mCarousel.size.x() - (mCarousel.logoSize.x() * 1.1f);
 			else
 				xOff = (mCarousel.size.x() - mCarousel.logoSize.x()) / 2;
 			break;
 		case HORIZONTAL:
 		default:
 			logoSpacing[0] = ((mCarousel.size.x() - (mCarousel.logoSize.x() * mCarousel.maxLogoCount)) / (mCarousel.maxLogoCount)) + mCarousel.logoSize.x();
-			xOff = (mCarousel.size.x() - mCarousel.logoSize.x()) / 2 - (mCamOffset * logoSpacing[0]);
+			xOff = (mCarousel.size.x() - mCarousel.logoSize.x()) / 2.f - (mCamOffset * logoSpacing[0]);
 
 			if (mCarousel.logoAlignment == ALIGN_TOP)
-				yOff = mCarousel.logoSize.y() / 10;
+				yOff = mCarousel.logoSize.y() / 10.f;
 			else if (mCarousel.logoAlignment == ALIGN_BOTTOM)
-				yOff = mCarousel.size.y() - (mCarousel.logoSize.y() * 1.1);
+				yOff = mCarousel.size.y() - (mCarousel.logoSize.y() * 1.1f);
 			else
-				yOff = (mCarousel.size.y() - mCarousel.logoSize.y()) / 2;
+				yOff = (mCarousel.size.y() - mCarousel.logoSize.y()) / 2.f;
 			break;
 	}
 
@@ -489,11 +488,11 @@ void SystemView::renderCarousel(const Eigen::Affine3f& trans)
 
 		float distance = i - mCamOffset;
 
-		float scale = 1.0 + ((mCarousel.logoScale - 1.0) * (1 - fabs(distance)));
+		float scale = 1.0f + ((mCarousel.logoScale - 1.0f) * (1.0f - fabs(distance)));
 		scale = std::min(mCarousel.logoScale, std::max(1.0f, scale));
 		scale /= mCarousel.logoScale;
 
-		int opacity = round(0x80 + ((0xFF - 0x80) * (1 - fabs(distance))));
+		int opacity = (int) round(0x80 + ((0xFF - 0x80) * (1.0f - fabs(distance))));
 		opacity = std::max((int) 0x80, opacity);
 
 		const std::shared_ptr<GuiComponent> &comp = mEntries.at(index).data.logo;
@@ -623,7 +622,7 @@ void SystemView::getCarouselFromTheme(const ThemeData::ThemeElement* elem)
 	if (elem->has("logoSize"))
 		mCarousel.logoSize = elem->get<Eigen::Vector2f>("logoSize").cwiseProduct(mSize);
 	if (elem->has("maxLogoCount"))
-		mCarousel.maxLogoCount = std::round(elem->get<float>("maxLogoCount"));
+		mCarousel.maxLogoCount = (int) std::round(elem->get<float>("maxLogoCount"));
 	if (elem->has("zIndex"))
 		mCarousel.zIndex = elem->get<float>("zIndex");
 	if (elem->has("logoRotation"))

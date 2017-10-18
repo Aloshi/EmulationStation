@@ -320,8 +320,8 @@ void VideoGameListView::updateInfoPanel()
 
 void VideoGameListView::launch(FileData* game)
 {
-	float screenWidth = Renderer::getScreenWidth();
-	float screenHeight = Renderer::getScreenHeight();
+	float screenWidth = (float) Renderer::getScreenWidth();
+	float screenHeight = (float) Renderer::getScreenHeight();
 
 	Eigen::Vector3f target(screenWidth / 2.0f, screenHeight / 2.0f, 0);
 

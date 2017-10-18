@@ -155,8 +155,6 @@ void VideoComponent::setOpacity(unsigned char opacity)
 
 void VideoComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	float x, y;
-
 	Eigen::Affine3f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 

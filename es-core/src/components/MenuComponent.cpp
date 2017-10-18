@@ -63,7 +63,7 @@ void MenuComponent::updateSize()
 		}
 	}
 
-	float width = std::min(Renderer::getScreenHeight(), (unsigned int) (Renderer::getScreenWidth() * 0.90f));
+	float width = (float) std::min(Renderer::getScreenHeight(), (unsigned int) (Renderer::getScreenWidth() * 0.90f));
 	setSize(width, height);
 }
 
