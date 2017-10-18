@@ -60,7 +60,7 @@ public:
 
 	float getRotation() const;
 	void setRotation(float rotation);
-	inline void setRotationDegrees(float rotation) { setRotation(rotation * M_PI / 180); }
+	inline void setRotationDegrees(float rotation) { setRotation((float) (rotation * M_PI / 180)); }
 
 	float getScale() const;
 	void setScale(float scale);

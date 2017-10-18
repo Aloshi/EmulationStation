@@ -105,8 +105,8 @@ bool TextureData::initImageFromMemory(const unsigned char* fileData, size_t leng
 		return false;
 	}
 
-	mSourceWidth = width;
-	mSourceHeight = height;
+	mSourceWidth = (float) width;
+	mSourceHeight = (float) height;
 	mScalable = false;
 
 	return initFromRGBA(imageRGBA.data(), width, height);

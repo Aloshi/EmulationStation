@@ -111,7 +111,7 @@ void BasicGameListView::remove(FileData *game, bool deleteFile)
 	{
 		std::vector<FileData*> siblings = parent->getChildrenListToDisplay();
 		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
-		auto gamePos = std::distance(siblings.begin(), gameIter);
+		unsigned int gamePos = std::distance(siblings.begin(), gameIter);
 		if (gameIter != siblings.end())
 		{
 			if ((gamePos + 1) < siblings.size())

@@ -319,14 +319,14 @@ void VideoVlcComponent::startVideo()
 
 							if(resizeScale.x() < resizeScale.y())
 							{
-								mVideoWidth *= resizeScale.x();
-								mVideoHeight *= resizeScale.x();
+								mVideoWidth = (unsigned int) (mVideoWidth * resizeScale.x());
+								mVideoHeight = (unsigned int) (mVideoHeight * resizeScale.x());
 							}else{
-								mVideoWidth *= resizeScale.y();
-								mVideoHeight *= resizeScale.y();
+								mVideoWidth = (unsigned int) (mVideoWidth * resizeScale.y());
+								mVideoHeight = (unsigned int) (mVideoHeight * resizeScale.y());
 							}
-							mVideoHeight = round(mVideoHeight);
-							mVideoWidth = round(mVideoWidth);
+							mVideoHeight = (unsigned int) round(mVideoHeight);
+							mVideoWidth = (unsigned int) round(mVideoWidth);
 						}
 					}
 #endif

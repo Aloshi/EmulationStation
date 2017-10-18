@@ -131,7 +131,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 					}
 					catch (int e)
 					{
-						LOG(LogError) << "Error parsing Rating (invalid value, expected decimal): " << ratingString;
+						LOG(LogError) << "Error parsing Rating (invalid value, exception nr.): " << ratingString << ", " << e;
 					}
 				}
 			}
