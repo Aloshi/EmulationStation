@@ -194,7 +194,7 @@ void DetailedGameListView::updateInfoPanel()
 		//mDescription.setText("");
 		fadingOut = true;
 	}else{
-		mImage.setImage(file->metadata.get("image"));
+		mImage.setImage(file->getImagePath());
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
