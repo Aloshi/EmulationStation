@@ -110,6 +110,8 @@ namespace Renderer
 			if(SDL_GL_SetSwapInterval(-1) != 0 && SDL_GL_SetSwapInterval(1) != 0)
 				LOG(LogWarning) << "Tried to enable vsync, but failed! (" << SDL_GetError() << ")";
 		}
+		else
+			SDL_GL_SetSwapInterval(0);
 
 		return true;
 	}
