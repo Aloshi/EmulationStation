@@ -63,20 +63,17 @@ void SystemData::setIsGameSystemStatus()
 	mIsGameSystem = (mName != "retropie");
 }
 
-#ifndef WIN32
-// test to see if a file is hidden in *nix (dot-prefixed)
-// could be expanded to check for Windows hidden attribute
+// test to see if a file is hidden
 bool isHidden(const fs::path &filePath)
 {
+#ifdef WIN32
+	const DWORD Attributes = GetFileAttributes(filePath.generic_string().c_str());
+	return (Attributes != INVALID_FILE_ATTRIBUTES) && (Attributes & FILE_ATTRIBUTE_HIDDEN);
+#else
 	fs::path::string_type fileName = filePath.filename().string();
-	if(fileName[0] == '.')
-	{
-		return true;
-	}
-
-	return false;
-}
+	return fileName[0] == '.';
 #endif
+}
 
 void SystemData::populateFolder(FileData* folder)
 {
@@ -121,11 +118,9 @@ void SystemData::populateFolder(FileData* folder)
 		isGame = false;
 		if(std::find(mEnvData->mSearchExtensions.begin(), mEnvData->mSearchExtensions.end(), extension) != mEnvData->mSearchExtensions.end())
 		{
-#ifndef WIN32
 			// skip hidden files
 			if(!showHidden && isHidden(filePath))
 				continue;
-#endif
 
 			FileData* newGame = new FileData(GAME, filePath.generic_string(), mEnvData, this);
 			folder->addChild(newGame);
