@@ -44,6 +44,18 @@ ViewController::~ViewController()
 
 void ViewController::goToStart()
 {
+	// If specific system is requested, go directly to the game list
+	auto requestedSystem = Settings::getInstance()->getString("StartupSystem");
+	if("" != requestedSystem && "retropie" != requestedSystem)
+	{
+		for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++){
+			if ((*it)->getName() == requestedSystem)
+			{
+				goToGameList(*it);
+				return;
+			}
+		}
+	}
 	goToSystemView(SystemData::sSystemVector.at(0));
 }
 
@@ -472,7 +484,7 @@ void ViewController::monitorUIMode()
 {
 	std::string uimode = Settings::getInstance()->getString("UIMode");
 	if (uimode != mCurUIMode) // UIMODE HAS CHANGED
-	{	
+	{
 		mCurUIMode = uimode;
 		reloadAll();
 		goToStart();

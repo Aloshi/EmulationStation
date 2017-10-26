@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Sound.h"
 #include "Log.h"
+#include "SystemData.h"
 #include "Settings.h"
 #include "PowerSaver.h"
 #include "guis/GuiMsgBox.h"
@@ -264,6 +265,21 @@ void GuiMenu::openUISettings()
 		Settings::getInstance()->setString("GamelistViewStyle", gamelist_style->getSelected());
 		if (needReload)
 			ViewController::get()->reloadAll();
+	});
+
+	// Optionally start in selected system
+	auto systemfocus_list = std::make_shared< OptionListComponent<std::string> >(mWindow, "START ON SYSTEM", false);
+	systemfocus_list->add("NONE", "", Settings::getInstance()->getString("StartupSystem") == "");
+	for (auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	{
+		if ("retropie" != (*it)->getName())
+		{
+			systemfocus_list->add((*it)->getName(), (*it)->getName(), Settings::getInstance()->getString("StartupSystem") == (*it)->getName());
+		}
+	}
+	s->addWithLabel("START ON SYSTEM", systemfocus_list);
+	s->addSaveFunc([systemfocus_list] {
+		Settings::getInstance()->setString("StartupSystem", systemfocus_list->getSelected());
 	});
 
 	// show help
