@@ -5,11 +5,12 @@
 #include <string>
 #include <set>
 #include <list>
-#include <Eigen/Dense>
 #include "platform.h"
 #include "resources/TextureData.h"
 #include "resources/TextureDataManager.h"
 #include GLHEADER
+#include "math/Vector2i.h"
+#include "math/Vector2f.h"
 
 // An OpenGL texture.
 // Automatically recreates the texture with renderer deinit/reinit.
@@ -22,14 +23,14 @@ public:
 
 	// For scalable source images in textures we want to set the resolution to rasterize at
 	void rasterizeAt(size_t width, size_t height);
-	Eigen::Vector2f getSourceImageSize() const;
+	Vector2f getSourceImageSize() const;
 
 	virtual ~TextureResource();
 
 	bool isInitialized() const;
 	bool isTiled() const;
 
-	const Eigen::Vector2i getSize() const;
+	const Vector2i getSize() const;
 	bool bind();
 
 	static size_t getTotalMemUsage(); // returns an approximation of total VRAM used by textures (in bytes)
@@ -48,8 +49,8 @@ private:
 	// The texture data manager manages loading and unloading of filesystem based textures
 	static TextureDataManager		sTextureDataManager;
 
-	Eigen::Vector2i					mSize;
-	Eigen::Vector2f					mSourceSize;
+	Vector2i					mSize;
+	Vector2f					mSourceSize;
 	bool							mForceLoad;
 
 	typedef std::pair<std::string, bool> TextureKeyType;

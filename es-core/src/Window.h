@@ -28,7 +28,7 @@ public:
 
 	class InfoPopup {
 	public:
-		virtual void render(const Eigen::Affine3f& parentTrans) = 0;
+		virtual void render(const Transform4x4f& parentTrans) = 0;
 		virtual void stop() = 0;
 		virtual ~InfoPopup() {};
 	};

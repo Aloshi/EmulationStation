@@ -43,15 +43,15 @@ GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :
 	setPosition(posX, posY, 0);
 
 	mFrame->setImagePath(":/frame.png");
-	mFrame->fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
+	mFrame->fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 	addChild(mFrame);
 
 	// we only init the actual time when we first start to render
 	mStartTime = 0;
 
-	mGrid = new ComponentGrid(window, Eigen::Vector2i(1, 3));
+	mGrid = new ComponentGrid(window, Vector2i(1, 3));
 	mGrid->setSize(mSize);
-	mGrid->setEntry(s, Eigen::Vector2i(0, 1), false, true);
+	mGrid->setEntry(s, Vector2i(0, 1), false, true);
 	addChild(mGrid);
 }
 
@@ -60,10 +60,10 @@ GuiInfoPopup::~GuiInfoPopup()
 
 }
 
-void GuiInfoPopup::render(const Eigen::Affine3f& parentTrans)
+void GuiInfoPopup::render(const Transform4x4f& parentTrans)
 {
 	// we use identity as we want to render on a specific window position, not on the view
-	Eigen::Affine3f trans = getTransform() * Eigen::Affine3f::Identity();
+	Transform4x4f trans = getTransform() * Transform4x4f::Identity();
 	if(running && updateState())
 	{
 		// if we're still supposed to be rendering it

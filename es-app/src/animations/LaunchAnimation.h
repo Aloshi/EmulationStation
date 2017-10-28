@@ -2,6 +2,7 @@
 
 #include "animations/Animation.h"
 #include "Log.h"
+#include "math/Scale3x3f.h"
 
 // let's look at the game launch effect:
 // -move camera to center on point P (interpolation method: linear)
@@ -31,34 +32,34 @@ class LaunchAnimation : public Animation
 {
 public:
 	//Target is a centerpoint
-	LaunchAnimation(Eigen::Affine3f& camera, float& fade, const Eigen::Vector3f& target, int duration) : 
+	LaunchAnimation(Transform4x4f& camera, float& fade, const Vector3f& target, int duration) : 
 	  mCameraStart(camera), mTarget(target), mDuration(duration), cameraOut(camera), fadeOut(fade) {}
 
 	int getDuration() const override { return mDuration; }
 
 	void apply(float t) override
 	{
-		cameraOut = Eigen::Affine3f::Identity();
+		cameraOut = Transform4x4f::Identity();
 
 		float zoom = lerp<float>(1.0, 4.25f, t*t);
-		cameraOut.scale(Eigen::Vector3f(zoom, zoom, 1));
+		cameraOut *= Scale3x3f(Vector3f(zoom, zoom, 1));
 
 		const float sw = (float)Renderer::getScreenWidth() / zoom;
 		const float sh = (float)Renderer::getScreenHeight() / zoom;
 
-		Eigen::Vector3f centerPoint = lerp<Eigen::Vector3f>(-mCameraStart.translation() + Eigen::Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0), 
+		Vector3f centerPoint = lerp<Vector3f>(-mCameraStart.translation() + Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0), 
 			mTarget, smoothStep(0.0, 1.0, t));
 
-		cameraOut.translate(Eigen::Vector3f((sw / 2) - centerPoint.x(), (sh / 2) - centerPoint.y(), 0));
+		cameraOut.translate(Vector3f((sw / 2) - centerPoint.x(), (sh / 2) - centerPoint.y(), 0));
 		
 		fadeOut = lerp<float>(0.0, 1.0, t*t);
 	}
 
 private:
-	Eigen::Affine3f mCameraStart;
-	Eigen::Vector3f mTarget;
+	Transform4x4f mCameraStart;
+	Vector3f mTarget;
 	int mDuration;
 
-	Eigen::Affine3f& cameraOut;
+	Transform4x4f& cameraOut;
 	float& fadeOut;
 };

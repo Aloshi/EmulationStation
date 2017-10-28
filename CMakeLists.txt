@@ -54,7 +54,6 @@ find_package(Boost REQUIRED COMPONENTS system date_time locale)
 else()
 find_package(Boost REQUIRED COMPONENTS system filesystem date_time locale)
 endif()
-find_package(Eigen3 REQUIRED)
 find_package(CURL REQUIRED)
 find_package(VLC REQUIRED)
 
@@ -102,8 +101,6 @@ else()
     add_definitions(-DUSE_OPENGL_ES)
 endif()
 
-add_definitions(-DEIGEN_DONT_ALIGN)
-
 #-------------------------------------------------------------------------------
 #add include directories
 set(COMMON_INCLUDE_DIRS
@@ -111,7 +108,6 @@ set(COMMON_INCLUDE_DIRS
     ${FreeImage_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
-    ${EIGEN3_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
     ${VLC_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/external

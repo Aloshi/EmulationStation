@@ -12,13 +12,13 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 	const std::string& name1, const std::function<void()>& func1,
 	const std::string& name2, const std::function<void()>& func2, 
 	const std::string& name3, const std::function<void()>& func3) : GuiComponent(window), 
-	mBackground(window, ":/frame.png"), mGrid(window, Eigen::Vector2i(1, 2))
+	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 2))
 {
 	float width = Renderer::getScreenWidth() * 0.6f; // max width
 	float minWidth = Renderer::getScreenWidth() * 0.3f; // minimum width
 
 	mMsg = std::make_shared<TextComponent>(mWindow, text, Font::get(FONT_SIZE_MEDIUM), 0x777777FF, ALIGN_CENTER);
-	mGrid.setEntry(mMsg, Eigen::Vector2i(0, 0), false, false);
+	mGrid.setEntry(mMsg, Vector2i(0, 0), false, false);
 
 	// create the buttons
 	mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, name1, name1, std::bind(&GuiMsgBox::deleteMeAndCall, this, func1)));
@@ -44,7 +44,7 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 
 	// put the buttons into a ComponentGrid
 	mButtonGrid = makeButtonGrid(mWindow, mButtons);
-	mGrid.setEntry(mButtonGrid, Eigen::Vector2i(0, 1), true, false, Eigen::Vector2i(1, 1), GridFlags::BORDER_TOP);
+	mGrid.setEntry(mButtonGrid, Vector2i(0, 1), true, false, Vector2i(1, 1), GridFlags::BORDER_TOP);
 
 	// decide final width
 	if(mMsg->getSize().x() < width && mButtonGrid->getSize().x() < width)
@@ -94,7 +94,7 @@ void GuiMsgBox::onSizeChanged()
 	mMsg->setSize(mSize.x() - HORIZONTAL_PADDING_PX*2, mGrid.getRowHeight(0));
 	mGrid.onSizeChanged();
 
-	mBackground.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-32, -32));
+	mBackground.fitTo(mSize, Vector3f::Zero(), Vector2f(-32, -32));
 }
 
 void GuiMsgBox::deleteMeAndCall(const std::function<void()>& func)

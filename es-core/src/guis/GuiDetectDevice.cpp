@@ -14,8 +14,6 @@
 
 #define HOLD_TIME 1000
 
-using namespace Eigen;
-
 namespace fs = boost::filesystem;
 
 GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun, const std::function<void()>& doneCallback) : GuiComponent(window), mFirstRun(firstRun), 

@@ -13,8 +13,6 @@ AnimationFrame BUSY_ANIMATION_FRAMES[] = {
 };
 const AnimationDef BUSY_ANIMATION_DEF = { BUSY_ANIMATION_FRAMES, 4, true };
 
-using namespace Eigen;
-
 BusyComponent::BusyComponent(Window* window) : GuiComponent(window),
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(5, 3))
 {
