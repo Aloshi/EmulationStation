@@ -26,9 +26,7 @@ void writeSubtitle(const char* gameName, const char* systemName, bool always)
 	FILE* file = fopen(getTitlePath().c_str(), "w");
 	int end = (int)(Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") / (1000));
 	if (always) {
-		fprintf(file, "1\n00:00:01,000 --> 00:00:");
-		fprintf(file, std::to_string(end).c_str());
-		fprintf(file, ",000\n");
+		fprintf(file, "1\n00:00:01,000 --> 00:00:%d,000\n", end);
 	}
 	else
 	{
@@ -40,13 +38,7 @@ void writeSubtitle(const char* gameName, const char* systemName, bool always)
 	if (!always) {
 		if (end > 12)
 		{
-			fprintf(file, "2\n00:00:");
-			fprintf(file, std::to_string(end - 4).c_str());
-			fprintf(file, ",000 --> 00:00:");
-			fprintf(file, std::to_string(end).c_str());
-			fprintf(file, ",000\n");
-			fprintf(file, "%s\n", gameName);
-			fprintf(file, "<i>%s</i>\n", systemName);
+			fprintf(file, "2\n00:00:%d,000 --> 00:00:%d,000\n%s\n<i>%s</i>\n", end-4, end, gameName, systemName);
 		}
 	}
 
