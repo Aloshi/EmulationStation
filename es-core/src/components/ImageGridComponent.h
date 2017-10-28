@@ -218,7 +218,6 @@ void ImageGridComponent<T>::updateImages()
 	Eigen::Vector2i gridSize = getGridSize();
 
 	int cursorRow = mCursor / gridSize.x();
-	int cursorCol = mCursor % gridSize.x();
 
 	int start = (cursorRow - (gridSize.y() / 2)) * gridSize.x();
 
@@ -240,7 +239,7 @@ void ImageGridComponent<T>::updateImages()
 		}
 
 		Eigen::Vector2f squareSize = getSquareSize(mEntries.at(i).data.texture);
-		if(i == mCursor)
+		if(i == (unsigned int)mCursor)
 		{
 			image.setColorShift(0xFFFFFFFF);
 			image.setResize(squareSize.x() + getPadding().x() * 0.95f, squareSize.y() + getPadding().y() * 0.95f);

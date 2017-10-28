@@ -107,8 +107,6 @@ void TextureDataManager::load(std::shared_ptr<TextureData> tex, bool block)
 	size_t size = TextureResource::getTotalMemUsage();
 	size_t max_texture = (size_t)Settings::getInstance()->getInt("MaxVRAM") * 1024 * 1024;
 
-	size_t in = size;
-
 	for (auto it = mTextures.rbegin(); it != mTextures.rend(); ++it)
 	{
 		if (size < max_texture)

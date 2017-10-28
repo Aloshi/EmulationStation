@@ -142,7 +142,8 @@ Font::FontFace::FontFace(ResourceData&& d, int size) : data(d)
 	int err = FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face);
 	assert(!err);
 	
-	FT_Set_Pixel_Sizes(face, 0, size);
+	if(!err)
+		FT_Set_Pixel_Sizes(face, 0, size);
 }
 
 Font::FontFace::~FontFace()
