@@ -191,11 +191,6 @@ void VideoPlayerComponent::stopVideo()
 		int status;
 		kill(mPlayerPid, SIGKILL);
 		waitpid(mPlayerPid, &status, WNOHANG);
-		// Restart AudioManager
-		if (boost::starts_with(Settings::getInstance()->getString("OMXAudioDev").c_str(), "alsa"))
-		{
-			AudioManager::getInstance()->init();
-		}
 		mPlayerPid = -1;
 	}
 }
