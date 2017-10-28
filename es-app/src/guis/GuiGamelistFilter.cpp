@@ -55,7 +55,6 @@ void GuiGamelistFilter::addFiltersToMenu()
 
 		FilterIndexType type = (*it).type; // type of filter
 		std::map<std::string, int>* allKeys = (*it).allIndexKeys; // all possible filters for this type
-		std::vector<std::string>* allFilteredKeys = (*it).currentFilteredKeys; // current keys being filtered for
 		std::string menuLabel = (*it).menuLabel; // text to show in menu
 		std::shared_ptr< OptionListComponent<std::string> > optionList;
 

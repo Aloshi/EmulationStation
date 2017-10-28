@@ -275,14 +275,14 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 		if(!result)
 			throw error << "Error parsing file: \n    " << result.description();
 
-		pugi::xml_node root = includeDoc.child("theme");
-		if(!root)
+		pugi::xml_node theme = includeDoc.child("theme");
+		if(!theme)
 			throw error << "Missing <theme> tag!";
 
-		parseVariables(root);
-		parseIncludes(root);
-		parseViews(root);
-		parseFeatures(root);
+		parseVariables(theme);
+		parseIncludes(theme);
+		parseViews(theme);
+		parseFeatures(theme);
 
 		mPaths.pop_back();
 	}

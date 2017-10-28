@@ -313,7 +313,6 @@ int main(int argc, char* argv[])
 	int ps_time = SDL_GetTicks();
 
 	bool running = true;
-	bool ps_standby = false;
 
 	while(running)
 	{
