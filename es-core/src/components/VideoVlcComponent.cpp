@@ -52,7 +52,7 @@ VideoVlcComponent::~VideoVlcComponent()
 
 void VideoVlcComponent::setResize(float width, float height)
 {
-	mTargetSize << width, height;
+	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = false;
 	mStaticImage.setResize(width, height);
 	resize();
@@ -60,7 +60,7 @@ void VideoVlcComponent::setResize(float width, float height)
 
 void VideoVlcComponent::setMaxSize(float width, float height)
 {
-	mTargetSize << width, height;
+	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = true;
 	mStaticImage.setMaxSize(width, height);
 	resize();
@@ -71,9 +71,9 @@ void VideoVlcComponent::resize()
 	if(!mTexture)
 		return;
 
-	const Eigen::Vector2f textureSize(mVideoWidth, mVideoHeight);
+	const Vector2f textureSize(mVideoWidth, mVideoHeight);
 
-	if(textureSize.isZero())
+	if(textureSize == Vector2f::Zero())
 		return;
 
 		// SVG rasterization is determined by height (see SVGResource.cpp), and rasterization is done in terms of pixels
@@ -87,7 +87,7 @@ void VideoVlcComponent::resize()
 
 			mSize = textureSize;
 
-			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
+			Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
 
 			if(resizeScale.x() < resizeScale.y())
 			{
@@ -105,7 +105,7 @@ void VideoVlcComponent::resize()
 		}else{
 			// if both components are set, we just stretch
 			// if no components are set, we don't resize at all
-			mSize = mTargetSize.isZero() ? textureSize : mTargetSize;
+			mSize = mTargetSize == Vector2f::Zero() ? textureSize : mTargetSize;
 
 			// if only one component is set, we resize in a way that maintains aspect ratio
 			// for SVG rasterization, we always calculate width from rounded height (see comment above)
@@ -126,12 +126,12 @@ void VideoVlcComponent::resize()
 	onSizeChanged();
 }
 
-void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
+void VideoVlcComponent::render(const Transform4x4f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
 	float x, y;
 
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 
 	Renderer::setMatrix(trans);
@@ -151,9 +151,9 @@ void VideoVlcComponent::render(const Eigen::Affine3f& parentTrans)
 		// Define a structure to contain the data for each vertex
 		struct Vertex
 		{
-			Eigen::Vector2f pos;
-			Eigen::Vector2f tex;
-			Eigen::Vector4f colour;
+			Vector2f pos;
+			Vector2f tex;
+			Vector4f colour;
 		} vertices[6];
 
 		// We need two triangles to cover the rectangular area
@@ -315,7 +315,7 @@ void VideoVlcComponent::startVideo()
 					{
 						if(!Settings::getInstance()->getBool("CaptionsCompatibility")) {
 
-							Eigen::Vector2f resizeScale((Renderer::getScreenWidth() / mVideoWidth), (Renderer::getScreenHeight() / mVideoHeight));
+							Vector2f resizeScale((Renderer::getScreenWidth() / mVideoWidth), (Renderer::getScreenHeight() / mVideoHeight));
 
 							if(resizeScale.x() < resizeScale.y())
 							{

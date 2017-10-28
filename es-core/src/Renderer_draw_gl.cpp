@@ -9,7 +9,16 @@
 #include "Util.h"
 
 namespace Renderer {
-	std::stack<Eigen::Vector4i> clipStack;
+	struct ClipRect {
+		ClipRect(const int x, const int y, const int w, const int h) :
+			x(x), y(y), w(w), h(h) {};
+		int x;
+		int y;
+		int w;
+		int h;
+	};
+
+	std::stack<ClipRect> clipStack;
 
 	void setColor4bArray(GLubyte* array, unsigned int color)
 	{
@@ -29,41 +38,41 @@ namespace Renderer {
 		}
 	}
 
-	void pushClipRect(Eigen::Vector2i pos, Eigen::Vector2i dim)
+	void pushClipRect(Vector2i pos, Vector2i dim)
 	{
-		Eigen::Vector4i box(pos.x(), pos.y(), dim.x(), dim.y());
-		if(box[2] == 0)
-			box[2] = Renderer::getScreenWidth() - box.x();
-		if(box[3] == 0)
-			box[3] = Renderer::getScreenHeight() - box.y();
+		ClipRect box(pos.x(), pos.y(), dim.x(), dim.y());
+		if(box.w == 0)
+			box.w = Renderer::getScreenWidth() - box.x;
+		if(box.h == 0)
+			box.h = Renderer::getScreenHeight() - box.y;
 
 		//glScissor starts at the bottom left of the window
 		//so (0, 0, 1, 1) is the bottom left pixel
 		//everything else uses y+ = down, so flip it to be consistent
 		//rect.pos.y = Renderer::getScreenHeight() - rect.pos.y - rect.size.y;
-		box[1] = Renderer::getScreenHeight() - box.y() - box[3];
+		box.y = Renderer::getScreenHeight() - box.y - box.h;
 
 		//make sure the box fits within clipStack.top(), and clip further accordingly
 		if(clipStack.size())
 		{
-			Eigen::Vector4i& top = clipStack.top();
-			if(top[0] > box[0])
-				box[0] = top[0];
-			if(top[1] > box[1])
-				box[1] = top[1];
-			if(top[0] + top[2] < box[0] + box[2])
-				box[2] = (top[0] + top[2]) - box[0];
-			if(top[1] + top[3] < box[1] + box[3])
-				box[3] = (top[1] + top[3]) - box[1];
+			const ClipRect& top = clipStack.top();
+			if(top.x > box.x)
+				box.x = top.x;
+			if(top.y > box.y)
+				box.y = top.y;
+			if(top.x + top.w < box.x + box.w)
+				box.w = (top.x + top.w) - box.x;
+			if(top.y + top.h < box.y + box.h)
+				box.h = (top.y + top.h) - box.y;
 		}
 
-		if(box[2] < 0)
-			box[2] = 0;
-		if(box[3] < 0)
-			box[3] = 0;
+		if(box.w < 0)
+			box.w = 0;
+		if(box.h < 0)
+			box.h = 0;
 
 		clipStack.push(box);
-		glScissor(box[0], box[1], box[2], box[3]);
+		glScissor(box.x, box.y, box.w, box.h);
 		glEnable(GL_SCISSOR_TEST);
 	}
 
@@ -80,8 +89,8 @@ namespace Renderer {
 		{
 			glDisable(GL_SCISSOR_TEST);
 		}else{
-			Eigen::Vector4i top = clipStack.top();
-			glScissor(top[0], top[1], top[2], top[3]);
+			const ClipRect& top = clipStack.top();
+			glScissor(top.x, top.y, top.w, top.h);
 		}
 	}
 
@@ -128,13 +137,8 @@ namespace Renderer {
 		glDisableClientState(GL_COLOR_ARRAY);
 	}
 
-	void setMatrix(float* matrix)
+	void setMatrix(const Transform4x4f& matrix)
 	{
-		glLoadMatrixf(matrix);
-	}
-
-	void setMatrix(const Eigen::Affine3f& matrix)
-	{
-		setMatrix((float*)matrix.data());
+		glLoadMatrixf((GLfloat*)&matrix);
 	}
 };

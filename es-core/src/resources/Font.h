@@ -5,9 +5,9 @@
 #include GLHEADER
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include <Eigen/Dense>
 #include "resources/ResourceManager.h"
 #include "ThemeData.h"
+#include "math/Vector2i.h"
 
 class TextCache;
 
@@ -41,14 +41,14 @@ public:
 
 	virtual ~Font();
 
-	Eigen::Vector2f sizeText(std::string text, float lineSpacing = 1.5f); // Returns the expected size of a string when rendered.  Extra spacing is applied to the Y axis.
+	Vector2f sizeText(std::string text, float lineSpacing = 1.5f); // Returns the expected size of a string when rendered.  Extra spacing is applied to the Y axis.
 	TextCache* buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color);
-	TextCache* buildTextCache(const std::string& text, Eigen::Vector2f offset, unsigned int color, float xLen, Alignment alignment = ALIGN_LEFT, float lineSpacing = 1.5f);
+	TextCache* buildTextCache(const std::string& text, Vector2f offset, unsigned int color, float xLen, Alignment alignment = ALIGN_LEFT, float lineSpacing = 1.5f);
 	void renderTextCache(TextCache* cache);
 	
 	std::string wrapText(std::string text, float xLen); // Inserts newlines into text to make it wrap properly.
-	Eigen::Vector2f sizeWrappedText(std::string text, float xLen, float lineSpacing = 1.5f); // Returns the expected size of a string after wrapping is applied.
-	Eigen::Vector2f getWrappedTextCursorOffset(std::string text, float xLen, size_t cursor, float lineSpacing = 1.5f); // Returns the position of of the cursor after moving "cursor" characters.
+	Vector2f sizeWrappedText(std::string text, float xLen, float lineSpacing = 1.5f); // Returns the expected size of a string after wrapping is applied.
+	Vector2f getWrappedTextCursorOffset(std::string text, float xLen, size_t cursor, float lineSpacing = 1.5f); // Returns the position of of the cursor after moving "cursor" characters.
 
 	float getHeight(float lineSpacing = 1.5f) const;
 	float getLetterHeight();
@@ -81,14 +81,14 @@ private:
 	struct FontTexture
 	{
 		GLuint textureId;
-		Eigen::Vector2i textureSize;
+		Vector2i textureSize;
 
-		Eigen::Vector2i writePos;
+		Vector2i writePos;
 		int rowHeight;
 
 		FontTexture();
 		~FontTexture();
-		bool findEmpty(const Eigen::Vector2i& size, Eigen::Vector2i& cursor_out);
+		bool findEmpty(const Vector2i& size, Vector2i& cursor_out);
 
 		// you must call initTexture() after creating a FontTexture to get a textureId
 		void initTexture(); // initializes the OpenGL texture according to this FontTexture's settings, updating textureId
@@ -109,7 +109,7 @@ private:
 
 	std::vector<FontTexture> mTextures;
 
-	void getTextureForNewGlyph(const Eigen::Vector2i& glyphSize, FontTexture*& tex_out, Eigen::Vector2i& cursor_out);
+	void getTextureForNewGlyph(const Vector2i& glyphSize, FontTexture*& tex_out, Vector2i& cursor_out);
 
 	std::map< unsigned int, std::unique_ptr<FontFace> > mFaceCache;
 	FT_Face getFaceForChar(UnicodeChar id);
@@ -119,11 +119,11 @@ private:
 	{
 		FontTexture* texture;
 		
-		Eigen::Vector2f texPos;
-		Eigen::Vector2f texSize; // in texels!
+		Vector2f texPos;
+		Vector2f texSize; // in texels!
 
-		Eigen::Vector2f advance;
-		Eigen::Vector2f bearing;
+		Vector2f advance;
+		Vector2f bearing;
 	};
 
 	std::map<UnicodeChar, Glyph> mGlyphMap;
@@ -149,8 +149,8 @@ class TextCache
 protected:
 	struct Vertex
 	{
-		Eigen::Vector2f pos;
-		Eigen::Vector2f tex;
+		Vector2f pos;
+		Vector2f tex;
 	};
 
 	struct VertexList
@@ -165,7 +165,7 @@ protected:
 public:
 	struct CacheMetrics
 	{
-		Eigen::Vector2f size;
+		Vector2f size;
 	} metrics;
 
 	void setColor(unsigned int color);

@@ -14,8 +14,6 @@
 #define ICON_TEXT_SPACING 8 // space between [icon] and [text] (px)
 #define ENTRY_SPACING 16 // space between [text] and next [icon] (px)
 
-using namespace Eigen;
-
 static const std::map<std::string, const char*> ICON_PATH_MAP = boost::assign::map_list_of
 	("up/down", ":/help/dpad_updown.svg")
 	("left/right", ":/help/dpad_leftright.svg")
@@ -95,7 +93,7 @@ void HelpComponent::updateGrid()
 		mGrid->setEntry(labels.at(i), Vector2i(col + 2, 0), false, false);
 	}
 
-	mGrid->setPosition(Eigen::Vector3f(mStyle.position.x(), mStyle.position.y(), 0.0f));
+	mGrid->setPosition(Vector3f(mStyle.position.x(), mStyle.position.y(), 0.0f));
 	//mGrid->setPosition(OFFSET_X, Renderer::getScreenHeight() - mGrid->getSize().y() - OFFSET_Y);
 }
 
@@ -132,9 +130,9 @@ void HelpComponent::setOpacity(unsigned char opacity)
 	}
 }
 
-void HelpComponent::render(const Eigen::Affine3f& parentTrans)
+void HelpComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 	
 	if(mGrid)
 		mGrid->render(trans);

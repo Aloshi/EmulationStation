@@ -32,13 +32,13 @@ public:
 	// Can be set before or after an image is loaded.
 	// setMaxSize() and setResize() are mutually exclusive.
 	void setResize(float width, float height);
-	inline void setResize(const Eigen::Vector2f& size) { setResize(size.x(), size.y()); }
+	inline void setResize(const Vector2f& size) { setResize(size.x(), size.y()); }
 
 	// Resize the image to be as large as possible but fit within a box of this size.
 	// Can be set before or after an image is loaded.
 	// Never breaks the aspect ratio. setMaxSize() and setResize() are mutually exclusive.
 	void setMaxSize(float width, float height);
-	inline void setMaxSize(const Eigen::Vector2f& size) { setMaxSize(size.x(), size.y()); }
+	inline void setMaxSize(const Vector2f& size) { setMaxSize(size.x(), size.y()); }
 
 	// Multiply all pixels in the image by this color when rendering.
 	void setColorShift(unsigned int color);
@@ -47,17 +47,17 @@ public:
 	void setFlipY(bool flip); // Mirror on the Y axis.
 
 	// Returns the size of the current texture, or (0, 0) if none is loaded.  May be different than drawn size (use getSize() for that).
-	Eigen::Vector2i getTextureSize() const;
+	Vector2i getTextureSize() const;
 
 	bool hasImage();
 
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 private:
-	Eigen::Vector2f mTargetSize;
+	Vector2f mTargetSize;
 
 	bool mFlipX, mFlipY, mTargetIsMax;
 
@@ -67,8 +67,8 @@ private:
 
 	struct Vertex
 	{
-		Eigen::Vector2f pos;
-		Eigen::Vector2f tex;
+		Vector2f pos;
+		Vector2f tex;
 	} mVertices[6];
 
 	GLubyte mColors[6*4];

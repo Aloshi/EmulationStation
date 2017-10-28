@@ -419,7 +419,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			std::string first = str.substr(0, divider);
 			std::string second = str.substr(divider, std::string::npos);
 
-			Eigen::Vector2f val(atof(first.c_str()), atof(second.c_str()));
+			Vector2f val(atof(first.c_str()), atof(second.c_str()));
 
 			element.properties[node.name()] = val;
 			break;

@@ -9,7 +9,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
 #include <boost/xpressive/xpressive.hpp>
-#include <Eigen/Dense>
 #include "pugixml/src/pugixml.hpp"
 #include "GuiComponent.h"
 
@@ -91,7 +90,7 @@ public:
 		bool extra;
 		std::string type;
 
-		std::map< std::string, boost::variant<Eigen::Vector2f, std::string, unsigned int, float, bool> > properties;
+		std::map< std::string, boost::variant<Vector2f, std::string, unsigned int, float, bool> > properties;
 
 		template<typename T>
 		T get(const std::string& prop) const { return boost::get<T>(properties.at(prop)); }

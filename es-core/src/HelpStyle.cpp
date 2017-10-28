@@ -5,7 +5,7 @@
 
 HelpStyle::HelpStyle()
 {
-	position = Eigen::Vector2f(Renderer::getScreenWidth() * 0.012f, Renderer::getScreenHeight() * 0.9515f);
+	position = Vector2f(Renderer::getScreenWidth() * 0.012f, Renderer::getScreenHeight() * 0.9515f);
 	iconColor = 0x777777FF;
 	textColor = 0x777777FF;
 
@@ -22,7 +22,7 @@ void HelpStyle::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::s
 		return;
 
 	if(elem->has("pos"))
-		position = elem->get<Eigen::Vector2f>("pos").cwiseProduct(Eigen::Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight()));
+		position = elem->get<Vector2f>("pos") * Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	if(elem->has("textColor"))
 		textColor = elem->get<unsigned int>("textColor");

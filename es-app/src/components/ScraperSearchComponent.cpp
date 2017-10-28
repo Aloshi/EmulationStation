@@ -15,14 +15,12 @@
 #include "guis/GuiTextEditPopup.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
-	mGrid(window, Eigen::Vector2i(4, 3)), mBusyAnim(window), 
+	mGrid(window, Vector2i(4, 3)), mBusyAnim(window), 
 	mSearchType(type)
 {
 	addChild(&mGrid);
 
 	mBlockAccept = false;
-
-	using namespace Eigen;
 
 	// left spacer (empty component, needed for borders)
 	mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(0, 0), false, false, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
@@ -171,8 +169,6 @@ void ScraperSearchComponent::resizeMetadata()
 
 void ScraperSearchComponent::updateViewStyle()
 {
-	using namespace Eigen;
-
 	// unlink description and result list and result name
 	mGrid.removeEntry(mResultName);
 	mGrid.removeEntry(mResultDesc);
@@ -345,9 +341,9 @@ bool ScraperSearchComponent::input(InputConfig* config, Input input)
 	return GuiComponent::input(config, input);
 }
 
-void ScraperSearchComponent::render(const Eigen::Affine3f& parentTrans)
+void ScraperSearchComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 
 	renderChildren(trans);
 

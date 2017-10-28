@@ -37,7 +37,7 @@ void TextEditComponent::onFocusLost()
 
 void TextEditComponent::onSizeChanged()
 {
-	mBox.fitTo(mSize, Eigen::Vector3f::Zero(), Eigen::Vector2f(-34, -32 - TEXT_PADDING_VERT));
+	mBox.fitTo(mSize, Vector3f::Zero(), Vector2f(-34, -32 - TEXT_PADDING_VERT));
 	onTextChanged(); // wrap point probably changed
 }
 
@@ -219,7 +219,7 @@ void TextEditComponent::onCursorChanged()
 {
 	if(isMultiline())
 	{
-		Eigen::Vector2f textSize = mFont->getWrappedTextCursorOffset(mText, getTextAreaSize().x(), mCursor); 
+		Vector2f textSize = mFont->getWrappedTextCursorOffset(mText, getTextAreaSize().x(), mCursor); 
 
 		if(mScrollOffset.y() + getTextAreaSize().y() < textSize.y() + mFont->getHeight()) //need to scroll down?
 		{
@@ -229,7 +229,7 @@ void TextEditComponent::onCursorChanged()
 			mScrollOffset[1] = textSize.y();
 		}
 	}else{
-		Eigen::Vector2f cursorPos = mFont->sizeText(mText.substr(0, mCursor));
+		Vector2f cursorPos = mFont->sizeText(mText.substr(0, mCursor));
 
 		if(mScrollOffset.x() + getTextAreaSize().x() < cursorPos.x())
 		{
@@ -241,22 +241,22 @@ void TextEditComponent::onCursorChanged()
 	}
 }
 
-void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
+void TextEditComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = getTransform() * parentTrans;
+	Transform4x4f trans = getTransform() * parentTrans;
 	renderChildren(trans);
 
 	// text + cursor rendering
 	// offset into our "text area" (padding)
-	trans.translation() += Eigen::Vector3f(getTextAreaPos().x(), getTextAreaPos().y(), 0);
+	trans.translation() += Vector3f(getTextAreaPos().x(), getTextAreaPos().y(), 0);
 
-	Eigen::Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());
-	Eigen::Vector3f dimScaled = trans * Eigen::Vector3f(getTextAreaSize().x(), getTextAreaSize().y(), 0); // use "text area" size for clipping
-	Eigen::Vector2i clipDim((int)dimScaled.x() - trans.translation().x(), (int)dimScaled.y() - trans.translation().y());
+	Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());
+	Vector3f dimScaled = trans * Vector3f(getTextAreaSize().x(), getTextAreaSize().y(), 0); // use "text area" size for clipping
+	Vector2i clipDim((int)dimScaled.x() - trans.translation().x(), (int)dimScaled.y() - trans.translation().y());
 	Renderer::pushClipRect(clipPos, clipDim);
 
-	trans.translate(Eigen::Vector3f(-mScrollOffset.x(), -mScrollOffset.y(), 0));
-	trans = roundMatrix(trans);
+	trans.translate(Vector3f(-mScrollOffset.x(), -mScrollOffset.y(), 0));
+	trans.round();
 
 	Renderer::setMatrix(trans);
 
@@ -271,7 +271,7 @@ void TextEditComponent::render(const Eigen::Affine3f& parentTrans)
 	// draw cursor
 	if(mEditing)
 	{
-		Eigen::Vector2f cursorPos;
+		Vector2f cursorPos;
 		if(isMultiline())
 		{
 			cursorPos = mFont->getWrappedTextCursorOffset(mText, getTextAreaSize().x(), mCursor);
@@ -290,14 +290,14 @@ bool TextEditComponent::isMultiline()
 	return (getSize().y() > mFont->getHeight() * 1.25f);
 }
 
-Eigen::Vector2f TextEditComponent::getTextAreaPos() const
+Vector2f TextEditComponent::getTextAreaPos() const
 {
-	return Eigen::Vector2f(TEXT_PADDING_HORIZ / 2.0f, TEXT_PADDING_VERT / 2.0f);
+	return Vector2f(TEXT_PADDING_HORIZ / 2.0f, TEXT_PADDING_VERT / 2.0f);
 }
 
-Eigen::Vector2f TextEditComponent::getTextAreaSize() const
+Vector2f TextEditComponent::getTextAreaSize() const
 {
-	return Eigen::Vector2f(mSize.x() - TEXT_PADDING_HORIZ, mSize.y() - TEXT_PADDING_VERT);
+	return Vector2f(mSize.x() - TEXT_PADDING_HORIZ, mSize.y() - TEXT_PADDING_VERT);
 }
 
 std::vector<HelpPrompt> TextEditComponent::getHelpPrompts()

@@ -14,8 +14,6 @@
 #include "components/SwitchComponent.h"
 #include "guis/GuiTextEditPopup.h"
 
-using namespace Eigen;
-
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams,
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window),
 	mScraperParams(scraperParams),
@@ -115,7 +113,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 				auto bracket = std::make_shared<ImageComponent>(mWindow);
 				bracket->setImage(":/arrow.svg");
-				bracket->setResize(Eigen::Vector2f(0, lbl->getFont()->getLetterHeight()));
+				bracket->setResize(Vector2f(0, lbl->getFont()->getLetterHeight()));
 				row.addElement(bracket, false);
 
 				bool multiLine = iter->type == MD_MULTILINE_STRING;

@@ -101,7 +101,7 @@ void GuiSlideshowScreensaverOptions::addEditableTextComponent(ComponentListRow r
 
 	auto bracket = std::make_shared<ImageComponent>(mWindow);
 	bracket->setImage(":/arrow.svg");
-	bracket->setResize(Eigen::Vector2f(0, lbl->getFont()->getLetterHeight()));
+	bracket->setResize(Vector2f(0, lbl->getFont()->getLetterHeight()));
 	row.addElement(bracket, false);
 
 	auto updateVal = [ed](const std::string& newVal) { ed->setValue(newVal); }; // ok callback (apply new value to ed)

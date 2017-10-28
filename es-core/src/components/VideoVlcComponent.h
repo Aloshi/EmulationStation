@@ -32,7 +32,7 @@ public:
 	VideoVlcComponent(Window* window, std::string subtitles);
 	virtual ~VideoVlcComponent();
 
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 
 	// Resize the video to fit this size. If one axis is zero, scale that axis to maintain aspect ratio.
