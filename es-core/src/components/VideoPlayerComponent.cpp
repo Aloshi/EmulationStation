@@ -43,7 +43,7 @@ void VideoPlayerComponent::render(const Transform4x4f& parentTrans)
 void VideoPlayerComponent::setResize(float width, float height)
 {
 	setSize(width, height);
-	mTargetSize << width, height;
+	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = false;
 	mStaticImage.setSize(width, height);
 	onSizeChanged();
@@ -52,7 +52,7 @@ void VideoPlayerComponent::setResize(float width, float height)
 void VideoPlayerComponent::setMaxSize(float width, float height)
 {
 	setSize(width, height);
-	mTargetSize << width, height;
+	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = true;
 	mStaticImage.setMaxSize(width, height);
 	onSizeChanged();
