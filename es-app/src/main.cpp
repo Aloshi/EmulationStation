@@ -20,7 +20,6 @@
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include <sstream>
-#include <boost/locale.hpp>
 #include <FreeImage.h>
 
 #ifdef WIN32
@@ -182,7 +181,7 @@ int main(int argc, char* argv[])
 	unsigned int width = 0;
 	unsigned int height = 0;
 
-	std::locale::global(boost::locale::generator().generate(""));
+	std::locale::global(std::locale(std::locale(""), "C", std::locale::numeric));
 	boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv, &width, &height))
