@@ -4,7 +4,6 @@
 
 #include "animations/Animation.h"
 #include "Log.h"
-#include "math/Scale3x3f.h"
 
 // let's look at the game launch effect:
 // -move camera to center on point P (interpolation method: linear)
@@ -44,7 +43,7 @@ public:
 		cameraOut = Transform4x4f::Identity();
 
 		float zoom = lerp<float>(1.0, 4.25f, t*t);
-		cameraOut *= Scale3x3f(Vector3f(zoom, zoom, 1));
+		cameraOut.scale(zoom);
 
 		const float sw = (float)Renderer::getScreenWidth() / zoom;
 		const float sh = (float)Renderer::getScreenHeight() / zoom;
