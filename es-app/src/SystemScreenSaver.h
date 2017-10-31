@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_SYSTEM_SCREEN_SAVER_H
+#define ES_APP_SYSTEM_SCREEN_SAVER_H
 
 #include "Window.h"
 
@@ -60,3 +62,5 @@ private:
 	std::shared_ptr<Sound>	mBackgroundAudio;
 	bool			mStopBackgroundAudio;
 };
+
+#endif // ES_APP_SYSTEM_SCREEN_SAVER_H

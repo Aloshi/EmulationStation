@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H
+#define ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H
 
 #include "FileData.h"
 #include "Renderer.h"
@@ -44,3 +46,5 @@ protected:
 	FileData* mRoot;
 	std::shared_ptr<ThemeData> mTheme;
 };
+
+#endif // ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H

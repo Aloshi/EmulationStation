@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_ANIMATIONS_LAUNCH_ANIMATION_H
+#define ES_APP_ANIMATIONS_LAUNCH_ANIMATION_H
 
 #include "animations/Animation.h"
 #include "Log.h"
@@ -63,3 +65,5 @@ private:
 	Transform4x4f& cameraOut;
 	float& fadeOut;
 };
+
+#endif // ES_APP_ANIMATIONS_LAUNCH_ANIMATION_H

@@ -1,5 +1,6 @@
-#ifndef _IMAGECOMPONENT_H_
-#define _IMAGECOMPONENT_H_
+#pragma once
+#ifndef ES_CORE_COMPONENTS_IMAGE_COMPONENT_H
+#define ES_CORE_COMPONENTS_IMAGE_COMPONENT_H
 
 #include "platform.h"
 #include GLHEADER
@@ -88,4 +89,4 @@ private:
 	bool					mDynamic;
 };
 
-#endif
+#endif // ES_CORE_COMPONENTS_IMAGE_COMPONENT_H

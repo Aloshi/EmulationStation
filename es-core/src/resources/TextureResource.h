@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_RESOURCES_TEXTURE_RESOURCE_H
+#define ES_CORE_RESOURCES_TEXTURE_RESOURCE_H
 
 #include "resources/ResourceManager.h"
 
@@ -57,3 +59,5 @@ private:
 	static std::map< TextureKeyType, std::weak_ptr<TextureResource> > sTextureMap; // map of textures, used to prevent duplicate textures
 	static std::set<TextureResource*> 	sAllTextures;	// Set of all textures, used for memory management
 };
+
+#endif // ES_CORE_RESOURCES_TEXTURE_RESOURCE_H

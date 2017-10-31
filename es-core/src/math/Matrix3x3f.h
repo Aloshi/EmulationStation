@@ -1,5 +1,6 @@
-#ifndef _MATRIX3X3F_H_
-#define _MATRIX3X3F_H_
+#pragma once
+#ifndef ES_CORE_MATH_MATRIX3X3F_H
+#define ES_CORE_MATH_MATRIX3X3F_H
 
 #include <assert.h>
 #include <math/Vector3f.h>
@@ -74,4 +75,4 @@ protected:
 
 };
 
-#endif
+#endif // ES_CORE_MATH_MATRIX3X3F_H

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_NINE_PATCH_COMPONENT_H
+#define ES_CORE_COMPONENTS_NINE_PATCH_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "resources/TextureResource.h"
@@ -52,3 +54,5 @@ private:
 	unsigned int mCenterColor;
 	std::shared_ptr<TextureResource> mTexture;
 };
+
+#endif // ES_CORE_COMPONENTS_NINE_PATCH_COMPONENT_H

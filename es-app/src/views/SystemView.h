@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_VIEWS_SYSTEM_VIEW_H
+#define ES_APP_VIEWS_SYSTEM_VIEW_H
 
 #include "GuiComponent.h"
 #include "components/ImageComponent.h"
@@ -84,3 +86,5 @@ private:
 	bool mViewNeedsReload;
 	bool mShowing;
 };
+
+#endif // ES_APP_VIEWS_SYSTEM_VIEW_H

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_COMPONENT_LIST_H
+#define ES_CORE_COMPONENTS_COMPONENT_LIST_H
 
 #include "IList.h"
 #include <functional>
@@ -85,3 +87,5 @@ private:
 
 	std::function<void(CursorState state)> mCursorChangedCallback;
 };
+
+#endif // ES_CORE_COMPONENTS_COMPONENT_LIST_H

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_COMPONENT_GRID_H
+#define ES_CORE_COMPONENTS_COMPONENT_GRID_H
 
 #include "GuiComponent.h"
 #include "math/Vector2i.h"
@@ -118,3 +120,5 @@ private:
 	void onCursorMoved(Vector2i from, Vector2i to);
 	Vector2i mCursor;
 };
+
+#endif // ES_CORE_COMPONENTS_COMPONENT_GRID_H

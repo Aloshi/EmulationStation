@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_ANIMATIONS_ANIMATION_H
+#define ES_CORE_ANIMATIONS_ANIMATION_H
 
 class Animation
 {
@@ -39,3 +41,5 @@ T lerp(const T& start, const T& end, float t)
 
 	return (start * (1 - t) + end * t);
 }
+
+#endif // ES_CORE_ANIMATIONS_ANIMATION_H

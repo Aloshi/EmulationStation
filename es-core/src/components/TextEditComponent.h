@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H
+#define ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
@@ -61,3 +63,5 @@ private:
 	std::shared_ptr<Font> mFont;
 	std::unique_ptr<TextCache> mTextCache;
 };
+
+#endif // ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H

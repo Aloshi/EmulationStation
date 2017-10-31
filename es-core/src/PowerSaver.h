@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_POWER_SAVER_H
+#define ES_CORE_POWER_SAVER_H
 
 class PowerSaver
 {
@@ -42,3 +44,5 @@ private:
 
 	static void loadWakeupTime();
 };
+
+#endif // ES_CORE_POWER_SAVER_H

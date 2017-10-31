@@ -1,5 +1,6 @@
-#ifndef _TRANSFORM4X4F_H_
-#define _TRANSFORM4X4F_H_
+#pragma once
+#ifndef ES_CORE_MATH_TRANSFORM4X4F_H
+#define ES_CORE_MATH_TRANSFORM4X4F_H
 
 #include <math/Matrix4x4f.h>
 #include <math/Vector3f.h>
@@ -123,4 +124,4 @@ public:
 
 };
 
-#endif
+#endif // ES_CORE_MATH_TRANSFORM4X4F_H

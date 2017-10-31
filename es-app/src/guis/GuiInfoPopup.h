@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_GUIS_GUI_INFO_POPUP_H
+#define ES_APP_GUIS_GUI_INFO_POPUP_H
 
 #include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
@@ -25,3 +27,5 @@ private:
 	NinePatchComponent* mFrame;
 	bool running;
 };
+
+#endif // ES_APP_GUIS_GUI_INFO_POPUP_H

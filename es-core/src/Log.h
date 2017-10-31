@@ -1,5 +1,6 @@
-#ifndef _LOG_H_
-#define _LOG_H_
+#pragma once
+#ifndef ES_CORE_LOG_H
+#define ES_CORE_LOG_H
 
 #define LOG(level) \
 if(level > Log::getReportingLevel()) ; \
@@ -36,4 +37,4 @@ private:
 	LogLevel messageLevel;
 };
 
-#endif
+#endif // ES_CORE_LOG_H

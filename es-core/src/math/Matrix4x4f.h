@@ -1,5 +1,6 @@
-#ifndef _MATRIX4X4F_H_
-#define _MATRIX4X4F_H_
+#pragma once
+#ifndef ES_CORE_MATH_MATRIX4X4F_H
+#define ES_CORE_MATH_MATRIX4X4F_H
 
 #include <assert.h>
 #include <math/Matrix3x3f.h>
@@ -176,4 +177,4 @@ protected:
 
 };
 
-#endif
+#endif // ES_CORE_MATH_MATRIX4X4F_H

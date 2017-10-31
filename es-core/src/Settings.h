@@ -1,4 +1,7 @@
 #pragma once
+#ifndef ES_CORE_SETTINGS_H
+#define ES_CORE_SETTINGS_H
+
 #include <string>
 #include <map>
 
@@ -35,3 +38,5 @@ private:
 	std::map<std::string, float> mFloatMap;
 	std::map<std::string, std::string> mStringMap;
 };
+
+#endif // ES_CORE_SETTINGS_H

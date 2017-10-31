@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_GUIS_GUI_GAME_SCRAPER_H
+#define ES_APP_GUIS_GUI_GAME_SCRAPER_H
 
 #include "GuiComponent.h"
 #include "components/ScraperSearchComponent.h"
@@ -31,3 +33,5 @@ private:
 
 	std::function<void()> mCancelFunc;
 };
+
+#endif // ES_APP_GUIS_GUI_GAME_SCRAPER_H

@@ -1,5 +1,6 @@
-#ifndef _INPUTCONFIG_H_
-#define _INPUTCONFIG_H_
+#pragma once
+#ifndef ES_CORE_INPUT_CONFIG_H
+#define ES_CORE_INPUT_CONFIG_H
 
 #include <map>
 #include <vector>
@@ -115,4 +116,4 @@ private:
 	const std::string mDeviceGUID;
 };
 
-#endif
+#endif // ES_CORE_INPUT_CONFIG_H

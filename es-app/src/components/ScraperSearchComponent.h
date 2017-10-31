@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_COMPONENTS_SCRAPER_SEARCH_COMPONENT_H
+#define ES_APP_COMPONENTS_SCRAPER_SEARCH_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "scrapers/Scraper.h"
@@ -102,3 +104,5 @@ private:
 
 	BusyComponent mBusyAnim;
 };
+
+#endif // ES_APP_COMPONENTS_SCRAPER_SEARCH_COMPONENT_H

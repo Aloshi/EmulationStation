@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_GUIS_GUI_GAME_LIST_FILTER_H
+#define ES_APP_GUIS_GUI_GAME_LIST_FILTER_H
 
 #include "GuiComponent.h"
 #include "SystemData.h"
@@ -32,3 +34,5 @@ private:
 	SystemData* mSystem;
 	FileFilterIndex* mFilterIndex;
 };
+
+#endif // ES_APP_GUIS_GUI_GAME_LIST_FILTER_H

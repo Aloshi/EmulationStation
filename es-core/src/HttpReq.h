@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_HTTP_REQ_H
+#define ES_CORE_HTTP_REQ_H
 
 #include <curl/curl.h>
 #include <sstream>
@@ -66,3 +68,5 @@ private:
 	std::stringstream mContent;
 	std::string mErrorMsg;
 };
+
+#endif // ES_CORE_HTTP_REQ_H

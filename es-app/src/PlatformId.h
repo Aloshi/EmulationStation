@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_PLATFORM_ID_H
+#define ES_APP_PLATFORM_ID_H
 
 #include <map>
 
@@ -80,3 +82,5 @@ namespace PlatformIds
 
 	const char* getCleanMameName(const char* from);
 }
+
+#endif // ES_APP_PLATFORM_ID_H

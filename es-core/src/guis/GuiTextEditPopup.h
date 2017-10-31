@@ -1,3 +1,7 @@
+#pragma once
+#ifndef ES_CORE_GUIS_GUI_TEXT_EDIT_POPUP_H
+#define ES_CORE_GUIS_GUI_TEXT_EDIT_POPUP_H
+
 #include "GuiComponent.h"
 
 #include "components/NinePatchComponent.h"
@@ -26,3 +30,5 @@ private:
 
 	bool mMultiLine;
 };
+
+#endif // ES_CORE_GUIS_GUI_TEXT_EDIT_POPUP_H

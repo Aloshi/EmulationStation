@@ -1,5 +1,6 @@
-#ifndef _SOUND_H_
-#define _SOUND_H_
+#pragma once
+#ifndef ES_CORE_SOUND_H
+#define ES_CORE_SOUND_H
 
 #include <string>
 #include <map>
@@ -43,4 +44,4 @@ private:
 	static std::map< std::string, std::shared_ptr<Sound> > sMap;
 };
 
-#endif
+#endif // ES_CORE_SOUND_H

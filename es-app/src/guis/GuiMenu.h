@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_GUIS_GUI_MENU_H
+#define ES_APP_GUIS_GUI_MENU_H
 
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
@@ -29,3 +31,5 @@ private:
 	MenuComponent mMenu;
 	TextComponent mVersion;
 };
+
+#endif // ES_APP_GUIS_GUI_MENU_H

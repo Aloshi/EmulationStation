@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_GUIS_GUI_META_DATA_ED_H
+#define ES_APP_GUIS_GUI_META_DATA_ED_H
 
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
@@ -41,3 +43,5 @@ private:
 	std::function<void()> mSavedCallback;
 	std::function<void()> mDeleteFunc;
 };
+
+#endif // ES_APP_GUIS_GUI_META_DATA_ED_H

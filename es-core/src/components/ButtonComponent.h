@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_BUTTON_COMPONENT_H
+#define ES_CORE_COMPONENTS_BUTTON_COMPONENT_H
 
 #include "GuiComponent.h"
 #include <functional>
@@ -45,3 +47,5 @@ private:
 	std::unique_ptr<TextCache> mTextCache;
 	NinePatchComponent mBox;
 };
+
+#endif // ES_CORE_COMPONENTS_BUTTON_COMPONENT_H

@@ -1,5 +1,6 @@
-#ifndef _ROTATION3X3F_H_
-#define _ROTATION3X3F_H_
+#pragma once
+#ifndef ES_CORE_MATH_ROTATION3X3F_H
+#define ES_CORE_MATH_ROTATION3X3F_H
 
 class Rotation3x3f : public Matrix3x3f
 {
@@ -36,4 +37,4 @@ public:
 
 };
 
-#endif
+#endif // ES_CORE_MATH_ROTATION3X3F_H

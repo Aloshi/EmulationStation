@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_COMPONENTS_ASYNC_REQ_COMPONENT_H
+#define ES_APP_COMPONENTS_ASYNC_REQ_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "HttpReq.h"
@@ -43,3 +45,5 @@ private:
 	unsigned int mTime;
 	std::shared_ptr<HttpReq> mRequest;
 };
+
+#endif // ES_APP_COMPONENTS_ASYNC_REQ_COMPONENT_H
