@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_COMPONENTS_RATING_COMPONENT_H
+#define ES_APP_COMPONENTS_RATING_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "resources/TextureResource.h"
@@ -53,3 +55,4 @@ private:
 	std::shared_ptr<TextureResource> mUnfilledTexture;
 };
 
+#endif // ES_APP_COMPONENTS_RATING_COMPONENT_H

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_SCRAPERS_GAMES_DB_SCRAPER_H
+#define ES_APP_SCRAPERS_GAMES_DB_SCRAPER_H
 
 #include "scrapers/Scraper.h"
 
@@ -23,3 +25,5 @@ protected:
 
 	std::queue< std::unique_ptr<ScraperRequest> >* mRequestQueue;
 };
+
+#endif // ES_APP_SCRAPERS_GAMES_DB_SCRAPER_H

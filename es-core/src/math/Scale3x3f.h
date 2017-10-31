@@ -1,5 +1,6 @@
-#ifndef _SCALE3X3F_H_
-#define _SCALE3X3F_H_
+#pragma once
+#ifndef ES_CORE_MATH_SCALE3X3F_H
+#define ES_CORE_MATH_SCALE3X3F_H
 
 class Scale3x3f : public Matrix3x3f
 {
@@ -23,4 +24,4 @@ public:
 
 };
 
-#endif
+#endif // ES_CORE_MATH_SCALE3X3F_H

@@ -1,5 +1,6 @@
-#ifndef _VECTOR3F_H_
-#define _VECTOR3F_H_
+#pragma once
+#ifndef ES_CORE_MATH_VECTOR3F_H
+#define ES_CORE_MATH_VECTOR3F_H
 
 #include <assert.h>
 
@@ -70,4 +71,4 @@ private:
 
 };
 
-#endif
+#endif // ES_CORE_MATH_VECTOR3F_H

@@ -1,5 +1,6 @@
-#ifndef _GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H_
-#define _GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H_
+#pragma once
+#ifndef ES_APP_GUIS_GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H
+#define ES_APP_GUIS_GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H
 
 #include "components/MenuComponent.h"
 #include "GuiScreensaverOptions.h"
@@ -15,4 +16,4 @@ private:
 	void addEditableTextComponent(ComponentListRow row, const std::string label, std::shared_ptr<GuiComponent> ed, std::string value);
 };
 
-#endif // _GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H_
+#endif // ES_APP_GUIS_GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H

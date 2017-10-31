@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_SCROLLABLE_CONTAINER_H
+#define ES_CORE_COMPONENTS_SCROLLABLE_CONTAINER_H
 
 #include "GuiComponent.h"
 
@@ -26,3 +28,5 @@ private:
 	bool mAtEnd;
 	int mAutoScrollResetAccumulator;
 };
+
+#endif // ES_CORE_COMPONENTS_SCROLLABLE_CONTAINER_H

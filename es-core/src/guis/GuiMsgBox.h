@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_GUIS_GUI_MSG_BOX_H
+#define ES_CORE_GUIS_GUI_MSG_BOX_H
 
 #include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
@@ -31,3 +33,5 @@ private:
 	std::shared_ptr<ComponentGrid> mButtonGrid;
 	std::function<void()> mAcceleratorFunc;
 };
+
+#endif // ES_CORE_GUIS_GUI_MSG_BOX_H

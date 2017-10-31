@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_HELP_COMPONENT_H
+#define ES_CORE_COMPONENTS_HELP_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "HelpStyle.h"
@@ -30,3 +32,5 @@ private:
 	std::vector<HelpPrompt> mPrompts;
 	HelpStyle mStyle;
 };
+
+#endif // ES_CORE_COMPONENTS_HELP_COMPONENT_H

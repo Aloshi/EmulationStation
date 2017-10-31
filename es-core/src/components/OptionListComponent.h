@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H
+#define ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "resources/Font.h"
@@ -336,3 +338,5 @@ private:
 
 	std::vector<OptionListData> mEntries;
 };
+
+#endif // ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H

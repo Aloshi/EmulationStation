@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_UTIL_H
+#define ES_CORE_UTIL_H
 
 #include <string>
 #include <boost/filesystem.hpp>
@@ -42,3 +44,5 @@ std::vector<std::string> commaStringToVector(std::string commaString);
 
 // turn a vector of strings into a comma-separated string
 std::string vectorToCommaString(std::vector<std::string> stringVector);
+
+#endif // ES_CORE_UTIL_H

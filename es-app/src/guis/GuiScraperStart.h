@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_GUIS_GUI_SCRAPER_START_H
+#define ES_APP_GUIS_GUI_SCRAPER_START_H
 
 #include "GuiComponent.h"
 #include "SystemData.h"
@@ -36,3 +38,5 @@ private:
 
 	MenuComponent mMenu;
 };
+
+#endif // ES_APP_GUIS_GUI_SCRAPER_START_H

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_MENU_COMPONENT_H
+#define ES_CORE_COMPONENTS_MENU_COMPONENT_H
 
 #include "components/NinePatchComponent.h"
 #include "components/ComponentList.h"
@@ -53,3 +55,5 @@ private:
 	std::shared_ptr<ComponentGrid> mButtonGrid;
 	std::vector< std::shared_ptr<ButtonComponent> > mButtons;
 };
+
+#endif // ES_CORE_COMPONENTS_MENU_COMPONENT_H

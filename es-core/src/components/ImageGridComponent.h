@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
+#define ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "components/IList.h"
@@ -252,3 +254,5 @@ void ImageGridComponent<T>::updateImages()
 		i++;
 	}
 }
+
+#endif // ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H

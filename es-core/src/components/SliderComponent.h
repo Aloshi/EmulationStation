@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_SLIDER_COMPONENT_H
+#define ES_CORE_COMPONENTS_SLIDER_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "components/ImageComponent.h"
@@ -39,3 +41,5 @@ private:
 	std::shared_ptr<Font> mFont;
 	std::shared_ptr<TextCache> mValueCache;
 };
+
+#endif // ES_CORE_COMPONENTS_SLIDER_COMPONENT_H

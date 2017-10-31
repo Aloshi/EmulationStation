@@ -1,3 +1,7 @@
+#pragma once
+#ifndef ES_CORE_COMPONENTS_ANIMATED_IMAGE_COMPONENT_H
+#define ES_CORE_COMPONENTS_ANIMATED_IMAGE_COMPONENT_H
+
 #include "GuiComponent.h"
 #include "ImageComponent.h"
 
@@ -38,3 +42,5 @@ private:
 	int mFrameAccumulator;
 	int mCurrentFrame;
 };
+
+#endif // ES_CORE_COMPONENTS_ANIMATED_IMAGE_COMPONENT_H

@@ -1,5 +1,6 @@
-#ifndef _INPUTMANAGER_H_
-#define _INPUTMANAGER_H_
+#pragma once
+#ifndef ES_CORE_INPUT_MANAGER_H
+#define ES_CORE_INPUT_MANAGER_H
 
 #include <SDL.h>
 #include <vector>
@@ -57,4 +58,4 @@ public:
 	bool parseEvent(const SDL_Event& ev, Window* window);
 };
 
-#endif
+#endif // ES_CORE_INPUT_MANAGER_H

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_RESOURCES_FONT_H
+#define ES_CORE_RESOURCES_FONT_H
 
 #include <string>
 #include "platform.h"
@@ -172,3 +174,5 @@ public:
 
 	friend Font;
 };
+
+#endif // ES_CORE_RESOURCES_FONT_H

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_SYSTEM_DATA_H
+#define ES_APP_SYSTEM_DATA_H
 
 #include <vector>
 #include <string>
@@ -94,3 +96,5 @@ private:
 
 	FileData* mRootFolder;
 };
+
+#endif // ES_APP_SYSTEM_DATA_H

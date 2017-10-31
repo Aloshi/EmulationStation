@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_SCRAPERS_SCRAPER_H
+#define ES_APP_SCRAPERS_SCRAPER_H
 
 #include "MetaData.h"
 #include "SystemData.h"
@@ -154,3 +156,5 @@ std::unique_ptr<MDResolveHandle> resolveMetaDataAssets(const ScraperSearchResult
 //Will overwrite the image at [path] with the new resized one.
 //Returns true if successful, false otherwise.
 bool resizeImage(const std::string& path, int maxWidth, int maxHeight);
+
+#endif // ES_APP_SCRAPERS_SCRAPER_H

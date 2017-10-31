@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_HELP_STYLE_H
+#define ES_CORE_HELP_STYLE_H
 
 #include "math/Vector2f.h"
 #include <memory>
@@ -17,3 +19,5 @@ struct HelpStyle
 	HelpStyle(); // default values
 	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view);
 };
+
+#endif // ES_CORE_HELP_STYLE_H

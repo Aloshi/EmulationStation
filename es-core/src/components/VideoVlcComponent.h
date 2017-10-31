@@ -1,5 +1,6 @@
-#ifndef _VIDEOVLCCOMPONENT_H_
-#define _VIDEOVLCCOMPONENT_H_
+#pragma once
+#ifndef ES_CORE_COMPONENTS_VIDEO_VLC_COMPONENT_H
+#define ES_CORE_COMPONENTS_VIDEO_VLC_COMPONENT_H
 
 #include "platform.h"
 #include GLHEADER
@@ -68,4 +69,4 @@ private:
 	std::shared_ptr<TextureResource> mTexture;
 };
 
-#endif
+#endif // ES_CORE_COMPONENTS_VIDEO_VLC_COMPONENT_H

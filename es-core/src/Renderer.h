@@ -1,5 +1,6 @@
-#ifndef _RENDERER_H_
-#define _RENDERER_H_
+#pragma once
+#ifndef ES_CORE_RENDERER_H
+#define ES_CORE_RENDERER_H
 
 #include <vector>
 #include <string>
@@ -36,4 +37,4 @@ namespace Renderer
 	void drawRect(float x, float y, float w, float h, unsigned int color, GLenum blend_sfactor = GL_SRC_ALPHA, GLenum blend_dfactor = GL_ONE_MINUS_SRC_ALPHA);
 }
 
-#endif
+#endif // ES_CORE_RENDERER_H

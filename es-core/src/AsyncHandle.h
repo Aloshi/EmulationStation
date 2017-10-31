@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_ASYNC_HANDLE_H
+#define ES_CORE_ASYNC_HANDLE_H
 
 enum AsyncHandleStatus
 {
@@ -42,3 +44,5 @@ protected:
 	std::string mError;
 	AsyncHandleStatus mStatus;
 };
+
+#endif // ES_CORE_ASYNC_HANDLE_H

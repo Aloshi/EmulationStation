@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_META_DATA_H
+#define ES_APP_META_DATA_H
 
 #include "pugixml/src/pugixml.hpp"
 #include <string>
@@ -70,3 +72,5 @@ private:
 	std::map<std::string, std::string> mMap;
 	bool mWasChanged;
 };
+
+#endif // ES_APP_META_DATA_H

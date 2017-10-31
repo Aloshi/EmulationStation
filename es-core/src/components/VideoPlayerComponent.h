@@ -1,6 +1,7 @@
 #ifdef _RPI_
-#ifndef _VIDEOPLAYERCOMPONENT_H_
-#define _VIDEOPLAYERCOMPONENT_H_
+#pragma once
+#ifndef ES_CORE_COMPONENTS_VIDEO_PLAYER_COMPONENT_H
+#define ES_CORE_COMPONENTS_VIDEO_PLAYER_COMPONENT_H
 
 #include "platform.h"
 #include GLHEADER
@@ -39,6 +40,5 @@ private:
 	std::string						subtitlePath;
 };
 
-#endif
-#endif
-
+#endif // ES_CORE_COMPONENTS_VIDEO_PLAYER_COMPONENT_H
+#endif // _RPI_

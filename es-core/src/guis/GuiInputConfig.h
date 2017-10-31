@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_GUIS_GUI_INPUT_CONFIG_H
+#define ES_CORE_GUIS_GUI_INPUT_CONFIG_H
 
 #include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
@@ -50,3 +52,5 @@ private:
 
 	BusyComponent mBusyAnim;	
 };
+
+#endif // ES_CORE_GUIS_GUI_INPUT_CONFIG_H

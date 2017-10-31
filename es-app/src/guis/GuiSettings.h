@@ -1,3 +1,7 @@
+#pragma once
+#ifndef ES_APP_GUIS_GUI_SETTINGS_H
+#define ES_APP_GUIS_GUI_SETTINGS_H
+
 #include "GuiComponent.h"
 #include "components/MenuComponent.h"
 #include "SystemData.h"
@@ -22,3 +26,5 @@ private:
 	MenuComponent mMenu;
 	std::vector< std::function<void()> > mSaveFuncs;
 };
+
+#endif // ES_APP_GUIS_GUI_SETTINGS_H

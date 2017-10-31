@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_VIEWS_VIEW_CONTROLLER_H
+#define ES_APP_VIEWS_VIEW_CONTROLLER_H
 
 #include "views/gamelist/IGameListView.h"
 #include "views/SystemView.h"
@@ -102,3 +104,5 @@ private:
 	State mState;
 	std::string mCurUIMode;
 };
+
+#endif // ES_APP_VIEWS_VIEW_CONTROLLER_H

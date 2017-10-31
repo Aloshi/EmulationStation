@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_FILE_FILTER_INDEX_H
+#define ES_APP_FILE_FILTER_INDEX_H
 
 #include <map>
 #include "FileData.h"
@@ -83,3 +85,5 @@ private:
 	FileData* mRootFolder;
 
 };
+
+#endif // ES_APP_FILE_FILTER_INDEX_H

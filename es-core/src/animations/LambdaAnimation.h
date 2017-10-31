@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_ANIMATIONS_LAMBDA_ANIMATION_H
+#define ES_CORE_ANIMATIONS_LAMBDA_ANIMATION_H
 
 #include "animations/Animation.h"
 
@@ -21,3 +23,5 @@ private:
 	std::function<void(float t)> mFunction;
 	int mDuration;
 };
+
+#endif // ES_CORE_ANIMATIONS_LAMBDA_ANIMATION_H

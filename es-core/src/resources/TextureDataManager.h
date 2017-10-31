@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_RESOURCES_TEXTURE_DATA_MANAGER_H
+#define ES_CORE_RESOURCES_TEXTURE_DATA_MANAGER_H
 
 #include "resources/ResourceManager.h"
 #include "platform.h"
@@ -84,3 +86,4 @@ private:
 	TextureLoader*																			mLoader;
 };
 
+#endif // ES_CORE_RESOURCES_TEXTURE_DATA_MANAGER_H

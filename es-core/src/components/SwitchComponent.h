@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_SWITCH_COMPONENT_H
+#define ES_CORE_COMPONENTS_SWITCH_COMPONENT_H
 
 #include "GuiComponent.h"
 #include "components/ImageComponent.h"
@@ -27,3 +29,5 @@ private:
 	ImageComponent mImage;
 	bool mState;
 };
+
+#endif // ES_CORE_COMPONENTS_SWITCH_COMPONENT_H

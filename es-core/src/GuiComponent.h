@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_GUI_COMPONENT_H
+#define ES_CORE_GUI_COMPONENT_H
 
 #include "InputConfig.h"
 #include <memory>
@@ -161,3 +163,5 @@ private:
 	Transform4x4f mTransform; //Don't access this directly! Use getTransform()!
 	AnimationController* mAnimationMap[MAX_ANIMATIONS];
 };
+
+#endif // ES_CORE_GUI_COMPONENT_H

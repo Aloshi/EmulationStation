@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_COMPONENTS_TEXT_LIST_COMPONENT_H
+#define ES_APP_COMPONENTS_TEXT_LIST_COMPONENT_H
 
 #include "components/IList.h"
 #include "Renderer.h"
@@ -405,3 +407,5 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 		mSelectorImage.setImage("");
 	}
 }
+
+#endif // ES_APP_COMPONENTS_TEXT_LIST_COMPONENT_H

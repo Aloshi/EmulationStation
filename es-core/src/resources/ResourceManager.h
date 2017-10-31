@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_RESOURCES_RESOURCE_MANAGER_H
+#define ES_CORE_RESOURCES_RESOURCE_MANAGER_H
 
 #include <stddef.h>
 #include <memory>
@@ -46,3 +48,5 @@ private:
 
 	std::list< std::weak_ptr<IReloadable> > mReloadables;
 };
+
+#endif // ES_CORE_RESOURCES_RESOURCE_MANAGER_H

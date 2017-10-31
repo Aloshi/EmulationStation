@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_COLLECTION_SYSTEM_MANAGER_H
+#define ES_APP_COLLECTION_SYSTEM_MANAGER_H
 
 #include <vector>
 #include <string>
@@ -113,3 +115,5 @@ private:
 std::string getCustomCollectionConfigPath(std::string collectionName);
 std::string getCollectionsFolder();
 bool systemSort(SystemData* sys1, SystemData* sys2);
+
+#endif // ES_APP_COLLECTION_SYSTEM_MANAGER_H

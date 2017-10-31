@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_WINDOW_H
+#define ES_CORE_WInDOW_H
 
 #include "GuiComponent.h"
 #include "InputManager.h"
@@ -114,3 +116,5 @@ private:
 
 	bool mRenderedHelpPrompts;
 };
+
+#endif // ES_CORE_WINDOW_H

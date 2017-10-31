@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_RESOURCES_TEXTURE_DATA_H
+#define ES_CORE_RESOURCES_TEXTURE_DATA_H
 
 #include <string>
 #include <memory>
@@ -61,3 +63,5 @@ private:
 	bool			mScalable;
 	bool			mReloadable;
 };
+
+#endif // ES_CORE_RESOURCES_TEXTURE_DATA_H

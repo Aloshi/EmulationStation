@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_DATE_TIME_COMPONENT_H
+#define ES_CORE_COMPONENTS_DATE_TIME_COMPONENT_H
 
 #include "GuiComponent.h"
 #include <boost/date_time.hpp>
@@ -64,3 +66,5 @@ private:
 
 	bool mAutoSize;
 };
+
+#endif // ES_CORE_COMPONENTS_DATE_TIME_COMPONENT_H

@@ -1,5 +1,6 @@
-#ifndef _VECTOR2F_H_
-#define _VECTOR2F_H_
+#pragma once
+#ifndef ES_CORE_MATH_VECTOR2F_H
+#define ES_CORE_MATH_VECTOR2F_H
 
 #include <assert.h>
 
@@ -62,4 +63,4 @@ private:
 
 };
 
-#endif
+#endif // ES_CORE_MATH_VECTOR2F_H

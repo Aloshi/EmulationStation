@@ -1,5 +1,6 @@
-#ifndef _VIDEOCOMPONENT_H_
-#define _VIDEOCOMPONENT_H_
+#pragma once
+#ifndef ES_CORE_COMPONENTS_VIDEO_COMPONENT_H
+#define ES_CORE_COMPONENTS_VIDEO_COMPONENT_H
 
 #include "platform.h"
 #include GLHEADER
@@ -114,4 +115,4 @@ protected:
 	Configuration					mConfig;
 };
 
-#endif
+#endif // ES_CORE_COMPONENTS_VIDEO_COMPONENT_H

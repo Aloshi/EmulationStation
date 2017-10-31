@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ES_APP_FILE_DATA_H
+#define ES_APP_FILE_DATA_H
 
 #include <unordered_map>
 #include <string>
@@ -118,3 +120,5 @@ private:
 };
 
 FileData::SortType getSortTypeFromString(std::string desc);
+
+#endif // ES_APP_FILE_DATA_H
