@@ -1,14 +1,10 @@
 #include "guis/GuiVideoScreensaverOptions.h"
-#include "Window.h"
-#include "Settings.h"
-#include "views/ViewController.h"
 
-#include "components/SwitchComponent.h"
-#include "components/SliderComponent.h"
 #include "components/OptionListComponent.h"
-#include "components/MenuComponent.h"
+#include "components/SliderComponent.h"
+#include "components/SwitchComponent.h"
 #include "guis/GuiMsgBox.h"
-#include "PowerSaver.h"
+#include "Settings.h"
 
 GuiVideoScreensaverOptions::GuiVideoScreensaverOptions(Window* window, const char* title) : GuiScreensaverOptions(window, title)
 {

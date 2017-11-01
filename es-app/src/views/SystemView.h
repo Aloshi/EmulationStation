@@ -2,15 +2,14 @@
 #ifndef ES_APP_VIEWS_SYSTEM_VIEW_H
 #define ES_APP_VIEWS_SYSTEM_VIEW_H
 
-#include "GuiComponent.h"
-#include "components/ImageComponent.h"
-#include "components/TextComponent.h"
-#include "components/ScrollableContainer.h"
 #include "components/IList.h"
-#include "resources/TextureResource.h"
+#include "components/TextComponent.h"
+#include "resources/Font.h"
+#include "GuiComponent.h"
+#include <memory>
 
-class SystemData;
 class AnimatedImageComponent;
+class SystemData;
 
 enum CarouselType : unsigned int
 {

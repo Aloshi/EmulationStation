@@ -2,13 +2,12 @@
 #ifndef ES_CORE_COMPONENTS_IMAGE_COMPONENT_H
 #define ES_CORE_COMPONENTS_IMAGE_COMPONENT_H
 
+#include "math/Vector2i.h"
+#include "GuiComponent.h"
 #include "platform.h"
 #include GLHEADER
 
-#include "GuiComponent.h"
-#include <string>
-#include <memory>
-#include "resources/TextureResource.h"
+class TextureResource;
 
 class ImageComponent : public GuiComponent
 {

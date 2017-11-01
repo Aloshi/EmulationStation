@@ -1,10 +1,15 @@
 #include "ScraperCmdLine.h"
-#include <iostream>
-#include <vector>
-#include "SystemData.h"
-#include "Settings.h"
-#include <signal.h>
+
 #include "Log.h"
+#include "platform.h"
+#include "SystemData.h"
+#include <iostream>
+#include <signal.h>
+#if defined(__linux__)
+#include <unistd.h>
+#elif defined(WIN32)
+#include <Windows.h>
+#endif
 
 std::ostream& out = std::cout;
 

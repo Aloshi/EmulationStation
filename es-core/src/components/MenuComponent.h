@@ -2,10 +2,11 @@
 #ifndef ES_CORE_COMPONENTS_MENU_COMPONENT_H
 #define ES_CORE_COMPONENTS_MENU_COMPONENT_H
 
-#include "components/NinePatchComponent.h"
-#include "components/ComponentList.h"
-#include "components/TextComponent.h"
 #include "components/ComponentGrid.h"
+#include "components/ComponentList.h"
+#include "components/NinePatchComponent.h"
+#include "components/TextComponent.h"
+#include "Renderer.h"
 #include "Util.h"
 
 class ButtonComponent;

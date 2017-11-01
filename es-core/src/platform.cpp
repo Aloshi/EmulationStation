@@ -1,13 +1,11 @@
 #include "platform.h"
-#include <stdlib.h>
-#include <boost/filesystem.hpp>
-#include <SDL.h>
-#include <iostream>
-#include <fcntl.h>
 
+#include <boost/filesystem/path.hpp>
+#include <SDL_events.h>
 #ifdef WIN32
 #include <codecvt>
 #endif
+#include <fcntl.h>
 
 std::string getHomePath()
 {

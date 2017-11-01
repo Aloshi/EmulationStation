@@ -1,9 +1,7 @@
 #include "guis/GuiGamelistFilter.h"
-#include "guis/GuiMsgBox.h"
-#include "views/ViewController.h"
 
-#include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
+#include "SystemData.h"
 
 GuiGamelistFilter::GuiGamelistFilter(Window* window, SystemData* system) : GuiComponent(window), mMenu(window, "FILTER GAMELIST BY"), mSystem(system)
 {

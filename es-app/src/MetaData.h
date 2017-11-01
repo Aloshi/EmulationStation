@@ -2,12 +2,9 @@
 #ifndef ES_APP_META_DATA_H
 #define ES_APP_META_DATA_H
 
-#include "pugixml/src/pugixml.hpp"
-#include <string>
-#include <map>
-#include "GuiComponent.h"
-#include <boost/date_time.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/filesystem/path.hpp>
+#include <pugixml/src/pugixml.hpp>
 
 enum MetaDataType
 {

@@ -2,8 +2,8 @@
 #ifndef ES_CORE_IMAGE_IO
 #define ES_CORE_IMAGE_IO
 
+#include <stdlib.h>
 #include <vector>
-#include <FreeImage.h>
 
 class ImageIO
 {

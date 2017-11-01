@@ -1,13 +1,11 @@
 #include "guis/GuiGameScraper.h"
-#include "guis/GuiTextEditPopup.h"
-#include "components/TextComponent.h"
+
 #include "components/ButtonComponent.h"
 #include "components/MenuComponent.h"
-#include "scrapers/Scraper.h"
-#include "Renderer.h"
-#include "Log.h"
+#include "components/TextComponent.h"
+#include "FileData.h"
 #include "PowerSaver.h"
-#include "Settings.h"
+#include "SystemData.h"
 
 GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc) : GuiComponent(window),
 	mGrid(window, Vector2i(1, 7)),

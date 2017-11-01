@@ -2,16 +2,13 @@
 #ifndef ES_APP_GUIS_GUI_GAME_LIST_FILTER_H
 #define ES_APP_GUIS_GUI_GAME_LIST_FILTER_H
 
-#include "GuiComponent.h"
-#include "SystemData.h"
 #include "components/MenuComponent.h"
 #include "FileFilterIndex.h"
-#include "Log.h"
-
+#include "GuiComponent.h"
 
 template<typename T>
 class OptionListComponent;
-
+class SystemData;
 
 class GuiGamelistFilter : public GuiComponent
 {

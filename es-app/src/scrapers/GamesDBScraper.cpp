@@ -1,10 +1,12 @@
 #include "scrapers/GamesDBScraper.h"
+
+#include "FileData.h"
 #include "Log.h"
-#include "pugixml/src/pugixml.hpp"
-#include "MetaData.h"
+#include "PlatformId.h"
 #include "Settings.h"
+#include "SystemData.h"
 #include "Util.h"
-#include <boost/assign.hpp>
+#include <boost/assign/list_of.hpp>
 
 using namespace PlatformIds;
 const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::map_list_of

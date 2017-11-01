@@ -2,9 +2,7 @@
 #ifndef ES_APP_GUIS_GUI_SCREENSAVER_OPTIONS_H
 #define ES_APP_GUIS_GUI_SCREENSAVER_OPTIONS_H
 
-#include "GuiComponent.h"
 #include "components/MenuComponent.h"
-#include "SystemData.h"
 
 // This is just a really simple template for a GUI that calls some save functions when closed.
 class GuiScreensaverOptions : public GuiComponent

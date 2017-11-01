@@ -2,10 +2,9 @@
 #ifndef ES_CORE_SOUND_H
 #define ES_CORE_SOUND_H
 
-#include <string>
+#include "SDL_audio.h"
 #include <map>
 #include <memory>
-#include "SDL_audio.h"
 
 class ThemeData;
 

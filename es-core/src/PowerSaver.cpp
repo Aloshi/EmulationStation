@@ -1,7 +1,7 @@
 #include "PowerSaver.h"
+
 #include "AudioManager.h"
 #include "Settings.h"
-#include <string.h>
 
 bool PowerSaver::mState = false;
 bool PowerSaver::mRunningScreenSaver = false;

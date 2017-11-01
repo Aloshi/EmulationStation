@@ -1,12 +1,9 @@
 #include "views/gamelist/IGameListView.h"
-#include "Window.h"
-#include "guis/GuiMetaDataEd.h"
-#include "guis/GuiMenu.h"
+
 #include "guis/GuiGamelistOptions.h"
 #include "views/ViewController.h"
-#include "Settings.h"
-#include "Log.h"
 #include "Sound.h"
+#include "Window.h"
 
 bool IGameListView::input(InputConfig* config, Input input)
 {

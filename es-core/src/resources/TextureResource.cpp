@@ -1,11 +1,7 @@
 #include "resources/TextureResource.h"
-#include "Log.h"
-#include "platform.h"
-#include GLHEADER
-#include "ImageIO.h"
-#include "Renderer.h"
+
+#include "resources/TextureData.h"
 #include "Util.h"
-#include "Settings.h"
 
 TextureDataManager		TextureResource::sTextureDataManager;
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;

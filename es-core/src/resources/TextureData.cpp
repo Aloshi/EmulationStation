@@ -1,12 +1,15 @@
 #include "resources/TextureData.h"
+
 #include "resources/ResourceManager.h"
-#include "Log.h"
 #include "ImageIO.h"
-#include "string.h"
-#include "Util.h"
-#include "nanosvg/nanosvg.h"
-#include "nanosvg/nanosvgrast.h"
-#include <vector>
+#include "Log.h"
+#include "platform.h"
+#include GLHEADER
+#include <nanosvg/nanosvg.h>
+#include <nanosvg/nanosvgrast.h>
+#include <assert.h>
+#include <math.h>
+#include <string.h>
 
 #define DPI 96
 

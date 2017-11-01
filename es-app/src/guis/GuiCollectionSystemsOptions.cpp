@@ -1,13 +1,12 @@
 #include "guis/GuiCollectionSystemsOptions.h"
-#include "guis/GuiMsgBox.h"
-#include "guis/GuiTextEditPopup.h"
-#include "Settings.h"
-#include "views/ViewController.h"
 
-#include "guis/GuiSettings.h"
-#include "Util.h"
-#include "components/TextComponent.h"
 #include "components/OptionListComponent.h"
+#include "components/SwitchComponent.h"
+#include "guis/GuiSettings.h"
+#include "guis/GuiTextEditPopup.h"
+#include "views/ViewController.h"
+#include "CollectionSystemManager.h"
+#include "Window.h"
 
 GuiCollectionSystemsOptions::GuiCollectionSystemsOptions(Window* window) : GuiComponent(window), mMenu(window, "GAME COLLECTION SETTINGS")
 {

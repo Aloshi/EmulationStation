@@ -1,15 +1,13 @@
 #include "guis/GuiDetectDevice.h"
-#include "Window.h"
-#include "Renderer.h"
-#include "PowerSaver.h"
-#include "resources/Font.h"
-#include "guis/GuiInputConfig.h"
+
 #include "components/TextComponent.h"
-#include <iostream>
-#include <string>
-#include <sstream>
+#include "guis/GuiInputConfig.h"
+#include "InputManager.h"
+#include "PowerSaver.h"
+#include "Renderer.h"
 #include "Util.h"
-#include <boost/filesystem.hpp>
+#include "Window.h"
+#include <boost/filesystem/operations.hpp>
 
 #define HOLD_TIME 1000
 

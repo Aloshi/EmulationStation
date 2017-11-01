@@ -1,17 +1,11 @@
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
-#include <boost/algorithm/string/predicate.hpp>
+
 #include "AudioManager.h"
-#include "Renderer.h"
-#include "ThemeData.h"
 #include "Settings.h"
-#include "Util.h"
-#include <signal.h>
-#include <wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <boost/algorithm/string/predicate.hpp>
 #include <fcntl.h>
-#include <math.h>
+#include <wait.h>
 
 class VolumeControl
 {

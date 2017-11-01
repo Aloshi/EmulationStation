@@ -2,11 +2,8 @@
 #ifndef ES_CORE_UTIL_H
 #define ES_CORE_UTIL_H
 
-#include <string>
-#include <boost/filesystem.hpp>
-#include <boost/date_time.hpp>
-#include "math/Transform4x4f.h"
-#include "math/Vector2f.h"
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/filesystem/path.hpp>
 
 std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);

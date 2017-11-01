@@ -3,17 +3,12 @@
 #define ES_APP_COMPONENTS_TEXT_LIST_COMPONENT_H
 
 #include "components/IList.h"
-#include "Renderer.h"
-#include "resources/Font.h"
-#include "InputManager.h"
-#include "Sound.h"
 #include "Log.h"
-#include "ThemeData.h"
+#include "Sound.h"
 #include "Util.h"
-#include <vector>
-#include <string>
 #include <memory>
-#include <functional>
+
+class TextCache;
 
 struct TextListData
 {

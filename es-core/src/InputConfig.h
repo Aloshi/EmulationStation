@@ -2,12 +2,12 @@
 #ifndef ES_CORE_INPUT_CONFIG_H
 #define ES_CORE_INPUT_CONFIG_H
 
+#include <pugixml/src/pugixml.hpp>
+#include <SDL_joystick.h>
+#include <SDL_keyboard.h>
 #include <map>
-#include <vector>
-#include <string>
-#include <SDL.h>
 #include <sstream>
-#include "pugixml/src/pugixml.hpp"
+#include <vector>
 
 #define DEVICE_KEYBOARD -1
 

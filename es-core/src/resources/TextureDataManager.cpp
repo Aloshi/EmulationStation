@@ -1,4 +1,6 @@
 #include "resources/TextureDataManager.h"
+
+#include "resources/TextureData.h"
 #include "resources/TextureResource.h"
 #include "Settings.h"
 

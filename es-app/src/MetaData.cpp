@@ -1,7 +1,8 @@
 #include "MetaData.h"
-#include "components/TextComponent.h"
+
 #include "Log.h"
 #include "Util.h"
+#include <boost/date_time/posix_time/time_formatters.hpp>
 
 namespace fs = boost::filesystem;
 

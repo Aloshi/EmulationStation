@@ -2,9 +2,9 @@
 #ifndef ES_CORE_ANIMATIONS_ANIMATION_CONTROLLER_H
 #define ES_CORE_ANIMATIONS_ANIMATION_CONTROLLER_H
 
-#include <memory>
 #include <functional>
-#include "animations/Animation.h"
+
+class Animation;
 
 class AnimationController
 {

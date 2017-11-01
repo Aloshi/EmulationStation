@@ -1,4 +1,7 @@
 #include "components/AnimatedImageComponent.h"
+
+#include "components/ImageComponent.h"
+#include "resources/ResourceManager.h"
 #include "Log.h"
 
 AnimatedImageComponent::AnimatedImageComponent(Window* window) : GuiComponent(window), mEnabled(false)

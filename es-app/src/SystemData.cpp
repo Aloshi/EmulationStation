@@ -1,15 +1,18 @@
 #include "SystemData.h"
-#include "Gamelist.h"
-#include <boost/filesystem.hpp>
-#include <fstream>
-#include <stdlib.h>
-#include <SDL_joystick.h>
-#include "Renderer.h"
-#include "Log.h"
-#include "InputManager.h"
-#include <iostream>
-#include "Settings.h"
+
+#include "CollectionSystemManager.h"
+#include "FileFilterIndex.h"
 #include "FileSorts.h"
+#include "Gamelist.h"
+#include "Log.h"
+#include "platform.h"
+#include "Settings.h"
+#include "ThemeData.h"
+#include <boost/filesystem/operations.hpp>
+#include <fstream>
+#ifdef WIN32
+#include <Windows.h>
+#endif
 
 std::vector<SystemData*> SystemData::sSystemVector;
 

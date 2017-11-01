@@ -2,12 +2,10 @@
 #ifndef ES_APP_GUIS_GUI_SCRAPER_MULTI_H
 #define ES_APP_GUIS_GUI_SCRAPER_MULTI_H
 
-#include "GuiComponent.h"
-#include "components/NinePatchComponent.h"
 #include "components/ComponentGrid.h"
+#include "components/NinePatchComponent.h"
 #include "scrapers/Scraper.h"
-
-#include <queue>
+#include "GuiComponent.h"
 
 class ScraperSearchComponent;
 class TextComponent;

@@ -2,13 +2,12 @@
 #ifndef ES_CORE_INPUT_MANAGER_H
 #define ES_CORE_INPUT_MANAGER_H
 
-#include <SDL.h>
-#include <vector>
+#include <SDL_joystick.h>
 #include <map>
-#include <string>
 
 class InputConfig;
 class Window;
+union SDL_Event;
 
 //you should only ever instantiate one of these, by the way
 class InputManager

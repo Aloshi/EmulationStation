@@ -1,11 +1,9 @@
 #include "components/ImageComponent.h"
-#include <iostream>
-#include <boost/filesystem.hpp>
-#include <math.h>
+
+#include "resources/TextureResource.h"
 #include "Log.h"
 #include "Renderer.h"
 #include "ThemeData.h"
-#include "Util.h"
 
 Vector2i ImageComponent::getTextureSize() const
 {

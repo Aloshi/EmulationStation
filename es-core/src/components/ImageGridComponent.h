@@ -2,10 +2,8 @@
 #ifndef ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 #define ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 
-#include "GuiComponent.h"
 #include "components/IList.h"
-#include "components/ImageComponent.h"
-#include "Log.h"
+#include "resources/TextureResource.h"
 
 struct ImageGridData
 {

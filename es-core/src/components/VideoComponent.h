@@ -2,16 +2,12 @@
 #ifndef ES_CORE_COMPONENTS_VIDEO_COMPONENT_H
 #define ES_CORE_COMPONENTS_VIDEO_COMPONENT_H
 
-#include "platform.h"
-#include GLHEADER
-
+#include "components/ImageComponent.h"
 #include "GuiComponent.h"
-#include "ImageComponent.h"
+#include <boost/filesystem/path.hpp>
 #include <string>
-#include <memory>
-#include <SDL.h>
-#include <SDL_mutex.h>
-#include <boost/filesystem.hpp>
+
+class TextureResource;
 
 std::string	getTitlePath();
 std::string	getTitleFolder();

@@ -2,14 +2,14 @@
 #ifndef ES_CORE_RESOURCES_FONT_H
 #define ES_CORE_RESOURCES_FONT_H
 
-#include <string>
-#include "platform.h"
-#include GLHEADER
+#include "math/Vector2f.h"
+#include "math/Vector2i.h"
+#include "resources/ResourceManager.h"
+#include "Renderer.h"
+#include "ThemeData.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-#include "resources/ResourceManager.h"
-#include "ThemeData.h"
-#include "math/Vector2i.h"
+#include <vector>
 
 class TextCache;
 

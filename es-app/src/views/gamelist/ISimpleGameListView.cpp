@@ -1,11 +1,10 @@
 #include "views/gamelist/ISimpleGameListView.h"
-#include "ThemeData.h"
-#include "Window.h"
+
 #include "views/ViewController.h"
-#include "Sound.h"
-#include "Log.h"
-#include "Settings.h"
 #include "CollectionSystemManager.h"
+#include "Settings.h"
+#include "Sound.h"
+#include "SystemData.h"
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window)

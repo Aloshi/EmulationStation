@@ -2,6 +2,8 @@
 #ifndef ES_CORE_PLATFORM_H
 #define ES_CORE_PLATFORM_H
 
+#include <string>
+
 //the Makefile defines one of these:
 //#define USE_OPENGL_ES
 //#define USE_OPENGL_DESKTOP
@@ -18,8 +20,6 @@
 
 	#define GLHEADER <SDL_opengl.h>
 #endif
-
-#include <string>
 
 std::string getHomePath();
 

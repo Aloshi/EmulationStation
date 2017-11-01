@@ -3,7 +3,8 @@
 #define ES_CORE_COMPONENTS_ANIMATED_IMAGE_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "ImageComponent.h"
+
+class ImageComponent;
 
 struct AnimationFrame
 {

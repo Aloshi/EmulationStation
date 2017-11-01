@@ -2,11 +2,11 @@
 #ifndef ES_CORE_COMPONENTS_SLIDER_COMPONENT_H
 #define ES_CORE_COMPONENTS_SLIDER_COMPONENT_H
 
-#include "GuiComponent.h"
 #include "components/ImageComponent.h"
+#include "GuiComponent.h"
 
-class TextCache;
 class Font;
+class TextCache;
 
 // Used to display/edit a value between some min and max values.
 class SliderComponent : public GuiComponent

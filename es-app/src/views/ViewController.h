@@ -2,10 +2,14 @@
 #ifndef ES_APP_VIEWS_VIEW_CONTROLLER_H
 #define ES_APP_VIEWS_VIEW_CONTROLLER_H
 
-#include "views/gamelist/IGameListView.h"
-#include "views/SystemView.h"
+#include "FileData.h"
+#include "GuiComponent.h"
+#include "Renderer.h"
+#include <vector>
 
+class IGameListView;
 class SystemData;
+class SystemView;
 
 const std::vector<std::string> UIModes = { "Full", "Kiosk" };
 

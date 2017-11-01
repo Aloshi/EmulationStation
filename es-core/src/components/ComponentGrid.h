@@ -2,8 +2,8 @@
 #ifndef ES_CORE_COMPONENTS_COMPONENT_GRID_H
 #define ES_CORE_COMPONENTS_COMPONENT_GRID_H
 
-#include "GuiComponent.h"
 #include "math/Vector2i.h"
+#include "GuiComponent.h"
 
 namespace GridFlags
 {

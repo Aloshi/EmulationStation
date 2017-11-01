@@ -2,13 +2,8 @@
 #ifndef ES_CORE_COMPONENTS_ILIST_H
 #define ES_CORE_COMPONENTS_ILIST_H
 
-#include <string>
-#include <vector>
-#include <memory>
-#include "GuiComponent.h"
 #include "components/ImageComponent.h"
 #include "resources/Font.h"
-#include "Renderer.h"
 #include "PowerSaver.h"
 
 enum CursorState

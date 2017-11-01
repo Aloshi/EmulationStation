@@ -2,15 +2,13 @@
 #ifndef ES_CORE_RENDERER_H
 #define ES_CORE_RENDERER_H
 
-#include <vector>
-#include <string>
+#include "math/Vector2i.h"
 #include "platform.h"
 #include GLHEADER
-#include "math/Transform4x4f.h"
-#include "math/Vector2i.h"
 
-class GuiComponent;
 class Font;
+class GuiComponent;
+class Transform4x4f;
 
 //The Renderer provides several higher-level functions for drawing (rectangles, text, etc.).
 //Renderer_draw_gl.cpp has most of the higher-level functions and wrappers.

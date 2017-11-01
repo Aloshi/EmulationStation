@@ -2,20 +2,17 @@
 #ifndef ES_APP_COMPONENTS_SCRAPER_SEARCH_COMPONENT_H
 #define ES_APP_COMPONENTS_SCRAPER_SEARCH_COMPONENT_H
 
-#include "GuiComponent.h"
-#include "scrapers/Scraper.h"
-#include "components/ComponentGrid.h"
 #include "components/BusyComponent.h"
-#include <functional>
+#include "components/ComponentGrid.h"
+#include "scrapers/Scraper.h"
+#include "GuiComponent.h"
 
 class ComponentList;
+class DateTimeComponent;
 class ImageComponent;
 class RatingComponent;
-class TextComponent;
-class DateTimeComponent;
 class ScrollableContainer;
-class HttpReq;
-class AnimatedImageComponent;
+class TextComponent;
 
 class ScraperSearchComponent : public GuiComponent
 {

@@ -1,5 +1,10 @@
 #include "FileFilterIndex.h"
 
+#include "FileData.h"
+#include "Log.h"
+#include "Util.h"
+#include <boost/algorithm/string/trim.hpp>
+
 #define UNKNOWN_LABEL "UNKNOWN"
 #define INCLUDE_UNKNOWN false;
 
@@ -123,7 +128,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 				std::string ratingString = game->metadata.get("rating");
 				if (!ratingString.empty()) {
 					try {
-						ratingNumber = boost::math::iround(std::stod(ratingString)*5);
+						ratingNumber = (int)((std::stod(ratingString)*5)+0.5);
 						if (ratingNumber < 0)
 							ratingNumber = 0;
 

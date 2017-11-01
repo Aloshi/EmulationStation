@@ -3,13 +3,9 @@
 #define ES_APP_FILE_FILTER_INDEX_H
 
 #include <map>
-#include "FileData.h"
-#include "Log.h"
-#include <boost/math/special_functions/round.hpp>
-#include <boost/algorithm/string.hpp>
-#include <sstream>
-#include <iostream>
-#include "Util.h"
+#include <vector>
+
+class FileData;
 
 enum FilterIndexType
 {

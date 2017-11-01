@@ -2,13 +2,12 @@
 #ifndef ES_CORE_GUIS_GUI_TEXT_EDIT_POPUP_H
 #define ES_CORE_GUIS_GUI_TEXT_EDIT_POPUP_H
 
+#include "components/ComponentGrid.h"
+#include "components/NinePatchComponent.h"
 #include "GuiComponent.h"
 
-#include "components/NinePatchComponent.h"
-#include "components/ButtonComponent.h"
-#include "components/ComponentGrid.h"
-#include "components/TextEditComponent.h"
-#include "components/TextComponent.h"
+class TextComponent;
+class TextEditComponent;
 
 class GuiTextEditPopup : public GuiComponent
 {

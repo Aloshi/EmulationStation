@@ -2,7 +2,6 @@
 #ifndef ES_CORE_SETTINGS_H
 #define ES_CORE_SETTINGS_H
 
-#include <string>
 #include <map>
 
 //This is a singleton for storing settings.

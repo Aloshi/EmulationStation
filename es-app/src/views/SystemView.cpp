@@ -1,14 +1,12 @@
 #include "views/SystemView.h"
-#include "SystemData.h"
-#include "Renderer.h"
-#include "Log.h"
-#include "Window.h"
-#include "views/ViewController.h"
+
 #include "animations/LambdaAnimation.h"
-#include "PowerSaver.h"
-#include "SystemData.h"
+#include "views/ViewController.h"
+#include "Log.h"
+#include "Renderer.h"
 #include "Settings.h"
-#include "Util.h"
+#include "SystemData.h"
+#include "Window.h"
 
 // buffer values for scrolling velocity (left, stopped, right)
 const int logoBuffersLeft[] = { -5, -2, -1 };

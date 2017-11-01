@@ -4,9 +4,9 @@
 
 #include "Window.h"
 
-class VideoComponent;
 class ImageComponent;
 class Sound;
+class VideoComponent;
 
 // Screensaver implementation for main window
 class SystemScreenSaver : public Window::ScreenSaver

@@ -1,8 +1,10 @@
 #include "VolumeControl.h"
-#include "Settings.h"
 
 #include "Log.h"
-
+#include "Settings.h"
+#ifdef WIN32
+#include <mmdeviceapi.h>
+#endif
 
 #if defined(__linux__)
     #ifdef _RPI_

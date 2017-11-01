@@ -2,12 +2,14 @@
 #ifndef ES_APP_GUIS_GUI_META_DATA_ED_H
 #define ES_APP_GUIS_GUI_META_DATA_ED_H
 
-#include "GuiComponent.h"
-#include "components/MenuComponent.h"
-#include "MetaData.h"
+#include "components/ComponentGrid.h"
+#include "components/NinePatchComponent.h"
 #include "scrapers/Scraper.h"
+#include "GuiComponent.h"
+#include "MetaData.h"
 
-#include <functional>
+class ComponentList;
+class TextComponent;
 
 class GuiMetaDataEd : public GuiComponent
 {
