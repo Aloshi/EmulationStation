@@ -34,4 +34,4 @@ private:
 	std::function<void()> mDoneCallback;
 };
 
-#endif ES_CORE_GUIS_GUI_DETECT_DEVICE_H
+#endif // ES_CORE_GUIS_GUI_DETECT_DEVICE_H
