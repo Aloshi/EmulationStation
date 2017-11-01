@@ -372,7 +372,8 @@ void ViewController::update(int deltaTime)
 void ViewController::render(const Transform4x4f& parentTrans)
 {
 	Transform4x4f trans = mCamera * parentTrans;
-	Transform4x4f transInverse = trans.inverse();
+	Transform4x4f transInverse;
+	transInverse.invert(trans);
 
 	// camera position, position + size
 	Vector3f viewStart = transInverse.translation();

@@ -4,8 +4,6 @@
 #include "Renderer.h"
 #include "animations/AnimationController.h"
 #include "ThemeData.h"
-#include "math/Rotation3x3f.h"
-#include "math/Scale3x3f.h"
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255),
 	mPosition(Vector3f::Zero()), mOrigin(Vector2f::Zero()), mRotationOrigin(0.5, 0.5),
@@ -247,7 +245,7 @@ const Transform4x4f& GuiComponent::getTransform()
 	mTransform.translate(mPosition);
 	if (mScale != 1.0)
 	{
-		mTransform *= Scale3x3f(mScale);
+		mTransform.scale(mScale);
 	}
 	if (mRotation != 0.0)
 	{
@@ -259,8 +257,8 @@ const Transform4x4f& GuiComponent::getTransform()
 		if (xOff != 0.0 || yOff != 0.0)
 			mTransform.translate(Vector3f(xOff * -1, yOff * -1, 0.0f));
 
-		// apply rotation transorm
-		mTransform *= Rotation3x3f(mRotation, Vector3f::UnitZ());
+		// apply rotation transform
+		mTransform.rotateZ(mRotation);
 
 		// Tranform back to original point
 		if (xOff != 0.0 || yOff != 0.0)
