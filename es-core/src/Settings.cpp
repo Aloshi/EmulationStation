@@ -1,9 +1,10 @@
 #include "Settings.h"
+
 #include "Log.h"
-#include "pugixml/src/pugixml.hpp"
 #include "platform.h"
-#include <boost/filesystem.hpp>
-#include <boost/assign.hpp>
+#include <boost/assign/list_of.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <pugixml/src/pugixml.hpp>
 
 Settings* Settings::sInstance = NULL;
 

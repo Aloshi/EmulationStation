@@ -2,6 +2,8 @@
 #ifndef ES_CORE_ASYNC_HANDLE_H
 #define ES_CORE_ASYNC_HANDLE_H
 
+#include <string>
+
 enum AsyncHandleStatus
 {
 	ASYNC_IN_PROGRESS,

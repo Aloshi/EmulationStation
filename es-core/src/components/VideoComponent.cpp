@@ -1,13 +1,13 @@
 #include "components/VideoComponent.h"
+
+#include "resources/ResourceManager.h"
+#include "PowerSaver.h"
 #include "Renderer.h"
 #include "ThemeData.h"
-#include "Settings.h"
 #include "Util.h"
 #include "Window.h"
-#include "PowerSaver.h"
-#ifdef WIN32
-#include <codecvt>
-#endif
+#include <boost/filesystem/operations.hpp>
+#include <SDL_timer.h>
 
 #define FADE_TIME_MS	200
 

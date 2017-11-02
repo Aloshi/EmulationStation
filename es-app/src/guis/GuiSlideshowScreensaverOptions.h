@@ -2,7 +2,6 @@
 #ifndef ES_APP_GUIS_GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H
 #define ES_APP_GUIS_GUI_SLIDESHOW_SCREENSAVER_OPTIONS_H
 
-#include "components/MenuComponent.h"
 #include "GuiScreensaverOptions.h"
 
 class GuiSlideshowScreensaverOptions : public GuiScreensaverOptions

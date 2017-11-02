@@ -1,18 +1,23 @@
 #include "guis/GuiMetaDataEd.h"
-#include "Renderer.h"
-#include "Log.h"
-#include "components/AsyncReqComponent.h"
-#include "Settings.h"
-#include "views/ViewController.h"
-#include "guis/GuiGameScraper.h"
-#include "guis/GuiMsgBox.h"
-#include <boost/filesystem.hpp>
 
-#include "components/TextEditComponent.h"
+#include "components/ButtonComponent.h"
+#include "components/ComponentList.h"
 #include "components/DateTimeComponent.h"
+#include "components/MenuComponent.h"
 #include "components/RatingComponent.h"
 #include "components/SwitchComponent.h"
+#include "components/TextComponent.h"
+#include "guis/GuiGameScraper.h"
+#include "guis/GuiMsgBox.h"
 #include "guis/GuiTextEditPopup.h"
+#include "resources/Font.h"
+#include "views/ViewController.h"
+#include "CollectionSystemManager.h"
+#include "FileData.h"
+#include "FileFilterIndex.h"
+#include "SystemData.h"
+#include "Util.h"
+#include "Window.h"
 
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams,
 	const std::string& header, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window),

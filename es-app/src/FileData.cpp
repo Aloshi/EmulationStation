@@ -1,11 +1,18 @@
 #include "FileData.h"
-#include "FileSorts.h"
-#include "views/ViewController.h"
-#include "SystemData.h"
-#include "Log.h"
+
 #include "AudioManager.h"
-#include "VolumeControl.h"
+#include "CollectionSystemManager.h"
+#include "FileFilterIndex.h"
+#include "FileSorts.h"
+#include "Log.h"
+#include "platform.h"
+#include "SystemData.h"
 #include "Util.h"
+#include "VolumeControl.h"
+#include "Window.h"
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/filesystem/operations.hpp>
 
 namespace fs = boost::filesystem;
 

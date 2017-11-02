@@ -2,11 +2,10 @@
 #ifndef ES_CORE_RESOURCES_TEXTURE_DATA_H
 #define ES_CORE_RESOURCES_TEXTURE_DATA_H
 
-#include <string>
-#include <memory>
 #include "platform.h"
-#include <mutex>
 #include GLHEADER
+#include <mutex>
+#include <string>
 
 class TextureResource;
 

@@ -2,8 +2,8 @@
 #ifndef ES_CORE_COMPONENTS_TEXT_COMPONENT_H
 #define ES_CORE_COMPONENTS_TEXT_COMPONENT_H
 
-#include "GuiComponent.h"
 #include "resources/Font.h"
+#include "GuiComponent.h"
 
 class ThemeData;
 

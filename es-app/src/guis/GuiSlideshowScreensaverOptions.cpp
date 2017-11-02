@@ -1,16 +1,10 @@
 #include "guis/GuiSlideshowScreensaverOptions.h"
-#include "Window.h"
-#include "Settings.h"
-#include "views/ViewController.h"
 
-#include "components/SwitchComponent.h"
 #include "components/SliderComponent.h"
-#include "components/TextComponent.h"
-#include "components/OptionListComponent.h"
-#include "components/MenuComponent.h"
-#include "guis/GuiMsgBox.h"
+#include "components/SwitchComponent.h"
 #include "guis/GuiTextEditPopup.h"
-#include "PowerSaver.h"
+#include "Settings.h"
+#include "Window.h"
 
 GuiSlideshowScreensaverOptions::GuiSlideshowScreensaverOptions(Window* window, const char* title) : GuiScreensaverOptions(window, title)
 {

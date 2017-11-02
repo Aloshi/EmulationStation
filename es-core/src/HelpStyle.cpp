@@ -1,7 +1,7 @@
 #include "HelpStyle.h"
-#include "ThemeData.h"
-#include "Renderer.h"
+
 #include "resources/Font.h"
+#include "Renderer.h"
 
 HelpStyle::HelpStyle()
 {

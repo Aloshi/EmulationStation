@@ -1,9 +1,11 @@
 #include "GuiComponent.h"
-#include "Window.h"
+
+#include "animations/Animation.h"
+#include "animations/AnimationController.h"
 #include "Log.h"
 #include "Renderer.h"
-#include "animations/AnimationController.h"
 #include "ThemeData.h"
+#include "Window.h"
 
 GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255),
 	mPosition(Vector3f::Zero()), mOrigin(Vector2f::Zero()), mRotationOrigin(0.5, 0.5),

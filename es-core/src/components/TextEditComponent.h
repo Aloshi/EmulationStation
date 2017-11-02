@@ -2,8 +2,8 @@
 #ifndef ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H
 #define ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H
 
-#include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
+#include "GuiComponent.h"
 
 class Font;
 class TextCache;

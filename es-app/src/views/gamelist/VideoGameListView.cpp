@@ -1,14 +1,15 @@
 #include "views/gamelist/VideoGameListView.h"
-#include "views/ViewController.h"
-#include "Window.h"
+
 #include "animations/LambdaAnimation.h"
-#include <sys/stat.h>
-#include <fcntl.h>
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
-#include "Settings.h"
 #endif
 #include "components/VideoVlcComponent.h"
+#include "views/ViewController.h"
+#ifdef _RPI_
+#include "Settings.h"
+#endif
+#include <boost/filesystem/operations.hpp>
 
 VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),

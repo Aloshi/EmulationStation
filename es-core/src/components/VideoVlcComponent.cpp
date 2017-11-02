@@ -1,9 +1,11 @@
 #include "components/VideoVlcComponent.h"
-#include "Renderer.h"
-#include "ThemeData.h"
-#include "Util.h"
-#include "Settings.h"
+
+#include "resources/TextureResource.h"
 #include "PowerSaver.h"
+#include "Renderer.h"
+#include "Settings.h"
+#include <vlc/vlc.h>
+#include <SDL_mutex.h>
 
 #ifdef WIN32
 #include <codecvt>

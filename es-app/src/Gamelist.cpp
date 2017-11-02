@@ -1,10 +1,13 @@
 #include "Gamelist.h"
-#include "SystemData.h"
-#include "pugixml/src/pugixml.hpp"
-#include <boost/filesystem.hpp>
+
+#include "FileData.h"
+#include "FileFilterIndex.h"
 #include "Log.h"
 #include "Settings.h"
+#include "SystemData.h"
 #include "Util.h"
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace fs = boost::filesystem;
 

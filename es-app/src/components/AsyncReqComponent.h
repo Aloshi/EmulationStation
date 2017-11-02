@@ -3,9 +3,8 @@
 #define ES_APP_COMPONENTS_ASYNC_REQ_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "HttpReq.h"
-#include <functional>
-#include <memory>
+
+class HttpReq;
 
 /* 
 	Used to asynchronously run an HTTP request.

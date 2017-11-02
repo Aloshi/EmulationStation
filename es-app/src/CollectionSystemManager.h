@@ -2,16 +2,14 @@
 #ifndef ES_APP_COLLECTION_SYSTEM_MANAGER_H
 #define ES_APP_COLLECTION_SYSTEM_MANAGER_H
 
-#include <vector>
+#include <map>
 #include <string>
-#include "FileData.h"
-#include "Window.h"
-#include "MetaData.h"
-#include "PlatformId.h"
-#include "ThemeData.h"
-#include "FileFilterIndex.h"
-#include "SystemData.h"
-#include "views/ViewController.h"
+#include <vector>
+
+class FileData;
+class SystemData;
+class Window;
+struct SystemEnvironmentData;
 
 enum CollectionSystemType
 {

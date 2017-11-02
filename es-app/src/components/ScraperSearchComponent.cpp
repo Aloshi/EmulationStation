@@ -1,18 +1,18 @@
 #include "components/ScraperSearchComponent.h"
 
-#include "guis/GuiMsgBox.h"
-#include "components/TextComponent.h"
-#include "components/ScrollableContainer.h"
+#include "components/ComponentList.h"
+#include "components/DateTimeComponent.h"
 #include "components/ImageComponent.h"
 #include "components/RatingComponent.h"
-#include "components/DateTimeComponent.h"
-#include "components/AnimatedImageComponent.h"
-#include "components/ComponentList.h"
-#include "HttpReq.h"
-#include "Settings.h"
+#include "components/ScrollableContainer.h"
+#include "components/TextComponent.h"
+#include "guis/GuiMsgBox.h"
+#include "guis/GuiTextEditPopup.h"
+#include "resources/Font.h"
+#include "FileData.h"
 #include "Log.h"
 #include "Util.h"
-#include "guis/GuiTextEditPopup.h"
+#include "Window.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
 	mGrid(window, Vector2i(4, 3)), mBusyAnim(window), 

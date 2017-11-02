@@ -2,15 +2,15 @@
 #ifndef ES_APP_SYSTEM_DATA_H
 #define ES_APP_SYSTEM_DATA_H
 
-#include <vector>
-#include <string>
-#include "FileData.h"
-#include "Window.h"
-#include "MetaData.h"
 #include "PlatformId.h"
-#include "ThemeData.h"
-#include "FileFilterIndex.h"
-#include "CollectionSystemManager.h"
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <vector>
+
+class FileData;
+class FileFilterIndex;
+class ThemeData;
 
 struct SystemEnvironmentData
 {

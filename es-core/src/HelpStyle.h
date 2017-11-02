@@ -6,8 +6,8 @@
 #include <memory>
 #include <string>
 
-class ThemeData;
 class Font;
+class ThemeData;
 
 struct HelpStyle
 {

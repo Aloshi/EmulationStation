@@ -2,11 +2,11 @@
 #ifndef ES_APP_GUIS_GUI_FAST_SELECT_H
 #define ES_APP_GUIS_GUI_FAST_SELECT_H
 
-#include "GuiComponent.h"
-#include "views/gamelist/IGameListView.h"
-
 #include "components/NinePatchComponent.h"
 #include "components/TextComponent.h"
+#include "GuiComponent.h"
+
+class IGameListView;
 
 class GuiFastSelect : public GuiComponent
 {

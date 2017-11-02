@@ -1,6 +1,7 @@
 #include "BusyComponent.h"
 
 #include "components/AnimatedImageComponent.h"
+#include "components/ImageComponent.h"
 #include "components/TextComponent.h"
 #include "Renderer.h"
 

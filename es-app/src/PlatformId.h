@@ -2,8 +2,6 @@
 #ifndef ES_APP_PLATFORM_ID_H
 #define ES_APP_PLATFORM_ID_H
 
-#include <map>
-
 namespace PlatformIds
 {
 	enum PlatformId : unsigned int

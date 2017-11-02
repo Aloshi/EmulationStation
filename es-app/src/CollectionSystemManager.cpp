@@ -1,20 +1,20 @@
-#include "SystemData.h"
-#include "Gamelist.h"
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/xpressive/xpressive.hpp>
-#include "Util.h"
-#include <algorithm>
-#include <fstream>
-#include <stdlib.h>
-#include <SDL_joystick.h>
-#include "Renderer.h"
-#include "Log.h"
-#include "InputManager.h"
-#include <iostream>
-#include "Settings.h"
-#include "pugixml/src/pugixml.hpp"
+#include "CollectionSystemManager.h"
+
 #include "guis/GuiInfoPopup.h"
+#include "views/gamelist/IGameListView.h"
+#include "views/ViewController.h"
+#include "FileData.h"
+#include "FileFilterIndex.h"
+#include "Log.h"
+#include "Settings.h"
+#include "SystemData.h"
+#include "ThemeData.h"
+#include "Util.h"
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/xpressive/xpressive.hpp>
+#include <fstream>
+#include <unordered_map>
 
 namespace fs = boost::filesystem;
 std::string myCollectionsName = "collections";

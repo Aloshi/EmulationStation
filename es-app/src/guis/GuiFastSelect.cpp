@@ -1,5 +1,6 @@
 #include "guis/GuiFastSelect.h"
-#include "ThemeData.h"
+
+#include "views/gamelist/IGameListView.h"
 #include "FileSorts.h"
 #include "SystemData.h"
 

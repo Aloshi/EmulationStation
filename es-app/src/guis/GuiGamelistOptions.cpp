@@ -1,10 +1,14 @@
 #include "GuiGamelistOptions.h"
-#include "GuiMetaDataEd.h"
-#include "Util.h"
-#include "Settings.h"
+
+#include "guis/GuiGamelistFilter.h"
+#include "scrapers/Scraper.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
+#include "FileFilterIndex.h"
+#include "FileSorts.h"
+#include "GuiMetaDataEd.h"
+#include "SystemData.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window),
 	mSystem(system), mMenu(window, "OPTIONS"), fromPlaceholder(false), mFiltersChanged(false)

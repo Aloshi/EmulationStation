@@ -2,20 +2,19 @@
 #ifndef ES_CORE_GUI_COMPONENT_H
 #define ES_CORE_GUI_COMPONENT_H
 
-#include "InputConfig.h"
-#include <memory>
-#include <string>
-#include <functional>
-#include "HelpStyle.h"
 #include "math/Transform4x4f.h"
+#include "HelpPrompt.h"
+#include "HelpStyle.h"
+#include "InputConfig.h"
+#include <functional>
+#include <memory>
 
-class Window;
 class Animation;
 class AnimationController;
-class ThemeData;
 class Font;
-
-typedef std::pair<std::string, std::string> HelpPrompt;
+class InputConfig;
+class ThemeData;
+class Window;
 
 class GuiComponent
 {

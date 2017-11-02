@@ -2,10 +2,10 @@
 #ifndef ES_CORE_COMPONENTS_BUTTON_COMPONENT_H
 #define ES_CORE_COMPONENTS_BUTTON_COMPONENT_H
 
-#include "GuiComponent.h"
-#include <functional>
-#include "resources/Font.h"
 #include "components/NinePatchComponent.h"
+#include "GuiComponent.h"
+
+class TextCache;
 
 class ButtonComponent : public GuiComponent
 {

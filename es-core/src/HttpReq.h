@@ -3,8 +3,8 @@
 #define ES_CORE_HTTP_REQ_H
 
 #include <curl/curl.h>
-#include <sstream>
 #include <map>
+#include <sstream>
 
 /* Usage:
  * HttpReq myRequest("www.google.com", "/index.html");

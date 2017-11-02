@@ -2,13 +2,13 @@
 #ifndef ES_CORE_COMPONENTS_VIDEO_VLC_COMPONENT_H
 #define ES_CORE_COMPONENTS_VIDEO_VLC_COMPONENT_H
 
-#include "platform.h"
-#include GLHEADER
-
 #include "VideoComponent.h"
-#include <vlc/vlc.h>
-#include <vlc/libvlc_media.h>
-#include "resources/TextureResource.h"
+
+struct SDL_mutex;
+struct SDL_Surface;
+struct libvlc_instance_t;
+struct libvlc_media_t;
+struct libvlc_media_player_t;
 
 struct VideoContext {
 	SDL_Surface*		surface;

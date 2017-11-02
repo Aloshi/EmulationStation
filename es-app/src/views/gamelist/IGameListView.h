@@ -3,12 +3,11 @@
 #define ES_APP_VIEWS_GAME_LIST_IGAME_LIST_VIEW_H
 
 #include "FileData.h"
+#include "GuiComponent.h"
 #include "Renderer.h"
 
-class Window;
-class GuiComponent;
-class FileData;
 class ThemeData;
+class Window;
 
 // This is an interface that defines the minimum for a GameListView.
 class IGameListView : public GuiComponent

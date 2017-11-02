@@ -1,8 +1,9 @@
 #include "components/DateTimeComponent.h"
+
+#include "resources/Font.h"
 #include "Renderer.h"
-#include "Window.h"
-#include "Log.h"
 #include "Util.h"
+#include <boost/date_time.hpp>
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 

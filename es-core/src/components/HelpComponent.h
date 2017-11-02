@@ -5,9 +5,9 @@
 #include "GuiComponent.h"
 #include "HelpStyle.h"
 
+class ComponentGrid;
 class ImageComponent;
 class TextureResource;
-class ComponentGrid;
 
 class HelpComponent : public GuiComponent
 {

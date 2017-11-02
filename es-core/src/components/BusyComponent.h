@@ -2,9 +2,9 @@
 #ifndef ES_CORE_COMPONENTS_BUSY_COMPONENT_H
 #define ES_CORE_COMPONENTS_BUSY_COMPONENT_H
 
-#include "GuiComponent.h"
 #include "components/ComponentGrid.h"
 #include "components/NinePatchComponent.h"
+#include "GuiComponent.h"
 
 class AnimatedImageComponent;
 class TextComponent;

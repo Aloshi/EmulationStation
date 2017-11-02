@@ -1,21 +1,21 @@
 #include "SystemScreenSaver.h"
+
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
-#include "components/ImageComponent.h"
-#include "platform.h"
+#include "views/gamelist/IGameListView.h"
+#include "views/ViewController.h"
+#include "FileData.h"
+#include "FileFilterIndex.h"
+#include "Log.h"
 #include "PowerSaver.h"
 #include "Renderer.h"
-#include "Settings.h"
+#include "Sound.h"
 #include "SystemData.h"
 #include "Util.h"
-#include "Log.h"
-#include "AudioManager.h"
-#include "Sound.h"
-#include "views/ViewController.h"
-#include "views/gamelist/IGameListView.h"
-#include <stdio.h>
+#include <boost/filesystem/operations.hpp>
+#include <unordered_map>
 
 #define FADE_TIME 			300
 

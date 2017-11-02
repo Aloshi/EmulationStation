@@ -1,9 +1,9 @@
 #include "guis/GuiScreensaverOptions.h"
-#include "Window.h"
-#include "Settings.h"
-#include "views/ViewController.h"
 
-#include "components/ButtonComponent.h"
+#include "views/ViewController.h"
+#include "Settings.h"
+#include "SystemData.h"
+#include "Window.h"
 
 GuiScreensaverOptions::GuiScreensaverOptions(Window* window, const char* title) : GuiComponent(window), mMenu(window, title)
 {

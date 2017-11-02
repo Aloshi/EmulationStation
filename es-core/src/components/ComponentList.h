@@ -3,7 +3,6 @@
 #define ES_CORE_COMPONENTS_COMPONENT_LIST_H
 
 #include "IList.h"
-#include <functional>
 
 struct ComponentListElement
 {

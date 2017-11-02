@@ -1,19 +1,11 @@
 #include "guis/GuiGeneralScreensaverOptions.h"
-#include "Window.h"
-#include "Settings.h"
-#include "PowerSaver.h"
-#include "views/ViewController.h"
 
-#include "components/ButtonComponent.h"
-#include "components/SwitchComponent.h"
-#include "components/SliderComponent.h"
-#include "components/TextComponent.h"
-//#include "components/TextEditComponent.h"
 #include "components/OptionListComponent.h"
-#include "components/MenuComponent.h"
+#include "components/SliderComponent.h"
 #include "guis/GuiMsgBox.h"
-#include "guis/GuiVideoScreensaverOptions.h"
 #include "guis/GuiSlideshowScreensaverOptions.h"
+#include "guis/GuiVideoScreensaverOptions.h"
+#include "Settings.h"
 
 GuiGeneralScreensaverOptions::GuiGeneralScreensaverOptions(Window* window, const char* title) : GuiScreensaverOptions(window, title)
 {

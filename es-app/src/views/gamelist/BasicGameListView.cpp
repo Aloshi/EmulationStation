@@ -1,11 +1,10 @@
 #include "views/gamelist/BasicGameListView.h"
+
 #include "views/ViewController.h"
-#include "Renderer.h"
-#include "Window.h"
-#include "ThemeData.h"
-#include "SystemData.h"
+#include "CollectionSystemManager.h"
 #include "Settings.h"
-#include "FileFilterIndex.h"
+#include "SystemData.h"
+#include <boost/filesystem/operations.hpp>
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)

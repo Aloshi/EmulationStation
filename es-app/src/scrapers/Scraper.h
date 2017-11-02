@@ -2,15 +2,15 @@
 #ifndef ES_APP_SCRAPERS_SCRAPER_H
 #define ES_APP_SCRAPERS_SCRAPER_H
 
-#include "MetaData.h"
-#include "SystemData.h"
-#include "HttpReq.h"
 #include "AsyncHandle.h"
-#include <vector>
-#include <functional>
+#include "HttpReq.h"
+#include "MetaData.h"
 #include <queue>
 
 #define MAX_SCRAPER_RESULTS 7
+
+class FileData;
+class SystemData;
 
 struct ScraperSearchParams
 {

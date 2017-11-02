@@ -3,8 +3,9 @@
 #define ES_CORE_COMPONENTS_DATE_TIME_COMPONENT_H
 
 #include "GuiComponent.h"
-#include <boost/date_time.hpp>
-#include "resources/Font.h"
+#include <boost/date_time/posix_time/ptime.hpp>
+
+class TextCache;
 
 // Used to enter or display a specific point in time.
 class DateTimeComponent : public GuiComponent

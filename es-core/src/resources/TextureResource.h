@@ -2,17 +2,14 @@
 #ifndef ES_CORE_RESOURCES_TEXTURE_RESOURCE_H
 #define ES_CORE_RESOURCES_TEXTURE_RESOURCE_H
 
-#include "resources/ResourceManager.h"
-
-#include <string>
-#include <set>
-#include <list>
-#include "platform.h"
-#include "resources/TextureData.h"
-#include "resources/TextureDataManager.h"
-#include GLHEADER
 #include "math/Vector2i.h"
 #include "math/Vector2f.h"
+#include "resources/ResourceManager.h"
+#include "resources/TextureDataManager.h"
+#include <set>
+#include <string>
+
+class TextureData;
 
 // An OpenGL texture.
 // Automatically recreates the texture with renderer deinit/reinit.

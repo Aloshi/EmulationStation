@@ -3,7 +3,10 @@
 #define ES_APP_COMPONENTS_RATING_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "resources/TextureResource.h"
+#include "platform.h"
+#include GLHEADER
+
+class TextureResource;
 
 #define NUM_RATING_STARS 5
 

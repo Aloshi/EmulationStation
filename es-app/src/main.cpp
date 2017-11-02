@@ -1,30 +1,29 @@
 //EmulationStation, a graphical front-end for ROM browsing. Created by Alec "Aloshi" Lofquist.
 //http://www.aloshi.com
 
-#include <SDL.h>
-#include <iostream>
-#include <iomanip>
-#include "Renderer.h"
-#include "views/ViewController.h"
-#include "SystemData.h"
-#include <boost/filesystem.hpp>
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
-#include "AudioManager.h"
-#include "platform.h"
-#include "Log.h"
-#include "Window.h"
-#include "SystemScreenSaver.h"
+#include "views/ViewController.h"
+#include "CollectionSystemManager.h"
 #include "EmulationStation.h"
+#include "InputManager.h"
+#include "Log.h"
+#include "platform.h"
 #include "PowerSaver.h"
-#include "Settings.h"
 #include "ScraperCmdLine.h"
-#include <sstream>
-#include <FreeImage.h>
-
+#include "Settings.h"
+#include "SystemData.h"
+#include "SystemScreenSaver.h"
+#include <boost/filesystem/operations.hpp>
+#include <SDL_events.h>
+#include <SDL_main.h>
+#include <SDL_timer.h>
+#include <iostream>
 #ifdef WIN32
 #include <Windows.h>
 #endif
+
+#include <FreeImage.h>
 
 namespace fs = boost::filesystem;
 

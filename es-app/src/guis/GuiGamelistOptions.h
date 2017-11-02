@@ -2,13 +2,13 @@
 #ifndef ES_APP_GUIS_GUI_GAME_LIST_OPTIONS_H
 #define ES_APP_GUIS_GUI_GAME_LIST_OPTIONS_H
 
-#include "GuiComponent.h"
 #include "components/MenuComponent.h"
 #include "components/OptionListComponent.h"
-#include "GuiGamelistFilter.h"
-#include "FileSorts.h"
+#include "FileData.h"
+#include "GuiComponent.h"
 
 class IGameListView;
+class SystemData;
 
 class GuiGamelistOptions : public GuiComponent
 {

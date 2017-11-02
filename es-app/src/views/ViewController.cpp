@@ -1,19 +1,18 @@
 #include "views/ViewController.h"
-#include "Log.h"
-#include "SystemData.h"
-#include "Settings.h"
-#include "PowerSaver.h"
 
-#include "views/gamelist/BasicGameListView.h"
-#include "views/gamelist/DetailedGameListView.h"
-#include "views/gamelist/VideoGameListView.h"
-#include "views/gamelist/GridGameListView.h"
-#include "guis/GuiMenu.h"
-#include "guis/GuiMsgBox.h"
+#include "animations/Animation.h"
+#include "animations/LambdaAnimation.h"
 #include "animations/LaunchAnimation.h"
 #include "animations/MoveCameraAnimation.h"
-#include "animations/LambdaAnimation.h"
-#include <SDL.h>
+#include "guis/GuiMenu.h"
+#include "views/gamelist/DetailedGameListView.h"
+#include "views/gamelist/IGameListView.h"
+#include "views/gamelist/VideoGameListView.h"
+#include "views/SystemView.h"
+#include "Log.h"
+#include "Settings.h"
+#include "SystemData.h"
+#include "Window.h"
 
 ViewController* ViewController::sInstance = NULL;
 

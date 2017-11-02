@@ -1,12 +1,8 @@
-#include "platform.h"
 #include "Renderer.h"
-#include GLHEADER
-#include <iostream>
-#include "resources/Font.h"
-#include <boost/filesystem.hpp>
+
 #include "Log.h"
+#include <math.h>
 #include <stack>
-#include "Util.h"
 
 namespace Renderer {
 	struct ClipRect {

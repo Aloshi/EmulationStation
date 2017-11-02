@@ -2,8 +2,8 @@
 #ifndef ES_APP_VIEWS_GAME_LIST_BASIC_GAME_LIST_VIEW_H
 #define ES_APP_VIEWS_GAME_LIST_BASIC_GAME_LIST_VIEW_H
 
-#include "views/gamelist/ISimpleGameListView.h"
 #include "components/TextListComponent.h"
+#include "views/gamelist/ISimpleGameListView.h"
 
 class BasicGameListView : public ISimpleGameListView
 {

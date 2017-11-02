@@ -3,14 +3,8 @@
 #define ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "resources/Font.h"
-#include "Renderer.h"
-#include "Window.h"
-#include "components/TextComponent.h"
-#include "components/ImageComponent.h"
-#include "components/MenuComponent.h"
-#include <sstream>
 #include "Log.h"
+#include "Window.h"
 
 //Used to display a list of options.
 //Can select one or multiple options.
