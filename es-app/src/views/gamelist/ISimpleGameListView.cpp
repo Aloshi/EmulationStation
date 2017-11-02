@@ -142,7 +142,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				setCursor(randomGame);
 			}
 			return true;
-		}else if (config->isMappedTo("y", input))
+		}else if (config->isMappedTo("y", input) && !(ViewController::get()->isUIModeKid()))
 		{
 			if(mRoot->getSystem()->isGameSystem())
 			{

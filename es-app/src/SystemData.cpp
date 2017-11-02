@@ -340,6 +340,33 @@ std::string SystemData::getConfigPath(bool forWrite)
 	return "/etc/emulationstation/es_systems.cfg";
 }
 
+SystemData* SystemData::getNext() const
+{
+	std::vector<SystemData*>::const_iterator it = getIterator();
+
+	do {
+		it++;
+		if (it == sSystemVector.end())
+			it = sSystemVector.begin();
+	} while ((*it)->getDisplayedGameCount() == 0); 
+	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
+
+	return *it;
+}
+
+SystemData* SystemData::getPrev() const
+{
+	auto it = getRevIterator();
+	do {
+		it++;
+		if (it == sSystemVector.rend())
+			it = sSystemVector.rbegin();
+	} while ((*it)->getDisplayedGameCount() == 0);
+	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
+
+	return *it;
+}
+
 std::string SystemData::getGamelistPath(bool forWrite) const
 {
 	fs::path filePath;

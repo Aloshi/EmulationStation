@@ -56,22 +56,9 @@ public:
 	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.rbegin(), sSystemVector.rend(), this); };
 	inline bool isCollection() { return mIsCollectionSystem; };
 	inline bool isGameSystem() { return mIsGameSystem; }
-	inline SystemData* getNext() const
-	{
-		auto it = getIterator();
-		it++;
-		if(it == sSystemVector.end()) it = sSystemVector.begin();
-		return *it;
-	}
-
-	inline SystemData* getPrev() const
-	{
-		auto it = getRevIterator();
-		it++;
-		if(it == sSystemVector.rend()) it = sSystemVector.rbegin();
-		return *it;
-	}
-
+	
+	SystemData* getNext() const;
+	SystemData* getPrev() const;
 	static SystemData* getRandomSystem();
 	FileData* getRandomGame();
 

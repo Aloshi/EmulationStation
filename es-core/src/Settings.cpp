@@ -14,6 +14,7 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
 	("DebugText")
+	("ForceKid")
 	("ForceKiosk")
 	("IgnoreGamelist")
 	("HideConsole")
@@ -124,6 +125,8 @@ void Settings::setDefaults()
 	mStringMap["UIMode"] = "Full";
 	mStringMap["UIMode_passkey"] = "uuddlrlrba";
 	mBoolMap["ForceKiosk"] = false;
+	mBoolMap["ForceKid"] = false;
+	mBoolMap["hideQuitMenuOnKidUI"] = false;
 }
 
 template <typename K, typename V>

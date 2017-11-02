@@ -38,7 +38,8 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	if (isFullUI)
 		addEntry("CONFIGURE INPUT", 0x777777FF, true, [this] { openConfigInput(); });
 
-	addEntry("QUIT", 0x777777FF, true, [this] {openQuitMenu(); });
+	if (!(ViewController::get()->isUIModeKid() && Settings::getInstance()->getBool("hideQuitMenuOnKidUI")))
+		addEntry("QUIT", 0x777777FF, true, [this] {openQuitMenu(); });
 
 	addChild(&mMenu);
 	addVersionInfo();
@@ -422,12 +423,11 @@ void GuiMenu::openQuitMenu()
 			s->addRow(row);
 		}
 	}
-
 	row.elements.clear();
 	row.makeAcceptInputHandler([window] {
 		window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
 			[] {
-			if(quitES("/tmp/es-sysrestart") != 0)
+			if (quitES("/tmp/es-sysrestart") != 0)
 				LOG(LogWarning) << "Restart terminated with non-zero result!";
 		}, "NO", nullptr));
 	});
@@ -455,7 +455,6 @@ void GuiMenu::addVersionInfo()
 	mVersion.setText("EMULATIONSTATION V" + strToUpper(PROGRAM_VERSION_STRING));
 	mVersion.setHorizontalAlignment(ALIGN_CENTER);
 	addChild(&mVersion);
-
 }
 
 void GuiMenu::openScreensaverOptions() {

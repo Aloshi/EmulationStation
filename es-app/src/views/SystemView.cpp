@@ -1,6 +1,7 @@
 #include "views/SystemView.h"
 
 #include "animations/LambdaAnimation.h"
+#include "guis/GuiMsgBox.h"
 #include "views/ViewController.h"
 #include "Log.h"
 #include "Renderer.h"
@@ -35,78 +36,88 @@ void SystemView::populate()
 		if(mViewNeedsReload)
 			getViewElements(theme);
 
-		Entry e;
-		e.name = (*it)->getName();
-		e.object = *it;
-
-		// make logo
-		const ThemeData::ThemeElement* logoElem = theme->getElement("system", "logo", "image");
-		if(logoElem)
+		if((*it)->getDisplayedGameCount() > 0)
 		{
-			std::string path = logoElem->get<std::string>("path");
-			std::string defaultPath = logoElem->has("default") ? logoElem->get<std::string>("default") : "";
-			if((!path.empty() && ResourceManager::getInstance()->fileExists(path))
-			   || (!defaultPath.empty() && ResourceManager::getInstance()->fileExists(defaultPath)))
+			Entry e;
+			e.name = (*it)->getName();
+			e.object = *it;
+
+			// make logo
+			const ThemeData::ThemeElement* logoElem = theme->getElement("system", "logo", "image");
+			if(logoElem)
 			{
-				ImageComponent* logo = new ImageComponent(mWindow, false, false);
-				logo->setMaxSize(mCarousel.logoSize * mCarousel.logoScale);
-				logo->applyTheme(theme, "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
-
-				e.data.logo = std::shared_ptr<GuiComponent>(logo);
+				std::string path = logoElem->get<std::string>("path");
+				std::string defaultPath = logoElem->has("default") ? logoElem->get<std::string>("default") : "";
+				if((!path.empty() && ResourceManager::getInstance()->fileExists(path))
+				   || (!defaultPath.empty() && ResourceManager::getInstance()->fileExists(defaultPath)))
+				{
+					ImageComponent* logo = new ImageComponent(mWindow, false, false);
+					logo->setMaxSize(mCarousel.logoSize * mCarousel.logoScale);
+					logo->applyTheme(theme, "system", "logo", ThemeFlags::PATH | ThemeFlags::COLOR);
+					e.data.logo = std::shared_ptr<GuiComponent>(logo);
+				}
 			}
-		}
-		if (!e.data.logo)
-		{
-			// no logo in theme; use text
-			TextComponent* text = new TextComponent(mWindow,
-				(*it)->getName(),
-				Font::get(FONT_SIZE_LARGE),
-				0x000000FF,
-				ALIGN_CENTER);
-			text->setSize(mCarousel.logoSize * mCarousel.logoScale);
-			text->applyTheme((*it)->getTheme(), "system", "logoText", ThemeFlags::FONT_PATH | ThemeFlags::FONT_SIZE | ThemeFlags::COLOR | ThemeFlags::FORCE_UPPERCASE);
-			e.data.logo = std::shared_ptr<GuiComponent>(text);
+			if (!e.data.logo)
+			{
+				// no logo in theme; use text
+				TextComponent* text = new TextComponent(mWindow,
+					(*it)->getName(),
+					Font::get(FONT_SIZE_LARGE),
+					0x000000FF,
+					ALIGN_CENTER);
+				text->setSize(mCarousel.logoSize * mCarousel.logoScale);
+				text->applyTheme((*it)->getTheme(), "system", "logoText", ThemeFlags::FONT_PATH | ThemeFlags::FONT_SIZE | ThemeFlags::COLOR | ThemeFlags::FORCE_UPPERCASE);
+				e.data.logo = std::shared_ptr<GuiComponent>(text);
+
+				if (mCarousel.type == VERTICAL || mCarousel.type == VERTICAL_WHEEL)
+					text->setHorizontalAlignment(mCarousel.logoAlignment);
+				else
+					text->setVerticalAlignment(mCarousel.logoAlignment);
+			}
 
 			if (mCarousel.type == VERTICAL || mCarousel.type == VERTICAL_WHEEL)
-				text->setHorizontalAlignment(mCarousel.logoAlignment);
-			else
-				text->setVerticalAlignment(mCarousel.logoAlignment);
-		}
+			{
+				if (mCarousel.logoAlignment == ALIGN_LEFT)
+					e.data.logo->setOrigin(0, 0.5);
+				else if (mCarousel.logoAlignment == ALIGN_RIGHT)
+					e.data.logo->setOrigin(1.0, 0.5);
+				else
+					e.data.logo->setOrigin(0.5, 0.5);
+			} else {
+				if (mCarousel.logoAlignment == ALIGN_TOP)
+					e.data.logo->setOrigin(0.5, 0);
+				else if (mCarousel.logoAlignment == ALIGN_BOTTOM)
+					e.data.logo->setOrigin(0.5, 1);
+				else
+					e.data.logo->setOrigin(0.5, 0.5);
+			}
 
-		if (mCarousel.type == VERTICAL || mCarousel.type == VERTICAL_WHEEL)
+			Vector2f denormalized = mCarousel.logoSize * e.data.logo->getOrigin();
+			e.data.logo->setPosition(denormalized.x(), denormalized.y(), 0.0);
+			// delete any existing extras
+			for (auto extra : e.data.backgroundExtras)
+				delete extra;
+			e.data.backgroundExtras.clear();
+
+			// make background extras
+			e.data.backgroundExtras = ThemeData::makeExtras((*it)->getTheme(), "system", mWindow);
+
+			// sort the extras by z-index
+			std::stable_sort(e.data.backgroundExtras.begin(), e.data.backgroundExtras.end(),  [](GuiComponent* a, GuiComponent* b) {
+				return b->getZIndex() > a->getZIndex();
+			});
+
+			this->add(e);
+		}
+	}
+	if (mEntries.size() == 0)
+	{
+		// Something is wrong, there is not a single system to show, check if UI mode is not full
+		if (!ViewController::get()->isUIModeFull())
 		{
-			if (mCarousel.logoAlignment == ALIGN_LEFT)
-				e.data.logo->setOrigin(0, 0.5);
-			else if (mCarousel.logoAlignment == ALIGN_RIGHT)
-				e.data.logo->setOrigin(1.0, 0.5);
-			else
-				e.data.logo->setOrigin(0.5, 0.5);
-		} else {
-			if (mCarousel.logoAlignment == ALIGN_TOP)
-				e.data.logo->setOrigin(0.5, 0);
-			else if (mCarousel.logoAlignment == ALIGN_BOTTOM)
-				e.data.logo->setOrigin(0.5, 1);
-			else
-				e.data.logo->setOrigin(0.5, 0.5);
+			Settings::getInstance()->setString("UIMode", "Full");
+			mWindow->pushGui(new GuiMsgBox(mWindow, "The selected UI mode has nothing to show,\n returning to UI mode: FULL", "OK", nullptr));
 		}
-
-		Vector2f denormalized = mCarousel.logoSize * e.data.logo->getOrigin();
-		e.data.logo->setPosition(denormalized.x(), denormalized.y(), 0.0);
-
-		// delete any existing extras
-		for (auto extra : e.data.backgroundExtras)
-			delete extra;
-		e.data.backgroundExtras.clear();
-
-		// make background extras
-		e.data.backgroundExtras = ThemeData::makeExtras((*it)->getTheme(), "system", mWindow);
-
-		// sort the extras by z-index
-		std::stable_sort(e.data.backgroundExtras.begin(), e.data.backgroundExtras.end(),  [](GuiComponent* a, GuiComponent* b) {
-			return b->getZIndex() > a->getZIndex();
-		});
-
-		this->add(e);
 	}
 }
 
