@@ -6,13 +6,13 @@
 #include "platform.h"
 #include "Settings.h"
 #include "SystemData.h"
-#include <boost/assign/list_of.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <FreeImage.h>
 #include <fstream>
 
-const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
-	("TheGamesDB", &thegamesdb_generate_scraper_requests);
+const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs {
+	{ "TheGamesDB", &thegamesdb_generate_scraper_requests }
+};
 
 std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params)
 {

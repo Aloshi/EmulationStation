@@ -2,7 +2,6 @@
 
 #include "Log.h"
 #include "platform.h"
-#include <boost/assign/list_of.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 
@@ -10,18 +9,19 @@ Settings* Settings::sInstance = NULL;
 
 // these values are NOT saved to es_settings.xml
 // since they're set through command-line arguments, and not the in-program settings menu
-std::vector<const char*> settings_dont_save = boost::assign::list_of
-	("Debug")
-	("DebugGrid")
-	("DebugText")
-	("ForceKid")
-	("ForceKiosk")
-	("IgnoreGamelist")
-	("HideConsole")
-	("ShowExit")
-	("SplashScreen")
-	("VSync")
-	("Windowed");
+std::vector<const char*> settings_dont_save {
+	{ "Debug" },
+	{ "DebugGrid" },
+	{ "DebugText" },
+	{ "ForceKid" },
+	{ "ForceKiosk" },
+	{ "IgnoreGamelist" },
+	{ "HideConsole" },
+	{ "ShowExit" },
+	{ "SplashScreen" },
+	{ "VSync" },
+	{ "Windowed" }
+};
 
 Settings::Settings()
 {

@@ -7,7 +7,6 @@
 #include "Log.h"
 #include "Settings.h"
 #include "Util.h"
-#include <boost/assign/list_of.hpp>
 
 #define OFFSET_X 12 // move the entire thing right by this amount (px)
 #define OFFSET_Y 12 // move the entire thing up by this amount (px)
@@ -15,18 +14,19 @@
 #define ICON_TEXT_SPACING 8 // space between [icon] and [text] (px)
 #define ENTRY_SPACING 16 // space between [text] and next [icon] (px)
 
-static const std::map<std::string, const char*> ICON_PATH_MAP = boost::assign::map_list_of
-	("up/down", ":/help/dpad_updown.svg")
-	("left/right", ":/help/dpad_leftright.svg")
-	("up/down/left/right", ":/help/dpad_all.svg")
-	("a", ":/help/button_a.svg")
-	("b", ":/help/button_b.svg")
-	("x", ":/help/button_x.svg")
-	("y", ":/help/button_y.svg")
-	("l", ":/help/button_l.svg")
-	("r", ":/help/button_r.svg")
-	("start", ":/help/button_start.svg")
-	("select", ":/help/button_select.svg");
+static const std::map<std::string, const char*> ICON_PATH_MAP {
+	{ "up/down", ":/help/dpad_updown.svg" },
+	{ "left/right", ":/help/dpad_leftright.svg" },
+	{ "up/down/left/right", ":/help/dpad_all.svg" },
+	{ "a", ":/help/button_a.svg" },
+	{ "b", ":/help/button_b.svg" },
+	{ "x", ":/help/button_x.svg" },
+	{ "y", ":/help/button_y.svg" },
+	{ "l", ":/help/button_l.svg" },
+	{ "r", ":/help/button_r.svg" },
+	{ "start", ":/help/button_start.svg" },
+	{ "select", ":/help/button_select.svg" }
+};
 
 HelpComponent::HelpComponent(Window* window) : GuiComponent(window)
 {
