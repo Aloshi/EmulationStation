@@ -77,6 +77,7 @@ private:
 	std::shared_ptr<ThemeData> mTheme;
 
 	void populateFolder(FileData* folder);
+	void indexAllGameFilters(const FileData* folder);
 	void setIsGameSystemStatus();
 
 	FileFilterIndex* mFilterIndex;

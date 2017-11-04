@@ -36,6 +36,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, Sys
 			parseGamelist(this);
 
 		mRootFolder->sort(FileSorts::SortTypes.at(0));
+
+		indexAllGameFilters(mRootFolder);
 	}
 	else
 	{
@@ -141,6 +143,20 @@ void SystemData::populateFolder(FileData* folder)
 				delete newFolder;
 			else
 				folder->addChild(newFolder);
+		}
+	}
+}
+
+void SystemData::indexAllGameFilters(const FileData* folder)
+{
+	const std::vector<FileData*>& children = folder->getChildren();
+
+	for(std::vector<FileData*>::const_iterator it = children.begin(); it != children.end(); ++it)
+	{
+		switch((*it)->getType())
+		{
+			case GAME:   { mFilterIndex->addToIndex(*it); } break;
+			case FOLDER: { indexAllGameFilters(*it);      } break;
 		}
 	}
 }
