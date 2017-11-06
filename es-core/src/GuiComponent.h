@@ -2,6 +2,7 @@
 #ifndef ES_CORE_GUI_COMPONENT_H
 #define ES_CORE_GUI_COMPONENT_H
 
+#include "math/Misc.h"
 #include "math/Transform4x4f.h"
 #include "HelpPrompt.h"
 #include "HelpStyle.h"
@@ -62,7 +63,7 @@ public:
 
 	float getRotation() const;
 	void setRotation(float rotation);
-	inline void setRotationDegrees(float rotation) { setRotation((float) (rotation * M_PI / 180)); }
+	inline void setRotationDegrees(float rotation) { setRotation((float)ES_DEG_TO_RAD(rotation)); }
 
 	float getScale() const;
 	void setScale(float scale);
