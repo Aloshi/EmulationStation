@@ -304,7 +304,8 @@ void CollectionSystemManager::deleteCollectionFiles(FileData* file)
 			if (found) {
 				sysDataIt->second.needsSave = true;
 				FileData* collectionEntry = children.at(key);
-				ViewController::get()->getGameListView(sysDataIt->second.system).get()->remove(collectionEntry, false);
+				SystemData* systemViewToUpdate = getSystemToView(sysDataIt->second.system);
+				ViewController::get()->getGameListView(systemViewToUpdate).get()->remove(collectionEntry, false);
 			}
 		}
 	}
