@@ -98,6 +98,7 @@ void SystemScreenSaver::startScreenSaver()
 			mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
 #endif
 
+			mVideoScreensaver->topWindow(true);
 			mVideoScreensaver->setOrigin(0.5f, 0.5f);
 			mVideoScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
 
