@@ -3,6 +3,7 @@
 #define ES_APP_COMPONENTS_TEXT_LIST_COMPONENT_H
 
 #include "components/IList.h"
+#include "math/Misc.h"
 #include "Log.h"
 #include "Sound.h"
 #include "Util.h"
@@ -81,11 +82,8 @@ protected:
 	virtual void onCursorChanged(const CursorState& state);
 
 private:
-	static const int MARQUEE_DELAY = 1000;
-	static const int MARQUEE_SPEED = 8;
-	static const int MARQUEE_RATE = 1;
-
 	int mMarqueeOffset;
+	int mMarqueeOffset2;
 	int mMarqueeTime;
 
 	Alignment mAlignment;
@@ -112,7 +110,8 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	IList<TextListData, T>(window), mSelectorImage(window)
 {
 	mMarqueeOffset = 0;
-	mMarqueeTime = -MARQUEE_DELAY;
+	mMarqueeOffset2 = 0;
+	mMarqueeTime = 0;
 
 	mHorizontalMargin = 0;
 	mAlignment = ALIGN_CENTER;
@@ -212,16 +211,29 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 				offset[0] = mHorizontalMargin;
 			break;
 		}
-		
-		if(mCursor == i)
-			offset[0] -= mMarqueeOffset;
-		
-		Transform4x4f drawTrans = trans;
-		drawTrans.translate(offset);
-		Renderer::setMatrix(drawTrans);
 
+		// render text
+		Transform4x4f drawTrans = trans;
+
+		// currently selected item text might be scrolling
+		if((mCursor == i) && (mMarqueeOffset > 0))
+			drawTrans.translate(offset - Vector3f(mMarqueeOffset, 0, 0));
+		else
+			drawTrans.translate(offset);
+
+		Renderer::setMatrix(drawTrans);
 		font->renderTextCache(entry.data.textCache.get());
-		
+
+		// render currently selected item text again if
+		// marquee is scrolled far enough for it to repeat
+		if((mCursor == i) && (mMarqueeOffset2 < 0))
+		{
+			drawTrans = trans;
+			drawTrans.translate(offset - Vector3f(mMarqueeOffset2, 0, 0));
+			Renderer::setMatrix(drawTrans);
+			font->renderTextCache(entry.data.textCache.get());
+		}
+
 		y += entrySize;
 	}
 
@@ -277,22 +289,37 @@ template <typename T>
 void TextListComponent<T>::update(int deltaTime)
 {
 	listUpdate(deltaTime);
+
 	if(!isScrolling() && size() > 0)
 	{
-		//if we're not scrolling and this object's text goes outside our size, marquee it!
-		const std::string& text = mEntries.at((unsigned int)mCursor).name;
+		// always reset the marquee offsets
+		mMarqueeOffset  = 0;
+		mMarqueeOffset2 = 0;
 
-		Vector2f textSize = mFont->sizeText(text);
+		// if we're not scrolling and this object's text goes outside our size, marquee it!
+		const float textLength = mFont->sizeText(mEntries.at((unsigned int)mCursor).name).x();
+		const int   limit      = mSize.x() - mHorizontalMargin * 2;
 
-		//it's long enough to marquee
-		if(textSize.x() - mMarqueeOffset > mSize.x() - 12 - mHorizontalMargin * 2)
+		if(textLength > limit)
 		{
+			// loop
+			// pixels per second ( based on nes-mini font at 1920x1080 to produce a speed of 200 )
+			const float speed        = mFont->sizeText("ABCDEFGHIJKLMNOPQRSTUVWXYZ").x() * 0.247f;
+			const int   delay        = 3000;
+			const int   scrollLength = textLength;
+			const int   returnLength = (int)(speed * 1.5);
+			const int   scrollTime   = (int)((scrollLength * 1000) / speed);
+			const int   returnTime   = (int)((returnLength * 1000) / speed);
+			const int   maxTime      = (delay + scrollTime + returnTime);
+
 			mMarqueeTime += deltaTime;
-			while(mMarqueeTime > MARQUEE_SPEED)
-			{
-				mMarqueeOffset += MARQUEE_RATE;
-				mMarqueeTime -= MARQUEE_SPEED;
-			}
+			while(mMarqueeTime > maxTime)
+				mMarqueeTime -= maxTime;
+
+			mMarqueeOffset = Math::scroll_loop(delay, scrollTime + returnTime, mMarqueeTime, scrollLength + returnLength);
+
+			if(mMarqueeOffset > (scrollLength - (limit - returnLength)))
+				mMarqueeOffset2 = mMarqueeOffset - (scrollLength + returnLength);
 		}
 	}
 
@@ -316,7 +343,8 @@ template <typename T>
 void TextListComponent<T>::onCursorChanged(const CursorState& state)
 {
 	mMarqueeOffset = 0;
-	mMarqueeTime = -MARQUEE_DELAY;
+	mMarqueeOffset2 = 0;
+	mMarqueeTime = 0;
 
 	if(mCursorChangedCallback)
 		mCursorChangedCallback(state);
