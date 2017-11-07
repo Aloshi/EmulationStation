@@ -36,14 +36,15 @@ struct ScrollTierList
 // default scroll tiers
 const ScrollTier QUICK_SCROLL_TIERS[] = {
 	{500, 500},
-	{5000, 114},
-	{0, 8}
+	{2000, 114},
+	{4000, 32},
+	{0, 16}
 };
-const ScrollTierList LIST_SCROLL_STYLE_QUICK = { 3, QUICK_SCROLL_TIERS };
+const ScrollTierList LIST_SCROLL_STYLE_QUICK = { 4, QUICK_SCROLL_TIERS };
 
 const ScrollTier SLOW_SCROLL_TIERS[] = {
 	{500, 500},
-	{0, 150}
+	{0, 200}
 };
 const ScrollTierList LIST_SCROLL_STYLE_SLOW = { 2, SLOW_SCROLL_TIERS };
 
@@ -97,6 +98,11 @@ public:
 	bool isScrolling() const
 	{
 		return (mScrollVelocity != 0 && mScrollTier > 0);
+	}
+
+	int getScrollingVelocity() 
+	{
+		return mScrollVelocity;
 	}
 
 	void stopScrolling()

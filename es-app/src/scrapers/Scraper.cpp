@@ -6,11 +6,9 @@
 #include <boost/assign.hpp>
 
 #include "GamesDBScraper.h"
-#include "TheArchiveScraper.h"
 
 const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
-	("TheGamesDB", &thegamesdb_generate_scraper_requests)
-	("TheArchive", &thearchive_generate_scraper_requests);
+	("TheGamesDB", &thegamesdb_generate_scraper_requests);
 
 std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params)
 {
@@ -43,7 +41,7 @@ void ScraperSearchHandle::update()
 	if(mStatus == ASYNC_DONE)
 		return;
 
-	while(!mRequestQueue.empty())
+	if(!mRequestQueue.empty())
 	{
 		auto& req = mRequestQueue.front();
 		AsyncHandleStatus status = req->status();
@@ -64,7 +62,6 @@ void ScraperSearchHandle::update()
 		if(status == ASYNC_DONE)
 		{
 			mRequestQueue.pop();
-			continue;
 		}
 
 		// status == ASYNC_IN_PROGRESS

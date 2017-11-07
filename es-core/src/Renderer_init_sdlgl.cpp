@@ -36,6 +36,9 @@ namespace Renderer
 			return false;
 		}
 
+		//hide mouse cursor early
+		initialCursorState = SDL_ShowCursor(0) == 1;
+
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -108,9 +111,6 @@ namespace Renderer
 				LOG(LogWarning) << "Tried to enable vsync, but failed! (" << SDL_GetError() << ")";
 		}
 
-		//hide mouse cursor
-		initialCursorState = SDL_ShowCursor(0) == 1;
-
 		return true;
 	}
 
@@ -151,7 +151,7 @@ namespace Renderer
 		glMatrixMode(GL_PROJECTION);
 		glOrtho(0, display_width, display_height, 0, -1.0, 1.0);
 		glMatrixMode(GL_MODELVIEW);
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 		return true;
 	}

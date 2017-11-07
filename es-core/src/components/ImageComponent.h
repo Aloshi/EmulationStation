@@ -12,7 +12,7 @@
 class ImageComponent : public GuiComponent
 {
 public:
-	ImageComponent(Window* window);
+	ImageComponent(Window* window, bool forceLoad = false, bool dynamic = true);
 	virtual ~ImageComponent();
 
 	//Loads the image at the given filepath. Will tile if tile is true (retrieves texture as tiling, creates vertices accordingly).
@@ -24,10 +24,6 @@ public:
 
 	void onSizeChanged() override;
 	void setOpacity(unsigned char opacity) override;
-
-	//Sets the origin as a percentage of this image (e.g. (0, 0) is top left, (0.5, 0.5) is the center)
-	void setOrigin(float originX, float originY);
-	inline void setOrigin(Eigen::Vector2f origin) { setOrigin(origin.x(), origin.y()); }
 
 	// Resize the image to fit this size. If one axis is zero, scale that axis to maintain aspect ratio.
 	// If both are non-zero, potentially break the aspect ratio.  If both are zero, no resizing.
@@ -51,9 +47,6 @@ public:
 	// Returns the size of the current texture, or (0, 0) if none is loaded.  May be different than drawn size (use getSize() for that).
 	Eigen::Vector2i getTextureSize() const;
 
-	// Returns the center point of the image (takes origin into account).
-	Eigen::Vector2f getCenter() const;
-
 	bool hasImage();
 
 	void render(const Eigen::Affine3f& parentTrans) override;
@@ -63,7 +56,6 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 private:
 	Eigen::Vector2f mTargetSize;
-	Eigen::Vector2f mOrigin;
 
 	bool mFlipX, mFlipY, mTargetIsMax;
 
@@ -81,10 +73,15 @@ private:
 
 	void updateVertices();
 	void updateColors();
+	void fadeIn(bool textureLoaded);
 
 	unsigned int mColorShift;
 
 	std::shared_ptr<TextureResource> mTexture;
+	unsigned char			 mFadeOpacity;
+	bool					 mFading;
+	bool				     mForceLoad;
+	bool					mDynamic;
 };
 
 #endif

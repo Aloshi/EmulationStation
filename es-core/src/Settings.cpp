@@ -1,6 +1,6 @@
 #include "Settings.h"
 #include "Log.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include "platform.h"
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
@@ -13,12 +13,12 @@ std::vector<const char*> settings_dont_save = boost::assign::list_of
 	("Debug")
 	("DebugGrid")
 	("DebugText")
-	("ParseGamelistOnly")
 	("ShowExit")
 	("Windowed")
 	("VSync")
 	("HideConsole")
-	("IgnoreGamelist");
+	("IgnoreGamelist")
+	("SplashScreen");
 
 Settings::Settings()
 {
@@ -41,12 +41,14 @@ void Settings::setDefaults()
 
 	mBoolMap["BackgroundJoystickInput"] = false;
 	mBoolMap["ParseGamelistOnly"] = false;
+	mBoolMap["ShowHiddenFiles"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
 	mBoolMap["Windowed"] = false;
+	mBoolMap["SplashScreen"] = true;
 
 #ifdef _RPI_
-	// don't enable VSync by default on the Pi, since it already 
+	// don't enable VSync by default on the Pi, since it already
 	// has trouble trying to render things at 60fps in certain menus
 	mBoolMap["VSync"] = false;
 #else
@@ -59,6 +61,8 @@ void Settings::setDefaults()
 	mBoolMap["IgnoreGamelist"] = false;
 	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
+	mBoolMap["MoveCarousel"] = true;
+	mBoolMap["SaveGamelistsOnExit"] = true;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
@@ -67,11 +71,59 @@ void Settings::setDefaults()
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
+	#ifdef _RPI_
+		mIntMap["MaxVRAM"] = 80;
+	#else
+		mIntMap["MaxVRAM"] = 100;
+	#endif
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
+	mStringMap["GamelistViewStyle"] = "automatic";
+
+	mBoolMap["ScreenSaverControls"] = true;
+	mStringMap["ScreenSaverGameInfo"] = "never";
+	mBoolMap["StretchVideoOnScreenSaver"] = false;
+	mStringMap["PowerSaverMode"] = "disabled";
+
+	mIntMap["ScreenSaverSwapImageTimeout"] = 10000;
+	mBoolMap["SlideshowScreenSaverStretch"] = false;
+	mStringMap["SlideshowScreenSaverBackgroundAudioFile"] = getHomePath() + "/.emulationstation/slideshow/audio/slideshow_bg.wav";
+	mBoolMap["SlideshowScreenSaverCustomImageSource"] = false;
+	mStringMap["SlideshowScreenSaverImageDir"] = getHomePath() + "/.emulationstation/slideshow/image";
+	mStringMap["SlideshowScreenSaverImageFilter"] = ".png,.jpg";
+	mBoolMap["SlideshowScreenSaverRecurse"] = false;
+
+	// This setting only applies to raspberry pi but set it for all platforms so
+	// we don't get a warning if we encounter it on a different platform
+	mBoolMap["VideoOmxPlayer"] = false;
+	#ifdef _RPI_
+		// we're defaulting to OMX Player for full screen video on the Pi
+		mBoolMap["ScreenSaverOmxPlayer"] = true;
+	#else
+		mBoolMap["ScreenSaverOmxPlayer"] = false;
+	#endif
+
+	mIntMap["ScreenSaverSwapVideoTimeout"] = 30000;
+
+	mBoolMap["VideoAudio"] = true;
+	mBoolMap["CaptionsCompatibility"] = true;
+	// Audio out device for Video playback using OMX player.
+	mStringMap["OMXAudioDev"] = "both";
+	mStringMap["CollectionSystemsAuto"] = "";
+	mStringMap["CollectionSystemsCustom"] = "";
+	mBoolMap["SortAllSystems"] = false;
+	mBoolMap["UseCustomCollectionsSystem"] = true;
+
+	// Audio out device for volume control
+	#ifdef _RPI_
+		mStringMap["AudioDevice"] = "PCM";
+	#else
+		mStringMap["AudioDevice"] = "Master";
+	#endif
+
 }
 
 template <typename K, typename V>

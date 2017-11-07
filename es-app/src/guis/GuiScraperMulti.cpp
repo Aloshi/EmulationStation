@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "views/ViewController.h"
 #include "Gamelist.h"
+#include "PowerSaver.h"
 
 #include "components/TextComponent.h"
 #include "components/ButtonComponent.h"
@@ -12,14 +13,17 @@
 
 using namespace Eigen;
 
-GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults) : 
-	GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)), 
+GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchParams>& searches, bool approveResults) :
+	GuiComponent(window), mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5)),
 	mSearchQueue(searches)
 {
 	assert(mSearchQueue.size());
 
 	addChild(&mBackground);
 	addChild(&mGrid);
+
+	PowerSaver::pause();
+	mIsProcessing = true;
 
 	mTotalGames = mSearchQueue.size();
 	mCurrentGame = 0;
@@ -36,7 +40,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	mSubtitle = std::make_shared<TextComponent>(mWindow, "subtitle text", Font::get(FONT_SIZE_SMALL), 0x888888FF, ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle, Vector2i(0, 2), false, true);
 
-	mSearchComp = std::make_shared<ScraperSearchComponent>(mWindow, 
+	mSearchComp = std::make_shared<ScraperSearchComponent>(mWindow,
 		approveResults ? ScraperSearchComponent::ALWAYS_ACCEPT_MATCHING_CRC : ScraperSearchComponent::ALWAYS_ACCEPT_FIRST_RESULT);
 	mSearchComp->setAcceptCallback(std::bind(&GuiScraperMulti::acceptResult, this, std::placeholders::_1));
 	mSearchComp->setSkipCallback(std::bind(&GuiScraperMulti::skip, this));
@@ -47,9 +51,9 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 
 	if(approveResults)
 	{
-		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "search", [&] { 
-			mSearchComp->openInputScreen(mSearchQueue.front()); 
-			mGrid.resetCursor(); 
+		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "INPUT", "search", [&] {
+			mSearchComp->openInputScreen(mSearchQueue.front());
+			mGrid.resetCursor();
 		}));
 
 		buttons.push_back(std::make_shared<ButtonComponent>(mWindow, "SKIP", "skip", [&] {
@@ -141,8 +145,11 @@ void GuiScraperMulti::finish()
 			ss << "\n" << mTotalSkipped << " GAME" << ((mTotalSkipped > 1) ? "S" : "") << " SKIPPED.";
 	}
 
-	mWindow->pushGui(new GuiMsgBox(mWindow, ss.str(), 
+	mWindow->pushGui(new GuiMsgBox(mWindow, ss.str(),
 		"OK", [&] { delete this; }));
+
+	mIsProcessing = false;
+	PowerSaver::resume();
 }
 
 std::vector<HelpPrompt> GuiScraperMulti::getHelpPrompts()

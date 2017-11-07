@@ -6,24 +6,18 @@
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
-#include "resources/SVGResource.h"
 
 Eigen::Vector2i ImageComponent::getTextureSize() const
 {
 	if(mTexture)
 		return mTexture->getSize();
 	else
-		return Eigen::Vector2i(0, 0);
+		return Eigen::Vector2i::Zero();
 }
 
-Eigen::Vector2f ImageComponent::getCenter() const
-{
-	return Eigen::Vector2f(mPosition.x() - (getSize().x() * mOrigin.x()) + getSize().x() / 2, 
-		mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
-}
-
-ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
+ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
+	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0.0f), mFading(false)
 {
 	updateColors();
 }
@@ -37,9 +31,7 @@ void ImageComponent::resize()
 	if(!mTexture)
 		return;
 
-	SVGResource* svg = dynamic_cast<SVGResource*>(mTexture.get());
-
-	const Eigen::Vector2f textureSize = svg ? svg->getSourceImageSize() : Eigen::Vector2f((float)mTexture->getSize().x(), (float)mTexture->getSize().y());
+	const Eigen::Vector2f textureSize = mTexture->getSourceImageSize();
 	if(textureSize.isZero())
 		return;
 
@@ -90,12 +82,8 @@ void ImageComponent::resize()
 			}
 		}
 	}
-
-	if(svg)
-	{
-		// mSize.y() should already be rounded
-		svg->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
-	}
+	// mSize.y() should already be rounded
+	mTexture->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
 
 	onSizeChanged();
 }
@@ -110,7 +98,7 @@ void ImageComponent::setImage(std::string path, bool tile)
 	if(path.empty() || !ResourceManager::getInstance()->fileExists(path))
 		mTexture.reset();
 	else
-		mTexture = TextureResource::get(path, tile);
+		mTexture = TextureResource::get(path, tile, mForceLoad, mDynamic);
 
 	resize();
 }
@@ -129,12 +117,6 @@ void ImageComponent::setImage(const std::shared_ptr<TextureResource>& texture)
 {
 	mTexture = texture;
 	resize();
-}
-
-void ImageComponent::setOrigin(float originX, float originY)
-{
-	mOrigin << originX, originY;
-	updateVertices();
 }
 
 void ImageComponent::setResize(float width, float height)
@@ -166,6 +148,9 @@ void ImageComponent::setFlipY(bool flip)
 void ImageComponent::setColorShift(unsigned int color)
 {
 	mColorShift = color;
+	// Grab the opacity from the color shift because we may need to apply it if
+	// fading textures in
+	mOpacity = color & 0xff;
 	updateColors();
 }
 
@@ -183,16 +168,8 @@ void ImageComponent::updateVertices()
 
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
-	Eigen::Vector2f topLeft(-mSize.x() * mOrigin.x(), -mSize.y() * mOrigin.y());
-	Eigen::Vector2f bottomRight(mSize.x() * (1 -mOrigin.x()), mSize.y() * (1 - mOrigin.y()));
-
-	const float width = round(bottomRight.x() - topLeft.x());
-	const float height = round(bottomRight.y() - topLeft.y());
-
-	topLeft[0] = floor(topLeft[0]);
-	topLeft[1] = floor(topLeft[1]);
-	bottomRight[0] = topLeft[0] + width;
-	bottomRight[1] = topLeft[1] + height;
+	Eigen::Vector2f topLeft(0.0, 0.0);
+	Eigen::Vector2f bottomRight(round(mSize.x()), round(mSize.y()));
 
 	mVertices[0].pos << topLeft.x(), topLeft.y();
 	mVertices[1].pos << topLeft.x(), bottomRight.y();
@@ -239,15 +216,18 @@ void ImageComponent::updateColors()
 
 void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Eigen::Affine3f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
-	
+
 	if(mTexture && mOpacity > 0)
 	{
 		if(mTexture->isInitialized())
 		{
 			// actually draw the image
-			mTexture->bind();
+			// The bind() function returns false if the texture is not currently loaded. A blank
+			// texture is bound in this case but we want to handle a fade so it doesn't just 'jump' in
+			// when it finally loads
+			fadeIn(mTexture->bind());
 
 			glEnable(GL_TEXTURE_2D);
 			glEnable(GL_BLEND);
@@ -276,6 +256,47 @@ void ImageComponent::render(const Eigen::Affine3f& parentTrans)
 	}
 
 	GuiComponent::renderChildren(trans);
+}
+
+void ImageComponent::fadeIn(bool textureLoaded)
+{
+	if (!mForceLoad)
+	{
+		if (!textureLoaded)
+		{
+			// Start the fade if this is the first time we've encountered the unloaded texture
+			if (!mFading)
+			{
+				// Start with a zero opacity and flag it as fading
+				mFadeOpacity = 0;
+				mFading = true;
+				// Set the colours to be translucent
+				mColorShift = (mColorShift >> 8 << 8) | 0;
+				updateColors();
+			}
+		}
+		else if (mFading)
+		{
+			// The texture is loaded and we need to fade it in. The fade is based on the frame rate
+			// and is 1/4 second if running at 60 frames per second although the actual value is not
+			// that important
+			int opacity = mFadeOpacity + 255 / 15;
+			// See if we've finished fading
+			if (opacity >= 255)
+			{
+				mFadeOpacity = 255;
+				mFading = false;
+			}
+			else
+			{
+				mFadeOpacity = (unsigned char)opacity;
+			}
+			// Apply the combination of the target opacity and current fade
+			float newOpacity = (float)mOpacity * ((float)mFadeOpacity / 255.0f);
+			mColorShift = (mColorShift >> 8 << 8) | (unsigned char)newOpacity;
+			updateColors();
+		}
+	}
 }
 
 bool ImageComponent::hasImage()
@@ -321,6 +342,18 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 
 	if(properties & COLOR && elem->has("color"))
 		setColorShift(elem->get<unsigned int>("color"));
+
+	if(properties & ThemeFlags::ROTATION) {
+		if(elem->has("rotation"))
+			setRotationDegrees(elem->get<float>("rotation"));
+		if(elem->has("rotationOrigin"))
+			setRotationOrigin(elem->get<Eigen::Vector2f>("rotationOrigin"));
+	}
+
+	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
+		setZIndex(elem->get<float>("zIndex"));
+	else
+		setZIndex(getDefaultZIndex());
 }
 
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()

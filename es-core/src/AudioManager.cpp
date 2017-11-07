@@ -89,7 +89,7 @@ void AudioManager::init()
 	sAudioFormat.freq = 44100;
 	sAudioFormat.format = AUDIO_S16;
 	sAudioFormat.channels = 2;
-	sAudioFormat.samples = 1024;
+	sAudioFormat.samples = 4096;
 	sAudioFormat.callback = mixAudio;
 	sAudioFormat.userdata = NULL;
 

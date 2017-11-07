@@ -14,7 +14,6 @@ public:
 
 	virtual const char* getName() const override { return "detailed"; }
 
-protected:
 	virtual void launch(FileData* game) override;
 
 private:

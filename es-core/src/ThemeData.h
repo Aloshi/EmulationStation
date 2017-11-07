@@ -8,8 +8,9 @@
 #include <string>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
+#include <boost/xpressive/xpressive.hpp>
 #include <Eigen/Dense>
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include "GuiComponent.h"
 
 template<typename T>
@@ -37,7 +38,9 @@ namespace ThemeFlags
 		TEXT = 512,
 		FORCE_UPPERCASE = 1024,
 		LINE_SPACING = 2048,
-
+		DELAY = 4096,
+		Z_INDEX = 8192,
+		ROTATION = 16384,
 		ALL = 0xFFFFFFFF
 	};
 }
@@ -69,19 +72,6 @@ ThemeException& operator<<(ThemeException& e, T appendMsg)
 	e.msg = ss.str();
 	return e;
 }
-
-class ThemeExtras : public GuiComponent
-{
-public:
-	ThemeExtras(Window* window) : GuiComponent(window) {};
-	virtual ~ThemeExtras();
-
-	// will take ownership of the components within extras (delete them in destructor or when setExtras is called again)
-	void setExtras(const std::vector<GuiComponent*>& extras);
-
-private:
-	std::vector<GuiComponent*> mExtras;
-};
 
 struct ThemeSet
 {
@@ -122,7 +112,7 @@ public:
 	ThemeData();
 
 	// throws ThemeException
-	void loadFile(const std::string& path);
+	void loadFile(std::map<std::string, std::string> sysDataMap, const std::string& path);
 
 	enum ElementPropertyType
 	{
@@ -133,6 +123,8 @@ public:
 		FLOAT,
 		BOOLEAN
 	};
+
+	bool hasView(const std::string& view);
 
 	// If expectedType is an empty string, will do no type checking.
 	const ThemeElement* getElement(const std::string& view, const std::string& element, const std::string& expectedType) const;
@@ -146,11 +138,15 @@ public:
 
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
+	static std::vector<std::string> sSupportedFeatures;
+	static std::vector<std::string> sSupportedViews;
 
 	std::deque<boost::filesystem::path> mPaths;
 	float mVersion;
 
+	void parseFeatures(const pugi::xml_node& themeRoot);
 	void parseIncludes(const pugi::xml_node& themeRoot);
+	void parseVariables(const pugi::xml_node& root);
 	void parseViews(const pugi::xml_node& themeRoot);
 	void parseView(const pugi::xml_node& viewNode, ThemeView& view);
 	void parseElement(const pugi::xml_node& elementNode, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element);

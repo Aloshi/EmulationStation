@@ -15,10 +15,13 @@ Eigen::Affine3f roundMatrix(const Eigen::Affine3f& mat);
 Eigen::Vector3f roundVector(const Eigen::Vector3f& vec);
 Eigen::Vector2f roundVector(const Eigen::Vector2f& vec);
 
+#if defined(_WIN32) && _MSC_VER < 1800
 float round(float num);
+#endif
 
 std::string getCanonicalPath(const std::string& str);
 
+boost::filesystem::path removeCommonPathUsingStrings(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains);
 // example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
 boost::filesystem::path removeCommonPath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains);
 
@@ -31,3 +34,16 @@ boost::filesystem::path makeRelativePath(const boost::filesystem::path& path, co
 boost::filesystem::path resolvePath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool allowHome);
 
 boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");
+
+std::string escapePath(const boost::filesystem::path& path);
+
+std::string strreplace(std::string str, const std::string& replace, const std::string& with);
+
+// Remove (.*) and [.*] from str
+std::string removeParenthesis(const std::string& str);
+
+// split a comma-separated string into a vector
+std::vector<std::string> commaStringToVector(std::string commaString);
+
+// turn a vector of strings into a comma-separated string
+std::string vectorToCommaString(std::vector<std::string> stringVector);

@@ -10,7 +10,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGame
 	mGrid.setSize(mSize.x(), mSize.y() * 0.8f);
 	addChild(&mGrid);
 
-	populateList(root->getChildren());
+	populateList(root->getChildrenListToDisplay());
 }
 
 FileData* GridGameListView::getCursor()
@@ -22,7 +22,7 @@ void GridGameListView::setCursor(FileData* file)
 {
 	if(!mGrid.setCursor(file))
 	{
-		populateList(file->getParent()->getChildren());
+		populateList(file->getParent()->getChildrenListToDisplay());
 		mGrid.setCursor(file);
 	}
 }

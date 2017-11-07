@@ -29,3 +29,8 @@ CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
 Makefile
+
+# Eclipse
+.cproject
+.project
+.settings/

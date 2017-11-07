@@ -1,4 +1,5 @@
 #include "VolumeControl.h"
+#include "Settings.h"
 
 #include "Log.h"
 
@@ -20,7 +21,7 @@ VolumeControl::VolumeControl()
 #if defined (__APPLE__)
     #error TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
-    , mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
 #elif defined(WIN32) || defined(_WIN32)
 	, mixerHandle(nullptr), endpointVolume(nullptr)
 #endif
@@ -31,7 +32,15 @@ VolumeControl::VolumeControl()
 	originalVolume = getVolume();
 }
 
-VolumeControl::VolumeControl(const VolumeControl & right)
+VolumeControl::VolumeControl(const VolumeControl & right):
+  originalVolume(0), internalVolume(0)
+#if defined (__APPLE__)
+    #error TODO: Not implemented for MacOS yet!!!
+#elif defined(__linux__)
+	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+#elif defined(WIN32) || defined(_WIN32)
+	, mixerHandle(nullptr), endpointVolume(nullptr)
+#endif
 {
 	sInstance = right.sInstance;
 }
@@ -73,6 +82,10 @@ void VolumeControl::init()
 	//try to open mixer device
 	if (mixerHandle == nullptr)
 	{
+		#ifdef _RPI_
+		mixerName = Settings::getInstance()->getString("AudioDevice").c_str();
+		#endif
+
 		snd_mixer_selem_id_alloca(&mixerSelemId);
 		//sets simple-mixer index and name
 		snd_mixer_selem_id_set_index(mixerSelemId, mixerIndex);

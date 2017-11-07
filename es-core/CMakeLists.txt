@@ -11,6 +11,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Log.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/platform.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/PowerSaver.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Sound.h
@@ -42,6 +43,9 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoPlayerComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoVlcComponent.h
 
 	# Guis
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.h
@@ -52,8 +56,9 @@ set(CORE_HEADERS
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
-	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureData.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureDataManager.h
 
 	# Embedded assets (needed by ResourceManager)
 	${emulationstation-all_SOURCE_DIR}/data/Resources.h
@@ -69,6 +74,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/InputManager.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Log.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/platform.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/PowerSaver.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_draw_gl.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Renderer_init_sdlgl.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/Settings.cpp
@@ -96,6 +102,9 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/SwitchComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/TextEditComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoPlayerComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/VideoVlcComponent.cpp
 
 	# Guis
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiDetectDevice.cpp
@@ -106,8 +115,9 @@ set(CORE_SOURCES
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/SVGResource.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureResource.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureData.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/TextureDataManager.cpp
 )
 
 set(EMBEDDED_ASSET_SOURCES
@@ -121,21 +131,27 @@ set(EMBEDDED_ASSET_SOURCES
     ${emulationstation-all_SOURCE_DIR}/data/converted/frame_png.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/scroll_gradient_png.cpp
 
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_a_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_b_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_x_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_y_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_l_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_r_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_start_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_button_select_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_up_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_down_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_left_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_right_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_updown_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_leftright_svg.cpp
-    ${emulationstation-all_SOURCE_DIR}/data/converted/help_dpad_all_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__analog_thumb_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_a_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_b_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_x_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_y_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_l_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_r_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_start_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_select_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__button_hotkey_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_up_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_down_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_left_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_right_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_updown_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_leftright_svg.cpp
+    ${emulationstation-all_SOURCE_DIR}/data/converted/help__dpad_all_svg.cpp
 
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_regular_ttf.cpp
     ${emulationstation-all_SOURCE_DIR}/data/converted/opensans_hebrew_condensed_light_ttf.cpp

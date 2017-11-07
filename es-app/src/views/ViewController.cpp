@@ -2,15 +2,18 @@
 #include "Log.h"
 #include "SystemData.h"
 #include "Settings.h"
+#include "PowerSaver.h"
 
 #include "views/gamelist/BasicGameListView.h"
 #include "views/gamelist/DetailedGameListView.h"
+#include "views/gamelist/VideoGameListView.h"
 #include "views/gamelist/GridGameListView.h"
 #include "guis/GuiMenu.h"
 #include "guis/GuiMsgBox.h"
 #include "animations/LaunchAnimation.h"
 #include "animations/MoveCameraAnimation.h"
 #include "animations/LambdaAnimation.h"
+#include <SDL.h>
 
 ViewController* ViewController::sInstance = NULL;
 
@@ -55,6 +58,12 @@ int ViewController::getSystemId(SystemData* system)
 
 void ViewController::goToSystemView(SystemData* system)
 {
+	// Tell any current view it's about to be hidden
+	if (mCurrentView)
+	{
+		mCurrentView->onHide();
+	}
+
 	mState.viewing = SYSTEM_SELECT;
 	mState.system = system;
 
@@ -63,6 +72,8 @@ void ViewController::goToSystemView(SystemData* system)
 
 	systemList->goToSystem(system, false);
 	mCurrentView = systemList;
+	mCurrentView->onShow();
+	PowerSaver::setState(true);
 
 	playViewTransition();
 }
@@ -99,21 +110,61 @@ void ViewController::goToGameList(SystemData* system)
 	mState.viewing = GAME_LIST;
 	mState.system = system;
 
+	if (mCurrentView)
+	{
+		mCurrentView->onHide();
+	}
 	mCurrentView = getGameListView(system);
+	if (mCurrentView)
+	{
+		mCurrentView->onShow();
+	}
 	playViewTransition();
+}
+
+void ViewController::goToRandomGame()
+{
+	unsigned int total = 0;
+	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	{
+		if ((*it)->isGameSystem())
+			total += (*it)->getDisplayedGameCount();
+	}
+
+	// get random number in range
+	int target = std::round(((double)std::rand() / (double)RAND_MAX) * total);
+
+	for (auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	{
+		if ((*it)->isGameSystem())
+		{
+			if ((target - (int)(*it)->getDisplayedGameCount()) >= 0)
+			{
+				target -= (int)(*it)->getDisplayedGameCount();
+			}
+			else
+			{
+				goToGameList(*it);
+				std::vector<FileData*> list = (*it)->getRootFolder()->getFilesRecursive(GAME, true);
+				getGameListView(*it)->setCursor(list.at(target));
+				return;
+			}
+		}
+	}
 }
 
 void ViewController::playViewTransition()
 {
 	Eigen::Vector3f target(Eigen::Vector3f::Identity());
-	if(mCurrentView) 
+	if(mCurrentView)
 		target = mCurrentView->getPosition();
 
 	// no need to animate, we're not going anywhere (probably goToNextGamelist() or goToPrevGamelist() when there's only 1 system)
 	if(target == -mCamera.translation() && !isAnimationPlaying(0))
 		return;
 
-	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
+	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
+	if(transition_style == "fade")
 	{
 		// fade
 		// stop whatever's currently playing, leaving mFadeOpacity wherever it is
@@ -141,10 +192,18 @@ void ViewController::playViewTransition()
 		}else{
 			advanceAnimation(0, (int)(mFadeOpacity * FADE_DURATION));
 		}
-	}else{
-		// slide
+	} else if (transition_style == "slide"){
+		// slide or simple slide
 		setAnimation(new MoveCameraAnimation(mCamera, target));
 		updateHelpPrompts(); // update help prompts immediately
+	} else {
+		// instant
+		setAnimation(new LambdaAnimation(
+			[this, target](float t)
+		{
+			this->mCamera.translation() = -target;
+		}, 1));
+		updateHelpPrompts();
 	}
 }
 
@@ -163,38 +222,59 @@ void ViewController::launch(FileData* game, Eigen::Vector3f center)
 		return;
 	}
 
+	// Hide the current view
+	if (mCurrentView)
+		mCurrentView->onHide();
+
 	Eigen::Affine3f origCamera = mCamera;
 	origCamera.translation() = -mCurrentView->getPosition();
 
 	center += mCurrentView->getPosition();
 	stopAnimation(1); // make sure the fade in isn't still playing
+	mWindow->stopInfoPopup(); // make sure we disable any existing info popup
 	mLockInput = true;
 
-	if(Settings::getInstance()->getString("TransitionStyle") == "fade")
+	std::string transition_style = Settings::getInstance()->getString("TransitionStyle");
+	if(transition_style == "fade")
 	{
 		// fade out, launch game, fade back in
 		auto fadeFunc = [this](float t) {
-			//t -= 1;
-			//mFadeOpacity = lerp<float>(0.0f, 1.0f, t*t*t + 1);
 			mFadeOpacity = lerp<float>(0.0f, 1.0f, t);
 		};
 		setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this, game, fadeFunc]
 		{
-			game->getSystem()->launchGame(mWindow, game);
-			mLockInput = false;
-			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, nullptr, true);
+			game->launchGame(mWindow);
+			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
 		});
-	}else{
+	} else if (transition_style == "slide"){
 		// move camera to zoom in on center + fade out, launch game, come back in
-		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game] 
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 1500), 0, [this, origCamera, center, game]
 		{
-			game->getSystem()->launchGame(mWindow, game);
+			game->launchGame(mWindow);
 			mCamera = origCamera;
-			mLockInput = false;
-			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, nullptr, true);
+			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
 		});
+	} else { // instant
+		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, [this, origCamera, center, game]
+		{
+			game->launchGame(mWindow);
+			mCamera = origCamera;
+			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, [this] { mLockInput = false; }, true);
+			this->onFileChanged(game, FILE_METADATA_CHANGED);
+		});
+	}
+}
+
+void ViewController::removeGameListView(SystemData* system)
+{
+	//if we already made one, return that one
+	auto exists = mGameListViews.find(system);
+	if(exists != mGameListViews.end())
+	{
+		exists->second.reset();
+		mGameListViews.erase(system);
 	}
 }
 
@@ -208,25 +288,54 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	//if we didn't, make it, remember it, and return it
 	std::shared_ptr<IGameListView> view;
 
+	bool themeHasVideoView = system->getTheme()->hasView("video");
+
 	//decide type
-	bool detailed = false;
-	std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
-	for(auto it = files.begin(); it != files.end(); it++)
+	GameListViewType selectedViewType = AUTOMATIC;
+
+	std::string viewPreference = Settings::getInstance()->getString("GamelistViewStyle");
+	if (viewPreference.compare("basic") == 0)
+		selectedViewType = BASIC;
+	if (viewPreference.compare("detailed") == 0)
+		selectedViewType = DETAILED;
+	if (viewPreference.compare("video") == 0)
+		selectedViewType = VIDEO;
+
+	if (selectedViewType == AUTOMATIC)
 	{
-		if(!(*it)->getThumbnailPath().empty())
+		std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
+		for (auto it = files.begin(); it != files.end(); it++)
 		{
-			detailed = true;
-			break;
+			if (themeHasVideoView && !(*it)->getVideoPath().empty())
+			{
+				selectedViewType = VIDEO;
+				break;
+			}
+			else if (!(*it)->getThumbnailPath().empty())
+			{
+				selectedViewType = DETAILED;
+				// Don't break out in case any subsequent files have video
+			}
 		}
 	}
-		
-	if(detailed)
-		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
-	else
-		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
-		
-	// uncomment for experimental "image grid" view
-	//view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
+
+	// Create the view
+	switch (selectedViewType)
+	{
+		case VIDEO:
+			view = std::shared_ptr<IGameListView>(new VideoGameListView(mWindow, system->getRootFolder()));
+			break;
+		case DETAILED:
+			view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+			break;
+		// case GRID placeholder for future implementation.
+		//		view = std::shared_ptr<IGameListView>(new GridGameListView(mWindow, system->getRootFolder()));
+		//		break;
+		case BASIC:
+		default:
+			view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
+			break;
+	}
 
 	view->setTheme(system->getTheme());
 
@@ -292,7 +401,7 @@ void ViewController::render(const Eigen::Affine3f& parentTrans)
 
 	// draw systemview
 	getSystemListView()->render(trans);
-	
+
 	// draw gamelists
 	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
 	{
@@ -337,16 +446,22 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 
 			if(reloadTheme)
 				system->loadTheme();
-
 			std::shared_ptr<IGameListView> newView = getGameListView(system);
-			newView->setCursor(cursor);
 
+			// to counter having come from a placeholder
+			if (!cursor->isPlaceHolder()) {
+				newView->setCursor(cursor);
+			}
 			if(isCurrent)
 				mCurrentView = newView;
 
 			break;
 		}
 	}
+	// Redisplay the current view
+	if (mCurrentView)
+		mCurrentView->onShow();
+
 }
 
 void ViewController::reloadAll()
@@ -373,7 +488,9 @@ void ViewController::reloadAll()
 		mCurrentView = getGameListView(mState.getSystem());
 	}else if(mState.viewing == SYSTEM_SELECT)
 	{
-		mSystemListView->goToSystem(mState.getSystem(), false);
+		SystemData* system = mState.getSystem();
+		goToSystemView(SystemData::sSystemVector.front());
+		mSystemListView->goToSystem(system, false);
 		mCurrentView = mSystemListView;
 	}else{
 		goToSystemView(SystemData::sSystemVector.front());
@@ -387,7 +504,7 @@ std::vector<HelpPrompt> ViewController::getHelpPrompts()
 	std::vector<HelpPrompt> prompts;
 	if(!mCurrentView)
 		return prompts;
-	
+
 	prompts = mCurrentView->getHelpPrompts();
 	prompts.push_back(HelpPrompt("start", "menu"));
 

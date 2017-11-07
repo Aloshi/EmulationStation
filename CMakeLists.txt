@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
+option(GLES "Set to ON if targeting OpenGL ES" ${GLES})
+option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
+
 project(emulationstation-all)
 
 #-------------------------------------------------------------------------------
@@ -11,29 +14,30 @@ LIST(APPEND CMAKE_MODULE_PATH
 
 #-------------------------------------------------------------------------------
 #set up OpenGL system variable
-set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
-set_property(CACHE GLSystem PROPERTY STRINGS "Desktop OpenGL" "OpenGL ES")
-
+if(GLES)
+    set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
+elseif(GL)
+    set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 #-------------------------------------------------------------------------------
 #check if we're running on Raspberry Pi
-MESSAGE("Looking for bcm_host.h")
-if(EXISTS "/opt/vc/include/bcm_host.h")
+elseif(EXISTS "/opt/vc/include/bcm_host.h")
     MESSAGE("bcm_host.h found")
     set(BCMHOST found)
-    set(GLSystem "OpenGL ES")
-else()
-    MESSAGE("bcm_host.h not found")
-endif()
-
+    set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
 #-------------------------------------------------------------------------------
-#check if we're running on olinuxino
-MESSAGE("Looking for libMali.so")
-if(EXISTS "/usr/lib/libMali.so")
+#check if we're running on olinuxino / odroid / etc
+elseif(EXISTS "/usr/lib/libMali.so" OR
+    EXISTS "/usr/lib/arm-linux-gnueabihf/libMali.so" OR
+    EXISTS "/usr/lib/aarch64-linux-gnu/libMali.so" OR
+    EXISTS "/usr/lib/arm-linux-gnueabihf/mali-egl/libmali.so" OR
+    EXISTS "/usr/lib/arm-linux-gnueabihf/libmali.so")
     MESSAGE("libMali.so found")
-    set(GLSystem "OpenGL ES")
+    set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
 else()
-    MESSAGE("libMali.so not found")
-endif()
+    set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
+endif(GLES)
+
+set_property(CACHE GLSystem PROPERTY STRINGS "Desktop OpenGL" "OpenGL ES")
 
 #finding necessary packages
 #-------------------------------------------------------------------------------
@@ -45,9 +49,14 @@ endif()
 find_package(Freetype REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
+if(MSVC)
+find_package(Boost REQUIRED COMPONENTS system date_time locale)
+else()
 find_package(Boost REQUIRED COMPONENTS system filesystem date_time locale)
+endif()
 find_package(Eigen3 REQUIRED)
 find_package(CURL REQUIRED)
+find_package(VLC REQUIRED)
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -78,8 +87,13 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     endif()
 
     #set up compiler flags for GCC
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O3") #support C++11 for std::, optimize
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O3")  #-s = strip binary
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O0") #support C++11 for std::, optimize
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O0")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O2") #support C++11 for std::, optimize
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O2")  #-s = strip binary
+endif()
 endif()
 
 if(${GLSystem} MATCHES "Desktop OpenGL")
@@ -99,6 +113,7 @@ set(COMMON_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
+    ${VLC_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
 )
@@ -148,6 +163,7 @@ set(COMMON_LIBRARIES
     ${FreeImage_LIBRARIES}
 	${SDL2_LIBRARY}
     ${CURL_LIBRARIES}
+    ${VLC_LIBRARIES}
     pugixml
     nanosvg
 )

@@ -14,7 +14,9 @@
 #include "platform.h"
 #include "Log.h"
 #include "Window.h"
+#include "SystemScreenSaver.h"
 #include "EmulationStation.h"
+#include "PowerSaver.h"
 #include "Settings.h"
 #include "ScraperCmdLine.h"
 #include <sstream>
@@ -49,12 +51,20 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--ignore-gamelist") == 0)
 		{
 			Settings::getInstance()->setBool("IgnoreGamelist", true);
+#ifndef WIN32
+		}else if(strcmp(argv[i], "--show-hidden-files") == 0)
+		{
+			Settings::getInstance()->setBool("ShowHiddenFiles", true);
+#endif
 		}else if(strcmp(argv[i], "--draw-framerate") == 0)
 		{
 			Settings::getInstance()->setBool("DrawFramerate", true);
 		}else if(strcmp(argv[i], "--no-exit") == 0)
 		{
 			Settings::getInstance()->setBool("ShowExit", false);
+		}else if(strcmp(argv[i], "--no-splash") == 0)
+		{
+			Settings::getInstance()->setBool("SplashScreen", false);
 		}else if(strcmp(argv[i], "--debug") == 0)
 		{
 			Settings::getInstance()->setBool("Debug", true);
@@ -71,6 +81,10 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 		}else if(strcmp(argv[i], "--scrape") == 0)
 		{
 			scrape_cmdline = true;
+		}else if(strcmp(argv[i], "--max-vram") == 0)
+		{
+			int maxVRAM = atoi(argv[i + 1]);
+			Settings::getInstance()->setInt("MaxVRAM", maxVRAM);
 		}else if(strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
 		{
 #ifdef WIN32
@@ -81,7 +95,7 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 			AttachConsole(ATTACH_PARENT_PROCESS);
 			freopen("CONOUT$", "wb", stdout);
 #endif
-			std::cout << 
+			std::cout <<
 				"EmulationStation, a graphical front-end for ROM browsing.\n"
 				"Written by Alec \"Aloshi\" Lofquist.\n"
 				"Version " << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING << "\n\n"
@@ -91,10 +105,12 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				"--ignore-gamelist		ignore the gamelist (useful for troubleshooting)\n"
 				"--draw-framerate		display the framerate\n"
 				"--no-exit			don't show the exit option in the menu\n"
+				"--no-splash			don't show the splash screen\n"
 				"--debug				more logging, show console on Windows\n"
 				"--scrape			scrape using command line interface\n"
 				"--windowed			not fullscreen, should be used with --resolution\n"
 				"--vsync [1/on or 0/off]		turn vsync on or off (default is on)\n"
+				"--max-vram [size]		Max VRAM to use in Mb before swapping. 0 for unlimited\n"
 				"--help, -h			summon a sentient, angry tuba\n\n"
 				"More information available in README.md.\n";
 			return false; //exit after printing help
@@ -123,7 +139,7 @@ bool verifyHomeFolderExists()
 	return true;
 }
 
-// Returns true if everything is OK, 
+// Returns true if everything is OK,
 bool loadSystemConfigFile(const char** errorString)
 {
 	*errorString = NULL;
@@ -157,6 +173,8 @@ void onExit()
 
 int main(int argc, char* argv[])
 {
+	srand((unsigned int)time(NULL));
+
 	unsigned int width = 0;
 	unsigned int height = 0;
 
@@ -169,8 +187,8 @@ int main(int argc, char* argv[])
 	// only show the console on Windows if HideConsole is false
 #ifdef WIN32
 	// MSVC has a "SubSystem" option, with two primary options: "WINDOWS" and "CONSOLE".
-	// In "WINDOWS" mode, no console is automatically created for us.  This is good, 
-	// because we can choose to only create the console window if the user explicitly 
+	// In "WINDOWS" mode, no console is automatically created for us.  This is good,
+	// because we can choose to only create the console window if the user explicitly
 	// asks for it, preventing it from flashing open and then closing.
 	// In "CONSOLE" mode, a console is always automatically created for us before we
 	// enter main. In this case, we can only hide the console after the fact, which
@@ -192,7 +210,7 @@ int main(int argc, char* argv[])
 	}else{
 		// we want to hide the console
 		// if we're compiled with the "WINDOWS" subsystem, this is already done.
-		// if we're compiled with the "CONSOLE" subsystem, a console is already created; 
+		// if we're compiled with the "CONSOLE" subsystem, a console is already created;
 		// it'll flash open, but we hide it nearly immediately
 		if(GetConsoleWindow()) // should only pass in "CONSOLE" mode
 			ShowWindow(GetConsoleWindow(), SW_HIDE);
@@ -204,6 +222,7 @@ int main(int argc, char* argv[])
 		return 1;
 
 	//start the logger
+	Log::init();
 	Log::open();
 	LOG(LogInfo) << "EmulationStation - v" << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING;
 
@@ -211,7 +230,10 @@ int main(int argc, char* argv[])
 	atexit(&onExit);
 
 	Window window;
+	SystemScreenSaver screensaver(&window);
+	PowerSaver::init();
 	ViewController::init(&window);
+	CollectionSystemManager::init(&window);
 	window.pushGui(ViewController::get());
 
 	if(!scrape_cmdline)
@@ -225,8 +247,8 @@ int main(int argc, char* argv[])
 		std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
 		LOG(LogInfo) << "Checking available OpenGL extensions...";
 		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
-
-		window.renderLoadingScreen();
+		if(Settings::getInstance()->getBool("SplashScreen"))
+			window.renderLoadingScreen();
 	}
 
 	const char* errorMsg = NULL;
@@ -244,7 +266,7 @@ int main(int argc, char* argv[])
 		// we can't handle es_systems.cfg file problems inside ES itself, so display the error message then quit
 		window.pushGui(new GuiMsgBox(&window,
 			errorMsg,
-			"QUIT", [] { 
+			"QUIT", [] {
 				SDL_Event* quit = new SDL_Event();
 				quit->type = SDL_QUIT;
 				SDL_PushEvent(quit);
@@ -279,31 +301,53 @@ int main(int argc, char* argv[])
 	SDL_JoystickEventState(SDL_ENABLE);
 
 	int lastTime = SDL_GetTicks();
+	int ps_time = SDL_GetTicks();
+
 	bool running = true;
+	bool ps_standby = false;
 
 	while(running)
 	{
 		SDL_Event event;
-		while(SDL_PollEvent(&event))
+		bool ps_standby = PowerSaver::getState() && SDL_GetTicks() - ps_time > PowerSaver::getMode();
+
+		if(ps_standby ? SDL_WaitEventTimeout(&event, PowerSaver::getTimeout()) : SDL_PollEvent(&event))
 		{
-			switch(event.type)
+			do
 			{
-				case SDL_JOYHATMOTION:
-				case SDL_JOYBUTTONDOWN:
-				case SDL_JOYBUTTONUP:
-				case SDL_KEYDOWN:
-				case SDL_KEYUP:
-				case SDL_JOYAXISMOTION:
-				case SDL_TEXTINPUT:
-				case SDL_TEXTEDITING:
-				case SDL_JOYDEVICEADDED:
-				case SDL_JOYDEVICEREMOVED:
-					InputManager::getInstance()->parseEvent(event, &window);
-					break;
-				case SDL_QUIT:
-					running = false;
-					break;
-			}
+				switch(event.type)
+				{
+					case SDL_JOYHATMOTION:
+					case SDL_JOYBUTTONDOWN:
+					case SDL_JOYBUTTONUP:
+					case SDL_KEYDOWN:
+					case SDL_KEYUP:
+					case SDL_JOYAXISMOTION:
+					case SDL_TEXTINPUT:
+					case SDL_TEXTEDITING:
+					case SDL_JOYDEVICEADDED:
+					case SDL_JOYDEVICEREMOVED:
+						InputManager::getInstance()->parseEvent(event, &window);
+						break;
+					case SDL_QUIT:
+						running = false;
+						break;
+				}
+			} while(SDL_PollEvent(&event));
+
+			// triggered if exiting from SDL_WaitEvent due to event
+			if (ps_standby)
+				// show as if continuing from last event
+				lastTime = SDL_GetTicks();
+
+			// reset counter
+			ps_time = SDL_GetTicks();
+		}
+		else if (ps_standby)
+		{
+			// If exitting SDL_WaitEventTimeout due to timeout. Trail considering
+			// timeout as an event
+			ps_time = SDL_GetTicks();
 		}
 
 		if(window.isSleeping())
@@ -317,8 +361,8 @@ int main(int argc, char* argv[])
 		int deltaTime = curTime - lastTime;
 		lastTime = curTime;
 
-		// cap deltaTime at 1000
-		if(deltaTime > 1000 || deltaTime < 0)
+		// cap deltaTime if it ever goes negative
+		if(deltaTime < 0)
 			deltaTime = 1000;
 
 		window.update(deltaTime);
@@ -332,6 +376,7 @@ int main(int argc, char* argv[])
 		delete window.peekGui();
 	window.deinit();
 
+	CollectionSystemManager::deinit();
 	SystemData::deleteSystems();
 
 	LOG(LogInfo) << "EmulationStation cleanly shutting down.";

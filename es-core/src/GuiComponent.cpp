@@ -5,8 +5,9 @@
 #include "animations/AnimationController.h"
 #include "ThemeData.h"
 
-GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255), 
-	mPosition(Eigen::Vector3f::Zero()), mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity())
+GuiComponent::GuiComponent(Window* window) : mWindow(window), mParent(NULL), mOpacity(255),
+	mPosition(Eigen::Vector3f::Zero()), mOrigin(Eigen::Vector2f::Zero()), mRotationOrigin(0.5, 0.5),
+	mSize(Eigen::Vector2f::Zero()), mTransform(Eigen::Affine3f::Identity()), mIsProcessing(false)
 {
 	for(unsigned char i = 0; i < MAX_ANIMATIONS; i++)
 		mAnimationMap[i] = NULL;
@@ -75,16 +76,31 @@ Eigen::Vector3f GuiComponent::getPosition() const
 	return mPosition;
 }
 
-void GuiComponent::setPosition(const Eigen::Vector3f& offset)
-{
-	mPosition = offset;
-	onPositionChanged();
-}
-
 void GuiComponent::setPosition(float x, float y, float z)
 {
 	mPosition << x, y, z;
 	onPositionChanged();
+}
+
+Eigen::Vector2f GuiComponent::getOrigin() const
+{
+	return mOrigin;
+}
+
+void GuiComponent::setOrigin(float x, float y)
+{
+	mOrigin << x, y;
+	onOriginChanged();
+}
+
+Eigen::Vector2f GuiComponent::getRotationOrigin() const
+{
+	return mRotationOrigin;
+}
+
+void GuiComponent::setRotationOrigin(float x, float y)
+{
+	mRotationOrigin << x, y;;
 }
 
 Eigen::Vector2f GuiComponent::getSize() const
@@ -92,16 +108,56 @@ Eigen::Vector2f GuiComponent::getSize() const
 	return mSize;
 }
 
-void GuiComponent::setSize(const Eigen::Vector2f& size)
-{
-    mSize = size;
-    onSizeChanged();
-}
-
 void GuiComponent::setSize(float w, float h)
 {
 	mSize << w, h;
     onSizeChanged();
+}
+
+float GuiComponent::getRotation() const
+{
+	return mRotation;
+}
+
+void GuiComponent::setRotation(float rotation)
+{
+	mRotation = rotation;
+}
+
+float GuiComponent::getScale() const
+{
+	return mScale;
+}
+
+void GuiComponent::setScale(float scale)
+{
+	mScale = scale;
+}
+
+float GuiComponent::getZIndex() const
+{
+	return mZIndex;
+}
+
+void GuiComponent::setZIndex(float z)
+{
+	mZIndex = z;
+}
+
+float GuiComponent::getDefaultZIndex() const
+{
+	return mDefaultZIndex;
+}
+
+void GuiComponent::setDefaultZIndex(float z)
+{
+	mDefaultZIndex = z;
+}
+
+Eigen::Vector2f GuiComponent::getCenter() const
+{
+	return Eigen::Vector2f(mPosition.x() - (getSize().x() * mOrigin.x()) + getSize().x() / 2,
+						   mPosition.y() - (getSize().y() * mOrigin.y()) + getSize().y() / 2);
 }
 
 //Children stuff.
@@ -142,6 +198,13 @@ void GuiComponent::clearChildren()
 	mChildren.clear();
 }
 
+void GuiComponent::sortChildren()
+{
+	std:stable_sort(mChildren.begin(), mChildren.end(),  [](GuiComponent* a, GuiComponent* b) {
+		return b->getZIndex() > a->getZIndex();
+	});
+}
+
 unsigned int GuiComponent::getChildCount() const
 {
 	return mChildren.size();
@@ -180,6 +243,28 @@ const Eigen::Affine3f& GuiComponent::getTransform()
 {
 	mTransform.setIdentity();
 	mTransform.translate(mPosition);
+	if (mScale != 1.0)
+	{
+		mTransform *= Eigen::Scaling(mScale);
+	}
+	if (mRotation != 0.0)
+	{
+		// Calculate offset as difference between origin and rotation origin
+		float xOff = (mOrigin.x() - mRotationOrigin.x()) * mSize.x();
+		float yOff = (mOrigin.y() - mRotationOrigin.y()) * mSize.y();
+
+		// transform to offset point
+		if (xOff != 0.0 || yOff != 0.0)
+			mTransform.translate(Eigen::Vector3f(xOff * -1, yOff * -1, 0.0f));
+
+		// apply rotation transorm
+		mTransform *= Eigen::AngleAxisf(mRotation, Eigen::Vector3f::UnitZ());
+
+		// Tranform back to original point
+		if (xOff != 0.0 || yOff != 0.0)
+			mTransform.translate(Eigen::Vector3f(xOff, yOff, 0.0f));
+	}
+	mTransform.translate(Eigen::Vector3f(mOrigin.x() * mSize.x() * -1, mOrigin.y() * mSize.y() * -1, 0.0f));
 	return mTransform;
 }
 
@@ -319,6 +404,22 @@ void GuiComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std
 
 	if(properties & ThemeFlags::SIZE && elem->has("size"))
 		setSize(elem->get<Eigen::Vector2f>("size").cwiseProduct(scale));
+
+	// position + size also implies origin
+	if((properties & ORIGIN || (properties & POSITION && properties & ThemeFlags::SIZE)) && elem->has("origin"))
+		setOrigin(elem->get<Eigen::Vector2f>("origin"));
+
+	if(properties & ThemeFlags::ROTATION) {
+		if(elem->has("rotation"))
+			setRotationDegrees(elem->get<float>("rotation"));
+		if(elem->has("rotationOrigin"))
+			setRotationOrigin(elem->get<Eigen::Vector2f>("rotationOrigin"));
+	}
+
+	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
+		setZIndex(elem->get<float>("zIndex"));
+	else
+		setZIndex(getDefaultZIndex());
 }
 
 void GuiComponent::updateHelpPrompts()
@@ -338,4 +439,39 @@ void GuiComponent::updateHelpPrompts()
 HelpStyle GuiComponent::getHelpStyle()
 {
 	return HelpStyle();
+}
+
+bool GuiComponent::isProcessing() const
+{
+	return mIsProcessing;
+}
+
+void GuiComponent::onShow()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onShow();
+}
+
+void GuiComponent::onHide()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onHide();
+}
+
+void GuiComponent::onScreenSaverActivate()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onScreenSaverActivate();
+}
+
+void GuiComponent::onScreenSaverDeactivate()
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->onScreenSaverDeactivate();
+}
+
+void GuiComponent::topWindow(bool isTop)
+{
+	for(unsigned int i = 0; i < getChildCount(); i++)
+		getChild(i)->topWindow(isTop);
 }

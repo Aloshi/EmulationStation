@@ -5,15 +5,17 @@
 #include "ThemeData.h"
 #include "SystemData.h"
 #include "Settings.h"
+#include "FileFilterIndex.h"
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
 {
 	mList.setSize(mSize.x(), mSize.y() * 0.8f);
 	mList.setPosition(0, mSize.y() * 0.2f);
+	mList.setDefaultZIndex(20);
 	addChild(&mList);
 
-	populateList(root->getChildren());
+	populateList(root->getChildrenListToDisplay());
 }
 
 void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
@@ -21,6 +23,8 @@ void BasicGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	ISimpleGameListView::onThemeChanged(theme);
 	using namespace ThemeFlags;
 	mList.applyTheme(theme, getName(), "gamelist", ALL);
+
+	sortChildren();
 }
 
 void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
@@ -38,12 +42,17 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 void BasicGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mList.clear();
-
-	mHeaderText.setText(files.at(0)->getSystem()->getFullName());
-
-	for(auto it = files.begin(); it != files.end(); it++)
+	mHeaderText.setText(mRoot->getSystem()->getFullName());
+	if (files.size() > 0)
 	{
-		mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		for(auto it = files.begin(); it != files.end(); it++)
+		{
+			mList.add((*it)->getName(), *it, ((*it)->getType() == FOLDER));
+		}
+	}
+	else
+	{
+		addPlaceholder();
 	}
 }
 
@@ -54,9 +63,9 @@ FileData* BasicGameListView::getCursor()
 
 void BasicGameListView::setCursor(FileData* cursor)
 {
-	if(!mList.setCursor(cursor))
+	if(!mList.setCursor(cursor) && (!cursor->isPlaceHolder()))
 	{
-		populateList(cursor->getParent()->getChildren());
+		populateList(cursor->getParent()->getChildrenListToDisplay());
 		mList.setCursor(cursor);
 
 		// update our cursor stack in case our cursor just got set to some folder we weren't in before
@@ -69,7 +78,7 @@ void BasicGameListView::setCursor(FileData* cursor)
 				tmp.push(ptr);
 				ptr = ptr->getParent();
 			}
-			
+
 			// flip the stack and put it in mCursorStack
 			mCursorStack = std::stack<FileData*>();
 			while(!tmp.empty())
@@ -81,9 +90,45 @@ void BasicGameListView::setCursor(FileData* cursor)
 	}
 }
 
+void BasicGameListView::addPlaceholder()
+{
+	// empty list - add a placeholder
+	FileData* placeholder = new FileData(PLACEHOLDER, "<No Entries Found>", this->mRoot->getSystem()->getSystemEnvData(), this->mRoot->getSystem());
+	mList.add(placeholder->getName(), placeholder, (placeholder->getType() == PLACEHOLDER));
+}
+
 void BasicGameListView::launch(FileData* game)
 {
 	ViewController::get()->launch(game);
+}
+
+void BasicGameListView::remove(FileData *game, bool deleteFile)
+{
+	if (deleteFile)
+		boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
+	FileData* parent = game->getParent();
+	if (getCursor() == game)                     // Select next element in list, or prev if none
+	{
+		std::vector<FileData*> siblings = parent->getChildrenListToDisplay();
+		auto gameIter = std::find(siblings.begin(), siblings.end(), game);
+		auto gamePos = std::distance(siblings.begin(), gameIter);
+		if (gameIter != siblings.end())
+		{
+			if ((gamePos + 1) < siblings.size())
+			{
+				setCursor(siblings.at(gamePos + 1));
+			} else if ((gamePos - 1) > 0) {
+				setCursor(siblings.at(gamePos - 1));
+			}
+		}
+	}
+	mList.remove(game);
+	if(mList.size() == 0)
+	{
+		addPlaceholder();
+	}
+	delete game;                                 // remove before repopulating (removes from parent)
+	onFileChanged(parent, FILE_REMOVED);           // update the view, with game removed
 }
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
@@ -96,5 +141,12 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
 	prompts.push_back(HelpPrompt("select", "options"));
+	prompts.push_back(HelpPrompt("x", "random"));
+	if(mRoot->getSystem()->isGameSystem())
+	{
+		std::string prompt = CollectionSystemManager::get()->getEditingCollection();
+		//TODO: fix this for non-std auto systems
+		prompts.push_back(HelpPrompt("y", prompt));
+	}
 	return prompts;
 }

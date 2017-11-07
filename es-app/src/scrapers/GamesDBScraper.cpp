@@ -1,6 +1,6 @@
 #include "scrapers/GamesDBScraper.h"
 #include "Log.h"
-#include "pugixml/pugixml.hpp"
+#include "pugixml/src/pugixml.hpp"
 #include "MetaData.h"
 #include "Settings.h"
 #include "Util.h"
@@ -28,13 +28,14 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(MAC_OS, "Mac OS")
 	(XBOX, "Microsoft Xbox")
 	(XBOX_360, "Microsoft Xbox 360")
-	// missing MSX
-	(NEOGEO, "NeoGeo")
+	(MSX, "MSX")
+	(NEOGEO, "Neo Geo")
 	(NEOGEO_POCKET, "Neo Geo Pocket")
 	(NEOGEO_POCKET_COLOR, "Neo Geo Pocket Color")
 	(NINTENDO_3DS, "Nintendo 3DS")
 	(NINTENDO_64, "Nintendo 64")
 	(NINTENDO_DS, "Nintendo DS")
+	(FAMICOM_DISK_SYSTEM, "Famicom Disk System")
 	(NINTENDO_ENTERTAINMENT_SYSTEM, "Nintendo Entertainment System (NES)")
 	(GAME_BOY, "Nintendo Game Boy")
 	(GAME_BOY_ADVANCE, "Nintendo Game Boy Advance")
@@ -42,6 +43,8 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(NINTENDO_GAMECUBE, "Nintendo GameCube")
 	(NINTENDO_WII, "Nintendo Wii")
 	(NINTENDO_WII_U, "Nintendo Wii U")
+	(NINTENDO_VIRTUAL_BOY, "Nintendo Virtual Boy")
+	(NINTENDO_GAME_AND_WATCH, "Game & Watch")
 	(PC, "PC")
 	(SEGA_32X, "Sega 32X")
 	(SEGA_CD, "Sega CD")
@@ -51,31 +54,48 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(SEGA_MASTER_SYSTEM, "Sega Master System")
 	(SEGA_MEGA_DRIVE, "Sega Mega Drive")
 	(SEGA_SATURN, "Sega Saturn")
+	(SEGA_SG1000, "SEGA SG-1000")	
 	(PLAYSTATION, "Sony Playstation")
 	(PLAYSTATION_2, "Sony Playstation 2")
 	(PLAYSTATION_3, "Sony Playstation 3")
 	(PLAYSTATION_4, "Sony Playstation 4")
 	(PLAYSTATION_VITA, "Sony Playstation Vita")
-	(PLAYSTATION_PORTABLE, "Sony PSP")
+	(PLAYSTATION_PORTABLE, "Sony Playstation Portable")
 	(SUPER_NINTENDO, "Super Nintendo (SNES)")
 	(TURBOGRAFX_16, "TurboGrafx 16")
 	(WONDERSWAN, "WonderSwan")
 	(WONDERSWAN_COLOR, "WonderSwan Color")
-	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
-
+	(ZX_SPECTRUM, "Sinclair ZX Spectrum")
+	(VIDEOPAC_ODYSSEY2, "Magnavox Odyssey 2")
+	(VECTREX, "Vectrex")
+	(TRS80_COLOR_COMPUTER, "TRS-80 Color Computer")
+	(TANDY, "TRS-80 Color Computer");
 
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
 	std::vector<ScraperSearchResult>& results)
 {
 	std::string path = "thegamesdb.net/api/GetGame.php?";
+	bool usingGameID = false;
 
 	std::string cleanName = params.nameOverride;
-	if(cleanName.empty())
+	if (cleanName.empty())
+	{
 		cleanName = params.game->getCleanName();
+		path += "name=" + HttpReq::urlEncode(cleanName);
+	}
+	else
+	{
+		if (cleanName.substr(0,3) == "id:") {
+			std::string gameID = cleanName.substr(3,-1);
+			path += "id=" + HttpReq::urlEncode(gameID);
+			usingGameID = true;
+		}
+		else {
+			path += "exactname=" + HttpReq::urlEncode(cleanName);
+		}
+	}
 
-	path += "name=" + HttpReq::urlEncode(cleanName);
-
-	if(params.system->getPlatformIds().empty())
+	if(params.system->getPlatformIds().empty() || usingGameID)
 	{
 		// no platform specified, we're done
 		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
