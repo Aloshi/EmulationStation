@@ -166,10 +166,23 @@ void GuiMenu::openUISettings()
 		UImodeSelection->add(*it, *it, Settings::getInstance()->getString("UIMode") == *it);
 	s->addWithLabel("UI MODE", UImodeSelection);
 	Window* window = mWindow;
-	s->addSaveFunc([UImodeSelection, window]
+	s->addSaveFunc([ UImodeSelection, window]
 	{
-		LOG(LogDebug) << "Setting UI mode to" << UImodeSelection->getSelected();
-		Settings::getInstance()->setString("UIMode", UImodeSelection->getSelected());
+		std::string selectedMode = UImodeSelection->getSelected();
+		if (selectedMode != "Full")
+		{
+			std::string msg = "You are changing the UI to a restricted mode:\n" + selectedMode + "\n";
+			msg += "This will hide most menu-options to prevent changes to the system.\n";
+			msg += "To unlock and return to the full UI, enter this code: \n";
+			msg += "Up, up, down, down, left, right, left, right, B, A. \n\n";
+			msg += "Do you want to proceed?";
+
+			window->pushGui(new GuiMsgBox(window, msg, "YES",
+				[selectedMode] {
+					LOG(LogDebug) << "Setting UI mode to" << selectedMode;
+					Settings::getInstance()->setString("UIMode", selectedMode);
+			}, "NO", nullptr));
+		}
 	});
 
 	// screensaver
