@@ -21,8 +21,6 @@ class TextCache;
 #define FONT_PATH_LIGHT ":/opensans_hebrew_condensed_light.ttf"
 #define FONT_PATH_REGULAR ":/opensans_hebrew_condensed_regular.ttf"
 
-typedef unsigned long UnicodeChar;
-
 enum Alignment
 {
 	ALIGN_LEFT,
@@ -68,12 +66,6 @@ public:
 	size_t getMemUsage() const; // returns an approximation of VRAM used by this font's texture (in bytes)
 	static size_t getTotalMemUsage(); // returns an approximation of total VRAM used by font textures (in bytes)
 
-	// utf8 stuff
-	static size_t getNextCursor(const std::string& str, size_t cursor);
-	static size_t getPrevCursor(const std::string& str, size_t cursor);
-	static size_t moveCursor(const std::string& str, size_t cursor, int moveAmt); // negative moveAmt = move backwards, positive = move forwards
-	static UnicodeChar readUnicodeChar(const std::string& str, size_t& cursor); // reads unicode character at cursor AND moves cursor to the next valid unicode char
-
 private:
 	static FT_Library sLibrary;
 	static std::map< std::pair<std::string, int>, std::weak_ptr<Font> > sFontMap;
@@ -114,7 +106,7 @@ private:
 	void getTextureForNewGlyph(const Vector2i& glyphSize, FontTexture*& tex_out, Vector2i& cursor_out);
 
 	std::map< unsigned int, std::unique_ptr<FontFace> > mFaceCache;
-	FT_Face getFaceForChar(UnicodeChar id);
+	FT_Face getFaceForChar(unsigned int id);
 	void clearFaceCache();
 
 	struct Glyph
@@ -128,9 +120,9 @@ private:
 		Vector2f bearing;
 	};
 
-	std::map<UnicodeChar, Glyph> mGlyphMap;
+	std::map<unsigned int, Glyph> mGlyphMap;
 
-	Glyph* getGlyph(UnicodeChar id);
+	Glyph* getGlyph(unsigned int id);
 
 	int mMaxGlyphHeight;
 	

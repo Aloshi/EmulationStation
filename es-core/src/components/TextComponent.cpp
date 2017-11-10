@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "Renderer.h"
 #include "Settings.h"
+#include "StringUtil.h"
 #include "Util.h"
 
 TextComponent::TextComponent(Window* window) : GuiComponent(window), 
@@ -197,7 +198,7 @@ void TextComponent::onTextChanged()
 
 		while(text.size() && size.x() + abbrevSize.x() > mSize.x())
 		{
-			size_t newSize = Font::getPrevCursor(text, text.size());
+			size_t newSize = StringUtil::prevCursor(text, text.size());
 			text.erase(newSize, text.size() - newSize);
 			size = f->sizeText(text);
 		}

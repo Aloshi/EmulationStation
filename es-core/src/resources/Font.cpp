@@ -2,6 +2,7 @@
 
 #include "Log.h"
 #include "Renderer.h"
+#include "StringUtil.h"
 #include "Util.h"
 
 FT_Library Font::sLibrary = NULL;
@@ -9,130 +10,6 @@ FT_Library Font::sLibrary = NULL;
 int Font::getSize() const { return mSize; }
 
 std::map< std::pair<std::string, int>, std::weak_ptr<Font> > Font::sFontMap;
-
-
-// utf8 stuff
-size_t Font::getNextCursor(const std::string& str, size_t cursor)
-{
-	// compare to character at the cursor
-	const char& c = str[cursor];
-
-	size_t result = cursor;
-	if((c & 0x80) == 0) // 0xxxxxxx, one byte character
-	{
-		result += 1;
-	}
-	else if((c & 0xE0) == 0xC0) // 110xxxxx, two bytes left in character
-	{
-		result += 2;
-	}
-	else if((c & 0xF0) == 0xE0) // 1110xxxx, three bytes left in character
-	{
-		result += 3;
-	}
-	else if((c & 0xF8) == 0xF0) // 11110xxx, four bytes left in character
-	{
-		result += 4;
-	}
-	else
-	{
-		// error, invalid utf8 string
-		
-		// if this assert is tripped, the cursor is in the middle of a utf8 code point
-		assert((c & 0xC0) != 0x80); // character is 10xxxxxx
-
-		// if that wasn't it, something crazy happened
-		assert(false);
-	}
-
-	if(str.length() < result || result < cursor) // don't go beyond the very end of the string, try and catch overflow
-		return cursor;
-	return result;
-}
-
-// note: will happily accept malformed utf8
-size_t Font::getPrevCursor(const std::string& str, size_t cursor)
-{
-	if(cursor == 0)
-		return 0;
-
-	do
-	{
-		cursor--;
-	} while(cursor > 0 &&
-		(str[cursor] & 0xC0) == 0x80); // character is 10xxxxxx
-
-	return cursor;
-}
-
-size_t Font::moveCursor(const std::string& str, size_t cursor, int amt)
-{
-	if(amt > 0)
-	{
-		for(int i = 0; i < amt; i++)
-			cursor = Font::getNextCursor(str, cursor);
-	}
-	else if(amt < 0)
-	{
-		for(int i = amt; i < 0; i++)
-			cursor = Font::getPrevCursor(str, cursor);
-	}
-
-	return cursor;
-}
-
-UnicodeChar Font::readUnicodeChar(const std::string& str, size_t& cursor)
-{
-	const char& c = str[cursor];
-
-	if((c & 0x80) == 0) // 0xxxxxxx, one byte character
-	{
-		// 0xxxxxxx
-		cursor++;
-		return (UnicodeChar)c;
-	}
-	else if((c & 0xE0) == 0xC0) // 110xxxxx, two bytes left in character
-	{
-		// 110xxxxx 10xxxxxx
-		UnicodeChar val = ((str[cursor] & 0x1F) << 6) |
-			(str[cursor + 1] & 0x3F);
-		cursor += 2;
-		return val;
-	}
-	else if((c & 0xF0) == 0xE0) // 1110xxxx, three bytes left in character
-	{
-		// 1110xxxx 10xxxxxx 10xxxxxx
-		UnicodeChar val = ((str[cursor] & 0x0F) << 12) |
-			((str[cursor + 1] & 0x3F) << 6) |
-			 (str[cursor + 2] & 0x3F);
-		cursor += 3;
-		return val;
-	}
-	else if((c & 0xF8) == 0xF0) // 11110xxx, four bytes left in character
-	{
-		// 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-		UnicodeChar val = ((str[cursor] & 0x07) << 18) |
-			((str[cursor + 1] & 0x3F) << 12) |
-			((str[cursor + 2] & 0x3F) << 6) |
-			 (str[cursor + 3] & 0x3F);
-		cursor += 4;
-		return val;
-	}
-	else
-	{
-		// error, invalid utf8 string
-
-		// if this assert is tripped, the cursor is in the middle of a utf8 code point
-		assert((c & 0xC0) != 0x80); // character is 10xxxxxx
-
-		// if that wasn't it, something crazy happened
-		assert(false);
-	}
-
-	// error
-	return 0;
-}
-
 
 Font::FontFace::FontFace(ResourceData&& d, int size) : data(d)
 {
@@ -201,7 +78,7 @@ Font::Font(int size, const std::string& path) : mSize(size), mPath(path)
 		initLibrary();
 
 	// always initialize ASCII characters
-	for(UnicodeChar i = 32; i < 128; i++)
+	for(unsigned int i = 32; i < 128; i++)
 		getGlyph(i);
 
 	clearFaceCache();
@@ -398,7 +275,7 @@ std::vector<std::string> getFallbackFontPaths()
 #endif
 }
 
-FT_Face Font::getFaceForChar(UnicodeChar id)
+FT_Face Font::getFaceForChar(unsigned int id)
 {
 	static const std::vector<std::string> fallbackFonts = getFallbackFontPaths();
 
@@ -430,7 +307,7 @@ void Font::clearFaceCache()
 	mFaceCache.clear();
 }
 
-Font::Glyph* Font::getGlyph(UnicodeChar id)
+Font::Glyph* Font::getGlyph(unsigned int id)
 {
 	// is it already loaded?
 	auto it = mGlyphMap.find(id);
@@ -571,9 +448,9 @@ Vector2f Font::sizeText(std::string text, float lineSpacing)
 	size_t i = 0;
 	while(i < text.length())
 	{
-		UnicodeChar character = readUnicodeChar(text, i); // advances i
+		unsigned int character = StringUtil::chars2Unicode(text, i); // advances i
 
-		if(character == (UnicodeChar)'\n')
+		if(character == '\n')
 		{
 			if(lineWidth > highestWidth)
 				highestWidth = lineWidth;
@@ -600,7 +477,7 @@ float Font::getHeight(float lineSpacing) const
 
 float Font::getLetterHeight()
 {
-	Glyph* glyph = getGlyph((UnicodeChar)'S');
+	Glyph* glyph = getGlyph('S');
 	assert(glyph);
 	return glyph->texSize.y() * glyph->texture->textureSize.y();
 }
@@ -664,21 +541,21 @@ Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, size_t s
 	size_t cursor = 0;
 	while(cursor < stop)
 	{
-		UnicodeChar wrappedCharacter = readUnicodeChar(wrappedText, wrapCursor);
-		UnicodeChar character = readUnicodeChar(text, cursor);
+		unsigned int wrappedCharacter = StringUtil::chars2Unicode(wrappedText, wrapCursor);
+		unsigned int character = StringUtil::chars2Unicode(text, cursor);
 
-		if(wrappedCharacter == (UnicodeChar)'\n' && character != (UnicodeChar)'\n')
+		if(wrappedCharacter == '\n' && character != '\n')
 		{
 			//this is where the wordwrap inserted a newline
 			//reset lineWidth and increment y, but don't consume a cursor character
 			lineWidth = 0.0f;
 			y += getHeight(lineSpacing);
 
-			cursor = getPrevCursor(text, cursor); // unconsume
+			cursor = StringUtil::prevCursor(text, cursor); // unconsume
 			continue;
 		}
 
-		if(character == (UnicodeChar)'\n')
+		if(character == '\n')
 		{
 			lineWidth = 0.0f;
 			y += getHeight(lineSpacing);
@@ -727,7 +604,7 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 {
 	float x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, 0, xLen, alignment) : 0);
 	
-	float yTop = getGlyph((UnicodeChar)'S')->bearing.y();
+	float yTop = getGlyph('S')->bearing.y();
 	float yBot = getHeight(lineSpacing);
 	float y = offset[1] + (yBot + yTop)/2.0f;
 
@@ -735,17 +612,16 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 	std::map< FontTexture*, std::vector<TextCache::Vertex> > vertMap;
 
 	size_t cursor = 0;
-	UnicodeChar character;
-	Glyph* glyph;
 	while(cursor < text.length())
 	{
-		character = readUnicodeChar(text, cursor); // also advances cursor
+		unsigned int character = StringUtil::chars2Unicode(text, cursor); // also advances cursor
+		Glyph* glyph;
 
 		// invalid character
 		if(character == 0)
 			continue;
 
-		if(character == (UnicodeChar)'\n')
+		if(character == '\n')
 		{
 			y += getHeight(lineSpacing);
 			x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, cursor /* cursor is already advanced */, xLen, alignment) : 0);
