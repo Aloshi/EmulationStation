@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "SystemData.h"
 #include "Util.h"
+#include <pugixml/src/pugixml.hpp>
 
 using namespace PlatformIds;
 const std::map<PlatformId, const char*> gamesdb_platformid_map {

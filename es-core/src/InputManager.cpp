@@ -5,6 +5,7 @@
 #include "platform.h"
 #include "Window.h"
 #include <boost/filesystem/operations.hpp>
+#include <pugixml/src/pugixml.hpp>
 #include <SDL.h>
 #include <iostream>
 

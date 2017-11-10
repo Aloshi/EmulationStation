@@ -13,6 +13,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/xpressive/xpressive.hpp>
+#include <pugixml/src/pugixml.hpp>
 #include <fstream>
 #include <unordered_map>
 

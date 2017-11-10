@@ -1,6 +1,7 @@
 #include "InputConfig.h"
 
 #include "Log.h"
+#include <pugixml/src/pugixml.hpp>
 
 //some util functions
 std::string inputTypeToString(InputType type)
@@ -146,7 +147,7 @@ std::vector<std::string> InputConfig::getMappedTo(Input input)
 	return maps;
 }
 
-void InputConfig::loadFromXML(pugi::xml_node node)
+void InputConfig::loadFromXML(pugi::xml_node& node)
 {
 	clear();
 
@@ -172,7 +173,7 @@ void InputConfig::loadFromXML(pugi::xml_node node)
 	}
 }
 
-void InputConfig::writeToXML(pugi::xml_node parent)
+void InputConfig::writeToXML(pugi::xml_node& parent)
 {
 	pugi::xml_node cfg = parent.append_child("inputConfig");
 

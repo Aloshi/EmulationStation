@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "Util.h"
 #include <boost/date_time/posix_time/time_formatters.hpp>
+#include <pugixml/src/pugixml.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -69,7 +70,7 @@ MetaDataList::MetaDataList(MetaDataListType type)
 }
 
 
-MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node node, const fs::path& relativeTo)
+MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& node, const fs::path& relativeTo)
 {
 	MetaDataList mdl(type);
 
@@ -95,7 +96,7 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node n
 	return mdl;
 }
 
-void MetaDataList::appendToXML(pugi::xml_node parent, bool ignoreDefaults, const fs::path& relativeTo) const
+void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const fs::path& relativeTo) const
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 

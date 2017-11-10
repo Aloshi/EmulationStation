@@ -6,10 +6,11 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/variant/get.hpp>
 #include <boost/variant/variant.hpp>
-#include <pugixml/src/pugixml.hpp>
 #include <deque>
 #include <map>
 #include <sstream>
+
+namespace pugi { class xml_node; }
 
 template<typename T>
 class TextListComponent;

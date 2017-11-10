@@ -4,7 +4,8 @@
 
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/filesystem/path.hpp>
-#include <pugixml/src/pugixml.hpp>
+
+namespace pugi { class xml_node; }
 
 enum MetaDataType
 {
@@ -43,8 +44,8 @@ const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type);
 class MetaDataList
 {
 public:
-	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node node, const boost::filesystem::path& relativeTo);
-	void appendToXML(pugi::xml_node parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const;
+	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node& node, const boost::filesystem::path& relativeTo);
+	void appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const;
 
 	MetaDataList(MetaDataListType type);
 	
