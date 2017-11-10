@@ -9,6 +9,7 @@
 #include "Settings.h"
 #include "ThemeData.h"
 #include <boost/filesystem/operations.hpp>
+#include <pugixml/src/pugixml.hpp>
 #include <fstream>
 #ifdef WIN32
 #include <Windows.h>

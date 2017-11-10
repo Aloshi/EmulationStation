@@ -8,6 +8,7 @@
 #include "Util.h"
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+#include <pugixml/src/pugixml.hpp>
 
 namespace fs = boost::filesystem;
 

@@ -5,12 +5,13 @@
 #ifdef HAVE_LIBCEC
 #include <libcec/cectypes.h>
 #endif // HAVE_LIBCEC
-#include <pugixml/src/pugixml.hpp>
 #include <SDL_joystick.h>
 #include <SDL_keyboard.h>
 #include <map>
 #include <sstream>
 #include <vector>
+
+namespace pugi { class xml_node; }
 
 #define DEVICE_KEYBOARD -1
 #define DEVICE_CEC      -2
@@ -212,8 +213,8 @@ public:
 	// Writes Input mapped to this name to result if true.
 	bool getInputByName(const std::string& name, Input* result);
 
-	void loadFromXML(pugi::xml_node root);
-	void writeToXML(pugi::xml_node parent);
+	void loadFromXML(pugi::xml_node& root);
+	void writeToXML(pugi::xml_node& parent);
 
 	bool isConfigured();
 

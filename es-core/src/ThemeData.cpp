@@ -7,6 +7,7 @@
 #include "Settings.h"
 #include <boost/filesystem/operations.hpp>
 #include <boost/xpressive/xpressive_static.hpp>
+#include <pugixml/src/pugixml.hpp>
 
 std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "video" } };
 std::vector<std::string> ThemeData::sSupportedFeatures { { "video" }, { "carousel" }, { "z-index" } };
