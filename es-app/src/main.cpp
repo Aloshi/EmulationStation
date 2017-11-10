@@ -185,7 +185,7 @@ int main(int argc, char* argv[])
 	unsigned int width = 0;
 	unsigned int height = 0;
 
-	std::locale::global(std::locale(std::locale(""), "C", std::locale::numeric));
+	std::locale::global(std::locale("C"));
 	boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv, &width, &height))
