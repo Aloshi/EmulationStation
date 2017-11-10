@@ -24,6 +24,7 @@ private:
 	std::map<SDL_JoystickID, SDL_Joystick*> mJoysticks;
 	std::map<SDL_JoystickID, InputConfig*> mInputConfigs;
 	InputConfig* mKeyboardInputConfig;
+	InputConfig* mCECInputConfig;
 
 	std::map<SDL_JoystickID, int*> mPrevAxisValues;
 

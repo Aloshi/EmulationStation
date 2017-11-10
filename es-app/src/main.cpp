@@ -326,24 +326,10 @@ int main(int argc, char* argv[])
 		{
 			do
 			{
-				switch(event.type)
-				{
-					case SDL_JOYHATMOTION:
-					case SDL_JOYBUTTONDOWN:
-					case SDL_JOYBUTTONUP:
-					case SDL_KEYDOWN:
-					case SDL_KEYUP:
-					case SDL_JOYAXISMOTION:
-					case SDL_TEXTINPUT:
-					case SDL_TEXTEDITING:
-					case SDL_JOYDEVICEADDED:
-					case SDL_JOYDEVICEREMOVED:
-						InputManager::getInstance()->parseEvent(event, &window);
-						break;
-					case SDL_QUIT:
-						running = false;
-						break;
-				}
+				InputManager::getInstance()->parseEvent(event, &window);
+
+				if(event.type == SDL_QUIT)
+					running = false;
 			} while(SDL_PollEvent(&event));
 
 			// triggered if exiting from SDL_WaitEvent due to event
