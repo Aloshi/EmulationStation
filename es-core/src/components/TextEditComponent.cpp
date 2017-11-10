@@ -2,6 +2,7 @@
 
 #include "resources/Font.h"
 #include "Renderer.h"
+#include "StringUtil.h"
 
 #define TEXT_PADDING_HORIZ 10
 #define TEXT_PADDING_VERT 2
@@ -59,7 +60,7 @@ void TextEditComponent::textInput(const char* text)
 		{
 			if(mCursor > 0)
 			{
-				size_t newCursor = Font::getPrevCursor(mText, mCursor);
+				size_t newCursor = StringUtil::prevCursor(mText, mCursor);
 				mText.erase(mText.begin() + newCursor, mText.begin() + mCursor);
 				mCursor = newCursor;
 			}
@@ -190,7 +191,7 @@ void TextEditComponent::updateCursorRepeat(int deltaTime)
 
 void TextEditComponent::moveCursor(int amt)
 {
-	mCursor = Font::moveCursor(mText, mCursor, amt);
+	mCursor = StringUtil::moveCursor(mText, mCursor, amt);
 	onCursorChanged();
 }
 
