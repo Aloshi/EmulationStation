@@ -276,7 +276,7 @@ std::string vectorToCommaString(std::vector<std::string> stringVector)
 	std::string out = "";
 	std::sort(stringVector.begin(), stringVector.end());
 	// from a vector of system names get comma separated string
-	for(std::vector<std::string>::iterator it = stringVector.begin() ; it != stringVector.end() ; it++ )
+	for(std::vector<std::string>::const_iterator it = stringVector.cbegin() ; it != stringVector.cend() ; it++ )
 	{
 		out = out + (out == "" ? "" : ",") + (*it);
 	}

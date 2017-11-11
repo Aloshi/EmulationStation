@@ -20,7 +20,7 @@ void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere)
 
 	this->add(e);
 
-	for(auto it = mEntries.back().data.elements.begin(); it != mEntries.back().data.elements.end(); it++)
+	for(auto it = mEntries.back().data.elements.cbegin(); it != mEntries.back().data.elements.cend(); it++)
 		addChild(it->component.get());
 
 	updateElementSize(mEntries.back().data);
@@ -35,7 +35,7 @@ void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere)
 
 void ComponentList::onSizeChanged()
 {
-	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+	for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 	{
 		updateElementSize(it->data);
 		updateElementPosition(it->data);
@@ -99,7 +99,7 @@ void ComponentList::update(int deltaTime)
 	if(size())
 	{
 		// update our currently selected row
-		for(auto it = mEntries.at(mCursor).data.elements.begin(); it != mEntries.at(mCursor).data.elements.end(); it++)
+		for(auto it = mEntries.at(mCursor).data.elements.cbegin(); it != mEntries.at(mCursor).data.elements.cend(); it++)
 			it->component->update(deltaTime);
 	}
 }
@@ -119,7 +119,7 @@ void ComponentList::onCursorChanged(const CursorState& state)
 	// this is terribly inefficient but we don't know what we came from so...
 	if(size())
 	{
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 			it->data.elements.back().component->onFocusLost();
 
 		mEntries.at(mCursor).data.elements.back().component->onFocusGained();
@@ -181,7 +181,7 @@ void ComponentList::render(const Transform4x4f& parentTrans)
 	{
 		auto& entry = mEntries.at(i);
 		drawAll = !mFocused || i != (unsigned int)mCursor;
-		for(auto it = entry.data.elements.begin(); it != entry.data.elements.end(); it++)
+		for(auto it = entry.data.elements.cbegin(); it != entry.data.elements.cend(); it++)
 		{
 			if(drawAll || it->invert_when_selected)
 			{
@@ -213,7 +213,7 @@ void ComponentList::render(const Transform4x4f& parentTrans)
 		Renderer::drawRect(0.0f, mSelectorBarOffset, 2.0f, selectedRowHeight, 0x878787FF);
 		Renderer::drawRect(mSize.x() - 2.0f, mSelectorBarOffset, 2.0f, selectedRowHeight, 0x878787FF);
 
-		for(auto it = drawAfterCursor.begin(); it != drawAfterCursor.end(); it++)
+		for(auto it = drawAfterCursor.cbegin(); it != drawAfterCursor.cend(); it++)
 			(*it)->render(trans);
 
 		// reset matrix if one of these components changed it
@@ -249,7 +249,7 @@ float ComponentList::getRowHeight(const ComponentListRow& row) const
 float ComponentList::getTotalRowHeight() const
 {
 	float height = 0;
-	for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+	for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 	{
 		height += getRowHeight(it->data);
 	}
@@ -260,7 +260,7 @@ float ComponentList::getTotalRowHeight() const
 void ComponentList::updateElementPosition(const ComponentListRow& row)
 {
 	float yOffset = 0;
-	for(auto it = mEntries.begin(); it != mEntries.end() && &it->data != &row; it++)
+	for(auto it = mEntries.cbegin(); it != mEntries.cend() && &it->data != &row; it++)
 	{
 		yOffset += getRowHeight(it->data);
 	}
@@ -284,7 +284,7 @@ void ComponentList::updateElementSize(const ComponentListRow& row)
 	float width = mSize.x() - TOTAL_HORIZONTAL_PADDING_PX;
 	std::vector< std::shared_ptr<GuiComponent> > resizeVec;
 
-	for(auto it = row.elements.begin(); it != row.elements.end(); it++)
+	for(auto it = row.elements.cbegin(); it != row.elements.cend(); it++)
 	{
 		if(it->resize_width)
 			resizeVec.push_back(it->component);
@@ -294,7 +294,7 @@ void ComponentList::updateElementSize(const ComponentListRow& row)
 
 	// redistribute the "unused" width equally among the components with resize_width set to true
 	width = width / resizeVec.size();
-	for(auto it = resizeVec.begin(); it != resizeVec.end(); it++)
+	for(auto it = resizeVec.cbegin(); it != resizeVec.cend(); it++)
 	{
 		(*it)->setSize(width, (*it)->getSize().y());
 	}
@@ -318,7 +318,7 @@ std::vector<HelpPrompt> ComponentList::getHelpPrompts()
 	if(size() > 1)
 	{
 		bool addMovePrompt = true;
-		for(auto it = prompts.begin(); it != prompts.end(); it++)
+		for(auto it = prompts.cbegin(); it != prompts.cend(); it++)
 		{
 			if(it->first == "up/down" || it->first == "up/down/left/right")
 			{

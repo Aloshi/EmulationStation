@@ -104,11 +104,11 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 		// because TheGamesDB API either sucks or I don't know how to use it properly...
 		std::string urlBase = path;
 		auto& platforms = params.system->getPlatformIds();
-		for(auto platformIt = platforms.begin(); platformIt != platforms.end(); platformIt++)
+		for(auto platformIt = platforms.cbegin(); platformIt != platforms.cend(); platformIt++)
 		{
 			path = urlBase;
 			auto mapIt = gamesdb_platformid_map.find(*platformIt);
-			if(mapIt != gamesdb_platformid_map.end())
+			if(mapIt != gamesdb_platformid_map.cend())
 			{
 				path += "&platform=";
 				path += HttpReq::urlEncode(mapIt->second);

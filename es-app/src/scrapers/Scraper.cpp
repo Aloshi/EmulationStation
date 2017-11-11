@@ -26,7 +26,7 @@ std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParam
 std::vector<std::string> getScraperList()
 {
 	std::vector<std::string> list;
-	for(auto it = scraper_request_funcs.begin(); it != scraper_request_funcs.end(); it++)
+	for(auto it = scraper_request_funcs.cbegin(); it != scraper_request_funcs.cend(); it++)
 	{
 		list.push_back(it->first);
 	}
@@ -142,8 +142,8 @@ void MDResolveHandle::update()
 	if(mStatus == ASYNC_DONE || mStatus == ASYNC_ERROR)
 		return;
 	
-	auto it = mFuncs.begin();
-	while(it != mFuncs.end())
+	auto it = mFuncs.cbegin();
+	while(it != mFuncs.cend())
 	{
 		if(it->first->status() == ASYNC_ERROR)
 		{

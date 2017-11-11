@@ -51,7 +51,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	// this is because of how GuiComponent::update works.  if it was just delete this, this would happen when the metadata resolver is done:
 	//     GuiGameScraper::update()
 	//       GuiComponent::update()
-	//         it = mChildren.begin();
+	//         it = mChildren.cbegin();
 	//         mBox::update()
 	//         it++;
 	//         mSearchComponent::update()
@@ -61,7 +61,7 @@ GuiGameScraper::GuiGameScraper(Window* window, ScraperSearchParams params, std::
 	// so instead we do this:
 	//     GuiGameScraper::update()
 	//       GuiComponent::update()
-	//         it = mChildren.begin();
+	//         it = mChildren.cbegin();
 	//         mBox::update()
 	//         it++;
 	//         mSearchComponent::update()

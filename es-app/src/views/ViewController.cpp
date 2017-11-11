@@ -48,7 +48,7 @@ void ViewController::goToStart()
 	auto requestedSystem = Settings::getInstance()->getString("StartupSystem");
 	if("" != requestedSystem && "retropie" != requestedSystem)
 	{
-		for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++){
+		for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++){
 			if ((*it)->getName() == requestedSystem)
 			{
 				goToGameList(*it);
@@ -62,7 +62,7 @@ void ViewController::goToStart()
 int ViewController::getSystemId(SystemData* system)
 {
 	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
-	return std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
+	return std::find(sysVec.cbegin(), sysVec.cend(), system) - sysVec.cbegin();
 }
 
 void ViewController::goToSystemView(SystemData* system)
@@ -188,7 +188,7 @@ void ViewController::playViewTransition()
 void ViewController::onFileChanged(FileData* file, FileChangeType change)
 {
 	auto it = mGameListViews.find(file->getSystem());
-	if(it != mGameListViews.end())
+	if(it != mGameListViews.cend())
 		it->second->onFileChanged(file, change);
 }
 
@@ -249,7 +249,7 @@ void ViewController::removeGameListView(SystemData* system)
 {
 	//if we already made one, return that one
 	auto exists = mGameListViews.find(system);
-	if(exists != mGameListViews.end())
+	if(exists != mGameListViews.cend())
 	{
 		exists->second.reset();
 		mGameListViews.erase(system);
@@ -260,7 +260,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 {
 	//if we already made one, return that one
 	auto exists = mGameListViews.find(system);
-	if(exists != mGameListViews.end())
+	if(exists != mGameListViews.cend())
 		return exists->second;
 
 	//if we didn't, make it, remember it, and return it
@@ -282,7 +282,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	if (selectedViewType == AUTOMATIC)
 	{
 		std::vector<FileData*> files = system->getRootFolder()->getFilesRecursive(GAME | FOLDER);
-		for (auto it = files.begin(); it != files.end(); it++)
+		for (auto it = files.cbegin(); it != files.cend(); it++)
 		{
 			if (themeHasVideoView && !(*it)->getVideoPath().empty())
 			{
@@ -318,7 +318,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	view->setTheme(system->getTheme());
 
 	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
-	int id = std::find(sysVec.begin(), sysVec.end(), system) - sysVec.begin();
+	int id = std::find(sysVec.cbegin(), sysVec.cend(), system) - sysVec.cbegin();
 	view->setPosition(id * (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight() * 2);
 
 	addChild(view.get());
@@ -386,7 +386,7 @@ void ViewController::render(const Transform4x4f& parentTrans)
 	getSystemListView()->render(trans);
 
 	// draw gamelists
-	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	for(auto it = mGameListViews.cbegin(); it != mGameListViews.cend(); it++)
 	{
 		// clipping
 		Vector3f guiStart = it->second->getPosition();
@@ -410,7 +410,7 @@ void ViewController::render(const Transform4x4f& parentTrans)
 
 void ViewController::preload()
 {
-	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
+	for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
 	{
 		(*it)->getIndex()->resetFilters();
 		getGameListView(*it);
@@ -419,7 +419,7 @@ void ViewController::preload()
 
 void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 {
-	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	for(auto it = mGameListViews.cbegin(); it != mGameListViews.cend(); it++)
 	{
 		if(it->second.get() == view)
 		{
@@ -452,7 +452,7 @@ void ViewController::reloadAll()
 {
 	// clear all gamelistviews
 	std::map<SystemData*, FileData*> cursorMap;
-	for(auto it = mGameListViews.begin(); it != mGameListViews.end(); it++)
+	for(auto it = mGameListViews.cbegin(); it != mGameListViews.cend(); it++)
 	{
 		cursorMap[it->first] = it->second->getCursor();
 	}
@@ -460,7 +460,7 @@ void ViewController::reloadAll()
 
 
 	// load themes, create gamelistviews and reset filters
-	for(auto it = cursorMap.begin(); it != cursorMap.end(); it++)
+	for(auto it = cursorMap.cbegin(); it != cursorMap.cend(); it++)
 	{
 		it->first->loadTheme();
 		it->first->getIndex()->resetFilters();

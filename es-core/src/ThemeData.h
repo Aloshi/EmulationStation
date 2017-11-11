@@ -58,7 +58,7 @@ public:
 	inline void setFiles(const std::deque<boost::filesystem::path>& deque)
 	{
 		*this << "from theme \"" << deque.front().string() << "\"\n";
-		for(auto it = deque.begin() + 1; it != deque.end(); it++)
+		for(auto it = deque.cbegin() + 1; it != deque.cend(); it++)
 			*this << "  (from included file \"" << (*it).string() << "\")\n";
 		*this << "    ";
 	}
@@ -96,7 +96,7 @@ public:
 		template<typename T>
 		T get(const std::string& prop) const { return boost::get<T>(properties.at(prop)); }
 
-		inline bool has(const std::string& prop) const { return (properties.find(prop) != properties.end()); }
+		inline bool has(const std::string& prop) const { return (properties.find(prop) != properties.cend()); }
 	};
 
 private:

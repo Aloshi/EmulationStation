@@ -58,11 +58,11 @@ void FileFilterIndex::importIndex(FileFilterIndex* indexToImport)
 
 	std::vector<IndexImportStructure> indexImportDecl = std::vector<IndexImportStructure>(indexStructDecls, indexStructDecls + sizeof(indexStructDecls) / sizeof(indexStructDecls[0]));
 
-	for (std::vector<IndexImportStructure>::iterator indexesIt = indexImportDecl.begin(); indexesIt != indexImportDecl.end(); ++indexesIt )
+	for (std::vector<IndexImportStructure>::const_iterator indexesIt = indexImportDecl.cbegin(); indexesIt != indexImportDecl.cend(); ++indexesIt )
 	{
-		for (std::map<std::string, int>::iterator sourceIt = (*indexesIt).sourceIndex->begin(); sourceIt != (*indexesIt).sourceIndex->end(); ++sourceIt )
+		for (std::map<std::string, int>::const_iterator sourceIt = (*indexesIt).sourceIndex->cbegin(); sourceIt != (*indexesIt).sourceIndex->cend(); ++sourceIt )
 		{
-			if ((*indexesIt).destinationIndex->find((*sourceIt).first) == (*indexesIt).destinationIndex->end())
+			if ((*indexesIt).destinationIndex->find((*sourceIt).first) == (*indexesIt).destinationIndex->cend())
 			{
 				// entry doesn't exist
 				(*((*indexesIt).destinationIndex))[(*sourceIt).first] = (*sourceIt).second;
@@ -211,15 +211,15 @@ void FileFilterIndex::setFilter(FilterIndexType type, std::vector<std::string>* 
 	}
 	else
 	{
-		for (std::vector<FilterDataDecl>::iterator it = filterDataDecl.begin(); it != filterDataDecl.end(); ++it ) {
+		for (std::vector<FilterDataDecl>::const_iterator it = filterDataDecl.cbegin(); it != filterDataDecl.cend(); ++it ) {
 			if ((*it).type == type)
 			{
 				FilterDataDecl filterData = (*it);
 				*(filterData.filteredByRef) = values->size() > 0;
 				filterData.currentFilteredKeys->clear();
-				for (std::vector<std::string>::iterator vit = values->begin(); vit != values->end(); ++vit ) {
+				for (std::vector<std::string>::const_iterator vit = values->cbegin(); vit != values->cend(); ++vit ) {
 					// check if exists
-					if (filterData.allIndexKeys->find(*vit) != filterData.allIndexKeys->end()) {
+					if (filterData.allIndexKeys->find(*vit) != filterData.allIndexKeys->cend()) {
 						filterData.currentFilteredKeys->push_back(std::string(*vit));
 					}
 				}
@@ -231,7 +231,7 @@ void FileFilterIndex::setFilter(FilterIndexType type, std::vector<std::string>* 
 
 void FileFilterIndex::clearAllFilters()
 {
-	for (std::vector<FilterDataDecl>::iterator it = filterDataDecl.begin(); it != filterDataDecl.end(); ++it )
+	for (std::vector<FilterDataDecl>::const_iterator it = filterDataDecl.cbegin(); it != filterDataDecl.cend(); ++it )
 	{
 		FilterDataDecl filterData = (*it);
 		*(filterData.filteredByRef) = false;
@@ -300,7 +300,7 @@ bool FileFilterIndex::showFile(FileData* game)
 		std::vector<FileData*> children = game->getChildren();
 		// iterate through all of the children, until there's a match
 
-		for (std::vector<FileData*>::iterator it = children.begin(); it != children.end(); ++it ) {
+		for (std::vector<FileData*>::const_iterator it = children.cbegin(); it != children.cend(); ++it ) {
 			if (showFile(*it))
 			{
 				return true;
@@ -311,7 +311,7 @@ bool FileFilterIndex::showFile(FileData* game)
 
 	bool keepGoing = false;
 
-	for (std::vector<FilterDataDecl>::iterator it = filterDataDecl.begin(); it != filterDataDecl.end(); ++it ) {
+	for (std::vector<FilterDataDecl>::const_iterator it = filterDataDecl.cbegin(); it != filterDataDecl.cend(); ++it ) {
 		FilterDataDecl filterData = (*it);
 		if(*(filterData.filteredByRef))
 		{
@@ -352,7 +352,7 @@ bool FileFilterIndex::isKeyBeingFilteredBy(std::string key, FilterIndexType type
 	{
 		if (filterTypes[i] == type)
 		{
-			for (std::vector<std::string>::iterator it = filterKeysList[i].begin(); it != filterKeysList[i].end(); ++it )
+			for (std::vector<std::string>::const_iterator it = filterKeysList[i].cbegin(); it != filterKeysList[i].cend(); ++it )
 			{
 				if (key == (*it))
 				{
@@ -503,7 +503,7 @@ void FileFilterIndex::manageIndexEntry(std::map<std::string, int>* index, std::s
 		return;
 	if (remove) {
 		// removing entry
-		if (index->find(key) == index->end())
+		if (index->find(key) == index->cend())
 		{
 			// this shouldn't happen
 			LOG(LogInfo) << "Couldn't find entry in index! " << key;
@@ -519,7 +519,7 @@ void FileFilterIndex::manageIndexEntry(std::map<std::string, int>* index, std::s
 	else
 	{
 		// adding entry
-		if (index->find(key) == index->end())
+		if (index->find(key) == index->cend())
 		{
 			(*index)[key] = 1;
 		}

@@ -65,7 +65,7 @@ MetaDataList::MetaDataList(MetaDataListType type)
 	: mType(type), mWasChanged(false)
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
-	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
+	for(auto iter = mdd.cbegin(); iter != mdd.cend(); iter++)
 		set(iter->key, iter->defaultValue);
 }
 
@@ -76,7 +76,7 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& 
 
 	const std::vector<MetaDataDecl>& mdd = mdl.getMDD();
 
-	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
+	for(auto iter = mdd.cbegin(); iter != mdd.cend(); iter++)
 	{
 		pugi::xml_node md = node.child(iter->key.c_str());
 		if(md)
@@ -100,10 +100,10 @@ void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, cons
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 
-	for(auto mddIter = mdd.begin(); mddIter != mdd.end(); mddIter++)
+	for(auto mddIter = mdd.cbegin(); mddIter != mdd.cend(); mddIter++)
 	{
 		auto mapIter = mMap.find(mddIter->key);
-		if(mapIter != mMap.end())
+		if(mapIter != mMap.cend())
 		{
 			// we have this value!
 			// if it's just the default (and we ignore defaults), don't write it

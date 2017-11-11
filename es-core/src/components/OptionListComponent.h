@@ -219,7 +219,7 @@ public:
 	std::vector<T> getSelectedObjects()
 	{
 		std::vector<T> ret;
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			if(it->selected)
 				ret.push_back(it->object);
@@ -298,7 +298,7 @@ private:
 				mParent->onSizeChanged();
 		}else{
 			// display currently selected + l/r cursors
-			for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+			for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 			{
 				if(it->selected)
 				{

@@ -122,7 +122,7 @@ void SystemData::populateFolder(FileData* folder)
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
 
 		isGame = false;
-		if(std::find(mEnvData->mSearchExtensions.begin(), mEnvData->mSearchExtensions.end(), extension) != mEnvData->mSearchExtensions.end())
+		if(std::find(mEnvData->mSearchExtensions.cbegin(), mEnvData->mSearchExtensions.cend(), extension) != mEnvData->mSearchExtensions.cend())
 		{
 			// skip hidden files
 			if(!showHidden && isHidden(filePath))
@@ -152,7 +152,7 @@ void SystemData::indexAllGameFilters(const FileData* folder)
 {
 	const std::vector<FileData*>& children = folder->getChildren();
 
-	for(std::vector<FileData*>::const_iterator it = children.begin(); it != children.end(); ++it)
+	for(std::vector<FileData*>::const_iterator it = children.cbegin(); it != children.cend(); ++it)
 	{
 		switch((*it)->getType())
 		{
@@ -231,7 +231,7 @@ bool SystemData::loadConfig()
 		const char* platformList = system.child("platform").text().get();
 		std::vector<std::string> platformStrs = readList(platformList);
 		std::vector<PlatformIds::PlatformId> platformIds;
-		for(auto it = platformStrs.begin(); it != platformStrs.end(); it++)
+		for(auto it = platformStrs.cbegin(); it != platformStrs.cend(); it++)
 		{
 			const char* str = it->c_str();
 			PlatformIds::PlatformId platformId = PlatformIds::getPlatformId(str);
@@ -363,8 +363,8 @@ SystemData* SystemData::getNext() const
 
 	do {
 		it++;
-		if (it == sSystemVector.end())
-			it = sSystemVector.begin();
+		if (it == sSystemVector.cend())
+			it = sSystemVector.cbegin();
 	} while ((*it)->getDisplayedGameCount() == 0); 
 	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
 
@@ -373,11 +373,12 @@ SystemData* SystemData::getNext() const
 
 SystemData* SystemData::getPrev() const
 {
-	auto it = getRevIterator();
+	std::vector<SystemData*>::const_reverse_iterator it = getRevIterator();
+
 	do {
 		it++;
-		if (it == sSystemVector.rend())
-			it = sSystemVector.rbegin();
+		if (it == sSystemVector.crend())
+			it = sSystemVector.crbegin();
 	} while ((*it)->getDisplayedGameCount() == 0);
 	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
 
@@ -439,7 +440,7 @@ SystemData* SystemData::getRandomSystem()
 {
 	//  this is a bit brute force. It might be more efficient to just to a while (!gameSystem) do random again...
 	unsigned int total = 0;
-	for(auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
+	for(auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
 	{
 		if ((*it)->isGameSystem())
 			total ++;
@@ -447,7 +448,7 @@ SystemData* SystemData::getRandomSystem()
 
 	// get random number in range
 	int target = (int) std::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
-	for (auto it = sSystemVector.begin(); it != sSystemVector.end(); it++)
+	for (auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
 	{
 		if ((*it)->isGameSystem())
 		{

@@ -42,8 +42,8 @@ namespace FileSorts
 		// we compare the actual metadata name, as collection files have the system appended which messes up the order
 		std::string name1 = file1->metadata.get("name");
 		std::string name2 = file2->metadata.get("name");
-		transform(name1.begin(), name1.end(), name1.begin(), ::toupper);
-		transform(name2.begin(), name2.end(), name2.begin(), ::toupper);
+		transform(name1.cbegin(), name1.cend(), name1.begin(), ::toupper);
+		transform(name2.cbegin(), name2.cend(), name2.begin(), ::toupper);
 		return name1.compare(name2) < 0;
 	}
 
@@ -90,8 +90,8 @@ namespace FileSorts
 	{
 		std::string genre1 = file1->metadata.get("genre");
 		std::string genre2 = file2->metadata.get("genre");
-		transform(genre1.begin(), genre1.end(), genre1.begin(), ::toupper);
-		transform(genre2.begin(), genre2.end(), genre2.begin(), ::toupper);
+		transform(genre1.cbegin(), genre1.cend(), genre1.begin(), ::toupper);
+		transform(genre2.cbegin(), genre2.cend(), genre2.begin(), ::toupper);
 		return genre1.compare(genre2) < 0;
 	}
 
@@ -99,8 +99,8 @@ namespace FileSorts
 	{
 		std::string developer1 = file1->metadata.get("developer");
 		std::string developer2 = file2->metadata.get("developer");
-		transform(developer1.begin(), developer1.end(), developer1.begin(), ::toupper);
-		transform(developer2.begin(), developer2.end(), developer2.begin(), ::toupper);
+		transform(developer1.cbegin(), developer1.cend(), developer1.begin(), ::toupper);
+		transform(developer2.cbegin(), developer2.cend(), developer2.begin(), ::toupper);
 		return developer1.compare(developer2) < 0;
 	}
 
@@ -108,8 +108,8 @@ namespace FileSorts
 	{
 		std::string publisher1 = file1->metadata.get("publisher");
 		std::string publisher2 = file2->metadata.get("publisher");
-		transform(publisher1.begin(), publisher1.end(), publisher1.begin(), ::toupper);
-		transform(publisher2.begin(), publisher2.end(), publisher2.begin(), ::toupper);
+		transform(publisher1.cbegin(), publisher1.cend(), publisher1.begin(), ::toupper);
+		transform(publisher2.cbegin(), publisher2.cend(), publisher2.begin(), ::toupper);
 		return publisher1.compare(publisher2) < 0;
 	}
 
@@ -117,8 +117,8 @@ namespace FileSorts
 	{
 		std::string system1 = file1->getSystemName();
 		std::string system2 = file2->getSystemName();
-		transform(system1.begin(), system1.end(), system1.begin(), ::toupper);
-		transform(system2.begin(), system2.end(), system2.begin(), ::toupper);
+		transform(system1.cbegin(), system1.cend(), system1.begin(), ::toupper);
+		transform(system2.cbegin(), system2.cend(), system2.begin(), ::toupper);
 		return system1.compare(system2) < 0;
 	}
 };

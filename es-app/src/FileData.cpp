@@ -88,7 +88,7 @@ const std::vector<FileData*>& FileData::getChildrenListToDisplay() {
 	FileFilterIndex* idx = CollectionSystemManager::get()->getSystemToView(mSystem)->getIndex();
 	if (idx->isFiltered()) {
 		mFilteredChildren.clear();
-		for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+		for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 		{
 			if (idx->showFile((*it))) {
 				mFilteredChildren.push_back(*it);
@@ -167,7 +167,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool d
 	std::vector<FileData*> out;
 	FileFilterIndex* idx = mSystem->getIndex();
 
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 	{
 		if((*it)->getType() & typeMask)
 		{
@@ -178,7 +178,7 @@ std::vector<FileData*> FileData::getFilesRecursive(unsigned int typeMask, bool d
 		if((*it)->getChildren().size() > 0)
 		{
 			std::vector<FileData*> subchildren = (*it)->getFilesRecursive(typeMask, displayedOnly);
-			out.insert(out.end(), subchildren.cbegin(), subchildren.cend());
+			out.insert(out.cend(), subchildren.cbegin(), subchildren.cend());
 		}
 	}
 
@@ -200,7 +200,7 @@ void FileData::addChild(FileData* file)
 	assert(file->getParent() == NULL);
 
 	const std::string key = file->getKey();
-	if (mChildrenByFilename.find(key) == mChildrenByFilename.end())
+	if (mChildrenByFilename.find(key) == mChildrenByFilename.cend())
 	{
 		mChildrenByFilename[key] = file;
 		mChildren.push_back(file);
@@ -213,7 +213,7 @@ void FileData::removeChild(FileData* file)
 	assert(mType == FOLDER);
 	assert(file->getParent() == this);
 	mChildrenByFilename.erase(file->getKey());
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 	{
 		if(*it == file)
 		{
@@ -232,7 +232,7 @@ void FileData::sort(ComparisonFunction& comparator, bool ascending)
 {
 	std::stable_sort(mChildren.begin(), mChildren.end(), comparator);
 
-	for(auto it = mChildren.begin(); it != mChildren.end(); it++)
+	for(auto it = mChildren.cbegin(); it != mChildren.cend(); it++)
 	{
 		if((*it)->getChildren().size() > 0)
 			(*it)->sort(comparator, ascending);

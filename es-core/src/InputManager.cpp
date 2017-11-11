@@ -121,7 +121,7 @@ void InputManager::removeJoystickByJoystickID(SDL_JoystickID joyId)
 
 	// close the joystick
 	auto joyIt = mJoysticks.find(joyId);
-	if(joyIt != mJoysticks.end())
+	if(joyIt != mJoysticks.cend())
 	{
 		SDL_JoystickClose(joyIt->second);
 		mJoysticks.erase(joyIt);
@@ -135,19 +135,19 @@ void InputManager::deinit()
 	if(!initialized())
 		return;
 
-	for(auto iter = mJoysticks.begin(); iter != mJoysticks.end(); iter++)
+	for(auto iter = mJoysticks.cbegin(); iter != mJoysticks.cend(); iter++)
 	{
 		SDL_JoystickClose(iter->second);
 	}
 	mJoysticks.clear();
 
-	for(auto iter = mInputConfigs.begin(); iter != mInputConfigs.end(); iter++)
+	for(auto iter = mInputConfigs.cbegin(); iter != mInputConfigs.cend(); iter++)
 	{
 		delete iter->second;
 	}
 	mInputConfigs.clear();
 
-	for(auto iter = mPrevAxisValues.begin(); iter != mPrevAxisValues.end(); iter++)
+	for(auto iter = mPrevAxisValues.cbegin(); iter != mPrevAxisValues.cend(); iter++)
 	{
 		delete[] iter->second;
 	}
@@ -453,7 +453,7 @@ bool InputManager::initialized() const
 int InputManager::getNumConfiguredDevices()
 {
 	int num = 0;
-	for(auto it = mInputConfigs.begin(); it != mInputConfigs.end(); it++)
+	for(auto it = mInputConfigs.cbegin(); it != mInputConfigs.cend(); it++)
 	{
 		if(it->second->isConfigured())
 			num++;
@@ -477,7 +477,7 @@ std::string InputManager::getDeviceGUIDString(int deviceId)
 		return CEC_GUID_STRING;
 
 	auto it = mJoysticks.find(deviceId);
-	if(it == mJoysticks.end())
+	if(it == mJoysticks.cend())
 	{
 		LOG(LogError) << "getDeviceGUIDString - deviceId " << deviceId << " not found!";
 		return "something went horribly wrong";
