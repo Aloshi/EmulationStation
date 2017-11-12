@@ -27,7 +27,7 @@ const ResourceData ResourceManager::getFileData(const std::string& path) const
 {
 	//check if its embedded
 	
-	if(res2hMap.find(path) != res2hMap.end())
+	if(res2hMap.find(path) != res2hMap.cend())
 	{
 		//it is
 		Res2hEntry embeddedEntry = res2hMap.find(path)->second;
@@ -70,7 +70,7 @@ ResourceData ResourceManager::loadFile(const std::string& path) const
 bool ResourceManager::fileExists(const std::string& path) const
 {
 	//if it exists as an embedded file, return true
-	if(res2hMap.find(path) != res2hMap.end())
+	if(res2hMap.find(path) != res2hMap.cend())
 		return true;
 
 	return fs::exists(path);
@@ -78,8 +78,8 @@ bool ResourceManager::fileExists(const std::string& path) const
 
 void ResourceManager::unloadAll()
 {
-	auto iter = mReloadables.begin();
-	while(iter != mReloadables.end())
+	auto iter = mReloadables.cbegin();
+	while(iter != mReloadables.cend())
 	{
 		if(!iter->expired())
 		{
@@ -93,8 +93,8 @@ void ResourceManager::unloadAll()
 
 void ResourceManager::reloadAll()
 {
-	auto iter = mReloadables.begin();
-	while(iter != mReloadables.end())
+	auto iter = mReloadables.cbegin();
+	while(iter != mReloadables.cend())
 	{
 		if(!iter->expired())
 		{

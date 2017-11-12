@@ -132,10 +132,10 @@ void Settings::setDefaults()
 template <typename K, typename V>
 void saveMap(pugi::xml_document& doc, std::map<K, V>& map, const char* type)
 {
-	for(auto iter = map.begin(); iter != map.end(); iter++)
+	for(auto iter = map.cbegin(); iter != map.cend(); iter++)
 	{
 		// key is on the "don't save" list, so don't save it
-		if(std::find(settings_dont_save.begin(), settings_dont_save.end(), iter->first) != settings_dont_save.end())
+		if(std::find(settings_dont_save.cbegin(), settings_dont_save.cend(), iter->first) != settings_dont_save.cend())
 			continue;
 
 		pugi::xml_node node = doc.append_child(type);
@@ -155,7 +155,7 @@ void Settings::saveFile()
 	saveMap<std::string, float>(doc, mFloatMap, "float");
 
 	//saveMap<std::string, std::string>(doc, mStringMap, "string");
-	for(auto iter = mStringMap.begin(); iter != mStringMap.end(); iter++)
+	for(auto iter = mStringMap.cbegin(); iter != mStringMap.cend(); iter++)
 	{
 		pugi::xml_node node = doc.append_child("string");
 		node.append_attribute("name").set_value(iter->first.c_str());
@@ -193,7 +193,7 @@ void Settings::loadFile()
 //Print a warning message if the setting we're trying to get doesn't already exist in the map, then return the value in the map.
 #define SETTINGS_GETSET(type, mapName, getMethodName, setMethodName) type Settings::getMethodName(const std::string& name) \
 { \
-	if(mapName.find(name) == mapName.end()) \
+	if(mapName.find(name) == mapName.cend()) \
 	{ \
 		LOG(LogError) << "Tried to use unset setting " << name << "!"; \
 	} \

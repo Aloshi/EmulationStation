@@ -41,13 +41,13 @@ void Window::pushGui(GuiComponent* gui)
 
 void Window::removeGui(GuiComponent* gui)
 {
-	for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+	for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
 	{
 		if(*i == gui)
 		{
 			i = mGuiStack.erase(i);
 
-			if(i == mGuiStack.end() && mGuiStack.size()) // we just popped the stack and the stack is not empty
+			if(i == mGuiStack.cend() && mGuiStack.size()) // we just popped the stack and the stack is not empty
 			{
 				mGuiStack.back()->updateHelpPrompts();
 				mGuiStack.back()->topWindow(true);
@@ -99,7 +99,7 @@ bool Window::init(unsigned int width, unsigned int height)
 void Window::deinit()
 {
 	// Hide all GUI elements on uninitialisation - this disable
-	for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+	for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
 	{
 		(*i)->onHide();
 	}
@@ -332,14 +332,14 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 
 	std::map<std::string, bool> inputSeenMap;
 	std::map<std::string, int> mappedToSeenMap;
-	for(auto it = prompts.begin(); it != prompts.end(); it++)
+	for(auto it = prompts.cbegin(); it != prompts.cend(); it++)
 	{
 		// only add it if the same icon hasn't already been added
 		if(inputSeenMap.emplace(it->first, true).second)
 		{
 			// this symbol hasn't been seen yet, what about the action name?
 			auto mappedTo = mappedToSeenMap.find(it->second);
-			if(mappedTo != mappedToSeenMap.end())
+			if(mappedTo != mappedToSeenMap.cend())
 			{
 				// yes, it has!
 
@@ -404,7 +404,7 @@ void Window::onWake()
 
 bool Window::isProcessing()
 {
-	return count_if(mGuiStack.begin(), mGuiStack.end(), [](GuiComponent* c) { return c->isProcessing(); }) > 0;
+	return count_if(mGuiStack.cbegin(), mGuiStack.cend(), [](GuiComponent* c) { return c->isProcessing(); }) > 0;
 }
 
 void Window::startScreenSaver()
@@ -412,7 +412,7 @@ void Window::startScreenSaver()
  	if (mScreenSaver && !mRenderScreenSaver)
  	{
  		// Tell the GUI components the screensaver is starting
- 		for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+ 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
  			(*i)->onScreenSaverActivate();
 
  		mScreenSaver->startScreenSaver();
@@ -428,7 +428,7 @@ void Window::startScreenSaver()
  		mRenderScreenSaver = false;
 
  		// Tell the GUI components the screensaver has stopped
- 		for(auto i = mGuiStack.begin(); i != mGuiStack.end(); i++)
+ 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
  			(*i)->onScreenSaverDeactivate();
  	}
  }

@@ -68,7 +68,7 @@ void HelpComponent::updateGrid()
 
 	float width = 0;
 	const float height = round(font->getLetterHeight() * 1.25f);
-	for(auto it = mPrompts.begin(); it != mPrompts.end(); it++)
+	for(auto it = mPrompts.cbegin(); it != mPrompts.cend(); it++)
 	{
 		auto icon = std::make_shared<ImageComponent>(mWindow);
 		icon->setImage(getIconTexture(it->first.c_str()));
@@ -101,11 +101,11 @@ void HelpComponent::updateGrid()
 std::shared_ptr<TextureResource> HelpComponent::getIconTexture(const char* name)
 {
 	auto it = mIconCache.find(name);
-	if(it != mIconCache.end())
+	if(it != mIconCache.cend())
 		return it->second;
 	
 	auto pathLookup = ICON_PATH_MAP.find(name);
-	if(pathLookup == ICON_PATH_MAP.end())
+	if(pathLookup == ICON_PATH_MAP.cend())
 	{
 		LOG(LogError) << "Unknown help icon \"" << name << "\"!";
 		return nullptr;

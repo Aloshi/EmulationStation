@@ -62,7 +62,7 @@ private:
 		Vector2f squareSize(32, 32);
 
 		// calc biggest square size
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			Vector2f chkSize = getSquareSize(it->data.texture);
 			if(chkSize.x() > squareSize.x())

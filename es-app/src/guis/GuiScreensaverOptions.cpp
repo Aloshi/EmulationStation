@@ -25,7 +25,7 @@ void GuiScreensaverOptions::save()
 	if(!mSaveFuncs.size())
 		return;
 
-	for(auto it = mSaveFuncs.begin(); it != mSaveFuncs.end(); it++)
+	for(auto it = mSaveFuncs.cbegin(); it != mSaveFuncs.cend(); it++)
 		(*it)();
 
 	Settings::getInstance()->saveFile();

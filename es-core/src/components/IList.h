@@ -129,21 +129,21 @@ public:
 		return mEntries.at(mCursor).object;
 	}
 
-	void setCursor(typename std::vector<Entry>::iterator& it)
+	void setCursor(typename std::vector<Entry>::const_iterator& it)
 	{
-		assert(it != mEntries.end());
-		mCursor = it - mEntries.begin();
+		assert(it != mEntries.cend());
+		mCursor = it - mEntries.cbegin();
 		onCursorChanged(CURSOR_STOPPED);
 	}
 
 	// returns true if successful (select is in our list), false if not
 	bool setCursor(const UserData& obj)
 	{
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			if((*it).object == obj)
 			{
-				mCursor = it - mEntries.begin();
+				mCursor = it - mEntries.cbegin();
 				onCursorChanged(CURSOR_STOPPED);
 				return true;
 			}
@@ -160,7 +160,7 @@ public:
 
 	bool remove(const UserData& obj)
 	{
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			if((*it).object == obj)
 			{
@@ -175,9 +175,9 @@ public:
 	inline int size() const { return mEntries.size(); }
 
 protected:
-	void remove(typename std::vector<Entry>::iterator& it)
+	void remove(typename std::vector<Entry>::const_iterator& it)
 	{
-		if(mCursor > 0 && it - mEntries.begin() <= mCursor)
+		if(mCursor > 0 && it - mEntries.cbegin() <= mCursor)
 		{
 			mCursor--;
 			onCursorChanged(CURSOR_STOPPED);

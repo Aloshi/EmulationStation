@@ -57,7 +57,7 @@ public:
 
 	inline std::shared_ptr<GuiComponent> getSelectedComponent()
 	{
-		GridEntry* e = getCellAt(mCursor);
+		const GridEntry* e = getCellAt(mCursor);
 		if(e)
 			return e->component;
 		else
@@ -110,8 +110,8 @@ private:
 	void updateCellComponent(const GridEntry& cell);
 	void updateSeparators();
 
-	GridEntry* getCellAt(int x, int y);
-	inline GridEntry* getCellAt(const Vector2i& pos) { return getCellAt(pos.x(), pos.y()); }
+	const GridEntry* getCellAt(int x, int y) const;
+	inline const GridEntry* getCellAt(const Vector2i& pos) const { return getCellAt(pos.x(), pos.y()); }
 	
 	Vector2i mGridSize;
 

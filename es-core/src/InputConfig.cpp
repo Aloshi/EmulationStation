@@ -72,14 +72,14 @@ void InputConfig::mapInput(const std::string& name, Input input)
 void InputConfig::unmapInput(const std::string& name)
 {
 	auto it = mNameMap.find(toLower(name));
-	if(it != mNameMap.end())
+	if(it != mNameMap.cend())
 		mNameMap.erase(it);
 }
 
 bool InputConfig::getInputByName(const std::string& name, Input* result)
 {
 	auto it = mNameMap.find(toLower(name));
-	if(it != mNameMap.end())
+	if(it != mNameMap.cend())
 	{
 		*result = it->second;
 		return true;
@@ -115,8 +115,8 @@ std::vector<std::string> InputConfig::getMappedTo(Input input)
 {
 	std::vector<std::string> maps;
 
-	typedef std::map<std::string, Input>::iterator it_type;
-	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)
+	typedef std::map<std::string, Input>::const_iterator it_type;
+	for(it_type iterator = mNameMap.cbegin(); iterator != mNameMap.cend(); iterator++)
 	{
 		Input chk = iterator->second;
 
@@ -188,8 +188,8 @@ void InputConfig::writeToXML(pugi::xml_node& parent)
 
 	cfg.append_attribute("deviceGUID") = mDeviceGUID.c_str();
 
-	typedef std::map<std::string, Input>::iterator it_type;
-	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)
+	typedef std::map<std::string, Input>::const_iterator it_type;
+	for(it_type iterator = mNameMap.cbegin(); iterator != mNameMap.cend(); iterator++)
 	{
 		if(!iterator->second.configured)
 			continue;

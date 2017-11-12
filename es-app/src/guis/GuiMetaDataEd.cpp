@@ -47,7 +47,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mGrid.setEntry(mList, Vector2i(0, 1), true, true);
 
 	// populate list
-	for(auto iter = mdd.begin(); iter != mdd.end(); iter++)
+	for(auto iter = mdd.cbegin(); iter != mdd.cend(); iter++)
 	{
 		std::shared_ptr<GuiComponent> ed;
 

@@ -37,7 +37,7 @@ bool GridGameListView::input(InputConfig* config, Input input)
 void GridGameListView::populateList(const std::vector<FileData*>& files)
 {
 	mGrid.clear();
-	for(auto it = files.begin(); it != files.end(); it++)
+	for(auto it = files.cbegin(); it != files.cend(); it++)
 	{
 		mGrid.add((*it)->getName(), (*it)->getThumbnailPath(), *it);
 	}

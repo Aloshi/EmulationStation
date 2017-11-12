@@ -39,10 +39,10 @@ void Font::initLibrary()
 size_t Font::getMemUsage() const
 {
 	size_t memUsage = 0;
-	for(auto it = mTextures.begin(); it != mTextures.end(); it++)
+	for(auto it = mTextures.cbegin(); it != mTextures.cend(); it++)
 		memUsage += it->textureSize.x() * it->textureSize.y() * 4;
 
-	for(auto it = mFaceCache.begin(); it != mFaceCache.end(); it++)
+	for(auto it = mFaceCache.cbegin(); it != mFaceCache.cend(); it++)
 		memUsage += it->second->data.length;
 
 	return memUsage;
@@ -52,8 +52,8 @@ size_t Font::getTotalMemUsage()
 {
 	size_t total = 0;
 
-	auto it = sFontMap.begin();
-	while(it != sFontMap.end())
+	auto it = sFontMap.cbegin();
+	while(it != sFontMap.cend())
 	{
 		if(it->second.expired())
 		{
@@ -105,7 +105,7 @@ std::shared_ptr<Font> Font::get(int size, const std::string& path)
 
 	std::pair<std::string, int> def(canonicalPath.empty() ? getDefaultPath() : canonicalPath, size);
 	auto foundFont = sFontMap.find(def);
-	if(foundFont != sFontMap.end())
+	if(foundFont != sFontMap.cend())
 	{
 		if(!foundFont->second.expired())
 			return foundFont->second.lock();
@@ -284,7 +284,7 @@ FT_Face Font::getFaceForChar(unsigned int id)
 	{
 		auto fit = mFaceCache.find(i);
 
-		if(fit == mFaceCache.end()) // doesn't exist yet
+		if(fit == mFaceCache.cend()) // doesn't exist yet
 		{
 			// i == 0 -> mPath
 			// otherwise, take from fallbackFonts
@@ -299,7 +299,7 @@ FT_Face Font::getFaceForChar(unsigned int id)
 	}
 
 	// nothing has a valid glyph - return the "real" face so we get a "missing" character
-	return mFaceCache.begin()->second->face;
+	return mFaceCache.cbegin()->second->face;
 }
 
 void Font::clearFaceCache()
@@ -311,7 +311,7 @@ Font::Glyph* Font::getGlyph(unsigned int id)
 {
 	// is it already loaded?
 	auto it = mGlyphMap.find(id);
-	if(it != mGlyphMap.end())
+	if(it != mGlyphMap.cend())
 		return &it->second;
 
 	// nope, need to make a glyph
@@ -376,7 +376,7 @@ void Font::rebuildTextures()
 	}
 
 	// reupload the texture data
-	for(auto it = mGlyphMap.begin(); it != mGlyphMap.end(); it++)
+	for(auto it = mGlyphMap.cbegin(); it != mGlyphMap.cend(); it++)
 	{
 		FT_Face face = getFaceForChar(it->first);
 		FT_GlyphSlot glyphSlot = face->glyph;
@@ -406,7 +406,7 @@ void Font::renderTextCache(TextCache* cache)
 		return;
 	}
 
-	for(auto it = cache->vertexLists.begin(); it != cache->vertexLists.end(); it++)
+	for(auto it = cache->vertexLists.cbegin(); it != cache->vertexLists.cend(); it++)
 	{
 		assert(*it->textureIdPtr != 0);
 
@@ -675,7 +675,7 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 	cache->metrics = { sizeText(text, lineSpacing) };
 
 	unsigned int i = 0;
-	for(auto it = vertMap.begin(); it != vertMap.end(); it++)
+	for(auto it = vertMap.cbegin(); it != vertMap.cend(); it++)
 	{
 		TextCache::VertexList& vertList = cache->vertexLists.at(i);
 
@@ -698,8 +698,8 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 
 void TextCache::setColor(unsigned int color)
 {
-	for(auto it = vertexLists.begin(); it != vertexLists.end(); it++)
-		Renderer::buildGLColorArray(it->colors.data(), color, it->verts.size());
+	for(auto it = vertexLists.cbegin(); it != vertexLists.cend(); it++)
+		Renderer::buildGLColorArray((GLubyte*)(it->colors.data()), color, it->verts.size());
 }
 
 std::shared_ptr<Font> Font::getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig)

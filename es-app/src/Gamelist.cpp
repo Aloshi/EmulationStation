@@ -41,7 +41,7 @@ FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& pa
 		const std::unordered_map<std::string, FileData*>& children = treeNode->getChildrenByFilename();
 
 		std::string key = path_it->string();
-		found = children.find(key) != children.end();
+		found = children.find(key) != children.cend();
 		if (found) {
 			treeNode = children.at(key);
 		}

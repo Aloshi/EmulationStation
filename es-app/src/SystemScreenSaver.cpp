@@ -259,8 +259,8 @@ void SystemScreenSaver::renderScreenSaver()
 unsigned long SystemScreenSaver::countGameListNodes(const char *nodeName)
 {
 	unsigned long nodeCount = 0;
-	std::vector<SystemData*>:: iterator it;
-	for (it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); ++it)
+	std::vector<SystemData*>::const_iterator it;
+	for (it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); ++it)
 	{
 		// We only want images and videos from game systems that are not collections
 		if (!(*it)->isCollection() && (*it)->isGameSystem())
@@ -309,8 +309,8 @@ void SystemScreenSaver::countImages()
 
 void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeName, std::string& path)
 {
-	std::vector<SystemData*>:: iterator it;
-	for (it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); ++it)
+	std::vector<SystemData*>::const_iterator it;
+	for (it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); ++it)
 	{
 		pugi::xml_document doc;
 		pugi::xml_node root;
@@ -354,7 +354,7 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 						const std::unordered_map<std::string, FileData*>& children = rootFileData->getChildrenByFilename();
 						std::unordered_map<std::string, FileData*>::const_iterator screenSaverGame = children.find(shortPath);
 
-						if (screenSaverGame != children.end())
+						if (screenSaverGame != children.cend())
 						{
 							// Found the corresponding FileData
 							mCurrentGame = screenSaverGame->second;
@@ -365,10 +365,10 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 							// iterate on children
 							FileType type = GAME;
 							std::vector<FileData*> allFiles = rootFileData->getFilesRecursive(type);
-							std::vector<FileData*>::iterator itf;  // declare an iterator to a vector of strings
+							std::vector<FileData*>::const_iterator itf;  // declare an iterator to a vector of strings
 
 							int i = 0;
-							for(itf=allFiles.begin() ; itf < allFiles.end(); itf++,i++ ) {
+							for(itf=allFiles.cbegin() ; itf < allFiles.cend(); itf++,i++ ) {
 								if ((*itf)->getPath() == gamePath)
 								{
 									mCurrentGame = (*itf);

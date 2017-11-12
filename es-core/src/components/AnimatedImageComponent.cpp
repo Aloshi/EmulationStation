@@ -44,7 +44,7 @@ void AnimatedImageComponent::reset()
 
 void AnimatedImageComponent::onSizeChanged()
 {
-	for(auto it = mFrames.begin(); it != mFrames.end(); it++)
+	for(auto it = mFrames.cbegin(); it != mFrames.cend(); it++)
 	{
 		it->first->setResize(mSize.x(), mSize.y());
 	}

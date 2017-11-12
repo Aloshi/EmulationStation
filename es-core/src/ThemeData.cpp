@@ -215,7 +215,7 @@ void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const st
 	mViews.clear();
 	mVariables.clear();
 
-	mVariables.insert(sysDataMap.begin(), sysDataMap.end());
+	mVariables.insert(sysDataMap.cbegin(), sysDataMap.cend());
 
 	pugi::xml_document doc;
 	pugi::xml_parse_result res = doc.load_file(path.c_str());
@@ -286,7 +286,7 @@ void ThemeData::parseFeatures(const pugi::xml_node& root)
 
 		const std::string supportedAttr = node.attribute("supported").as_string();
 
-		if (std::find(sSupportedFeatures.begin(), sSupportedFeatures.end(), supportedAttr) != sSupportedFeatures.end())
+		if (std::find(sSupportedFeatures.cbegin(), sSupportedFeatures.cend(), supportedAttr) != sSupportedFeatures.cend())
 		{
 			parseViews(node);
 		}
@@ -335,7 +335,7 @@ void ThemeData::parseViews(const pugi::xml_node& root)
 			prevOff = nameAttr.find_first_not_of(delim, off);
 			off = nameAttr.find_first_of(delim, prevOff);
 			
-			if (std::find(sSupportedViews.begin(), sSupportedViews.end(), viewKey) != sSupportedViews.end())
+			if (std::find(sSupportedViews.cbegin(), sSupportedViews.cend(), viewKey) != sSupportedViews.cend())
 			{
 				ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
 				parseView(node, view);
@@ -355,7 +355,7 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 			throw error << "Element of type \"" << node.name() << "\" missing \"name\" attribute!";
 
 		auto elemTypeIt = sElementMap.find(node.name());
-		if(elemTypeIt == sElementMap.end())
+		if(elemTypeIt == sElementMap.cend())
 			throw error << "Unknown element of type \"" << node.name() << "\"!";
 
 		const char* delim = " \t\r\n,";
@@ -371,7 +371,7 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 			parseElement(node, elemTypeIt->second, 
 				view.elements.insert(std::pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
 
-			if(std::find(view.orderedKeys.begin(), view.orderedKeys.end(), elemKey) == view.orderedKeys.end())
+			if(std::find(view.orderedKeys.cbegin(), view.orderedKeys.cend(), elemKey) == view.orderedKeys.cend())
 				view.orderedKeys.push_back(elemKey);
 		}
 	}
@@ -389,7 +389,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
 	{
 		auto typeIt = typeMap.find(node.name());
-		if(typeIt == typeMap.end())
+		if(typeIt == typeMap.cend())
 			throw error << "Unknown property type \"" << node.name() << "\" (for element of type " << root.name() << ").";
 
 		std::string str = resolvePlaceholders(node.text().as_string());
@@ -457,17 +457,17 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 bool ThemeData::hasView(const std::string& view)
 {
 	auto viewIt = mViews.find(view);
-	return (viewIt != mViews.end());
+	return (viewIt != mViews.cend());
 }
 
 const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, const std::string& element, const std::string& expectedType) const
 {
 	auto viewIt = mViews.find(view);
-	if(viewIt == mViews.end())
+	if(viewIt == mViews.cend())
 		return NULL; // not found
 
 	auto elemIt = viewIt->second.elements.find(element);
-	if(elemIt == viewIt->second.elements.end()) return NULL;
+	if(elemIt == viewIt->second.elements.cend()) return NULL;
 
 	if(elemIt->second.type != expectedType && !expectedType.empty())
 	{
@@ -509,10 +509,10 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 	std::vector<GuiComponent*> comps;
 
 	auto viewIt = theme->mViews.find(view);
-	if(viewIt == theme->mViews.end())
+	if(viewIt == theme->mViews.cend())
 		return comps;
 	
-	for(auto it = viewIt->second.orderedKeys.begin(); it != viewIt->second.orderedKeys.end(); it++)
+	for(auto it = viewIt->second.orderedKeys.cbegin(); it != viewIt->second.orderedKeys.cend(); it++)
 	{
 		ThemeElement& elem = viewIt->second.elements.at(*it);
 		if(elem.extra)
@@ -572,11 +572,11 @@ fs::path ThemeData::getThemeFromCurrentSet(const std::string& system)
 		return "";
 	}
 
-	auto set = themeSets.find(Settings::getInstance()->getString("ThemeSet"));
-	if(set == themeSets.end())
+	std::map<std::string, ThemeSet>::const_iterator set = themeSets.find(Settings::getInstance()->getString("ThemeSet"));
+	if(set == themeSets.cend())
 	{
 		// currently selected theme set is missing, so just pick the first available set
-		set = themeSets.begin();
+		set = themeSets.cbegin();
 		Settings::getInstance()->setString("ThemeSet", set->first);
 	}
 

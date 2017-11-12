@@ -114,7 +114,7 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 
 	TextureKeyType key(canonicalPath, tile);
 	auto foundTexture = sTextureMap.find(key);
-	if(foundTexture != sTextureMap.end())
+	if(foundTexture != sTextureMap.cend())
 	{
 		if(!foundTexture->second.expired())
 			return foundTexture->second.lock();
