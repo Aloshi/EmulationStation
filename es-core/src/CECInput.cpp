@@ -16,6 +16,32 @@ extern int SDL_USER_CECBUTTONUP;
 CECInput* CECInput::sInstance = nullptr;
 
 #ifdef HAVE_LIBCEC
+#if CEC_LIB_VERSION_MAJOR >= 4
+static void onAlert(void* /*cbParam*/, const CEC::libcec_alert /*type*/, const CEC::libcec_parameter /*param*/)
+{
+	return;
+}
+
+static void onCommand(void* /*cbParam*/, const CEC::cec_command* /*command*/)
+{
+	return;
+}
+
+static void onKeyPress(void* /*cbParam*/, const CEC::cec_keypress* key)
+{
+	SDL_Event event;
+	event.type      = (key->duration > 0) ? SDL_USER_CECBUTTONUP : SDL_USER_CECBUTTONDOWN;
+	event.user.code = key->keycode;
+	SDL_PushEvent(&event);
+
+	return;
+}
+
+static void onLogMessage(void* /*cbParam*/, const CEC::cec_log_message* /*message*/)
+{
+	return;
+}
+#else
 static int onAlert(void* /*cbParam*/, const CEC::libcec_alert /*type*/, const CEC::libcec_parameter /*param*/)
 {
 	return 0;
@@ -40,6 +66,7 @@ static int onLogMessage(void* /*cbParam*/, const CEC::cec_log_message /*message*
 {
 	return 0;
 }
+#endif
 #endif // HAVE_LIBCEC
 
 void CECInput::init()
@@ -70,34 +97,41 @@ CECInput::CECInput() : mlibCEC(nullptr)
 	config.callbacks       = &callbacks;
 	config.deviceTypes.Add(CEC::CEC_DEVICE_TYPE_PLAYBACK_DEVICE);
 
+#if CEC_LIB_VERSION_MAJOR >= 4
+	callbacks.alert           = &onAlert;
+	callbacks.commandReceived = &onCommand;
+	callbacks.keyPress        = &onKeyPress;
+	callbacks.logMessage      = &onLogMessage;
+#else
 	callbacks.CBCecAlert      = &onAlert;
 	callbacks.CBCecCommand    = &onCommand;
 	callbacks.CBCecKeyPress   = &onKeyPress;
 	callbacks.CBCecLogMessage = &onLogMessage;
+#endif
 
 	mlibCEC = LibCecInitialise(&config);
-	
+
 	if(!mlibCEC)
 	{
 		LOG(LogInfo) << "CECInput::LibCecInitialise failed";
 		return;
 	}
 
-	CEC::cec_adapter adapters[10];
-	int8_t numAdapters = mlibCEC->FindAdapters(adapters, 10, nullptr);
+	CEC::cec_adapter_descriptor adapters[10];
+	int8_t numAdapters = mlibCEC->DetectAdapters(adapters, 10, nullptr, true);
 
 	if(numAdapters <= 0)
 	{
-		LOG(LogInfo) << "CECInput::mAdapter->FindAdapters failed";
+		LOG(LogInfo) << "CECInput::mAdapter->DetectAdapters failed";
 		UnloadLibCec(mlibCEC);
 		mlibCEC = nullptr;
 		return;
 	}
 
 	for(int i = 0; i < numAdapters; ++i)
-		LOG(LogDebug) << "adapter: " << i << " path: " << adapters[i].comm  << " comm: " << adapters[i].comm;
+		LOG(LogDebug) << "adapter: " << i << " path: " << adapters[i].strComPath << " name: " << adapters[i].strComName;
 
-	if(!mlibCEC->Open(adapters[0].comm))
+	if(!mlibCEC->Open(adapters[0].strComName))
 	{
 		LOG(LogInfo) << "CECInput::mAdapter->Open failed";
 		UnloadLibCec(mlibCEC);
