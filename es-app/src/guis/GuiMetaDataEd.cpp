@@ -156,7 +156,7 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 	mGrid.setEntry(mButtons, Vector2i(0, 2), true, false);
 
 	// resize + center	
-	float width = (float) std::min(Renderer::getScreenHeight(), (unsigned int) (Renderer::getScreenWidth() * 0.90f));
+	float width = (float) Math::min(Renderer::getScreenHeight(), (unsigned int) (Renderer::getScreenWidth() * 0.90f));
 	setSize(width, Renderer::getScreenHeight() * 0.82f);
 	setPosition((Renderer::getScreenWidth() - mSize.x()) / 2, (Renderer::getScreenHeight() - mSize.y()) / 2);
 }

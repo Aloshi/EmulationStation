@@ -101,7 +101,7 @@ void VideoVlcComponent::resize()
 			}
 
 			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = round(mSize[1]);
+			mSize[1] = Math::round(mSize[1]);
 			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
 
 		}else{
@@ -113,17 +113,17 @@ void VideoVlcComponent::resize()
 			// for SVG rasterization, we always calculate width from rounded height (see comment above)
 			if(!mTargetSize.x() && mTargetSize.y())
 			{
-				mSize[1] = round(mTargetSize.y());
+				mSize[1] = Math::round(mTargetSize.y());
 				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
 			}else if(mTargetSize.x() && !mTargetSize.y())
 			{
-				mSize[1] = round((mTargetSize.x() / textureSize.x()) * textureSize.y());
+				mSize[1] = Math::round((mTargetSize.x() / textureSize.x()) * textureSize.y());
 				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
 			}
 		}
 
 	// mSize.y() should already be rounded
-	mTexture->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
+	mTexture->rasterizeAt((int)Math::round(mSize.x()), (int)Math::round(mSize.y()));
 
 	onSizeChanged();
 }
@@ -327,8 +327,8 @@ void VideoVlcComponent::startVideo()
 								mVideoWidth = (unsigned int) (mVideoWidth * resizeScale.y());
 								mVideoHeight = (unsigned int) (mVideoHeight * resizeScale.y());
 							}
-							mVideoHeight = (unsigned int) round(mVideoHeight);
-							mVideoWidth = (unsigned int) round(mVideoWidth);
+							mVideoHeight = (unsigned int) Math::round(mVideoHeight);
+							mVideoWidth = (unsigned int) Math::round(mVideoWidth);
 						}
 					}
 #endif

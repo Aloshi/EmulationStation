@@ -8,37 +8,37 @@ class Vector2i
 {
 public:
 
-	         Vector2i()                                        { }
-	         Vector2i(const int i)              : mX(i), mY(i) { }
-	         Vector2i(const int x, const int y) : mX(x), mY(y) { }
+	         Vector2i()                                            { }
+	         Vector2i(const int _i)               : mX(_i), mY(_i) { }
+	         Vector2i(const int _x, const int _y) : mX(_x), mY(_y) { }
 
-	const bool operator==(const Vector2i& other) const { return ((mX == other.mX) && (mY == other.mY)); }
-	const bool operator!=(const Vector2i& other) const { return ((mX != other.mX) || (mY != other.mY)); }
+	const bool operator==(const Vector2i& _other) const { return ((mX == _other.mX) && (mY == _other.mY)); }
+	const bool operator!=(const Vector2i& _other) const { return ((mX != _other.mX) || (mY != _other.mY)); }
 
-	const Vector2i operator+(const Vector2i& other) const { return { mX + other.mX, mY + other.mY }; }
-	const Vector2i operator-(const Vector2i& other) const { return { mX - other.mX, mY - other.mY }; }
-	const Vector2i operator*(const Vector2i& other) const { return { mX * other.mX, mY * other.mY }; }
-	const Vector2i operator/(const Vector2i& other) const { return { mX / other.mX, mY / other.mY }; }
+	const Vector2i operator+(const Vector2i& _other) const { return { mX + _other.mX, mY + _other.mY }; }
+	const Vector2i operator-(const Vector2i& _other) const { return { mX - _other.mX, mY - _other.mY }; }
+	const Vector2i operator*(const Vector2i& _other) const { return { mX * _other.mX, mY * _other.mY }; }
+	const Vector2i operator/(const Vector2i& _other) const { return { mX / _other.mX, mY / _other.mY }; }
 
-	const Vector2i operator+(const int& other) const { return { mX + other, mY + other }; }
-	const Vector2i operator-(const int& other) const { return { mX - other, mY - other }; }
-	const Vector2i operator*(const int& other) const { return { mX * other, mY * other }; }
-	const Vector2i operator/(const int& other) const { return { mX / other, mY / other }; }
+	const Vector2i operator+(const int& _other) const { return { mX + _other, mY + _other }; }
+	const Vector2i operator-(const int& _other) const { return { mX - _other, mY - _other }; }
+	const Vector2i operator*(const int& _other) const { return { mX * _other, mY * _other }; }
+	const Vector2i operator/(const int& _other) const { return { mX / _other, mY / _other }; }
 
 	const Vector2i operator-() const { return { -mX , -mY }; }
 
-	Vector2i& operator+=(const Vector2i& other) { *this = *this + other; return *this; }
-	Vector2i& operator-=(const Vector2i& other) { *this = *this - other; return *this; }
-	Vector2i& operator*=(const Vector2i& other) { *this = *this * other; return *this; }
-	Vector2i& operator/=(const Vector2i& other) { *this = *this / other; return *this; }
+	Vector2i& operator+=(const Vector2i& _other) { *this = *this + _other; return *this; }
+	Vector2i& operator-=(const Vector2i& _other) { *this = *this - _other; return *this; }
+	Vector2i& operator*=(const Vector2i& _other) { *this = *this * _other; return *this; }
+	Vector2i& operator/=(const Vector2i& _other) { *this = *this / _other; return *this; }
 
-	Vector2i& operator+=(const int& other) { *this = *this + other; return *this; }
-	Vector2i& operator-=(const int& other) { *this = *this - other; return *this; }
-	Vector2i& operator*=(const int& other) { *this = *this * other; return *this; }
-	Vector2i& operator/=(const int& other) { *this = *this / other; return *this; }
+	Vector2i& operator+=(const int& _other) { *this = *this + _other; return *this; }
+	Vector2i& operator-=(const int& _other) { *this = *this - _other; return *this; }
+	Vector2i& operator*=(const int& _other) { *this = *this * _other; return *this; }
+	Vector2i& operator/=(const int& _other) { *this = *this / _other; return *this; }
 
-	      int& operator[](const int index)       { assert(index < 2 && "index out of range"); return (&mX)[index]; }
-	const int& operator[](const int index) const { assert(index < 2 && "index out of range"); return (&mX)[index]; }
+	      int& operator[](const int _index)       { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
+	const int& operator[](const int _index) const { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
 
 	      int& x()       { return mX; }
 	      int& y()       { return mY; }
@@ -54,6 +54,6 @@ private:
 	int mX;
 	int mY;
 
-};
+}; // Vector2i
 
 #endif // ES_CORE_MATH_VECTOR2I_H

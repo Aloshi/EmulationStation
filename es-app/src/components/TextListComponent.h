@@ -137,7 +137,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 	if(size() == 0)
 		return;
 
-	const float entrySize = std::max(font->getHeight(1.0), (float)font->getSize()) * mLineSpacing;
+	const float entrySize = Math::max(font->getHeight(1.0), (float)font->getSize()) * mLineSpacing;
 
 	int startEntry = 0;
 
@@ -316,7 +316,7 @@ void TextListComponent<T>::update(int deltaTime)
 			while(mMarqueeTime > maxTime)
 				mMarqueeTime -= maxTime;
 
-			mMarqueeOffset = Math::scroll_loop(delay, scrollTime + returnTime, mMarqueeTime, scrollLength + returnLength);
+			mMarqueeOffset = Math::Scroll::loop(delay, scrollTime + returnTime, mMarqueeTime, scrollLength + returnLength);
 
 			if(mMarqueeOffset > (scrollLength - (limit - returnLength)))
 				mMarqueeOffset2 = mMarqueeOffset - (scrollLength + returnLength);
@@ -373,7 +373,7 @@ void TextListComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, c
 	}
 
 	setFont(Font::getFromTheme(elem, properties, mFont));
-	const float selectorHeight = std::max(mFont->getHeight(1.0), (float)mFont->getSize()) * mLineSpacing;
+	const float selectorHeight = Math::max(mFont->getHeight(1.0), (float)mFont->getSize()) * mLineSpacing;
 	setSelectorHeight(selectorHeight);
 
 	if(properties & SOUND && elem->has("scrollSound"))

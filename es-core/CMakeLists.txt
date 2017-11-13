@@ -54,6 +54,14 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBox.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiTextEditPopup.h
 
+	# Math
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Misc.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Transform4x4f.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector2f.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector2i.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector3f.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector4f.h
+
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/ResourceManager.h
@@ -113,6 +121,14 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiInputConfig.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiMsgBox.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/guis/GuiTextEditPopup.cpp
+
+	# Math
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Misc.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Transform4x4f.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector2f.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector2i.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector3f.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/math/Vector4f.cpp
 
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.cpp

@@ -107,7 +107,7 @@ void TextComponent::render(const Transform4x4f& parentTrans)
 	if(mTextCache)
 	{
 		const Vector2f& textSize = mTextCache->metrics.size;
-		float yOff;
+		float yOff = 0;
 		switch(mVerticalAlignment)
 		{
 			case ALIGN_TOP:

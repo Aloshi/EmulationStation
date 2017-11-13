@@ -149,7 +149,7 @@ void ViewController::playViewTransition()
 		cancelAnimation(0);
 
 		auto fadeFunc = [this](float t) {
-			mFadeOpacity = lerp<float>(0, 1, t);
+			mFadeOpacity = Math::lerp(0, 1, t);
 		};
 
 		const static int FADE_DURATION = 240; // fade in/out time
@@ -217,7 +217,7 @@ void ViewController::launch(FileData* game, Vector3f center)
 	{
 		// fade out, launch game, fade back in
 		auto fadeFunc = [this](float t) {
-			mFadeOpacity = lerp<float>(0.0f, 1.0f, t);
+			mFadeOpacity = Math::lerp(0.0f, 1.0f, t);
 		};
 		setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this, game, fadeFunc]
 		{

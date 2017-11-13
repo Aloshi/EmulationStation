@@ -67,7 +67,7 @@ void HelpComponent::updateGrid()
 	std::vector< std::shared_ptr<TextComponent> > labels;
 
 	float width = 0;
-	const float height = round(font->getLetterHeight() * 1.25f);
+	const float height = Math::round(font->getLetterHeight() * 1.25f);
 	for(auto it = mPrompts.cbegin(); it != mPrompts.cend(); it++)
 	{
 		auto icon = std::make_shared<ImageComponent>(mWindow);

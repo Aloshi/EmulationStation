@@ -13,7 +13,7 @@ GuiVideoScreensaverOptions::GuiVideoScreensaverOptions(Window* window, const cha
 	swap->setValue((float)(Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout") / (1000)));
 	addWithLabel("SWAP VIDEO AFTER (SECS)", swap);
 	addSaveFunc([swap] {
-		int playNextTimeout = (int)round(swap->getValue()) * (1000);
+		int playNextTimeout = (int)Math::round(swap->getValue()) * (1000);
 		Settings::getInstance()->setInt("ScreenSaverSwapVideoTimeout", playNextTimeout);
 		PowerSaver::updateTimeouts();
 	});
