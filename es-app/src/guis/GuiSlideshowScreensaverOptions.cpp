@@ -15,7 +15,7 @@ GuiSlideshowScreensaverOptions::GuiSlideshowScreensaverOptions(Window* window, c
 	sss_image_sec->setValue((float)(Settings::getInstance()->getInt("ScreenSaverSwapImageTimeout") / (1000)));
 	addWithLabel(row, "SWAP IMAGE AFTER (SECS)", sss_image_sec);
 	addSaveFunc([sss_image_sec] {
-		int playNextTimeout = (int)round(sss_image_sec->getValue()) * (1000);
+		int playNextTimeout = (int)Math::round(sss_image_sec->getValue()) * (1000);
 		Settings::getInstance()->setInt("ScreenSaverSwapImageTimeout", playNextTimeout);
 		PowerSaver::updateTimeouts();
 	});

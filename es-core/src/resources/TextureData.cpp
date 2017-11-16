@@ -1,5 +1,6 @@
 #include "resources/TextureData.h"
 
+#include "math/Misc.h"
 #include "resources/ResourceManager.h"
 #include "ImageIO.h"
 #include "Log.h"
@@ -8,7 +9,6 @@
 #include <nanosvg/nanosvg.h>
 #include <nanosvg/nanosvgrast.h>
 #include <assert.h>
-#include <math.h>
 #include <string.h>
 
 #define DPI 96
@@ -62,18 +62,18 @@ bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length
 		mSourceWidth = svgImage->width;
 		mSourceHeight = svgImage->height;
 	}
-	mWidth = (size_t)round(mSourceWidth);
-	mHeight = (size_t)round(mSourceHeight);
+	mWidth = (size_t)Math::round(mSourceWidth);
+	mHeight = (size_t)Math::round(mSourceHeight);
 
 	if (mWidth == 0)
 	{
 		// auto scale width to keep aspect
-		mWidth = (size_t)round(((float)mHeight / svgImage->height) * svgImage->width);
+		mWidth = (size_t)Math::round(((float)mHeight / svgImage->height) * svgImage->width);
 	}
 	else if (mHeight == 0)
 	{
 		// auto scale height to keep aspect
-		mHeight = (size_t)round(((float)mWidth / svgImage->width) * svgImage->height);
+		mHeight = (size_t)Math::round(((float)mWidth / svgImage->width) * svgImage->height);
 	}
 
 	unsigned char* dataRGBA = new unsigned char[mWidth * mHeight * 4];

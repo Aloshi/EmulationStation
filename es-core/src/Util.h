@@ -9,10 +9,6 @@ std::string strToUpper(const char* from);
 std::string& strToUpper(std::string& str);
 std::string strToUpper(const std::string& str);
 
-#if defined(_WIN32) && _MSC_VER < 1800
-float round(float num);
-#endif
-
 std::string getCanonicalPath(const std::string& str);
 
 boost::filesystem::path removeCommonPathUsingStrings(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains);

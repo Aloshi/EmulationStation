@@ -2,60 +2,31 @@
 #ifndef ES_CORE_MATH_MISC_H
 #define ES_CORE_MATH_MISC_H
 
-#include <math.h>
-
 #define	ES_PI (3.1415926535897932384626433832795028841971693993751058209749445923)
 #define	ES_RAD_TO_DEG(x) ((x) * (180.0 / ES_PI))
 #define	ES_DEG_TO_RAD(x) ((x) * (ES_PI / 180.0))
 
 namespace Math
 {
-	inline float scroll_bounce(const float delayTime, const float scrollTime, const float currentTime, const int scrollLength)
+	// added here to avoid including math.h whenever these are used
+	double cos(const double _num);
+	double sin(const double _num);
+
+	float min(const float _num1, const float _num2);
+	float max(const float _num1, const float _num2);
+	float clamp(const float _num, const float _min, const float _max);
+	float round(const float _num);
+	float lerp(const float _start, const float _end, const float _fraction);
+	float smoothStep(const float _left, const float _right, const float _x);
+	float smootherStep(const float _left, const float _right, const float _x);
+	
+	namespace Scroll
 	{
-		if(currentTime < delayTime)
-		{
-			// wait
-			return 0;
-		}
-		else if(currentTime < (delayTime + scrollTime))
-		{
-			// lerp from 0 to scrollLength
-			const float fraction = (currentTime - delayTime) / scrollTime;
-			return (float)(((1.0 - cos(ES_PI * fraction)) * 0.5) * scrollLength);
-		}
-		else if(currentTime < (delayTime + scrollTime + delayTime))
-		{
-			// wait some more
-			return scrollLength;
-		}
-		else if(currentTime < (delayTime + scrollTime + delayTime + scrollTime))
-		{
-			// lerp back from scrollLength to 0
-			const float fraction = 1.0 - (currentTime - delayTime - scrollTime - delayTime) / scrollTime;
-			return (float)(((1.0 - cos(ES_PI * fraction)) * 0.5) * scrollLength);
-		}
+		float bounce(const float _delayTime, const float _scrollTime, const float _currentTime, const int _scrollLength);
+		float loop(const float _delayTime, const float _scrollTime, const float _currentTime, const int _scrollLength);
 
-		// and back to waiting
-		return 0;
-	}
+	} // Math::Scroll::
 
-	inline float scroll_loop(const float delayTime, const float scrollTime, const float currentTime, const int scrollLength)
-	{
-		if(currentTime < delayTime)
-		{
-			// wait
-			return 0;
-		}
-		else if(currentTime < (delayTime + scrollTime))
-		{
-			// lerp from 0 to scrollLength
-			const float fraction = (currentTime - delayTime) / scrollTime;
-			return fraction * scrollLength;
-		}
-
-		// and back to waiting
-		return 0;
-	}
-}
+} // Math::
 
 #endif // ES_CORE_MATH_MISC_H

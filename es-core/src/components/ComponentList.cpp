@@ -169,10 +169,10 @@ void ComponentList::render(const Transform4x4f& parentTrans)
 	Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
 	Renderer::pushClipRect(Vector2i((int)trans.translation().x(), (int)trans.translation().y()),
-		Vector2i((int)round(dim.x()), (int)round(dim.y() + 1)));
+		Vector2i((int)Math::round(dim.x()), (int)Math::round(dim.y() + 1)));
 
 	// scroll the camera
-	trans.translate(Vector3f(0, -round(mCameraOffset), 0));
+	trans.translate(Vector3f(0, -Math::round(mCameraOffset), 0));
 
 	// draw our entries
 	std::vector<GuiComponent*> drawAfterCursor;

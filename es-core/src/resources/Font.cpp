@@ -595,11 +595,6 @@ float Font::getNewlineStartOffset(const std::string& text, const unsigned int& c
 	}
 }
 
-inline float font_round(float v)
-{
-	return round(v);
-}
-
 TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsigned int color, float xLen, Alignment alignment, float lineSpacing)
 {
 	float x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, 0, xLen, alignment) : 0);
@@ -643,8 +638,8 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 
 		// triangle 1
 		// round to fix some weird "cut off" text bugs
-		tri[0].pos = Vector2f(font_round(glyphStartX), font_round(y + (glyph->texSize.y() * textureSize.y() - glyph->bearing.y())));
-		tri[1].pos = Vector2f(font_round(glyphStartX + glyph->texSize.x() * textureSize.x()), font_round(y - glyph->bearing.y()));
+		tri[0].pos = Vector2f(Math::round(glyphStartX), Math::round(y + (glyph->texSize.y() * textureSize.y() - glyph->bearing.y())));
+		tri[1].pos = Vector2f(Math::round(glyphStartX + glyph->texSize.x() * textureSize.x()), Math::round(y - glyph->bearing.y()));
 		tri[2].pos = Vector2f(tri[0].pos.x(), tri[1].pos.y());
 
 		//tri[0].tex = Vector2f(0, 0);

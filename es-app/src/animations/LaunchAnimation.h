@@ -41,18 +41,18 @@ public:
 	{
 		cameraOut = Transform4x4f::Identity();
 
-		float zoom = lerp<float>(1.0, 4.25f, t*t);
+		float zoom = Math::lerp(1.0, 4.25f, t*t);
 		cameraOut.scale(zoom);
 
 		const float sw = (float)Renderer::getScreenWidth() / zoom;
 		const float sh = (float)Renderer::getScreenHeight() / zoom;
 
-		Vector3f centerPoint = lerp<Vector3f>(-mCameraStart.translation() + Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0), 
-			mTarget, smoothStep(0.0, 1.0, t));
+		const Vector2f startPoint  = Vector2f(-mCameraStart.translation()) + Vector2f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
+		const Vector2f centerPoint = Vector2f().lerp(startPoint, Vector2f(mTarget), Math::smootherStep(0.0, 1.0, t));
 
 		cameraOut.translate(Vector3f((sw / 2) - centerPoint.x(), (sh / 2) - centerPoint.y(), 0));
 		
-		fadeOut = lerp<float>(0.0, 1.0, t*t);
+		fadeOut = Math::lerp(0.0, 1.0, t*t);
 	}
 
 private:

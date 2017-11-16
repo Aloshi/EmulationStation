@@ -59,7 +59,7 @@ void ImageComponent::resize()
 			}
 
 			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = round(mSize[1]);
+			mSize[1] = Math::round(mSize[1]);
 			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
 
 		}else{
@@ -71,17 +71,17 @@ void ImageComponent::resize()
 			// for SVG rasterization, we always calculate width from rounded height (see comment above)
 			if(!mTargetSize.x() && mTargetSize.y())
 			{
-				mSize[1] = round(mTargetSize.y());
+				mSize[1] = Math::round(mTargetSize.y());
 				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
 			}else if(mTargetSize.x() && !mTargetSize.y())
 			{
-				mSize[1] = round((mTargetSize.x() / textureSize.x()) * textureSize.y());
+				mSize[1] = Math::round((mTargetSize.x() / textureSize.x()) * textureSize.y());
 				mSize[0] = (mSize.y() / textureSize.y()) * textureSize.x();
 			}
 		}
 	}
 	// mSize.y() should already be rounded
-	mTexture->rasterizeAt((int)round(mSize.x()), (int)round(mSize.y()));
+	mTexture->rasterizeAt((int)Math::round(mSize.x()), (int)Math::round(mSize.y()));
 
 	onSizeChanged();
 }
@@ -177,7 +177,7 @@ void ImageComponent::updateVertices()
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
 	Vector2f topLeft(0.0, 0.0);
-	Vector2f bottomRight(round(mSize.x()), round(mSize.y()));
+	Vector2f bottomRight(Math::round(mSize.x()), Math::round(mSize.y()));
 
 	mVertices[0].pos = Vector2f(topLeft.x(), topLeft.y());
 	mVertices[1].pos = Vector2f(topLeft.x(), bottomRight.y());

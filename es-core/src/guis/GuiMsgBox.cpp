@@ -47,13 +47,13 @@ GuiMsgBox::GuiMsgBox(Window* window, const std::string& text,
 	if(mMsg->getSize().x() < width && mButtonGrid->getSize().x() < width)
 	{
 		// mMsg and buttons are narrower than width
-		width = std::max(mButtonGrid->getSize().x(), mMsg->getSize().x());
-		width = std::max(width, minWidth);
+		width = Math::max(mButtonGrid->getSize().x(), mMsg->getSize().x());
+		width = Math::max(width, minWidth);
 	}
 
 	// now that we know width, we can find height
 	mMsg->setSize(width, 0); // mMsg->getSize.y() now returns the proper length
-	const float msgHeight = std::max(Font::get(FONT_SIZE_LARGE)->getHeight(), mMsg->getSize().y()*1.225f);
+	const float msgHeight = Math::max(Font::get(FONT_SIZE_LARGE)->getHeight(), mMsg->getSize().y()*1.225f);
 	setSize(width + HORIZONTAL_PADDING_PX*2, msgHeight + mButtonGrid->getSize().y());
 
 	// center for good measure

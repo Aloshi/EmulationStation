@@ -29,13 +29,6 @@ std::string strToUpper(const std::string& str)
 	return strToUpper(str.c_str());
 }
 
-#if defined(_WIN32) && _MSC_VER < 1800
-float round(float num)
-{
-	return (float)((int)(num + 0.5f));
-}
-#endif
-
 // embedded resources, e.g. ":/font.ttf", need to be properly handled too
 std::string getCanonicalPath(const std::string& path)
 {
