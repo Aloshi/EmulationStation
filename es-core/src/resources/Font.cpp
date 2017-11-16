@@ -1,8 +1,8 @@
 #include "resources/Font.h"
 
+#include "utils/StringUtil.h"
 #include "Log.h"
 #include "Renderer.h"
-#include "StringUtil.h"
 #include "Util.h"
 
 FT_Library Font::sLibrary = NULL;
@@ -448,7 +448,7 @@ Vector2f Font::sizeText(std::string text, float lineSpacing)
 	size_t i = 0;
 	while(i < text.length())
 	{
-		unsigned int character = StringUtil::chars2Unicode(text, i); // advances i
+		unsigned int character = Utils::String::chars2Unicode(text, i); // advances i
 
 		if(character == '\n')
 		{
@@ -541,8 +541,8 @@ Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, size_t s
 	size_t cursor = 0;
 	while(cursor < stop)
 	{
-		unsigned int wrappedCharacter = StringUtil::chars2Unicode(wrappedText, wrapCursor);
-		unsigned int character = StringUtil::chars2Unicode(text, cursor);
+		unsigned int wrappedCharacter = Utils::String::chars2Unicode(wrappedText, wrapCursor);
+		unsigned int character = Utils::String::chars2Unicode(text, cursor);
 
 		if(wrappedCharacter == '\n' && character != '\n')
 		{
@@ -551,7 +551,7 @@ Vector2f Font::getWrappedTextCursorOffset(std::string text, float xLen, size_t s
 			lineWidth = 0.0f;
 			y += getHeight(lineSpacing);
 
-			cursor = StringUtil::prevCursor(text, cursor); // unconsume
+			cursor = Utils::String::prevCursor(text, cursor); // unconsume
 			continue;
 		}
 
@@ -609,7 +609,7 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 	size_t cursor = 0;
 	while(cursor < text.length())
 	{
-		unsigned int character = StringUtil::chars2Unicode(text, cursor); // also advances cursor
+		unsigned int character = Utils::String::chars2Unicode(text, cursor); // also advances cursor
 		Glyph* glyph;
 
 		// invalid character
