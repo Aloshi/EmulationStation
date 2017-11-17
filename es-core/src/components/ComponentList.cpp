@@ -28,7 +28,7 @@ void ComponentList::addRow(const ComponentListRow& row, bool setCursorHere)
 
 	if(setCursorHere)
 	{
-		mCursor = mEntries.size() - 1;
+		mCursor = (int)mEntries.size() - 1;
 		onCursorChanged(CURSOR_STOPPED);
 	}
 }

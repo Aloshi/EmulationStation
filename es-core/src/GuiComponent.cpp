@@ -209,7 +209,7 @@ void GuiComponent::sortChildren()
 
 unsigned int GuiComponent::getChildCount() const
 {
-	return mChildren.size();
+	return (int)mChildren.size();
 }
 
 GuiComponent* GuiComponent::getChild(unsigned int i) const
@@ -270,7 +270,7 @@ const Transform4x4f& GuiComponent::getTransform()
 	return mTransform;
 }
 
-void GuiComponent::setValue(const std::string& value)
+void GuiComponent::setValue(const std::string& /*value*/)
 {
 }
 

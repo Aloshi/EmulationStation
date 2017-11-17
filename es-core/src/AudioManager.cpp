@@ -10,7 +10,7 @@ SDL_AudioSpec AudioManager::sAudioFormat;
 std::shared_ptr<AudioManager> AudioManager::sInstance;
 
 
-void AudioManager::mixAudio(void *unused, Uint8 *stream, int len)
+void AudioManager::mixAudio(void* /*unused*/, Uint8 *stream, int len)
 {
 	bool stillPlaying = false;
 

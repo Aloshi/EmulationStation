@@ -77,7 +77,7 @@ private:
 	Vector2i getGridSize() const
 	{
 		Vector2f squareSize = getMaxSquareSize();
-		Vector2i gridSize(mSize.x() / (squareSize.x() + getPadding().x()), mSize.y() / (squareSize.y() + getPadding().y()));
+		Vector2i gridSize((int)(mSize.x() / (squareSize.x() + getPadding().x())), (int)(mSize.y() / (squareSize.y() + getPadding().y())));
 		return gridSize;
 	};
 
@@ -167,7 +167,7 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 }
 
 template<typename T>
-void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
+void ImageGridComponent<T>::onCursorChanged(const CursorState& /*state*/)
 {
 	updateImages();
 }

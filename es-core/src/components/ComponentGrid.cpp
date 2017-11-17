@@ -195,7 +195,7 @@ void ComponentGrid::updateSeparators()
 	}
 
 	mLineColors.reserve(mLines.size());
-	Renderer::buildGLColorArray((GLubyte*)mLineColors.data(), 0xC6C7C6FF, mLines.size());
+	Renderer::buildGLColorArray((GLubyte*)mLineColors.data(), 0xC6C7C6FF, (unsigned int)mLines.size());
 }
 
 void ComponentGrid::onSizeChanged()
@@ -374,7 +374,7 @@ void ComponentGrid::render(const Transform4x4f& parentTrans)
 		glVertexPointer(2, GL_FLOAT, 0, &mLines[0].x);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 0, mLineColors.data());
 
-		glDrawArrays(GL_LINES, 0, mLines.size());
+		glDrawArrays(GL_LINES, 0, (GLsizei)mLines.size());
 
 		glDisable(GL_BLEND);
 		glDisableClientState(GL_VERTEX_ARRAY);

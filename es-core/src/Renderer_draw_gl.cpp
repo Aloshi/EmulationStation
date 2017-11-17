@@ -18,10 +18,10 @@ namespace Renderer {
 
 	void setColor4bArray(GLubyte* array, unsigned int color)
 	{
-		array[0] = (color & 0xff000000) >> 24;
-		array[1] = (color & 0x00ff0000) >> 16;
-		array[2] = (color & 0x0000ff00) >> 8;
-		array[3] = (color & 0x000000ff);
+		array[0] = ((color & 0xff000000) >> 24) & 255;
+		array[1] = ((color & 0x00ff0000) >> 16) & 255;
+		array[2] = ((color & 0x0000ff00) >>  8) & 255;
+		array[3] = ((color & 0x000000ff)      ) & 255;
 	}
 
 	void buildGLColorArray(GLubyte* ptr, unsigned int color, unsigned int vertCount)

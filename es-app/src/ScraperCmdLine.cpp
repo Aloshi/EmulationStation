@@ -13,7 +13,7 @@
 
 std::ostream& out = std::cout;
 
-void handle_interrupt_signal(int p)
+void handle_interrupt_signal(int /*p*/)
 {
 	sleep(50);
 

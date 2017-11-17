@@ -5,17 +5,41 @@
 namespace Math
 {
 	// added here to avoid including math.h whenever these are used
-	double cos(const double _num)
+	float cosf(const float _num)
 	{
-		return ::cos(_num);
+		return ::cosf(_num);
 
 	} // Math::cos
 
-	double sin(const double _num)
+	float sinf(const float _num)
 	{
-		return ::sin(_num);
+		return ::sinf(_num);
 
 	} // Math::sin
+
+	float floorf(const float _num)
+	{
+		return ::floorf(_num);
+
+	} // Math::floor
+
+	float ceilf(const float _num)
+	{
+		return ::ceilf(_num);
+
+	} // Math::ceil
+
+	int min(const int _num1, const int _num2)
+	{
+		return (_num1 < _num2) ? _num1 : _num2;
+
+	} // Math::min
+
+	int max(const int _num1, const int _num2)
+	{
+		return (_num1 > _num2) ? _num1 : _num2;
+
+	} // Math::max
 
 	float min(const float _num1, const float _num2)
 	{
@@ -37,7 +61,7 @@ namespace Math
 
 	float round(const float _num)
 	{
-		return (int)(_num + 0.5);
+		return (float)(int)(_num + 0.5);
 
 	} // Math::round
 
@@ -63,7 +87,7 @@ namespace Math
 
 	namespace Scroll
 	{
-		float bounce(const float _delayTime, const float _scrollTime, const float _currentTime, const int _scrollLength)
+		float bounce(const float _delayTime, const float _scrollTime, const float _currentTime, const float _scrollLength)
 		{
 			if(_currentTime < _delayTime)
 			{
@@ -93,7 +117,7 @@ namespace Math
 
 		} // Math::Scroll::bounce
 
-		float loop(const float _delayTime, const float _scrollTime, const float _currentTime, const int _scrollLength)
+		float loop(const float _delayTime, const float _scrollTime, const float _currentTime, const float _scrollLength)
 		{
 			if(_currentTime < _delayTime)
 			{

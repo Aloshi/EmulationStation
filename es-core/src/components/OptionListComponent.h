@@ -193,7 +193,7 @@ public:
 					unsigned int i = getSelectedId();
 					int next = (int)i - 1;
 					if(next < 0)
-						next += mEntries.size();
+						next += (int)mEntries.size();
 
 					mEntries.at(i).selected = false;
 					mEntries.at(next).selected = true;

@@ -81,7 +81,7 @@ void ImageComponent::resize()
 		}
 	}
 	// mSize.y() should already be rounded
-	mTexture->rasterizeAt((int)Math::round(mSize.x()), (int)Math::round(mSize.y()));
+	mTexture->rasterizeAt((size_t)Math::round(mSize.x()), (size_t)Math::round(mSize.y()));
 
 	onSizeChanged();
 }

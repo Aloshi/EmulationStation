@@ -462,7 +462,7 @@ void SystemScreenSaver::pickRandomCustomImage(std::string& path)
 			}
 		}
 
-		int fileCount = matchingFiles.size();
+		int fileCount = (int)matchingFiles.size();
 		if (fileCount > 0)
 		{
 			// get a random index in the range 0 to fileCount (exclusive)

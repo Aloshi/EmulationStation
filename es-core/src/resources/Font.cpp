@@ -13,7 +13,7 @@ std::map< std::pair<std::string, int>, std::weak_ptr<Font> > Font::sFontMap;
 
 Font::FontFace::FontFace(ResourceData&& d, int size) : data(d)
 {
-	int err = FT_New_Memory_Face(sLibrary, data.ptr.get(), data.length, 0, &face);
+	int err = FT_New_Memory_Face(sLibrary, data.ptr.get(), (FT_Long)data.length, 0, &face);
 	assert(!err);
 	
 	if(!err)
@@ -89,12 +89,12 @@ Font::~Font()
 	unload(ResourceManager::getInstance());
 }
 
-void Font::reload(std::shared_ptr<ResourceManager>& rm)
+void Font::reload(std::shared_ptr<ResourceManager>& /*rm*/)
 {
 	rebuildTextures();
 }
 
-void Font::unload(std::shared_ptr<ResourceManager>& rm)
+void Font::unload(std::shared_ptr<ResourceManager>& /*rm*/)
 {
 	unloadTextures();
 }
@@ -387,8 +387,8 @@ void Font::rebuildTextures()
 		FontTexture* tex = it->second.texture;
 		
 		// find the position/size
-		Vector2i cursor(it->second.texPos.x() * tex->textureSize.x(), it->second.texPos.y() * tex->textureSize.y());
-		Vector2i glyphSize(it->second.texSize.x() * tex->textureSize.x(), it->second.texSize.y() * tex->textureSize.y());
+		Vector2i cursor((int)(it->second.texPos.x() * tex->textureSize.x()), (int)(it->second.texPos.y() * tex->textureSize.y()));
+		Vector2i glyphSize((int)(it->second.texSize.x() * tex->textureSize.x()), (int)(it->second.texSize.y() * tex->textureSize.y()));
 		
 		// upload to texture
 		glBindTexture(GL_TEXTURE_2D, tex->textureId);
@@ -425,7 +425,7 @@ void Font::renderTextCache(TextCache* cache)
 		glTexCoordPointer(2, GL_FLOAT, sizeof(TextCache::Vertex), &it->verts[0].tex);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 0, it->colors.data());
 
-		glDrawArrays(GL_TRIANGLES, 0, it->verts.size());
+		glDrawArrays(GL_TRIANGLES, 0, (GLsizei)(it->verts.size()));
 
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -582,12 +582,12 @@ float Font::getNewlineStartOffset(const std::string& text, const unsigned int& c
 		return 0;
 	case ALIGN_CENTER:
 		{
-			unsigned int endChar = text.find('\n', charStart);
+			unsigned int endChar = (unsigned int)text.find('\n', charStart);
 			return (xLen - sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x()) / 2.0f;
 		}
 	case ALIGN_RIGHT:
 		{
-			unsigned int endChar = text.find('\n', charStart);
+			unsigned int endChar = (unsigned int)text.find('\n', charStart);
 			return xLen - (sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x());
 		}
 	default:
@@ -619,7 +619,7 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 		if(character == '\n')
 		{
 			y += getHeight(lineSpacing);
-			x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, cursor /* cursor is already advanced */, xLen, alignment) : 0);
+			x = offset[0] + (xLen != 0 ? getNewlineStartOffset(text, (const unsigned int)cursor /* cursor is already advanced */, xLen, alignment) : 0);
 			continue;
 		}
 
@@ -678,7 +678,7 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 		vertList.verts = it->second;
 
 		vertList.colors.resize(4 * it->second.size());
-		Renderer::buildGLColorArray(vertList.colors.data(), color, it->second.size());
+		Renderer::buildGLColorArray(vertList.colors.data(), color, (unsigned int)(it->second.size()));
 	}
 
 	clearFaceCache();
@@ -694,7 +694,7 @@ TextCache* Font::buildTextCache(const std::string& text, float offsetX, float of
 void TextCache::setColor(unsigned int color)
 {
 	for(auto it = vertexLists.cbegin(); it != vertexLists.cend(); it++)
-		Renderer::buildGLColorArray((GLubyte*)(it->colors.data()), color, it->verts.size());
+		Renderer::buildGLColorArray((GLubyte*)(it->colors.data()), color, (unsigned int)(it->verts.size()));
 }
 
 std::shared_ptr<Font> Font::getFromTheme(const ThemeData::ThemeElement* elem, unsigned int properties, const std::shared_ptr<Font>& orig)

@@ -356,7 +356,7 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 				}
 			}else{
 				// no, it hasn't!
-				mappedToSeenMap.emplace(it->second, addPrompts.size());
+				mappedToSeenMap.emplace(it->second, (int)addPrompts.size());
 				addPrompts.push_back(*it);
 			}
 		}
@@ -439,7 +439,7 @@ void Window::startScreenSaver()
  		mScreenSaver->renderScreenSaver();
  }
 
-bool Window::PassKeyListener::isUIModeChanged(InputConfig * config, Input input, Window* window)
+bool Window::PassKeyListener::isUIModeChanged(InputConfig * config, Input input, Window* /*window*/)
 {
 	// This function reads the current input to listen for the passkey
 	// sequence to unlock the UI mode. The progress is saved in mPassKeyCounter
@@ -468,7 +468,7 @@ bool Window::PassKeyListener::isUIModeChanged(InputConfig * config, Input input,
 		this->mPassKeyCounter = 0; // current input is incorrect, reset counter
 	}
 
-	if (this->mPassKeyCounter == (this->mPassKeySequence.length()))
+	if (this->mPassKeyCounter == (int)(this->mPassKeySequence.length()))
 	{
 		// When we have reached the end of the list, trigger UI_mode unlock
 		LOG(LogDebug) << " Window::PassKeyListener::isUIModeChanged(): Passkey sequence completed, switching UIMode to full";
