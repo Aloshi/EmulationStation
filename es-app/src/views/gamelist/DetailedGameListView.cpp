@@ -21,7 +21,7 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
 	mList.setSize(mSize.x() * (0.50f - padding), mList.getSize().y());
 	mList.setAlignment(TextListComponent<FileData*>::ALIGN_LEFT);
-	mList.setCursorChangedCallback([&](const CursorState& state) { updateInfoPanel(); });
+	mList.setCursorChangedCallback([&](const CursorState& /*state*/) { updateInfoPanel(); });
 
 	// image
 	mImage.setOrigin(0.5f, 0.5f);
@@ -119,7 +119,7 @@ void DetailedGameListView::initMDLabels()
 	std::vector<TextComponent*> components = getMDLabels();
 
 	const unsigned int colCount = 2;
-	const unsigned int rowCount = components.size() / 2;
+	const unsigned int rowCount = (int)(components.size() / 2);
 
 	Vector3f start(mSize.x() * 0.01f, mSize.y() * 0.625f, 0.0f);
 	

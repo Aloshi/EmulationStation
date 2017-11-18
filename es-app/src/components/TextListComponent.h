@@ -63,7 +63,7 @@ public:
 			it->data.textCache.reset();
 	}
 
-	inline void setUppercase(bool uppercase) 
+	inline void setUppercase(bool /*uppercase*/) 
 	{
 		mUppercase = true;
 		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
@@ -78,7 +78,7 @@ public:
 	inline void setLineSpacing(float lineSpacing) { mLineSpacing = lineSpacing; }
 
 protected:
-	virtual void onScroll(int amt) { if(!mScrollSound.empty()) Sound::get(mScrollSound)->play(); }
+	virtual void onScroll(int /*amt*/) { if(!mScrollSound.empty()) Sound::get(mScrollSound)->play(); }
 	virtual void onCursorChanged(const CursorState& state);
 
 private:
@@ -217,7 +217,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 
 		// currently selected item text might be scrolling
 		if((mCursor == i) && (mMarqueeOffset > 0))
-			drawTrans.translate(offset - Vector3f(mMarqueeOffset, 0, 0));
+			drawTrans.translate(offset - Vector3f((float)mMarqueeOffset, 0, 0));
 		else
 			drawTrans.translate(offset);
 
@@ -229,7 +229,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 		if((mCursor == i) && (mMarqueeOffset2 < 0))
 		{
 			drawTrans = trans;
-			drawTrans.translate(offset - Vector3f(mMarqueeOffset2, 0, 0));
+			drawTrans.translate(offset - Vector3f((float)mMarqueeOffset2, 0, 0));
 			Renderer::setMatrix(drawTrans);
 			font->renderTextCache(entry.data.textCache.get());
 		}
@@ -298,28 +298,28 @@ void TextListComponent<T>::update(int deltaTime)
 
 		// if we're not scrolling and this object's text goes outside our size, marquee it!
 		const float textLength = mFont->sizeText(mEntries.at((unsigned int)mCursor).name).x();
-		const int   limit      = mSize.x() - mHorizontalMargin * 2;
+		const float limit      = mSize.x() - mHorizontalMargin * 2;
 
 		if(textLength > limit)
 		{
 			// loop
 			// pixels per second ( based on nes-mini font at 1920x1080 to produce a speed of 200 )
 			const float speed        = mFont->sizeText("ABCDEFGHIJKLMNOPQRSTUVWXYZ").x() * 0.247f;
-			const int   delay        = 3000;
-			const int   scrollLength = textLength;
-			const int   returnLength = (int)(speed * 1.5);
-			const int   scrollTime   = (int)((scrollLength * 1000) / speed);
-			const int   returnTime   = (int)((returnLength * 1000) / speed);
-			const int   maxTime      = (delay + scrollTime + returnTime);
+			const float delay        = 3000;
+			const float scrollLength = textLength;
+			const float returnLength = speed * 1.5f;
+			const float scrollTime   = (scrollLength * 1000) / speed;
+			const float returnTime   = (returnLength * 1000) / speed;
+			const int   maxTime      = (int)(delay + scrollTime + returnTime);
 
 			mMarqueeTime += deltaTime;
 			while(mMarqueeTime > maxTime)
 				mMarqueeTime -= maxTime;
 
-			mMarqueeOffset = Math::Scroll::loop(delay, scrollTime + returnTime, mMarqueeTime, scrollLength + returnLength);
+			mMarqueeOffset = (int)(Math::Scroll::loop(delay, scrollTime + returnTime, (float)mMarqueeTime, scrollLength + returnLength));
 
 			if(mMarqueeOffset > (scrollLength - (limit - returnLength)))
-				mMarqueeOffset2 = mMarqueeOffset - (scrollLength + returnLength);
+				mMarqueeOffset2 = (int)(mMarqueeOffset - (scrollLength + returnLength));
 		}
 	}
 

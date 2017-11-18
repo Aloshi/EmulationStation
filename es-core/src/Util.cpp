@@ -12,14 +12,14 @@ std::string strToUpper(const char* from)
 {
 	std::string str(from);
 	for(unsigned int i = 0; i < str.size(); i++)
-		str[i] = toupper(from[i]);
+		str[i] = (char)toupper(from[i]);
 	return str;
 }
 
 std::string& strToUpper(std::string& str)
 {
 	for(unsigned int i = 0; i < str.size(); i++)
-		str[i] = toupper(str[i]);
+		str[i] = (char)toupper(str[i]);
 
 	return str;
 }

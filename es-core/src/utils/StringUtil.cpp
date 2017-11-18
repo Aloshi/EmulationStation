@@ -51,22 +51,22 @@ namespace Utils
 
 			if(_unicode < 0x80) // one byte character
 			{
-				result += ((_unicode      )       );
+				result += ((_unicode      ) & 0xFF);
 			}
 			else if(_unicode < 0x800) // two byte character
 			{
-				result += ((_unicode >>  6)       ) | 0xC0;
+				result += ((_unicode >>  6) & 0xFF) | 0xC0;
 				result += ((_unicode      ) & 0x3F) | 0x80;
 			}
 			else if(_unicode < 0xFFFF) // three byte character
 			{
-				result += ((_unicode >> 12)       ) | 0xE0;
+				result += ((_unicode >> 12) & 0xFF) | 0xE0;
 				result += ((_unicode >>  6) & 0x3F) | 0x80;
 				result += ((_unicode      ) & 0x3F) | 0x80;
 			}
 			else if(_unicode <= 0x1fffff) // four byte character
 			{
-				result += ((_unicode >> 18)       ) | 0xF0;
+				result += ((_unicode >> 18) & 0xFF) | 0xF0;
 				result += ((_unicode >> 12) & 0x3F) | 0x80;
 				result += ((_unicode >>  6) & 0x3F) | 0x80;
 				result += ((_unicode      ) & 0x3F) | 0x80;

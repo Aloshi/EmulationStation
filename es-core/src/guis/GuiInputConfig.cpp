@@ -248,7 +248,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	}
 
 	// only show "HOLD TO SKIP" if this input is skippable
-	mList->setCursorChangedCallback([this](CursorState state) {
+	mList->setCursorChangedCallback([this](CursorState /*state*/) {
 		bool skippable = inputSkippable[mList->getCursorId()];
 		mSubtitle2->setOpacity(skippable * 255);
 	});
@@ -381,7 +381,7 @@ void GuiInputConfig::setAssignedTo(const std::shared_ptr<TextComponent>& text, I
 	text->setColor(0x777777FF);
 }
 
-void GuiInputConfig::error(const std::shared_ptr<TextComponent>& text, const std::string& msg)
+void GuiInputConfig::error(const std::shared_ptr<TextComponent>& text, const std::string& /*msg*/)
 {
 	text->setText("ALREADY TAKEN");
 	text->setColor(0x656565FF);

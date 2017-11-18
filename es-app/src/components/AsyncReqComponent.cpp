@@ -35,13 +35,13 @@ void AsyncReqComponent::update(int deltaTime)
 	mTime += deltaTime;
 }
 
-void AsyncReqComponent::render(const Transform4x4f& parentTrans)
+void AsyncReqComponent::render(const Transform4x4f& /*parentTrans*/)
 {
 	Transform4x4f trans = Transform4x4f::Identity();
 	trans = trans.translate(Vector3f(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0));
 	Renderer::setMatrix(trans);
 
-	Vector3f point(Math::cos(mTime * 0.01f) * 12, Math::sin(mTime * 0.01f) * 12, 0);
+	Vector3f point(Math::cosf(mTime * 0.01f) * 12, Math::sinf(mTime * 0.01f) * 12, 0);
 	Renderer::drawRect((int)point.x(), (int)point.y(), 8, 8, 0x0000FFFF);
 }
 

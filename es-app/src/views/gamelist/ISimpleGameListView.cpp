@@ -59,7 +59,7 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 	}
 }
 
-void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
+void ISimpleGameListView::onFileChanged(FileData* /*file*/, FileChangeType /*change*/)
 {
 	// we could be tricky here to be efficient;
 	// but this shouldn't happen very often so we'll just always repopulate

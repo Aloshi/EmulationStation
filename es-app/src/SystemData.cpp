@@ -433,7 +433,7 @@ bool SystemData::hasGamelist() const
 
 unsigned int SystemData::getGameCount() const
 {
-	return mRootFolder->getFilesRecursive(GAME).size();
+	return (unsigned int)mRootFolder->getFilesRecursive(GAME).size();
 }
 
 SystemData* SystemData::getRandomSystem()
@@ -447,7 +447,7 @@ SystemData* SystemData::getRandomSystem()
 	}
 
 	// get random number in range
-	int target = (int) Math::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
+	int target = (int)Math::round((std::rand() / (float)RAND_MAX) * (total - 1));
 	for (auto it = sSystemVector.cbegin(); it != sSystemVector.cend(); it++)
 	{
 		if ((*it)->isGameSystem())
@@ -470,18 +470,18 @@ SystemData* SystemData::getRandomSystem()
 FileData* SystemData::getRandomGame()
 {
 	std::vector<FileData*> list = mRootFolder->getFilesRecursive(GAME, true);
-	unsigned int total = list.size();
+	unsigned int total = (int)list.size();
 	int target = 0;
 	// get random number in range
 	if (total == 0)
 		return NULL;
-	target = (int) Math::round(((double)std::rand() / (double)RAND_MAX) * (total - 1));
+	target = (int)Math::round((std::rand() / (float)RAND_MAX) * (total - 1));
 	return list.at(target);
 }
 
 unsigned int SystemData::getDisplayedGameCount() const
 {
-	return mRootFolder->getFilesRecursive(GAME, true).size();
+	return (unsigned int)mRootFolder->getFilesRecursive(GAME, true).size();
 }
 
 void SystemData::loadTheme()

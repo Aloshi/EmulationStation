@@ -156,6 +156,8 @@ public:
 			case CEC::CEC_USER_CONTROL_CODE_AN_CHANNELS_LIST:            { return "AN-Channels-List";            } break;
 			default:                                                     { return "UNKNOWN";                     }
 		}
+#else // HAVE_LIBCEC
+		(void)keycode;
 #endif // HAVE_LIBCEC
 
 		return "UNKNOWN";

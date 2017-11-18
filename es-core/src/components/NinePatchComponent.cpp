@@ -51,7 +51,7 @@ void NinePatchComponent::buildVertices()
 	mColors = new GLubyte[6 * 9 * 4];
 	updateColors();
 
-	const Vector2f ts = Vector2f(mTexture->getSize().x(), mTexture->getSize().y());
+	const Vector2f ts = Vector2f((float)mTexture->getSize().x(), (float)mTexture->getSize().y());
 
 	//coordinates on the image in pixels, top left origin
 	const Vector2f pieceCoords[9] = {

@@ -63,7 +63,7 @@ GuiInfoPopup::~GuiInfoPopup()
 
 }
 
-void GuiInfoPopup::render(const Transform4x4f& parentTrans)
+void GuiInfoPopup::render(const Transform4x4f& /*parentTrans*/)
 {
 	// we use identity as we want to render on a specific window position, not on the view
 	Transform4x4f trans = getTransform() * Transform4x4f::Identity();
@@ -108,7 +108,7 @@ bool GuiInfoPopup::updateState()
 	{
 		alpha = ((-(curTime - mStartTime - mDuration)*255)/500);
 	}
-	mGrid->setOpacity(alpha);
+	mGrid->setOpacity((unsigned char)alpha);
 
 	// apply fade in effect to popup frame
 	mFrame->setEdgeColor(0xFFFFFF00 | (unsigned char)(alpha));

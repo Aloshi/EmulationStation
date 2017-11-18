@@ -171,7 +171,7 @@ void InputManager::deinit()
 	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 }
 
-int InputManager::getNumJoysticks() { return mJoysticks.size(); }
+int InputManager::getNumJoysticks() { return (int)mJoysticks.size(); }
 int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 {
 	if(id == DEVICE_KEYBOARD)

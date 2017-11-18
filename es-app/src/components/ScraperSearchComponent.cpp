@@ -57,7 +57,7 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "GENRE:", font, mdLblColor), mMD_Genre));
 	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PLAYERS:", font, mdLblColor), mMD_Players));
 
-	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, mMD_Pairs.size()*2 - 1));
+	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, (int)mMD_Pairs.size()*2 - 1));
 	unsigned int i = 0;
 	for(auto it = mMD_Pairs.cbegin(); it != mMD_Pairs.cend(); it++)
 	{

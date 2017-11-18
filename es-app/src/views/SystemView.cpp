@@ -206,7 +206,7 @@ void SystemView::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void SystemView::onCursorChanged(const CursorState& state)
+void SystemView::onCursorChanged(const CursorState& /*state*/)
 {
 	// update help style
 	updateHelpPrompts();
@@ -388,7 +388,7 @@ HelpStyle SystemView::getHelpStyle()
 	return style;
 }
 
-void  SystemView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
+void  SystemView::onThemeChanged(const std::shared_ptr<ThemeData>& /*theme*/)
 {
 	LOG(LogDebug) << "SystemView::onThemeChanged()";
 	mViewNeedsReload = true;
@@ -488,9 +488,9 @@ void SystemView::renderCarousel(const Transform4x4f& trans)
 	{
 		int index = i;
 		while (index < 0)
-			index += mEntries.size();
+			index += (int)mEntries.size();
 		while (index >= (int)mEntries.size())
-			index -= mEntries.size();
+			index -= (int)mEntries.size();
 
 		Transform4x4f logoTrans = carouselTrans;
 		logoTrans.translate(Vector3f(i * logoSpacing[0] + xOff, i * logoSpacing[1] + yOff, 0));
@@ -501,7 +501,7 @@ void SystemView::renderCarousel(const Transform4x4f& trans)
 		scale = Math::min(mCarousel.logoScale, Math::max(1.0f, scale));
 		scale /= mCarousel.logoScale;
 
-		int opacity = (int) Math::round(0x80 + ((0xFF - 0x80) * (1.0f - fabs(distance))));
+		int opacity = (int)Math::round(0x80 + ((0xFF - 0x80) * (1.0f - fabs(distance))));
 		opacity = Math::max((int) 0x80, opacity);
 
 		const std::shared_ptr<GuiComponent> &comp = mEntries.at(index).data.logo;
@@ -510,7 +510,7 @@ void SystemView::renderCarousel(const Transform4x4f& trans)
 			comp->setRotationOrigin(mCarousel.logoRotationOrigin);
 		}
 		comp->setScale(scale);
-		comp->setOpacity(opacity);
+		comp->setOpacity((unsigned char)opacity);
 		comp->render(logoTrans);
 	}
 	Renderer::popClipRect();
@@ -536,9 +536,9 @@ void SystemView::renderExtras(const Transform4x4f& trans, float lower, float upp
 	{
 		int index = i;
 		while (index < 0)
-			index += mEntries.size();
+			index += (int)mEntries.size();
 		while (index >= (int)mEntries.size())
-			index -= mEntries.size();
+			index -= (int)mEntries.size();
 
 		//Only render selected system when not showing
 		if (mShowing || index == mCursor)
@@ -631,7 +631,7 @@ void SystemView::getCarouselFromTheme(const ThemeData::ThemeElement* elem)
 	if (elem->has("logoSize"))
 		mCarousel.logoSize = elem->get<Vector2f>("logoSize") * mSize;
 	if (elem->has("maxLogoCount"))
-		mCarousel.maxLogoCount = (int) Math::round(elem->get<float>("maxLogoCount"));
+		mCarousel.maxLogoCount = (int)Math::round(elem->get<float>("maxLogoCount"));
 	if (elem->has("zIndex"))
 		mCarousel.zIndex = elem->get<float>("zIndex");
 	if (elem->has("logoRotation"))

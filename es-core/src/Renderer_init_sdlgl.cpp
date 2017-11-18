@@ -85,7 +85,7 @@ namespace Renderer
 						Uint32 rmask = 0x000000ff; Uint32 gmask = 0x0000ff00; Uint32 bmask = 0x00ff0000; Uint32 amask = 0xff000000;
 			#endif
 			//try creating SDL surface from logo data
-			SDL_Surface * logoSurface = SDL_CreateRGBSurfaceFrom((void *)rawData.data(), width, height, 32, width * 4, rmask, gmask, bmask, amask);
+			SDL_Surface * logoSurface = SDL_CreateRGBSurfaceFrom((void *)rawData.data(), (int)width, (int)height, 32, (int)(width * 4), rmask, gmask, bmask, amask);
 			if (logoSurface != NULL)
 			{
 				SDL_SetWindowIcon(sdlWindow, logoSurface);

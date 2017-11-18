@@ -9,7 +9,7 @@ std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * d
 	std::vector<unsigned char> rawData;
 	width = 0;
 	height = 0;
-	FIMEMORY * fiMemory = FreeImage_OpenMemory((BYTE *)data, size);
+	FIMEMORY * fiMemory = FreeImage_OpenMemory((BYTE *)data, (DWORD)size);
 	if (fiMemory != nullptr) {
 		//detect the filetype from data
 		FREE_IMAGE_FORMAT format = FreeImage_GetFileTypeFromMemory(fiMemory);
@@ -39,7 +39,7 @@ std::vector<unsigned char> ImageIO::loadFromMemoryRGBA32(const unsigned char * d
 					unsigned char * tempData = new unsigned char[width * height * 4];
 					for (size_t i = 0; i < height; i++)
 					{
-						const BYTE * scanLine = FreeImage_GetScanLine(fiBitmap, i);
+						const BYTE * scanLine = FreeImage_GetScanLine(fiBitmap, (int)i);
 						memcpy(tempData + (i * width * 4), scanLine, width * 4);
 					}
 					//convert from BGRA to RGBA

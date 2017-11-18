@@ -23,7 +23,7 @@ GuiScraperMulti::GuiScraperMulti(Window* window, const std::queue<ScraperSearchP
 	PowerSaver::pause();
 	mIsProcessing = true;
 
-	mTotalGames = mSearchQueue.size();
+	mTotalGames = (int)mSearchQueue.size();
 	mCurrentGame = 0;
 	mTotalSuccessful = 0;
 	mTotalSkipped = 0;

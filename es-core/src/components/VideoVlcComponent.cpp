@@ -23,14 +23,14 @@ static void *lock(void *data, void **p_pixels) {
 }
 
 // VLC just rendered a video frame.
-static void unlock(void *data, void *id, void *const *p_pixels) {
+static void unlock(void *data, void* /*id*/, void *const* /*p_pixels*/) {
 	struct VideoContext *c = (struct VideoContext *)data;
 	SDL_UnlockSurface(c->surface);
 	SDL_UnlockMutex(c->mutex);
 }
 
 // VLC wants to display a video frame.
-static void display(void *data, void *id) {
+static void display(void* /*data*/, void* /*id*/) {
 	//Data to be displayed
 }
 
@@ -73,7 +73,7 @@ void VideoVlcComponent::resize()
 	if(!mTexture)
 		return;
 
-	const Vector2f textureSize(mVideoWidth, mVideoHeight);
+	const Vector2f textureSize((float)mVideoWidth, (float)mVideoHeight);
 
 	if(textureSize == Vector2f::Zero())
 		return;
@@ -123,7 +123,7 @@ void VideoVlcComponent::resize()
 		}
 
 	// mSize.y() should already be rounded
-	mTexture->rasterizeAt((int)Math::round(mSize.x()), (int)Math::round(mSize.y()));
+	mTexture->rasterizeAt((size_t)Math::round(mSize.x()), (size_t)Math::round(mSize.y()));
 
 	onSizeChanged();
 }
@@ -317,7 +317,7 @@ void VideoVlcComponent::startVideo()
 					{
 						if(!Settings::getInstance()->getBool("CaptionsCompatibility")) {
 
-							Vector2f resizeScale((Renderer::getScreenWidth() / mVideoWidth), (Renderer::getScreenHeight() / mVideoHeight));
+							Vector2f resizeScale((Renderer::getScreenWidth() / (float)mVideoWidth), (Renderer::getScreenHeight() / (float)mVideoHeight));
 
 							if(resizeScale.x() < resizeScale.y())
 							{
@@ -327,8 +327,6 @@ void VideoVlcComponent::startVideo()
 								mVideoWidth = (unsigned int) (mVideoWidth * resizeScale.y());
 								mVideoHeight = (unsigned int) (mVideoHeight * resizeScale.y());
 							}
-							mVideoHeight = (unsigned int) Math::round(mVideoHeight);
-							mVideoWidth = (unsigned int) Math::round(mVideoWidth);
 						}
 					}
 #endif

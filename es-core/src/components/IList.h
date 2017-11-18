@@ -143,7 +143,7 @@ public:
 		{
 			if((*it).object == obj)
 			{
-				mCursor = it - mEntries.cbegin();
+				mCursor = (int)(it - mEntries.cbegin());
 				onCursorChanged(CURSOR_STOPPED);
 				return true;
 			}
@@ -172,7 +172,7 @@ public:
 		return false;
 	}
 
-	inline int size() const { return mEntries.size(); }
+	inline int size() const { return (int)mEntries.size(); }
 
 protected:
 	void remove(typename std::vector<Entry>::const_iterator& it)
@@ -244,7 +244,7 @@ protected:
 			scroll(mScrollVelocity);
 	}
 
-	void listRenderTitleOverlay(const Transform4x4f& trans)
+	void listRenderTitleOverlay(const Transform4x4f& /*trans*/)
 	{
 		if(size() == 0 || !mTitleOverlayFont || mTitleOverlayOpacity == 0)
 			return;
@@ -305,8 +305,8 @@ protected:
 		onCursorChanged((mScrollTier > 0) ? CURSOR_SCROLLING : CURSOR_STOPPED);
 	}
 
-	virtual void onCursorChanged(const CursorState& state) {}
-	virtual void onScroll(int amt) {}
+	virtual void onCursorChanged(const CursorState& /*state*/) {}
+	virtual void onScroll(int /*amt*/) {}
 };
 
 #endif // ES_CORE_COMPONENTS_ILIST_H

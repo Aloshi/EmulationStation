@@ -62,7 +62,7 @@ void ViewController::goToStart()
 int ViewController::getSystemId(SystemData* system)
 {
 	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
-	return std::find(sysVec.cbegin(), sysVec.cend(), system) - sysVec.cbegin();
+	return (int)(std::find(sysVec.cbegin(), sysVec.cend(), system) - sysVec.cbegin());
 }
 
 void ViewController::goToSystemView(SystemData* system)
@@ -177,7 +177,7 @@ void ViewController::playViewTransition()
 	} else {
 		// instant
 		setAnimation(new LambdaAnimation(
-			[this, target](float t)
+			[this, target](float /*t*/)
 		{
 			this->mCamera.translation() = -target;
 		}, 1));
@@ -318,7 +318,7 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	view->setTheme(system->getTheme());
 
 	std::vector<SystemData*>& sysVec = SystemData::sSystemVector;
-	int id = std::find(sysVec.cbegin(), sysVec.cend(), system) - sysVec.cbegin();
+	int id = (int)(std::find(sysVec.cbegin(), sysVec.cend(), system) - sysVec.cbegin());
 	view->setPosition(id * (float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight() * 2);
 
 	addChild(view.get());
