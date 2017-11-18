@@ -1,5 +1,6 @@
 #include "views/gamelist/BasicGameListView.h"
 
+#include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "Settings.h"
@@ -141,7 +142,7 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("b", "back"));
 	prompts.push_back(HelpPrompt("select", "options"));
 	prompts.push_back(HelpPrompt("x", "random"));
-	if(mRoot->getSystem()->isGameSystem() && !ViewController::get()->isUIModeKid())
+	if(mRoot->getSystem()->isGameSystem() && !UIModeController::getInstance()->isUIModeKid())
 	{
 		std::string prompt = CollectionSystemManager::get()->getEditingCollection();
 		prompts.push_back(HelpPrompt("y", prompt));

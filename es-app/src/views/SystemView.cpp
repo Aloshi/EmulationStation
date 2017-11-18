@@ -2,6 +2,7 @@
 
 #include "animations/LambdaAnimation.h"
 #include "guis/GuiMsgBox.h"
+#include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "Log.h"
 #include "Renderer.h"
@@ -113,7 +114,7 @@ void SystemView::populate()
 	if (mEntries.size() == 0)
 	{
 		// Something is wrong, there is not a single system to show, check if UI mode is not full
-		if (!ViewController::get()->isUIModeFull())
+		if (!UIModeController::getInstance()->isUIModeFull())
 		{
 			Settings::getInstance()->setString("UIMode", "Full");
 			mWindow->pushGui(new GuiMsgBox(mWindow, "The selected UI mode has nothing to show,\n returning to UI mode: FULL", "OK", nullptr));

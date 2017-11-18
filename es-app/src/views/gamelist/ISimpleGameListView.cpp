@@ -1,5 +1,6 @@
 #include "views/gamelist/ISimpleGameListView.h"
 
+#include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "Settings.h"
@@ -142,7 +143,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				setCursor(randomGame);
 			}
 			return true;
-		}else if (config->isMappedTo("y", input) && !(ViewController::get()->isUIModeKid()))
+		}else if (config->isMappedTo("y", input) && !(UIModeController::getInstance()->isUIModeKid()))
 		{
 			if(mRoot->getSystem()->isGameSystem())
 			{
