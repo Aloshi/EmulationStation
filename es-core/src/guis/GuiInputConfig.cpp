@@ -158,6 +158,8 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	std::stringstream ss;
 	if(target->getDeviceId() == DEVICE_KEYBOARD)
 		ss << "KEYBOARD";
+	else if(target->getDeviceId() == DEVICE_CEC)
+		ss << "CEC";
 	else
 		ss << "GAMEPAD " << (target->getDeviceId() + 1);
 	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(ss.str()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, ALIGN_CENTER);
