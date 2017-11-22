@@ -132,22 +132,15 @@ namespace Utils
 
 		} // moveCursor
 
-		void trim(std::string& _string)
+		std::string trim(const std::string& _path)
 		{
-			if(_string.size())
-			{
-				size_t cursorB = 0;
-				size_t cursorE = _string.size();
-			
-				while((cursorB < _string.size()) && _string[cursorB] == ' ')
-					++cursorB;
+			const size_t pathBegin = _path.find_first_not_of(" \t");
+			const size_t pathEnd   = _path.find_last_not_of(" \t");
 
-				while((cursorE > 0) && _string[cursorE - 1] == ' ')
-					--cursorE;
+			if(pathBegin == std::string::npos)
+				return "";
 
-				_string.erase(_string.begin() + cursorE, _string.end());
-				_string.erase(_string.begin(), _string.begin() + cursorB);
-			}
+			return _path.substr(pathBegin, pathEnd - pathBegin + 1);
 
 		} // trim
 

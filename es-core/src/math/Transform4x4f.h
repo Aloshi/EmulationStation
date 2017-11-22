@@ -12,9 +12,9 @@ public:
 	Transform4x4f()                                                                                                                            { }
 	Transform4x4f(const Vector4f& _r0, const Vector4f& _r1, const Vector4f& _r2, const Vector4f& _r3) : mR0(_r0), mR1(_r1), mR2(_r2), mR3(_r3) { }
 
-	const Transform4x4f operator*(const Transform4x4f& _other) const;
-	const Vector3f operator*(const Vector3f& _other) const;
-	Transform4x4f& operator*=(const Transform4x4f& _other) { *this = *this * _other; return *this; }
+	const Transform4x4f operator* (const Transform4x4f& _other) const;
+	const Vector3f      operator* (const Vector3f& _other) const;
+	Transform4x4f&      operator*=(const Transform4x4f& _other) { *this = *this * _other; return *this; }
 
 	inline       Vector4f& r0()       { return mR0; }
 	inline       Vector4f& r1()       { return mR1; }
@@ -25,14 +25,14 @@ public:
 	inline const Vector4f& r2() const { return mR2; }
 	inline const Vector4f& r3() const { return mR3; }
 
-	Transform4x4f& invert(const Transform4x4f& _other);
-	Transform4x4f& scale(const Vector3f& _scale);
-	Transform4x4f& rotate(const float _angle, const Vector3f& _axis);
-	Transform4x4f& rotateX(const float _angle);
-	Transform4x4f& rotateY(const float _angle);
-	Transform4x4f& rotateZ(const float _angle);
+	Transform4x4f& invert   (const Transform4x4f& _other);
+	Transform4x4f& scale    (const Vector3f& _scale);
+	Transform4x4f& rotate   (const float _angle, const Vector3f& _axis);
+	Transform4x4f& rotateX  (const float _angle);
+	Transform4x4f& rotateY  (const float _angle);
+	Transform4x4f& rotateZ  (const float _angle);
 	Transform4x4f& translate(const Vector3f& _translation);
-	Transform4x4f& round();
+	Transform4x4f& round    ();
 
 	inline       Vector3f& translation()       { return mR3.v3(); }
 	inline const Vector3f& translation() const { return mR3.v3(); }

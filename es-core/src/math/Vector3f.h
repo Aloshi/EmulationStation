@@ -19,33 +19,33 @@ public:
 	explicit Vector3f(const Vector2f& _v, const float _z)             : mX(((Vector3f&)_v).mX), mY(((Vector3f&)_v).mY), mZ(_z)                 { }
 	explicit Vector3f(const Vector4f& _v)                             : mX(((Vector3f&)_v).mX), mY(((Vector3f&)_v).mY), mZ(((Vector3f&)_v).mZ) { }
 
-	const bool operator==(const Vector3f& _other) const { return ((mX == _other.mX) && (mY == _other.mY) && (mZ == _other.mZ)); }
-	const bool operator!=(const Vector3f& _other) const { return ((mX != _other.mX) || (mY != _other.mY) || (mZ != _other.mZ)); }
+	const bool     operator==(const Vector3f& _other) const { return ((mX == _other.mX) && (mY == _other.mY) && (mZ == _other.mZ)); }
+	const bool     operator!=(const Vector3f& _other) const { return ((mX != _other.mX) || (mY != _other.mY) || (mZ != _other.mZ)); }
 
-	const Vector3f operator+(const Vector3f& _other) const { return { mX + _other.mX, mY + _other.mY, mZ + _other.mZ }; }
-	const Vector3f operator-(const Vector3f& _other) const { return { mX - _other.mX, mY - _other.mY, mZ - _other.mZ }; }
-	const Vector3f operator*(const Vector3f& _other) const { return { mX * _other.mX, mY * _other.mY, mZ * _other.mZ }; }
-	const Vector3f operator/(const Vector3f& _other) const { return { mX / _other.mX, mY / _other.mY, mZ / _other.mZ }; }
+	const Vector3f operator+ (const Vector3f& _other) const { return { mX + _other.mX, mY + _other.mY, mZ + _other.mZ }; }
+	const Vector3f operator- (const Vector3f& _other) const { return { mX - _other.mX, mY - _other.mY, mZ - _other.mZ }; }
+	const Vector3f operator* (const Vector3f& _other) const { return { mX * _other.mX, mY * _other.mY, mZ * _other.mZ }; }
+	const Vector3f operator/ (const Vector3f& _other) const { return { mX / _other.mX, mY / _other.mY, mZ / _other.mZ }; }
 
-	const Vector3f operator+(const float& _other) const { return { mX + _other, mY + _other, mZ + _other }; }
-	const Vector3f operator-(const float& _other) const { return { mX - _other, mY - _other, mZ - _other }; }
-	const Vector3f operator*(const float& _other) const { return { mX * _other, mY * _other, mZ * _other }; }
-	const Vector3f operator/(const float& _other) const { return { mX / _other, mY / _other, mZ / _other }; }
+	const Vector3f operator+ (const float& _other) const    { return { mX + _other, mY + _other, mZ + _other }; }
+	const Vector3f operator- (const float& _other) const    { return { mX - _other, mY - _other, mZ - _other }; }
+	const Vector3f operator* (const float& _other) const    { return { mX * _other, mY * _other, mZ * _other }; }
+	const Vector3f operator/ (const float& _other) const    { return { mX / _other, mY / _other, mZ / _other }; }
 
-	const Vector3f operator-() const { return { -mX , -mY, -mZ }; }
+	const Vector3f operator- () const                       { return { -mX , -mY, -mZ }; }
 
-	Vector3f& operator+=(const Vector3f& _other) { *this = *this + _other; return *this; }
-	Vector3f& operator-=(const Vector3f& _other) { *this = *this - _other; return *this; }
-	Vector3f& operator*=(const Vector3f& _other) { *this = *this * _other; return *this; }
-	Vector3f& operator/=(const Vector3f& _other) { *this = *this / _other; return *this; }
+	Vector3f&      operator+=(const Vector3f& _other)       { *this = *this + _other; return *this; }
+	Vector3f&      operator-=(const Vector3f& _other)       { *this = *this - _other; return *this; }
+	Vector3f&      operator*=(const Vector3f& _other)       { *this = *this * _other; return *this; }
+	Vector3f&      operator/=(const Vector3f& _other)       { *this = *this / _other; return *this; }
 
-	Vector3f& operator+=(const float& _other) { *this = *this + _other; return *this; }
-	Vector3f& operator-=(const float& _other) { *this = *this - _other; return *this; }
-	Vector3f& operator*=(const float& _other) { *this = *this * _other; return *this; }
-	Vector3f& operator/=(const float& _other) { *this = *this / _other; return *this; }
+	Vector3f&      operator+=(const float& _other)          { *this = *this + _other; return *this; }
+	Vector3f&      operator-=(const float& _other)          { *this = *this - _other; return *this; }
+	Vector3f&      operator*=(const float& _other)          { *this = *this * _other; return *this; }
+	Vector3f&      operator/=(const float& _other)          { *this = *this / _other; return *this; }
 
-	      float& operator[](const int _index)       { assert(_index < 3 && "index out of range"); return (&mX)[_index]; }
-	const float& operator[](const int _index) const { assert(_index < 3 && "index out of range"); return (&mX)[_index]; }
+	      float&   operator[](const int _index)             { assert(_index < 3 && "index out of range"); return (&mX)[_index]; }
+	const float&   operator[](const int _index) const       { assert(_index < 3 && "index out of range"); return (&mX)[_index]; }
 
 	      float& x()       { return mX; }
 	      float& y()       { return mY; }
@@ -58,9 +58,9 @@ public:
 	inline const Vector2f& v2() const { return *(Vector2f*)this; }
 
 	Vector3f& round();
-	Vector3f& lerp(const Vector3f& _start, const Vector3f& _end, const float _fraction);
+	Vector3f& lerp (const Vector3f& _start, const Vector3f& _end, const float _fraction);
 
-	static const Vector3f Zero()  { return { 0, 0, 0 }; }
+	static const Vector3f Zero () { return { 0, 0, 0 }; }
 	static const Vector3f UnitX() { return { 1, 0, 0 }; }
 	static const Vector3f UnitY() { return { 0, 1, 0 }; }
 	static const Vector3f UnitZ() { return { 0, 0, 1 }; }
