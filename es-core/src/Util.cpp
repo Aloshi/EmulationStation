@@ -3,7 +3,6 @@
 #include "platform.h"
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
-#include <boost/date_time/posix_time/posix_time_io.hpp>
 #include <boost/filesystem/operations.hpp>
 
 namespace fs = boost::filesystem;
@@ -162,16 +161,6 @@ fs::path makeRelativePath(const fs::path& path, const fs::path& relativeTo, bool
 
 	// nothing could be resolved
 	return path;
-}
-
-boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt)
-{
-	std::istringstream ss(str);
-	ss.imbue(std::locale(std::locale::classic(), new boost::posix_time::time_input_facet(fmt))); //std::locale handles deleting the facet
-	boost::posix_time::ptime time;
-	ss >> time;
-
-	return time;
 }
 
 std::string strreplace(std::string str, const std::string& replace, const std::string& with)

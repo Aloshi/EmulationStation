@@ -1,5 +1,6 @@
 #include "FileData.h"
 
+#include "utils/TimeUtil.h"
 #include "AudioManager.h"
 #include "CollectionSystemManager.h"
 #include "FileFilterIndex.h"
@@ -11,7 +12,6 @@
 #include "VolumeControl.h"
 #include "Window.h"
 #include <boost/algorithm/string/trim.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/filesystem/operations.hpp>
 
 namespace fs = boost::filesystem;
@@ -285,8 +285,7 @@ void FileData::launchGame(Window* window)
 	gameToUpdate->metadata.set("playcount", std::to_string(static_cast<long long>(timesPlayed)));
 
 	//update last played time
-	boost::posix_time::ptime time = boost::posix_time::second_clock::universal_time();
-	gameToUpdate->metadata.setTime("lastplayed", time);
+	gameToUpdate->metadata.set("lastplayed", Utils::Time::DateTime(Utils::Time::now()));
 	CollectionSystemManager::get()->refreshCollectionSystems(gameToUpdate);
 }
 
