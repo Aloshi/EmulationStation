@@ -1,9 +1,9 @@
 #include "FileFilterIndex.h"
-#include "Settings.h"
-#include "views/ViewController.h"
 
+#include "views/UIModeController.h"
 #include "FileData.h"
 #include "Log.h"
+#include "Settings.h"
 #include "Util.h"
 #include <boost/algorithm/string/trim.hpp>
 
@@ -248,13 +248,13 @@ void FileFilterIndex::resetFilters()
 
 void FileFilterIndex::setUIModeFilters()
 {
-	if (!ViewController::get()->isUIModeFull())
+	if (!UIModeController::getInstance()->isUIModeFull())
 	{
 		filterByHidden = true;
 		std::vector<std::string> val = { "FALSE" };
 		setFilter(HIDDEN_FILTER, &val);
 	}
-	if (ViewController::get()->isUIModeKid())
+	if (UIModeController::getInstance()->isUIModeKid())
 	{
 		filterByKidGame = true;
 		std::vector<std::string> val = { "TRUE" };

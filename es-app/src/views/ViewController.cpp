@@ -9,6 +9,7 @@
 #include "views/gamelist/IGameListView.h"
 #include "views/gamelist/VideoGameListView.h"
 #include "views/SystemView.h"
+#include "views/UIModeController.h"
 #include "FileFilterIndex.h"
 #include "Log.h"
 #include "Settings.h"
@@ -33,7 +34,6 @@ ViewController::ViewController(Window* window)
 	: GuiComponent(window), mCurrentView(nullptr), mCamera(Transform4x4f::Identity()), mFadeOpacity(0), mLockInput(false)
 {
 	mState.viewing = NOTHING;
-	mCurUIMode = Settings::getInstance()->getString("UIMode");
 }
 
 ViewController::~ViewController()
@@ -57,6 +57,13 @@ void ViewController::goToStart()
 		}
 	}
 	goToSystemView(SystemData::sSystemVector.at(0));
+}
+
+void ViewController::ReloadAndGoToStart()
+{
+	mWindow->renderLoadingScreen();
+	ViewController::get()->reloadAll();
+	ViewController::get()->goToStart();
 }
 
 int ViewController::getSystemId(SystemData* system)
@@ -353,6 +360,11 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 	}
 
+	if(UIModeController::getInstance()->listen(config, input))  // check if UI mode has changed due to passphrase completion
+	{
+		return true;
+	}
+
 	if(mCurrentView)
 		return mCurrentView->input(config, input);
 
@@ -380,7 +392,7 @@ void ViewController::render(const Transform4x4f& parentTrans)
 	Vector3f viewEnd = transInverse * Vector3f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight(), 0);
 
 	// Keep track of UI mode changes.
-	monitorUIMode();
+	UIModeController::getInstance()->monitorUIMode();
 
 	// draw systemview
 	getSystemListView()->render(trans);
@@ -486,29 +498,6 @@ void ViewController::reloadAll()
 	}
 
 	updateHelpPrompts();
-}
-
-void ViewController::monitorUIMode()
-{
-	std::string uimode = Settings::getInstance()->getString("UIMode");
-	if (uimode != mCurUIMode) // UIMODE HAS CHANGED
-	{
-		mWindow->renderLoadingScreen();
-		mCurUIMode = uimode;
-		reloadAll();
-		goToStart();
-	}
-}
-
-bool ViewController::isUIModeFull()
-{
-	return ((mCurUIMode == "Full") && ! Settings::getInstance()->getBool("ForceKiosk"));
-}
-
-bool ViewController::isUIModeKid()
-{
-	return (Settings::getInstance()->getBool("ForceKid") ||
-		((mCurUIMode == "Kid") && !Settings::getInstance()->getBool("ForceKiosk")));
 }
 
 std::vector<HelpPrompt> ViewController::getHelpPrompts()

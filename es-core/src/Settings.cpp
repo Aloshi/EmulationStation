@@ -146,6 +146,7 @@ void saveMap(pugi::xml_document& doc, std::map<K, V>& map, const char* type)
 
 void Settings::saveFile()
 {
+	LOG(LogDebug) << "Settings::saveFile() : Saving Settings to file.";
 	const std::string path = getHomePath() + "/.emulationstation/es_settings.cfg";
 
 	pugi::xml_document doc;

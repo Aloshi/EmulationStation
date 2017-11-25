@@ -41,20 +41,6 @@ public:
 		virtual ~InfoPopup() {};
 	};
 
-	class PassKeyListener {
-	public:
-		bool isUIModeChanged(InputConfig* config, Input input, Window* window);
-		PassKeyListener()
-		{
-			mPassKeySequence = Settings::getInstance()->getString("UIMode_passkey");
-			mPassKeyCounter = 0;
-		}
-	private:
-		std::string mPassKeySequence;
-		int mPassKeyCounter;
-		const std::vector<std::string> mInputVals = { "up", "down", "left", "right", "a", "b", "x", "y" };
-	};
-
 	Window();
 	~Window();
 
@@ -102,7 +88,6 @@ private:
 	ScreenSaver*	mScreenSaver;
 	InfoPopup*		mInfoPopup;
 	bool			mRenderScreenSaver;
-	PassKeyListener* mPassKeyListener;
 
 	std::vector<GuiComponent*> mGuiStack;
 
