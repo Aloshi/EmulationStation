@@ -1,9 +1,9 @@
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
 
+#include "utils/StringUtil.h"
 #include "AudioManager.h"
 #include "Settings.h"
-#include <boost/algorithm/string/predicate.hpp>
 #include <fcntl.h>
 #include <wait.h>
 
@@ -68,7 +68,7 @@ void VideoPlayerComponent::startVideo()
 			mPlayingVideoPath = mVideoPath;
 
 			// Disable AudioManager so video can play, in case we're requesting ALSA
-			if (boost::starts_with(Settings::getInstance()->getString("OMXAudioDev").c_str(), "alsa"))
+			if (Utils::String::startsWith(Settings::getInstance()->getString("OMXAudioDev").c_str(), "alsa"))
 			{
 				AudioManager::getInstance()->deinit();
 			}

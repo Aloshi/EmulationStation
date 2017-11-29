@@ -1,6 +1,7 @@
 #include "CollectionSystemManager.h"
 
 #include "guis/GuiInfoPopup.h"
+#include "utils/StringUtil.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "FileData.h"
@@ -10,9 +11,7 @@
 #include "SystemData.h"
 #include "ThemeData.h"
 #include "Util.h"
-#include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/xpressive/xpressive.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
 #include <unordered_map>
@@ -351,26 +350,33 @@ bool CollectionSystemManager::isThemeCustomCollectionCompatible(std::vector<std:
 
 std::string CollectionSystemManager::getValidNewCollectionName(std::string inName, int index)
 {
-	// filter name - [^A-Za-z0-9\[\]\(\)\s]
-	using namespace boost::xpressive;
-	std::string name;
-	sregex regexp = sregex::compile("[^A-Za-z0-9\\-\\[\\]\\(\\)\\s']");
-	if (index == 0)
+	std::string name = inName;
+
+	if(index == 0)
 	{
-		name = regex_replace(inName, regexp, "");
-		if (name == "")
+		size_t remove = std::string::npos;
+
+		// get valid name
+		while((remove = name.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-[]() ")) != std::string::npos)
 		{
-			name = "New Collection";
+			name.erase(remove, 1);
 		}
 	}
 	else
 	{
-		name = inName + " (" + std::to_string(index) + ")";
+		name += " (" + std::to_string(index) + ")";
 	}
+
+	if(name == "")
+	{
+		name = "New Collection";
+	}
+
 	if(name != inName)
 	{
 		LOG(LogInfo) << "Had to change name, from: " << inName << " to: " << name;
 	}
+
 	// get used systems in es_systems.cfg
 	std::vector<std::string> systemsInUse = getSystemsFromConfig();
 	// get folders assigned to custom collections
@@ -948,7 +954,7 @@ std::vector<std::string> CollectionSystemManager::getCollectionsFromConfigFolder
 				std::string filename = file.substr(configPath.string().size());
 
 				// need to confirm filename matches config format
-				if (boost::algorithm::ends_with(filename, ".cfg") && boost::algorithm::starts_with(filename, "custom-") && filename != "custom-.cfg")
+				if (filename != "custom-.cfg" && Utils::String::startsWith(filename, "custom-") && Utils::String::endsWith(filename, ".cfg"))
 				{
 					filename = filename.substr(7, filename.size()-11);
 					systems.push_back(filename);

@@ -1,5 +1,6 @@
 #include "FileData.h"
 
+#include "utils/StringUtil.h"
 #include "utils/TimeUtil.h"
 #include "AudioManager.h"
 #include "CollectionSystemManager.h"
@@ -11,7 +12,6 @@
 #include "Util.h"
 #include "VolumeControl.h"
 #include "Window.h"
-#include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem/operations.hpp>
 
 namespace fs = boost::filesystem;
@@ -327,7 +327,7 @@ const std::string& CollectionFileData::getName()
 {
 	if (mDirty) {
 		mCollectionFileName = removeParenthesis(mSourceFileData->metadata.get("name"));
-		boost::trim(mCollectionFileName);
+		Utils::String::trim(mCollectionFileName);
 		mCollectionFileName += " [" + strToUpper(mSourceFileData->getSystem()->getName()) + "]";
 		mDirty = false;
 	}

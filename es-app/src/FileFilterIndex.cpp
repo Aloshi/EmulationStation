@@ -1,11 +1,11 @@
 #include "FileFilterIndex.h"
 
+#include "utils/StringUtil.h"
 #include "views/UIModeController.h"
 #include "FileData.h"
 #include "Log.h"
 #include "Settings.h"
 #include "Util.h"
-#include <boost/algorithm/string/trim.hpp>
 
 #define UNKNOWN_LABEL "UNKNOWN"
 #define INCLUDE_UNKNOWN false;
@@ -94,7 +94,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 		case GENRE_FILTER:
 		{
 			key = strToUpper(game->metadata.get("genre"));
-			boost::trim(key);
+			Utils::String::trim(key);
 			if (getSecondary && !key.empty()) {
 				std::istringstream f(key);
 				std::string newKey;
@@ -121,7 +121,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 		case PUBDEV_FILTER:
 		{
 			key = strToUpper(game->metadata.get("publisher"));
-			boost::trim(key);
+			Utils::String::trim(key);
 
 			if ((getSecondary && !key.empty()) || (!getSecondary && key.empty()))
 				key = strToUpper(game->metadata.get("developer"));
@@ -173,7 +173,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 			break;
 		}
 	}
-	boost::trim(key);
+	Utils::String::trim(key);
 	if (key.empty() || (type == RATINGS_FILTER && key == "0 STARS")) {
 		key = UNKNOWN_LABEL;
 	}
