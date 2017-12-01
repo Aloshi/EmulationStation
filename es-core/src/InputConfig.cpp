@@ -181,7 +181,14 @@ void InputConfig::writeToXML(pugi::xml_node& parent)
 	{
 		cfg.append_attribute("type") = "keyboard";
 		cfg.append_attribute("deviceName") = "Keyboard";
-	}else{
+	}
+	else if(mDeviceId == DEVICE_CEC)
+	{
+		cfg.append_attribute("type") = "cec";
+		cfg.append_attribute("deviceName") = "CEC";
+	}
+	else
+	{
 		cfg.append_attribute("type") = "joystick";
 		cfg.append_attribute("deviceName") = mDeviceName.c_str();
 	}

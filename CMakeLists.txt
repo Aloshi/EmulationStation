@@ -179,6 +179,11 @@ set(COMMON_LIBRARIES
 
 #add libCEC_LIBRARIES
 if(DEFINED libCEC_FOUND)
+if(DEFINED BCMHOST)
+    LIST(APPEND COMMON_LIBRARIES
+        vchiq_arm
+    )
+endif()
     LIST(APPEND COMMON_LIBRARIES
         dl
         ${libCEC_LIBRARIES}
