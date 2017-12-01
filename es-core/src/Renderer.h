@@ -15,11 +15,15 @@ class Transform4x4f;
 //Renderer_init_*.cpp has platform-specific renderer initialziation/deinitialziation code.  (e.g. the Raspberry Pi sets up dispmanx/OpenGL ES)
 namespace Renderer
 {
-	bool init(int w, int h);
+	bool init();
 	void deinit();
 
+	unsigned int getWindowWidth();
+	unsigned int getWindowHeight();
 	unsigned int getScreenWidth();
 	unsigned int getScreenHeight();
+	unsigned int getScreenOffsetX();
+	unsigned int getScreenOffsetY();
 
 	void buildGLColorArray(GLubyte* ptr, unsigned int color, unsigned int vertCount);
 

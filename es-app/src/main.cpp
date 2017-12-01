@@ -29,7 +29,7 @@ namespace fs = boost::filesystem;
 
 bool scrape_cmdline = false;
 
-bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height)
+bool parseArgs(int argc, char* argv[])
 {
 	for(int i = 1; i < argc; i++)
 	{
@@ -41,9 +41,37 @@ bool parseArgs(int argc, char* argv[], unsigned int* width, unsigned int* height
 				return false;
 			}
 
-			*width = atoi(argv[i + 1]);
-			*height = atoi(argv[i + 2]);
+			int width = atoi(argv[i + 1]);
+			int height = atoi(argv[i + 2]);
 			i += 2; // skip the argument value
+			Settings::getInstance()->setInt("WindowWidth", width);
+			Settings::getInstance()->setInt("WindowHeight", height);
+		}else if(strcmp(argv[i], "--screensize") == 0)
+		{
+			if(i >= argc - 2)
+			{
+				std::cerr << "Invalid screensize supplied.";
+				return false;
+			}
+
+			int width = atoi(argv[i + 1]);
+			int height = atoi(argv[i + 2]);
+			i += 2; // skip the argument value
+			Settings::getInstance()->setInt("ScreenWidth", width);
+			Settings::getInstance()->setInt("ScreenHeight", height);
+		}else if(strcmp(argv[i], "--screenoffset") == 0)
+		{
+			if(i >= argc - 2)
+			{
+				std::cerr << "Invalid screenoffset supplied.";
+				return false;
+			}
+
+			int x = atoi(argv[i + 1]);
+			int y = atoi(argv[i + 2]);
+			i += 2; // skip the argument value
+			Settings::getInstance()->setInt("ScreenOffsetX", x);
+			Settings::getInstance()->setInt("ScreenOffsetY", y);
 		}else if(strcmp(argv[i], "--gamelist-only") == 0)
 		{
 			Settings::getInstance()->setBool("ParseGamelistOnly", true);
@@ -182,13 +210,10 @@ int main(int argc, char* argv[])
 {
 	srand((unsigned int)time(NULL));
 
-	unsigned int width = 0;
-	unsigned int height = 0;
-
 	std::locale::global(std::locale("C"));
 	boost::filesystem::path::imbue(std::locale());
 
-	if(!parseArgs(argc, argv, &width, &height))
+	if(!parseArgs(argc, argv))
 		return 0;
 
 	// only show the console on Windows if HideConsole is false
@@ -250,7 +275,7 @@ int main(int argc, char* argv[])
 
 	if(!scrape_cmdline)
 	{
-		if(!window.init(width, height))
+		if(!window.init())
 		{
 			LOG(LogError) << "Window failed to initialize!";
 			return 1;
