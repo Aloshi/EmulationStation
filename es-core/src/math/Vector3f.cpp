@@ -5,7 +5,7 @@ Vector3f& Vector3f::round()
 	mX = (float)(int)(mX + 0.5f);
 	mY = (float)(int)(mY + 0.5f);
 	mZ = (float)(int)(mZ + 0.5f);
-	
+
 	return *this;
 
 } // round

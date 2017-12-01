@@ -14,55 +14,55 @@ namespace Utils
 {
 	namespace FileSystem
 	{
-		bool createDirectory(const std::string& path)
+		bool createDirectory(const std::string& _path)
 		{
 			// don't create if it already exists
-			if(exists(path))
+			if(exists(_path))
 				return true;
 
 			// convert '\\' to '/'
-			fixSeparators(path);
+			makeGeneric(_path);
 
 			// try to create directory
-			if(mkdir(path.c_str(), 0755) == 0)
+			if(mkdir(_path.c_str(), 0755) == 0)
 				return true;
 
 			// failed to create directory, try to create the parent
-			std::string parent = getParent(path);
+			std::string parent = getParent(_path);
 
 			// only try to create parent if it's not identical to path
-			if(parent != path)
+			if(parent != _path)
 				createDirectory(parent);
 
 			// try to create directory again now that the parent should exist
-			return (mkdir(path.c_str(), 0755) == 0);
+			return (mkdir(_path.c_str(), 0755) == 0);
 
 		} // createDirectory
 
-		void fixSeparators(const std::string& path)
+		void makeGeneric(const std::string& _path)
 		{
 			char* p = nullptr;
 
 			// convert '\\' to '/'
-			for(p = (char*)path.c_str() + 1; *p; ++p)
+			for(p = (char*)_path.c_str() + 1; *p; ++p)
 			{
 				if(*p == '\\')
 					*p = '/';
 			}
 
-		} // fixSeparators
+		} // makeGeneric
 
-		std::string escapePath(const std::string& path)
+		std::string escapePath(const std::string& _path)
 		{
 
 #ifdef WIN32
 			// windows escapes stuff by just putting everything in quotes
-			return '"' + path + '"';
+			return '"' + _path + '"';
 #else // WIN32
 			// insert a backslash before most characters that would mess up a bash path
-			std::string escapedPath = path;
+			std::string escapedPath  = _path;
 			const char* invalidChars = "\\ '\"!$^&*(){}[]?;<>";
-			const char* invalidChar = invalidChars;
+			const char* invalidChar  = invalidChars;
 
 			while(*invalidChar)
 			{
@@ -83,14 +83,14 @@ namespace Utils
 
 		} // escapePath
 
-		std::string getParent(const std::string& path)
+		std::string getParent(const std::string& _path)
 		{
 			// convert '\\' to '/'
-			fixSeparators(path);
+			makeGeneric(_path);
 
 			// make a copy of the path
 			char temp[512];
-			size_t len = snprintf(temp, sizeof(temp), "%s", path.c_str());
+			size_t len = snprintf(temp, sizeof(temp), "%s", _path.c_str());
 
 			// find last '/' and end the new path
 			while(len > 1)
@@ -103,18 +103,18 @@ namespace Utils
 			}
 
 			// no parent found
-			return path;
+			return _path;
 
 		} // getParent
 
-		std::string getFileName(const std::string& path)
+		std::string getFileName(const std::string& _path)
 		{
 			// convert '\\' to '/'
-			fixSeparators(path);
+			makeGeneric(_path);
 
 			// make a copy of the path
 			char temp[512];
-			size_t len = snprintf(temp, sizeof(temp), "%s", path.c_str());
+			size_t len = snprintf(temp, sizeof(temp), "%s", _path.c_str());
 
 			// find last '/' and return the filename
 			while(len > 1)
@@ -125,13 +125,13 @@ namespace Utils
 			}
 
 			// no '/' found, entire path is a filename
-			return path;
+			return _path;
 
 		} // getFileName
 
-		std::string getStem(const std::string& path)
+		std::string getStem(const std::string& _path)
 		{
-			std::string fileName = getFileName(path);
+			std::string fileName = getFileName(_path);
 
 			// empty fileName
 			if(fileName == ".")
@@ -156,10 +156,10 @@ namespace Utils
 
 		} // getStem
 
-		bool exists(const std::string& path)
+		bool exists(const std::string& _path)
 		{
 			struct stat info;
-			return (stat(path.c_str(), &info) == 0);
+			return (stat(_path.c_str(), &info) == 0);
 
 		} // exists
 

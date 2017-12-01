@@ -18,33 +18,33 @@ public:
 	explicit Vector2f(const Vector3f& _v)             : mX(((Vector2f&)_v).mX), mY(((Vector2f&)_v).mY) { }
 	explicit Vector2f(const Vector4f& _v)             : mX(((Vector2f&)_v).mX), mY(((Vector2f&)_v).mY) { }
 
-	const bool operator==(const Vector2f& _other) const { return ((mX == _other.mX) && (mY == _other.mY)); }
-	const bool operator!=(const Vector2f& _other) const { return ((mX != _other.mX) || (mY != _other.mY)); }
+	const bool     operator==(const Vector2f& _other) const { return ((mX == _other.mX) && (mY == _other.mY)); }
+	const bool     operator!=(const Vector2f& _other) const { return ((mX != _other.mX) || (mY != _other.mY)); }
 
-	const Vector2f operator+(const Vector2f& _other) const { return { mX + _other.mX, mY + _other.mY }; }
-	const Vector2f operator-(const Vector2f& _other) const { return { mX - _other.mX, mY - _other.mY }; }
-	const Vector2f operator*(const Vector2f& _other) const { return { mX * _other.mX, mY * _other.mY }; }
-	const Vector2f operator/(const Vector2f& _other) const { return { mX / _other.mX, mY / _other.mY }; }
+	const Vector2f operator+ (const Vector2f& _other) const { return { mX + _other.mX, mY + _other.mY }; }
+	const Vector2f operator- (const Vector2f& _other) const { return { mX - _other.mX, mY - _other.mY }; }
+	const Vector2f operator* (const Vector2f& _other) const { return { mX * _other.mX, mY * _other.mY }; }
+	const Vector2f operator/ (const Vector2f& _other) const { return { mX / _other.mX, mY / _other.mY }; }
 
-	const Vector2f operator+(const float& _other) const { return { mX + _other, mY + _other }; }
-	const Vector2f operator-(const float& _other) const { return { mX - _other, mY - _other }; }
-	const Vector2f operator*(const float& _other) const { return { mX * _other, mY * _other }; }
-	const Vector2f operator/(const float& _other) const { return { mX / _other, mY / _other }; }
+	const Vector2f operator+ (const float& _other) const    { return { mX + _other, mY + _other }; }
+	const Vector2f operator- (const float& _other) const    { return { mX - _other, mY - _other }; }
+	const Vector2f operator* (const float& _other) const    { return { mX * _other, mY * _other }; }
+	const Vector2f operator/ (const float& _other) const    { return { mX / _other, mY / _other }; }
 
-	const Vector2f operator-() const { return { -mX , -mY }; }
+	const Vector2f operator- () const                       { return { -mX , -mY }; }
 
-	Vector2f& operator+=(const Vector2f& _other) { *this = *this + _other; return *this; }
-	Vector2f& operator-=(const Vector2f& _other) { *this = *this - _other; return *this; }
-	Vector2f& operator*=(const Vector2f& _other) { *this = *this * _other; return *this; }
-	Vector2f& operator/=(const Vector2f& _other) { *this = *this / _other; return *this; }
+	Vector2f&      operator+=(const Vector2f& _other)       { *this = *this + _other; return *this; }
+	Vector2f&      operator-=(const Vector2f& _other)       { *this = *this - _other; return *this; }
+	Vector2f&      operator*=(const Vector2f& _other)       { *this = *this * _other; return *this; }
+	Vector2f&      operator/=(const Vector2f& _other)       { *this = *this / _other; return *this; }
 
-	Vector2f& operator+=(const float& _other) { *this = *this + _other; return *this; }
-	Vector2f& operator-=(const float& _other) { *this = *this - _other; return *this; }
-	Vector2f& operator*=(const float& _other) { *this = *this * _other; return *this; }
-	Vector2f& operator/=(const float& _other) { *this = *this / _other; return *this; }
+	Vector2f&      operator+=(const float& _other)          { *this = *this + _other; return *this; }
+	Vector2f&      operator-=(const float& _other)          { *this = *this - _other; return *this; }
+	Vector2f&      operator*=(const float& _other)          { *this = *this * _other; return *this; }
+	Vector2f&      operator/=(const float& _other)          { *this = *this / _other; return *this; }
 
-	      float& operator[](const int _index)       { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
-	const float& operator[](const int _index) const { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
+	      float&   operator[](const int _index)             { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
+	const float&   operator[](const int _index) const       { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
 
 	      float& x()       { return mX; }
 	      float& y()       { return mY; }
@@ -52,9 +52,9 @@ public:
 	const float& y() const { return mY; }
 
 	Vector2f& round();
-	Vector2f& lerp(const Vector2f& _start, const Vector2f& _end, const float _fraction);
+	Vector2f& lerp (const Vector2f& _start, const Vector2f& _end, const float _fraction);
 
-	static const Vector2f Zero()  { return { 0, 0 }; }
+	static const Vector2f Zero () { return { 0, 0 }; }
 	static const Vector2f UnitX() { return { 1, 0 }; }
 	static const Vector2f UnitY() { return { 0, 1 }; }
 

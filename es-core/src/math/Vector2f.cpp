@@ -4,9 +4,9 @@ Vector2f& Vector2f::round()
 {
 	mX = (float)(int)(mX + 0.5f);
 	mY = (float)(int)(mY + 0.5f);
-		
+
 	return *this;
-	
+
 } // round
 
 Vector2f& Vector2f::lerp(const Vector2f& _start, const Vector2f& _end, const float _fraction)

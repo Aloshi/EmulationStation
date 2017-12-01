@@ -6,7 +6,7 @@ Vector4f& Vector4f::round()
 	mY = (float)(int)(mY + 0.5f);
 	mZ = (float)(int)(mZ + 0.5f);
 	mW = (float)(int)(mW + 0.5f);
-	
+
 	return *this;
 
 } // round
