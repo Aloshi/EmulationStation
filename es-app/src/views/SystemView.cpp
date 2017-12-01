@@ -37,7 +37,7 @@ void SystemView::populate()
 		if(mViewNeedsReload)
 			getViewElements(theme);
 
-		if((*it)->getDisplayedGameCount() > 0)
+		if((*it)->isVisible())
 		{
 			Entry e;
 			e.name = (*it)->getName();
