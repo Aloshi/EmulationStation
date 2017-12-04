@@ -12,30 +12,30 @@ namespace Utils
 			mTimeStruct = { 0, 0, 0, 1, 0, 0, 0, 0, -1 };
 			mIsoString  = "00000000T000000";
 
-		} // Time
+		} // DateTime::DateTime
 
 		DateTime::DateTime(const time_t& _time)
 		{
 			setTime(_time);
 
-		} // Time
+		} // DateTime::DateTime
 
 		DateTime::DateTime(const tm& _timeStruct)
 		{
 			setTimeStruct(_timeStruct);
 
-		} // Time
+		} // DateTime::DateTime
 
 		DateTime::DateTime(const std::string& _isoString)
 		{
 			setIsoString(_isoString);
 
-		} // Time
+		} // DateTime::DateTime
 
 		DateTime::~DateTime()
 		{
 
-		} // ~Time
+		} // DateTime::~DateTime
 
 		void DateTime::setTime(const time_t& _time)
 		{
@@ -44,19 +44,19 @@ namespace Utils
 			mTimeStruct = *localtime(&mTime);
 			mIsoString  = timeToString(mTime);
 
-		} // setTime
+		} // DateTime::setTime
 
 		void DateTime::setTimeStruct(const tm& _timeStruct)
 		{
 			setTime(mktime((tm*)&_timeStruct));
 
-		} // setTimeStruct
+		} // DateTime::setTimeStruct
 
 		void DateTime::setIsoString(const std::string& _isoString)
 		{
 			setTime(stringToTime(_isoString));
 
-		} // setIsoString
+		} // DateTime::setIsoString
 
 		Duration::Duration(const time_t& _time)
 		{
@@ -66,12 +66,12 @@ namespace Utils
 			mMinutes      = ((mTotalSeconds % (60*60)) - (mTotalSeconds % (60))) / 60;
 			mSeconds      = mTotalSeconds % 60;
 
-		} // Duration
+		} // Duration::Duration
 
 		Duration::~Duration()
 		{
 
-		} // ~Duration
+		} // Duration::~Duration
 
 		time_t now()
 		{
@@ -86,7 +86,7 @@ namespace Utils
 			const char* s           = _string.c_str();
 			const char* f           = _format.c_str();
 			tm          timeStruct  = { 0, 0, 0, 1, 0, 0, 0, 0, -1 };
-			int         parsedChars = 0;
+			size_t      parsedChars = 0;
 
 			if(_string == "not-a-date-time")
 				return mktime(&timeStruct);

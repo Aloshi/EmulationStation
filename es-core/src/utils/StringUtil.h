@@ -13,11 +13,12 @@ namespace Utils
 		size_t       nextCursor   (const std::string& _string, const size_t _cursor);
 		size_t       prevCursor   (const std::string& _string, const size_t _cursor);
 		size_t       moveCursor   (const std::string& _string, const size_t _cursor, const int _amount);
-		std::string  trim         (const std::string& _path);
+		std::string  toUpper      (const std::string& _string);
+		std::string  trim         (const std::string& _string);
 		bool         startsWith   (const std::string& _string, const std::string& _test);
 		bool         endsWith     (const std::string& _string, const std::string& _test);
 
-	} // Utils::String::
+	} // String::
 
 } // Utils::
 
