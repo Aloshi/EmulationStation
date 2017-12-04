@@ -8,6 +8,7 @@
 #include <pugixml/src/pugixml.hpp>
 #include <SDL.h>
 #include <iostream>
+#include <assert.h>
 
 #define KEYBOARD_GUID_STRING "-1"
 #define CEC_GUID_STRING      "-2"
@@ -26,8 +27,6 @@
 // hack for cec support
 int SDL_USER_CECBUTTONDOWN = -1;
 int SDL_USER_CECBUTTONUP   = -1;
-
-namespace fs = boost::filesystem;
 
 InputManager* InputManager::mInstance = NULL;
 
@@ -279,7 +278,7 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 bool InputManager::loadInputConfig(InputConfig* config)
 {
 	std::string path = getConfigPath();
-	if(!fs::exists(path))
+	if(!boost::filesystem::exists(path))
 		return false;
 	
 	pugi::xml_document doc;
@@ -334,7 +333,7 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 
 	pugi::xml_document doc;
 
-	if(fs::exists(path))
+	if(boost::filesystem::exists(path))
 	{
 		// merge files
 		pugi::xml_parse_result result = doc.load_file(path.c_str());
@@ -395,7 +394,7 @@ void InputManager::doOnFinish()
 	std::string path = getConfigPath();
 	pugi::xml_document doc;
 
-	if(fs::exists(path))
+	if(boost::filesystem::exists(path))
 	{
 		pugi::xml_parse_result result = doc.load_file(path.c_str());
 		if(!result)

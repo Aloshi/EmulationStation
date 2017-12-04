@@ -11,8 +11,6 @@
 
 #define HOLD_TIME 1000
 
-namespace fs = boost::filesystem;
-
 GuiDetectDevice::GuiDetectDevice(Window* window, bool firstRun, const std::function<void()>& doneCallback) : GuiComponent(window), mFirstRun(firstRun), 
 	mBackground(window, ":/frame.png"), mGrid(window, Vector2i(1, 5))
 {
@@ -104,7 +102,7 @@ void GuiDetectDevice::update(int deltaTime)
 	if(mHoldingConfig)
 	{
 		// If ES starts and if a known device is connected after startup skip controller configuration
-		if(mFirstRun && fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
+		if(mFirstRun && boost::filesystem::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
 			if(mDoneCallback)
 				mDoneCallback();

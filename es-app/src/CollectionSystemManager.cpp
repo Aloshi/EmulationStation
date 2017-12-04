@@ -16,7 +16,6 @@
 #include <fstream>
 #include <unordered_map>
 
-namespace fs = boost::filesystem;
 std::string myCollectionsName = "collections";
 
 /* Handling the getting, initialization, deinitialization, saving and deletion of
@@ -52,8 +51,8 @@ CollectionSystemManager::CollectionSystemManager(Window* window) : mWindow(windo
 	mCollectionEnvData->mPlatformIds = allPlatformIds;
 
 	std::string path = getCollectionsFolder();
-	if(!fs::exists(path))
-		fs::create_directory(path);
+	if(!boost::filesystem::exists(path))
+		boost::filesystem::create_directory(path);
 
 	mIsEditingCustom = false;
 	mEditingCollection = "Favorites";
@@ -334,7 +333,7 @@ bool CollectionSystemManager::isThemeCustomCollectionCompatible(std::vector<std:
 	if(set != themeSets.cend())
 	{
 		std::string defaultThemeFilePath = set->second.path.string() + "/theme.xml";
-		if (fs::exists(defaultThemeFilePath))
+		if (boost::filesystem::exists(defaultThemeFilePath))
 		{
 			return true;
 		}
@@ -722,7 +721,7 @@ void CollectionSystemManager::populateCustomCollection(CollectionSystemData* sys
 	CollectionSystemDecl sysDecl = sysData->decl;
 	std::string path = getCustomCollectionConfigPath(newSys->getName());
 
-	if(!fs::exists(path))
+	if(!boost::filesystem::exists(path))
 	{
 		LOG(LogInfo) << "Couldn't find custom collection config file at " << path;
 		return;
@@ -829,7 +828,7 @@ std::vector<std::string> CollectionSystemManager::getSystemsFromConfig()
 	std::vector<std::string> systems;
 	std::string path = SystemData::getConfigPath(false);
 
-	if(!fs::exists(path))
+	if(!boost::filesystem::exists(path))
 	{
 		return systems;
 	}
@@ -880,20 +879,20 @@ std::vector<std::string> CollectionSystemManager::getSystemsFromTheme()
 		Settings::getInstance()->setString("ThemeSet", set->first);
 	}
 
-	fs::path themePath = set->second.path;
+	boost::filesystem::path themePath = set->second.path;
 
-	if (fs::exists(themePath))
+	if (boost::filesystem::exists(themePath))
 	{
-		fs::directory_iterator end_itr; // default construction yields past-the-end
-		for (fs::directory_iterator itr(themePath); itr != end_itr; ++itr)
+		boost::filesystem::directory_iterator end_itr; // default construction yields past-the-end
+		for (boost::filesystem::directory_iterator itr(themePath); itr != end_itr; ++itr)
 		{
-			if (fs::is_directory(itr->status()))
+			if (boost::filesystem::is_directory(itr->status()))
 			{
 				//... here you have a directory
 				std::string folder = itr->path().string();
 				folder = folder.substr(themePath.string().size()+1);
 
-				if(fs::exists(set->second.getThemePath(folder)))
+				if(boost::filesystem::exists(set->second.getThemePath(folder)))
 				{
 					systems.push_back(folder);
 				}
@@ -940,14 +939,14 @@ std::vector<std::string> CollectionSystemManager::getUnusedSystemsFromTheme()
 std::vector<std::string> CollectionSystemManager::getCollectionsFromConfigFolder()
 {
 	std::vector<std::string> systems;
-	fs::path configPath = getCollectionsFolder();
+	boost::filesystem::path configPath = getCollectionsFolder();
 
-	if (fs::exists(configPath))
+	if (boost::filesystem::exists(configPath))
 	{
-		fs::directory_iterator end_itr; // default construction yields past-the-end
-		for (fs::directory_iterator itr(configPath); itr != end_itr; ++itr)
+		boost::filesystem::directory_iterator end_itr; // default construction yields past-the-end
+		for (boost::filesystem::directory_iterator itr(configPath); itr != end_itr; ++itr)
 		{
-			if (fs::is_regular_file(itr->status()))
+			if (boost::filesystem::is_regular_file(itr->status()))
 			{
 				// it's a file
 				std::string file = itr->path().string();
@@ -1013,7 +1012,7 @@ bool CollectionSystemManager::includeFileInAutoCollections(FileData* file)
 
 std::string getCustomCollectionConfigPath(std::string collectionName)
 {
-	fs::path path = getCollectionsFolder() + "custom-" + collectionName + ".cfg";
+	boost::filesystem::path path = getCollectionsFolder() + "custom-" + collectionName + ".cfg";
 	return path.generic_string();
 }
 

@@ -3,7 +3,6 @@
 #define ES_APP_FILE_DATA_H
 
 #include "MetaData.h"
-#include <boost/filesystem/path.hpp>
 #include <unordered_map>
 
 class SystemData;

@@ -7,17 +7,14 @@
 #include "SystemData.h"
 #include "Util.h"
 #include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
 #include <pugixml/src/pugixml.hpp>
-
-namespace fs = boost::filesystem;
 
 FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& path, FileType type, bool trustGamelist)
 {
 	// first, verify that path is within the system's root folder
 	FileData* root = system->getRootFolder();
 
-	fs::path relative;
+	boost::filesystem::path relative;
 	bool contains = false;
 	if (trustGamelist)
 	{
@@ -111,7 +108,7 @@ void parseGamelist(SystemData* system)
 		return;
 	}
 
-	fs::path relativeTo = system->getStartPath();
+	boost::filesystem::path relativeTo = system->getStartPath();
 
 	const char* tagList[2] = { "game", "folder" };
 	FileType typeList[2] = { GAME, FOLDER };
@@ -121,7 +118,7 @@ void parseGamelist(SystemData* system)
 		FileType type = typeList[i];
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
-			fs::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
+			boost::filesystem::path path = resolvePath(fileNode.child("path").text().get(), relativeTo, false);
 
 			if(!trustGamelist && !boost::filesystem::exists(path))
 			{
@@ -242,9 +239,9 @@ void updateGamelist(SystemData* system)
 					continue;
 				}
 
-				fs::path nodePath = resolvePath(pathNode.text().get(), system->getStartPath(), true);
-				fs::path gamePath((*fit)->getPath());
-				if(nodePath == gamePath || (fs::exists(nodePath) && fs::exists(gamePath) && fs::equivalent(nodePath, gamePath)))
+				boost::filesystem::path nodePath = resolvePath(pathNode.text().get(), system->getStartPath(), true);
+				boost::filesystem::path gamePath((*fit)->getPath());
+				if(nodePath == gamePath || (boost::filesystem::exists(nodePath) && boost::filesystem::exists(gamePath) && boost::filesystem::equivalent(nodePath, gamePath)))
 				{
 					// found it
 					root.remove_child(fileNode);
