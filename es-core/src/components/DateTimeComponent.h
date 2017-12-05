@@ -2,8 +2,8 @@
 #ifndef ES_CORE_COMPONENTS_DATE_TIME_COMPONENT_H
 #define ES_CORE_COMPONENTS_DATE_TIME_COMPONENT_H
 
+#include "utils/TimeUtil.h"
 #include "GuiComponent.h"
-#include <boost/date_time/posix_time/ptime.hpp>
 
 class TextCache;
 
@@ -49,8 +49,8 @@ private:
 	
 	void updateTextCache();
 
-	boost::posix_time::ptime mTime;
-	boost::posix_time::ptime mTimeBeforeEdit;
+	Utils::Time::DateTime mTime;
+	Utils::Time::DateTime mTimeBeforeEdit;
 
 	bool mEditing;
 	int mEditIndex;

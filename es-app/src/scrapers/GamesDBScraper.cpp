@@ -1,5 +1,6 @@
 #include "scrapers/GamesDBScraper.h"
 
+#include "utils/TimeUtil.h"
 #include "FileData.h"
 #include "Log.h"
 #include "PlatformId.h"
@@ -156,10 +157,7 @@ void TheGamesDBRequest::processGame(const pugi::xml_document& xmldoc, std::vecto
 
 		result.mdl.set("name", game.child("GameTitle").text().get());
 		result.mdl.set("desc", game.child("Overview").text().get());
-
-		boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
-		result.mdl.setTime("releasedate", rd);
-
+		result.mdl.set("releasedate", Utils::Time::DateTime(Utils::Time::stringToTime(game.child("ReleaseDate").text().get(), "%m/%d/%Y")));
 		result.mdl.set("developer", game.child("Developer").text().get());
 		result.mdl.set("publisher", game.child("Publisher").text().get());
 		result.mdl.set("genre", game.child("Genres").first_child().text().get());

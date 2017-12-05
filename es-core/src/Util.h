@@ -2,7 +2,6 @@
 #ifndef ES_CORE_UTIL_H
 #define ES_CORE_UTIL_H
 
-#include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/filesystem/path.hpp>
 
 std::string strToUpper(const char* from);
@@ -22,8 +21,6 @@ boost::filesystem::path makeRelativePath(const boost::filesystem::path& path, co
 // expands "./my/path.sfc" to "[relativeTo]/my/path.sfc"
 // if allowHome is true, also expands "~/my/path.sfc" to "/home/pi/my/path.sfc"
 boost::filesystem::path resolvePath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool allowHome);
-
-boost::posix_time::ptime string_to_ptime(const std::string& str, const std::string& fmt = "%Y%m%dT%H%M%S%F%q");
 
 std::string escapePath(const boost::filesystem::path& path);
 

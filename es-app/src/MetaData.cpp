@@ -2,7 +2,6 @@
 
 #include "Log.h"
 #include "Util.h"
-#include <boost/date_time/posix_time/time_formatters.hpp>
 #include <pugixml/src/pugixml.hpp>
 
 namespace fs = boost::filesystem;
@@ -126,11 +125,6 @@ void MetaDataList::set(const std::string& key, const std::string& value)
 	mWasChanged = true;
 }
 
-void MetaDataList::setTime(const std::string& key, const boost::posix_time::ptime& time)
-{
-	set(key, boost::posix_time::to_iso_string(time));
-}
-
 const std::string& MetaDataList::get(const std::string& key) const
 {
 	return mMap.at(key);
@@ -144,11 +138,6 @@ int MetaDataList::getInt(const std::string& key) const
 float MetaDataList::getFloat(const std::string& key) const
 {
 	return (float)atof(get(key).c_str());
-}
-
-boost::posix_time::ptime MetaDataList::getTime(const std::string& key) const
-{
-	return string_to_ptime(get(key), "%Y%m%dT%H%M%S%F%q");
 }
 
 bool MetaDataList::isDefault()
