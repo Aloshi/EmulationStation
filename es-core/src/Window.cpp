@@ -65,9 +65,9 @@ GuiComponent* Window::peekGui()
 	return mGuiStack.back();
 }
 
-bool Window::init(unsigned int width, unsigned int height)
+bool Window::init()
 {
-	if(!Renderer::init(width, height))
+	if(!Renderer::init())
 	{
 		LOG(LogError) << "Renderer failed to initialize!";
 		return false;
