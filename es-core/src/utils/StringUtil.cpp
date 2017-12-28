@@ -144,6 +144,18 @@ namespace Utils
 
 		} // trim
 
+		bool startsWith(const std::string& _string, const std::string& _test)
+		{
+			return (_string.find(_test) == 0);
+
+		} // startsWith
+
+		bool endsWith(const std::string& _string, const std::string& _test)
+		{
+			return (_string.find(_test) == (_string.size() - _test.size()));
+
+		} // endsWith
+
 	} // String::
 
 } // Utils::

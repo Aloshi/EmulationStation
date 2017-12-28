@@ -4,8 +4,6 @@
 
 #include "math/Vector2f.h"
 #include <boost/filesystem/path.hpp>
-#include <boost/variant/get.hpp>
-#include <boost/variant/variant.hpp>
 #include <deque>
 #include <map>
 #include <sstream>
@@ -91,10 +89,33 @@ public:
 		bool extra;
 		std::string type;
 
-		std::map< std::string, boost::variant<Vector2f, std::string, unsigned int, float, bool> > properties;
+		struct Property
+		{
+			void operator= (const Vector2f& value)     { v = value; }
+			void operator= (const std::string& value)  { s = value; }
+			void operator= (const unsigned int& value) { i = value; }
+			void operator= (const float& value)        { f = value; }
+			void operator= (const bool& value)         { b = value; }
+
+			Vector2f     v;
+			std::string  s;
+			unsigned int i;
+			float        f;
+			bool         b;
+		};
+
+		std::map< std::string, Property > properties;
 
 		template<typename T>
-		T get(const std::string& prop) const { return boost::get<T>(properties.at(prop)); }
+		const T get(const std::string& prop) const
+		{
+			if(     std::is_same<T, Vector2f>::value)     return *(const T*)&properties.at(prop).v;
+			else if(std::is_same<T, std::string>::value)  return *(const T*)&properties.at(prop).s;
+			else if(std::is_same<T, unsigned int>::value) return *(const T*)&properties.at(prop).i;
+			else if(std::is_same<T, float>::value)        return *(const T*)&properties.at(prop).f;
+			else if(std::is_same<T, bool>::value)         return *(const T*)&properties.at(prop).b;
+			return T();
+		}
 
 		inline bool has(const std::string& prop) const { return (properties.find(prop) != properties.cend()); }
 	};

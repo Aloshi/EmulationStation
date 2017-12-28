@@ -6,7 +6,6 @@
 #include "platform.h"
 #include "Settings.h"
 #include <boost/filesystem/operations.hpp>
-#include <boost/xpressive/xpressive_static.hpp>
 #include <pugixml/src/pugixml.hpp>
 
 std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "video" } };
@@ -176,24 +175,24 @@ std::string resolvePath(const char* in, const fs::path& relative)
 
 std::map<std::string, std::string> mVariables;
 
-std::string &format_variables(const boost::xpressive::smatch &what)
-{
-	return mVariables[what[1].str()];
-}
-
 std::string resolvePlaceholders(const char* in)
 {
-	if(!in || in[0] == '\0')
-		return std::string(in);
-		
 	std::string inStr(in);
-	
-	using namespace boost::xpressive;
-	sregex rex = "${" >> (s1 = +('.' | _w)) >> '}';
-    
-	std::string output = regex_replace(inStr, rex, format_variables);
 
-	return output;
+	if(inStr.empty())
+		return inStr;
+
+	const size_t variableBegin = inStr.find("${");
+	const size_t variableEnd   = inStr.find("}", variableBegin);
+
+	if((variableBegin == std::string::npos) || (variableEnd == std::string::npos))
+		return inStr;
+
+	std::string prefix  = inStr.substr(0, variableBegin);
+	std::string replace = inStr.substr(variableBegin + 2, variableEnd - (variableBegin + 2));
+	std::string suffix  = inStr.substr(variableEnd + 1);
+
+	return prefix + mVariables[replace] + suffix;
 }
 
 ThemeData::ThemeData()

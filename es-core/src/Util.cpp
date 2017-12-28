@@ -1,8 +1,6 @@
 #include "Util.h"
 
 #include "platform.h"
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/split.hpp>
 #include <boost/filesystem/operations.hpp>
 
 namespace fs = boost::filesystem;
@@ -248,8 +246,20 @@ std::vector<std::string> commaStringToVector(std::string commaString)
 {
 	// from a comma separated string, get a vector of strings
 	std::vector<std::string> strs;
-	boost::split(strs, commaString, boost::is_any_of(","));
-	std::sort(strs.begin(), strs.end());
+	size_t start = 0;
+	size_t comma = commaString.find(",");
+	strs.push_back(commaString.substr(start, comma));
+	if(comma != std::string::npos)
+	{
+		start = comma + 1;
+		while((comma = commaString.find(",", start)) != std::string::npos)
+		{
+			strs.push_back(commaString.substr(start, comma - start));
+			start = comma + 1;
+		}
+		strs.push_back(commaString.substr(start));
+		std::sort(strs.begin(), strs.end());
+	}
 	return strs;
 }
 
