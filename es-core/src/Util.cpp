@@ -3,8 +3,6 @@
 #include "platform.h"
 #include <boost/filesystem/operations.hpp>
 
-namespace fs = boost::filesystem;
-
 std::string strToUpper(const char* from)
 {
 	std::string str(from);
@@ -37,7 +35,7 @@ std::string getCanonicalPath(const std::string& path)
 
 // expands "./my/path.sfc" to "[relativeTo]/my/path.sfc"
 // if allowHome is true, also expands "~/my/path.sfc" to "/home/pi/my/path.sfc"
-fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allowHome)
+boost::filesystem::path resolvePath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool allowHome)
 {
 	// nothing here
 	if(path.begin() == path.end())
@@ -45,7 +43,7 @@ fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allo
 
 	if(*path.begin() == ".")
 	{
-		fs::path ret = relativeTo;
+		boost::filesystem::path ret = relativeTo;
 		for(auto it = ++path.begin(); it != path.end(); ++it)
 			ret /= *it;
 		return ret;
@@ -53,7 +51,7 @@ fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allo
 
 	if(allowHome && *path.begin() == "~")
 	{
-		fs::path ret = getHomePath();
+		boost::filesystem::path ret = getHomePath();
 		for(auto it = ++path.begin(); it != path.end(); ++it)
 			ret /= *it;
 		return ret;
@@ -62,7 +60,7 @@ fs::path resolvePath(const fs::path& path, const fs::path& relativeTo, bool allo
 	return path;
 }
 
-fs::path removeCommonPathUsingStrings(const fs::path& path, const fs::path& relativeTo, bool& contains)
+boost::filesystem::path removeCommonPathUsingStrings(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains)
 {
 #ifdef WIN32
 	std::wstring pathStr = path.c_str();
@@ -82,18 +80,18 @@ fs::path removeCommonPathUsingStrings(const fs::path& path, const fs::path& rela
 }
 
 // example: removeCommonPath("/home/pi/roms/nes/foo/bar.nes", "/home/pi/roms/nes/") returns "foo/bar.nes"
-fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool& contains)
+boost::filesystem::path removeCommonPath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains)
 {
-	// if either of these doesn't exist, fs::canonical() is going to throw an error
-	if(!fs::exists(path) || !fs::exists(relativeTo))
+	// if either of these doesn't exist, boost::filesystem::canonical() is going to throw an error
+	if(!boost::filesystem::exists(path) || !boost::filesystem::exists(relativeTo))
 	{
 		contains = false;
 		return path;
 	}
 
-	// if it's a symlink we don't want to apply fs::canonical on it, otherwise we'll lose the current parent_path
-	fs::path p = (fs::is_symlink(path) ? fs::canonical(path.parent_path()) / path.filename() : fs::canonical(path));
-	fs::path r = fs::canonical(relativeTo);
+	// if it's a symlink we don't want to apply boost::filesystem::canonical on it, otherwise we'll lose the current parent_path
+	boost::filesystem::path p = (boost::filesystem::is_symlink(path) ? boost::filesystem::canonical(path.parent_path()) / path.filename() : boost::filesystem::canonical(path));
+	boost::filesystem::path r = boost::filesystem::canonical(relativeTo);
 
 	if(p.root_path() != r.root_path())
 	{
@@ -101,7 +99,7 @@ fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool
 		return p;
 	}
 
-	fs::path result;
+	boost::filesystem::path result;
 
 	// find point of divergence
 	auto itr_path = p.begin();
@@ -120,7 +118,7 @@ fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool
 
 	while(itr_path != p.end())
 	{
-		if(*itr_path != fs::path("."))
+		if(*itr_path != boost::filesystem::path("."))
 			result = result / *itr_path;
 
 		++itr_path;
@@ -132,11 +130,11 @@ fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool
 
 // usage: makeRelativePath("/path/to/my/thing.sfc", "/path/to") -> "./my/thing.sfc"
 // usage: makeRelativePath("/home/pi/my/thing.sfc", "/path/to", true) -> "~/my/thing.sfc"
-fs::path makeRelativePath(const fs::path& path, const fs::path& relativeTo, bool allowHome)
+boost::filesystem::path makeRelativePath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool allowHome)
 {
 	bool contains = false;
 
-	fs::path ret = removeCommonPath(path, relativeTo, contains);
+	boost::filesystem::path ret = removeCommonPath(path, relativeTo, contains);
 	if(contains)
 	{
 		// success
@@ -177,7 +175,7 @@ std::string escapePath(const boost::filesystem::path& path)
 {
 #ifdef WIN32
 	// windows escapes stuff by just putting everything in quotes
-	return '"' + fs::path(path).make_preferred().string() + '"';
+	return '"' + boost::filesystem::path(path).make_preferred().string() + '"';
 #else
 	// a quick and dirty way to insert a backslash before most characters that would mess up a bash path
 	std::string pathStr = path.string();

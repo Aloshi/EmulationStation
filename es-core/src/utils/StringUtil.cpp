@@ -132,15 +132,26 @@ namespace Utils
 
 		} // moveCursor
 
-		std::string trim(const std::string& _path)
+		std::string toUpper(const std::string& _string)
 		{
-			const size_t pathBegin = _path.find_first_not_of(" \t");
-			const size_t pathEnd   = _path.find_last_not_of(" \t");
+			std::string string;
 
-			if(pathBegin == std::string::npos)
+			for(size_t i = 0; i < _string.length(); ++i)
+				string += (char)toupper(_string[i]);
+
+			return string;
+
+		} // toUpper
+
+		std::string trim(const std::string& _string)
+		{
+			const size_t strBegin = _string.find_first_not_of(" \t");
+			const size_t strEnd   = _string.find_last_not_of(" \t");
+
+			if(strBegin == std::string::npos)
 				return "";
 
-			return _path.substr(pathBegin, pathEnd - pathBegin + 1);
+			return _string.substr(strBegin, strEnd - strBegin + 1);
 
 		} // trim
 

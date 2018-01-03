@@ -4,8 +4,6 @@
 #include <boost/filesystem/operations.hpp>
 #include <fstream>
 
-namespace fs = boost::filesystem;
-
 auto array_deleter = [](unsigned char* p) { delete[] p; };
 auto nop_deleter = [](unsigned char* /*p*/) { };
 
@@ -39,7 +37,7 @@ const ResourceData ResourceManager::getFileData(const std::string& path) const
 	}
 
 	//it's not embedded; load the file
-	if(!fs::exists(path))
+	if(!boost::filesystem::exists(path))
 	{
 		//if the file doesn't exist, return an "empty" ResourceData
 		ResourceData data = {NULL, 0};
@@ -73,7 +71,7 @@ bool ResourceManager::fileExists(const std::string& path) const
 	if(res2hMap.find(path) != res2hMap.cend())
 		return true;
 
-	return fs::exists(path);
+	return boost::filesystem::exists(path);
 }
 
 void ResourceManager::unloadAll()

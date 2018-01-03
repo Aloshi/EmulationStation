@@ -14,9 +14,7 @@
 #include "Window.h"
 #include <boost/filesystem/operations.hpp>
 
-namespace fs = boost::filesystem;
-
-FileData::FileData(FileType type, const fs::path& path, SystemEnvironmentData* envData, SystemData* system)
+FileData::FileData(FileType type, const boost::filesystem::path& path, SystemEnvironmentData* envData, SystemData* system)
 	: mType(type), mPath(path), mSystem(system), mEnvData(envData), mSourceFileData(NULL), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
 {
 	// metadata needs at least a name field (since that's what getName() will return)
@@ -259,7 +257,7 @@ void FileData::launchGame(Window* window)
 
 	const std::string rom = escapePath(getPath());
 	const std::string basename = getPath().stem().string();
-	const std::string rom_raw = fs::path(getPath()).make_preferred().string();
+	const std::string rom_raw = boost::filesystem::path(getPath()).make_preferred().string();
 
 	command = strreplace(command, "%ROM%", rom);
 	command = strreplace(command, "%BASENAME%", basename);

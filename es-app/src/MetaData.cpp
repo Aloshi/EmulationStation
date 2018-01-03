@@ -4,8 +4,6 @@
 #include "Util.h"
 #include <pugixml/src/pugixml.hpp>
 
-namespace fs = boost::filesystem;
-
 MetaDataDecl gameDecls[] = {
 	// key,         type,                   default,            statistic,  name in GuiMetaDataEd,  prompt in GuiMetaDataEd
 	{"name",        MD_STRING,              "",                 false,      "name",                 "enter game name"},
@@ -69,7 +67,7 @@ MetaDataList::MetaDataList(MetaDataListType type)
 }
 
 
-MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& node, const fs::path& relativeTo)
+MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& node, const boost::filesystem::path& relativeTo)
 {
 	MetaDataList mdl(type);
 
@@ -95,7 +93,7 @@ MetaDataList MetaDataList::createFromXML(MetaDataListType type, pugi::xml_node& 
 	return mdl;
 }
 
-void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const fs::path& relativeTo) const
+void MetaDataList::appendToXML(pugi::xml_node& parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const
 {
 	const std::vector<MetaDataDecl>& mdd = getMDD();
 

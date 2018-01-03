@@ -25,8 +25,6 @@
 
 #include <FreeImage.h>
 
-namespace fs = boost::filesystem;
-
 bool scrape_cmdline = false;
 
 bool parseArgs(int argc, char* argv[])
@@ -160,11 +158,11 @@ bool verifyHomeFolderExists()
 	//make sure the config directory exists
 	std::string home = getHomePath();
 	std::string configDir = home + "/.emulationstation";
-	if(!fs::exists(configDir))
+	if(!boost::filesystem::exists(configDir))
 	{
 		std::cout << "Creating config directory \"" << configDir << "\"\n";
-		fs::create_directory(configDir);
-		if(!fs::exists(configDir))
+		boost::filesystem::create_directory(configDir);
+		if(!boost::filesystem::exists(configDir))
 		{
 			std::cerr << "Config directory could not be created!\n";
 			return false;
@@ -326,7 +324,7 @@ int main(int argc, char* argv[])
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
 	{
-		if(fs::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
+		if(boost::filesystem::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
 			ViewController::get()->goToStart();
 		}else{

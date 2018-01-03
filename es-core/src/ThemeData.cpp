@@ -123,8 +123,6 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "zIndex", FLOAT } } }
 };
 
-namespace fs = boost::filesystem;
-
 #define MINIMUM_THEME_FORMAT_VERSION 3
 #define CURRENT_THEME_FORMAT_VERSION 5
 
@@ -151,12 +149,12 @@ unsigned int getHexColor(const char* str)
 }
 
 // helper
-std::string resolvePath(const char* in, const fs::path& relative)
+std::string resolvePath(const char* in, const boost::filesystem::path& relative)
 {
 	if(!in || in[0] == '\0')
 		return in;
 
-	fs::path relPath = relative.parent_path();
+	boost::filesystem::path relPath = relative.parent_path();
 	
 	boost::filesystem::path path(in);
 	
@@ -207,7 +205,7 @@ void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const st
 	ThemeException error;
 	error.setFiles(mPaths);
 
-	if(!fs::exists(path))
+	if(!boost::filesystem::exists(path))
 		throw error << "File does not exist!";
 
 	mVersion = 0;
@@ -486,7 +484,7 @@ const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 		theme = std::shared_ptr<ThemeData>(new ThemeData());
 
 		const std::string path = getHomePath() + "/.emulationstation/es_theme_default.xml";
-		if(fs::exists(path))
+		if(boost::filesystem::exists(path))
 		{
 			try
 			{
@@ -537,21 +535,21 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	std::map<std::string, ThemeSet> sets;
 
 	static const size_t pathCount = 2;
-	fs::path paths[pathCount] = { 
+	boost::filesystem::path paths[pathCount] = { 
 		"/etc/emulationstation/themes", 
 		getHomePath() + "/.emulationstation/themes" 
 	};
 
-	fs::directory_iterator end;
+	boost::filesystem::directory_iterator end;
 
 	for(size_t i = 0; i < pathCount; i++)
 	{
-		if(!fs::is_directory(paths[i]))
+		if(!boost::filesystem::is_directory(paths[i]))
 			continue;
 
-		for(fs::directory_iterator it(paths[i]); it != end; ++it)
+		for(boost::filesystem::directory_iterator it(paths[i]); it != end; ++it)
 		{
-			if(fs::is_directory(*it))
+			if(boost::filesystem::is_directory(*it))
 			{
 				ThemeSet set = {*it};
 				sets[set.getName()] = set;
@@ -562,7 +560,7 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	return sets;
 }
 
-fs::path ThemeData::getThemeFromCurrentSet(const std::string& system)
+boost::filesystem::path ThemeData::getThemeFromCurrentSet(const std::string& system)
 {
 	auto themeSets = ThemeData::getThemeSets();
 	if(themeSets.empty())
