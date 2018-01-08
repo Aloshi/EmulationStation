@@ -188,7 +188,7 @@ std::string resolvePlaceholders(const char* in)
 
 	std::string prefix  = inStr.substr(0, variableBegin);
 	std::string replace = inStr.substr(variableBegin + 2, variableEnd - (variableBegin + 2));
-	std::string suffix  = inStr.substr(variableEnd + 1);
+	std::string suffix  = resolvePlaceholders(inStr.substr(variableEnd + 1).c_str());
 
 	return prefix + mVariables[replace] + suffix;
 }
