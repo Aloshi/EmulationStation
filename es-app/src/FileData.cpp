@@ -1,5 +1,6 @@
 #include "FileData.h"
 
+#include "utils/FileSystemUtil.h"
 #include "utils/StringUtil.h"
 #include "utils/TimeUtil.h"
 #include "AudioManager.h"
@@ -12,7 +13,6 @@
 #include "Util.h"
 #include "VolumeControl.h"
 #include "Window.h"
-#include <boost/filesystem/operations.hpp>
 
 FileData::FileData(FileType type, const boost::filesystem::path& path, SystemEnvironmentData* envData, SystemData* system)
 	: mType(type), mPath(path), mSystem(system), mEnvData(envData), mSourceFileData(NULL), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
@@ -66,7 +66,7 @@ const std::string FileData::getThumbnailPath() const
 				if(thumbnail.empty())
 				{
 					std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
-					if(boost::filesystem::exists(path))
+					if(Utils::FileSystem::exists(path))
 						thumbnail = path;
 				}
 			}
@@ -109,7 +109,7 @@ const std::string FileData::getVideoPath() const
 	if(video.empty())
 	{
 		std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-video.mp4";
-		if(boost::filesystem::exists(path))
+		if(Utils::FileSystem::exists(path))
 			video = path;
 	}
 
@@ -129,7 +129,7 @@ const std::string FileData::getMarqueePath() const
 			if(marquee.empty())
 			{
 				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-marquee" + extList[i];
-				if(boost::filesystem::exists(path))
+				if(Utils::FileSystem::exists(path))
 					marquee = path;
 			}
 		}
@@ -151,7 +151,7 @@ const std::string FileData::getImagePath() const
 			if(image.empty())
 			{
 				std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-image" + extList[i];
-				if(boost::filesystem::exists(path))
+				if(Utils::FileSystem::exists(path))
 					image = path;
 			}
 		}

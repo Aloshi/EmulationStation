@@ -2,12 +2,12 @@
 
 #include "components/TextComponent.h"
 #include "guis/GuiInputConfig.h"
+#include "utils/FileSystemUtil.h"
 #include "InputManager.h"
 #include "PowerSaver.h"
 #include "Renderer.h"
 #include "Util.h"
 #include "Window.h"
-#include <boost/filesystem/operations.hpp>
 
 #define HOLD_TIME 1000
 
@@ -102,7 +102,7 @@ void GuiDetectDevice::update(int deltaTime)
 	if(mHoldingConfig)
 	{
 		// If ES starts and if a known device is connected after startup skip controller configuration
-		if(mFirstRun && boost::filesystem::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
+		if(mFirstRun && Utils::FileSystem::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
 			if(mDoneCallback)
 				mDoneCallback();

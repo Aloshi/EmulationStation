@@ -1,10 +1,10 @@
 #include "InputManager.h"
 
+#include "utils/FileSystemUtil.h"
 #include "CECInput.h"
 #include "Log.h"
 #include "platform.h"
 #include "Window.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <SDL.h>
 #include <iostream>
@@ -278,7 +278,7 @@ bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 bool InputManager::loadInputConfig(InputConfig* config)
 {
 	std::string path = getConfigPath();
-	if(!boost::filesystem::exists(path))
+	if(!Utils::FileSystem::exists(path))
 		return false;
 	
 	pugi::xml_document doc;
@@ -333,7 +333,7 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 
 	pugi::xml_document doc;
 
-	if(boost::filesystem::exists(path))
+	if(Utils::FileSystem::exists(path))
 	{
 		// merge files
 		pugi::xml_parse_result result = doc.load_file(path.c_str());
@@ -394,7 +394,7 @@ void InputManager::doOnFinish()
 	std::string path = getConfigPath();
 	pugi::xml_document doc;
 
-	if(boost::filesystem::exists(path))
+	if(Utils::FileSystem::exists(path))
 	{
 		pugi::xml_parse_result result = doc.load_file(path.c_str());
 		if(!result)

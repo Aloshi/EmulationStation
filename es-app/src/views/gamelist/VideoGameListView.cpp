@@ -5,11 +5,11 @@
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
+#include "utils/FileSystemUtil.h"
 #include "views/ViewController.h"
 #ifdef _RPI_
 #include "Settings.h"
 #endif
-#include <boost/filesystem/operations.hpp>
 
 VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),
@@ -224,7 +224,7 @@ void VideoGameListView::updateInfoPanel()
 {
 	FileData* file = (mList.size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
 
-	boost::filesystem::remove(getTitlePath().c_str());
+	Utils::FileSystem::removeFile(getTitlePath());
 
 	bool fadingOut;
 	if(file == NULL)

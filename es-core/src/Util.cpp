@@ -1,5 +1,6 @@
 #include "Util.h"
 
+#include "utils/FileSystemUtil.h"
 #include "platform.h"
 #include <boost/filesystem/operations.hpp>
 
@@ -27,7 +28,7 @@ std::string strToUpper(const std::string& str)
 // embedded resources, e.g. ":/font.ttf", need to be properly handled too
 std::string getCanonicalPath(const std::string& path)
 {
-	if(path.empty() || !boost::filesystem::exists(path))
+	if(path.empty() || !Utils::FileSystem::exists(path))
 		return path;
 
 	return boost::filesystem::canonical(path).generic_string();
@@ -83,14 +84,14 @@ boost::filesystem::path removeCommonPathUsingStrings(const boost::filesystem::pa
 boost::filesystem::path removeCommonPath(const boost::filesystem::path& path, const boost::filesystem::path& relativeTo, bool& contains)
 {
 	// if either of these doesn't exist, boost::filesystem::canonical() is going to throw an error
-	if(!boost::filesystem::exists(path) || !boost::filesystem::exists(relativeTo))
+	if(!Utils::FileSystem::exists(path.generic_string()) || !Utils::FileSystem::exists(relativeTo.generic_string()))
 	{
 		contains = false;
 		return path;
 	}
 
 	// if it's a symlink we don't want to apply boost::filesystem::canonical on it, otherwise we'll lose the current parent_path
-	boost::filesystem::path p = (boost::filesystem::is_symlink(path) ? boost::filesystem::canonical(path.parent_path()) / path.filename() : boost::filesystem::canonical(path));
+	boost::filesystem::path p = (Utils::FileSystem::isSymlink(path.generic_string()) ? boost::filesystem::canonical(path.parent_path()) / path.filename() : boost::filesystem::canonical(path));
 	boost::filesystem::path r = boost::filesystem::canonical(relativeTo);
 
 	if(p.root_path() != r.root_path())

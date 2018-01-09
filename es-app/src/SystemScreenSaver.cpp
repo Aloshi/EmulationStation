@@ -4,6 +4,7 @@
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
+#include "utils/FileSystemUtil.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
 #include "FileData.h"
@@ -38,8 +39,8 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 {
 	mWindow->setScreenSaver(this);
 	std::string path = getTitleFolder();
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 	srand((unsigned int)time(NULL));
 	mVideoChangeTime = 30000;
 }
@@ -81,13 +82,13 @@ void SystemScreenSaver::startScreenSaver()
 		pickRandomVideo(path);
 
 		int retry = 200;
-		while(retry > 0 && ((path.empty() || !boost::filesystem::exists(path)) || mCurrentGame == NULL))
+		while(retry > 0 && ((path.empty() || !Utils::FileSystem::exists(path)) || mCurrentGame == NULL))
 		{
 			retry--;
 			pickRandomVideo(path);
 		}
 
-		if (!path.empty() && boost::filesystem::exists(path))
+		if (!path.empty() && Utils::FileSystem::exists(path))
 		{
 #ifdef _RPI_
 			// Create the correct type of video component
@@ -164,7 +165,7 @@ void SystemScreenSaver::startScreenSaver()
 		std::string bg_audio_file = Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile");
 		if ((!mBackgroundAudio) && (bg_audio_file != ""))
 		{
-			if (boost::filesystem::exists(bg_audio_file))
+			if (Utils::FileSystem::exists(bg_audio_file))
 			{
 				// paused PS so that the background audio keeps playing
 				PowerSaver::pause();
@@ -269,7 +270,7 @@ unsigned long SystemScreenSaver::countGameListNodes(const char *nodeName)
 			pugi::xml_node root;
 			std::string xmlReadPath = (*it)->getGamelistPath(false);
 
-			if(boost::filesystem::exists(xmlReadPath))
+			if(Utils::FileSystem::exists(xmlReadPath))
 			{
 				pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
 				if (!result)
@@ -321,7 +322,7 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 
 		std::string xmlReadPath = (*it)->getGamelistPath(false);
 
-		if(boost::filesystem::exists(xmlReadPath))
+		if(Utils::FileSystem::exists(xmlReadPath))
 		{
 			pugi::xml_parse_result result = doc.load_file(xmlReadPath.c_str());
 			if (!result)
@@ -416,7 +417,7 @@ void SystemScreenSaver::pickRandomGameListImage(std::string& path)
 void SystemScreenSaver::pickRandomCustomImage(std::string& path)
 {
 	std::string imageDir = Settings::getInstance()->getString("SlideshowScreenSaverImageDir");
-	if ((imageDir != "") && (boost::filesystem::exists(imageDir)))
+	if ((imageDir != "") && (Utils::FileSystem::exists(imageDir)))
 	{
 		std::string imageFilter = Settings::getInstance()->getString("SlideshowScreenSaverImageFilter");
 
@@ -430,7 +431,7 @@ void SystemScreenSaver::pickRandomCustomImage(std::string& path)
 			// TODO: Figure out how to remove this duplication in the else block
 			for (iter; iter != end_iter; ++iter)
 			{
-				if (boost::filesystem::is_regular_file(iter->status()))
+				if (Utils::FileSystem::isRegularFile(iter->path().generic_string()))
 				{
 					// If the image filter is empty, or the file extension is in the filter string,
 					//  add it to the matching files list
@@ -449,7 +450,7 @@ void SystemScreenSaver::pickRandomCustomImage(std::string& path)
 
 			for (iter; iter != end_iter; ++iter)
 			{
-				if (boost::filesystem::is_regular_file(iter->status()))
+				if (Utils::FileSystem::isRegularFile(iter->path().generic_string()))
 				{
 					// If the image filter is empty, or the file extension is in the filter string,
 					//  add it to the matching files list

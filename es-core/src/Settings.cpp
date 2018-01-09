@@ -1,9 +1,11 @@
 #include "Settings.h"
 
+#include "utils/FileSystemUtil.h"
 #include "Log.h"
 #include "platform.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
+#include <algorithm>
+#include <vector>
 
 Settings* Settings::sInstance = NULL;
 
@@ -185,7 +187,7 @@ void Settings::loadFile()
 {
 	const std::string path = getHomePath() + "/.emulationstation/es_settings.cfg";
 
-	if(!boost::filesystem::exists(path))
+	if(!Utils::FileSystem::exists(path))
 		return;
 
 	pugi::xml_document doc;
