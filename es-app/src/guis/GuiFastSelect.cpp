@@ -35,8 +35,8 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	mSortId = 0; // TODO
 	updateSortText();
 
-	mLetterId = (int)LETTERS.find(mGameList->getCursor()->getName()[0]);
-	if(mLetterId == (int)std::string::npos)
+	mLetterId = LETTERS.find(mGameList->getCursor()->getName()[0]);
+	if(mLetterId == std::string::npos)
 		mLetterId = 0;
 
 	mScrollDir = 0;
@@ -115,9 +115,9 @@ void GuiFastSelect::scroll()
 {
 	mLetterId += mScrollDir;
 	if(mLetterId < 0)
-		mLetterId += (int)LETTERS.length();
-	else if(mLetterId >= (int)LETTERS.length())
-		mLetterId -= (int)LETTERS.length();
+		mLetterId += LETTERS.length();
+	else if(mLetterId >= LETTERS.length())
+		mLetterId -= LETTERS.length();
 
 	mLetterText.setText(LETTERS.substr(mLetterId, 1));
 }
