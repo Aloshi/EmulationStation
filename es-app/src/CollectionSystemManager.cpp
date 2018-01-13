@@ -14,7 +14,6 @@
 #include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
-#include <unordered_map>
 
 std::string myCollectionsName = "collections";
 
@@ -1023,9 +1022,7 @@ std::string getCollectionsFolder()
 
 bool systemSort(SystemData* sys1, SystemData* sys2)
 {
-	std::string name1 = sys1->getName();
-	std::string name2 = sys2->getName();
-	transform(name1.cbegin(), name1.cend(), name1.begin(), ::toupper);
-	transform(name2.cbegin(), name2.cend(), name2.begin(), ::toupper);
+	std::string name1 = Utils::String::toUpper(sys1->getName());
+	std::string name2 = Utils::String::toUpper(sys2->getName());
 	return name1.compare(name2) < 0;
 }

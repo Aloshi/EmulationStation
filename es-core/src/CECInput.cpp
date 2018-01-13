@@ -169,29 +169,31 @@ CECInput::~CECInput()
 
 std::string CECInput::getAlertTypeString(const unsigned int _type)
 {
-
-#ifdef HAVE_LIBCEC
 	switch(_type)
 	{
+
+#ifdef HAVE_LIBCEC
 		case CEC::CEC_ALERT_SERVICE_DEVICE:         { return "Service-Device";         } break;
 		case CEC::CEC_ALERT_CONNECTION_LOST:        { return "Connection-Lost";        } break;
 		case CEC::CEC_ALERT_PERMISSION_ERROR:       { return "Permission-Error";       } break;
 		case CEC::CEC_ALERT_PORT_BUSY:              { return "Port-Busy";              } break;
 		case CEC::CEC_ALERT_PHYSICAL_ADDRESS_ERROR: { return "Physical-Address-Error"; } break;
 		case CEC::CEC_ALERT_TV_POLL_FAILED:         { return "TV-Poll-Failed";         } break;
-	}
+#else // HAVE_LIBCEC
+		case 0:
 #endif // HAVE_LIBCEC
 
-	return "Unknown";
+		default:                                    { return "Unknown";                } break;
+	}
 
 } // getAlertTypeString
 
 std::string CECInput::getOpCodeString(const unsigned int _opCode)
 {
-
-#ifdef HAVE_LIBCEC
 	switch(_opCode)
 	{
+
+#ifdef HAVE_LIBCEC
 		case CEC::CEC_OPCODE_ACTIVE_SOURCE:                 { return "Active-Source";                 } break;
 		case CEC::CEC_OPCODE_IMAGE_VIEW_ON:                 { return "Image-View-On";                 } break;
 		case CEC::CEC_OPCODE_TEXT_VIEW_ON:                  { return "Text-View-On";                  } break;
@@ -262,19 +264,21 @@ std::string CECInput::getOpCodeString(const unsigned int _opCode)
 		case CEC::CEC_OPCODE_END_ARC:                       { return "End-Arc";                       } break;
 		case CEC::CEC_OPCODE_CDC:                           { return "CDC";                           } break;
 		case CEC::CEC_OPCODE_NONE:                          { return "None";                          } break;
-	}
+#else // HAVE_LIBCEC
+		case 0:
 #endif // HAVE_LIBCEC
 
-	return "Unknown";
+		default:                                            { return "Unknown";                       } break;
+	}
 
 } // getOpCodeString
 
 std::string CECInput::getKeyCodeString(const unsigned int _keyCode)
 {
-
-#ifdef HAVE_LIBCEC
 	switch(_keyCode)
 	{
+
+#ifdef HAVE_LIBCEC
 		case CEC::CEC_USER_CONTROL_CODE_SELECT:                      { return "Select";                      } break;
 		case CEC::CEC_USER_CONTROL_CODE_UP:                          { return "Up";                          } break;
 		case CEC::CEC_USER_CONTROL_CODE_DOWN:                        { return "Down";                        } break;
@@ -362,9 +366,11 @@ std::string CECInput::getKeyCodeString(const unsigned int _keyCode)
 		case CEC::CEC_USER_CONTROL_CODE_DATA:                        { return "Data";                        } break;
 		case CEC::CEC_USER_CONTROL_CODE_AN_RETURN:                   { return "AN-Return";                   } break;
 		case CEC::CEC_USER_CONTROL_CODE_AN_CHANNELS_LIST:            { return "AN-Channels-List";            } break;
-	}
+#else // HAVE_LIBCEC
+		case 0:
 #endif // HAVE_LIBCEC
 
-	return "Unknown";
+		default:                                                     { return "Unknown";                     } break;
+	}
 
 } // getKeyCodeString
