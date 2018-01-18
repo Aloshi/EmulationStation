@@ -69,7 +69,13 @@ namespace Renderer {
 			box.h = 0;
 
 		clipStack.push(box);
-		glScissor(box.x, box.y, box.w, box.h);
+		switch(Renderer::getScreenRotate())
+		{
+			case 0: { glScissor(box.x,                                       box.y,                                       box.w, box.h); } break;
+			case 1: { glScissor(box.y,                                       Renderer::getScreenWidth()  - box.x - box.w, box.h, box.w); } break;
+			case 2: { glScissor(Renderer::getScreenWidth()  - box.x - box.w, Renderer::getScreenHeight() - box.y - box.h, box.w, box.h); } break;
+			case 3: { glScissor(Renderer::getScreenHeight() - box.y - box.h, box.x,                                       box.h, box.w); } break;
+		}
 		glEnable(GL_SCISSOR_TEST);
 	}
 
@@ -87,7 +93,13 @@ namespace Renderer {
 			glDisable(GL_SCISSOR_TEST);
 		}else{
 			const ClipRect& top = clipStack.top();
-			glScissor(top.x, top.y, top.w, top.h);
+			switch(Renderer::getScreenRotate())
+			{
+				case 0: { glScissor(top.x,                                       top.y,                                       top.w, top.h); } break;
+				case 1: { glScissor(top.y,                                       Renderer::getScreenWidth()  - top.x - top.w, top.h, top.w); } break;
+				case 2: { glScissor(Renderer::getScreenWidth()  - top.x - top.w, Renderer::getScreenHeight() - top.y - top.h, top.w, top.h); } break;
+				case 3: { glScissor(Renderer::getScreenHeight() - top.y - top.h, top.x,                                       top.h, top.w); } break;
+			}
 		}
 	}
 

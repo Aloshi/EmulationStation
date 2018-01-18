@@ -70,6 +70,17 @@ bool parseArgs(int argc, char* argv[])
 			i += 2; // skip the argument value
 			Settings::getInstance()->setInt("ScreenOffsetX", x);
 			Settings::getInstance()->setInt("ScreenOffsetY", y);
+		}else if (strcmp(argv[i], "--screenrotate") == 0)
+		{
+			if (i >= argc - 1)
+			{
+				std::cerr << "Invalid screenrotate supplied.";
+				return false;
+			}
+
+			int rotate = atoi(argv[i + 1]);
+			++i; // skip the argument value
+			Settings::getInstance()->setInt("ScreenRotate", rotate);
 		}else if(strcmp(argv[i], "--gamelist-only") == 0)
 		{
 			Settings::getInstance()->setBool("ParseGamelistOnly", true);

@@ -24,6 +24,7 @@ namespace Renderer
 	unsigned int getScreenHeight();
 	unsigned int getScreenOffsetX();
 	unsigned int getScreenOffsetY();
+	unsigned int getScreenRotate();
 
 	void buildGLColorArray(GLubyte* ptr, unsigned int color, unsigned int vertCount);
 
