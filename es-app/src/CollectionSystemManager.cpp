@@ -491,6 +491,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 		}
 		else
 		{
+			file->getSourceFileData()->getSystem()->getIndex()->removeFromIndex(file);
 			MetaDataList* md = &file->getSourceFileData()->metadata;
 			std::string value = md->get("favorite");
 			if (value == "false")
@@ -502,6 +503,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 				adding = false;
 				md->set("favorite", "false");
 			}
+			file->getSourceFileData()->getSystem()->getIndex()->addToIndex(file);
 			refreshCollectionSystems(file->getSourceFileData());
 		}
 		if (adding)
