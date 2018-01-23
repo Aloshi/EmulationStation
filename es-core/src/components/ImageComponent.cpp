@@ -3,6 +3,7 @@
 #include "resources/TextureResource.h"
 #include "Log.h"
 #include "Renderer.h"
+#include "Settings.h"
 #include "ThemeData.h"
 
 Vector2i ImageComponent::getTextureSize() const
@@ -229,6 +230,11 @@ void ImageComponent::render(const Transform4x4f& parentTrans)
 
 	if(mTexture && mOpacity > 0)
 	{
+		if(Settings::getInstance()->getBool("DebugImage")) {
+			Vector2f targetSizePos = (mTargetSize - mSize) * mOrigin * -1;
+			Renderer::drawRect(targetSizePos.x(), targetSizePos.y(), mTargetSize.x(), mTargetSize.y(), 0xFF000033);
+			Renderer::drawRect(0.0f, 0.0f, mSize.x(), mSize.y(), 0x00000033);
+		}
 		if(mTexture->isInitialized())
 		{
 			// actually draw the image
