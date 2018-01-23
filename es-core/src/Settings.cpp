@@ -13,6 +13,7 @@ std::vector<const char*> settings_dont_save {
 	{ "Debug" },
 	{ "DebugGrid" },
 	{ "DebugText" },
+	{ "DebugImage" },
 	{ "ForceKid" },
 	{ "ForceKiosk" },
 	{ "IgnoreGamelist" },

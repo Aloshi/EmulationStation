@@ -40,11 +40,15 @@ public:
 	void setMaxSize(float width, float height);
 	inline void setMaxSize(const Vector2f& size) { setMaxSize(size.x(), size.y()); }
 
+	Vector2f getRotationSize() const override;
+
 	// Multiply all pixels in the image by this color when rendering.
 	void setColorShift(unsigned int color);
 
 	void setFlipX(bool flip); // Mirror on the X axis.
 	void setFlipY(bool flip); // Mirror on the Y axis.
+
+	void setRotateByTargetSize(bool rotate);  // Flag indicating if rotation should be based on target size vs. actual size.
 
 	// Returns the size of the current texture, or (0, 0) if none is loaded.  May be different than drawn size (use getSize() for that).
 	Vector2i getTextureSize() const;
@@ -86,6 +90,7 @@ private:
 	bool					 mFading;
 	bool				     mForceLoad;
 	bool					mDynamic;
+	bool					mRotateByTargetSize;
 };
 
 #endif // ES_CORE_COMPONENTS_IMAGE_COMPONENT_H

@@ -3,6 +3,7 @@
 #include "resources/TextureResource.h"
 #include "Log.h"
 #include "Renderer.h"
+#include "Settings.h"
 #include "ThemeData.h"
 
 Vector2i ImageComponent::getTextureSize() const
@@ -15,7 +16,7 @@ Vector2i ImageComponent::getTextureSize() const
 
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
 	mTargetIsMax(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
-	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0), mFading(false)
+	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0), mFading(false), mRotateByTargetSize(false)
 {
 	updateColors();
 }
@@ -141,6 +142,16 @@ void ImageComponent::setMaxSize(float width, float height)
 	resize();
 }
 
+Vector2f ImageComponent::getRotationSize() const
+{
+	return mRotateByTargetSize ? mTargetSize : mSize;
+}
+
+void ImageComponent::setRotateByTargetSize(bool rotate)
+{
+	mRotateByTargetSize = rotate;
+}
+
 void ImageComponent::setFlipX(bool flip)
 {
 	mFlipX = flip;
@@ -229,6 +240,11 @@ void ImageComponent::render(const Transform4x4f& parentTrans)
 
 	if(mTexture && mOpacity > 0)
 	{
+		if(Settings::getInstance()->getBool("DebugImage")) {
+			Vector2f targetSizePos = (mTargetSize - mSize) * mOrigin * -1;
+			Renderer::drawRect(targetSizePos.x(), targetSizePos.y(), mTargetSize.x(), mTargetSize.y(), 0xFF000033);
+			Renderer::drawRect(0.0f, 0.0f, mSize.x(), mSize.y(), 0x00000033);
+		}
 		if(mTexture->isInitialized())
 		{
 			// actually draw the image
