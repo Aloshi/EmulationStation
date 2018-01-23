@@ -61,6 +61,8 @@ public:
     void setSize(float w, float h);
     virtual void onSizeChanged() {};
 
+	virtual Vector2f getRotationSize() const { return getSize(); };
+
 	float getRotation() const;
 	void setRotation(float rotation);
 	inline void setRotationDegrees(float rotation) { setRotation((float)ES_DEG_TO_RAD(rotation)); }
