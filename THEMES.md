@@ -676,7 +676,7 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 
 * `type` - type: STRING.
 	- Sets the scoll direction of the carousel.
-	- Accepted values are "horizontal", "vertical" or "vertical_wheel".
+	- Accepted values are "horizontal", "vertical", "horizontal_wheel" or "vertical_wheel".
 	- Default is "horizontal".
 * `size` - type: NORMALIZED_PAIR. Default is "1 0.2325"
 * `pos` - type: NORMALIZED_PAIR.  Default is "0 0.38375".
@@ -692,13 +692,13 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 * `logoRotation` - type: FLOAT.
 	- Angle in degrees that the logos should be rotated.  Value should be positive.
 	- Default is 7.5
-	- This property only applies when `type` is "vertical_wheel".
+	- This property only applies when `type` is "horizontal_wheel" or "vertical_wheel".
 * `logoRotationOrigin` - type: NORMALIZED_PAIR.
 	- Point around which the logos will be rotated. Defaults to `-5 0.5`.
-	- This property only applies when `type` is "vertical_wheel".
+	- This property only applies when `type` is "horizontal_wheel" or "vertical_wheel".
 * `logoAlignment` - type: STRING.
 	- Sets the alignment of the logos relative to the carousel.
-	- Accepted values are "top", "bottom" or "center" when `type` is "horizontal".
+	- Accepted values are "top", "bottom" or "center" when `type` is "horizontal" or "horizontal_wheel".
 	- Accepted values are "left", "right" or "center" when `type` is "vertical" or "vertical_wheel".
 	- Default is "center"
 * `maxLogoCount` - type: FLOAT.
