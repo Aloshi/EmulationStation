@@ -3,6 +3,7 @@
 
 #include "guis/GuiDetectDevice.h"
 #include "guis/GuiMsgBox.h"
+#include "utils/FileSystemUtil.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "EmulationStation.h"
@@ -14,7 +15,6 @@
 #include "Settings.h"
 #include "SystemData.h"
 #include "SystemScreenSaver.h"
-#include <boost/filesystem/operations.hpp>
 #include <SDL_events.h>
 #include <SDL_main.h>
 #include <SDL_timer.h>
@@ -169,11 +169,11 @@ bool verifyHomeFolderExists()
 	//make sure the config directory exists
 	std::string home = getHomePath();
 	std::string configDir = home + "/.emulationstation";
-	if(!boost::filesystem::exists(configDir))
+	if(!Utils::FileSystem::exists(configDir))
 	{
 		std::cout << "Creating config directory \"" << configDir << "\"\n";
-		boost::filesystem::create_directory(configDir);
-		if(!boost::filesystem::exists(configDir))
+		Utils::FileSystem::createDirectory(configDir);
+		if(!Utils::FileSystem::exists(configDir))
 		{
 			std::cerr << "Config directory could not be created!\n";
 			return false;
@@ -335,7 +335,7 @@ int main(int argc, char* argv[])
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
 	{
-		if(boost::filesystem::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
+		if(Utils::FileSystem::exists(InputManager::getConfigPath()) && InputManager::getInstance()->getNumConfiguredDevices() > 0)
 		{
 			ViewController::get()->goToStart();
 		}else{

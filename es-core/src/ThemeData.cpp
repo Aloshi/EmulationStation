@@ -2,6 +2,7 @@
 
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
+#include "utils/FileSystemUtil.h"
 #include "Log.h"
 #include "platform.h"
 #include "Settings.h"
@@ -205,7 +206,7 @@ void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const st
 	ThemeException error;
 	error.setFiles(mPaths);
 
-	if(!boost::filesystem::exists(path))
+	if(!Utils::FileSystem::exists(path))
 		throw error << "File does not exist!";
 
 	mVersion = 0;
@@ -484,7 +485,7 @@ const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 		theme = std::shared_ptr<ThemeData>(new ThemeData());
 
 		const std::string path = getHomePath() + "/.emulationstation/es_theme_default.xml";
-		if(boost::filesystem::exists(path))
+		if(Utils::FileSystem::exists(path))
 		{
 			try
 			{
@@ -544,12 +545,12 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 
 	for(size_t i = 0; i < pathCount; i++)
 	{
-		if(!boost::filesystem::is_directory(paths[i]))
+		if(!Utils::FileSystem::isDirectory(paths[i].generic_string()))
 			continue;
 
 		for(boost::filesystem::directory_iterator it(paths[i]); it != end; ++it)
 		{
-			if(boost::filesystem::is_directory(*it))
+			if(Utils::FileSystem::isDirectory((*it).path().generic_string()))
 			{
 				ThemeSet set = {*it};
 				sets[set.getName()] = set;

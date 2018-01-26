@@ -1,11 +1,11 @@
 #include "views/gamelist/BasicGameListView.h"
 
+#include "utils/FileSystemUtil.h"
 #include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "Settings.h"
 #include "SystemData.h"
-#include <boost/filesystem/operations.hpp>
 
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
@@ -105,7 +105,7 @@ void BasicGameListView::launch(FileData* game)
 void BasicGameListView::remove(FileData *game, bool deleteFile)
 {
 	if (deleteFile)
-		boost::filesystem::remove(game->getPath());  // actually delete the file on the filesystem
+		Utils::FileSystem::removeFile(game->getPath().generic_string());  // actually delete the file on the filesystem
 	FileData* parent = game->getParent();
 	if (getCursor() == game)                     // Select next element in list, or prev if none
 	{

@@ -1,12 +1,12 @@
 #include "components/VideoComponent.h"
 
 #include "resources/ResourceManager.h"
+#include "utils/FileSystemUtil.h"
 #include "PowerSaver.h"
 #include "Renderer.h"
 #include "ThemeData.h"
 #include "Util.h"
 #include "Window.h"
-#include <boost/filesystem/operations.hpp>
 #include <SDL_timer.h>
 
 #define FADE_TIME_MS	200
@@ -75,8 +75,8 @@ VideoComponent::VideoComponent(Window* window) :
 	}
 
 	std::string path = getTitleFolder();
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 }
 
 VideoComponent::~VideoComponent()

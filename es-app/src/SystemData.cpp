@@ -1,5 +1,6 @@
 #include "SystemData.h"
 
+#include "utils/FileSystemUtil.h"
 #include "CollectionSystemManager.h"
 #include "FileFilterIndex.h"
 #include "FileSorts.h"
@@ -82,7 +83,7 @@ bool isHidden(const boost::filesystem::path &filePath)
 void SystemData::populateFolder(FileData* folder)
 {
 	const boost::filesystem::path& folderPath = folder->getPath();
-	if(!boost::filesystem::is_directory(folderPath))
+	if(!Utils::FileSystem::isDirectory(folderPath.generic_string()))
 	{
 		LOG(LogWarning) << "Error - folder with path \"" << folderPath << "\" is not a directory!";
 		return;
@@ -91,7 +92,7 @@ void SystemData::populateFolder(FileData* folder)
 	const std::string folderStr = folderPath.generic_string();
 
 	//make sure that this isn't a symlink to a thing we already have
-	if(boost::filesystem::is_symlink(folderPath))
+	if(Utils::FileSystem::isSymlink(folderPath.generic_string()))
 	{
 		//if this symlink resolves to somewhere that's at the beginning of our path, it's gonna recurse
 		if(folderStr.find(boost::filesystem::canonical(folderPath).generic_string()) == 0)
@@ -132,7 +133,7 @@ void SystemData::populateFolder(FileData* folder)
 		}
 
 		//add directories that also do not match an extension as folders
-		if(!isGame && boost::filesystem::is_directory(filePath))
+		if(!isGame && Utils::FileSystem::isDirectory(filePath.generic_string()))
 		{
 			FileData* newFolder = new FileData(FOLDER, filePath.generic_string(), mEnvData, this);
 			populateFolder(newFolder);
@@ -186,7 +187,7 @@ bool SystemData::loadConfig()
 
 	LOG(LogInfo) << "Loading system config file " << path << "...";
 
-	if(!boost::filesystem::exists(path))
+	if(!Utils::FileSystem::exists(path))
 	{
 		LOG(LogError) << "es_systems.cfg file does not exist!";
 		writeExampleConfig(getConfigPath(true));
@@ -349,7 +350,7 @@ void SystemData::deleteSystems()
 std::string SystemData::getConfigPath(bool forWrite)
 {
 	boost::filesystem::path path = getHomePath() + "/.emulationstation/es_systems.cfg";
-	if(forWrite || boost::filesystem::exists(path))
+	if(forWrite || Utils::FileSystem::exists(path.generic_string()))
 		return path.generic_string();
 
 	return "/etc/emulationstation/es_systems.cfg";
@@ -388,13 +389,13 @@ std::string SystemData::getGamelistPath(bool forWrite) const
 	boost::filesystem::path filePath;
 
 	filePath = mRootFolder->getPath() / "gamelist.xml";
-	if(boost::filesystem::exists(filePath))
+	if(Utils::FileSystem::exists(filePath.generic_string()))
 		return filePath.generic_string();
 
 	filePath = getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
 	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
-		boost::filesystem::create_directories(filePath.parent_path());
-	if(forWrite || boost::filesystem::exists(filePath))
+		Utils::FileSystem::createDirectory(filePath.parent_path().generic_string());
+	if(forWrite || Utils::FileSystem::exists(filePath.generic_string()))
 		return filePath.generic_string();
 
 	return "/etc/emulationstation/gamelists/" + mName + "/gamelist.xml";
@@ -409,13 +410,13 @@ std::string SystemData::getThemePath() const
 
 	// first, check game folder
 	boost::filesystem::path localThemePath = mRootFolder->getPath() / "theme.xml";
-	if(boost::filesystem::exists(localThemePath))
+	if(Utils::FileSystem::exists(localThemePath.generic_string()))
 		return localThemePath.generic_string();
 
 	// not in game folder, try system theme in theme sets
 	localThemePath = ThemeData::getThemeFromCurrentSet(mThemeFolder);
 
-	if (boost::filesystem::exists(localThemePath))
+	if (Utils::FileSystem::exists(localThemePath.generic_string()))
 		return localThemePath.generic_string();
 
 	// not system theme, try default system theme in theme set
@@ -426,7 +427,7 @@ std::string SystemData::getThemePath() const
 
 bool SystemData::hasGamelist() const
 {
-	return (boost::filesystem::exists(getGamelistPath(false)));
+	return (Utils::FileSystem::exists(getGamelistPath(false)));
 }
 
 unsigned int SystemData::getGameCount() const
@@ -488,7 +489,7 @@ void SystemData::loadTheme()
 
 	std::string path = getThemePath();
 
-	if(!boost::filesystem::exists(path)) // no theme available for this platform
+	if(!Utils::FileSystem::exists(path)) // no theme available for this platform
 		return;
 
 	try
