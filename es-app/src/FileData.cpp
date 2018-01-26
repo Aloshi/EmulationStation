@@ -45,7 +45,7 @@ std::string FileData::getDisplayName() const
 
 std::string FileData::getCleanName() const
 {
-	return removeParenthesis(this->getDisplayName());
+	return Utils::String::removeParenthesis(this->getDisplayName());
 }
 
 const std::string FileData::getThumbnailPath() const
@@ -255,7 +255,7 @@ void FileData::launchGame(Window* window)
 
 	std::string command = mEnvData->mLaunchCommand;
 
-	const std::string rom = escapePath(getPath());
+	const std::string rom = Utils::FileSystem::getEscapedPath(getPath().generic_string());
 	const std::string basename = getPath().stem().string();
 	const std::string rom_raw = boost::filesystem::path(getPath()).make_preferred().string();
 
@@ -324,8 +324,7 @@ void CollectionFileData::refreshMetadata()
 const std::string& CollectionFileData::getName()
 {
 	if (mDirty) {
-		mCollectionFileName = removeParenthesis(mSourceFileData->metadata.get("name"));
-		Utils::String::trim(mCollectionFileName);
+		mCollectionFileName  = Utils::String::removeParenthesis(mSourceFileData->metadata.get("name"));
 		mCollectionFileName += " [" + strToUpper(mSourceFileData->getSystem()->getName()) + "]";
 		mDirty = false;
 	}

@@ -152,12 +152,21 @@ namespace Utils
 			// insert a backslash before most characters that would mess up a bash path
 			const char* invalidChars = "\\ '\"!$^&*(){}[]?;<>";
 			const char* invalidChar  = invalidChars;
-			size_t      offset       = std::string::npos;
+			size_t      start        = 0;
+			size_t      offset       = 0;
 
 			while(*invalidChar)
 			{
-				while((offset = path.find(*invalidChar)) != std::string::npos)
-					path.insert(offset, 1, '\\');
+				while((offset = path.find(*invalidChar, start)) != std::string::npos)
+				{
+					start = offset + 1;
+
+					if((offset == 0) || (path[offset - 1] != '\\'))
+					{
+						path.insert(offset, 1, '\\');
+						++start;
+					}
+				}
 
 				++invalidChar;
 			}
@@ -170,6 +179,10 @@ namespace Utils
 
 		std::string getCanonicalPath(const std::string& _path)
 		{
+			// temporary hack for builtin resources
+			if((_path[0] == ':') && (_path[1] == '/'))
+				return _path;
+
 			std::string path = exists(_path) ? getAbsolutePath(_path) : getGenericPath(_path);
 
 			// cleanup path

@@ -4,6 +4,7 @@
 #include "components/SwitchComponent.h"
 #include "guis/GuiSettings.h"
 #include "guis/GuiTextEditPopup.h"
+#include "utils/StringUtil.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "Window.h"
@@ -110,8 +111,8 @@ void GuiCollectionSystemsOptions::createCollection(std::string inName) {
 	std::string name = CollectionSystemManager::get()->getValidNewCollectionName(inName);
 	SystemData* newSys = CollectionSystemManager::get()->addNewCustomCollection(name);
 	customOptionList->add(name, name, true);
-	std::string outAuto = vectorToCommaString(autoOptionList->getSelectedObjects());
-	std::string outCustom = vectorToCommaString(customOptionList->getSelectedObjects());
+	std::string outAuto = Utils::String::vectorToCommaString(autoOptionList->getSelectedObjects());
+	std::string outCustom = Utils::String::vectorToCommaString(customOptionList->getSelectedObjects());
 	updateSettings(outAuto, outCustom);
 	ViewController::get()->goToSystemView(newSys);
 
@@ -161,9 +162,9 @@ void GuiCollectionSystemsOptions::addSystemsToMenu()
 
 void GuiCollectionSystemsOptions::applySettings()
 {
-	std::string outAuto = vectorToCommaString(autoOptionList->getSelectedObjects());
+	std::string outAuto = Utils::String::vectorToCommaString(autoOptionList->getSelectedObjects());
 	std::string prevAuto = Settings::getInstance()->getString("CollectionSystemsAuto");
-	std::string outCustom = vectorToCommaString(customOptionList->getSelectedObjects());
+	std::string outCustom = Utils::String::vectorToCommaString(customOptionList->getSelectedObjects());
 	std::string prevCustom = Settings::getInstance()->getString("CollectionSystemsCustom");
 	bool outSort = sortAllSystemsSwitch->getState();
 	bool prevSort = Settings::getInstance()->getBool("SortAllSystems");

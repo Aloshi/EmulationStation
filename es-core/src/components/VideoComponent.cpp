@@ -102,7 +102,7 @@ void VideoComponent::onSizeChanged()
 bool VideoComponent::setVideo(std::string path)
 {
 	// Convert the path into a generic format
-	boost::filesystem::path fullPath = getCanonicalPath(path);
+	boost::filesystem::path fullPath = Utils::FileSystem::getCanonicalPath(path);
 	fullPath.make_preferred().native();
 
 	// Check that it's changed

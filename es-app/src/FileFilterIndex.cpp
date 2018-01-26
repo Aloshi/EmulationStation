@@ -94,7 +94,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 		case GENRE_FILTER:
 		{
 			key = strToUpper(game->metadata.get("genre"));
-			Utils::String::trim(key);
+			key = Utils::String::trim(key);
 			if (getSecondary && !key.empty()) {
 				std::istringstream f(key);
 				std::string newKey;
@@ -121,7 +121,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 		case PUBDEV_FILTER:
 		{
 			key = strToUpper(game->metadata.get("publisher"));
-			Utils::String::trim(key);
+			key = Utils::String::trim(key);
 
 			if ((getSecondary && !key.empty()) || (!getSecondary && key.empty()))
 				key = strToUpper(game->metadata.get("developer"));
@@ -173,7 +173,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 			break;
 		}
 	}
-	Utils::String::trim(key);
+	key = Utils::String::trim(key);
 	if (key.empty() || (type == RATINGS_FILTER && key == "0 STARS")) {
 		key = UNKNOWN_LABEL;
 	}
