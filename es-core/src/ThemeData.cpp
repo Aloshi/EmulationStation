@@ -6,7 +6,6 @@
 #include "Log.h"
 #include "platform.h"
 #include "Settings.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 
 std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "video" } };
@@ -163,7 +162,7 @@ std::string resolvePath(const char* in, const boost::filesystem::path& relative)
 	// some directories could theoretically start with ~ or .
 	if(*path.begin() == "~")
 	{
-		path = getHomePath() + (in + 1);
+		path = Utils::FileSystem::getHomePath() + (in + 1);
 	}else if(*path.begin() == ".")
 	{
 		path = relPath / (in + 1);
@@ -484,7 +483,7 @@ const std::shared_ptr<ThemeData>& ThemeData::getDefault()
 	{
 		theme = std::shared_ptr<ThemeData>(new ThemeData());
 
-		const std::string path = getHomePath() + "/.emulationstation/es_theme_default.xml";
+		const std::string path = Utils::FileSystem::getHomePath() + "/.emulationstation/es_theme_default.xml";
 		if(Utils::FileSystem::exists(path))
 		{
 			try
@@ -538,19 +537,19 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	static const size_t pathCount = 2;
 	boost::filesystem::path paths[pathCount] = { 
 		"/etc/emulationstation/themes", 
-		getHomePath() + "/.emulationstation/themes" 
+		Utils::FileSystem::getHomePath() + "/.emulationstation/themes" 
 	};
-
-	boost::filesystem::directory_iterator end;
 
 	for(size_t i = 0; i < pathCount; i++)
 	{
 		if(!Utils::FileSystem::isDirectory(paths[i].generic_string()))
 			continue;
 
-		for(boost::filesystem::directory_iterator it(paths[i]); it != end; ++it)
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(paths[i].generic_string());
+
+		for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			if(Utils::FileSystem::isDirectory((*it).path().generic_string()))
+			if(Utils::FileSystem::isDirectory(*it))
 			{
 				ThemeSet set = {*it};
 				sets[set.getName()] = set;

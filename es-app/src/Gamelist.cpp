@@ -6,7 +6,6 @@
 #include "Log.h"
 #include "Settings.h"
 #include "SystemData.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 
 FileData* findOrCreateFile(SystemData* system, const boost::filesystem::path& path, FileType type)
@@ -232,7 +231,7 @@ void updateGamelist(SystemData* system)
 
 				boost::filesystem::path nodePath = Utils::FileSystem::resolveRelativePath(pathNode.text().get(), system->getStartPath(), true);
 				boost::filesystem::path gamePath((*fit)->getPath());
-				if(nodePath == gamePath || (Utils::FileSystem::exists(nodePath.generic_string()) && Utils::FileSystem::exists(gamePath.generic_string()) && boost::filesystem::equivalent(nodePath, gamePath)))
+				if(nodePath == gamePath || (Utils::FileSystem::exists(nodePath.generic_string()) && Utils::FileSystem::exists(gamePath.generic_string()) && Utils::FileSystem::isEquivalent(nodePath.generic_string(), gamePath.generic_string())))
 				{
 					// found it
 					root.remove_child(fileNode);

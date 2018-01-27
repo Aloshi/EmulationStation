@@ -16,7 +16,7 @@ std::string getTitlePath() {
 }
 
 std::string getTitleFolder() {
-	std::string home = getHomePath();
+	std::string home = Utils::FileSystem::getHomePath();
 	return home + "/.emulationstation/tmp/";
 }
 

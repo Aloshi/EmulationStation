@@ -1,5 +1,6 @@
 #include "Log.h"
 
+#include "utils/FileSystemUtil.h"
 #include "platform.h"
 #include <iostream>
 
@@ -13,7 +14,7 @@ LogLevel Log::getReportingLevel()
 
 std::string Log::getLogPath()
 {
-	std::string home = getHomePath();
+	std::string home = Utils::FileSystem::getHomePath();
 	return home + "/.emulationstation/es_log.txt";
 }
 

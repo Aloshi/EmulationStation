@@ -14,7 +14,6 @@
 #include "Renderer.h"
 #include "Sound.h"
 #include "SystemData.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <unordered_map>
 
@@ -418,46 +417,20 @@ void SystemScreenSaver::pickRandomCustomImage(std::string& path)
 	std::string imageDir = Settings::getInstance()->getString("SlideshowScreenSaverImageDir");
 	if ((imageDir != "") && (Utils::FileSystem::exists(imageDir)))
 	{
-		std::string imageFilter = Settings::getInstance()->getString("SlideshowScreenSaverImageFilter");
+		std::string                   imageFilter = Settings::getInstance()->getString("SlideshowScreenSaverImageFilter");
+		std::vector<std::string>      matchingFiles;
+		Utils::FileSystem::stringList dirContent  = Utils::FileSystem::getDirContent(imageDir, Settings::getInstance()->getBool("SlideshowScreenSaverRecurse"));
 
-		std::vector<std::string> matchingFiles;
-
-		if (Settings::getInstance()->getBool("SlideshowScreenSaverRecurse"))
+		for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			boost::filesystem::recursive_directory_iterator end_iter;
-			boost::filesystem::recursive_directory_iterator iter(imageDir);
-
-			// TODO: Figure out how to remove this duplication in the else block
-			for (iter; iter != end_iter; ++iter)
+			if (Utils::FileSystem::isRegularFile(*it))
 			{
-				if (Utils::FileSystem::isRegularFile(iter->path().generic_string()))
+				// If the image filter is empty, or the file extension is in the filter string,
+				//  add it to the matching files list
+				if ((imageFilter.length() <= 0) ||
+					(imageFilter.find(Utils::FileSystem::getExtension(*it)) != std::string::npos))
 				{
-					// If the image filter is empty, or the file extension is in the filter string,
-					//  add it to the matching files list
-					if ((imageFilter.length() <= 0) ||
-						(imageFilter.find(iter->path().extension().string()) != std::string::npos))
-					{
-						matchingFiles.push_back(iter->path().string());
-					}
-				}
-			}
-		}
-		else
-		{
-			boost::filesystem::directory_iterator end_iter;
-			boost::filesystem::directory_iterator iter(imageDir);
-
-			for (iter; iter != end_iter; ++iter)
-			{
-				if (Utils::FileSystem::isRegularFile(iter->path().generic_string()))
-				{
-					// If the image filter is empty, or the file extension is in the filter string,
-					//  add it to the matching files list
-					if ((imageFilter.length() <= 0) ||
-						(imageFilter.find(iter->path().extension().string()) != std::string::npos))
-					{
-						matchingFiles.push_back(iter->path().string());
-					}
+					matchingFiles.push_back(*it);
 				}
 			}
 		}

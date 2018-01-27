@@ -11,7 +11,6 @@
 #include "Settings.h"
 #include "SystemData.h"
 #include "ThemeData.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
 
@@ -884,13 +883,14 @@ std::vector<std::string> CollectionSystemManager::getSystemsFromTheme()
 
 	if (Utils::FileSystem::exists(themePath.generic_string()))
 	{
-		boost::filesystem::directory_iterator end_itr; // default construction yields past-the-end
-		for (boost::filesystem::directory_iterator itr(themePath); itr != end_itr; ++itr)
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(themePath.generic_string());
+
+		for (Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			if (Utils::FileSystem::isDirectory(itr->path().generic_string()))
+			if (Utils::FileSystem::isDirectory(*it))
 			{
 				//... here you have a directory
-				std::string folder = itr->path().string();
+				std::string folder = *it;
 				folder = folder.substr(themePath.string().size()+1);
 
 				if(Utils::FileSystem::exists(set->second.getThemePath(folder).generic_string()))
@@ -944,13 +944,13 @@ std::vector<std::string> CollectionSystemManager::getCollectionsFromConfigFolder
 
 	if (Utils::FileSystem::exists(configPath.generic_string()))
 	{
-		boost::filesystem::directory_iterator end_itr; // default construction yields past-the-end
-		for (boost::filesystem::directory_iterator itr(configPath); itr != end_itr; ++itr)
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(configPath.generic_string());
+		for (Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
-			if (Utils::FileSystem::isRegularFile(itr->path().generic_string()))
+			if (Utils::FileSystem::isRegularFile(*it))
 			{
 				// it's a file
-				std::string file = itr->path().string();
+				std::string file = *it;
 				std::string filename = file.substr(configPath.string().size());
 
 				// need to confirm filename matches config format
@@ -1019,7 +1019,7 @@ std::string getCustomCollectionConfigPath(std::string collectionName)
 
 std::string getCollectionsFolder()
 {
-	return getHomePath() + "/.emulationstation/collections/";
+	return Utils::FileSystem::getHomePath() + "/.emulationstation/collections/";
 }
 
 bool systemSort(SystemData* sys1, SystemData* sys2)

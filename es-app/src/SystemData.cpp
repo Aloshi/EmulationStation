@@ -9,7 +9,6 @@
 #include "platform.h"
 #include "Settings.h"
 #include "ThemeData.h"
-#include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
 #ifdef WIN32
@@ -95,7 +94,7 @@ void SystemData::populateFolder(FileData* folder)
 	if(Utils::FileSystem::isSymlink(folderPath.generic_string()))
 	{
 		//if this symlink resolves to somewhere that's at the beginning of our path, it's gonna recurse
-		if(folderStr.find(boost::filesystem::canonical(folderPath).generic_string()) == 0)
+		if(folderStr.find(Utils::FileSystem::getCanonicalPath(folderPath.generic_string())) == 0)
 		{
 			LOG(LogWarning) << "Skipping infinitely recursive symlink \"" << folderPath << "\"";
 			return;
@@ -106,9 +105,10 @@ void SystemData::populateFolder(FileData* folder)
 	std::string extension;
 	bool isGame;
 	bool showHidden = Settings::getInstance()->getBool("ShowHiddenFiles");
-	for(boost::filesystem::directory_iterator end, dir(folderPath); dir != end; ++dir)
+	Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(folderPath.generic_string());
+	for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 	{
-		filePath = (*dir).path();
+		filePath = *it;
 
 		if(filePath.stem().empty())
 			continue;
@@ -268,7 +268,7 @@ bool SystemData::loadConfig()
 		if(path[0] == '~')
 		{
 			path.erase(0, 1);
-			path.insert(0, getHomePath());
+			path.insert(0, Utils::FileSystem::getHomePath());
 		}
 
 		//create the system runtime environment data
@@ -349,7 +349,7 @@ void SystemData::deleteSystems()
 
 std::string SystemData::getConfigPath(bool forWrite)
 {
-	boost::filesystem::path path = getHomePath() + "/.emulationstation/es_systems.cfg";
+	boost::filesystem::path path = Utils::FileSystem::getHomePath() + "/.emulationstation/es_systems.cfg";
 	if(forWrite || Utils::FileSystem::exists(path.generic_string()))
 		return path.generic_string();
 
@@ -392,7 +392,7 @@ std::string SystemData::getGamelistPath(bool forWrite) const
 	if(Utils::FileSystem::exists(filePath.generic_string()))
 		return filePath.generic_string();
 
-	filePath = getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
+	filePath = Utils::FileSystem::getHomePath() + "/.emulationstation/gamelists/" + mName + "/gamelist.xml";
 	if(forWrite) // make sure the directory exists if we're going to write to it, or crashes will happen
 		Utils::FileSystem::createDirectory(filePath.parent_path().generic_string());
 	if(forWrite || Utils::FileSystem::exists(filePath.generic_string()))
