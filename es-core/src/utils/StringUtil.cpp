@@ -1,5 +1,7 @@
 #include "utils/StringUtil.h"
 
+#include <algorithm>
+
 namespace Utils
 {
 	namespace String
@@ -155,17 +157,91 @@ namespace Utils
 
 		} // trim
 
-		bool startsWith(const std::string& _string, const std::string& _test)
+		std::string replace(const std::string& _string, const std::string& _replace, const std::string& _with)
 		{
-			return (_string.find(_test) == 0);
+			std::string string = _string;
+			size_t      pos;
+
+			while((pos = string.find(_replace)) != std::string::npos)
+				string = string.replace(pos, _replace.length(), _with.c_str(), _with.length());
+
+			return string;
+
+		} // replace
+
+		bool startsWith(const std::string& _string, const std::string& _start)
+		{
+			return (_string.find(_start) == 0);
 
 		} // startsWith
 
-		bool endsWith(const std::string& _string, const std::string& _test)
+		bool endsWith(const std::string& _string, const std::string& _end)
 		{
-			return (_string.find(_test) == (_string.size() - _test.size()));
+			return (_string.find(_end) == (_string.size() - _end.size()));
 
 		} // endsWith
+
+		std::string removeParenthesis(const std::string& _string)
+		{
+			static const char remove[4] = { '(', ')', '[', ']' };
+			std::string       string = _string;
+			size_t            start;
+			size_t            end;
+			bool              done = false;
+
+			while(!done)
+			{
+				done = true;
+
+				for(int i = 0; i < sizeof(remove); i += 2)
+				{
+					end   = string.find_first_of(remove[i + 1]);
+					start = string.find_last_of( remove[i + 0], end);
+
+					if((start != std::string::npos) && (end != std::string::npos))
+					{
+						string.erase(start, end - start + 1);
+						done = false;
+					}
+				}
+			}
+
+			return trim(string);
+
+		} // removeParenthesis
+
+		stringVector commaStringToVector(const std::string& _string)
+		{
+			stringVector vector;
+			size_t       start = 0;
+			size_t       comma = _string.find(",");
+
+			while(comma != std::string::npos)
+			{
+				vector.push_back(_string.substr(start, comma - start));
+				start = comma + 1;
+				comma = _string.find(",", start);
+			}
+
+			vector.push_back(_string.substr(start));
+			std::sort(vector.begin(), vector.end());
+
+			return vector;
+
+		} // commaStringToVector
+
+		std::string vectorToCommaString(stringVector _vector)
+		{
+			std::string string;
+
+			std::sort(_vector.begin(), _vector.end());
+
+			for(stringVector::const_iterator it = _vector.cbegin(); it != _vector.cend(); ++it)
+				string += (string.length() ? "," : "") + (*it);
+
+			return string;
+
+		} // vectorToCommaString
 
 	} // String::
 

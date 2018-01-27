@@ -1,5 +1,6 @@
 #include "resources/Font.h"
 
+#include "utils/FileSystemUtil.h"
 #include "utils/StringUtil.h"
 #include "Log.h"
 #include "Renderer.h"
@@ -101,7 +102,7 @@ void Font::unload(std::shared_ptr<ResourceManager>& /*rm*/)
 
 std::shared_ptr<Font> Font::get(int size, const std::string& path)
 {
-	const std::string canonicalPath = getCanonicalPath(path);
+	const std::string canonicalPath = Utils::FileSystem::getCanonicalPath(path);
 
 	std::pair<std::string, int> def(canonicalPath.empty() ? getDefaultPath() : canonicalPath, size);
 	auto foundFont = sFontMap.find(def);

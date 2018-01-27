@@ -339,7 +339,7 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 					if (index-- == 0)
 					{
 						// Yes. Resolve to a full path
-						path = resolvePath(node.text().get(), (*it)->getStartPath(), true).generic_string();
+						path = Utils::FileSystem::resolveRelativePath(node.text().get(), (*it)->getStartPath(), true);
 						mSystemName = (*it)->getFullName();
 						mGameName = fileNode.child("name").text().get();
 
@@ -347,7 +347,7 @@ void SystemScreenSaver::pickGameListNode(unsigned long index, const char *nodeNa
 
 						// try the easy way. Should work for the majority of cases, unless in subfolders
 						FileData* rootFileData = (*it)->getRootFolder();
-						std::string gamePath = resolvePath(fileNode.child("path").text().get(), (*it)->getStartPath(), false).string();
+						std::string gamePath = Utils::FileSystem::resolveRelativePath(fileNode.child("path").text().get(), (*it)->getStartPath(), false);
 
 						std::string shortPath = gamePath;
 						shortPath = shortPath.replace(0, (*it)->getStartPath().length()+1, "");

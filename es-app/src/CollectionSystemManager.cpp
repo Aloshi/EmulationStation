@@ -144,7 +144,7 @@ void CollectionSystemManager::loadCollectionSystems()
 void CollectionSystemManager::loadEnabledListFromSettings()
 {
 	// we parse the auto collection settings list
-	std::vector<std::string> autoSelected = commaStringToVector(Settings::getInstance()->getString("CollectionSystemsAuto"));
+	std::vector<std::string> autoSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsAuto"));
 
 	// iterate the map
 	for(std::map<std::string, CollectionSystemData>::iterator it = mAutoCollectionSystemsData.begin() ; it != mAutoCollectionSystemsData.end() ; it++ )
@@ -153,7 +153,7 @@ void CollectionSystemManager::loadEnabledListFromSettings()
 	}
 
 	// we parse the custom collection settings list
-	std::vector<std::string> customSelected = commaStringToVector(Settings::getInstance()->getString("CollectionSystemsCustom"));
+	std::vector<std::string> customSelected = Utils::String::commaStringToVector(Settings::getInstance()->getString("CollectionSystemsCustom"));
 
 	// iterate the map
 	for(std::map<std::string, CollectionSystemData>::iterator it = mCustomCollectionSystemsData.begin() ; it != mCustomCollectionSystemsData.end() ; it++ )
@@ -509,11 +509,11 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 		}
 		if (adding)
 		{
-			s = new GuiInfoPopup(mWindow, "Added '" + removeParenthesis(name) + "' to '" + strToUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "Added '" + Utils::String::removeParenthesis(name) + "' to '" + strToUpper(sysName) + "'", 4000);
 		}
 		else
 		{
-			s = new GuiInfoPopup(mWindow, "Removed '" + removeParenthesis(name) + "' from '" + strToUpper(sysName) + "'", 4000);
+			s = new GuiInfoPopup(mWindow, "Removed '" + Utils::String::removeParenthesis(name) + "' from '" + strToUpper(sysName) + "'", 4000);
 		}
 		mWindow->setInfoPopup(s);
 		return true;
