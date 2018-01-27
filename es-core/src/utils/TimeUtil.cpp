@@ -39,8 +39,7 @@ namespace Utils
 
 		void DateTime::setTime(const time_t& _time)
 		{
-			if(_time < 0) mTime = 0;
-			else          mTime = _time;
+			mTime       = (_time < 0) ? 0 : _time;
 			mTimeStruct = *localtime(&mTime);
 			mIsoString  = timeToString(mTime);
 

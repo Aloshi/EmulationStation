@@ -4,7 +4,6 @@
 #include "utils/StringUtil.h"
 #include "Log.h"
 #include "Renderer.h"
-#include "Util.h"
 
 FT_Library Font::sLibrary = NULL;
 

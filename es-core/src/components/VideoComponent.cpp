@@ -5,7 +5,6 @@
 #include "PowerSaver.h"
 #include "Renderer.h"
 #include "ThemeData.h"
-#include "Util.h"
 #include "Window.h"
 #include <SDL_timer.h>
 

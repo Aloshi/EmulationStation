@@ -1,8 +1,8 @@
 #include "components/ButtonComponent.h"
 
 #include "resources/Font.h"
+#include "utils/StringUtil.h"
 #include "Renderer.h"
-#include "Util.h"
 
 ButtonComponent::ButtonComponent(Window* window, const std::string& text, const std::string& helpText, const std::function<void()>& func) : GuiComponent(window),
 	mBox(window, ":/button.png"),
@@ -40,7 +40,7 @@ bool ButtonComponent::input(InputConfig* config, Input input)
 
 void ButtonComponent::setText(const std::string& text, const std::string& helpText)
 {
-	mText = strToUpper(text);
+	mText = Utils::String::toUpper(text);
 	mHelpText = helpText;
 	
 	mTextCache = std::unique_ptr<TextCache>(mFont->buildTextCache(mText, 0, 0, getCurTextColor()));

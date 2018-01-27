@@ -14,7 +14,6 @@
 #include "Renderer.h"
 #include "Sound.h"
 #include "SystemData.h"
-#include "Util.h"
 #include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 #include <unordered_map>

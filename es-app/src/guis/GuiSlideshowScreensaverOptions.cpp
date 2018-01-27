@@ -3,6 +3,7 @@
 #include "components/SliderComponent.h"
 #include "components/SwitchComponent.h"
 #include "guis/GuiTextEditPopup.h"
+#include "utils/StringUtil.h"
 #include "Settings.h"
 #include "Window.h"
 
@@ -72,7 +73,7 @@ void GuiSlideshowScreensaverOptions::addWithLabel(ComponentListRow row, const st
 {
 	row.elements.clear();
 
-	auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+	auto lbl = std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 	row.addElement(lbl, true); // label
 
 	row.addElement(component, false, true);
@@ -84,7 +85,7 @@ void GuiSlideshowScreensaverOptions::addEditableTextComponent(ComponentListRow r
 {
 	row.elements.clear();
 
-	auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+	auto lbl = std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 	row.addElement(lbl, true); // label
 
 	row.addElement(ed, true);

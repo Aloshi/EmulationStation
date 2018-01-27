@@ -9,9 +9,9 @@
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiTextEditPopup.h"
 #include "resources/Font.h"
+#include "utils/StringUtil.h"
 #include "FileData.h"
 #include "Log.h"
-#include "Util.h"
 #include "Window.h"
 
 ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) : GuiComponent(window),
@@ -244,7 +244,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 		for(size_t i = 0; i < results.size(); i++)
 		{
 			row.elements.clear();
-			row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(results.at(i).mdl.get("name")), font, color), true);
+			row.addElement(std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(results.at(i).mdl.get("name")), font, color), true);
 			row.makeAcceptInputHandler([this, i] { returnResult(mScraperResults.at(i)); });
 			mResultList->addRow(row);
 		}
@@ -269,7 +269,7 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 void ScraperSearchComponent::onSearchError(const std::string& error)
 {
 	LOG(LogInfo) << "ScraperSearchComponent search error: " << error;
-	mWindow->pushGui(new GuiMsgBox(mWindow, strToUpper(error),
+	mWindow->pushGui(new GuiMsgBox(mWindow, Utils::String::toUpper(error),
 		"RETRY", std::bind(&ScraperSearchComponent::search, this, mLastSearch),
 		"SKIP", mSkipCallback,
 		"CANCEL", mCancelCallback));
@@ -294,8 +294,8 @@ void ScraperSearchComponent::updateInfoPane()
 	if(i != -1 && (int)mScraperResults.size() > i)
 	{
 		ScraperSearchResult& res = mScraperResults.at(i);
-		mResultName->setText(strToUpper(res.mdl.get("name")));
-		mResultDesc->setText(strToUpper(res.mdl.get("desc")));
+		mResultName->setText(Utils::String::toUpper(res.mdl.get("name")));
+		mResultDesc->setText(Utils::String::toUpper(res.mdl.get("desc")));
 		mDescContainer->reset();
 
 		mResultThumbnail->setImage("");
@@ -308,12 +308,12 @@ void ScraperSearchComponent::updateInfoPane()
 		}
 
 		// metadata
-		mMD_Rating->setValue(strToUpper(res.mdl.get("rating")));
-		mMD_ReleaseDate->setValue(strToUpper(res.mdl.get("releasedate")));
-		mMD_Developer->setText(strToUpper(res.mdl.get("developer")));
-		mMD_Publisher->setText(strToUpper(res.mdl.get("publisher")));
-		mMD_Genre->setText(strToUpper(res.mdl.get("genre")));
-		mMD_Players->setText(strToUpper(res.mdl.get("players")));
+		mMD_Rating->setValue(Utils::String::toUpper(res.mdl.get("rating")));
+		mMD_ReleaseDate->setValue(Utils::String::toUpper(res.mdl.get("releasedate")));
+		mMD_Developer->setText(Utils::String::toUpper(res.mdl.get("developer")));
+		mMD_Publisher->setText(Utils::String::toUpper(res.mdl.get("publisher")));
+		mMD_Genre->setText(Utils::String::toUpper(res.mdl.get("genre")));
+		mMD_Players->setText(Utils::String::toUpper(res.mdl.get("players")));
 		mGrid.onSizeChanged();
 	}else{
 		mResultName->setText("");
