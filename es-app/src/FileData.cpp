@@ -10,7 +10,6 @@
 #include "Log.h"
 #include "platform.h"
 #include "SystemData.h"
-#include "Util.h"
 #include "VolumeControl.h"
 #include "Window.h"
 
@@ -259,9 +258,9 @@ void FileData::launchGame(Window* window)
 	const std::string basename = getPath().stem().string();
 	const std::string rom_raw = boost::filesystem::path(getPath()).make_preferred().string();
 
-	command = strreplace(command, "%ROM%", rom);
-	command = strreplace(command, "%BASENAME%", basename);
-	command = strreplace(command, "%ROM_RAW%", rom_raw);
+	command = Utils::String::replace(command, "%ROM%", rom);
+	command = Utils::String::replace(command, "%BASENAME%", basename);
+	command = Utils::String::replace(command, "%ROM_RAW%", rom_raw);
 
 	LOG(LogInfo) << "	" << command;
 	int exitCode = runSystemCommand(command);
@@ -325,7 +324,7 @@ const std::string& CollectionFileData::getName()
 {
 	if (mDirty) {
 		mCollectionFileName  = Utils::String::removeParenthesis(mSourceFileData->metadata.get("name"));
-		mCollectionFileName += " [" + strToUpper(mSourceFileData->getSystem()->getName()) + "]";
+		mCollectionFileName += " [" + Utils::String::toUpper(mSourceFileData->getSystem()->getName()) + "]";
 		mDirty = false;
 	}
 	return mCollectionFileName;

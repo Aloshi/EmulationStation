@@ -2,7 +2,6 @@
 
 #include "utils/FileSystemUtil.h"
 #include "resources/TextureData.h"
-#include "Util.h"
 
 TextureDataManager		TextureResource::sTextureDataManager;
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;

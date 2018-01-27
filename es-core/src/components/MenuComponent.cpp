@@ -34,7 +34,7 @@ MenuComponent::MenuComponent(Window* window, const char* title, const std::share
 
 void MenuComponent::setTitle(const char* title, const std::shared_ptr<Font>& font)
 {
-	mTitle->setText(strToUpper(title));
+	mTitle->setText(Utils::String::toUpper(title));
 	mTitle->setFont(font);
 }
 
@@ -79,7 +79,7 @@ void MenuComponent::onSizeChanged()
 
 void MenuComponent::addButton(const std::string& name, const std::string& helpText, const std::function<void()>& callback)
 {
-	mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, strToUpper(name), helpText, callback));
+	mButtons.push_back(std::make_shared<ButtonComponent>(mWindow, Utils::String::toUpper(name), helpText, callback));
 	updateGrid();
 	updateSize();
 }

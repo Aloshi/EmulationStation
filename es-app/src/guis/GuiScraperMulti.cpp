@@ -99,11 +99,11 @@ void GuiScraperMulti::doNextSearch()
 
 	// update title
 	std::stringstream ss;
-	mSystem->setText(strToUpper(mSearchQueue.front().system->getFullName()));
+	mSystem->setText(Utils::String::toUpper(mSearchQueue.front().system->getFullName()));
 
 	// update subtitle
 	ss.str(""); // clear
-	ss << "GAME " << (mCurrentGame + 1) << " OF " << mTotalGames << " - " << strToUpper(mSearchQueue.front().game->getPath().filename().string());
+	ss << "GAME " << (mCurrentGame + 1) << " OF " << mTotalGames << " - " << Utils::String::toUpper(mSearchQueue.front().game->getPath().filename().string());
 	mSubtitle->setText(ss.str());
 
 	mSearchComp->search(mSearchQueue.front());

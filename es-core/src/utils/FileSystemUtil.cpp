@@ -7,6 +7,7 @@
 // because windows...
 #include <direct.h>
 #include <Windows.h>
+#define getcwd _getcwd
 #define mkdir(x,y) _mkdir(x)
 #define snprintf _snprintf
 #define unlink _unlink
@@ -245,7 +246,7 @@ namespace Utils
 						else
 							path = getParent(path) + "/" + resolved;
 
-						for( ++it; it != pathList.cend(); ++it)
+						for(++it; it != pathList.cend(); ++it)
 							path += (path.size() == 0) ? (*it) : ("/" + (*it));
 
 						scan = true;
@@ -335,19 +336,19 @@ namespace Utils
 
 		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
 		{
-			std::string path = getGenericPath(_path);
+			std::string path       = getGenericPath(_path);
 			std::string relativeTo = isDirectory(_relativeTo) ? getGenericPath(_relativeTo) : getParent(_relativeTo);
 
 			// nothing to resolve
-			if (!path.length())
+			if(!path.length())
 				return path;
 
 			// replace '.' with relativeTo
-			if (path[0] == '.')
+			if(path[0] == '.')
 				return (relativeTo + "/" + &(path[1]));
 
 			// replace '~' with homePath
-			if (_allowHome && (path[0] == '~'))
+			if(_allowHome && (path[0] == '~'))
 				return (getHomePath() + "/" + &(path[1]));
 
 			// nothing to resolve
@@ -357,21 +358,20 @@ namespace Utils
 
 		std::string createRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
 		{
-			bool contains = false;
-			std::string path = removeCommonPath(_path, _relativeTo, contains);
+			bool        contains = false;
+			std::string path     = removeCommonPath(_path, _relativeTo, contains);
 
-			if (contains)
+			if(contains)
 			{
 				// success
 				return ("." + path);
 			}
 
-			if (_allowHome)
+			if(_allowHome)
 			{
-				contains = false;
-				std::string path = removeCommonPath(_path, getHomePath(), contains);
+				path = removeCommonPath(_path, getHomePath(), contains);
 
-				if (contains)
+				if(contains)
 				{
 					// success
 					return ("~" + path);
@@ -385,11 +385,11 @@ namespace Utils
 
 		std::string removeCommonPath(const std::string& _path, const std::string& _common, bool& _contains)
 		{
-			std::string path = getGenericPath(_path);
+			std::string path   = getGenericPath(_path);
 			std::string common = isDirectory(_common) ? getGenericPath(_common) : getParent(_common);
 
 			// check if path contains common
-			if (path.find_first_of(common) == 0)
+			if(path.find_first_of(common) == 0)
 			{
 				_contains = true;
 				return path.substr(common.length() + 1);
@@ -409,10 +409,10 @@ namespace Utils
 #if defined(_WIN32)
 			HANDLE hFile = CreateFile(path.c_str(), FILE_READ_ATTRIBUTES, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
 
-			if (hFile != INVALID_HANDLE_VALUE)
+			if(hFile != INVALID_HANDLE_VALUE)
 			{
 				resolved.resize(GetFinalPathNameByHandle(hFile, nullptr, 0, FILE_NAME_NORMALIZED) + 1);
-				if (GetFinalPathNameByHandle(hFile, (LPSTR)resolved.data(), (DWORD)resolved.size(), FILE_NAME_NORMALIZED) > 0)
+				if(GetFinalPathNameByHandle(hFile, (LPSTR)resolved.data(), (DWORD)resolved.size(), FILE_NAME_NORMALIZED) > 0)
 				{
 					resolved.resize(resolved.size() - 1);
 					resolved = getGenericPath(resolved);
@@ -423,10 +423,10 @@ namespace Utils
 			struct stat info;
 
 			// check if lstat succeeded
-			if (lstat(path.c_str(), &info) == 0)
+			if(lstat(path.c_str(), &info) == 0)
 			{
 				resolved.resize(info.st_size);
-				if (readlink(path.c_str(), (char*)resolved.data(), resolved.size()) > 0)
+				if(readlink(path.c_str(), (char*)resolved.data(), resolved.size()) > 0)
 					resolved = getGenericPath(resolved);
 			}
 #endif // _WIN32

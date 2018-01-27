@@ -6,7 +6,6 @@
 #include "Log.h"
 #include "Settings.h"
 #include "SystemData.h"
-#include "Util.h"
 #include <boost/filesystem/operations.hpp>
 #include <pugixml/src/pugixml.hpp>
 

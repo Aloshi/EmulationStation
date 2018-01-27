@@ -2,7 +2,6 @@
 
 #include "utils/FileSystemUtil.h"
 #include "Log.h"
-#include "Util.h"
 #include <pugixml/src/pugixml.hpp>
 
 MetaDataDecl gameDecls[] = {

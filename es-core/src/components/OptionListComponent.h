@@ -48,7 +48,7 @@ private:
 			for(auto it = mParent->mEntries.begin(); it != mParent->mEntries.end(); it++)
 			{
 				row.elements.clear();
-				row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(it->name), font, 0x777777FF), true);
+				row.addElement(std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(it->name), font, 0x777777FF), true);
 
 				OptionListData& e = *it;
 
@@ -302,7 +302,7 @@ private:
 			{
 				if(it->selected)
 				{
-					mText.setText(strToUpper(it->name));
+					mText.setText(Utils::String::toUpper(it->name));
 					mText.setSize(0, mText.getSize().y());
 					setSize(mText.getSize().x() + mLeftArrow.getSize().x() + mRightArrow.getSize().x() + 24, mText.getSize().y());
 					if(mParent) // hack since theres no "on child size changed" callback atm...

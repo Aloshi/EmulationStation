@@ -3,10 +3,10 @@
 #include "components/TextComponent.h"
 #include "guis/GuiInputConfig.h"
 #include "utils/FileSystemUtil.h"
+#include "utils/StringUtil.h"
 #include "InputManager.h"
 #include "PowerSaver.h"
 #include "Renderer.h"
-#include "Util.h"
 #include "Window.h"
 
 #define HOLD_TIME 1000
@@ -85,7 +85,7 @@ bool GuiDetectDevice::input(InputConfig* config, Input input)
 			// started holding
 			mHoldingConfig = config;
 			mHoldTime = HOLD_TIME;
-			mDeviceHeld->setText(strToUpper(config->getDeviceName()));
+			mDeviceHeld->setText(Utils::String::toUpper(config->getDeviceName()));
 		}else if(!input.value && mHoldingConfig == config)
 		{
 			// cancel

@@ -162,7 +162,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 		ss << "CEC";
 	else
 		ss << "GAMEPAD " << (target->getDeviceId() + 1);
-	mSubtitle1 = std::make_shared<TextComponent>(mWindow, strToUpper(ss.str()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, ALIGN_CENTER);
+	mSubtitle1 = std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(ss.str()), Font::get(FONT_SIZE_MEDIUM), 0x555555FF, ALIGN_CENTER);
 	mGrid.setEntry(mSubtitle1, Vector2i(0, 2), false, true);
 
 	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "HOLD ANY BUTTON TO SKIP", Font::get(FONT_SIZE_SMALL), 0x99999900, ALIGN_CENTER);
@@ -379,7 +379,7 @@ void GuiInputConfig::setNotDefined(const std::shared_ptr<TextComponent>& text)
 
 void GuiInputConfig::setAssignedTo(const std::shared_ptr<TextComponent>& text, Input input)
 {
-	text->setText(strToUpper(input.string()));
+	text->setText(Utils::String::toUpper(input.string()));
 	text->setColor(0x777777FF);
 }
 

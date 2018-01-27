@@ -5,7 +5,6 @@
 #include "FileData.h"
 #include "Log.h"
 #include "Settings.h"
-#include "Util.h"
 
 #define UNKNOWN_LABEL "UNKNOWN"
 #define INCLUDE_UNKNOWN false;
@@ -93,7 +92,7 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 	{
 		case GENRE_FILTER:
 		{
-			key = strToUpper(game->metadata.get("genre"));
+			key = Utils::String::toUpper(game->metadata.get("genre"));
 			key = Utils::String::trim(key);
 			if (getSecondary && !key.empty()) {
 				std::istringstream f(key);
@@ -120,13 +119,13 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 		}
 		case PUBDEV_FILTER:
 		{
-			key = strToUpper(game->metadata.get("publisher"));
+			key = Utils::String::toUpper(game->metadata.get("publisher"));
 			key = Utils::String::trim(key);
 
 			if ((getSecondary && !key.empty()) || (!getSecondary && key.empty()))
-				key = strToUpper(game->metadata.get("developer"));
+				key = Utils::String::toUpper(game->metadata.get("developer"));
 			else
-				key = strToUpper(game->metadata.get("publisher"));
+				key = Utils::String::toUpper(game->metadata.get("publisher"));
 			break;
 		}
 		case RATINGS_FILTER:
@@ -155,21 +154,21 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 		{
 			if (game->getType() != GAME)
 				return "FALSE";
-			key = strToUpper(game->metadata.get("favorite"));
+			key = Utils::String::toUpper(game->metadata.get("favorite"));
 			break;
 		}
 		case HIDDEN_FILTER:
 		{
 			if (game->getType() != GAME)
 				return "FALSE";
-			key = strToUpper(game->metadata.get("hidden"));
+			key = Utils::String::toUpper(game->metadata.get("hidden"));
 			break;
 		}
 		case KIDGAME_FILTER:
 		{
 			if (game->getType() != GAME)
 				return "FALSE";
-			key = strToUpper(game->metadata.get("kidgame"));
+			key = Utils::String::toUpper(game->metadata.get("kidgame"));
 			break;
 		}
 	}

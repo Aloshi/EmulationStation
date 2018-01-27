@@ -1,8 +1,8 @@
 #include "components/DateTimeComponent.h"
 
 #include "resources/Font.h"
+#include "utils/StringUtil.h"
 #include "Renderer.h"
-#include "Util.h"
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
@@ -245,7 +245,7 @@ std::shared_ptr<Font> DateTimeComponent::getFont() const
 void DateTimeComponent::updateTextCache()
 {
 	DisplayMode mode = getCurrentDisplayMode();
-	const std::string dispString = mUppercase ? strToUpper(getDisplayString(mode)) : getDisplayString(mode);
+	const std::string dispString = mUppercase ? Utils::String::toUpper(getDisplayString(mode)) : getDisplayString(mode);
 	std::shared_ptr<Font> font = getFont();
 	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
 
