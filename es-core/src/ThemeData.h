@@ -3,10 +3,12 @@
 #define ES_CORE_THEME_DATA_H
 
 #include "math/Vector2f.h"
-#include <boost/filesystem/path.hpp>
+#include "utils/FileSystemUtil.h"
 #include <deque>
 #include <map>
+#include <memory>
 #include <sstream>
+#include <vector>
 
 namespace pugi { class xml_node; }
 
@@ -53,11 +55,11 @@ public:
 	template<typename T>
 	friend ThemeException& operator<<(ThemeException& e, T msg);
 	
-	inline void setFiles(const std::deque<boost::filesystem::path>& deque)
+	inline void setFiles(const std::deque<std::string>& deque)
 	{
-		*this << "from theme \"" << deque.front().string() << "\"\n";
+		*this << "from theme \"" << deque.front() << "\"\n";
 		for(auto it = deque.cbegin() + 1; it != deque.cend(); it++)
-			*this << "  (from included file \"" << (*it).string() << "\")\n";
+			*this << "  (from included file \"" << (*it) << "\")\n";
 		*this << "    ";
 	}
 };
@@ -73,10 +75,10 @@ ThemeException& operator<<(ThemeException& e, T appendMsg)
 
 struct ThemeSet
 {
-	boost::filesystem::path path;
+	std::string path;
 
-	inline std::string getName() const { return path.stem().string(); }
-	inline boost::filesystem::path getThemePath(const std::string& system) const { return path/system/"theme.xml"; }
+	inline std::string getName() const { return Utils::FileSystem::getStem(path); }
+	inline std::string getThemePath(const std::string& system) const { return path + "/" + system + "/theme.xml"; }
 };
 
 class ThemeData
@@ -155,14 +157,14 @@ public:
 	static const std::shared_ptr<ThemeData>& getDefault();
 
 	static std::map<std::string, ThemeSet> getThemeSets();
-	static boost::filesystem::path getThemeFromCurrentSet(const std::string& system);
+	static std::string getThemeFromCurrentSet(const std::string& system);
 
 private:
 	static std::map< std::string, std::map<std::string, ElementPropertyType> > sElementMap;
 	static std::vector<std::string> sSupportedFeatures;
 	static std::vector<std::string> sSupportedViews;
 
-	std::deque<boost::filesystem::path> mPaths;
+	std::deque<std::string> mPaths;
 	float mVersion;
 
 	void parseFeatures(const pugi::xml_node& themeRoot);

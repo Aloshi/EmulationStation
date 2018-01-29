@@ -5,7 +5,11 @@
 #include "AsyncHandle.h"
 #include "HttpReq.h"
 #include "MetaData.h"
+#include <functional>
+#include <memory>
 #include <queue>
+#include <utility>
+#include <assert.h>
 
 #define MAX_SCRAPER_RESULTS 7
 

@@ -23,9 +23,6 @@ FreeType
 cURL
 	http://curl.haxx.se/
 
-Boost
-	http://www.boost.org/
-
 nanosvg
 	https://github.com/memononen/nanosvg
 

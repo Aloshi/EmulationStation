@@ -330,7 +330,7 @@ bool CollectionSystemManager::isThemeCustomCollectionCompatible(std::vector<std:
 	auto set = themeSets.find(Settings::getInstance()->getString("ThemeSet"));
 	if(set != themeSets.cend())
 	{
-		std::string defaultThemeFilePath = set->second.path.string() + "/theme.xml";
+		std::string defaultThemeFilePath = set->second.path + "/theme.xml";
 		if (Utils::FileSystem::exists(defaultThemeFilePath))
 		{
 			return true;
@@ -879,11 +879,11 @@ std::vector<std::string> CollectionSystemManager::getSystemsFromTheme()
 		Settings::getInstance()->setString("ThemeSet", set->first);
 	}
 
-	boost::filesystem::path themePath = set->second.path;
+	std::string themePath = set->second.path;
 
-	if (Utils::FileSystem::exists(themePath.generic_string()))
+	if (Utils::FileSystem::exists(themePath))
 	{
-		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(themePath.generic_string());
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(themePath);
 
 		for (Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
@@ -891,9 +891,9 @@ std::vector<std::string> CollectionSystemManager::getSystemsFromTheme()
 			{
 				//... here you have a directory
 				std::string folder = *it;
-				folder = folder.substr(themePath.string().size()+1);
+				folder = folder.substr(themePath.size()+1);
 
-				if(Utils::FileSystem::exists(set->second.getThemePath(folder).generic_string()))
+				if(Utils::FileSystem::exists(set->second.getThemePath(folder)))
 				{
 					systems.push_back(folder);
 				}
@@ -940,18 +940,18 @@ std::vector<std::string> CollectionSystemManager::getUnusedSystemsFromTheme()
 std::vector<std::string> CollectionSystemManager::getCollectionsFromConfigFolder()
 {
 	std::vector<std::string> systems;
-	boost::filesystem::path configPath = getCollectionsFolder();
+	std::string configPath = getCollectionsFolder();
 
-	if (Utils::FileSystem::exists(configPath.generic_string()))
+	if (Utils::FileSystem::exists(configPath))
 	{
-		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(configPath.generic_string());
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(configPath);
 		for (Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
 			if (Utils::FileSystem::isRegularFile(*it))
 			{
 				// it's a file
 				std::string file = *it;
-				std::string filename = file.substr(configPath.string().size());
+				std::string filename = file.substr(configPath.size());
 
 				// need to confirm filename matches config format
 				if (filename != "custom-.cfg" && Utils::String::startsWith(filename, "custom-") && Utils::String::endsWith(filename, ".cfg"))
@@ -1013,8 +1013,7 @@ bool CollectionSystemManager::includeFileInAutoCollections(FileData* file)
 
 std::string getCustomCollectionConfigPath(std::string collectionName)
 {
-	boost::filesystem::path path = getCollectionsFolder() + "custom-" + collectionName + ".cfg";
-	return path.generic_string();
+	return getCollectionsFolder() + "custom-" + collectionName + ".cfg";;
 }
 
 std::string getCollectionsFolder()

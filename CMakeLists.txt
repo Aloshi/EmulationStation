@@ -49,11 +49,6 @@ endif()
 find_package(Freetype REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
-if(MSVC)
-find_package(Boost REQUIRED COMPONENTS system date_time)
-else()
-find_package(Boost REQUIRED COMPONENTS system filesystem date_time)
-endif()
 find_package(CURL REQUIRED)
 find_package(VLC REQUIRED)
 find_package(libCEC)
@@ -113,7 +108,6 @@ set(COMMON_INCLUDE_DIRS
     ${FREETYPE_INCLUDE_DIRS}
     ${FreeImage_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
     ${CURL_INCLUDE_DIR}
     ${VLC_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/external
@@ -157,17 +151,11 @@ endif()
 #define libraries and directories
 if(DEFINED BCMHOST)
     link_directories(
-        ${Boost_LIBRARY_DIRS}
         "/opt/vc/lib"
-    )
-else()
-    link_directories(
-        ${Boost_LIBRARY_DIRS}
     )
 endif()
 
 set(COMMON_LIBRARIES
-    ${Boost_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     ${FreeImage_LIBRARIES}
     ${SDL2_LIBRARY}

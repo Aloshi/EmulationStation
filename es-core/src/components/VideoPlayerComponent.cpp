@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "Settings.h"
 #include <fcntl.h>
+#include <unistd.h>
 #include <wait.h>
 
 class VolumeControl

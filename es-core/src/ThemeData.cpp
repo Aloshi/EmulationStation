@@ -7,6 +7,7 @@
 #include "platform.h"
 #include "Settings.h"
 #include <pugixml/src/pugixml.hpp>
+#include <algorithm>
 
 std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "video" } };
 std::vector<std::string> ThemeData::sSupportedFeatures { { "video" }, { "carousel" }, { "z-index" } };
@@ -148,29 +149,6 @@ unsigned int getHexColor(const char* str)
 	return val;
 }
 
-// helper
-std::string resolvePath(const char* in, const boost::filesystem::path& relative)
-{
-	if(!in || in[0] == '\0')
-		return in;
-
-	boost::filesystem::path relPath = relative.parent_path();
-	
-	boost::filesystem::path path(in);
-	
-	// we use boost filesystem here instead of just string checks because 
-	// some directories could theoretically start with ~ or .
-	if(*path.begin() == "~")
-	{
-		path = Utils::FileSystem::getHomePath() + (in + 1);
-	}else if(*path.begin() == ".")
-	{
-		path = relPath / (in + 1);
-	}
-
-	return path.generic_string();
-}
-
 std::map<std::string, std::string> mVariables;
 
 std::string resolvePlaceholders(const char* in)
@@ -245,7 +223,7 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 	for(pugi::xml_node node = root.child("include"); node; node = node.next_sibling("include"))
 	{
 		const char* relPath = node.text().get();
-		std::string path = resolvePath(relPath, mPaths.back());
+		std::string path = Utils::FileSystem::resolveRelativePath(relPath, mPaths.back(), true);
 		if(!ResourceManager::getInstance()->fileExists(path))
 			throw error << "Included file \"" << relPath << "\" not found! (resolved to \"" << path << "\")";
 
@@ -412,7 +390,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			break;
 		case PATH:
 		{
-			std::string path = resolvePath(str.c_str(), mPaths.back().string());
+			std::string path = Utils::FileSystem::resolveRelativePath(str, mPaths.back(), true);
 			if(!ResourceManager::getInstance()->fileExists(path))
 			{
 				std::stringstream ss;
@@ -535,17 +513,18 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	std::map<std::string, ThemeSet> sets;
 
 	static const size_t pathCount = 2;
-	boost::filesystem::path paths[pathCount] = { 
+	std::string paths[pathCount] =
+	{ 
 		"/etc/emulationstation/themes", 
 		Utils::FileSystem::getHomePath() + "/.emulationstation/themes" 
 	};
 
 	for(size_t i = 0; i < pathCount; i++)
 	{
-		if(!Utils::FileSystem::isDirectory(paths[i].generic_string()))
+		if(!Utils::FileSystem::isDirectory(paths[i]))
 			continue;
 
-		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(paths[i].generic_string());
+		Utils::FileSystem::stringList dirContent = Utils::FileSystem::getDirContent(paths[i]);
 
 		for(Utils::FileSystem::stringList::const_iterator it = dirContent.cbegin(); it != dirContent.cend(); ++it)
 		{
@@ -560,9 +539,9 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 	return sets;
 }
 
-boost::filesystem::path ThemeData::getThemeFromCurrentSet(const std::string& system)
+std::string ThemeData::getThemeFromCurrentSet(const std::string& system)
 {
-	auto themeSets = ThemeData::getThemeSets();
+	std::map<std::string, ThemeSet> themeSets = ThemeData::getThemeSets();
 	if(themeSets.empty())
 	{
 		// no theme sets available

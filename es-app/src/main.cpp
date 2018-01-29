@@ -19,6 +19,7 @@
 #include <SDL_main.h>
 #include <SDL_timer.h>
 #include <iostream>
+#include <time.h>
 #ifdef WIN32
 #include <Windows.h>
 #endif
@@ -220,7 +221,6 @@ int main(int argc, char* argv[])
 	srand((unsigned int)time(NULL));
 
 	std::locale::global(std::locale("C"));
-	boost::filesystem::path::imbue(std::locale());
 
 	if(!parseArgs(argc, argv))
 		return 0;
