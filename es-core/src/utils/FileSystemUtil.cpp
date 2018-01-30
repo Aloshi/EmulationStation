@@ -22,7 +22,7 @@ namespace Utils
 {
 	namespace FileSystem
 	{
-		stringList getDirContent(const std::string& _path)
+		stringList getDirContent(const std::string& _path, const bool _recursive)
 		{
 			std::string path = getGenericPath(_path);
 			stringList  contentList;
@@ -44,7 +44,13 @@ namespace Utils
 
 						// ignore "." and ".."
 						if((name != ".") && (name != ".."))
-							contentList.push_back(name);
+						{
+							std::string fullName(path + "/" + name);
+							contentList.push_back(fullName);
+
+							if(_recursive && isDirectory(fullName))
+								contentList.merge(getDirContent(fullName, true));
+						}
 					}
 					while(FindNextFile(hFind, &findData));
 
@@ -64,7 +70,13 @@ namespace Utils
 
 						// ignore "." and ".."
 						if((name != ".") && (name != ".."))
-							contentList.push_back(name);
+						{
+							std::string fullName(path + "/" + name);
+							contentList.push_back(fullName);
+
+							if(_recursive && isDirectory(fullName))
+								contentList.merge(getDirContent(fullName, true));
+						}
 					}
 
 					closedir(dir);
