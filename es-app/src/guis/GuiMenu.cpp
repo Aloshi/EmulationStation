@@ -13,6 +13,7 @@
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "EmulationStation.h"
+#include "Scripting.h"
 #include "SystemData.h"
 #include "VolumeControl.h"
 #include <SDL_events.h>
@@ -296,13 +297,15 @@ void GuiMenu::openUISettings()
 		s->addSaveFunc([window, theme_set]
 		{
 			bool needReload = false;
-			if(Settings::getInstance()->getString("ThemeSet") != theme_set->getSelected())
+			std::string oldTheme = Settings::getInstance()->getString("ThemeSet");
+			if(oldTheme != theme_set->getSelected())
 				needReload = true;
 
 			Settings::getInstance()->setString("ThemeSet", theme_set->getSelected());
 
 			if(needReload)
 			{
+				Scripting::fireEvent("theme-changed", theme_set->getSelected(), oldTheme);
 				CollectionSystemManager::get()->updateSystemsList();
 				ViewController::get()->goToStart();
 				ViewController::get()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
@@ -472,6 +475,7 @@ void GuiMenu::openQuitMenu()
 		row.makeAcceptInputHandler([window] {
 			window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
 				[] {
+				Scripting::fireEvent("quit");
 				if(quitES("/tmp/es-restart") != 0)
 					LOG(LogWarning) << "Restart terminated with non-zero result!";
 			}, "NO", nullptr));
@@ -487,9 +491,8 @@ void GuiMenu::openQuitMenu()
 			row.makeAcceptInputHandler([window] {
 				window->pushGui(new GuiMsgBox(window, "REALLY QUIT?", "YES",
 					[] {
-					SDL_Event ev;
-					ev.type = SDL_QUIT;
-					SDL_PushEvent(&ev);
+					Scripting::fireEvent("quit");
+					quitES("");
 				}, "NO", nullptr));
 			});
 			row.addElement(std::make_shared<TextComponent>(window, "QUIT EMULATIONSTATION", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
@@ -500,6 +503,8 @@ void GuiMenu::openQuitMenu()
 	row.makeAcceptInputHandler([window] {
 		window->pushGui(new GuiMsgBox(window, "REALLY RESTART?", "YES",
 			[] {
+			Scripting::fireEvent("quit", "reboot");
+			Scripting::fireEvent("reboot");
 			if (quitES("/tmp/es-sysrestart") != 0)
 				LOG(LogWarning) << "Restart terminated with non-zero result!";
 		}, "NO", nullptr));
@@ -511,6 +516,8 @@ void GuiMenu::openQuitMenu()
 	row.makeAcceptInputHandler([window] {
 		window->pushGui(new GuiMsgBox(window, "REALLY SHUTDOWN?", "YES",
 			[] {
+			Scripting::fireEvent("quit", "shutdown");
+			Scripting::fireEvent("shutdown");
 			if (quitES("/tmp/es-shutdown") != 0)
 				LOG(LogWarning) << "Shutdown terminated with non-zero result!";
 		}, "NO", nullptr));
