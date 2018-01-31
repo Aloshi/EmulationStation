@@ -101,8 +101,7 @@ void VideoComponent::onSizeChanged()
 bool VideoComponent::setVideo(std::string path)
 {
 	// Convert the path into a generic format
-	boost::filesystem::path fullPath = Utils::FileSystem::getCanonicalPath(path);
-	fullPath.make_preferred().native();
+	std::string fullPath = Utils::FileSystem::getCanonicalPath(path);
 
 	// Check that it's changed
 	if (fullPath == mVideoPath)
@@ -112,7 +111,7 @@ bool VideoComponent::setVideo(std::string path)
 	mVideoPath = fullPath;
 
 	// If the file exists then set the new video
-	if (!fullPath.empty() && ResourceManager::getInstance()->fileExists(fullPath.generic_string()))
+	if (!fullPath.empty() && ResourceManager::getInstance()->fileExists(fullPath))
 	{
 		// Return true to show that we are going to attempt to play a video
 		return true;

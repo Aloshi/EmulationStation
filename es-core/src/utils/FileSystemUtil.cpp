@@ -22,6 +22,21 @@ namespace Utils
 {
 	namespace FileSystem
 	{
+
+#if defined(_WIN32)
+		static std::string convertFromWideString(const std::wstring wstring)
+		{
+			int         numBytes = WideCharToMultiByte(CP_UTF8, 0, wstring.c_str(), (int)wstring.length(), nullptr, 0, nullptr, nullptr);
+			std::string string;
+
+			string.resize(numBytes);
+			WideCharToMultiByte(CP_UTF8, 0, wstring.c_str(), (int)wstring.length(), (char*)string.c_str(), numBytes, nullptr, nullptr);
+
+			return std::string(string);
+
+		} // convertFromWideString
+#endif // _WIN32
+
 		stringList getDirContent(const std::string& _path, const bool _recursive)
 		{
 			std::string path = getGenericPath(_path);
@@ -32,15 +47,16 @@ namespace Utils
 			{
 
 #if defined(_WIN32)
-				WIN32_FIND_DATA findData;
-				HANDLE          hFind = FindFirstFile((path + "/*").c_str(), &findData);
+				WIN32_FIND_DATAW findData;
+				std::string      wildcard = path + "/*";
+				HANDLE           hFind    = FindFirstFileW(std::wstring(wildcard.begin(), wildcard.end()).c_str(), &findData);
 
 				if(hFind != INVALID_HANDLE_VALUE)
 				{
 					// loop over all files in the directory
 					do
 					{
-						std::string name(findData.cFileName);
+						std::string name = convertFromWideString(findData.cFileName);
 
 						// ignore "." and ".."
 						if((name != ".") && (name != ".."))
@@ -52,7 +68,7 @@ namespace Utils
 								contentList.merge(getDirContent(fullName, true));
 						}
 					}
-					while(FindNextFile(hFind, &findData));
+					while(FindNextFileW(hFind, &findData));
 
 					FindClose(hFind);
 				}
@@ -92,6 +108,31 @@ namespace Utils
 			return contentList;
 
 		} // getDirContent
+
+		stringList getPathList(const std::string& _path)
+		{
+			stringList  pathList;
+			std::string path  = getGenericPath(_path);
+			size_t      start = 0;
+			size_t      end   = 0;
+
+			// split at '/'
+			while((end = path.find("/", start)) != std::string::npos)
+			{
+				if(end != start)
+					pathList.push_back(std::string(path, start, end - start));
+
+				start = end + 1;
+			}
+
+			// add last folder / file to pathList
+			if(start != path.size())
+				pathList.push_back(std::string(path, start, path.size() - start));
+
+			// return the path list
+			return pathList;
+
+		} // getPathList
 
 		std::string getHomePath()
 		{
@@ -202,20 +243,7 @@ namespace Utils
 			bool scan = true;
 			while(scan)
 			{
-				stringList  pathList;
-				size_t      start = 0;
-				size_t      end   = 0;
-
-				// split at '/'
-				while((end = path.find("/", start)) != std::string::npos)
-				{
-					pathList.push_back(std::string(path, start, end - start));
-					start = end + 1;
-				}
-
-				// add last folder / file to pathList
-				if(start != path.size())
-					pathList.push_back(std::string(path, start, path.size() - start));
+				stringList pathList = getPathList(path);
 
 				path.clear();
 				scan = false;
@@ -356,12 +384,12 @@ namespace Utils
 				return path;
 
 			// replace '.' with relativeTo
-			if(path[0] == '.')
-				return (relativeTo + "/" + &(path[1]));
+			if((path[0] == '.') && (path[1] == '/'))
+				return (relativeTo + &(path[1]));
 
 			// replace '~' with homePath
-			if(_allowHome && (path[0] == '~'))
-				return (getHomePath() + "/" + &(path[1]));
+			if(_allowHome && (path[0] == '~') && (path[1] == '/'))
+				return (getHomePath() + &(path[1]));
 
 			// nothing to resolve
 			return path;
@@ -376,7 +404,7 @@ namespace Utils
 			if(contains)
 			{
 				// success
-				return ("." + path);
+				return ("./" + path);
 			}
 
 			if(_allowHome)
@@ -386,7 +414,7 @@ namespace Utils
 				if(contains)
 				{
 					// success
-					return ("~" + path);
+					return ("~/" + path);
 				}
 			}
 

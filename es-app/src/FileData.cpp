@@ -12,8 +12,9 @@
 #include "SystemData.h"
 #include "VolumeControl.h"
 #include "Window.h"
+#include <assert.h>
 
-FileData::FileData(FileType type, const boost::filesystem::path& path, SystemEnvironmentData* envData, SystemData* system)
+FileData::FileData(FileType type, const std::string& path, SystemEnvironmentData* envData, SystemData* system)
 	: mType(type), mPath(path), mSystem(system), mEnvData(envData), mSourceFileData(NULL), mParent(NULL), metadata(type == GAME ? GAME_METADATA : FOLDER_METADATA) // metadata is REALLY set in the constructor!
 {
 	// metadata needs at least a name field (since that's what getName() will return)
@@ -35,7 +36,7 @@ FileData::~FileData()
 
 std::string FileData::getDisplayName() const
 {
-	std::string stem = mPath.stem().generic_string();
+	std::string stem = Utils::FileSystem::getStem(mPath);
 	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
 		stem = PlatformIds::mameTitleSearch(stem.c_str());
 
@@ -254,9 +255,9 @@ void FileData::launchGame(Window* window)
 
 	std::string command = mEnvData->mLaunchCommand;
 
-	const std::string rom = Utils::FileSystem::getEscapedPath(getPath().generic_string());
-	const std::string basename = getPath().stem().string();
-	const std::string rom_raw = boost::filesystem::path(getPath()).make_preferred().string();
+	const std::string rom      = Utils::FileSystem::getEscapedPath(getPath());
+	const std::string basename = Utils::FileSystem::getStem(getPath());
+	const std::string rom_raw  = getPath();
 
 	command = Utils::String::replace(command, "%ROM%", rom);
 	command = Utils::String::replace(command, "%BASENAME%", basename);

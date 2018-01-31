@@ -16,6 +16,7 @@
 #include "SystemData.h"
 #include <pugixml/src/pugixml.hpp>
 #include <unordered_map>
+#include <time.h>
 
 #define FADE_TIME 			300
 

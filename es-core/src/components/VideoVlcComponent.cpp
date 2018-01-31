@@ -1,6 +1,7 @@
 #include "components/VideoVlcComponent.h"
 
 #include "resources/TextureResource.h"
+#include "utils/StringUtil.h"
 #include "PowerSaver.h"
 #include "Renderer.h"
 #include "Settings.h"
@@ -282,10 +283,9 @@ void VideoVlcComponent::startVideo()
 		mVideoHeight = 0;
 
 #ifdef WIN32
-		std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> wton;
-		std::string path = wton.to_bytes(mVideoPath.c_str());
+		std::string path(Utils::String::replace(mVideoPath, "/", "\\"));
 #else
-		std::string path(mVideoPath.c_str());
+		std::string path(mVideoPath);
 #endif
 		// Make sure we have a video path
 		if (mVLC && (path.size() > 0))

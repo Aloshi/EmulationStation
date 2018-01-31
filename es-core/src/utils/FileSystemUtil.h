@@ -12,6 +12,7 @@ namespace Utils
 		typedef std::list<std::string> stringList;
 
 		stringList  getDirContent      (const std::string& _path, const bool _recursive = false);
+		stringList  getPathList        (const std::string& _path);
 		std::string getHomePath        ();
 		std::string getCWDPath         ();
 		std::string getGenericPath     (const std::string& _path);

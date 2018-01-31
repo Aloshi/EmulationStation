@@ -7,6 +7,7 @@
 #include "InputManager.h"
 #include "Log.h"
 #include "Renderer.h"
+#include <algorithm>
 #include <iomanip>
 
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10),

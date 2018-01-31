@@ -4,7 +4,6 @@
 
 #include "components/ImageComponent.h"
 #include "GuiComponent.h"
-#include <boost/filesystem/path.hpp>
 #include <string>
 
 class TextureResource;
@@ -91,14 +90,14 @@ private:
 protected:
 	unsigned						mVideoWidth;
 	unsigned						mVideoHeight;
-	Vector2f					mTargetSize;
+	Vector2f						mTargetSize;
 	std::shared_ptr<TextureResource> mTexture;
 	float							mFadeIn;
 	std::string						mStaticImagePath;
 	ImageComponent					mStaticImage;
 
-	boost::filesystem::path			mVideoPath;
-	boost::filesystem::path			mPlayingVideoPath;
+	std::string						mVideoPath;
+	std::string						mPlayingVideoPath;
 	bool							mStartDelayed;
 	unsigned						mStartTime;
 	bool							mIsPlaying;

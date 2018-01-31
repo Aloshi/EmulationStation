@@ -105,7 +105,7 @@ void BasicGameListView::launch(FileData* game)
 void BasicGameListView::remove(FileData *game, bool deleteFile)
 {
 	if (deleteFile)
-		Utils::FileSystem::removeFile(game->getPath().generic_string());  // actually delete the file on the filesystem
+		Utils::FileSystem::removeFile(game->getPath());  // actually delete the file on the filesystem
 	FileData* parent = game->getParent();
 	if (getCursor() == game)                     // Select next element in list, or prev if none
 	{
