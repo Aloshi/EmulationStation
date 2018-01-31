@@ -565,6 +565,7 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 	std::string genre = "None";
 	std::string video = "";
 	std::string thumbnail = "";
+	std::string image = "";
 
 	std::unordered_map<std::string, FileData*> games = rootFolder->getChildrenByFilename();
 
@@ -608,6 +609,7 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 
 		video = randomGame->getVideoPath();
 		thumbnail = randomGame->getThumbnailPath();
+		image = randomGame->getImagePath();
 	}
 
 
@@ -618,7 +620,8 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 	rootFolder->metadata.set("releasedate", releasedate);
 	rootFolder->metadata.set("developer", developer);
 	rootFolder->metadata.set("video", video);
-	rootFolder->metadata.set("image", thumbnail);
+	rootFolder->metadata.set("thumbnail", thumbnail);
+	rootFolder->metadata.set("image", image);
 }
 
 void CollectionSystemManager::initCustomCollectionSystems()
