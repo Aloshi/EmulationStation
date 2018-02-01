@@ -41,7 +41,7 @@ void VideoPlayerComponent::setResize(float width, float height)
 	setSize(width, height);
 	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = false;
-	mStaticImage.setSize(width, height);
+	mStaticImage.setResize(width, height);
 	onSizeChanged();
 }
 
