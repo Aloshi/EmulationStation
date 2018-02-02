@@ -206,11 +206,12 @@ namespace Utils
 			// insert a backslash before most characters that would mess up a bash path
 			const char* invalidChars = "\\ '\"!$^&*(){}[]?;<>";
 			const char* invalidChar  = invalidChars;
-			size_t      start        = 0;
-			size_t      offset       = 0;
 
 			while(*invalidChar)
 			{
+				size_t start  = 0;
+				size_t offset = 0;
+
 				while((offset = path.find(*invalidChar, start)) != std::string::npos)
 				{
 					start = offset + 1;
