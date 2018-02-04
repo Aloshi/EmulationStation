@@ -18,6 +18,11 @@ sudo apt-get install libsdl2-dev libfreeimage-dev libfreetype6-dev libcurl4-open
   libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid \
   libvlc-dev libvlccore-dev vlc-nox
 ```
+**On Fedora:**
+All of this be easily installed with dnf ( With rpmfusion activated) :
+```bash
+sudo dnf install cmake SDL2-devel boost-devel freeimage-devel freetype-devel eigen3-devel curl-devel mesa-libGL-devel vlc-devel libcec-devel alsa-lib-devel
+```
 
 Note this Repository uses a git submodule - to checkout the source and all submodules, use
 
