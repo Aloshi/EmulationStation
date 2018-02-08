@@ -30,6 +30,8 @@ bool scrape_cmdline = false;
 
 bool parseArgs(int argc, char* argv[])
 {
+	Settings::getInstance()->setString("ExePath", argv[0]);
+
 	for(int i = 1; i < argc; i++)
 	{
 		if(strcmp(argv[i], "--resolution") == 0)

@@ -30,7 +30,8 @@ std::vector<const char*> settings_dont_save {
 	{ "ScreenHeight" },
 	{ "ScreenOffsetX" },
 	{ "ScreenOffsetY" },
-	{ "ScreenRotate" }
+	{ "ScreenRotate" },
+	{ "ExePath" }
 };
 
 Settings::Settings()
@@ -146,6 +147,8 @@ void Settings::setDefaults()
 	mIntMap["ScreenOffsetX"] = 0;
 	mIntMap["ScreenOffsetY"] = 0;
 	mIntMap["ScreenRotate"]  = 0;
+
+	mStringMap["ExePath"] = "";
 }
 
 template <typename K, typename V>

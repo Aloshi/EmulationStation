@@ -36,4 +36,4 @@ BEGIN
     END
 END
 
-IDI_ES_LOGO ICON DISCARDABLE "../data/es_icon.ico"
+IDI_ES_LOGO ICON DISCARDABLE "es_icon.ico"
