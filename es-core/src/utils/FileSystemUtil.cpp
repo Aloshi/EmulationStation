@@ -1,5 +1,6 @@
 #include "utils/FileSystemUtil.h"
 
+#include "Settings.h"
 #include <sys/stat.h>
 #include <string.h>
 
@@ -172,6 +173,26 @@ namespace Utils
 			return (getcwd(temp, 512) ? getGenericPath(temp) : "");
 
 		} // getCWDPath
+
+		std::string getExePath()
+		{
+			static std::string path;
+
+			// only construct the exepath once
+			if(!path.length())
+			{
+				path = getCanonicalPath(Settings::getInstance()->getString("ExePath"));
+
+				if(isRegularFile(path))
+				{
+					path = getParent(path);
+				}
+			}
+
+			// return constructed exepath
+			return path;
+
+		} // getExePath
 
 		std::string getGenericPath(const std::string& _path)
 		{

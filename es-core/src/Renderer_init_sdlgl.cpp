@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-#include "../data/Resources.h"
+#include "resources/ResourceManager.h"
 #include "ImageIO.h"
 #include "Log.h"
 #include "Settings.h"
@@ -101,7 +101,8 @@ namespace Renderer
 		//set an icon for the window
 		size_t width = 0;
 		size_t height = 0;
-		std::vector<unsigned char> rawData = ImageIO::loadFromMemoryRGBA32(window_icon_256_png_data, window_icon_256_png_size, width, height);
+		ResourceData resData = ResourceManager::getInstance()->getFileData(":/window_icon_256.png");
+		std::vector<unsigned char> rawData = ImageIO::loadFromMemoryRGBA32(resData.ptr.get(), resData.length, width, height);
 		if (!rawData.empty())
 		{
 			ImageIO::flipPixelsVert(rawData.data(), width, height);

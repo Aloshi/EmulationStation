@@ -1,6 +1,5 @@
 #include "ResourceManager.h"
 
-#include "../data/Resources.h"
 #include "utils/FileSystemUtil.h"
 #include <fstream>
 
@@ -21,31 +20,47 @@ std::shared_ptr<ResourceManager>& ResourceManager::getInstance()
 	return sInstance;
 }
 
+std::string ResourceManager::getResourcePath(const std::string& path) const
+{
+	// check if this is a resource file
+	if((path[0] == ':') && (path[1] == '/'))
+	{
+		std::string test;
+
+		// check in homepath
+		test = Utils::FileSystem::getHomePath() + "/.emulationstation/resources/" + &path[2];
+		if(Utils::FileSystem::exists(test))
+			return test;
+
+		// check in exepath
+		test = Utils::FileSystem::getExePath() + "/resources/" + &path[2];
+		if(Utils::FileSystem::exists(test))
+			return test;
+
+		// check in cwd
+		test = Utils::FileSystem::getCWDPath() + "/resources/" + &path[2];
+		if(Utils::FileSystem::exists(test))
+			return test;
+	}
+
+	// not a resource, return unmodified path
+	return path;
+}
+
 const ResourceData ResourceManager::getFileData(const std::string& path) const
 {
-	//check if its embedded
-	
-	if(res2hMap.find(path) != res2hMap.cend())
+	//check if its a resource
+	const std::string respath = getResourcePath(path);
+
+	if(Utils::FileSystem::exists(respath))
 	{
-		//it is
-		Res2hEntry embeddedEntry = res2hMap.find(path)->second;
-		ResourceData data = { 
-			std::shared_ptr<unsigned char>(const_cast<unsigned char*>(embeddedEntry.data), nop_deleter), 
-			embeddedEntry.size
-		};
+		ResourceData data = loadFile(respath);
 		return data;
 	}
 
-	//it's not embedded; load the file
-	if(!Utils::FileSystem::exists(path))
-	{
-		//if the file doesn't exist, return an "empty" ResourceData
-		ResourceData data = {NULL, 0};
-		return data;
-	}else{
-		ResourceData data = loadFile(path);
-		return data;
-	}
+	//if the file doesn't exist, return an "empty" ResourceData
+	ResourceData data = {NULL, 0};
+	return data;
 }
 
 ResourceData ResourceManager::loadFile(const std::string& path) const
@@ -67,8 +82,8 @@ ResourceData ResourceManager::loadFile(const std::string& path) const
 
 bool ResourceManager::fileExists(const std::string& path) const
 {
-	//if it exists as an embedded file, return true
-	if(res2hMap.find(path) != res2hMap.cend())
+	//if it exists as a resource file, return true
+	if(getResourcePath(path) != path)
 		return true;
 
 	return Utils::FileSystem::exists(path);
