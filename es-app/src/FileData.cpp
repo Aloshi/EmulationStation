@@ -8,6 +8,7 @@
 #include "FileFilterIndex.h"
 #include "FileSorts.h"
 #include "Log.h"
+#include "MameNames.h"
 #include "platform.h"
 #include "SystemData.h"
 #include "VolumeControl.h"
@@ -38,7 +39,7 @@ std::string FileData::getDisplayName() const
 {
 	std::string stem = Utils::FileSystem::getStem(mPath);
 	if(mSystem && mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO))
-		stem = PlatformIds::mameTitleSearch(stem.c_str());
+		stem = MameNames::getInstance()->getRealName(stem);
 
 	return stem;
 }
