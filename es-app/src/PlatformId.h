@@ -77,13 +77,6 @@ namespace PlatformIds
 
 	PlatformId getPlatformId(const char* str);
 	const char* getPlatformName(PlatformId id);
-
-	// Get the number of Mame titles in the mameNameToRealName array
-	// Should only run this once and store in a static or cached variable
-	int getMameTitleCount();
-
-	// Perform a binary search for a game title given a rom name
-	const char* mameTitleSearch(const char* from);
 }
 
 #endif // ES_APP_PLATFORM_ID_H
