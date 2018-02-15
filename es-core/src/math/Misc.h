@@ -29,7 +29,7 @@ namespace Math
 		float bounce(const float _delayTime, const float _scrollTime, const float _currentTime, const float _scrollLength);
 		float loop  (const float _delayTime, const float _scrollTime, const float _currentTime, const float _scrollLength);
 
-	} // Math::Scroll::
+	} // Scroll::
 
 } // Math::
 

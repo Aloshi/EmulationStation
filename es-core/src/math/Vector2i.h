@@ -40,10 +40,10 @@ public:
 	      int&     operator[](const int _index)             { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
 	const int&     operator[](const int _index) const       { assert(_index < 2 && "index out of range"); return (&mX)[_index]; }
 
-	      int& x()       { return mX; }
-	      int& y()       { return mY; }
-	const int& x() const { return mX; }
-	const int& y() const { return mY; }
+	inline       int& x()       { return mX; }
+	inline       int& y()       { return mY; }
+	inline const int& x() const { return mX; }
+	inline const int& y() const { return mY; }
 
 	static const Vector2i Zero () { return { 0, 0 }; }
 	static const Vector2i UnitX() { return { 1, 0 }; }
