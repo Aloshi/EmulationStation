@@ -55,7 +55,7 @@ MameNames::MameNames()
 	for(pugi::xml_node gameNode = doc.child("game"); gameNode; gameNode = gameNode.next_sibling("game"))
 	{
 		NamePair namePair = { gameNode.child("mamename").text().get(), gameNode.child("realname").text().get() };
-		names.push_back(namePair);
+		mNamePairs.push_back(namePair);
 	}
 
 } // MameNames
@@ -68,16 +68,16 @@ MameNames::~MameNames()
 std::string MameNames::getRealName(const std::string& _mameName)
 {
 	size_t start = 0;
-	size_t end   = names.size();
+	size_t end   = mNamePairs.size();
 
 	while(start < end)
 	{
 		const size_t index   = (start + end) / 2;
-		const int    compare = strcmp(names[index].mameName.c_str(), _mameName.c_str());
+		const int    compare = strcmp(mNamePairs[index].mameName.c_str(), _mameName.c_str());
 
 		if(compare < 0)       start = index + 1;
 		else if( compare > 0) end   = index;
-		else                  return names[index].realName;
+		else                  return mNamePairs[index].realName;
 	}
 
 	return _mameName;

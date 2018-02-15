@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-namespace CEC { class ICECAdapter; }
-
 class MameNames
 {
 public:
@@ -31,7 +29,7 @@ private:
 
 	static MameNames* sInstance;
 
-	namePairVector    names;
+	namePairVector    mNamePairs;
 
 }; // MameNames
 
