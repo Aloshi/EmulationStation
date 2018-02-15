@@ -1,6 +1,7 @@
 #include "utils/StringUtil.h"
 
 #include <algorithm>
+#include <stdarg.h>
 
 namespace Utils
 {
@@ -134,6 +135,17 @@ namespace Utils
 
 		} // moveCursor
 
+		std::string toLower(const std::string& _string)
+		{
+			std::string string;
+
+			for(size_t i = 0; i < _string.length(); ++i)
+				string += (char)tolower(_string[i]);
+
+			return string;
+
+		} // toLower
+
 		std::string toUpper(const std::string& _string)
 		{
 			std::string string;
@@ -242,6 +254,31 @@ namespace Utils
 			return string;
 
 		} // vectorToCommaString
+
+		std::string format(const char* _format, ...)
+		{
+			va_list	args;
+			va_list copy;
+
+			va_start(args, _format);
+
+			va_copy(copy, args);
+			const int length = vsnprintf(nullptr, 0, _format, copy);
+			va_end(copy);
+
+			char* buffer = new char[length + 1];
+			va_copy(copy, args);
+			vsnprintf(buffer, length + 1, _format, copy);
+			va_end(copy);
+
+			va_end(args);
+
+			std::string out(buffer);
+			delete buffer;
+
+			return out;
+
+		} // format
 
 	} // String::
 
