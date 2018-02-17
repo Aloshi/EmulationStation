@@ -49,14 +49,14 @@ public:
 	      float&   operator[](const int _index)             { assert(_index < 4 && "index out of range"); return (&mX)[_index]; }
 	const float&   operator[](const int _index) const       { assert(_index < 4 && "index out of range"); return (&mX)[_index]; }
 
-	      float& x()       { return mX; }
-	      float& y()       { return mY; }
-	      float& z()       { return mZ; }
-	      float& w()       { return mW; }
-	const float& x() const { return mX; }
-	const float& y() const { return mY; }
-	const float& z() const { return mZ; }
-	const float& w() const { return mW; }
+	inline       float& x()       { return mX; }
+	inline       float& y()       { return mY; }
+	inline       float& z()       { return mZ; }
+	inline       float& w()       { return mW; }
+	inline const float& x() const { return mX; }
+	inline const float& y() const { return mY; }
+	inline const float& z() const { return mZ; }
+	inline const float& w() const { return mW; }
 
 	inline       Vector2f& v2()       { return *(Vector2f*)this; }
 	inline const Vector2f& v2() const { return *(Vector2f*)this; }
