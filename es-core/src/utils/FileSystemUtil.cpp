@@ -143,21 +143,24 @@ namespace Utils
 			if(!path.length())
 			{
 				// this should give us something like "/home/YOUR_USERNAME" on Linux and "C:/Users/YOUR_USERNAME/" on Windows
-				std::string envHome(getenv("HOME"));
-				if(envHome.length())
+				char* envHome = getenv("HOME");
+				if(envHome)
 					path = getGenericPath(envHome);
 
 #if defined(_WIN32)
 				// but does not seem to work for Windows XP or Vista, so try something else
 				if(!path.length())
 				{
-					std::string envDir(getenv("HOMEDRIVE"));
-					std::string envPath(getenv("HOMEPATH"));
-					if(envDir.length() && envPath.length())
-						path = getGenericPath(envDir + "/" + envPath);
+					char* envHomeDrive = getenv("HOMEDRIVE");
+					char* envHomePath  = getenv("HOMEPATH");
+					if(envHomeDrive && envHomePath)
+						path = getGenericPath(std::string(envHomeDrive) + "/" + envHomePath);
 				}
 #endif // _WIN32
 
+				// no homepath found, fall back to current working directory
+				if(!path.length())
+					path = getCWDPath();
 			}
 
 			// return constructed homepath
