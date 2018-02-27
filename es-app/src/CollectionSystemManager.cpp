@@ -16,6 +16,8 @@
 
 std::string myCollectionsName = "collections";
 
+#define LAST_PLAYED_MAX	50
+
 /* Handling the getting, initialization, deinitialization, saving and deletion of
  * a CollectionSystemManager Instance */
 CollectionSystemManager* CollectionSystemManager::sInstance = NULL;
@@ -277,7 +279,23 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 			}
 		}
 		rootFolder->sort(getSortTypeFromString(mCollectionSystemDeclsIndex[name].defaultSort));
-		ViewController::get()->onFileChanged(rootFolder, FILE_SORTED);
+		if (name == "recent")
+		{
+			trimCollectionCount(rootFolder, LAST_PLAYED_MAX);
+			ViewController::get()->onFileChanged(rootFolder, FILE_METADATA_CHANGED);
+		}
+		else 
+			ViewController::get()->onFileChanged(rootFolder, FILE_SORTED);
+	}
+}
+
+void CollectionSystemManager::trimCollectionCount(FileData* rootFolder, int limit)
+{
+	SystemData* curSys = rootFolder->getSystem();
+	while (rootFolder->getChildren().size() > limit)
+	{
+		CollectionFileData* gameToRemove = (CollectionFileData*)rootFolder->getChildrenListToDisplay().back();
+		ViewController::get()->getGameListView(curSys).get()->remove(gameToRemove, false);
 	}
 }
 
@@ -713,6 +731,8 @@ void CollectionSystemManager::populateAutoCollection(CollectionSystemData* sysDa
 		}
 	}
 	rootFolder->sort(getSortTypeFromString(sysDecl.defaultSort));
+	if (sysDecl.type == AUTO_LAST_PLAYED)
+		trimCollectionCount(rootFolder, LAST_PLAYED_MAX);
 	sysData->isPopulated = true;
 }
 

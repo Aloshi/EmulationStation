@@ -103,6 +103,8 @@ private:
 	std::vector<std::string> getCollectionThemeFolders(bool custom);
 	std::vector<std::string> getUserCollectionThemeFolders();
 
+	void trimCollectionCount(FileData* rootFolder, int limit);
+
 	bool themeFolderExists(std::string folder);
 
 	bool includeFileInAutoCollections(FileData* file);
