@@ -221,7 +221,7 @@ void CollectionSystemManager::updateSystemsList()
 // updates all collection files related to the source file
 void CollectionSystemManager::refreshCollectionSystems(FileData* file)
 {
-	if (!file->getSystem()->isGameSystem())
+	if (!file->getSystem()->isGameSystem() || file->getType() != GAME)
 		return;
 
 	std::map<std::string, CollectionSystemData> allCollections;
