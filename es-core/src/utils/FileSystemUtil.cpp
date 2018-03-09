@@ -88,7 +88,7 @@ namespace Utils
 						// ignore "." and ".."
 						if((name != ".") && (name != ".."))
 						{
-							std::string fullName(path + "/" + name);
+							std::string fullName(getGenericPath(path + "/" + name));
 							contentList.push_back(fullName);
 
 							if(_recursive && isDirectory(fullName))
