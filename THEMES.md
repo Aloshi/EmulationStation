@@ -472,6 +472,39 @@ Reference
 * `image name="logo"` - ALL
 	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
 
+* Metadata
+	* Labels
+		* `text name="md_lbl_rating"` - ALL
+		* `text name="md_lbl_releasedate"` - ALL
+		* `text name="md_lbl_developer"` - ALL
+		* `text name="md_lbl_publisher"` - ALL
+		* `text name="md_lbl_genre"` - ALL
+		* `text name="md_lbl_players"` - ALL
+		* `text name="md_lbl_lastplayed"` - ALL
+		* `text name="md_lbl_playcount"` - ALL
+
+	* Values
+		* All values will follow to the right of their labels if a position isn't specified.
+
+		* `rating name="md_rating"` - ALL
+			- The "rating" metadata.
+		* `datetime name="md_releasedate"` - ALL
+			- The "releasedate" metadata.
+		* `text name="md_developer"` - ALL
+			- The "developer" metadata.
+		* `text name="md_publisher"` - ALL
+			- The "publisher" metadata.
+		* `text name="md_genre"` - ALL
+			- The "genre" metadata.
+		* `text name="md_players"` - ALL
+			- The "players" metadata (number of players the game supports).
+		* `datetime name="md_lastplayed"` - ALL
+			- The "lastplayed" metadata.  Displayed as a string representing the time relative to "now" (e.g. "3 hours ago").
+		* `text name="md_playcount"` - ALL
+			- The "playcount" metadata (number of times the game has been played).
+		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
+			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+
 ---
 
 #### system
