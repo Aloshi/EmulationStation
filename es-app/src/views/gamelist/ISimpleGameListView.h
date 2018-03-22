@@ -28,6 +28,8 @@ public:
 	virtual void launch(FileData* game) = 0;
 
 protected:
+	virtual std::string getQuickSystemSelectRightButton() = 0;
+	virtual std::string getQuickSystemSelectLeftButton() = 0;
 	virtual void populateList(const std::vector<FileData*>& files) = 0;
 
 	TextComponent mHeaderText;
