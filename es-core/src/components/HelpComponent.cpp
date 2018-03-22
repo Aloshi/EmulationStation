@@ -24,6 +24,7 @@ static const std::map<std::string, const char*> ICON_PATH_MAP {
 	{ "y", ":/help/button_y.svg" },
 	{ "l", ":/help/button_l.svg" },
 	{ "r", ":/help/button_r.svg" },
+	{ "lr", ":/help/button_lr.svg" },
 	{ "start", ":/help/button_start.svg" },
 	{ "select", ":/help/button_select.svg" }
 };
