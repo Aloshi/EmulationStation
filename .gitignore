@@ -37,5 +37,6 @@ Makefile
 
 # Clion
 .idea/
-*.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake
 *.cbp
