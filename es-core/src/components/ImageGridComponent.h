@@ -74,11 +74,11 @@ private:
 		return squareSize;
 	};
 
-	Vector2i getGridSize() const
+	Vector2i getGridDimension() const
 	{
 		Vector2f squareSize = getMaxSquareSize();
-		Vector2i gridSize((int)(mSize.x() / (squareSize.x() + getPadding().x())), (int)(mSize.y() / (squareSize.y() + getPadding().y())));
-		return gridSize;
+		Vector2i gridDimension((int)(mSize.x() / (squareSize.x() + getPadding().x())), (int)(mSize.y() / (squareSize.y() + getPadding().y())));
+		return gridDimension;
 	};
 
 	Vector2f getPadding() const { return Vector2f(24, 24); }
@@ -127,7 +127,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 
 		if(dir != Vector2i::Zero())
 		{
-			listInput(dir.x() + dir.y() * getGridSize().x());
+			listInput(dir.x() + dir.y() * getGridDimension().x());
 			return true;
 		}
 	}else{
@@ -185,21 +185,21 @@ void ImageGridComponent<T>::buildImages()
 {
 	mImages.clear();
 
-	Vector2i gridSize = getGridSize();
+	Vector2i gridDimension = getGridDimension();
 	Vector2f squareSize = getMaxSquareSize();
 	Vector2f padding = getPadding();
 
 	// attempt to center within our size
-	Vector2f totalSize(gridSize.x() * (squareSize.x() + padding.x()), gridSize.y() * (squareSize.y() + padding.y()));
+	Vector2f totalSize(gridDimension.x() * (squareSize.x() + padding.x()), gridDimension.y() * (squareSize.y() + padding.y()));
 	Vector2f offset(mSize.x() - totalSize.x(), mSize.y() - totalSize.y());
 	offset /= 2;
 
-	for(int y = 0; y < gridSize.y(); y++)
+	for(int y = 0; y < gridDimension.y(); y++)
 	{
-		for(int x = 0; x < gridSize.x(); x++)
+		for(int x = 0; x < gridDimension.x(); x++)
 		{
 			mImages.push_back(ImageComponent(mWindow));
-			ImageComponent& image = mImages.at(y * gridSize.x() + x);
+			ImageComponent& image = mImages.at(y * gridDimension.x() + x);
 
 			image.setPosition((squareSize.x() + padding.x()) * (x + 0.5f) + offset.x(), (squareSize.y() + padding.y()) * (y + 0.5f) + offset.y());
 			image.setOrigin(0.5f, 0.5f);
@@ -215,15 +215,15 @@ void ImageGridComponent<T>::updateImages()
 	if(mImages.empty())
 		buildImages();
 
-	Vector2i gridSize = getGridSize();
+	Vector2i gridDimension = getGridDimension();
 
-	int cursorRow = mCursor / gridSize.x();
+	int cursorRow = mCursor / gridDimension.x();
 
-	int start = (cursorRow - (gridSize.y() / 2)) * gridSize.x();
+	int start = (cursorRow - (gridDimension.y() / 2)) * gridDimension.x();
 
 	//if we're at the end put the row as close as we can and no higher
-	if(start + (gridSize.x() * gridSize.y()) >= (int)mEntries.size())
-		start = gridSize.x() * ((int)mEntries.size()/gridSize.x() - gridSize.y() + 1);
+	if(start + (gridDimension.x() * gridDimension.y()) >= (int)mEntries.size())
+		start = gridDimension.x() * ((int)mEntries.size()/gridDimension.x() - gridDimension.y() + 1);
 
 	if(start < 0)
 		start = 0;
