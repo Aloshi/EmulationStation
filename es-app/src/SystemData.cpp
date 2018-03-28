@@ -79,8 +79,6 @@ void SystemData::populateFolder(FileData* folder)
 	//make sure that this isn't a symlink to a thing we already have
 	if(Utils::FileSystem::isSymlink(folderPath))
 	{
-		Utils::FileSystem::getCanonicalPath("/RetroGames/roms/nes/garbage/../smurf.nes");
-
 		//if this symlink resolves to somewhere that's at the beginning of our path, it's gonna recurse
 		if(folderPath.find(Utils::FileSystem::getCanonicalPath(folderPath)) == 0)
 		{
