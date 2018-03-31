@@ -21,7 +21,6 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	const float padding = 0.01f;
 
 	mGrid.setPosition(mSize.x() * 0.1f, mSize.y() * 0.1f);
-//	mGrid.setSize(mSize.x(), mSize.y() * 0.8f);
 	mGrid.setCursorChangedCallback([&](const CursorState& /*state*/) { updateInfoPanel(); });
 	addChild(&mGrid);
 
@@ -124,6 +123,8 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	ISimpleGameListView::onThemeChanged(theme);
 
 	using namespace ThemeFlags;
+
+	mGrid.applyTheme(theme, getName(), "gamegrid", ALL);
 
 	initMDLabels();
 	std::vector<TextComponent*> labels = getMDLabels();

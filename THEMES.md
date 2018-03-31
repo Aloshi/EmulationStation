@@ -277,7 +277,7 @@ You can now change the order in which elements are rendered by setting `zIndex` 
 * `carousel name="systemcarousel"` - 40
 * `text name="systemInfo"` - 50
 
-##### basic, detailed, video
+##### basic, detailed, grid, video
 * `image name="background"` - 0
 * Extra Elements `extra="true"` - 10
 * `textlist name="gamelist"` - 20
@@ -471,6 +471,8 @@ Reference
 	- Displays the name of the system.  Only present if no "logo" image is specified.  Displayed at the top of the screen, centered by default.
 * `image name="logo"` - ALL
 	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
+* `imagegrid name="gamegrid"` - ALL
+	- The gamegrid.
 
 * Metadata
 	* Labels
@@ -564,7 +566,13 @@ Can be created as an extra.
 	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.  You can also control the transparency of an image with `<color>FFFFFFAA</color>` - keeping all the pixels their normal color and only affecting the alpha channel.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
-	
+
+#### imagegrid
+
+* `pos` - type: NORMALIZED_PAIR.
+* `size` - type: NORMALIZED_PAIR.
+    - The size of the grid. Take care the selected tile can go out of the grid size, so don't position the grid too close to another element or the screen border.
+
 #### video
 
 * `pos` - type: NORMALIZED_PAIR.
