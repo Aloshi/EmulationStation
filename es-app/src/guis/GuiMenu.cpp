@@ -261,6 +261,7 @@ void GuiMenu::openUISettings()
 			if(needReload)
 			{
 				CollectionSystemManager::get()->updateSystemsList();
+				ViewController::get()->goToStart();
 				ViewController::get()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
 			}
 		});
