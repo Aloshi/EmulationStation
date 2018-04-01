@@ -223,7 +223,7 @@ void ImageComponent::updateVertices()
 	}
 	if(mFlipY)
 	{
-		for(int i = 1; i < 6; i++)
+		for(int i = 0; i < 6; i++)
 			mVertices[i].tex[1] = mVertices[i].tex[1] == py ? 0 : py;
 	}
 }
