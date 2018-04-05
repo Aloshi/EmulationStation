@@ -97,6 +97,16 @@ void BasicGameListView::addPlaceholder()
 	mList.add(placeholder->getName(), placeholder, (placeholder->getType() == PLACEHOLDER));
 }
 
+std::string BasicGameListView::getQuickSystemSelectRightButton()
+{
+	return "right";
+}
+
+std::string BasicGameListView::getQuickSystemSelectLeftButton()
+{
+	return "left";
+}
+
 void BasicGameListView::launch(FileData* game)
 {
 	ViewController::get()->launch(game);

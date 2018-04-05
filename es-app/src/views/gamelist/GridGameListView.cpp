@@ -1,6 +1,7 @@
 #include "views/gamelist/GridGameListView.h"
 
 #include "views/ViewController.h"
+#include "Settings.h"
 #include "SystemData.h"
 
 GridGameListView::GridGameListView(Window* window, FileData* root) : ISimpleGameListView(window, root),
@@ -25,6 +26,16 @@ void GridGameListView::setCursor(FileData* file)
 		populateList(file->getParent()->getChildrenListToDisplay());
 		mGrid.setCursor(file);
 	}
+}
+
+std::string GridGameListView::getQuickSystemSelectRightButton()
+{
+	return "pagedown"; //rightshoulder
+}
+
+std::string GridGameListView::getQuickSystemSelectLeftButton()
+{
+	return "pageup"; //leftshoulder
 }
 
 bool GridGameListView::input(InputConfig* config, Input input)
@@ -88,6 +99,12 @@ void GridGameListView::remove(FileData *game, bool deleteFile)
 std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 {
 	std::vector<HelpPrompt> prompts;
+
+	if(Settings::getInstance()->getBool("QuickSystemSelect"))
+	{
+		prompts.push_back(HelpPrompt("l", "system"));
+		prompts.push_back(HelpPrompt("r", "system"));
+	}
 	prompts.push_back(HelpPrompt("up/down/left/right", "scroll"));
 	prompts.push_back(HelpPrompt("a", "launch"));
 	prompts.push_back(HelpPrompt("b", "back"));
