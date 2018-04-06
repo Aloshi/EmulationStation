@@ -306,6 +306,7 @@ You can now change the order in which elements are rendered by setting `zIndex` 
 		* `datetime name="md_lastplayed"`
 		* `text name="md_playcount"`
 		* `text name="md_description"`
+		* `text name="md_name"`
 * System Logo/Text - 50
 	* `text name="logoText"`
 	* `image name="logo"`
@@ -409,6 +410,8 @@ Reference
 			- The "playcount" metadata (number of times the game has been played).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
 			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+		* `text name="md_name"` - ALL
+			- The "name" metadata (the game name). Unlike the others metadata fields, the name is positioned offscreen by default
 
 #### video
 * `helpsystem name="help"` - ALL
@@ -460,7 +463,9 @@ Reference
 			- The "playcount" metadata (number of times the game has been played).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
 			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
-			
+		* `text name="md_name"` - ALL
+			- The "name" metadata (the game name). Unlike the others metadata fields, the name is positioned offscreen by default
+
 ---
 
 #### grid
@@ -511,6 +516,8 @@ Reference
 			- The "playcount" metadata (number of times the game has been played).
 		* `text name="md_description"` - POSITION | SIZE | FONT_PATH | FONT_SIZE | COLOR | Z_INDEX
 			- Text is the "desc" metadata.  If no `pos`/`size` is specified, will move and resize to fit under the lowest label and reach to the bottom of the screen.
+		* `text name="md_name"` - ALL
+			- The "name" metadata (the game name). Unlike the others metadata fields, the name is positioned offscreen by default
 
 ---
 
