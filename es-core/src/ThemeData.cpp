@@ -25,6 +25,9 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "tile", BOOLEAN },
 		{ "color", COLOR },
 		{ "zIndex", FLOAT } } },
+	{ "imagegrid", {
+		{ "pos", NORMALIZED_PAIR },
+		{ "size", NORMALIZED_PAIR } } },
 	{ "text", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },

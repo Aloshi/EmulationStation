@@ -38,6 +38,7 @@ public:
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Transform4x4f& parentTrans) override;
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
 
@@ -74,10 +75,10 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 
 	mEntriesDirty = true;
 
-	mSize = screen * 0.8f;
+	mSize = screen * 0.79f;
 	mMargin = screen * 0.01f;
 	mTileMaxSize = screen * 0.19f;
-	mSelectedTileMaxSize = mTileMaxSize + mMargin * 3.0f;
+	mSelectedTileMaxSize = mTileMaxSize * 1.15f;
 }
 
 template<typename T>
@@ -171,6 +172,12 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 		selectedImage->render(trans);
 
 	GuiComponent::renderChildren(trans);
+}
+
+template<typename T>
+void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
+{
+	GuiComponent::applyTheme(theme, view, element, properties);
 }
 
 template<typename T>
