@@ -21,6 +21,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	const float padding = 0.01f;
 
 	mGrid.setPosition(mSize.x() * 0.1f, mSize.y() * 0.1f);
+	mGrid.setDefaultZIndex(20);
 	mGrid.setCursorChangedCallback([&](const CursorState& /*state*/) { updateInfoPanel(); });
 	addChild(&mGrid);
 

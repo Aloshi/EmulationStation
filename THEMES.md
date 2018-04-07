@@ -281,6 +281,7 @@ You can now change the order in which elements are rendered by setting `zIndex` 
 * `image name="background"` - 0
 * Extra Elements `extra="true"` - 10
 * `textlist name="gamelist"` - 20
+* `imagegrid name="gamegrid"` - 20
 * Media
 	* `image name="md_image"` - 30
 	* `video name="md_video"` - 30
@@ -472,7 +473,11 @@ Reference
 * `image name="logo"` - ALL
 	- A header image.  If a non-empty `path` is specified, `text name="headerText"` will be hidden and this image will be, by default, displayed roughly in its place.
 * `imagegrid name="gamegrid"` - ALL
-	- The gamegrid.
+	- The gamegrid. The number of tile displayed is controlled by its size, margin and the default tile max size.
+* `gridtile name="default"` - ALL
+    - Note that many of the default gridtile parameters change the selected gridtile parameters if they are not explicitly set by the theme. For example, changing the background image of the default gridtile also change the background image of the selected gridtile. Refer to the gridtile documentation for more informations.
+* `gridtile name="selected"` - ALL
+    - See default gridtile description right above.
 
 * Metadata
 	* Labels
@@ -572,6 +577,20 @@ Can be created as an extra.
 * `pos` - type: NORMALIZED_PAIR.
 * `size` - type: NORMALIZED_PAIR.
     - The size of the grid. Take care the selected tile can go out of the grid size, so don't position the grid too close to another element or the screen border.
+* `margin` - type: NORMALIZED_PAIR.
+
+#### gridtile
+
+* `size` - type: NORMALIZED_PAIR.
+    - The size of the default gridtile is used to calculate how many tiles can fit in the imagegrid. If not explicitly set, the size of the selected gridtile is equal the size of the default gridtile * 1.2
+* `padding` - type: NORMALIZED_PAIR.
+    - The padding around the gridtile content. Default `16 16`. If not explicitly set, the selected tile padding will be equal to the default tile padding.
+* `backgroundImage` - type: PATH.
+    - If not explicitly set, the selected tile background image will be the same as the default tile background image.
+* `imageColor` - type: COLOR.
+    - The default tile image color and selected tile image color have no influence on each others.
+* `backgroundColor` - type: COLOR.
+    - The default tile background color and selected tile background color have no influence on each others.
 
 #### video
 

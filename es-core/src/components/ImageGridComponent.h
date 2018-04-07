@@ -4,6 +4,7 @@
 
 #include "components/IList.h"
 #include "resources/TextureResource.h"
+#include "GridTileComponent.h"
 
 struct ImageGridData
 {
@@ -43,15 +44,17 @@ public:
 	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
 
 private:
-	// Calculate how much tiles of size mTileMaxSize we can fit in a grid of size mSize using a margin of size mMargin
-	Vector2i getGridDimension() const
+	// Calculate how much tiles of size mTileSize we can fit in a grid of size mSize using a margin of size mMargin
+	void calcGridDimension()
 	{
-		           // GRID_SIZE = COLUMNS * TILE_SIZE + (COLUMNS - 1) * MARGIN
-		           // <=> COLUMNS = (GRID_SIZE + MARGIN) / (TILE_SIZE + MARGIN)
-		return Vector2i((int) ((mSize.x() + mMargin.x()) / (mTileMaxSize.x() + mMargin.x())),
-						(int) ((mSize.y() + mMargin.y()) / (mTileMaxSize.y() + mMargin.y())));
+		// GRID_SIZE = COLUMNS * TILE_SIZE + (COLUMNS - 1) * MARGIN
+		// <=> COLUMNS = (GRID_SIZE + MARGIN) / (TILE_SIZE + MARGIN)
+		Vector2f gridDimension = (mSize + mMargin) / (mTileSize + mMargin);
+
+		mGridDimension = Vector2i(gridDimension.x(), gridDimension.y());
 	};
 
+	int getStartPosition();
 	void buildImages();
 	void updateImages();
 
@@ -62,10 +65,12 @@ private:
 	bool mEntriesDirty;
 
 	Vector2f mMargin;
-	Vector2f mTileMaxSize;
-	Vector2f mSelectedTileMaxSize;
+	Vector2f mTileSize;
+	Vector2i mGridDimension;
 
-	std::vector<ImageComponent> mImages;
+	std::vector< std::shared_ptr<GridTileComponent> > mTiles;
+
+	std::shared_ptr<ThemeData> mTheme;
 };
 
 template<typename T>
@@ -75,10 +80,11 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 
 	mEntriesDirty = true;
 
-	mSize = screen * 0.79f;
-	mMargin = screen * 0.01f;
-	mTileMaxSize = screen * 0.19f;
-	mSelectedTileMaxSize = mTileMaxSize * 1.15f;
+	mSize = screen * 0.80f;
+	mMargin = screen * 0.07f;
+	mTileSize = GridTileComponent::getDefaultTileSize();
+
+	calcGridDimension();
 }
 
 template<typename T>
@@ -109,7 +115,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 
 		if(dir != Vector2i::Zero())
 		{
-			listInput(dir.x() + dir.y() * getGridDimension().x());
+			listInput(dir.x() + dir.y() * mGridDimension.x());
 			return true;
 		}
 	}else{
@@ -126,6 +132,9 @@ template<typename T>
 void ImageGridComponent<T>::update(int deltaTime)
 {
 	listUpdate(deltaTime);
+
+	for(auto it = mTiles.begin(); it != mTiles.end(); it++)
+		(*it)->update();
 }
 
 template<typename T>
@@ -140,36 +149,20 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 		mEntriesDirty = false;
 	}
 
-	// Dirty solution (took from updateImages function) to keep the selected image and render it later (on top of the others)
-	// Will be changed for a cleaner way with the introduction of GridTileComponent
-	Vector2i gridDimension = getGridDimension();
-
-	int cursorRow = mCursor / gridDimension.x();
-
-	int start = (cursorRow - (gridDimension.y() / 2)) * gridDimension.x();
-
-	//if we're at the end put the row as close as we can and no higher
-	if(start + (gridDimension.x() * gridDimension.y()) >= (int)mEntries.size())
-		start = gridDimension.x() * ((int)mEntries.size()/gridDimension.x() - gridDimension.y() + 1);
-
-	if(start < 0)
-		start = 0;
-
-	unsigned int i = (unsigned int)start;
-	ImageComponent* selectedImage = NULL;
-	for(auto it = mImages.begin(); it != mImages.end(); it++)
+	std::shared_ptr<GridTileComponent> selectedTile = NULL;
+	for(auto it = mTiles.begin(); it != mTiles.end(); it++)
 	{
 		// If it's the selected image, keep it for later, otherwise render it now
-		if(i == (unsigned int)mCursor)
-			selectedImage = it.base();
+		std::shared_ptr<GridTileComponent> tile = (*it);
+		if(tile->isSelected())
+			selectedTile = tile;
 		else
-			it->render(trans);
-		i++;
+			tile->render(trans);
 	}
 
 	// Render the selected image on top of the others
-	if (selectedImage != NULL)
-		selectedImage->render(trans);
+	if (selectedTile != NULL)
+		selectedTile->render(trans);
 
 	GuiComponent::renderChildren(trans);
 }
@@ -178,6 +171,27 @@ template<typename T>
 void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
 	GuiComponent::applyTheme(theme, view, element, properties);
+
+	// Keep the theme pointer to apply it on the tiles later on
+	mTheme = theme;
+
+	Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+
+	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "imagegrid");
+
+	if (elem && elem->has("margin"))
+		mMargin = elem->get<Vector2f>("margin") * screen;
+
+	// We still need to manually get the grid tile size here,
+	// so we can recalculate the new grid dimension, and THEN (re)build the tiles
+	elem = theme->getElement(view, "default", "gridtile");
+
+	mTileSize = elem && elem->has("size") ?
+				elem->get<Vector2f>("size") * screen :
+				GridTileComponent::getDefaultTileSize();
+
+	// Recalculate grid dimension after theme changed
+	calcGridDimension();
 }
 
 template<typename T>
@@ -196,77 +210,83 @@ void ImageGridComponent<T>::onSizeChanged()
 	updateImages();
 }
 
-// Create and position imagecomponents (mImages)
+// Create and position tiles (mTiles)
 template<typename T>
 void ImageGridComponent<T>::buildImages()
 {
-	mImages.clear();
+	mTiles.clear();
 
-	Vector2i gridDimension = getGridDimension();
-	Vector2f startPosition = mTileMaxSize / 2;
-	Vector2f tileDistance = mTileMaxSize + mMargin;
+	Vector2f startPosition = mTileSize / 2;
+	Vector2f tileDistance = mTileSize + mMargin;
 
 	// Layout tile size and position
-	for(int y = 0; y < gridDimension.y(); y++)
+	for(int y = 0; y < mGridDimension.y(); y++)
 	{
-		for(int x = 0; x < gridDimension.x(); x++)
+		for(int x = 0; x < mGridDimension.x(); x++)
 		{
 			// Create tiles
-			mImages.push_back(ImageComponent(mWindow));
-			ImageComponent& image = mImages.at(y * gridDimension.x() + x);
+			auto tile = std::make_shared<GridTileComponent>(mWindow);
 
-			image.setPosition(x * tileDistance.x() + startPosition.x(), y * tileDistance.y() + startPosition.y());
-			image.setOrigin(0.5f, 0.5f);
-			image.setMaxSize(mTileMaxSize);
-			image.setImage("");
+			tile->setPosition(x * tileDistance.x() + startPosition.x(), y * tileDistance.y() + startPosition.y());
+			tile->setOrigin(0.5f, 0.5f);
+			tile->setImage("");
+
+			if (mTheme)
+				tile->applyTheme(mTheme, "grid", "gridtile", ThemeFlags::ALL);
+
+			mTiles.push_back(tile);
 		}
 	}
 }
 
+// Return the starting position (the number of the game which will be displayed on top left of the screen)
 template<typename T>
-void ImageGridComponent<T>::updateImages()
+int ImageGridComponent<T>::getStartPosition()
 {
-	if(mImages.empty())
-		buildImages();
+	int cursorRow = mCursor / mGridDimension.x();
 
-	Vector2i gridDimension = getGridDimension();
-
-	int cursorRow = mCursor / gridDimension.x();
-
-	int start = (cursorRow - (gridDimension.y() / 2)) * gridDimension.x();
+	int start = (cursorRow - (mGridDimension.y() / 2)) * mGridDimension.x();
 
 	// If we are at the end put the row as close as we can and no higher, using the following formula
 	// Where E is the nb of entries, X the grid x dim (nb of column), Y the grid y dim (nb of line)
 	// start = first tile of last row - nb column * (nb line - 1)
 	//       = (E - 1) / X * X        - X * (Y - 1)
 	//       = X * ((E - 1) / X - Y + 1)
-	if(start + (gridDimension.x() * gridDimension.y()) >= (int)mEntries.size())
-		start = gridDimension.x() * (((int)mEntries.size() - 1) / gridDimension.x() - gridDimension.y() + 1);
+	if(start + (mGridDimension.x() * mGridDimension.y()) >= (int)mEntries.size())
+		start = mGridDimension.x() * (((int)mEntries.size() - 1) / mGridDimension.x() - mGridDimension.y() + 1);
 
 	if(start < 0)
 		start = 0;
 
-	unsigned int i = (unsigned int)start;
-	for(unsigned int img = 0; img < mImages.size(); img++)
+	return start;
+}
+
+template<typename T>
+void ImageGridComponent<T>::updateImages()
+{
+	if(mTiles.empty())
+		buildImages();
+
+	int pos = getStartPosition();
+
+	for(int img = 0; img < mTiles.size(); img++)
 	{
-		ImageComponent& image = mImages.at(img);
-		if(i >= (unsigned int)size())
+		std::shared_ptr<GridTileComponent> tile = mTiles.at(img);
+
+		// If we have more tiles than we have to display images on screen, hide them
+		if(pos >= size())
 		{
-			image.setImage("");
+			tile->setSelected(false);
+			tile->setImage("");
+			tile->setVisible(false);
 			continue;
 		}
 
-		if(i == (unsigned int)mCursor)
-		{
-			image.setColorShift(0xFFFFFFFF);
-			image.setMaxSize(mSelectedTileMaxSize);
-		}else{
-			image.setColorShift(0xAAAAAABB);
-			image.setMaxSize(mTileMaxSize);
-		}
+		tile->setSelected(pos == mCursor);
+		tile->setImage(mEntries.at(pos).data.texture);
+		tile->setVisible(true);
 
-		image.setImage(mEntries.at(i).data.texture);
-		i++;
+		pos++;
 	}
 }
 
