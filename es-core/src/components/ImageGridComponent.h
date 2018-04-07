@@ -39,6 +39,8 @@ public:
 	void update(int deltaTime) override;
 	void render(const Transform4x4f& parentTrans) override;
 
+	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
+
 private:
 	// Calculate how much tiles of size mTileMaxSize we can fit in a grid of size mSize using a margin of size mMargin
 	Vector2i getGridDimension() const
@@ -53,6 +55,8 @@ private:
 	void updateImages();
 
 	virtual void onCursorChanged(const CursorState& state);
+
+	std::function<void(CursorState state)> mCursorChangedCallback;
 
 	bool mEntriesDirty;
 
@@ -170,9 +174,12 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 }
 
 template<typename T>
-void ImageGridComponent<T>::onCursorChanged(const CursorState& /*state*/)
+void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 {
 	updateImages();
+
+	if(mCursorChangedCallback)
+		mCursorChangedCallback(state);
 }
 
 template<typename T>
