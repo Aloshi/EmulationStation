@@ -136,13 +136,16 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}
 		}else if (config->isMappedTo("x", input))
 		{
-			// go to random system game
-			FileData* randomGame = getCursor()->getSystem()->getRandomGame();
-			if (randomGame)
+			if (mRoot->getSystem()->isGameSystem())
 			{
-				setCursor(randomGame);
+				// go to random system game
+				FileData* randomGame = getCursor()->getSystem()->getRandomGame();
+				if (randomGame)
+				{
+					setCursor(randomGame);
+				}
+				return true;
 			}
-			return true;
 		}else if (config->isMappedTo("y", input) && !(UIModeController::getInstance()->isUIModeKid()))
 		{
 			if(mRoot->getSystem()->isGameSystem())
