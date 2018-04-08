@@ -28,7 +28,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 	{ "imagegrid", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
-		{ "margin", NORMALIZED_PAIR } } },
+		{ "margin", NORMALIZED_PAIR },
+		{ "scrollDirection", STRING } } },
 	{ "gridtile", {
 		{ "size", NORMALIZED_PAIR },
 		{ "padding", NORMALIZED_PAIR },

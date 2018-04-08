@@ -6,6 +6,12 @@
 #include "resources/TextureResource.h"
 #include "GridTileComponent.h"
 
+enum ScrollDirection
+{
+	SCROLL_VERTICALLY,
+	SCROLL_HORIZONTALLY
+};
+
 struct ImageGridData
 {
 	std::shared_ptr<TextureResource> texture;
@@ -51,7 +57,9 @@ private:
 		// <=> COLUMNS = (GRID_SIZE + MARGIN) / (TILE_SIZE + MARGIN)
 		Vector2f gridDimension = (mSize + mMargin) / (mTileSize + mMargin);
 
-		mGridDimension = Vector2i(gridDimension.x(), gridDimension.y());
+		mGridDimension = mScrollDirection == SCROLL_VERTICALLY ?
+						 Vector2i(gridDimension.x(), gridDimension.y()) :
+						 Vector2i(gridDimension.y(), gridDimension.x());
 	};
 
 	int getStartPosition();
@@ -71,6 +79,8 @@ private:
 	std::vector< std::shared_ptr<GridTileComponent> > mTiles;
 
 	std::shared_ptr<ThemeData> mTheme;
+
+	ScrollDirection mScrollDirection;
 };
 
 template<typename T>
@@ -85,6 +95,8 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 	mTileSize = GridTileComponent::getDefaultTileSize();
 
 	calcGridDimension();
+
+	mScrollDirection = SCROLL_VERTICALLY;
 }
 
 template<typename T>
@@ -105,13 +117,13 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 	{
 		Vector2i dir = Vector2i::Zero();
 		if(config->isMappedTo("up", input))
-			dir[1] = -1;
+			dir[1 ^ mScrollDirection] = -1;
 		else if(config->isMappedTo("down", input))
-			dir[1] = 1;
+			dir[1 ^ mScrollDirection] = 1;
 		else if(config->isMappedTo("left", input))
-			dir[0] = -1;
+			dir[0 ^ mScrollDirection] = -1;
 		else if(config->isMappedTo("right", input))
-			dir[0] = 1;
+			dir[0 ^ mScrollDirection] = 1;
 
 		if(dir != Vector2i::Zero())
 		{
@@ -178,9 +190,14 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 	Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "imagegrid");
+	if (elem)
+	{
+		if (elem->has("margin"))
+			mMargin = elem->get<Vector2f>("margin") * screen;
 
-	if (elem && elem->has("margin"))
-		mMargin = elem->get<Vector2f>("margin") * screen;
+		if (elem->has("scrollDirection"))
+			mScrollDirection = (ScrollDirection)(elem->get<std::string>("scrollDirection") == "horizontal");
+	}
 
 	// We still need to manually get the grid tile size here,
 	// so we can recalculate the new grid dimension, and THEN (re)build the tiles
@@ -219,6 +236,8 @@ void ImageGridComponent<T>::buildImages()
 	Vector2f startPosition = mTileSize / 2;
 	Vector2f tileDistance = mTileSize + mMargin;
 
+	int X, Y;
+
 	// Layout tile size and position
 	for(int y = 0; y < mGridDimension.y(); y++)
 	{
@@ -227,7 +246,12 @@ void ImageGridComponent<T>::buildImages()
 			// Create tiles
 			auto tile = std::make_shared<GridTileComponent>(mWindow);
 
-			tile->setPosition(x * tileDistance.x() + startPosition.x(), y * tileDistance.y() + startPosition.y());
+			// In Vertical mod, tiles are ordered from left to right, then from top to bottom
+			// In Horizontal mod, tiles are ordered from top to bottom, then from left to right
+			X = mScrollDirection == SCROLL_VERTICALLY ? x : y;
+			Y = mScrollDirection == SCROLL_VERTICALLY ? y : x;
+
+			tile->setPosition(X * tileDistance.x() + startPosition.x(), Y * tileDistance.y() + startPosition.y());
 			tile->setOrigin(0.5f, 0.5f);
 			tile->setImage("");
 
