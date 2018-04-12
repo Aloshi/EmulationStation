@@ -9,6 +9,7 @@
 #include "platform.h"
 #include "Settings.h"
 #include "ThemeData.h"
+#include "views/UIModeController.h"
 #include <pugixml/src/pugixml.hpp>
 #include <fstream>
 #ifdef WIN32
@@ -338,6 +339,13 @@ std::string SystemData::getConfigPath(bool forWrite)
 	return "/etc/emulationstation/es_systems.cfg";
 }
 
+bool SystemData::isVisible()
+{
+   return (getDisplayedGameCount() > 0 || 
+           (UIModeController::getInstance()->isUIModeFull() && mIsCollectionSystem) ||
+           (mIsCollectionSystem && mName == "favorites"));
+}
+
 SystemData* SystemData::getNext() const
 {
 	std::vector<SystemData*>::const_iterator it = getIterator();
@@ -346,7 +354,7 @@ SystemData* SystemData::getNext() const
 		it++;
 		if (it == sSystemVector.cend())
 			it = sSystemVector.cbegin();
-	} while ((*it)->getDisplayedGameCount() == 0); 
+	} while (!(*it)->isVisible());
 	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
 
 	return *it;
@@ -360,7 +368,7 @@ SystemData* SystemData::getPrev() const
 		it++;
 		if (it == sSystemVector.crend())
 			it = sSystemVector.crbegin();
-	} while ((*it)->getDisplayedGameCount() == 0);
+	} while (!(*it)->isVisible());
 	// as we are starting in a valid gamelistview, this will always succeed, even if we have to come full circle.
 
 	return *it;
