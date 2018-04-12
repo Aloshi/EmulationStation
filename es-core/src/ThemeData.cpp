@@ -27,7 +27,14 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "zIndex", FLOAT } } },
 	{ "imagegrid", {
 		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR } } },
+		{ "size", NORMALIZED_PAIR },
+		{ "margin", NORMALIZED_PAIR } } },
+	{ "gridtile", {
+		{ "size", NORMALIZED_PAIR },
+		{ "padding", NORMALIZED_PAIR },
+		{ "backgroundImage", PATH },
+		{ "imageColor", COLOR },
+		{ "backgroundColor", COLOR } } },
 	{ "text", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
@@ -128,7 +135,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 };
 
 #define MINIMUM_THEME_FORMAT_VERSION 3
-#define CURRENT_THEME_FORMAT_VERSION 5
+#define CURRENT_THEME_FORMAT_VERSION 6
 
 // helper
 unsigned int getHexColor(const char* str)

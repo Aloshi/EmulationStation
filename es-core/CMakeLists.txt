@@ -33,6 +33,7 @@ set(CORE_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentList.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.h
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/GridTileComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/IList.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.h
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageGridComponent.h
@@ -106,6 +107,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ComponentList.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/DateTimeComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/HelpComponent.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/components/GridTileComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/ImageComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/MenuComponent.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/components/NinePatchComponent.cpp
