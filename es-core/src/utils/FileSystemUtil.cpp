@@ -197,6 +197,18 @@ namespace Utils
 
 		} // getExePath
 
+		std::string getPreferredPath(const std::string& _path)
+		{
+			std::string path   = _path;
+			size_t      offset = std::string::npos;
+#if defined(_WIN32)
+			// convert '/' to '\\'
+			while((offset = path.find('/')) != std::string::npos)
+				path.replace(offset, 1, "\\");
+#endif // _WIN32
+			return path;
+		}
+
 		std::string getGenericPath(const std::string& _path)
 		{
 			std::string path   = _path;
@@ -225,7 +237,7 @@ namespace Utils
 
 #if defined(_WIN32)
 			// windows escapes stuff by just putting everything in quotes
-			return '"' + path + '"';
+			return '"' + getPreferredPath(path) + '"';
 #else // _WIN32
 			// insert a backslash before most characters that would mess up a bash path
 			const char* invalidChars = "\\ '\"!$^&*(){}[]?;<>";

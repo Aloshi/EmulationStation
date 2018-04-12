@@ -16,6 +16,7 @@ namespace Utils
 		std::string getHomePath        ();
 		std::string getCWDPath         ();
 		std::string getExePath         ();
+		std::string getPreferredPath   (const std::string& _path);
 		std::string getGenericPath     (const std::string& _path);
 		std::string getEscapedPath     (const std::string& _path);
 		std::string getCanonicalPath   (const std::string& _path);

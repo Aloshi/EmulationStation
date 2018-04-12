@@ -973,8 +973,7 @@ std::vector<std::string> CollectionSystemManager::getCollectionsFromConfigFolder
 			if (Utils::FileSystem::isRegularFile(*it))
 			{
 				// it's a file
-				std::string file = *it;
-				std::string filename = file.substr(configPath.size());
+				std::string filename = Utils::FileSystem::getFileName(*it);
 
 				// need to confirm filename matches config format
 				if (filename != "custom-.cfg" && Utils::String::startsWith(filename, "custom-") && Utils::String::endsWith(filename, ".cfg"))
@@ -1041,7 +1040,7 @@ std::string getCustomCollectionConfigPath(std::string collectionName)
 
 std::string getCollectionsFolder()
 {
-	return Utils::FileSystem::getHomePath() + "/.emulationstation/collections/";
+	return Utils::FileSystem::getGenericPath(Utils::FileSystem::getHomePath() + "/.emulationstation/collections/");
 }
 
 bool systemSort(SystemData* sys1, SystemData* sys2)
