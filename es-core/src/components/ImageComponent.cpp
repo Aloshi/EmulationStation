@@ -14,9 +14,15 @@ Vector2i ImageComponent::getTextureSize() const
 		return Vector2i::Zero();
 }
 
+Vector2f ImageComponent::getSize() const
+{
+	return GuiComponent::getSize() * (mBottomRightCrop - mTopLeftCrop);
+}
+
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
-	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0), mFading(false), mRotateByTargetSize(false)
+	mTargetIsMax(false), mTargetIsMin(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
+	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0), mFading(false), mRotateByTargetSize(false),
+	mTopLeftCrop(0.0f, 0.0f), mBottomRightCrop(1.0f, 1.0f)
 {
 	updateColors();
 }
@@ -57,6 +63,31 @@ void ImageComponent::resize()
 			}else{
 				mSize[0] *= resizeScale.y();
 				mSize[1] *= resizeScale.y();
+			}
+
+			// for SVG rasterization, always calculate width from rounded height (see comment above)
+			mSize[1] = Math::round(mSize[1]);
+			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
+
+		}else if(mTargetIsMin)
+		{
+			mSize = textureSize;
+
+			Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
+
+			if(resizeScale.x() > resizeScale.y())
+			{
+				mSize[0] *= resizeScale.x();
+				mSize[1] *= resizeScale.x();
+
+				float cropPercent = (mSize.y() - mTargetSize.y()) / (mSize.y() * 2);
+				crop(0, cropPercent, 0, cropPercent);
+			}else{
+				mSize[0] *= resizeScale.y();
+				mSize[1] *= resizeScale.y();
+
+				float cropPercent = (mSize.x() - mTargetSize.x()) / (mSize.x() * 2);
+				crop(cropPercent, 0, cropPercent, 0);
 			}
 
 			// for SVG rasterization, always calculate width from rounded height (see comment above)
@@ -132,6 +163,7 @@ void ImageComponent::setResize(float width, float height)
 {
 	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = false;
+	mTargetIsMin = false;
 	resize();
 }
 
@@ -139,6 +171,15 @@ void ImageComponent::setMaxSize(float width, float height)
 {
 	mTargetSize = Vector2f(width, height);
 	mTargetIsMax = true;
+	mTargetIsMin = false;
+	resize();
+}
+
+void ImageComponent::setMinSize(float width, float height)
+{
+	mTargetSize = Vector2f(width, height);
+	mTargetIsMax = false;
+	mTargetIsMin = true;
 	resize();
 }
 
@@ -150,6 +191,43 @@ Vector2f ImageComponent::getRotationSize() const
 void ImageComponent::setRotateByTargetSize(bool rotate)
 {
 	mRotateByTargetSize = rotate;
+}
+
+void ImageComponent::cropLeft(float percent)
+{
+	assert(percent >= 0.0f && percent <= 1.0f);
+	mTopLeftCrop.x() = percent;
+}
+
+void ImageComponent::cropTop(float percent)
+{
+	assert(percent >= 0.0f && percent <= 1.0f);
+	mTopLeftCrop.y() = percent;
+}
+
+void ImageComponent::cropRight(float percent)
+{
+	assert(percent >= 0.0f && percent <= 1.0f);
+	mBottomRightCrop.x() = 1.0f - percent;
+}
+
+void ImageComponent::cropBot(float percent)
+{
+	assert(percent >= 0.0f && percent <= 1.0f);
+	mBottomRightCrop.y() = 1.0f - percent;
+}
+
+void ImageComponent::crop(float left, float top, float right, float bot)
+{
+	cropLeft(left);
+	cropTop(top);
+	cropRight(right);
+	cropBot(bot);
+}
+
+void ImageComponent::uncrop()
+{
+	crop(0, 0, 0, 0);
 }
 
 void ImageComponent::setFlipX(bool flip)
@@ -187,8 +265,9 @@ void ImageComponent::updateVertices()
 
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
-	Vector2f topLeft(0.0, 0.0);
-	Vector2f bottomRight(Math::round(mSize.x()), Math::round(mSize.y()));
+	Vector2f size(Math::round(mSize.x()), Math::round(mSize.y()));
+	Vector2f topLeft(size * mTopLeftCrop);
+	Vector2f bottomRight(size * mBottomRightCrop);
 
 	mVertices[0].pos = Vector2f(topLeft.x(), topLeft.y());
 	mVertices[1].pos = Vector2f(topLeft.x(), bottomRight.y());
@@ -208,23 +287,23 @@ void ImageComponent::updateVertices()
 		py = 1;
 	}
 
-	mVertices[0].tex = Vector2f(0, py);
-	mVertices[1].tex = Vector2f(0, 0);
-	mVertices[2].tex = Vector2f(px, py);
+	mVertices[0].tex = Vector2f(mTopLeftCrop.x(), py - mTopLeftCrop.y());
+	mVertices[1].tex = Vector2f(mTopLeftCrop.x(), 1 - mBottomRightCrop.y());
+	mVertices[2].tex = Vector2f(px * mBottomRightCrop.x(), py - mTopLeftCrop.y());
 
-	mVertices[3].tex = Vector2f(px, py);
-	mVertices[4].tex = Vector2f(0, 0);
-	mVertices[5].tex = Vector2f(px, 0);
+	mVertices[3].tex = Vector2f(px * mBottomRightCrop.x(), py - mTopLeftCrop.y());
+	mVertices[4].tex = Vector2f(mTopLeftCrop.x(), 1 - mBottomRightCrop.y());
+	mVertices[5].tex = Vector2f(px * mBottomRightCrop.x(), 1 - mBottomRightCrop.y());
 
 	if(mFlipX)
 	{
 		for(int i = 0; i < 6; i++)
-			mVertices[i].tex[0] = mVertices[i].tex[0] == px ? 0 : px;
+			mVertices[i].tex[0] = px - mVertices[i].tex[0];
 	}
 	if(mFlipY)
 	{
 		for(int i = 0; i < 6; i++)
-			mVertices[i].tex[1] = mVertices[i].tex[1] == py ? 0 : py;
+			mVertices[i].tex[1] = py - mVertices[i].tex[1];
 	}
 }
 
@@ -352,6 +431,8 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 			setResize(elem->get<Vector2f>("size") * scale);
 		else if(elem->has("maxSize"))
 			setMaxSize(elem->get<Vector2f>("maxSize") * scale);
+		else if(elem->has("minSize"))
+			setMinSize(elem->get<Vector2f>("minSize") * scale);
 	}
 
 	// position + size also implies origin
