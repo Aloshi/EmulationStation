@@ -578,6 +578,8 @@ Can be created as an extra.
 * `size` - type: NORMALIZED_PAIR.
     - The size of the grid. Take care the selected tile can go out of the grid size, so don't position the grid too close to another element or the screen border.
 * `margin` - type: NORMALIZED_PAIR.
+* `scrollDirection` - type: STRING.
+    - `vertical` by default, can also be set to `horizontal`. Not that in `horizontal` mod, the tiles are ordered from top to bottom, then from left to right.
 
 #### gridtile
 
