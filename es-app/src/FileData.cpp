@@ -258,7 +258,7 @@ void FileData::launchGame(Window* window)
 
 	const std::string rom      = Utils::FileSystem::getEscapedPath(getPath());
 	const std::string basename = Utils::FileSystem::getStem(getPath());
-	const std::string rom_raw  = getPath();
+	const std::string rom_raw  = Utils::FileSystem::getPreferredPath(getPath());
 
 	command = Utils::String::replace(command, "%ROM%", rom);
 	command = Utils::String::replace(command, "%BASENAME%", basename);
