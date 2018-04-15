@@ -104,6 +104,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "path", PATH } } },
 	{ "helpsystem", {
 		{ "pos", NORMALIZED_PAIR },
+		{ "origin", NORMALIZED_PAIR },
 		{ "textColor", COLOR },
 		{ "iconColor", COLOR },
 		{ "fontPath", PATH },
