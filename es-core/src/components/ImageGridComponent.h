@@ -2,6 +2,7 @@
 #ifndef ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 #define ES_CORE_COMPONENTS_IMAGE_GRID_COMPONENT_H
 
+#include "Log.h"
 #include "components/IList.h"
 #include "resources/TextureResource.h"
 #include "GridTileComponent.h"
@@ -61,6 +62,8 @@ private:
 
 	// IMAGES & ENTRIES
 	bool mEntriesDirty;
+	std::shared_ptr<TextureResource> mDefaultGameTexture;
+	std::shared_ptr<TextureResource> mDefaultFolderTexture;
 
 	// TILES
 	Vector2f mMargin;
@@ -80,6 +83,8 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 	Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	mEntriesDirty = true;
+	mDefaultGameTexture = TextureResource::get(":/blank_game.png");
+	mDefaultFolderTexture = TextureResource::get(":/folder.png");
 
 	mSize = screen * 0.80f;
 	mMargin = screen * 0.07f;
@@ -96,7 +101,21 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	typename IList<ImageGridData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
-	entry.data.texture = ResourceManager::getInstance()->fileExists(imagePath) ? TextureResource::get(imagePath) : TextureResource::get(":/button.png");
+
+	if (ResourceManager::getInstance()->fileExists(imagePath))
+	{
+		entry.data.texture = TextureResource::get(imagePath);
+	}
+	else
+	{
+		// FileType::FOLDER = 2, but FileData is our template parameter T,
+		// so we don't want to bring that dependence to FileData here
+		if (obj->getType() == 2)
+			entry.data.texture = mDefaultFolderTexture;
+		else
+			entry.data.texture = mDefaultGameTexture;
+	}
+
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
 }
@@ -189,6 +208,50 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 
 		if (elem->has("scrollDirection"))
 			mScrollDirection = (ScrollDirection)(elem->get<std::string>("scrollDirection") == "horizontal");
+
+		if (elem->has("gameImage"))
+		{
+			std::string path = elem->get<std::string>("gameImage");
+
+			if (!ResourceManager::getInstance()->fileExists(path))
+				LOG(LogWarning) << "Could not replace default game image, check path: " << path;
+			else
+			{
+				std::shared_ptr<TextureResource> oldDefaultGameTexture = mDefaultGameTexture;
+
+				mDefaultGameTexture = TextureResource::get(path);
+
+				// mEntries are already loaded at this point,
+				// so we need to update them with new game image texture
+				for (auto it = mEntries.begin(); it != mEntries.end(); it++)
+				{
+					if ((*it).data.texture == oldDefaultGameTexture)
+						(*it).data.texture = mDefaultGameTexture;
+				}
+			}
+		}
+
+		if (elem->has("folderImage"))
+		{
+			std::string path = elem->get<std::string>("folderImage");
+
+			if (!ResourceManager::getInstance()->fileExists(path))
+				LOG(LogWarning) << "Could not replace default folder image, check path: " << path;
+			else
+			{
+				std::shared_ptr<TextureResource> oldDefaultFolderTexture = mDefaultFolderTexture;
+
+				mDefaultFolderTexture = TextureResource::get(path);
+
+				// mEntries are already loaded at this point,
+				// so we need to update them with new folder image texture
+				for (auto it = mEntries.begin(); it != mEntries.end(); it++)
+				{
+					if ((*it).data.texture == oldDefaultFolderTexture)
+						(*it).data.texture = mDefaultFolderTexture;
+				}
+			}
+		}
 	}
 
 	// We still need to manually get the grid tile size here,
