@@ -85,9 +85,9 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 	mMargin = screen * 0.07f;
 	mTileSize = GridTileComponent::getDefaultTileSize();
 
-	calcGridDimension();
-
 	mScrollDirection = SCROLL_VERTICALLY;
+
+	calcGridDimension();
 }
 
 template<typename T>
