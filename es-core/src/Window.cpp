@@ -209,7 +209,7 @@ void Window::update(int deltaTime)
 			// vram
 			float textureVramUsageMb = TextureResource::getTotalMemUsage() / 1000.0f / 1000.0f;
 			float textureTotalUsageMb = TextureResource::getTotalTextureSize() / 1000.0f / 1000.0f;
-			float fontVramUsageMb = Font::getTotalMemUsage() / 1000.0f / 1000.0f;;
+			float fontVramUsageMb = Font::getTotalMemUsage() / 1000.0f / 1000.0f;
 
 			ss << "\nFont VRAM: " << fontVramUsageMb << " Tex VRAM: " << textureVramUsageMb <<
 				  " Tex Max: " << textureTotalUsageMb;
