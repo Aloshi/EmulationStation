@@ -274,10 +274,7 @@ void GuiMenu::openUISettings()
 	styles.push_back("basic");
 	styles.push_back("detailed");
 	styles.push_back("video");
-
-	// Temporary "hack" so ES don't crash when leaving this menu after he enabled the grid by tweaking config file
-	if (Settings::getInstance()->getString("GamelistViewStyle") == "grid")
-		styles.push_back("grid");
+	styles.push_back("grid");
 
 	for (auto it = styles.cbegin(); it != styles.cend(); it++)
 		gamelist_style->add(*it, *it, Settings::getInstance()->getString("GamelistViewStyle") == *it);
