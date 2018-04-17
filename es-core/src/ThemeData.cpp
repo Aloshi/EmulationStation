@@ -29,6 +29,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
 		{ "margin", NORMALIZED_PAIR },
+		{ "gameImage", PATH },
+		{ "folderImage", PATH },
 		{ "scrollDirection", STRING } } },
 	{ "gridtile", {
 		{ "size", NORMALIZED_PAIR },
