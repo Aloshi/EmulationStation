@@ -37,9 +37,11 @@ public:
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
-private:
-	Vector2f getCornerSize() const;
+	const Vector2f& getCornerSize() const;
+	void setCornerSize(int sizeX, int sizeY);
+	inline void setCornerSize(const Vector2f& size) { setCornerSize(size.x(), size.y()); }
 
+private:
 	void buildVertices();
 	void updateColors();
 
@@ -53,6 +55,7 @@ private:
 	GLubyte* mColors;
 
 	std::string mPath;
+	Vector2f mCornerSize;
 	unsigned int mEdgeColor;
 	unsigned int mCenterColor;
 	std::shared_ptr<TextureResource> mTexture;
