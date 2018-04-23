@@ -281,6 +281,7 @@ void VideoGameListView::updateInfoPanel()
 	comps.push_back(mVideo);
 	comps.push_back(&mDescription);
 	comps.push_back(&mImage);
+	comps.push_back(&mName);
 	std::vector<TextComponent*> labels = getMDLabels();
 	comps.insert(comps.cend(), labels.cbegin(), labels.cend());
 
