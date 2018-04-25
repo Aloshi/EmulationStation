@@ -82,6 +82,14 @@ const std::string& FileData::getName()
 	return metadata.get("name");
 }
 
+const std::string& FileData::getSortName()
+{
+	if (metadata.get("sortname").empty())
+		return metadata.get("name");
+	else
+		return metadata.get("sortname");
+}
+
 const std::vector<FileData*>& FileData::getChildrenListToDisplay() {
 
 	FileFilterIndex* idx = CollectionSystemManager::get()->getSystemToView(mSystem)->getIndex();
