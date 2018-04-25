@@ -37,7 +37,7 @@ or
 ```bash
 git clone https://github.com/RetroPie/EmulationStation.git
 cd EmulationStation
-git submodule init --update
+git submodule update --init
 ```
 
 Then, generate and build the Makefile with CMake:
