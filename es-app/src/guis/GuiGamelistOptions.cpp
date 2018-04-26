@@ -30,7 +30,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		char startChar = '!';
 		char endChar = '_';
 
-		char curChar = (char)toupper(getGamelist()->getCursor()->getName()[0]);
+		char curChar = (char)toupper(getGamelist()->getCursor()->getSortName()[0]);
 		if(curChar < startChar || curChar > endChar)
 			curChar = startChar;
 
@@ -41,7 +41,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 			const std::vector<FileData*>& files = getGamelist()->getCursor()->getParent()->getChildrenListToDisplay();
 			for (auto file : files)
 			{
-				char candidate = (char)toupper(file->getName()[0]);
+				char candidate = (char)toupper(file->getSortName()[0]);
 				if (c == candidate)
 				{
 					mJumpToLetterList->add(std::string(1, c), c, c == curChar);
@@ -218,11 +218,11 @@ void GuiGamelistOptions::jumpToLetter()
 		if(files.at(mid)->getName().empty())
 			continue;
 
-		char checkLetter = (char)toupper(files.at(mid)->getName()[0]);
+		char checkLetter = (char)toupper(files.at(mid)->getSortName()[0]);
 
 		if(checkLetter < letter)
 			min = mid + 1;
-		else if(checkLetter > letter || (mid > 0 && (letter == toupper(files.at(mid - 1)->getName()[0]))))
+		else if(checkLetter > letter || (mid > 0 && (letter == toupper(files.at(mid - 1)->getSortName()[0]))))
 			max = mid - 1;
 		else
 			break; //exact match found
