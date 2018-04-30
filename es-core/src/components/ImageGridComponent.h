@@ -91,8 +91,6 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 	mTileSize = GridTileComponent::getDefaultTileSize();
 
 	mScrollDirection = SCROLL_VERTICALLY;
-
-	calcGridDimension();
 }
 
 template<typename T>
@@ -166,7 +164,6 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 
 	if(mEntriesDirty)
 	{
-		buildTiles();
 		updateTiles();
 		mEntriesDirty = false;
 	}
@@ -193,7 +190,10 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 template<typename T>
 void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
-	GuiComponent::applyTheme(theme, view, element, properties);
+	using namespace ThemeFlags;
+
+	// Apply theme to GuiComponent but not size property, which will be applied at the end of this function
+	GuiComponent::applyTheme(theme, view, element, properties ^ SIZE);
 
 	// Keep the theme pointer to apply it on the tiles later on
 	mTheme = theme;
@@ -262,8 +262,8 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 				elem->get<Vector2f>("size") * screen :
 				GridTileComponent::getDefaultTileSize();
 
-	// Recalculate grid dimension after theme changed
-	calcGridDimension();
+	// Apply size property, will trigger a call to onSizeChanged() which will build the tiles
+	GuiComponent::applyTheme(theme, view, element, SIZE);
 }
 
 template<typename T>
@@ -287,6 +287,8 @@ template<typename T>
 void ImageGridComponent<T>::buildTiles()
 {
 	mTiles.clear();
+
+	calcGridDimension();
 
 	Vector2f startPosition = mTileSize / 2;
 	Vector2f tileDistance = mTileSize + mMargin;
@@ -321,9 +323,6 @@ void ImageGridComponent<T>::buildTiles()
 template<typename T>
 void ImageGridComponent<T>::updateTiles()
 {
-	if(mTiles.empty())
-		buildTiles();
-
 	int img = getStartPosition();
 
 	for(int ti = 0; ti < mTiles.size(); ti++)
