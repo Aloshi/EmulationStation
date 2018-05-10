@@ -13,6 +13,8 @@ public:
 	static void       deinit     ();
 	static MameNames* getInstance();
 	std::string       getRealName(const std::string& _mameName);
+	const bool        isBios(const std::string& _biosName);
+	const bool        isDevice(const std::string& _deviceName);
 
 private:
 
@@ -29,7 +31,11 @@ private:
 
 	static MameNames* sInstance;
 
-	namePairVector    mNamePairs;
+	namePairVector mNamePairs;
+	std::vector<std::string> mMameBioses;
+	std::vector<std::string> mMameDevices;
+	
+	const bool find(const std::vector<std::string> devices, const std::string& name);
 
 }; // MameNames
 

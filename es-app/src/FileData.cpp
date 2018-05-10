@@ -196,6 +196,16 @@ std::string FileData::getKey() {
 	return getFileName();
 }
 
+const bool FileData::isArcadeAsset()
+{
+	const std::string stem = Utils::FileSystem::getStem(mPath);
+	return (
+		(mSystem && (mSystem->hasPlatformId(PlatformIds::ARCADE) || mSystem->hasPlatformId(PlatformIds::NEOGEO)))
+		&&
+		(MameNames::getInstance()->isBios(stem) || MameNames::getInstance()->isDevice(stem))
+	);
+}
+
 FileData* FileData::getSourceFileData()
 {
 	return this;
