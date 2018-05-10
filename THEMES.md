@@ -598,12 +598,18 @@ Can be created as an extra.
     - The size of the default gridtile is used to calculate how many tiles can fit in the imagegrid. If not explicitly set, the size of the selected gridtile is equal the size of the default gridtile * 1.2
 * `padding` - type: NORMALIZED_PAIR.
     - The padding around the gridtile content. Default `16 16`. If not explicitly set, the selected tile padding will be equal to the default tile padding.
-* `backgroundImage` - type: PATH.
-    - If not explicitly set, the selected tile background image will be the same as the default tile background image.
 * `imageColor` - type: COLOR.
     - The default tile image color and selected tile image color have no influence on each others.
+* `backgroundImage` - type: PATH.
+    - If not explicitly set, the selected tile background image will be the same as the default tile background image.
+* `backgroundCornerSize` - type: NORMALIZED_PAIR.
+    - The corner size of the ninepatch used for the tile background. Default is `16 16`.
 * `backgroundColor` - type: COLOR.
-    - The default tile background color and selected tile background color have no influence on each others.
+    - A shortcut to define both the center color and edge color at the same time. The default tile background color and selected tile background color have no influence on each others.
+* `backgroundCenterColor` - type: COLOR.
+    - Set the color of the center part of the ninepatch. The default tile background center color and selected tile background center color have no influence on each others.
+* `backgroundEdgeColor` - type: COLOR.
+    - Set the color of the edge parts of the ninepatch. The default tile background edge color and selected tile background edge color have no influence on each others.
 
 #### video
 

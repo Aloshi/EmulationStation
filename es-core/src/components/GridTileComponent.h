@@ -9,9 +9,11 @@ struct GridTileProperties
 {
 	Vector2f mSize;
 	Vector2f mPadding;
-	std::string mBackgroundImage;
 	unsigned int mImageColor;
-	unsigned int mBackgroundColor;
+	std::string mBackgroundImage;
+	Vector2f mBackgroundCornerSize;
+	unsigned int mBackgroundCenterColor;
+	unsigned int mBackgroundEdgeColor;
 };
 
 class GridTileComponent : public GuiComponent

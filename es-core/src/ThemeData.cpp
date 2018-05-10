@@ -35,9 +35,12 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 	{ "gridtile", {
 		{ "size", NORMALIZED_PAIR },
 		{ "padding", NORMALIZED_PAIR },
-		{ "backgroundImage", PATH },
 		{ "imageColor", COLOR },
-		{ "backgroundColor", COLOR } } },
+		{ "backgroundImage", PATH },
+		{ "backgroundCornerSize", NORMALIZED_PAIR },
+		{ "backgroundColor", COLOR },
+		{ "backgroundCenterColor", COLOR },
+		{ "backgroundEdgeColor", COLOR } } },
 	{ "text", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
