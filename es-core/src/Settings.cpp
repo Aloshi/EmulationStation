@@ -18,6 +18,7 @@ std::vector<const char*> settings_dont_save {
 	{ "DebugImage" },
 	{ "ForceKid" },
 	{ "ForceKiosk" },
+	{ "ForceDisableFilters" },
 	{ "IgnoreGamelist" },
 	{ "HideConsole" },
 	{ "ShowExit" },
@@ -138,7 +139,7 @@ void Settings::setDefaults()
 	mStringMap["UIMode_passkey"] = "uuddlrlrba";
 	mBoolMap["ForceKiosk"] = false;
 	mBoolMap["ForceKid"] = false;
-	mBoolMap["hideQuitMenuOnKidUI"] = false;
+	mBoolMap["ForceDisableFilters"] = false;
 
 	mIntMap["WindowWidth"]   = 0;
 	mIntMap["WindowHeight"]  = 0;

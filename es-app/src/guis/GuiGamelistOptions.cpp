@@ -77,11 +77,14 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		mMenu.addWithLabel("SORT GAMES BY", mListSort);
 	}
 	// show filtered menu
-	row.elements.clear();
-	row.addElement(std::make_shared<TextComponent>(mWindow, "FILTER GAMELIST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-	row.addElement(makeArrow(mWindow), false);
-	row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openGamelistFilter, this));
-	mMenu.addRow(row);
+	if(!Settings::getInstance()->getBool("ForceDisableFilters"))
+	{
+		row.elements.clear();
+		row.addElement(std::make_shared<TextComponent>(mWindow, "FILTER GAMELIST", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.addElement(makeArrow(mWindow), false);
+		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openGamelistFilter, this));
+		mMenu.addRow(row);		
+	}
 
 	std::map<std::string, CollectionSystemData> customCollections = CollectionSystemManager::get()->getCustomCollectionSystems();
 
