@@ -160,7 +160,8 @@ void NinePatchComponent::fitTo(Vector2f size, Vector3f position, Vector2f paddin
 	position[1] -= padding.y() / 2;
 
 	setSize(size + mCornerSize * 2);
-	setPosition(-mCornerSize.x() + position.x(), -mCornerSize.y() + position.y());
+	setPosition(position.x() + Math::lerp(-mCornerSize.x(), mCornerSize.x(), mOrigin.x()),
+				position.y() + Math::lerp(-mCornerSize.y(), mCornerSize.y(), mOrigin.y()));
 }
 
 void NinePatchComponent::setImagePath(const std::string& path)

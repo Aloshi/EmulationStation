@@ -144,7 +144,6 @@ void GridTileComponent::resize()
 
 	mImage->setMaxSize(currentProperties.mSize - currentProperties.mPadding);
 	mBackground.fitTo(currentProperties.mSize - Vector2f(32.0f, 32.0f)); // (32f, 32f) the NinePatchComponent natural padding
-	mBackground.setPosition(getSize().x() / 2, getSize().y() / 2);
 }
 
 const GridTileProperties& GridTileComponent::getCurrentProperties() const
