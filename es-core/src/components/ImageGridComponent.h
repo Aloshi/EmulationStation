@@ -204,10 +204,8 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 template<typename T>
 void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties)
 {
-	using namespace ThemeFlags;
-
 	// Apply theme to GuiComponent but not size property, which will be applied at the end of this function
-	GuiComponent::applyTheme(theme, view, element, properties ^ SIZE);
+	GuiComponent::applyTheme(theme, view, element, properties ^ ThemeFlags::SIZE);
 
 	// Keep the theme pointer to apply it on the tiles later on
 	mTheme = theme;
@@ -277,7 +275,7 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 				GridTileComponent::getDefaultTileSize();
 
 	// Apply size property, will trigger a call to onSizeChanged() which will build the tiles
-	GuiComponent::applyTheme(theme, view, element, SIZE);
+	GuiComponent::applyTheme(theme, view, element, ThemeFlags::SIZE);
 
 	// Trigger the call manually if the theme have no "imagegrid" element
 	if (!elem)
