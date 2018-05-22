@@ -23,6 +23,7 @@ class ImageGridComponent : public IList<ImageGridData, T>
 {
 protected:
 	using IList<ImageGridData, T>::mEntries;
+	using IList<ImageGridData, T>::mScrollTier;
 	using IList<ImageGridData, T>::listUpdate;
 	using IList<ImageGridData, T>::listInput;
 	using IList<ImageGridData, T>::listRenderTitleOverlay;
@@ -47,7 +48,6 @@ public:
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	void onSizeChanged() override;
-
 	inline void setCursorChangedCallback(const std::function<void(CursorState state)>& func) { mCursorChangedCallback = func; }
 
 protected:
@@ -57,11 +57,15 @@ private:
 	// TILES
 	void buildTiles();
 	void updateTiles();
+	void updateTileAtPos(int tilePos, int imgPos, int bufferTop, int bufferBot);
 	int getStartPosition() const;
 	void calcGridDimension();
 
 	// IMAGES & ENTRIES
+	const int texBuffersBehind[4] = { 1, 1, 1, 1 };
+	const int texBuffersForward[4] = { 1, 2, 3, 3 };
 	bool mEntriesDirty;
+	int mLastCursor;
 	std::shared_ptr<TextureResource> mDefaultGameTexture;
 	std::shared_ptr<TextureResource> mDefaultFolderTexture;
 
@@ -84,6 +88,7 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 	Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	mEntriesDirty = true;
+	mLastCursor = 0;
 	mDefaultGameTexture = TextureResource::get(":/blank_game.png");
 	mDefaultFolderTexture = TextureResource::get(":/folder.png");
 
@@ -179,7 +184,6 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 	Renderer::pushClipRect(pos, size);
 
 	// Render all the tiles but the selected one
-
 	std::shared_ptr<GridTileComponent> selectedTile = NULL;
 	for(auto it = mTiles.begin(); it != mTiles.end(); it++)
 	{
@@ -197,6 +201,8 @@ void ImageGridComponent<T>::render(const Transform4x4f& parentTrans)
 	// Render the selected image on top of the others
 	if (selectedTile != NULL)
 		selectedTile->render(trans);
+
+	listRenderTitleOverlay(trans);
 
 	GuiComponent::renderChildren(trans);
 }
@@ -306,8 +312,8 @@ void ImageGridComponent<T>::buildTiles()
 
 	calcGridDimension();
 
-	Vector2f startPosition = mTileSize / 2;
 	Vector2f tileDistance = mTileSize + mMargin;
+	Vector2f startPosition = mTileSize / 2 - Vector2f(0, tileDistance.y() * texBuffersForward[3]);
 
 	int X, Y;
 
@@ -342,26 +348,69 @@ void ImageGridComponent<T>::updateTiles()
 	if (!mTiles.size())
 		return;
 
-	int img = getStartPosition();
-
-	for(int ti = 0; ti < mTiles.size(); ti++)
+	// Stop updating the tiles at highest scroll speed
+	if (mScrollTier == 3)
 	{
-		std::shared_ptr<GridTileComponent> tile = mTiles.at(ti);
-
-		// If we have more tiles than we have to display images on screen, hide them
-		if(img >= size())
+		for (int ti = 0; ti < mTiles.size(); ti++)
 		{
+			std::shared_ptr<GridTileComponent> tile = mTiles.at(ti);
+
 			tile->setSelected(false);
-			tile->setImage("");
+			tile->setImage(mDefaultGameTexture);
 			tile->setVisible(false);
-			continue;
 		}
+		return;
+	}
 
-		tile->setSelected(img == mCursor);
-		tile->setImage(mEntries.at(img).data.texture);
+	// 1 if scrolling down, -1 if scrolling up
+	int scrollDirection = mCursor >= mLastCursor ? 1 : -1;
+
+	// If going down, update from top to bottom
+	// If going up, update from bottom to top
+	int ti = scrollDirection == 1 ? 0 : mTiles.size() - 1;
+	int end = scrollDirection == 1 ? mTiles.size() : -1;
+
+	int img = getStartPosition();
+	if (scrollDirection == -1)
+		img += mTiles.size() - 1;
+
+	// Calculate buffer size depending on scroll speed and direction
+	int bufferBehind = (texBuffersForward[3] - texBuffersBehind[mScrollTier]) * mGridDimension.x();
+	int bufferForward = (texBuffersForward[3] - texBuffersForward[mScrollTier]) * mGridDimension.x();
+
+	int bufferTop = scrollDirection == 1 ? bufferBehind : bufferForward;
+	int bufferBot = scrollDirection == 1 ? bufferForward : bufferBehind;
+
+	// Update the tiles
+	while (ti != end)
+	{
+		updateTileAtPos(ti, img, bufferTop, bufferBot);
+
+		ti += scrollDirection;
+		img += scrollDirection;
+	}
+
+	mLastCursor = mCursor;
+}
+
+template<typename T>
+void ImageGridComponent<T>::updateTileAtPos(int tilePos, int imgPos, int bufferTop, int bufferBot)
+{
+	std::shared_ptr<GridTileComponent> tile = mTiles.at(tilePos);
+
+	// If we have more tiles than we have to display images on screen, hide them
+	if(imgPos < 0 || imgPos >= size()
+	   || tilePos < bufferTop || tilePos >= mTiles.size() - bufferBot) // Same for tiles out of the buffer
+	{
+		tile->setSelected(false);
+		tile->setImage("");
+		tile->setVisible(false);
+	}
+	else
+	{
+		tile->setSelected(imgPos == mCursor);
+		tile->setImage(mEntries.at(imgPos).data.texture);
 		tile->setVisible(true);
-
-		img++;
 	}
 }
 
@@ -373,23 +422,28 @@ int ImageGridComponent<T>::getStartPosition() const
 	// case, whenever we have an integer number of rows or not (the last partial row is ignored when
 	// calculating position and the cursor shouldn't end up in this row when close to the end)
 	int partialRow = (int)mLastRowPartial;
-	if ((int)mEntries.size() < mGridDimension.x() * (mGridDimension.y() - (int)mLastRowPartial))
-		partialRow = 0;
 
 	int cursorRow = mCursor / mGridDimension.x();
 
 	int start = (cursorRow - ((mGridDimension.y() - partialRow) / 2)) * mGridDimension.x();
 
-	// If we are at the end put the row as close as we can and no higher, using the following formula
-	// Where E is the nb of entries, X the grid x dim (nb of column), Y the grid y dim (nb of line)
-	// start = first tile of last row - nb column * (nb line - 1)
-	//       = (E - 1) / X * X        - X * (Y - 1)
-	//       = X * ((E - 1) / X - Y + 1)
-	if(start + (mGridDimension.x() * (mGridDimension.y() - partialRow)) >= (int)mEntries.size())
-		start = mGridDimension.x() * (((int)mEntries.size() - 1) / mGridDimension.x() - mGridDimension.y() + 1 + partialRow);
+	// Number of tiles which are just used as a buffer for texture loading
+	int bufferSize = texBuffersForward[3] * mGridDimension.x();
 
-	if(start < 0)
-		start = 0;
+	if(start + (mGridDimension.x() * (mGridDimension.y() - partialRow)) >= (int)mEntries.size() + bufferSize)
+	{
+		// If we are at the end put the row as close as we can and no higher, using the following formula
+		// Where E is the nb of entries, X the grid x dim (nb of column), Y the grid y dim (nb of line)
+		// start = first tile of last row - nb column * (nb line - 1)
+		//       = (E - 1) / X * X        - X * (Y - 1)
+		//       = X * ((E - 1) / X - Y + 1)
+		start = mGridDimension.x() * (((int)mEntries.size() - 1) / mGridDimension.x() - mGridDimension.y() + 1 + partialRow) + bufferSize;
+	}
+
+	if(start < -bufferSize)
+	{
+		start = -bufferSize;
+	}
 
 	return start;
 }
@@ -416,6 +470,9 @@ void ImageGridComponent<T>::calcGridDimension()
 		LOG(LogError) << "Theme defined grid X dimension below 1";
 	if (mGridDimension.y() < 1)
 		LOG(LogError) << "Theme defined grid Y dimension below 1";
+
+	// Add extra tiles to both side depending on max texture buffer
+	mGridDimension.y() += texBuffersForward[3] * 2;
 };
 
 
