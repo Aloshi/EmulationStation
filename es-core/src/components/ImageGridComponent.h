@@ -313,7 +313,9 @@ void ImageGridComponent<T>::buildTiles()
 	calcGridDimension();
 
 	Vector2f tileDistance = mTileSize + mMargin;
-	Vector2f startPosition = mTileSize / 2 - Vector2f(0, tileDistance.y() * texBuffersForward[3]);
+	Vector2f bufferSize = Vector2f(mScrollDirection == SCROLL_HORIZONTALLY ? tileDistance.x() * texBuffersForward[3] : 0,
+								   mScrollDirection == SCROLL_VERTICALLY ? tileDistance.y() * texBuffersForward[3] : 0);
+	Vector2f startPosition = mTileSize / 2 - bufferSize;
 
 	int X, Y;
 
@@ -456,14 +458,14 @@ void ImageGridComponent<T>::calcGridDimension()
 	// <=> COLUMNS = (GRID_SIZE + MARGIN) / (TILE_SIZE + MARGIN)
 	Vector2f gridDimension = (mSize + mMargin) / (mTileSize + mMargin);
 
-	// Invert dimensions for horizontally scrolling grid
-	if (mScrollDirection == SCROLL_HORIZONTALLY)
-		gridDimension = Vector2f(gridDimension.y(), gridDimension.x());
-
 	mLastRowPartial = Math::floorf(gridDimension.y()) != gridDimension.y();
 
 	// Ceil y dim so we can display partial last row
 	mGridDimension = Vector2i(gridDimension.x(), Math::ceilf(gridDimension.y()));
+
+	// Invert dimensions for horizontally scrolling grid
+	if (mScrollDirection == SCROLL_HORIZONTALLY)
+		mGridDimension = Vector2i(mGridDimension.y(), mGridDimension.x());
 
 	// Grid dimension validation
 	if (mGridDimension.x() < 1)
