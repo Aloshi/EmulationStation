@@ -55,20 +55,19 @@ void ImageComponent::resize()
 			mSize = textureSize;
 
 			Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
-			
+
 			if(resizeScale.x() < resizeScale.y())
 			{
-				mSize[0] *= resizeScale.x();
-				mSize[1] *= resizeScale.x();
+				mSize[0] *= resizeScale.x(); // this will be mTargetSize.x(). We can't exceed it, nor be lower than it.
+				// we need to make sure we're not creating an image larger than max size
+				mSize[1] = Math::min(Math::round(mSize[1] *= resizeScale.x()), mTargetSize.y());
 			}else{
-				mSize[0] *= resizeScale.y();
-				mSize[1] *= resizeScale.y();
+				mSize[1] = Math::round(mSize[1] *= resizeScale.y()); // this will be mTargetSize.y(). We can't exceed it.
+				
+				// for SVG rasterization, always calculate width from rounded height (see comment above)
+				// we need to make sure we're not creating an image larger than max size
+				mSize[0] = Math::min((mSize[1] / textureSize.y()) * textureSize.x(), mTargetSize.x());
 			}
-
-			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = Math::round(mSize[1]);
-			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
-
 		}else if(mTargetIsMin)
 		{
 			mSize = textureSize;
@@ -91,8 +90,9 @@ void ImageComponent::resize()
 			}
 
 			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = Math::round(mSize[1]);
-			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
+			// we need to make sure we're not creating an image smaller than min size
+			mSize[1] = Math::max(Math::round(mSize[1]), mTargetSize.y());
+			mSize[0] = Math::max((mSize[1] / textureSize.y()) * textureSize.x(), mTargetSize.x());
 
 		}else{
 			// if both components are set, we just stretch
