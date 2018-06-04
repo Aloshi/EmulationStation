@@ -2,6 +2,7 @@
 
 #include "components/OptionListComponent.h"
 #include "components/SliderComponent.h"
+#include "components/SwitchComponent.h"
 #include "guis/GuiMsgBox.h"
 #include "guis/GuiSlideshowScreensaverOptions.h"
 #include "guis/GuiVideoScreensaverOptions.h"
@@ -17,6 +18,12 @@ GuiGeneralScreensaverOptions::GuiGeneralScreensaverOptions(Window* window, const
 	    Settings::getInstance()->setInt("ScreenSaverTime", (int)Math::round(screensaver_time->getValue()) * (1000 * 60));
 	    PowerSaver::updateTimeouts();
 	});
+	
+	// Allow ScreenSaver Controls - ScreenSaverControls
+	auto ss_controls = std::make_shared<SwitchComponent>(mWindow);
+	ss_controls->setState(Settings::getInstance()->getBool("ScreenSaverControls"));
+	addWithLabel("SCREENSAVER CONTROLS", ss_controls);
+	addSaveFunc([ss_controls] { Settings::getInstance()->setBool("ScreenSaverControls", ss_controls->getState()); });	
 
 	// screensaver behavior
 	auto screensaver_behavior = std::make_shared< OptionListComponent<std::string> >(mWindow, "SCREENSAVER BEHAVIOR", false);

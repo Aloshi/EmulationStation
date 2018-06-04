@@ -1,6 +1,7 @@
 #include "views/gamelist/IGameListView.h"
 
 #include "guis/GuiGamelistOptions.h"
+#include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "Sound.h"
 #include "Window.h"
@@ -8,7 +9,7 @@
 bool IGameListView::input(InputConfig* config, Input input)
 {
 	// select to open GuiGamelistOptions
-	if(config->isMappedTo("select", input) && input.value)
+	if(!UIModeController::getInstance()->isUIModeKid() && config->isMappedTo("select", input) && input.value)
 	{
 		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
 		mWindow->pushGui(new GuiGamelistOptions(mWindow, this->mRoot->getSystem()));

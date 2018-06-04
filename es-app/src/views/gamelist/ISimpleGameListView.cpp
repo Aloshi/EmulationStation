@@ -146,7 +146,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				}
 				return true;
 			}
-		}else if (config->isMappedTo("y", input) && !(UIModeController::getInstance()->isUIModeKid()))
+		}else if (config->isMappedTo("y", input) && UIModeController::getInstance()->isUIModeFull())
 		{
 			if(mRoot->getSystem()->isGameSystem())
 			{
