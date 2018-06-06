@@ -175,7 +175,7 @@ void GridTileComponent::resize()
 {
 	const GridTileProperties& currentProperties = getCurrentProperties();
 
-	mImage->setMaxSize(currentProperties.mSize - currentProperties.mPadding);
+	mImage->setMaxSize(currentProperties.mSize - currentProperties.mPadding * 2);
 	mBackground.setCornerSize(currentProperties.mBackgroundCornerSize);
 	mBackground.fitTo(currentProperties.mSize - mBackground.getCornerSize() * 2);
 }
