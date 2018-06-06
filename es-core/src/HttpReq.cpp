@@ -58,6 +58,33 @@ HttpReq::HttpReq(const std::string& url)
 		return;
 	}
 
+	//set curl to handle redirects
+	err = curl_easy_setopt(mHandle, CURLOPT_FOLLOWLOCATION, 1L);
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//set curl max redirects
+	err = curl_easy_setopt(mHandle, CURLOPT_MAXREDIRS, 2L);
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//set curl restrict redirect protocols
+	err = curl_easy_setopt(mHandle, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS); 
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
 	//tell curl how to write the data
 	err = curl_easy_setopt(mHandle, CURLOPT_WRITEFUNCTION, &HttpReq::write_content);
 	if(err != CURLE_OK)
