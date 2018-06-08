@@ -15,7 +15,7 @@ enum ScrollDirection
 
 struct ImageGridData
 {
-	std::shared_ptr<TextureResource> texture;
+	std::string texturePath;
 };
 
 template<typename T>
@@ -66,8 +66,8 @@ private:
 	const int texBuffersForward[4] = { 1, 2, 3, 3 };
 	bool mEntriesDirty;
 	int mLastCursor;
-	std::shared_ptr<TextureResource> mDefaultGameTexture;
-	std::shared_ptr<TextureResource> mDefaultFolderTexture;
+	std::string mDefaultGameTexture;
+	std::string mDefaultFolderTexture;
 
 	// TILES
 	bool mLastRowPartial;
@@ -89,8 +89,8 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 
 	mEntriesDirty = true;
 	mLastCursor = 0;
-	mDefaultGameTexture = TextureResource::get(":/blank_game.png");
-	mDefaultFolderTexture = TextureResource::get(":/folder.png");
+	mDefaultGameTexture = ":/blank_game.png";
+	mDefaultFolderTexture = ":/folder.png";
 
 	mSize = screen * 0.80f;
 	mMargin = screen * 0.07f;
@@ -105,20 +105,7 @@ void ImageGridComponent<T>::add(const std::string& name, const std::string& imag
 	typename IList<ImageGridData, T>::Entry entry;
 	entry.name = name;
 	entry.object = obj;
-
-	if (ResourceManager::getInstance()->fileExists(imagePath))
-	{
-		entry.data.texture = TextureResource::get(imagePath);
-	}
-	else
-	{
-		// FileType::FOLDER = 2, but FileData is our template parameter T,
-		// so we don't want to bring that dependence to FileData here
-		if (obj->getType() == 2)
-			entry.data.texture = mDefaultFolderTexture;
-		else
-			entry.data.texture = mDefaultGameTexture;
-	}
+	entry.data.texturePath = imagePath;
 
 	static_cast<IList< ImageGridData, T >*>(this)->add(entry);
 	mEntriesDirty = true;
@@ -235,16 +222,15 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 				LOG(LogWarning) << "Could not replace default game image, check path: " << path;
 			else
 			{
-				std::shared_ptr<TextureResource> oldDefaultGameTexture = mDefaultGameTexture;
-
-				mDefaultGameTexture = TextureResource::get(path);
+				std::string oldDefaultGameTexture = mDefaultGameTexture;
+				mDefaultGameTexture = path;
 
 				// mEntries are already loaded at this point,
 				// so we need to update them with new game image texture
 				for (auto it = mEntries.begin(); it != mEntries.end(); it++)
 				{
-					if ((*it).data.texture == oldDefaultGameTexture)
-						(*it).data.texture = mDefaultGameTexture;
+					if ((*it).data.texturePath == oldDefaultGameTexture)
+						(*it).data.texturePath = mDefaultGameTexture;
 				}
 			}
 		}
@@ -257,16 +243,15 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 				LOG(LogWarning) << "Could not replace default folder image, check path: " << path;
 			else
 			{
-				std::shared_ptr<TextureResource> oldDefaultFolderTexture = mDefaultFolderTexture;
-
-				mDefaultFolderTexture = TextureResource::get(path);
+				std::string oldDefaultFolderTexture = mDefaultFolderTexture;
+				mDefaultFolderTexture = path;
 
 				// mEntries are already loaded at this point,
 				// so we need to update them with new folder image texture
 				for (auto it = mEntries.begin(); it != mEntries.end(); it++)
 				{
-					if ((*it).data.texture == oldDefaultFolderTexture)
-						(*it).data.texture = mDefaultFolderTexture;
+					if ((*it).data.texturePath == oldDefaultFolderTexture)
+						(*it).data.texturePath = mDefaultFolderTexture;
 				}
 			}
 		}
@@ -411,8 +396,22 @@ void ImageGridComponent<T>::updateTileAtPos(int tilePos, int imgPos, int bufferT
 	else
 	{
 		tile->setSelected(imgPos == mCursor);
-		tile->setImage(mEntries.at(imgPos).data.texture);
 		tile->setVisible(true);
+
+		std::string imagePath = mEntries.at(imgPos).data.texturePath;
+		if (ResourceManager::getInstance()->fileExists(imagePath))
+		{
+			tile->setImage(imagePath);
+		}
+		else
+		{
+			// FileType::FOLDER = 2, but FileData is our template parameter T,
+			// so we don't want to bring that dependence to FileData here
+			if (mEntries.at(imgPos).object->getType() == 2)
+				tile->setImage(mDefaultFolderTexture);
+			else
+				tile->setImage(mDefaultGameTexture);
+		}
 	}
 }
 

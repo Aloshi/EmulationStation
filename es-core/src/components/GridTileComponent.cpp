@@ -151,6 +151,9 @@ bool GridTileComponent::isSelected() const
 void GridTileComponent::setImage(const std::string& path)
 {
 	mImage->setImage(path);
+
+	// Resize now to prevent flickering images when scrolling
+	resize();
 }
 
 void GridTileComponent::setImage(const std::shared_ptr<TextureResource>& texture)
