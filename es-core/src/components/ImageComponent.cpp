@@ -62,7 +62,7 @@ void ImageComponent::resize()
 				// we need to make sure we're not creating an image larger than max size
 				mSize[1] = Math::min(Math::round(mSize[1] *= resizeScale.x()), mTargetSize.y());
 			}else{
-				mSize[1] = Math::round(mSize[1] *= resizeScale.y()); // this will be mTargetSize.y(). We can't exceed it.
+				mSize[1] = Math::round(mSize[1] * resizeScale.y()); // this will be mTargetSize.y(). We can't exceed it.
 				
 				// for SVG rasterization, always calculate width from rounded height (see comment above)
 				// we need to make sure we're not creating an image larger than max size
@@ -112,8 +112,11 @@ void ImageComponent::resize()
 			}
 		}
 	}
+
+	mSize[0] = Math::round(mSize.x());
+	mSize[1] = Math::round(mSize.y());
 	// mSize.y() should already be rounded
-	mTexture->rasterizeAt((size_t)Math::round(mSize.x()), (size_t)Math::round(mSize.y()));
+	mTexture->rasterizeAt((size_t)mSize.x(), (size_t)mSize.y());
 
 	onSizeChanged();
 }
