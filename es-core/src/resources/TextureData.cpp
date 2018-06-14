@@ -35,11 +35,9 @@ void TextureData::initFromPath(const std::string& path)
 bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length)
 {
 	// If already initialised then don't read again
-	{
-		std::unique_lock<std::mutex> lock(mMutex);
-		if (mDataRGBA)
-			return true;
-	}
+	std::unique_lock<std::mutex> lock(mMutex);
+	if (mDataRGBA)
+		return true;
 
 	// nsvgParse excepts a modifiable, null-terminated string
 	char* copy = (char*)malloc(length + 1);
@@ -84,7 +82,6 @@ bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length
 
 	ImageIO::flipPixelsVert(dataRGBA, mWidth, mHeight);
 
-	std::unique_lock<std::mutex> lock(mMutex);
 	mDataRGBA = dataRGBA;
 
 	return true;
