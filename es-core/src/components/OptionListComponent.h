@@ -143,6 +143,9 @@ public:
 		mText.setHorizontalAlignment(ALIGN_CENTER);
 		addChild(&mText);
 
+		mLeftArrow.setResize(0, mText.getFont()->getLetterHeight());
+		mRightArrow.setResize(0, mText.getFont()->getLetterHeight());
+
 		if(mMultiSelect)
 		{
 			mRightArrow.setImage(":/arrow.svg");
