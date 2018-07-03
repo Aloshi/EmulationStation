@@ -5,5 +5,5 @@
  <polygon id="analog_right" points="50,27 50,37 57.8,32" fill="none" stroke="#fff" stroke-linejoin="round" stroke-width="2"/>
  <polygon id="analog_down" points="27,50 37,50 32,57.8" fill="none" stroke="#fff" stroke-linejoin="round" stroke-width="2"/>
  <polygon id="analog_left" points="14,27 14,37 6.2,32" fill="none" stroke="#fff" stroke-linejoin="round" stroke-width="2"/>
- <circle id="analog_thumb" cx="32" cy="32" r="5" fill="#fff" stroke="#fff" stroke-linejoin="round" stroke-width="2"/>
+ <circle id="analog_thumb" cx="32" cy="32" r="5" fill="none" stroke="#fff" stroke-linejoin="round" stroke-width="2"/>
 </svg>
