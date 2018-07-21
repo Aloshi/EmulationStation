@@ -27,7 +27,7 @@ class VolumeControl
     static const char * mixerName;
     static const char * mixerCard;
     int mixerIndex;
-	snd_mixer_t* mixerHandle;
+    snd_mixer_t* mixerHandle;
     snd_mixer_elem_t* mixerElem;
     snd_mixer_selem_id_t* mixerSelemId;
 #elif defined(WIN32) || defined(_WIN32)
