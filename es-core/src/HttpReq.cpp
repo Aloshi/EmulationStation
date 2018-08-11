@@ -1,7 +1,8 @@
-#include <iostream>
 #include "HttpReq.h"
+
+#include "utils/FileSystemUtil.h"
 #include "Log.h"
-#include <boost/filesystem.hpp>
+#include <assert.h>
 
 CURLM* HttpReq::s_multi_handle = curl_multi_init();
 
@@ -32,7 +33,7 @@ std::string HttpReq::urlEncode(const std::string &s)
 bool HttpReq::isUrl(const std::string& str)
 {
 	//the worst guess
-	return (!str.empty() && !boost::filesystem::exists(str) && 
+	return (!str.empty() && !Utils::FileSystem::exists(str) && 
 		(str.find("http://") != std::string::npos || str.find("https://") != std::string::npos || str.find("www.") != std::string::npos));
 }
 
@@ -50,6 +51,33 @@ HttpReq::HttpReq(const std::string& url)
 
 	//set the url
 	CURLcode err = curl_easy_setopt(mHandle, CURLOPT_URL, url.c_str());
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//set curl to handle redirects
+	err = curl_easy_setopt(mHandle, CURLOPT_FOLLOWLOCATION, 1L);
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//set curl max redirects
+	err = curl_easy_setopt(mHandle, CURLOPT_MAXREDIRS, 2L);
+	if(err != CURLE_OK)
+	{
+		mStatus = REQ_IO_ERROR;
+		onError(curl_easy_strerror(err));
+		return;
+	}
+
+	//set curl restrict redirect protocols
+	err = curl_easy_setopt(mHandle, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS); 
 	if(err != CURLE_OK)
 	{
 		mStatus = REQ_IO_ERROR;
@@ -117,7 +145,7 @@ HttpReq::Status HttpReq::status()
 
 		int msgs_left;
 		CURLMsg* msg;
-		while(msg = curl_multi_info_read(s_multi_handle, &msgs_left))
+		while((msg = curl_multi_info_read(s_multi_handle, &msgs_left)) != nullptr)
 		{
 			if(msg->msg == CURLMSG_DONE)
 			{

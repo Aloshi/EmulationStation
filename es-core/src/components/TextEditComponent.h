@@ -1,7 +1,9 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H
+#define ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H
 
-#include "GuiComponent.h"
 #include "components/NinePatchComponent.h"
+#include "GuiComponent.h"
 
 class Font;
 class TextCache;
@@ -15,7 +17,7 @@ public:
 	void textInput(const char* text) override;
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 	void onFocusGained() override;
 	void onFocusLost() override;
@@ -43,21 +45,23 @@ private:
 	void moveCursor(int amt);
 
 	bool isMultiline();
-	Eigen::Vector2f getTextAreaPos() const;
-	Eigen::Vector2f getTextAreaSize() const;
+	Vector2f getTextAreaPos() const;
+	Vector2f getTextAreaSize() const;
 
 	std::string mText;
 	bool mFocused;
 	bool mEditing;
-	int mCursor; // cursor position in characters
+	unsigned int mCursor; // cursor position in characters
 
 	int mCursorRepeatTimer;
 	int mCursorRepeatDir;
 
-	Eigen::Vector2f mScrollOffset;
+	Vector2f mScrollOffset;
 
 	NinePatchComponent mBox;
 
 	std::shared_ptr<Font> mFont;
 	std::unique_ptr<TextCache> mTextCache;
 };
+
+#endif // ES_CORE_COMPONENTS_TEXT_EDIT_COMPONENT_H

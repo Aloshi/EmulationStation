@@ -1,7 +1,12 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_NINE_PATCH_COMPONENT_H
+#define ES_CORE_COMPONENTS_NINE_PATCH_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "resources/TextureResource.h"
+#include "platform.h"
+#include GLHEADER
+
+class TextureResource;
 
 // Display an image in a way so that edges don't get too distorted no matter the final size. Useful for UI elements like backgrounds, buttons, etc.
 // This is accomplished by splitting an image into 9 pieces:
@@ -20,11 +25,11 @@ public:
 	NinePatchComponent(Window* window, const std::string& path = "", unsigned int edgeColor = 0xFFFFFFFF, unsigned int centerColor = 0xFFFFFFFF);
 	virtual ~NinePatchComponent();
 
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 	void onSizeChanged() override;
 
-	void fitTo(Eigen::Vector2f size, Eigen::Vector3f position = Eigen::Vector3f::Zero(), Eigen::Vector2f padding = Eigen::Vector2f::Zero());
+	void fitTo(Vector2f size, Vector3f position = Vector3f::Zero(), Vector2f padding = Vector2f::Zero());
 
 	void setImagePath(const std::string& path);
 	void setEdgeColor(unsigned int edgeColor); // Apply a color shift to the "edge" parts of the ninepatch.
@@ -32,23 +37,28 @@ public:
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
-private:
-	Eigen::Vector2f getCornerSize() const;
+	const Vector2f& getCornerSize() const;
+	void setCornerSize(int sizeX, int sizeY);
+	inline void setCornerSize(const Vector2f& size) { setCornerSize(size.x(), size.y()); }
 
+private:
 	void buildVertices();
 	void updateColors();
 
 	struct Vertex
 	{
-		Eigen::Vector2f pos;
-		Eigen::Vector2f tex;
+		Vector2f pos;
+		Vector2f tex;
 	};
 
 	Vertex* mVertices;
 	GLubyte* mColors;
 
 	std::string mPath;
+	Vector2f mCornerSize;
 	unsigned int mEdgeColor;
 	unsigned int mCenterColor;
 	std::shared_ptr<TextureResource> mTexture;
 };
+
+#endif // ES_CORE_COMPONENTS_NINE_PATCH_COMPONENT_H

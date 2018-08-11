@@ -1,5 +1,6 @@
 #include "guis/GuiFastSelect.h"
-#include "ThemeData.h"
+
+#include "views/gamelist/IGameListView.h"
 #include "FileSorts.h"
 #include "SystemData.h"
 
@@ -19,14 +20,14 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	addChild(&mBackground);
 
 	mLetterText.setSize(mSize.x(), mSize.y() * 0.75f);
-	mLetterText.setAlignment(ALIGN_CENTER);
+	mLetterText.setHorizontalAlignment(ALIGN_CENTER);
 	mLetterText.applyTheme(theme, "fastSelect", "letter", FONT_PATH | COLOR);
 	// TODO - set font size
 	addChild(&mLetterText);
 
 	mSortText.setPosition(0, mSize.y() * 0.75f);
 	mSortText.setSize(mSize.x(), mSize.y() * 0.25f);
-	mSortText.setAlignment(ALIGN_CENTER);
+	mSortText.setHorizontalAlignment(ALIGN_CENTER);
 	mSortText.applyTheme(theme, "fastSelect", "subtext", FONT_PATH | COLOR);
 	// TODO - set font size
 	addChild(&mSortText);
@@ -79,7 +80,7 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 	{
 		mSortId--;
 		if(mSortId < 0)
-			mSortId += FileSorts::SortTypes.size();
+			mSortId += (int)FileSorts::SortTypes.size();
 
 		updateSortText();
 		return true;
@@ -115,7 +116,7 @@ void GuiFastSelect::scroll()
 	mLetterId += mScrollDir;
 	if(mLetterId < 0)
 		mLetterId += LETTERS.length();
-	else if(mLetterId >= (int)LETTERS.length())
+	else if(mLetterId >= LETTERS.length())
 		mLetterId -= LETTERS.length();
 
 	mLetterText.setText(LETTERS.substr(mLetterId, 1));
@@ -145,7 +146,7 @@ void GuiFastSelect::updateGameListCursor()
 
 	// only skip by letter when the sort mode is alphabetical
 	const FileData::SortType& sort = FileSorts::SortTypes.at(mSortId);
-	if(sort.comparisonFunction != &FileSorts::compareFileName)
+	if(sort.comparisonFunction != &FileSorts::compareName)
 		return;
 
 	// find the first entry in the list that either exactly matches our target letter or is beyond our target letter

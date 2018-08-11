@@ -1,9 +1,10 @@
 #pragma once
+#ifndef ES_APP_COMPONENTS_ASYNC_REQ_COMPONENT_H
+#define ES_APP_COMPONENTS_ASYNC_REQ_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "HttpReq.h"
-#include <functional>
-#include <memory>
+
+class HttpReq;
 
 /* 
 	Used to asynchronously run an HTTP request.
@@ -33,7 +34,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 private:
@@ -43,3 +44,5 @@ private:
 	unsigned int mTime;
 	std::shared_ptr<HttpReq> mRequest;
 };
+
+#endif // ES_APP_COMPONENTS_ASYNC_REQ_COMPONENT_H

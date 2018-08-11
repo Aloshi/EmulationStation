@@ -1,8 +1,8 @@
 #include "components/DateTimeComponent.h"
+
+#include "resources/Font.h"
+#include "utils/StringUtil.h"
 #include "Renderer.h"
-#include "Window.h"
-#include "Log.h"
-#include "Util.h"
 
 DateTimeComponent::DateTimeComponent(Window* window, DisplayMode dispMode) : GuiComponent(window), 
 	mEditing(false), mEditIndex(0), mDisplayMode(dispMode), mRelativeUpdateAccumulator(0), 
@@ -33,9 +33,9 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 			mTimeBeforeEdit = mTime;
 
 			//initialize to now if unset
-			if(mTime == boost::posix_time::not_a_date_time)
+			if(mTime.getTime() == Utils::Time::NOT_A_DATE_TIME)
 			{
-				mTime = boost::posix_time::ptime(boost::gregorian::day_clock::local_day());
+				mTime = Utils::Time::now();
 				updateTextCache();
 			}
 		}
@@ -61,39 +61,43 @@ bool DateTimeComponent::input(InputConfig* config, Input input)
 
 		if(incDir != 0)
 		{
-			tm new_tm = boost::posix_time::to_tm(mTime);
+			tm new_tm = mTime;
 
 			if(mEditIndex == 0)
 			{
 				new_tm.tm_mon += incDir;
 
 				if(new_tm.tm_mon > 11)
-					new_tm.tm_mon = 11;
-				else if(new_tm.tm_mon < 0)
 					new_tm.tm_mon = 0;
+				else if(new_tm.tm_mon < 0)
+					new_tm.tm_mon = 11;
 				
-			}else if(mEditIndex == 1)
+			}
+			else if(mEditIndex == 1)
 			{
+				const int days_in_month = Utils::Time::daysInMonth(new_tm.tm_year + 1900, new_tm.tm_mon + 1);
 				new_tm.tm_mday += incDir;
-				int days_in_month = mTime.date().end_of_month().day().as_number();
-				if(new_tm.tm_mday > days_in_month)
-					new_tm.tm_mday = days_in_month;
-				else if(new_tm.tm_mday < 1)
-					new_tm.tm_mday = 1;
 
-			}else if(mEditIndex == 2)
+				if(new_tm.tm_mday > days_in_month)
+					new_tm.tm_mday = 1;
+				else if(new_tm.tm_mday < 1)
+					new_tm.tm_mday = days_in_month;
+
+			}
+			else if(mEditIndex == 2)
 			{
 				new_tm.tm_year += incDir;
+
 				if(new_tm.tm_year < 0)
 					new_tm.tm_year = 0;
 			}
 
 			//validate day
-			int days_in_month = boost::gregorian::date(new_tm.tm_year + 1900, new_tm.tm_mon + 1, 1).end_of_month().day().as_number();
+			const int days_in_month = Utils::Time::daysInMonth(new_tm.tm_year + 1900, new_tm.tm_mon + 1);
 			if(new_tm.tm_mday > days_in_month)
 				new_tm.tm_mday = days_in_month;
 
-			mTime = boost::posix_time::ptime_from_tm(new_tm);
+			mTime = new_tm;
 			
 			updateTextCache();
 			return true;
@@ -134,16 +138,16 @@ void DateTimeComponent::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void DateTimeComponent::render(const Eigen::Affine3f& parentTrans)
+void DateTimeComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 
 	if(mTextCache)
 	{
 		// vertically center
-		Eigen::Vector3f off(0, (mSize.y() - mTextCache->metrics.size.y()) / 2, 0);
+		Vector3f off(0, (mSize.y() - mTextCache->metrics.size.y()) / 2, 0);
 		trans.translate(off);
-		trans = roundMatrix(trans);
+		trans.round();
 
 		Renderer::setMatrix(trans);
 
@@ -165,13 +169,13 @@ void DateTimeComponent::render(const Eigen::Affine3f& parentTrans)
 
 void DateTimeComponent::setValue(const std::string& val)
 {
-	mTime = string_to_ptime(val);
+	mTime = val;
 	updateTextCache();
 }
 
 std::string DateTimeComponent::getValue() const
 {
-	return boost::posix_time::to_iso_string(mTime);
+	return mTime;
 }
 
 DateTimeComponent::DisplayMode DateTimeComponent::getCurrentDisplayMode() const
@@ -202,40 +206,32 @@ std::string DateTimeComponent::getDisplayString(DisplayMode mode) const
 	case DISP_RELATIVE_TO_NOW:
 		{
 			//relative time
-			using namespace boost::posix_time;
-
-			if(mTime == not_a_date_time)
+			if(mTime.getTime() == 0)
 				return "never";
 
-			ptime now = second_clock::universal_time();
-			time_duration dur = now - mTime;
+			Utils::Time::DateTime now(Utils::Time::now());
+			Utils::Time::Duration dur(now.getTime() - mTime.getTime());
 
-			if(dur < seconds(2))
-				return "just now";
-			if(dur < seconds(60))
-				return std::to_string((long long)dur.seconds()) + " secs ago";
-			if(dur < minutes(60))
-				return std::to_string((long long)dur.minutes()) + " min" + (dur < minutes(2) ? "" : "s") + " ago";
-			if(dur < hours(24))
-				return std::to_string((long long)dur.hours()) + " hour" + (dur < hours(2) ? "" : "s") + " ago";
+			char buf[64];
 
-			long long days = (long long)(dur.hours() / 24);
-			return std::to_string(days) + " day" + (days < 2 ? "" : "s") + " ago";
+			if(dur.getDays() > 0)
+				sprintf(buf, "%d day%s ago", dur.getDays(), (dur.getDays() > 1) ? "s" : "");
+			else if(dur.getHours() > 0)
+				sprintf(buf, "%d hour%s ago", dur.getHours(), (dur.getHours() > 1) ? "s" : "");
+			else if(dur.getMinutes() > 0)
+				sprintf(buf, "%d minute%s ago", dur.getMinutes(), (dur.getMinutes() > 1) ? "s" : "");
+			else
+				sprintf(buf, "%d second%s ago", dur.getSeconds(), (dur.getSeconds() > 1) ? "s" : "");
+			
+			return std::string(buf);
 		}
 		break;
 	}
 	
-	if(mTime == boost::posix_time::not_a_date_time)
+	if(mTime.getTime() == 0)
 		return "unknown";
 
-	boost::posix_time::time_facet* facet = new boost::posix_time::time_facet();
-	facet->format(fmt.c_str());
-	std::locale loc(std::locale::classic(), facet);
-
-	std::stringstream ss;
-	ss.imbue(loc);
-	ss << mTime;
-	return ss.str();
+	return Utils::Time::timeToString(mTime, fmt);
 }
 
 std::shared_ptr<Font> DateTimeComponent::getFont() const
@@ -249,7 +245,7 @@ std::shared_ptr<Font> DateTimeComponent::getFont() const
 void DateTimeComponent::updateTextCache()
 {
 	DisplayMode mode = getCurrentDisplayMode();
-	const std::string dispString = mUppercase ? strToUpper(getDisplayString(mode)) : getDisplayString(mode);
+	const std::string dispString = mUppercase ? Utils::String::toUpper(getDisplayString(mode)) : getDisplayString(mode);
 	std::shared_ptr<Font> font = getFont();
 	mTextCache = std::unique_ptr<TextCache>(font->buildTextCache(dispString, 0, 0, mColor));
 
@@ -269,22 +265,22 @@ void DateTimeComponent::updateTextCache()
 		return;
 
 	//month
-	Eigen::Vector2f start(0, 0);
-	Eigen::Vector2f end = font->sizeText(dispString.substr(0, 2));
-	Eigen::Vector2f diff = end - start;
-	mCursorBoxes.push_back(Eigen::Vector4f(start[0], start[1], diff[0], diff[1]));
+	Vector2f start(0, 0);
+	Vector2f end = font->sizeText(dispString.substr(0, 2));
+	Vector2f diff = end - start;
+	mCursorBoxes.push_back(Vector4f(start[0], start[1], diff[0], diff[1]));
 
 	//day
 	start[0] = font->sizeText(dispString.substr(0, 3)).x();
 	end = font->sizeText(dispString.substr(0, 5));
 	diff = end - start;
-	mCursorBoxes.push_back(Eigen::Vector4f(start[0], start[1], diff[0], diff[1]));
+	mCursorBoxes.push_back(Vector4f(start[0], start[1], diff[0], diff[1]));
 
 	//year
 	start[0] = font->sizeText(dispString.substr(0, 6)).x();
 	end = font->sizeText(dispString.substr(0, 10));
 	diff = end - start;
-	mCursorBoxes.push_back(Eigen::Vector4f(start[0], start[1], diff[0], diff[1]));
+	mCursorBoxes.push_back(Vector4f(start[0], start[1], diff[0], diff[1]));
 
 	//if mode == DISP_DATE_TIME do times too but I don't wanna do the logic for editing times because no one will ever use it so screw it
 }

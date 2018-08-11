@@ -1,9 +1,11 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_BUTTON_COMPONENT_H
+#define ES_CORE_COMPONENTS_BUTTON_COMPONENT_H
 
-#include "GuiComponent.h"
-#include <functional>
-#include "resources/Font.h"
 #include "components/NinePatchComponent.h"
+#include "GuiComponent.h"
+
+class TextCache;
 
 class ButtonComponent : public GuiComponent
 {
@@ -15,7 +17,7 @@ public:
 	void setEnabled(bool enable);
 
 	bool input(InputConfig* config, Input input) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 
 	void setText(const std::string& text, const std::string& helpText);
 
@@ -45,3 +47,5 @@ private:
 	std::unique_ptr<TextCache> mTextCache;
 	NinePatchComponent mBox;
 };
+
+#endif // ES_CORE_COMPONENTS_BUTTON_COMPONENT_H

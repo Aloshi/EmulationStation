@@ -1,10 +1,14 @@
 #include "VolumeControl.h"
 
+#include "math/Misc.h"
 #include "Log.h"
-
+#include "Settings.h"
+#ifdef WIN32
+#include <mmdeviceapi.h>
+#endif
 
 #if defined(__linux__)
-    #ifdef _RPI_
+    #if defined(_RPI_) || defined(_VERO4K_)
         const char * VolumeControl::mixerName = "PCM";
     #else
     	const char * VolumeControl::mixerName = "Master";
@@ -20,7 +24,7 @@ VolumeControl::VolumeControl()
 #if defined (__APPLE__)
     #error TODO: Not implemented for MacOS yet!!!
 #elif defined(__linux__)
-    , mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
 #elif defined(WIN32) || defined(_WIN32)
 	, mixerHandle(nullptr), endpointVolume(nullptr)
 #endif
@@ -31,8 +35,17 @@ VolumeControl::VolumeControl()
 	originalVolume = getVolume();
 }
 
-VolumeControl::VolumeControl(const VolumeControl & right)
+VolumeControl::VolumeControl(const VolumeControl & right):
+  originalVolume(0), internalVolume(0)
+#if defined (__APPLE__)
+    #error TODO: Not implemented for MacOS yet!!!
+#elif defined(__linux__)
+	, mixerIndex(0), mixerHandle(nullptr), mixerElem(nullptr), mixerSelemId(nullptr)
+#elif defined(WIN32) || defined(_WIN32)
+	, mixerHandle(nullptr), endpointVolume(nullptr)
+#endif
 {
+	(void)right;
 	sInstance = right.sInstance;
 }
 
@@ -73,6 +86,10 @@ void VolumeControl::init()
 	//try to open mixer device
 	if (mixerHandle == nullptr)
 	{
+		#ifdef _RPI_
+		mixerName = Settings::getInstance()->getString("AudioDevice").c_str();
+		#endif
+
 		snd_mixer_selem_id_alloca(&mixerSelemId);
 		//sets simple-mixer index and name
 		snd_mixer_selem_id_set_index(mixerSelemId, mixerIndex);
@@ -284,7 +301,7 @@ int VolumeControl::getVolume() const
 		mixerControlDetails.cbDetails = sizeof(MIXERCONTROLDETAILS_UNSIGNED);
 		if (mixerGetControlDetails((HMIXEROBJ)mixerHandle, &mixerControlDetails, MIXER_GETCONTROLDETAILSF_VALUE) == MMSYSERR_NOERROR) 
 		{
-			volume = (uint8_t)round((value.dwValue * 100) / 65535);
+			volume = (int)Math::round((value.dwValue * 100) / 65535.0f);
 		}
 		else
 		{
@@ -297,7 +314,7 @@ int VolumeControl::getVolume() const
 		float floatVolume = 0.0f; //0-1
 		if (endpointVolume->GetMasterVolumeLevelScalar(&floatVolume) == S_OK)
 		{
-			volume = (uint8_t)round(floatVolume * 100.0f);
+			volume = (int)Math::round(floatVolume * 100.0f);
 			LOG(LogInfo) << " getting volume as " << volume << " ( from float " << floatVolume << ")";
 		}
 		else

@@ -1,51 +1,60 @@
 #pragma once
+#ifndef ES_CORE_RESOURCES_TEXTURE_RESOURCE_H
+#define ES_CORE_RESOURCES_TEXTURE_RESOURCE_H
 
+#include "math/Vector2i.h"
+#include "math/Vector2f.h"
 #include "resources/ResourceManager.h"
-
+#include "resources/TextureDataManager.h"
+#include <set>
 #include <string>
-#include <Eigen/Dense>
-#include "platform.h"
-#include GLHEADER
+
+class TextureData;
 
 // An OpenGL texture.
 // Automatically recreates the texture with renderer deinit/reinit.
 class TextureResource : public IReloadable
 {
 public:
-	static std::shared_ptr<TextureResource> get(const std::string& path, bool tile = false);
+	static std::shared_ptr<TextureResource> get(const std::string& path, bool tile = false, bool forceLoad = false, bool dynamic = true);
+	void initFromPixels(const unsigned char* dataRGBA, size_t width, size_t height);
+	virtual void initFromMemory(const char* file, size_t length);
+
+	// For scalable source images in textures we want to set the resolution to rasterize at
+	void rasterizeAt(size_t width, size_t height);
+	Vector2f getSourceImageSize() const;
 
 	virtual ~TextureResource();
 
-	virtual void unload(std::shared_ptr<ResourceManager>& rm) override;
-	virtual void reload(std::shared_ptr<ResourceManager>& rm) override;
-	
 	bool isInitialized() const;
 	bool isTiled() const;
-	const Eigen::Vector2i& getSize() const;
-	void bind() const;
-	
-	// Warning: will NOT correctly reinitialize when this texture is reloaded (e.g. ES starts/stops playing a game).
-	virtual void initFromMemory(const char* file, size_t length);
 
-	// Warning: will NOT correctly reinitialize when this texture is reloaded (e.g. ES starts/stops playing a game).
-	void initFromPixels(const unsigned char* dataRGBA, size_t width, size_t height);
+	const Vector2i getSize() const;
+	bool bind();
 
-	size_t getMemUsage() const; // returns an approximation of the VRAM used by this texture (in bytes)
 	static size_t getTotalMemUsage(); // returns an approximation of total VRAM used by textures (in bytes)
+	static size_t getTotalTextureSize(); // returns the number of bytes that would be used if all textures were in memory
 
 protected:
-	TextureResource(const std::string& path, bool tile);
-	void deinit();
-
-	Eigen::Vector2i mTextureSize;
-	const std::string mPath;
-	const bool mTile;
+	TextureResource(const std::string& path, bool tile, bool dynamic);
+	virtual void unload(std::shared_ptr<ResourceManager>& rm);
+	virtual void reload(std::shared_ptr<ResourceManager>& rm);
 
 private:
-	GLuint mTextureID;
+	// mTextureData is used for textures that are not loaded from a file - these ones
+	// are permanently allocated and cannot be loaded and unloaded based on resources
+	std::shared_ptr<TextureData>		mTextureData;
+
+	// The texture data manager manages loading and unloading of filesystem based textures
+	static TextureDataManager		sTextureDataManager;
+
+	Vector2i					mSize;
+	Vector2f					mSourceSize;
+	bool							mForceLoad;
 
 	typedef std::pair<std::string, bool> TextureKeyType;
 	static std::map< TextureKeyType, std::weak_ptr<TextureResource> > sTextureMap; // map of textures, used to prevent duplicate textures
-
-	static std::list< std::weak_ptr<TextureResource> > sTextureList; // list of all textures, used for memory approximations
+	static std::set<TextureResource*> 	sAllTextures;	// Set of all textures, used for memory management
 };
+
+#endif // ES_CORE_RESOURCES_TEXTURE_RESOURCE_H

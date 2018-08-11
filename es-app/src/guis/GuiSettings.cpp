@@ -1,7 +1,9 @@
 #include "guis/GuiSettings.h"
-#include "Window.h"
-#include "Settings.h"
+
 #include "views/ViewController.h"
+#include "Settings.h"
+#include "SystemData.h"
+#include "Window.h"
 
 GuiSettings::GuiSettings(Window* window, const char* title) : GuiComponent(window), mMenu(window, title)
 {
@@ -23,7 +25,7 @@ void GuiSettings::save()
 	if(!mSaveFuncs.size())
 		return;
 
-	for(auto it = mSaveFuncs.begin(); it != mSaveFuncs.end(); it++)
+	for(auto it = mSaveFuncs.cbegin(); it != mSaveFuncs.cend(); it++)
 		(*it)();
 
 	Settings::getInstance()->saveFile();
@@ -47,6 +49,13 @@ bool GuiSettings::input(InputConfig* config, Input input)
 	}
 	
 	return GuiComponent::input(config, input);
+}
+
+HelpStyle GuiSettings::getHelpStyle()
+{
+	HelpStyle style = HelpStyle();
+	style.applyTheme(ViewController::get()->getState().getSystem()->getTheme(), "system");
+	return style;
 }
 
 std::vector<HelpPrompt> GuiSettings::getHelpPrompts()

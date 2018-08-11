@@ -1,5 +1,10 @@
+#pragma once
+#ifndef ES_CORE_COMPONENTS_ANIMATED_IMAGE_COMPONENT_H
+#define ES_CORE_COMPONENTS_ANIMATED_IMAGE_COMPONENT_H
+
 #include "GuiComponent.h"
-#include "ImageComponent.h"
+
+class ImageComponent;
 
 struct AnimationFrame
 {
@@ -24,7 +29,7 @@ public:
 	void reset(); // set to frame 0
 
 	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& trans) override;
+	void render(const Transform4x4f& trans) override;
 
 	void onSizeChanged() override;
 
@@ -38,3 +43,5 @@ private:
 	int mFrameAccumulator;
 	int mCurrentFrame;
 };
+
+#endif // ES_CORE_COMPONENTS_ANIMATED_IMAGE_COMPONENT_H

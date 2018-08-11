@@ -1,9 +1,9 @@
 #pragma once
+#ifndef ES_CORE_RESOURCES_RESOURCE_MANAGER_H
+#define ES_CORE_RESOURCES_RESOURCE_MANAGER_H
 
-#include <stddef.h>
-#include <memory>
-#include <map>
 #include <list>
+#include <memory>
 
 //The ResourceManager exists to...
 //Allow loading resources embedded into the executable like an actual file.
@@ -34,6 +34,7 @@ public:
 	void unloadAll();
 	void reloadAll();
 
+	std::string getResourcePath(const std::string& path) const;
 	const ResourceData getFileData(const std::string& path) const;
 	bool fileExists(const std::string& path) const;
 
@@ -46,3 +47,5 @@ private:
 
 	std::list< std::weak_ptr<IReloadable> > mReloadables;
 };
+
+#endif // ES_CORE_RESOURCES_RESOURCE_MANAGER_H

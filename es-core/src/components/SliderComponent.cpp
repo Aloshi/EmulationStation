@@ -1,9 +1,7 @@
 #include "components/SliderComponent.h"
-#include <assert.h>
-#include "Renderer.h"
+
 #include "resources/Font.h"
-#include "Log.h"
-#include "Util.h"
+#include "Renderer.h"
 
 #define MOVE_REPEAT_DELAY 500
 #define MOVE_REPEAT_RATE 40
@@ -61,9 +59,10 @@ void SliderComponent::update(int deltaTime)
 	GuiComponent::update(deltaTime);
 }
 
-void SliderComponent::render(const Eigen::Affine3f& parentTrans)
+void SliderComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Transform4x4f trans = parentTrans * getTransform();
+	trans.round();
 	Renderer::setMatrix(trans);
 
 	// render suffix
@@ -126,7 +125,7 @@ void SliderComponent::onValueChanged()
 		ss << mSuffix;
 		const std::string max = ss.str();
 
-		Eigen::Vector2f textSize = mFont->sizeText(max);
+		Vector2f textSize = mFont->sizeText(max);
 		mValueCache = std::shared_ptr<TextCache>(mFont->buildTextCache(val, mSize.x() - textSize.x(), (mSize.y() - textSize.y()) / 2, 0x777777FF));
 		mValueCache->metrics.size[0] = textSize.x(); // fudge the width
 	}

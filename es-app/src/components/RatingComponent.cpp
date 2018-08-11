@@ -1,16 +1,17 @@
 #include "components/RatingComponent.h"
-#include "Renderer.h"
-#include "Window.h"
-#include "Util.h"
-#include "resources/SVGResource.h"
 
-RatingComponent::RatingComponent(Window* window) : GuiComponent(window)
+#include "resources/TextureResource.h"
+#include "Renderer.h"
+#include "ThemeData.h"
+
+RatingComponent::RatingComponent(Window* window) : GuiComponent(window), mColorShift(0xFFFFFFFF)
 {
 	mFilledTexture = TextureResource::get(":/star_filled.svg", true);
 	mUnfilledTexture = TextureResource::get(":/star_unfilled.svg", true);
 	mValue = 0.5f;
-	mSize << 64 * NUM_RATING_STARS, 64;
+	mSize = Vector2f(64 * NUM_RATING_STARS, 64);
 	updateVertices();
+	updateColors();
 }
 
 void RatingComponent::setValue(const std::string& value)
@@ -38,6 +39,22 @@ std::string RatingComponent::getValue() const
 	return ss.str();
 }
 
+void RatingComponent::setOpacity(unsigned char opacity)
+{
+	mOpacity = opacity;
+	mColorShift = (mColorShift >> 8 << 8) | mOpacity;
+	updateColors();
+}
+
+void RatingComponent::setColorShift(unsigned int color)
+{
+	mColorShift = color;
+	// Grab the opacity from the color shift because we may need to apply it if
+	// fading textures in
+	mOpacity = color & 0xff;
+	updateColors();
+}
+
 void RatingComponent::onSizeChanged()
 {
 	if(mSize.y() == 0)
@@ -45,16 +62,13 @@ void RatingComponent::onSizeChanged()
 	else if(mSize.x() == 0)
 		mSize[0] = mSize.y() * NUM_RATING_STARS;
 
-	auto filledSVG = dynamic_cast<SVGResource*>(mFilledTexture.get());
-	auto unfilledSVG = dynamic_cast<SVGResource*>(mUnfilledTexture.get());
-
 	if(mSize.y() > 0)
 	{
-		size_t heightPx = (size_t)round(mSize.y());
-		if(filledSVG)
-			filledSVG->rasterizeAt(heightPx, heightPx);
-		if(unfilledSVG)
-			unfilledSVG->rasterizeAt(heightPx, heightPx);
+		size_t heightPx = (size_t)Math::round(mSize.y());
+		if (mFilledTexture)
+			mFilledTexture->rasterizeAt(heightPx, heightPx);
+		if(mUnfilledTexture)
+			mUnfilledTexture->rasterizeAt(heightPx, heightPx);
 	}
 
 	updateVertices();
@@ -64,49 +78,55 @@ void RatingComponent::updateVertices()
 {
 	const float numStars = NUM_RATING_STARS;
 
-	const float h = round(getSize().y()); // is the same as a single star's width
-	const float w = round(h * mValue * numStars);
-	const float fw = round(h * numStars);
+	const float h = Math::round(getSize().y()); // is the same as a single star's width
+	const float w = Math::round(h * mValue * numStars);
+	const float fw = Math::round(h * numStars);
 
-	mVertices[0].pos << 0.0f, 0.0f;
-		mVertices[0].tex << 0.0f, 1.0f;
-	mVertices[1].pos << w, h;
-		mVertices[1].tex << mValue * numStars, 0.0f;
-	mVertices[2].pos << 0.0f, h;
-		mVertices[2].tex << 0.0f, 0.0f;
+	mVertices[0].pos = Vector2f(0.0f, 0.0f);
+	mVertices[0].tex = Vector2f(0.0f, 1.0f);
+	mVertices[1].pos = Vector2f(w, h);
+	mVertices[1].tex = Vector2f(mValue * numStars, 0.0f);
+	mVertices[2].pos = Vector2f(0.0f, h);
+	mVertices[2].tex = Vector2f(0.0f, 0.0f);
 
 	mVertices[3] = mVertices[0];
-	mVertices[4].pos << w, 0.0f;
-		mVertices[4].tex << mValue * numStars, 1.0f;
+	mVertices[4].pos = Vector2f(w, 0.0f);
+	mVertices[4].tex = Vector2f(mValue * numStars, 1.0f);
 	mVertices[5] = mVertices[1];
 
 	mVertices[6] = mVertices[4];
-	mVertices[7].pos << fw, h;
-		mVertices[7].tex << numStars, 0.0f;
+	mVertices[7].pos = Vector2f(fw, h);
+	mVertices[7].tex = Vector2f(numStars, 0.0f);
 	mVertices[8] = mVertices[1];
 
 	mVertices[9] = mVertices[6];
-	mVertices[10].pos << fw, 0.0f;
-		mVertices[10].tex << numStars, 1.0f;
+	mVertices[10].pos = Vector2f(fw, 0.0f);
+	mVertices[10].tex = Vector2f(numStars, 1.0f);
 	mVertices[11] = mVertices[7];
 }
 
-void RatingComponent::render(const Eigen::Affine3f& parentTrans)
+void RatingComponent::updateColors()
 {
-	Eigen::Affine3f trans = roundMatrix(parentTrans * getTransform());
+	Renderer::buildGLColorArray(mColors, mColorShift, 12);
+}
+
+void RatingComponent::render(const Transform4x4f& parentTrans)
+{
+	Transform4x4f trans = parentTrans * getTransform();
+	trans.round();
 	Renderer::setMatrix(trans);
 
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glColor4ub(255, 255, 255, getOpacity());
-
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
 	
 	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
 	
 	mFilledTexture->bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -116,11 +136,10 @@ void RatingComponent::render(const Eigen::Affine3f& parentTrans)
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
 	
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-
-	glColor4ub(255, 255, 255, 255);
 
 	renderChildren(trans);
 }
@@ -160,6 +179,10 @@ void RatingComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const 
 		mUnfilledTexture = TextureResource::get(elem->get<std::string>("unfilledPath"), true);
 		imgChanged = true;
 	}
+
+
+	if(properties & COLOR && elem->has("color"))
+		setColorShift(elem->get<unsigned int>("color"));
 
 	if(imgChanged)
 		onSizeChanged();

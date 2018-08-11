@@ -1,12 +1,12 @@
 #include "components/HelpComponent.h"
-#include "Renderer.h"
-#include "Settings.h"
-#include "Log.h"
-#include "Util.h"
+
+#include "components/ComponentGrid.h"
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
-#include "components/ComponentGrid.h"
-#include <boost/assign.hpp>
+#include "resources/TextureResource.h"
+#include "utils/StringUtil.h"
+#include "Log.h"
+#include "Settings.h"
 
 #define OFFSET_X 12 // move the entire thing right by this amount (px)
 #define OFFSET_Y 12 // move the entire thing up by this amount (px)
@@ -14,20 +14,20 @@
 #define ICON_TEXT_SPACING 8 // space between [icon] and [text] (px)
 #define ENTRY_SPACING 16 // space between [text] and next [icon] (px)
 
-using namespace Eigen;
-
-static const std::map<std::string, const char*> ICON_PATH_MAP = boost::assign::map_list_of
-	("up/down", ":/help/dpad_updown.svg")
-	("left/right", ":/help/dpad_leftright.svg")
-	("up/down/left/right", ":/help/dpad_all.svg")
-	("a", ":/help/button_a.svg")
-	("b", ":/help/button_b.svg")
-	("x", ":/help/button_x.svg")
-	("y", ":/help/button_y.svg")
-	("l", ":/help/button_l.svg")
-	("r", ":/help/button_r.svg")
-	("start", ":/help/button_start.svg")
-	("select", ":/help/button_select.svg");
+static const std::map<std::string, const char*> ICON_PATH_MAP {
+	{ "up/down", ":/help/dpad_updown.svg" },
+	{ "left/right", ":/help/dpad_leftright.svg" },
+	{ "up/down/left/right", ":/help/dpad_all.svg" },
+	{ "a", ":/help/button_a.svg" },
+	{ "b", ":/help/button_b.svg" },
+	{ "x", ":/help/button_x.svg" },
+	{ "y", ":/help/button_y.svg" },
+	{ "l", ":/help/button_l.svg" },
+	{ "r", ":/help/button_r.svg" },
+	{ "lr", ":/help/button_lr.svg" },
+	{ "start", ":/help/button_start.svg" },
+	{ "select", ":/help/button_select.svg" }
+};
 
 HelpComponent::HelpComponent(Window* window) : GuiComponent(window)
 {
@@ -61,23 +61,23 @@ void HelpComponent::updateGrid()
 
 	std::shared_ptr<Font>& font = mStyle.font;
 
-	mGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i(mPrompts.size() * 4, 1));
+	mGrid = std::make_shared<ComponentGrid>(mWindow, Vector2i((int)mPrompts.size() * 4, 1));
 	// [icon] [spacer1] [text] [spacer2]
 	
 	std::vector< std::shared_ptr<ImageComponent> > icons;
 	std::vector< std::shared_ptr<TextComponent> > labels;
 
 	float width = 0;
-	const float height = round(font->getLetterHeight() * 1.25f);
-	for(auto it = mPrompts.begin(); it != mPrompts.end(); it++)
+	const float height = Math::round(font->getLetterHeight() * 1.25f);
+	for(auto it = mPrompts.cbegin(); it != mPrompts.cend(); it++)
 	{
 		auto icon = std::make_shared<ImageComponent>(mWindow);
-		icon->setImage(getIconTexture(it->first));
+		icon->setImage(getIconTexture(it->first.c_str()));
 		icon->setColorShift(mStyle.iconColor);
 		icon->setResize(0, height);
 		icons.push_back(icon);
 
-		auto lbl = std::make_shared<TextComponent>(mWindow, strToUpper(it->second), font, mStyle.textColor);
+		auto lbl = std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(it->second), font, mStyle.textColor);
 		labels.push_back(lbl);
 
 		width += icon->getSize().x() + lbl->getSize().x() + ICON_TEXT_SPACING + ENTRY_SPACING;
@@ -95,18 +95,19 @@ void HelpComponent::updateGrid()
 		mGrid->setEntry(labels.at(i), Vector2i(col + 2, 0), false, false);
 	}
 
-	mGrid->setPosition(Eigen::Vector3f(mStyle.position.x(), mStyle.position.y(), 0.0f));
+	mGrid->setPosition(Vector3f(mStyle.position.x(), mStyle.position.y(), 0.0f));
 	//mGrid->setPosition(OFFSET_X, Renderer::getScreenHeight() - mGrid->getSize().y() - OFFSET_Y);
+	mGrid->setOrigin(mStyle.origin);
 }
 
 std::shared_ptr<TextureResource> HelpComponent::getIconTexture(const char* name)
 {
 	auto it = mIconCache.find(name);
-	if(it != mIconCache.end())
+	if(it != mIconCache.cend())
 		return it->second;
 	
 	auto pathLookup = ICON_PATH_MAP.find(name);
-	if(pathLookup == ICON_PATH_MAP.end())
+	if(pathLookup == ICON_PATH_MAP.cend())
 	{
 		LOG(LogError) << "Unknown help icon \"" << name << "\"!";
 		return nullptr;
@@ -132,9 +133,9 @@ void HelpComponent::setOpacity(unsigned char opacity)
 	}
 }
 
-void HelpComponent::render(const Eigen::Affine3f& parentTrans)
+void HelpComponent::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 	
 	if(mGrid)
 		mGrid->render(trans);

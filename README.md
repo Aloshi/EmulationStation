@@ -1,47 +1,43 @@
 EmulationStation
 ================
 
-A cross-platform graphical front-end for emulators with controller navigation.
-
-Project website: http://emulationstation.org
-
-**Raspberry Pi users:**
-A cool guy named petrockblog made a script which automatically installs many emulators and ES. It also includes options for configuring your RPi and setting it up to boot directly into ES. You can find it here: https://github.com/petrockblog/RetroPie-Setup
-
-Download
-========
-
-Download a pre-compiled version at [emulationstation.org](http://emulationstation.org#download).
-
-
-I found a bug! I have a problem!
-================================
-
-- First, try to check the [issue list](https://github.com/Aloshi/EmulationStation/issues?state=open) for some entries that might match your problem.  Make sure to check closed issues too!
-
-- If you're running EmulationStation on a on Raspberry Pi and have problems with config file changes not taking effect, content missing after editing, etc., check if your SD card is corrupted (see issues [#78](https://github.com/Aloshi/EmulationStation/issues/78) and [#107](https://github.com/Aloshi/EmulationStation/issues/107)). You can do this with free tools like [h2testw](http://www.heise.de/download/h2testw.html) or [F3](http://oss.digirati.com.br/f3/).
-
-- Try to update to the latest version of EmulationStation using git (you might need to delete your `es_input.cfg` and `es_settings.cfg` after that to reset them to default values):
-```bash
-cd YourEmulationStationDirectory
-git pull
-cmake .
-make
-```
-
-- If your problem still isn't gone, the best way to report a bug is to post an issue on GitHub. Try to post the simplest steps possible to reproduce the bug. Include files you think might be related (except for ROMs, of course). If you haven't re-run ES since the crash, the log file `~/.emulationstation/es_log.txt` is also helpful.
+This is a fork of EmulationStation for RetroPie.
+EmulationStation is a cross-platform graphical front-end for emulators with controller navigation.
 
 Building
 ========
 
 EmulationStation uses some C++11 code, which means you'll need to use at least g++-4.7 on Linux, or VS2010 on Windows, to compile.
 
-EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, Boost (System, Filesystem, DateTime, Locale), FreeImage, FreeType, Eigen3, and cURL.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
+EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, FreeImage, FreeType, and cURL.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
 
 **On Debian/Ubuntu:**
 All of this be easily installed with apt-get:
 ```bash
-sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid
+sudo apt-get install libsdl2-dev libfreeimage-dev libfreetype6-dev libcurl4-openssl-dev \
+  libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid \
+  libvlc-dev libvlccore-dev vlc-nox
+```
+**On Fedora:**
+All of this be easily installed with dnf ( With rpmfusion activated) :
+```bash
+sudo dnf install SDL2-devel freeimage-devel freetype-devel curl-devel \
+  alsa-lib-devel mesa-libGL-devel cmake \
+  vlc-devel
+```
+
+Note this Repository uses a git submodule - to checkout the source and all submodules, use
+
+```bash
+git clone --recursive https://github.com/RetroPie/EmulationStation.git
+```
+
+or 
+
+```bash
+git clone https://github.com/RetroPie/EmulationStation.git
+cd EmulationStation
+git submodule update --init
 ```
 
 Then, generate and build the Makefile with CMake:
@@ -56,10 +52,6 @@ make
 Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
 
 **On Windows:**
-
-[Boost](http://www.boost.org/users/download/) (you'll need to compile yourself or get the pre-compiled binaries)
-
-[Eigen3](http://eigen.tuxfamily.org/index.php?title=Main_Page) (header-only library)
 
 [FreeImage](http://downloads.sourceforge.net/freeimage/FreeImage3154Win32.zip)
 
@@ -110,9 +102,12 @@ You can use `--help` or `-h` to view a list of command-line options. Briefly out
 --draw-framerate	- draw the framerate.
 --no-exit		- do not display 'exit' in the ES menu.
 --debug			- show the console window on Windows, do slightly more logging
---windowed	- run ES in a window, works best in conjunction with --resolution [w] [h].
+--windowed		- run ES in a window, works best in conjunction with --resolution [w] [h].
 --vsync [1/on or 0/off]	- turn vsync on or off (default is on).
---scrape	- run the interactive command-line metadata scraper.
+--scrape		- run the interactive command-line metadata scraper.
+--no-splash		- don't show the splash screen.
+--max-vram [size]	- Max VRAM to use in Mb before swapping. 0 for unlimited.
+--force-kiosk		- Force the UI mode to be Kiosk.
 ```
 
 As long as ES hasn't frozen, you can always press F4 to close the application.

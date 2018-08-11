@@ -1,4 +1,5 @@
 #include "Sound.h"
+
 #include "AudioManager.h"
 #include "Log.h"
 #include "Settings.h"
@@ -9,7 +10,7 @@ std::map< std::string, std::shared_ptr<Sound> > Sound::sMap;
 std::shared_ptr<Sound> Sound::get(const std::string& path)
 {
 	auto it = sMap.find(path);
-	if(it != sMap.end())
+	if(it != sMap.cend())
 		return it->second;
 
 	std::shared_ptr<Sound> sound = std::shared_ptr<Sound>(new Sound(path));
@@ -113,6 +114,8 @@ void Sound::play()
 
 	if(!Settings::getInstance()->getBool("EnableSounds"))
 		return;
+
+	AudioManager::getInstance();
 
 	SDL_LockAudio();
 	if (playing)

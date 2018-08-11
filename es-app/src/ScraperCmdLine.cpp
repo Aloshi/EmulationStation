@@ -1,14 +1,19 @@
 #include "ScraperCmdLine.h"
-#include <iostream>
-#include <vector>
-#include "SystemData.h"
-#include "Settings.h"
-#include <signal.h>
+
 #include "Log.h"
+#include "platform.h"
+#include "SystemData.h"
+#include <iostream>
+#include <signal.h>
+#if defined(__linux__)
+#include <unistd.h>
+#elif defined(WIN32)
+#include <Windows.h>
+#endif
 
 std::ostream& out = std::cout;
 
-void handle_interrupt_signal(int p)
+void handle_interrupt_signal(int /*p*/)
 {
 	sleep(50);
 
@@ -63,7 +68,7 @@ int run_scraper_cmdline()
 	if(system_choice == "y" || system_choice == "Y")
 	{
 		out << "Will scrape all platforms.\n";
-		for(auto i = SystemData::sSystemVector.begin(); i != SystemData::sSystemVector.end(); i++)
+		for(auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++)
 		{
 			out << "   " << (*i)->getName() << " (" << (*i)->getGameCount() << " games)\n";
 			systems.push_back(*i);
@@ -76,9 +81,9 @@ int run_scraper_cmdline()
 		out << "Type nothing and press enter when you are ready to continue.\n";
 
 		do {
-			for(auto i = SystemData::sSystemVector.begin(); i != SystemData::sSystemVector.end(); i++)
+			for(auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++)
 			{
-				if(std::find(systems.begin(), systems.end(), (*i)) != systems.end())
+				if(std::find(systems.cbegin(), systems.cend(), (*i)) != systems.cend())
 					out << " C ";
 				else
 					out << "   ";
@@ -92,7 +97,7 @@ int run_scraper_cmdline()
 				break;
 
 			bool found = false;
-			for(auto i = SystemData::sSystemVector.begin(); i != SystemData::sSystemVector.end(); i++)
+			for(auto i = SystemData::sSystemVector.cbegin(); i != SystemData::sSystemVector.cend(); i++)
 			{
 				if((*i)->getName() == sys_name)
 				{
@@ -140,14 +145,14 @@ int run_scraper_cmdline()
 
 	/*
 	std::shared_ptr<Scraper> scraper = Settings::getInstance()->getScraper();
-	for(auto sysIt = systems.begin(); sysIt != systems.end(); sysIt++)
+	for(auto sysIt = systems.cbegin(); sysIt != systems.cend(); sysIt++)
 	{
 		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(GAME);
 
 		ScraperSearchParams params;
 		params.system = (*sysIt);
 
-		for(auto gameIt = files.begin(); gameIt != files.end(); gameIt++)
+		for(auto gameIt = files.cbegin(); gameIt != files.cend(); gameIt++)
 		{
 			params.nameOverride = "";
 			params.game = *gameIt;
@@ -237,15 +242,15 @@ int run_scraper_cmdline()
 	out << "\n\n";
 	out << "Downloading boxart...\n";
 
-	for(auto sysIt = systems.begin(); sysIt != systems.end(); sysIt++)
+	for(auto sysIt = systems.cbegin(); sysIt != systems.cend(); sysIt++)
 	{
 		std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(GAME);
 
-		for(auto gameIt = files.begin(); gameIt != files.end(); gameIt++)
+		for(auto gameIt = files.cbegin(); gameIt != files.cend(); gameIt++)
 		{
 			FileData* game = *gameIt;
 			const std::vector<MetaDataDecl>& mdd = game->metadata.getMDD();
-			for(auto i = mdd.begin(); i != mdd.end(); i++)
+			for(auto i = mdd.cbegin(); i != mdd.cend(); i++)
 			{
 				std::string key = i->key;
 				std::string url = game->metadata.get(key);

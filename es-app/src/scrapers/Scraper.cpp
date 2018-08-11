@@ -1,16 +1,16 @@
 #include "scrapers/Scraper.h"
+
+#include "FileData.h"
+#include "GamesDBScraper.h"
 #include "Log.h"
 #include "Settings.h"
+#include "SystemData.h"
 #include <FreeImage.h>
-#include <boost/filesystem.hpp>
-#include <boost/assign.hpp>
+#include <fstream>
 
-#include "GamesDBScraper.h"
-#include "TheArchiveScraper.h"
-
-const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs = boost::assign::map_list_of
-	("TheGamesDB", &thegamesdb_generate_scraper_requests)
-	("TheArchive", &thearchive_generate_scraper_requests);
+const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs {
+	{ "TheGamesDB", &thegamesdb_generate_scraper_requests }
+};
 
 std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params)
 {
@@ -24,7 +24,7 @@ std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParam
 std::vector<std::string> getScraperList()
 {
 	std::vector<std::string> list;
-	for(auto it = scraper_request_funcs.begin(); it != scraper_request_funcs.end(); it++)
+	for(auto it = scraper_request_funcs.cbegin(); it != scraper_request_funcs.cend(); it++)
 	{
 		list.push_back(it->first);
 	}
@@ -43,15 +43,17 @@ void ScraperSearchHandle::update()
 	if(mStatus == ASYNC_DONE)
 		return;
 
-	while(!mRequestQueue.empty())
+	if(!mRequestQueue.empty())
 	{
-		auto& req = mRequestQueue.front();
-		AsyncHandleStatus status = req->status();
+		// a request can add more requests to the queue while running,
+		// so be careful with references into the queue
+		auto& req = *(mRequestQueue.front());
+		AsyncHandleStatus status = req.status();
 
 		if(status == ASYNC_ERROR)
 		{
 			// propegate error
-			setError(req->getStatusString());
+			setError(req.getStatusString());
 
 			// empty our queue
 			while(!mRequestQueue.empty())
@@ -64,7 +66,6 @@ void ScraperSearchHandle::update()
 		if(status == ASYNC_DONE)
 		{
 			mRequestQueue.pop();
-			continue;
 		}
 
 		// status == ASYNC_IN_PROGRESS
@@ -139,8 +140,8 @@ void MDResolveHandle::update()
 	if(mStatus == ASYNC_DONE || mStatus == ASYNC_ERROR)
 		return;
 	
-	auto it = mFuncs.begin();
-	while(it != mFuncs.end())
+	auto it = mFuncs.cbegin();
+	while(it != mFuncs.cend())
 	{
 		if(it->first->status() == ASYNC_ERROR)
 		{
@@ -259,7 +260,7 @@ bool resizeImage(const std::string& path, int maxWidth, int maxHeight)
 		return false;
 	}
 
-	bool saved = FreeImage_Save(format, imageRescaled, path.c_str());
+	bool saved = (FreeImage_Save(format, imageRescaled, path.c_str()) != 0);
 	FreeImage_Unload(imageRescaled);
 
 	if(!saved)
@@ -271,17 +272,17 @@ bool resizeImage(const std::string& path, int maxWidth, int maxHeight)
 std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& url)
 {
 	const std::string subdirectory = params.system->getName();
-	const std::string name = params.game->getPath().stem().generic_string() + "-" + suffix;
+	const std::string name = Utils::FileSystem::getStem(params.game->getPath()) + "-" + suffix;
 
-	std::string path = getHomePath() + "/.emulationstation/downloaded_images/";
+	std::string path = Utils::FileSystem::getHomePath() + "/.emulationstation/downloaded_images/";
 
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 
 	path += subdirectory + "/";
 
-	if(!boost::filesystem::exists(path))
-		boost::filesystem::create_directory(path);
+	if(!Utils::FileSystem::exists(path))
+		Utils::FileSystem::createDirectory(path);
 
 	size_t dot = url.find_last_of('.');
 	std::string ext;

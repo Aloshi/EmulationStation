@@ -1,17 +1,15 @@
 #include "views/gamelist/IGameListView.h"
-#include "Window.h"
-#include "guis/GuiMetaDataEd.h"
-#include "guis/GuiMenu.h"
+
 #include "guis/GuiGamelistOptions.h"
+#include "views/UIModeController.h"
 #include "views/ViewController.h"
-#include "Settings.h"
-#include "Log.h"
 #include "Sound.h"
+#include "Window.h"
 
 bool IGameListView::input(InputConfig* config, Input input)
 {
 	// select to open GuiGamelistOptions
-	if(config->isMappedTo("select", input) && input.value)
+	if(!UIModeController::getInstance()->isUIModeKid() && config->isMappedTo("select", input) && input.value)
 	{
 		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
 		mWindow->pushGui(new GuiGamelistOptions(mWindow, this->mRoot->getSystem()));
@@ -40,4 +38,19 @@ HelpStyle IGameListView::getHelpStyle()
 	HelpStyle style;
 	style.applyTheme(mTheme, getName());
 	return style;
+}
+
+void IGameListView::render(const Transform4x4f& parentTrans)
+{
+	Transform4x4f trans = parentTrans * getTransform();
+
+	float scaleX = trans.r0().x();
+	float scaleY = trans.r1().y();
+
+	Vector2i pos((int)Math::round(trans.translation()[0]), (int)Math::round(trans.translation()[1]));
+	Vector2i size((int)Math::round(mSize.x() * scaleX), (int)Math::round(mSize.y() * scaleY));
+
+	Renderer::pushClipRect(pos, size);
+	renderChildren(trans);
+	Renderer::popClipRect();
 }

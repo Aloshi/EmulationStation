@@ -1,14 +1,10 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H
+#define ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H
 
 #include "GuiComponent.h"
-#include "resources/Font.h"
-#include "Renderer.h"
-#include "Window.h"
-#include "components/TextComponent.h"
-#include "components/ImageComponent.h"
-#include "components/MenuComponent.h"
-#include <sstream>
 #include "Log.h"
+#include "Window.h"
 
 //Used to display a list of options.
 //Can select one or multiple options.
@@ -52,7 +48,7 @@ private:
 			for(auto it = mParent->mEntries.begin(); it != mParent->mEntries.end(); it++)
 			{
 				row.elements.clear();
-				row.addElement(std::make_shared<TextComponent>(mWindow, strToUpper(it->name), font, 0x777777FF), true);
+				row.addElement(std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(it->name), font, 0x777777FF), true);
 
 				OptionListData& e = *it;
 
@@ -138,14 +134,17 @@ private:
 	};
 
 public:
-	OptionListComponent(Window* window, const std::string& name, bool multiSelect = false) : GuiComponent(window), mMultiSelect(multiSelect), mName(name), 
+	OptionListComponent(Window* window, const std::string& name, bool multiSelect = false) : GuiComponent(window), mMultiSelect(multiSelect), mName(name),
 		 mText(window), mLeftArrow(window), mRightArrow(window)
 	{
 		auto font = Font::get(FONT_SIZE_MEDIUM, FONT_PATH_LIGHT);
 		mText.setFont(font);
 		mText.setColor(0x777777FF);
-		mText.setAlignment(ALIGN_CENTER);
+		mText.setHorizontalAlignment(ALIGN_CENTER);
 		addChild(&mText);
+
+		mLeftArrow.setResize(0, mText.getFont()->getLetterHeight());
+		mRightArrow.setResize(0, mText.getFont()->getLetterHeight());
 
 		if(mMultiSelect)
 		{
@@ -197,7 +196,7 @@ public:
 					unsigned int i = getSelectedId();
 					int next = (int)i - 1;
 					if(next < 0)
-						next += mEntries.size();
+						next += (int)mEntries.size();
 
 					mEntries.at(i).selected = false;
 					mEntries.at(next).selected = true;
@@ -223,7 +222,7 @@ public:
 	std::vector<T> getSelectedObjects()
 	{
 		std::vector<T> ret;
-		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+		for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 		{
 			if(it->selected)
 				ret.push_back(it->object);
@@ -248,6 +247,24 @@ public:
 		e.selected = selected;
 
 		mEntries.push_back(e);
+		onSelectedChanged();
+	}
+
+	void selectAll()
+	{
+		for(unsigned int i = 0; i < mEntries.size(); i++)
+		{
+			mEntries.at(i).selected = true;
+		}
+		onSelectedChanged();
+	}
+
+	void selectNone()
+	{
+		for(unsigned int i = 0; i < mEntries.size(); i++)
+		{
+			mEntries.at(i).selected = false;
+		}
 		onSelectedChanged();
 	}
 
@@ -284,11 +301,11 @@ private:
 				mParent->onSizeChanged();
 		}else{
 			// display currently selected + l/r cursors
-			for(auto it = mEntries.begin(); it != mEntries.end(); it++)
+			for(auto it = mEntries.cbegin(); it != mEntries.cend(); it++)
 			{
 				if(it->selected)
 				{
-					mText.setText(strToUpper(it->name));
+					mText.setText(Utils::String::toUpper(it->name));
 					mText.setSize(0, mText.getSize().y());
 					setSize(mText.getSize().x() + mLeftArrow.getSize().x() + mRightArrow.getSize().x() + 24, mText.getSize().y());
 					if(mParent) // hack since theres no "on child size changed" callback atm...
@@ -304,7 +321,7 @@ private:
 		std::vector<HelpPrompt> prompts;
 		if(!mMultiSelect)
 			prompts.push_back(HelpPrompt("left/right", "change"));
-		
+
 		prompts.push_back(HelpPrompt("a", "select"));
 		return prompts;
 	}
@@ -318,3 +335,5 @@ private:
 
 	std::vector<OptionListData> mEntries;
 };
+
+#endif // ES_CORE_COMPONENTS_OPTION_LIST_COMPONENT_H

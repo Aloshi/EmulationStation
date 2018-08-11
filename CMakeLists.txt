@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
+option(GLES "Set to ON if targeting OpenGL ES" ${GLES})
+option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
+
 project(emulationstation-all)
 
 #-------------------------------------------------------------------------------
@@ -11,29 +14,36 @@ LIST(APPEND CMAKE_MODULE_PATH
 
 #-------------------------------------------------------------------------------
 #set up OpenGL system variable
-set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
-set_property(CACHE GLSystem PROPERTY STRINGS "Desktop OpenGL" "OpenGL ES")
-
+if(GLES)
+    set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
+elseif(GL)
+    set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 #-------------------------------------------------------------------------------
 #check if we're running on Raspberry Pi
-MESSAGE("Looking for bcm_host.h")
-if(EXISTS "/opt/vc/include/bcm_host.h")
+elseif(EXISTS "/opt/vc/include/bcm_host.h")
     MESSAGE("bcm_host.h found")
     set(BCMHOST found)
-    set(GLSystem "OpenGL ES")
-else()
-    MESSAGE("bcm_host.h not found")
-endif()
-
+    set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
 #-------------------------------------------------------------------------------
-#check if we're running on olinuxino
-MESSAGE("Looking for libMali.so")
-if(EXISTS "/usr/lib/libMali.so")
+#check if we're running on OSMC Vero4K
+elseif(EXISTS "/opt/vero3/lib/libMali.so")
     MESSAGE("libMali.so found")
-    set(GLSystem "OpenGL ES")
+    set(VERO4K found)
+    set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
+#-------------------------------------------------------------------------------
+#check if we're running on olinuxino / odroid / etc
+elseif(EXISTS "/usr/lib/libMali.so" OR
+    EXISTS "/usr/lib/arm-linux-gnueabihf/libMali.so" OR
+    EXISTS "/usr/lib/aarch64-linux-gnu/libMali.so" OR
+    EXISTS "/usr/lib/arm-linux-gnueabihf/mali-egl/libmali.so" OR
+    EXISTS "/usr/lib/arm-linux-gnueabihf/libmali.so")
+    MESSAGE("libMali.so found")
+    set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
 else()
-    MESSAGE("libMali.so not found")
-endif()
+    set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
+endif(GLES)
+
+set_property(CACHE GLSystem PROPERTY STRINGS "Desktop OpenGL" "OpenGL ES")
 
 #finding necessary packages
 #-------------------------------------------------------------------------------
@@ -45,9 +55,9 @@ endif()
 find_package(Freetype REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system filesystem date_time locale)
-find_package(Eigen3 REQUIRED)
 find_package(CURL REQUIRED)
+find_package(VLC REQUIRED)
+find_package(libCEC)
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -60,12 +70,21 @@ if(DEFINED BCMHOST)
     add_definitions(-D_RPI_)
 endif()
 
+if(DEFINED VERO4K)
+    add_definitions(-D_VERO4K_)
+endif()
+
+if(DEFINED libCEC_FOUND)
+    add_definitions(-DHAVE_LIBCEC)
+endif()
+
 #-------------------------------------------------------------------------------
 
 if(MSVC)
     set(CMAKE_DEBUG_POSTFIX "d")
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+    add_definitions(-DNOMINMAX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
 endif()
@@ -78,8 +97,13 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     endif()
 
     #set up compiler flags for GCC
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O3") #support C++11 for std::, optimize
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O3")  #-s = strip binary
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O0") #support C++11 for std::, optimize
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O0")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O2") #support C++11 for std::, optimize
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O2")  #-s = strip binary
+endif()
 endif()
 
 if(${GLSystem} MATCHES "Desktop OpenGL")
@@ -88,20 +112,24 @@ else()
     add_definitions(-DUSE_OPENGL_ES)
 endif()
 
-add_definitions(-DEIGEN_DONT_ALIGN)
-
 #-------------------------------------------------------------------------------
 #add include directories
 set(COMMON_INCLUDE_DIRS
     ${FREETYPE_INCLUDE_DIRS}
     ${FreeImage_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
-    ${EIGEN3_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
+    ${VLC_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
 )
+
+#add libCEC_INCLUDE_DIR
+if(DEFINED libCEC_FOUND)
+    LIST(APPEND COMMON_INCLUDE_DIRS
+        ${libCEC_INCLUDE_DIR}
+    )
+endif()
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -116,6 +144,11 @@ if(DEFINED BCMHOST)
         "/opt/vc/include/interface/vcos"
         "/opt/vc/include/interface/vmcs_host/linux"
         "/opt/vc/include/interface/vcos/pthreads"
+    )
+#add include directory for Vero4K
+elseif(DEFINED VERO4K)
+    LIST(APPEND COMMON_INCLUDE_DIRS
+        "/opt/vero3/include"
     )
 else()
     if(${GLSystem} MATCHES "Desktop OpenGL")
@@ -133,24 +166,36 @@ endif()
 #define libraries and directories
 if(DEFINED BCMHOST)
     link_directories(
-        ${Boost_LIBRARY_DIRS}
         "/opt/vc/lib"
     )
-else()
+elseif(DEFINED VERO4K)
     link_directories(
-        ${Boost_LIBRARY_DIRS}
+        "/opt/vero3/lib"
     )
 endif()
 
 set(COMMON_LIBRARIES
-    ${Boost_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     ${FreeImage_LIBRARIES}
-	${SDL2_LIBRARY}
+    ${SDL2_LIBRARY}
     ${CURL_LIBRARIES}
+    ${VLC_LIBRARIES}
     pugixml
     nanosvg
 )
+
+#add libCEC_LIBRARIES
+if(DEFINED libCEC_FOUND)
+if(DEFINED BCMHOST)
+    LIST(APPEND COMMON_LIBRARIES
+        vchiq_arm
+    )
+endif()
+    LIST(APPEND COMMON_LIBRARIES
+        dl
+        ${libCEC_LIBRARIES}
+    )
+endif()
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -162,6 +207,11 @@ endif()
 if(DEFINED BCMHOST)
     LIST(APPEND COMMON_LIBRARIES
         bcm_host
+        brcmEGL
+        ${OPENGLES_LIBRARIES}
+    )
+elseif(DEFINED VERO4K)
+    LIST(APPEND COMMON_LIBRARIES
         EGL
         ${OPENGLES_LIBRARIES}
     )

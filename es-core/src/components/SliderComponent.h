@@ -1,10 +1,12 @@
 #pragma once
+#ifndef ES_CORE_COMPONENTS_SLIDER_COMPONENT_H
+#define ES_CORE_COMPONENTS_SLIDER_COMPONENT_H
 
-#include "GuiComponent.h"
 #include "components/ImageComponent.h"
+#include "GuiComponent.h"
 
-class TextCache;
 class Font;
+class TextCache;
 
 // Used to display/edit a value between some min and max values.
 class SliderComponent : public GuiComponent
@@ -18,7 +20,7 @@ public:
 
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
-	void render(const Eigen::Affine3f& parentTrans) override;
+	void render(const Transform4x4f& parentTrans) override;
 	
 	void onSizeChanged() override;
 	
@@ -39,3 +41,5 @@ private:
 	std::shared_ptr<Font> mFont;
 	std::shared_ptr<TextCache> mValueCache;
 };
+
+#endif // ES_CORE_COMPONENTS_SLIDER_COMPONENT_H

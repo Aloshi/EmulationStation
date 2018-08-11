@@ -1,5 +1,7 @@
 #pragma once
-#include <string>
+#ifndef ES_CORE_SETTINGS_H
+#define ES_CORE_SETTINGS_H
+
 #include <map>
 
 //This is a singleton for storing settings.
@@ -35,3 +37,5 @@ private:
 	std::map<std::string, float> mFloatMap;
 	std::map<std::string, std::string> mStringMap;
 };
+
+#endif // ES_CORE_SETTINGS_H

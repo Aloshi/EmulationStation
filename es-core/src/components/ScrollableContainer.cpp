@@ -1,9 +1,9 @@
 #include "components/ScrollableContainer.h"
-#include "Renderer.h"
-#include "Log.h"
 
-#define AUTO_SCROLL_RESET_DELAY 10000 // ms to reset to top after we reach the bottom
-#define AUTO_SCROLL_DELAY 8000 // ms to wait before we start to scroll
+#include "Renderer.h"
+
+#define AUTO_SCROLL_RESET_DELAY 3000 // ms to reset to top after we reach the bottom
+#define AUTO_SCROLL_DELAY 1000 // ms to wait before we start to scroll
 #define AUTO_SCROLL_SPEED 50 // ms between scrolls
 
 ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window), 
@@ -11,18 +11,18 @@ ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window),
 {
 }
 
-void ScrollableContainer::render(const Eigen::Affine3f& parentTrans)
+void ScrollableContainer::render(const Transform4x4f& parentTrans)
 {
-	Eigen::Affine3f trans = parentTrans * getTransform();
+	Transform4x4f trans = parentTrans * getTransform();
 
-	Eigen::Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());
+	Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());
 
-	Eigen::Vector3f dimScaled = trans * Eigen::Vector3f(mSize.x(), mSize.y(), 0);
-	Eigen::Vector2i clipDim((int)dimScaled.x() - trans.translation().x(), (int)dimScaled.y() - trans.translation().y());
+	Vector3f dimScaled = trans * Vector3f(mSize.x(), mSize.y(), 0);
+	Vector2i clipDim((int)(dimScaled.x() - trans.translation().x()), (int)(dimScaled.y() - trans.translation().y()));
 
 	Renderer::pushClipRect(clipPos, clipDim);
 
-	trans.translate(-Eigen::Vector3f(mScrollPos.x(), mScrollPos.y(), 0));
+	trans.translate(-Vector3f(mScrollPos.x(), mScrollPos.y(), 0));
 	Renderer::setMatrix(trans);
 
 	GuiComponent::renderChildren(trans);
@@ -34,24 +34,24 @@ void ScrollableContainer::setAutoScroll(bool autoScroll)
 {
 	if(autoScroll)
 	{
-		mScrollDir << 0, 1;
+		mScrollDir = Vector2f(0, 1);
 		mAutoScrollDelay = AUTO_SCROLL_DELAY;
 		mAutoScrollSpeed = AUTO_SCROLL_SPEED;
 		reset();
 	}else{
-		mScrollDir << 0, 0;
+		mScrollDir = Vector2f(0, 0);
 		mAutoScrollDelay = 0;
 		mAutoScrollSpeed = 0;
 		mAutoScrollAccumulator = 0;
 	}
 }
 
-Eigen::Vector2f ScrollableContainer::getScrollPos() const
+Vector2f ScrollableContainer::getScrollPos() const
 {
 	return mScrollPos;
 }
 
-void ScrollableContainer::setScrollPos(const Eigen::Vector2f& pos)
+void ScrollableContainer::setScrollPos(const Vector2f& pos)
 {
 	mScrollPos = pos;
 }
@@ -77,7 +77,7 @@ void ScrollableContainer::update(int deltaTime)
 	if(mScrollPos.y() < 0)
 		mScrollPos[1] = 0;
 
-	const Eigen::Vector2f contentSize = getContentSize();
+	const Vector2f contentSize = getContentSize();
 	if(mScrollPos.x() + getSize().x() > contentSize.x())
 	{
 		mScrollPos[0] = contentSize.x() - getSize().x();
@@ -104,13 +104,13 @@ void ScrollableContainer::update(int deltaTime)
 }
 
 //this should probably return a box to allow for when controls don't start at 0,0
-Eigen::Vector2f ScrollableContainer::getContentSize()
+Vector2f ScrollableContainer::getContentSize()
 {
-	Eigen::Vector2f max(0, 0);
+	Vector2f max(0, 0);
 	for(unsigned int i = 0; i < mChildren.size(); i++)
 	{
-		Eigen::Vector2f pos(mChildren.at(i)->getPosition()[0], mChildren.at(i)->getPosition()[1]);
-		Eigen::Vector2f bottomRight = mChildren.at(i)->getSize() + pos;
+		Vector2f pos(mChildren.at(i)->getPosition()[0], mChildren.at(i)->getPosition()[1]);
+		Vector2f bottomRight = mChildren.at(i)->getSize() + pos;
 		if(bottomRight.x() > max.x())
 			max.x() = bottomRight.x();
 		if(bottomRight.y() > max.y())
@@ -122,7 +122,7 @@ Eigen::Vector2f ScrollableContainer::getContentSize()
 
 void ScrollableContainer::reset()
 {
-	mScrollPos << 0, 0;
+	mScrollPos = Vector2f(0, 0);
 	mAutoScrollResetAccumulator = 0;
 	mAutoScrollAccumulator = -mAutoScrollDelay + mAutoScrollSpeed;
 	mAtEnd = false;

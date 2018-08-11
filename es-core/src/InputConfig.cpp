@@ -1,10 +1,7 @@
 #include "InputConfig.h"
-#include <string>
-#include <algorithm>
-#include <SDL.h>
-#include <iostream>
+
 #include "Log.h"
-#include "InputManager.h"
+#include <pugixml/src/pugixml.hpp>
 
 //some util functions
 std::string inputTypeToString(InputType type)
@@ -19,6 +16,8 @@ std::string inputTypeToString(InputType type)
 		return "hat";
 	case TYPE_KEY:
 		return "key";
+	case TYPE_CEC_BUTTON:
+		return "cec-button";
 	default:
 		return "error";
 	}
@@ -34,6 +33,8 @@ InputType stringToInputType(const std::string& type)
 		return TYPE_HAT;
 	if(type == "key")
 		return TYPE_KEY;
+	if(type == "cec-button")
+		return TYPE_CEC_BUTTON;
 	return TYPE_COUNT;
 }
 
@@ -42,7 +43,7 @@ std::string toLower(std::string str)
 {
 	for(unsigned int i = 0; i < str.length(); i++)
 	{
-		str[i] = tolower(str[i]);
+		str[i] = (char)tolower(str[i]);
 	}
 
 	return str;
@@ -71,14 +72,14 @@ void InputConfig::mapInput(const std::string& name, Input input)
 void InputConfig::unmapInput(const std::string& name)
 {
 	auto it = mNameMap.find(toLower(name));
-	if(it != mNameMap.end())
+	if(it != mNameMap.cend())
 		mNameMap.erase(it);
 }
 
 bool InputConfig::getInputByName(const std::string& name, Input* result)
 {
 	auto it = mNameMap.find(toLower(name));
-	if(it != mNameMap.end())
+	if(it != mNameMap.cend())
 	{
 		*result = it->second;
 		return true;
@@ -114,8 +115,8 @@ std::vector<std::string> InputConfig::getMappedTo(Input input)
 {
 	std::vector<std::string> maps;
 
-	typedef std::map<std::string, Input>::iterator it_type;
-	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)
+	typedef std::map<std::string, Input>::const_iterator it_type;
+	for(it_type iterator = mNameMap.cbegin(); iterator != mNameMap.cend(); iterator++)
 	{
 		Input chk = iterator->second;
 
@@ -146,7 +147,7 @@ std::vector<std::string> InputConfig::getMappedTo(Input input)
 	return maps;
 }
 
-void InputConfig::loadFromXML(pugi::xml_node node)
+void InputConfig::loadFromXML(pugi::xml_node& node)
 {
 	clear();
 
@@ -172,7 +173,7 @@ void InputConfig::loadFromXML(pugi::xml_node node)
 	}
 }
 
-void InputConfig::writeToXML(pugi::xml_node parent)
+void InputConfig::writeToXML(pugi::xml_node& parent)
 {
 	pugi::xml_node cfg = parent.append_child("inputConfig");
 
@@ -180,15 +181,22 @@ void InputConfig::writeToXML(pugi::xml_node parent)
 	{
 		cfg.append_attribute("type") = "keyboard";
 		cfg.append_attribute("deviceName") = "Keyboard";
-	}else{
+	}
+	else if(mDeviceId == DEVICE_CEC)
+	{
+		cfg.append_attribute("type") = "cec";
+		cfg.append_attribute("deviceName") = "CEC";
+	}
+	else
+	{
 		cfg.append_attribute("type") = "joystick";
 		cfg.append_attribute("deviceName") = mDeviceName.c_str();
 	}
 
 	cfg.append_attribute("deviceGUID") = mDeviceGUID.c_str();
 
-	typedef std::map<std::string, Input>::iterator it_type;
-	for(it_type iterator = mNameMap.begin(); iterator != mNameMap.end(); iterator++)
+	typedef std::map<std::string, Input>::const_iterator it_type;
+	for(it_type iterator = mNameMap.cbegin(); iterator != mNameMap.cend(); iterator++)
 	{
 		if(!iterator->second.configured)
 			continue;
