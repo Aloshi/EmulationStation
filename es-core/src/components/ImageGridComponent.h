@@ -89,8 +89,8 @@ ImageGridComponent<T>::ImageGridComponent(Window* window) : IList<ImageGridData,
 
 	mEntriesDirty = true;
 	mLastCursor = 0;
-	mDefaultGameTexture = ":/blank_game.png";
-	mDefaultFolderTexture = ":/folder.png";
+	mDefaultGameTexture = ":/cartridge.svg";
+	mDefaultFolderTexture = ":/folder.svg";
 
 	mSize = screen * 0.80f;
 	mMargin = screen * 0.07f;
