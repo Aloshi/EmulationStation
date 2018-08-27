@@ -11,9 +11,18 @@
 Window::Window() : mNormalizeNextUpdate(false), mFrameTimeElapsed(0), mFrameCountElapsed(0), mAverageDeltaTime(10), 
 	mAllowSleep(true), mSleeping(false), mTimeSinceLastInput(0)
 {
+    
 	mHelp = new HelpComponent(this);
 	mBackgroundOverlay = new ImageComponent(this);
-	mBackgroundOverlay->setImage(":/scroll_gradient.png");
+	
+    
+#ifndef __APPLE__
+    // This ends up calling some OpenGL methods before SDL has been asked to create a context
+    // On Mac OS X at least, this causes a EXC_BAD_ACCESS (segfault)
+    mBackgroundOverlay->setImage(":/scroll_gradient.png");
+#endif
+    
+
 }
 
 Window::~Window()
@@ -59,6 +68,9 @@ GuiComponent* Window::peekGui()
 
 bool Window::init(unsigned int width, unsigned int height)
 {
+    
+  
+
 	if(!Renderer::init(width, height))
 	{
 		LOG(LogError) << "Renderer failed to initialize!";
@@ -69,6 +81,7 @@ bool Window::init(unsigned int width, unsigned int height)
 
 	ResourceManager::getInstance()->reloadAll();
 
+    
 	//keep a reference to the default fonts, so they don't keep getting destroyed/recreated
 	if(mDefaultFonts.empty())
 	{
