@@ -3,7 +3,7 @@
 #include "Window.h"
 #include "animations/LambdaAnimation.h"
 
-DetailedGameListView::DetailedGameListView(Window* window, FileData* root) : 
+DetailedGameListView::DetailedGameListView(Window* window, const FileData& root) : 
 	BasicGameListView(window, root), 
 	mDescContainer(window), mDescription(window), 
 	mImage(window),
@@ -20,7 +20,7 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 
 	mList.setPosition(mSize.x() * (0.50f + padding), mList.getPosition().y());
 	mList.setSize(mSize.x() * (0.50f - padding), mList.getSize().y());
-	mList.setAlignment(TextListComponent<FileData*>::ALIGN_LEFT);
+	mList.setAlignment(TextListComponent<FileData>::ALIGN_LEFT);
 	mList.setCursorChangedCallback([&](const CursorState& state) { updateInfoPanel(); });
 
 	// image
@@ -64,7 +64,6 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
-
 
 	initMDLabels();
 	initMDValues();
@@ -179,7 +178,7 @@ void DetailedGameListView::initMDValues()
 
 void DetailedGameListView::updateInfoPanel()
 {
-	FileData* file = (mList.size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
+	const FileData* file = (mList.size() == 0 || mList.isScrolling()) ? NULL : &mList.getSelected();
 
 	bool fadingOut;
 	if(file == NULL)
@@ -188,20 +187,22 @@ void DetailedGameListView::updateInfoPanel()
 		//mDescription.setText("");
 		fadingOut = true;
 	}else{
-		mImage.setImage(file->metadata.get("image"));
-		mDescription.setText(file->metadata.get("desc"));
+		MetaDataMap metadata = file->get_metadata();
+
+		mImage.setImage(metadata.get("image"));
+		mDescription.setText(metadata.get("desc"));
 		mDescContainer.reset();
 
 		if(file->getType() == GAME)
 		{
-			mRating.setValue(file->metadata.get("rating"));
-			mReleaseDate.setValue(file->metadata.get("releasedate"));
-			mDeveloper.setValue(file->metadata.get("developer"));
-			mPublisher.setValue(file->metadata.get("publisher"));
-			mGenre.setValue(file->metadata.get("genre"));
-			mPlayers.setValue(file->metadata.get("players"));
-			mLastPlayed.setValue(file->metadata.get("lastplayed"));
-			mPlayCount.setValue(file->metadata.get("playcount"));
+			mRating.setValue(metadata.get("rating"));
+			mReleaseDate.setValue(metadata.get("releasedate"));
+			mDeveloper.setValue(metadata.get("developer"));
+			mPublisher.setValue(metadata.get("publisher"));
+			mGenre.setValue(metadata.get("genre"));
+			mPlayers.setValue(metadata.get("players"));
+			mLastPlayed.setValue(metadata.get("lastplayed"));
+			mPlayCount.setValue(metadata.get("playcount"));
 		}
 		
 		fadingOut = false;
@@ -232,13 +233,26 @@ void DetailedGameListView::updateInfoPanel()
 	}
 }
 
-void DetailedGameListView::launch(FileData* game)
+void DetailedGameListView::launch(FileData& game)
 {
 	Eigen::Vector3f target(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f, 0);
 	if(mImage.hasImage())
 		target << mImage.getCenter().x(), mImage.getCenter().y(), 0;
 
 	ViewController::get()->launch(game, target);
+}
+
+// we know we won't be recreated as a new type of gamelist,
+// so we do the ISimpleGameListView implementation, which is
+// to just repopulate
+void DetailedGameListView::onFilesChanged()
+{
+	ISimpleGameListView::onFilesChanged();
+}
+
+void DetailedGameListView::onMetaDataChanged(const FileData& file)
+{
+	ISimpleGameListView::onMetaDataChanged(file);
 }
 
 std::vector<TextComponent*> DetailedGameListView::getMDLabels()

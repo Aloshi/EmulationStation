@@ -36,22 +36,31 @@ Building
 
 EmulationStation uses some C++11 code, which means you'll need to use at least g++-4.7 on Linux, or VS2010 on Windows, to compile.
 
-EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, Boost (System, Filesystem, DateTime, Locale), FreeImage, FreeType, Eigen3, and cURL.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
+EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, Boost (System, Filesystem, DateTime, Locale), FreeImage, FreeType, Eigen3, libCEC, and cURL.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
 
 **On Debian/Ubuntu:**
 All of this be easily installed with apt-get:
 ```bash
-sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid
+sudo apt-get install libsdl2-dev libboost-system-dev libboost-filesystem-dev libboost-date-time-dev libboost-locale-dev libfreeimage-dev libfreetype6-dev libeigen3-dev libcec-dev libcurl4-openssl-dev libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid
 ```
 
 Then, generate and build the Makefile with CMake:
 ```bash
 cd YourEmulationStationDirectory
-cmake .
+mkdir build && cd build
+cmake ..
 make
 ```
 
 **On the Raspberry Pi:**
+
+Short build instructions for Raspberry Pi 2:
+```bash
+cd YourEmulationStationDirectory
+mkdir build && cd build
+cmake -DCMAKE_CXX_COMPILER=g++-4.7 -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2 ..
+make
+```
 
 Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
 
@@ -69,7 +78,9 @@ Complete Raspberry Pi build instructions at [emulationstation.org](http://emulat
 
 [cURL](http://curl.haxx.se/download.html) (you'll need to compile or get the pre-compiled DLL version)
 
-(Remember to copy necessary .DLLs into the same folder as the executable: probably FreeImage.dll, freetype6.dll, SDL2.dll, libcurl.dll, and zlib1.dll. Exact list depends on if you built your libraries in "static" mode or not.)
+[libCEC](http://packages.pulse-eight.net/)
+
+(Remember to copy necessary .DLLs into the same folder as the executable: probably FreeImage.dll, freetype6.dll, SDL2.dll, libcurl.dll, libcec.dll, and zlib1.dll. Exact list depends on if you built your libraries in "static" mode or not.)
 
 [CMake](http://www.cmake.org/cmake/resources/software.html) (this is used for generating the Visual Studio project)
 

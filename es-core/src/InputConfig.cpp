@@ -15,6 +15,8 @@ std::string inputTypeToString(InputType type)
 		return "axis";
 	case TYPE_BUTTON:
 		return "button";
+	case TYPE_CEC:
+		return "cec_key";
 	case TYPE_HAT:
 		return "hat";
 	case TYPE_KEY:
@@ -30,6 +32,8 @@ InputType stringToInputType(const std::string& type)
 		return TYPE_AXIS;
 	if(type == "button")
 		return TYPE_BUTTON;
+	if(type == "cec_key")
+		return TYPE_CEC;
 	if(type == "hat")
 		return TYPE_HAT;
 	if(type == "key")

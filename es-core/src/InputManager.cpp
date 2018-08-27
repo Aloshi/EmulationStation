@@ -8,6 +8,45 @@
 #include "platform.h"
 
 #define KEYBOARD_GUID_STRING "-1"
+#define CEC_GUID_STRING "-2"
+
+//using namespace CEC;
+using namespace std;
+//using namespace PLATFORM;
+
+#define CEC_CONFIG_VERSION CEC::CEC_CLIENT_VERSION_CURRENT;
+
+#include <cecloader.h>
+
+/*
+class CReconnect : public PLATFORM::CThread
+{
+public:
+	static CReconnect& Get(void)
+	{
+		static CReconnect _instance;
+		return _instance;
+	}
+
+	virtual ~CReconnect(void) {}
+
+	void* Process(void)
+	{
+		if(gParser)
+		{
+			gParser->Close();
+			if(!gParser->Open(gStrPort.c_str()))
+			{
+				LOG(LogInfo) << "Failed to reconnect\n";
+			}
+		}
+		return NULL;
+	}
+
+private:
+	CReconnect(void) {}
+};
+*/
 
 // SO HEY POTENTIAL POOR SAP WHO IS TRYING TO MAKE SENSE OF ALL THIS (by which I mean my future self)
 // There are like four distinct IDs used for joysticks (crazy, right?)
@@ -41,6 +80,46 @@ InputManager* InputManager::getInstance()
 	return mInstance;
 }
 
+Uint32 InputManager::getCecEventType() { return CecEventType; }
+
+int InputManager::CecKeyPress(void *UNUSED(cbParam), const CEC::cec_keypress key)
+{
+	bool* keyPressed = new bool(true);
+	SDL_Event* event = new SDL_Event();
+	Uint32 CecEventType = InputManager::getInstance()->getCecEventType();
+
+	if (key.duration > 0)
+		*keyPressed = false;
+
+	event->type = CecEventType;
+	event->user.code = key.keycode;
+	event->user.data1 = keyPressed;
+	event->user.data2 = NULL;
+
+	SDL_PushEvent(event);
+
+	return 0;
+}
+
+int InputManager::CecAlert(void *UNUSED(cbParam), const CEC::libcec_alert type, const CEC::libcec_parameter UNUSED(param))
+{
+	/*
+	switch (type)
+	{
+		case CEC::CEC_ALERT_CONNECTION_LOST:
+			if (!CReconnect::Get().IsRunning())
+			{
+				LOG(LogInfo) << "Connection lost - trying to reconnect\n";
+				CReconnect::Get().CreateThread(false);
+			}
+			break;
+		default:
+			break;
+	}
+	*/
+	return 0;
+}
+
 void InputManager::init()
 {
 	if(initialized())
@@ -60,12 +139,75 @@ void InputManager::init()
 
 	mKeyboardInputConfig = new InputConfig(DEVICE_KEYBOARD, "Keyboard", KEYBOARD_GUID_STRING);
 	loadInputConfig(mKeyboardInputConfig);
+
+	// try to register a custom SDL_Event for CEC-keypresses
+	CecEventType = (Uint32)-1;
+	CecEventType = SDL_RegisterEvents(CEC::CEC_USER_CONTROL_CODE_MAX);
+	if(CecEventType != ((Uint32)-1)) {
+		// try to initialize libcec
+		gConfig.Clear();
+		gCallbacks.Clear();
+		snprintf(gConfig.strDeviceName, 13, "EmuStation");
+		gConfig.clientVersion		= CEC_CONFIG_VERSION;
+		gConfig.bActivateSource		= 0;
+		gCallbacks.CBCecKeyPress	= &CecKeyPress;
+		gCallbacks.CBCecAlert		= &CecAlert;
+		gConfig.callbacks			= &gCallbacks;
+
+		gConfig.deviceTypes.Add(CEC::CEC_DEVICE_TYPE_PLAYBACK_DEVICE);
+
+		/*
+		// set the primary device type
+		gConfig.deviceTypes.Clear();
+		gConfig.deviceTypes.Add(config.deviceTypes[0]);
+		*/
+
+		gParser = LibCecInitialise(&gConfig);
+		if(!gParser)
+		{
+			LOG(LogInfo) << "Could not load libcec.so";
+
+			if(gParser)
+				UnloadLibCec(gParser);
+		}else{
+			std::string gStrPort = getConfigPath();
+
+			// init video on targets that need this
+			gParser->InitVideoStandalone();
+
+			LOG(LogInfo) << "Initialized libCEC version " << gParser->ToString((CEC::cec_server_version)gConfig.serverVersion);
+
+			CEC::cec_adapter devices[10];
+			uint8_t iDevicesFound = gParser->FindAdapters(devices, 10, NULL);
+			if(iDevicesFound <= 0)
+			{
+				LOG(LogInfo) << "No CEC devices found";
+				UnloadLibCec(gParser);
+			}else{
+				LOG(LogInfo) << "Added CEC device " << devices[0].path << " (com port: " << devices[0].comm << ")";
+				gStrPort = devices[0].comm;
+			}
+
+			LOG(LogInfo) << "Opening a connection to the CEC adapter...";
+
+			if(!gParser->Open(gStrPort.c_str()))
+			{
+				LOG(LogInfo) << "Unable to open the device on port " << gStrPort;
+				UnloadLibCec(gParser);
+			}
+
+			gParser->SetActiveSource();
+
+			mCECInputConfig = new InputConfig(DEVICE_CEC, "CEC-Device", CEC_GUID_STRING);
+			loadInputConfig(mCECInputConfig);
+		}
+	}
 }
 
 void InputManager::addJoystickByDeviceIndex(int id)
 {
 	assert(id >= 0 && id < SDL_NumJoysticks());
-	
+
 	// open joystick & add to our list
 	SDL_Joystick* joy = SDL_JoystickOpen(id);
 	assert(joy);
@@ -146,6 +288,15 @@ void InputManager::deinit()
 		mKeyboardInputConfig = NULL;
 	}
 
+	if(mCECInputConfig != NULL)
+	{
+		delete mCECInputConfig;
+		mCECInputConfig = NULL;
+	}
+
+	gParser->Close();
+	UnloadLibCec(gParser);
+
 	SDL_JoystickEventState(SDL_DISABLE);
 	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 }
@@ -155,6 +306,8 @@ int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 {
 	if(id == DEVICE_KEYBOARD)
 		return 120; //it's a lot, okay.
+	else if(id == DEVICE_CEC)
+		return (int)CEC::CEC_USER_CONTROL_CODE_MAX;
 	else
 		return SDL_JoystickNumButtons(mJoysticks[id]);
 }
@@ -163,6 +316,8 @@ InputConfig* InputManager::getInputConfigByDevice(int device)
 {
 	if(device == DEVICE_KEYBOARD)
 		return mKeyboardInputConfig;
+	else if(device == DEVICE_CEC)
+		return mCECInputConfig;
 	else
 		return mInputConfigs[device];
 }
@@ -170,72 +325,93 @@ InputConfig* InputManager::getInputConfigByDevice(int device)
 bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 {
 	bool causedEvent = false;
-	switch(ev.type)
+
+	if(CecEventType != ((Uint32)-1) && ev.type == CecEventType)
 	{
-	case SDL_JOYAXISMOTION:
-		//if it switched boundaries
-		if((abs(ev.jaxis.value) > DEADZONE) != (abs(mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis]) > DEADZONE))
+		bool* keyPressed = (bool*)ev.user.data1;
+
+		if(*keyPressed)
 		{
-			int normValue;
-			if(abs(ev.jaxis.value) <= DEADZONE)
-				normValue = 0;
-			else
-				if(ev.jaxis.value > 0)
-					normValue = 1;
+			/*
+			if(ev.key.repeat)
+				return false;
+			*/
+			window->input(getInputConfigByDevice(DEVICE_CEC), Input(DEVICE_CEC, TYPE_CEC, ev.user.code, 1, false));
+			delete keyPressed;
+			return true;
+		}else{
+			window->input(getInputConfigByDevice(DEVICE_CEC), Input(DEVICE_CEC, TYPE_CEC, ev.user.code, 0, false));
+			delete keyPressed;
+			return true;
+		}
+	}else{
+		switch(ev.type)
+		{
+		case SDL_JOYAXISMOTION:
+			//if it switched boundaries
+			if((abs(ev.jaxis.value) > DEADZONE) != (abs(mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis]) > DEADZONE))
+			{
+				int normValue;
+				if(abs(ev.jaxis.value) <= DEADZONE)
+					normValue = 0;
 				else
-					normValue = -1;
+					if(ev.jaxis.value > 0)
+						normValue = 1;
+					else
+						normValue = -1;
 
-			window->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, TYPE_AXIS, ev.jaxis.axis, normValue, false));
-			causedEvent = true;
-		}
+				window->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, TYPE_AXIS, ev.jaxis.axis, normValue, false));
+				causedEvent = true;
+			}
 
-		mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis] = ev.jaxis.value;
-		return causedEvent;
+			mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis] = ev.jaxis.value;
+			return causedEvent;
 
-	case SDL_JOYBUTTONDOWN:
-	case SDL_JOYBUTTONUP:
-		window->input(getInputConfigByDevice(ev.jbutton.which), Input(ev.jbutton.which, TYPE_BUTTON, ev.jbutton.button, ev.jbutton.state == SDL_PRESSED, false));
-		return true;
+		case SDL_JOYBUTTONDOWN:
+		case SDL_JOYBUTTONUP:
+			window->input(getInputConfigByDevice(ev.jbutton.which), Input(ev.jbutton.which, TYPE_BUTTON, ev.jbutton.button, ev.jbutton.state == SDL_PRESSED, false));
+			return true;
 
-	case SDL_JOYHATMOTION:
-		window->input(getInputConfigByDevice(ev.jhat.which), Input(ev.jhat.which, TYPE_HAT, ev.jhat.hat, ev.jhat.value, false));
-		return true;
+		case SDL_JOYHATMOTION:
+			window->input(getInputConfigByDevice(ev.jhat.which), Input(ev.jhat.which, TYPE_HAT, ev.jhat.hat, ev.jhat.value, false));
+			return true;
 
-	case SDL_KEYDOWN:
-		if(ev.key.keysym.sym == SDLK_BACKSPACE && SDL_IsTextInputActive())
-		{
-			window->textInput("\b");
-		}
+		case SDL_KEYDOWN:
+			if(ev.key.keysym.sym == SDLK_BACKSPACE && SDL_IsTextInputActive())
+			{
+				window->textInput("\b");
+			}
 
-		if(ev.key.repeat)
+			if(ev.key.repeat)
+				return false;
+
+			if(ev.key.keysym.sym == SDLK_F4)
+			{
+				SDL_Event* quit = new SDL_Event();
+				quit->type = SDL_QUIT;
+				SDL_PushEvent(quit);
+				return false;
+			}
+
+			window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 1, false));
+			return true;
+
+		case SDL_KEYUP:
+			window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
+			return true;
+
+		case SDL_TEXTINPUT:
+			window->textInput(ev.text.text);
+			break;
+
+		case SDL_JOYDEVICEADDED:
+			addJoystickByDeviceIndex(ev.jdevice.which); // ev.jdevice.which is a device index
+			return true;
+
+		case SDL_JOYDEVICEREMOVED:
+			removeJoystickByJoystickID(ev.jdevice.which); // ev.jdevice.which is an SDL_JoystickID (instance ID)
 			return false;
-
-		if(ev.key.keysym.sym == SDLK_F4)
-		{
-			SDL_Event* quit = new SDL_Event();
-			quit->type = SDL_QUIT;
-			SDL_PushEvent(quit);
-			return false;
 		}
-
-		window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 1, false));
-		return true;
-
-	case SDL_KEYUP:
-		window->input(getInputConfigByDevice(DEVICE_KEYBOARD), Input(DEVICE_KEYBOARD, TYPE_KEY, ev.key.keysym.sym, 0, false));
-		return true;
-
-	case SDL_TEXTINPUT:
-		window->textInput(ev.text.text);
-		break;
-
-	case SDL_JOYDEVICEADDED:
-		addJoystickByDeviceIndex(ev.jdevice.which); // ev.jdevice.which is a device index
-		return true;
-
-	case SDL_JOYDEVICEREMOVED:
-		removeJoystickByJoystickID(ev.jdevice.which); // ev.jdevice.which is an SDL_JoystickID (instance ID)
-		return false;
 	}
 
 	return false;
@@ -353,6 +529,9 @@ int InputManager::getNumConfiguredDevices()
 	if(mKeyboardInputConfig->isConfigured())
 		num++;
 
+	if(mCECInputConfig->isConfigured())
+		num++;
+
 	return num;
 }
 
@@ -360,6 +539,9 @@ std::string InputManager::getDeviceGUIDString(int deviceId)
 {
 	if(deviceId == DEVICE_KEYBOARD)
 		return KEYBOARD_GUID_STRING;
+
+	if(deviceId == DEVICE_CEC)
+		return CEC_GUID_STRING;
 
 	auto it = mJoysticks.find(deviceId);
 	if(it == mJoysticks.end())

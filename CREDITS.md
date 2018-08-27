@@ -4,6 +4,8 @@ Programming
 UI Art & Design
 	Nils Bonenberger
 
+libCEC Support
+	Ismail "CeRiAl" Khatib
 
 Libraries
 =========
@@ -28,6 +30,9 @@ Boost
 
 nanosvg
 	https://github.com/memononen/nanosvg
+
+libCEC
+	http://www.pulse-eight.net/
 
 Resources
 =========

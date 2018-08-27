@@ -8,14 +8,17 @@
 class DetailedGameListView : public BasicGameListView
 {
 public:
-	DetailedGameListView(Window* window, FileData* root);
+	DetailedGameListView(Window* window, const FileData& root);
 
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
+
+	virtual void onFilesChanged() override;
+	virtual void onMetaDataChanged(const FileData& file) override;
 
 	virtual const char* getName() const override { return "detailed"; }
 
 protected:
-	virtual void launch(FileData* game) override;
+	virtual void launch(FileData& game) override;
 
 private:
 	void updateInfoPanel();

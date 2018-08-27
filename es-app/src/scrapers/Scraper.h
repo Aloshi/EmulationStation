@@ -12,17 +12,18 @@
 
 struct ScraperSearchParams
 {
-	SystemData* system;
-	FileData* game;
+	ScraperSearchParams(SystemData* s, const FileData& g, const std::string& n = "") : system(s), game(g), nameOverride(n) {};
 
+	SystemData* system;
+	FileData game;
 	std::string nameOverride;
 };
 
 struct ScraperSearchResult
 {
-	ScraperSearchResult() : mdl(GAME_METADATA) {};
+	ScraperSearchResult() : metadata(GAME_METADATA) {};
 
-	MetaDataList mdl;
+	MetaDataMap metadata;
 	std::string imageUrl;
 	std::string thumbnailUrl;
 };

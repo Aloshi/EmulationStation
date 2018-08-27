@@ -7,7 +7,7 @@
 class GuiGameScraper : public GuiComponent
 {
 public:
-	GuiGameScraper(Window* window, ScraperSearchParams params, std::function<void(const ScraperSearchResult&)> doneFunc);
+	GuiGameScraper(Window* window, ScraperSearchParams params, const std::function<void(const ScraperSearchResult&)>& doneFunc);
 
 	void onSizeChanged() override;
 
@@ -28,6 +28,4 @@ private:
 	std::shared_ptr<ComponentGrid> mButtonGrid;
 
 	ScraperSearchParams mSearchParams;
-
-	std::function<void()> mCancelFunc;
 };
