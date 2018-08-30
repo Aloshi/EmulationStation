@@ -97,6 +97,10 @@ void SystemData::populateFolder(FileData* folder)
 	{
 		filePath = *it;
 
+		// skip hidden files and folders
+		if(!showHidden && Utils::FileSystem::isHidden(filePath))
+			continue;
+
 		//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
 		//we first get the extension of the file itself:
 		extension = Utils::FileSystem::getExtension(filePath);
@@ -107,10 +111,6 @@ void SystemData::populateFolder(FileData* folder)
 		isGame = false;
 		if(std::find(mEnvData->mSearchExtensions.cbegin(), mEnvData->mSearchExtensions.cend(), extension) != mEnvData->mSearchExtensions.cend())
 		{
-			// skip hidden files
-			if(!showHidden && Utils::FileSystem::isHidden(filePath))
-				continue;
-
 			FileData* newGame = new FileData(GAME, filePath, mEnvData, this);
 			folder->addChild(newGame);
 			isGame = true;

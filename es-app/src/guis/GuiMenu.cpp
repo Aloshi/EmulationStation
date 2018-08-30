@@ -363,13 +363,11 @@ void GuiMenu::openOtherSettings()
 	s->addWithLabel("PARSE GAMESLISTS ONLY", parse_gamelists);
 	s->addSaveFunc([parse_gamelists] { Settings::getInstance()->setBool("ParseGamelistOnly", parse_gamelists->getState()); });
 
-#ifndef WIN32
 	// hidden files
 	auto hidden_files = std::make_shared<SwitchComponent>(mWindow);
 	hidden_files->setState(Settings::getInstance()->getBool("ShowHiddenFiles"));
 	s->addWithLabel("SHOW HIDDEN FILES", hidden_files);
 	s->addSaveFunc([hidden_files] { Settings::getInstance()->setBool("ShowHiddenFiles", hidden_files->getState()); });
-#endif
 
 #ifdef _RPI_
 	// Video Player - VideoOmxPlayer
