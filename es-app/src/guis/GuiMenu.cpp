@@ -16,6 +16,7 @@
 #include "SystemData.h"
 #include "VolumeControl.h"
 #include <SDL_events.h>
+#include <algorithm>
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
@@ -94,13 +95,49 @@ void GuiMenu::openSoundSettings()
 
 	if (UIModeController::getInstance()->isUIModeFull())
 	{
-#ifdef _RPI_
+#if defined(__linux__)
+		// audio card
+		auto audio_card = std::make_shared< OptionListComponent<std::string> >(mWindow, "AUDIO CARD", false);
+		std::vector<std::string> audio_cards;
+	#ifdef _RPI_
+		// RPi Specific  Audio Cards
+		audio_cards.push_back("local");
+		audio_cards.push_back("hdmi");
+		audio_cards.push_back("both");
+	#endif
+		audio_cards.push_back("default");
+		audio_cards.push_back("sysdefault");
+		audio_cards.push_back("dmix");
+		audio_cards.push_back("hw");
+		audio_cards.push_back("plughw");
+		audio_cards.push_back("null");
+		if (Settings::getInstance()->getString("AudioCard") != "") {
+			if(std::find(audio_cards.begin(), audio_cards.end(), Settings::getInstance()->getString("AudioCard")) == audio_cards.end()) {
+				audio_cards.push_back(Settings::getInstance()->getString("AudioCard"));
+			}
+		}
+		for(auto ac = audio_cards.cbegin(); ac != audio_cards.cend(); ac++)
+			audio_card->add(*ac, *ac, Settings::getInstance()->getString("AudioCard") == *ac);
+		s->addWithLabel("AUDIO CARD", audio_card);
+		s->addSaveFunc([audio_card] {
+			Settings::getInstance()->setString("AudioCard", audio_card->getSelected());
+			VolumeControl::getInstance()->deinit();
+			VolumeControl::getInstance()->init();
+		});
+
 		// volume control device
 		auto vol_dev = std::make_shared< OptionListComponent<std::string> >(mWindow, "AUDIO DEVICE", false);
 		std::vector<std::string> transitions;
 		transitions.push_back("PCM");
 		transitions.push_back("Speaker");
 		transitions.push_back("Master");
+		transitions.push_back("Digital");
+		transitions.push_back("Analogue");
+		if (Settings::getInstance()->getString("AudioDevice") != "") {
+			if(std::find(transitions.begin(), transitions.end(), Settings::getInstance()->getString("AudioDevice")) == transitions.end()) {
+				transitions.push_back(Settings::getInstance()->getString("AudioDevice"));
+			}
+		}
 		for(auto it = transitions.cbegin(); it != transitions.cend(); it++)
 			vol_dev->add(*it, *it, Settings::getInstance()->getString("AudioDevice") == *it);
 		s->addWithLabel("AUDIO DEVICE", vol_dev);
@@ -134,14 +171,19 @@ void GuiMenu::openSoundSettings()
 #ifdef _RPI_
 		// OMX player Audio Device
 		auto omx_audio_dev = std::make_shared< OptionListComponent<std::string> >(mWindow, "OMX PLAYER AUDIO DEVICE", false);
-		std::vector<std::string> devices;
-		devices.push_back("local");
-		devices.push_back("hdmi");
-		devices.push_back("both");
-		// USB audio
-		devices.push_back("alsa:hw:0,0");
-		devices.push_back("alsa:hw:1,0");
-		for (auto it = devices.cbegin(); it != devices.cend(); it++)
+		std::vector<std::string> omx_cards;
+		// RPi Specific  Audio Cards
+		omx_cards.push_back("local");
+		omx_cards.push_back("hdmi");
+		omx_cards.push_back("both");
+		omx_cards.push_back("alsa:hw:0,0");
+		omx_cards.push_back("alsa:hw:1,0");
+		if (Settings::getInstance()->getString("OMXAudioDev") != "") {
+			if (std::find(omx_cards.begin(), omx_cards.end(), Settings::getInstance()->getString("OMXAudioDev")) == omx_cards.end()) {
+				omx_cards.push_back(Settings::getInstance()->getString("OMXAudioDev"));
+			}
+		}
+		for (auto it = omx_cards.cbegin(); it != omx_cards.cend(); it++)
 			omx_audio_dev->add(*it, *it, Settings::getInstance()->getString("OMXAudioDev") == *it);
 		s->addWithLabel("OMX PLAYER AUDIO DEVICE", omx_audio_dev);
 		s->addSaveFunc([omx_audio_dev] {
