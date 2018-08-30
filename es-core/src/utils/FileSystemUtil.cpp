@@ -1,3 +1,5 @@
+#define _FILE_OFFSET_BITS 64
+
 #include "utils/FileSystemUtil.h"
 
 #include "Settings.h"
@@ -11,6 +13,7 @@
 #define getcwd _getcwd
 #define mkdir(x,y) _mkdir(x)
 #define snprintf _snprintf
+#define stat64 _stat64
 #define unlink _unlink
 #define S_ISREG(x) (((x) & S_IFMT) == S_IFREG)
 #define S_ISDIR(x) (((x) & S_IFMT) == S_IFDIR)
@@ -557,10 +560,10 @@ namespace Utils
 		bool exists(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
-			struct stat info;
+			struct stat64 info;
 
-			// check if stat succeeded
-			return (stat(path.c_str(), &info) == 0);
+			// check if stat64 succeeded
+			return (stat64(path.c_str(), &info) == 0);
 
 		} // exists
 
@@ -579,10 +582,10 @@ namespace Utils
 		bool isRegularFile(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
-			struct stat info;
+			struct stat64 info;
 
-			// check if stat succeeded
-			if(stat(path.c_str(), &info) != 0)
+			// check if stat64 succeeded
+			if(stat64(path.c_str(), &info) != 0)
 				return false;
 
 			// check for S_IFREG attribute
@@ -653,11 +656,11 @@ namespace Utils
 		{
 			std::string path1 = getGenericPath(_path1);
 			std::string path2 = getGenericPath(_path2);
-			struct stat info1;
-			struct stat info2;
+			struct stat64 info1;
+			struct stat64 info2;
 
-			// check if stat succeeded
-			if((stat(path1.c_str(), &info1) != 0) || (stat(path2.c_str(), &info2) != 0))
+			// check if stat64 succeeded
+			if((stat64(path1.c_str(), &info1) != 0) || (stat64(path2.c_str(), &info2) != 0))
 				return false;
 
 			// check if attributes are identical
