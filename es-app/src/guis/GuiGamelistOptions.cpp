@@ -2,6 +2,8 @@
 #include "GuiMetaDataEd.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
+#include "Settings.h"
+
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window), 
 	mSystem(system), 
@@ -36,11 +38,12 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	mMenu.addRow(row);
 
 	// sort list by
+        int defaultSortId = (int)(Settings::getInstance()->getInt("SortTypeDefault"));
 	mListSort = std::make_shared<SortList>(mWindow, "SORT GAMES BY", false);
 	for(unsigned int i = 0; i < FileSorts::SortTypes.size(); i++)
 	{
 		const FileData::SortType& sort = FileSorts::SortTypes.at(i);
-		mListSort->add(sort.description, &sort, i == 0); // TODO - actually make the sort type persistent
+		mListSort->add(sort.description, &sort, i == defaultSortId); // TODO - actually make the sort type persistent
 	}
 
 	mMenu.addWithLabel("SORT GAMES BY", mListSort);

@@ -2,6 +2,7 @@
 #include "ThemeData.h"
 #include "FileSorts.h"
 #include "SystemData.h"
+#include "Settings.h"
 
 static const std::string LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -31,7 +32,7 @@ GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiCompo
 	// TODO - set font size
 	addChild(&mSortText);
 
-	mSortId = 0; // TODO
+	mSortId = (int)(Settings::getInstance()->getInt("SortTypeDefault")); // TODO
 	updateSortText();
 
 	mLetterId = LETTERS.find(mGameList->getCursor()->getName()[0]);

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "platform.h"
 
-LogLevel Log::reportingLevel = LogInfo;
+LogLevel Log::reportingLevel = LogError;
 FILE* Log::file = NULL; //fopen(getLogPath().c_str(), "w");
 
 LogLevel Log::getReportingLevel()

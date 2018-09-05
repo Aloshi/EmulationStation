@@ -59,6 +59,7 @@ void Settings::setDefaults()
 	mBoolMap["IgnoreGamelist"] = false;
 	mBoolMap["HideConsole"] = true;
 	mBoolMap["QuickSystemSelect"] = true;
+	mBoolMap["HideMainMenu"] = false;
 
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
@@ -67,6 +68,8 @@ void Settings::setDefaults()
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
+        mIntMap["SortTypeDefault"] = 0;
+        mIntMap["DimValue"] = 0x90;
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";

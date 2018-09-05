@@ -35,6 +35,7 @@ set(ES_HEADERS
     # Views
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/BasicGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/DetailedGameListView.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/FanartGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/IGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/ISimpleGameListView.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/GridGameListView.h
@@ -81,6 +82,7 @@ set(ES_SOURCES
     # Views
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/BasicGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/DetailedGameListView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/FanartGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/IGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/ISimpleGameListView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/views/gamelist/GridGameListView.cpp

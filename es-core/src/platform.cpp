@@ -1,7 +1,9 @@
 #include "platform.h"
 #include <stdlib.h>
 #include <boost/filesystem.hpp>
+#include <SDL.h>
 #include <iostream>
+#include <fcntl.h>
 
 #ifdef WIN32
 #include <codecvt>
@@ -12,11 +14,17 @@ std::string getHomePath()
 	std::string homePath;
 
 	// this should give you something like "/home/YOUR_USERNAME" on Linux and "C:\Users\YOUR_USERNAME\" on Windows
-	const char * envHome = getenv("HOME");
+	const char * envHome = getenv("EMULATIONSTATION_HOME");
 	if(envHome != nullptr)
 	{
 		homePath = envHome;
-	}
+	} else {
+		envHome = getenv("EMULATIONSTATION_HOME");
+		if(envHome != nullptr)
+		{
+			homePath = envHome;
+		}
+        }
 
 #ifdef WIN32
 	// but does not seem to work for Windows XP or Vista, so try something else
@@ -69,4 +77,20 @@ int runSystemCommand(const std::string& cmd_utf8)
 #else
 	return system(cmd_utf8.c_str());
 #endif
+}
+
+int quitES(const std::string& filename)
+{
+	touch(filename);
+	SDL_Event* quit = new SDL_Event();
+	quit->type = SDL_QUIT;
+	SDL_PushEvent(quit);
+	return 0;
+}
+
+void touch(const std::string& filename)
+{
+	int fd = open(filename.c_str(), O_CREAT|O_WRONLY, 0644);
+	if (fd >= 0)
+		close(fd);
 }

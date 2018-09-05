@@ -17,12 +17,14 @@ std::vector<SystemData*> SystemData::sSystemVector;
 
 namespace fs = boost::filesystem;
 
-SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
+SystemData::SystemData(const std::string& name, const std::string& fullName, const std::string& input, const std::string& startPath, const std::vector<std::string>& extensions, 
 	const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder)
 {
 	mName = name;
 	mFullName = fullName;
 	mStartPath = startPath;
+        mInput = input;
+        updateVisibility();
 
 	//expand home symbol if the startpath contains ~
 	if(mStartPath[0] == '~')
@@ -45,9 +47,16 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, con
 	if(!Settings::getInstance()->getBool("IgnoreGamelist"))
 		parseGamelist(this);
 
-	mRootFolder->sort(FileSorts::SortTypes.at(0));
+        int sortId = (int)(Settings::getInstance()->getInt("SortTypeDefault"));
+
+	mRootFolder->sort(FileSorts::SortTypes.at(sortId));
 
 	loadTheme();
+}
+
+void SystemData::updateVisibility()
+{
+	mVisible = InputManager::getInstance()->isInputFound(mInput);
 }
 
 SystemData::~SystemData()
@@ -102,6 +111,15 @@ std::string escapePath(const boost::filesystem::path& path)
 
 	return pathStr;
 #endif
+}
+
+void SystemData::updateSystems()
+{
+	for(unsigned int i = 0; i < sSystemVector.size(); i++)
+	{
+                SystemData *v = sSystemVector.at(i);
+		v->updateVisibility();
+	}
 }
 
 void SystemData::launchGame(Window* window, FileData* game)
@@ -262,12 +280,13 @@ bool SystemData::loadConfig()
 
 	for(pugi::xml_node system = systemList.child("system"); system; system = system.next_sibling("system"))
 	{
-		std::string name, fullname, path, cmd, themeFolder;
+		std::string name, fullname, path, cmd, themeFolder, input;
 		PlatformIds::PlatformId platformId = PlatformIds::PLATFORM_UNKNOWN;
 
 		name = system.child("name").text().get();
 		fullname = system.child("fullname").text().get();
 		path = system.child("path").text().get();
+                input = system.child("input").text().get();
 
 		// convert extensions list from a string into a vector of strings
 		std::vector<std::string> extensions = readList(system.child("extension").text().get());
@@ -312,7 +331,7 @@ bool SystemData::loadConfig()
 		boost::filesystem::path genericPath(path);
 		path = genericPath.generic_string();
 
-		SystemData* newSys = new SystemData(name, fullname, path, extensions, cmd, platformIds, themeFolder);
+		SystemData* newSys = new SystemData(name, fullname, input, path, extensions, cmd, platformIds, themeFolder);
 		if(newSys->getRootFolder()->getChildren().size() == 0)
 		{
 			LOG(LogWarning) << "System \"" << name << "\" has no games! Ignoring it.";

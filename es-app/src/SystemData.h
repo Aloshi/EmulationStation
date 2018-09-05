@@ -11,13 +11,15 @@
 class SystemData
 {
 public:
-	SystemData(const std::string& name, const std::string& fullName, const std::string& startPath, const std::vector<std::string>& extensions, 
+	SystemData(const std::string& name, const std::string& fullName, const std::string& input, const std::string& startPath, const std::vector<std::string>& extensions, 
 		const std::string& command, const std::vector<PlatformIds::PlatformId>& platformIds, const std::string& themeFolder);
 	~SystemData();
 
 	inline FileData* getRootFolder() const { return mRootFolder; };
 	inline const std::string& getName() const { return mName; }
 	inline const std::string& getFullName() const { return mFullName; }
+        inline const bool& isVisible() const { return mVisible; }
+        inline const std::string& getInput() const { return mInput; }
 	inline const std::string& getStartPath() const { return mStartPath; }
 	inline const std::vector<std::string>& getExtensions() const { return mSearchExtensions; }
 	inline const std::string& getThemeFolder() const { return mThemeFolder; }
@@ -63,16 +65,22 @@ public:
 
 	// Load or re-load theme.
 	void loadTheme();
+        void updateVisibility();
+
+        static void updateSystems();
 
 private:
 	std::string mName;
 	std::string mFullName;
 	std::string mStartPath;
+        std::string mInput;
 	std::vector<std::string> mSearchExtensions;
 	std::string mLaunchCommand;
 	std::vector<PlatformIds::PlatformId> mPlatformIds;
 	std::string mThemeFolder;
 	std::shared_ptr<ThemeData> mTheme;
+
+        bool mVisible;
 
 	void populateFolder(FileData* folder);
 

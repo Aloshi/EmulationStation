@@ -34,6 +34,7 @@ void SystemView::populate()
 
 	for(auto it = SystemData::sSystemVector.begin(); it != SystemData::sSystemVector.end(); it++)
 	{
+                if (!(*it)->isVisible()) continue;
 		const std::shared_ptr<ThemeData>& theme = (*it)->getTheme();
 
 		Entry e;

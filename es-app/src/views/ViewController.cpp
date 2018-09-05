@@ -3,8 +3,14 @@
 #include "SystemData.h"
 #include "Settings.h"
 
+#define USE_FANART
+
 #include "views/gamelist/BasicGameListView.h"
+#ifdef USE_FANART
+#include "views/gamelist/FanartGameListView.h"
+#else
 #include "views/gamelist/DetailedGameListView.h"
+#endif
 #include "views/gamelist/GridGameListView.h"
 #include "guis/GuiMenu.h"
 #include "guis/GuiMsgBox.h"
@@ -221,7 +227,11 @@ std::shared_ptr<IGameListView> ViewController::getGameListView(SystemData* syste
 	}
 		
 	if(detailed)
+#ifdef USE_FANART
+		view = std::shared_ptr<IGameListView>(new FanartGameListView(mWindow, system->getRootFolder()));
+#else
 		view = std::shared_ptr<IGameListView>(new DetailedGameListView(mWindow, system->getRootFolder()));
+#endif
 	else
 		view = std::shared_ptr<IGameListView>(new BasicGameListView(mWindow, system->getRootFolder()));
 		
@@ -259,7 +269,7 @@ bool ViewController::input(InputConfig* config, Input input)
 		return true;
 
 	// open menu
-	if(config->isMappedTo("start", input) && input.value != 0)
+	if(config->isMappedTo("start", input) && input.value != 0 && !Settings::getInstance()->getBool("HideMainMenu"))
 	{
 		// open menu
 		mWindow->pushGui(new GuiMenu(mWindow));

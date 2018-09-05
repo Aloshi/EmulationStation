@@ -284,6 +284,7 @@ int main(int argc, char* argv[])
 	while(running)
 	{
 		SDL_Event event;
+		bool isEventValid = true;
 		while(SDL_PollEvent(&event))
 		{
 			switch(event.type)
@@ -298,13 +299,24 @@ int main(int argc, char* argv[])
 				case SDL_TEXTEDITING:
 				case SDL_JOYDEVICEADDED:
 				case SDL_JOYDEVICEREMOVED:
-					InputManager::getInstance()->parseEvent(event, &window);
+					isEventValid = InputManager::getInstance()->parseEvent(event, &window);
 					break;
 				case SDL_QUIT:
 					running = false;
 					break;
 			}
+			switch(event.type)
+			{
+				case SDL_JOYDEVICEADDED:
+				case SDL_JOYDEVICEREMOVED:
+					SystemData::updateSystems();
+					ViewController::get()->reloadAll();
+					break;
+				default:
+					break;
+			}
 		}
+		if (isEventValid == false) continue;
 
 		if(window.isSleeping())
 		{

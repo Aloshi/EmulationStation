@@ -149,6 +149,14 @@ void TheGamesDBRequest::process(const std::unique_ptr<HttpReq>& req, std::vector
 
 		if(images)
 		{
+			pugi::xml_node fanart = images.child("fanart");
+			if (fanart) {
+				pugi::xml_node fanartUrl = fanart.child("original"); 
+				if (fanartUrl) {
+					result.fanartUrl = baseImageUrl + fanartUrl.text().get();
+				}
+			}
+
 			pugi::xml_node art = images.find_child_by_attribute("boxart", "side", "front");
 
 			if(art)

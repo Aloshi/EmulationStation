@@ -23,7 +23,7 @@ Eigen::Vector2f ImageComponent::getCenter() const
 }
 
 ImageComponent::ImageComponent(Window* window) : GuiComponent(window), 
-	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF)
+	mTargetIsMax(false), mFlipX(false), mFlipY(false), mOrigin(0.0, 0.0), mTargetSize(0, 0), mColorShift(0xFFFFFFFF), mCentered(false), mFullscreen(false)
 {
 	updateColors();
 }
@@ -43,6 +43,10 @@ void ImageComponent::resize()
 	if(textureSize.isZero())
 		return;
 
+	if (mCentered) {
+		setPosition((mTargetSize.x() - mSize.x())/2.0f + mOrigPosition.x(), (mTargetSize.y() - mSize.y())/2.0f+ mOrigPosition.y(), mOrigPosition.z());
+        }
+
 	if(mTexture->isTiled())
 	{
 		mSize = mTargetSize;
@@ -58,19 +62,20 @@ void ImageComponent::resize()
 			mSize = textureSize;
 
 			Eigen::Vector2f resizeScale((mTargetSize.x() / mSize.x()), (mTargetSize.y() / mSize.y()));
-			
-			if(resizeScale.x() < resizeScale.y())
-			{
-				mSize[0] *= resizeScale.x();
-				mSize[1] *= resizeScale.x();
-			}else{
-				mSize[0] *= resizeScale.y();
-				mSize[1] *= resizeScale.y();
+			if (!mFullscreen) 
+                        {
+				if(resizeScale.x() < resizeScale.y())
+				{
+					mSize[0] *= resizeScale.x();
+					mSize[1] *= resizeScale.x();
+				}else{
+					mSize[0] *= resizeScale.y();
+					mSize[1] *= resizeScale.y();
+				}
+				// for SVG rasterization, always calculate width from rounded height (see comment above)
+				mSize[1] = round(mSize[1]);
+				mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
 			}
-
-			// for SVG rasterization, always calculate width from rounded height (see comment above)
-			mSize[1] = round(mSize[1]);
-			mSize[0] = (mSize[1] / textureSize.y()) * textureSize.x();
 
 		}else{
 			// if both components are set, we just stretch
@@ -186,6 +191,11 @@ void ImageComponent::updateVertices()
 	Eigen::Vector2f topLeft(-mSize.x() * mOrigin.x(), -mSize.y() * mOrigin.y());
 	Eigen::Vector2f bottomRight(mSize.x() * (1 -mOrigin.x()), mSize.y() * (1 - mOrigin.y()));
 
+	if (mFullscreen) {
+		topLeft << -mPosition.x(), -mPosition.y();
+		bottomRight << (float)Renderer::getScreenWidth() - mPosition.x(), (float)Renderer::getScreenHeight() - mPosition.y();
+	}
+
 	const float width = round(bottomRight.x() - topLeft.x());
 	const float height = round(bottomRight.y() - topLeft.y());
 
@@ -202,7 +212,9 @@ void ImageComponent::updateVertices()
 	mVertices[4].pos << topLeft.x(), bottomRight.y();
 	mVertices[5].pos << bottomRight.x(), bottomRight.y();
 
-	float px, py;
+	float px, py, ox, oy;
+	ox = 0;
+	oy = 0;
 	if(mTexture->isTiled())
 	{
 		px = mSize.x() / getTextureSize().x();
@@ -210,25 +222,38 @@ void ImageComponent::updateVertices()
 	}else{
 		px = 1;
 		py = 1;
+		if (mFullscreen) {
+			Eigen::Vector2f aspectRatio((width / height), (mSize.x() / mSize.y()));
+			if(aspectRatio.x() < aspectRatio.y())
+			{
+				float l = aspectRatio.x()/(aspectRatio.y() * 2.0f);
+				ox = 0.5f - l;
+				px = 0.5f + l;
+			}else{
+				float l = aspectRatio.y()/(aspectRatio.x() * 2.0f);
+				oy = 0.5f - l;
+				py = 0.5f + l;
+			}
+		}
 	}
 
-	mVertices[0].tex << 0, py;
-	mVertices[1].tex << 0, 0;
+	mVertices[0].tex << ox, py;
+	mVertices[1].tex << ox, oy;
 	mVertices[2].tex << px, py;
 
 	mVertices[3].tex << px, py;
-	mVertices[4].tex << 0, 0;
-	mVertices[5].tex << px, 0;
+	mVertices[4].tex << ox, oy;
+	mVertices[5].tex << px, oy;
 
 	if(mFlipX)
 	{
 		for(int i = 0; i < 6; i++)
-			mVertices[i].tex[0] = mVertices[i].tex[0] == px ? 0 : px;
+			mVertices[i].tex[0] = mVertices[i].tex[0] == px ? ox : px;
 	}
 	if(mFlipY)
 	{
 		for(int i = 1; i < 6; i++)
-			mVertices[i].tex[1] = mVertices[i].tex[1] == py ? 0 : py;
+			mVertices[i].tex[1] = mVertices[i].tex[1] == py ? oy : py;
 	}
 }
 
@@ -299,6 +324,17 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 	{
 		Eigen::Vector2f denormalized = elem->get<Eigen::Vector2f>("pos").cwiseProduct(scale);
 		setPosition(Eigen::Vector3f(denormalized.x(), denormalized.y(), 0));
+		mOrigPosition << mPosition;
+	}
+
+	if (elem->has("centered") && elem->get<bool>("centered"))
+	{
+		mCentered = true;
+	}
+
+        if (elem->has("fullscreen") && elem->get<bool>("fullscreen"))
+	{
+		mFullscreen = true;
 	}
 
 	if(properties & ThemeFlags::SIZE)
@@ -321,6 +357,7 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 
 	if(properties & COLOR && elem->has("color"))
 		setColorShift(elem->get<unsigned int>("color"));
+	resize();
 }
 
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()

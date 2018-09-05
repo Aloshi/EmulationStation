@@ -32,43 +32,18 @@ ScraperSearchComponent::ScraperSearchComponent(Window* window, SearchType type) 
 
 	// selected result thumbnail
 	mResultThumbnail = std::make_shared<ImageComponent>(mWindow);
-	mGrid.setEntry(mResultThumbnail, Vector2i(1, 1), false, false, Vector2i(1, 1));
+	mGrid.setEntry(mResultThumbnail, Vector2i(1, 1), false, false, Vector2i(2, 3));
+
+	// selected result fanart
+	mResultFanart = std::make_shared<ImageComponent>(mWindow);
+	if(mSearchType != ALWAYS_ACCEPT_FIRST_RESULT)
+		mGrid.setEntry(mResultFanart, Vector2i(3, 2), false, false, Vector2i(1, 1));
 
 	// selected result desc + container
 	mDescContainer = std::make_shared<ScrollableContainer>(mWindow);
 	mResultDesc = std::make_shared<TextComponent>(mWindow, "Result desc", Font::get(FONT_SIZE_SMALL), 0x777777FF);
 	mDescContainer->addChild(mResultDesc.get());
 	mDescContainer->setAutoScroll(true);
-	
-	// metadata
-	auto font = Font::get(FONT_SIZE_SMALL); // this gets replaced in onSizeChanged() so its just a placeholder
-	const unsigned int mdColor = 0x777777FF;
-	const unsigned int mdLblColor = 0x666666FF;
-	mMD_Rating = std::make_shared<RatingComponent>(mWindow);
-	mMD_ReleaseDate = std::make_shared<DateTimeComponent>(mWindow);
-	mMD_ReleaseDate->setColor(mdColor);
-	mMD_Developer = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
-	mMD_Publisher = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
-	mMD_Genre = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
-	mMD_Players = std::make_shared<TextComponent>(mWindow, "", font, mdColor);
-
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RATING:", font, mdLblColor), mMD_Rating, false));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "RELEASED:", font, mdLblColor), mMD_ReleaseDate));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "DEVELOPER:", font, mdLblColor), mMD_Developer));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PUBLISHER:", font, mdLblColor), mMD_Publisher));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "GENRE:", font, mdLblColor), mMD_Genre));
-	mMD_Pairs.push_back(MetaDataPair(std::make_shared<TextComponent>(mWindow, "PLAYERS:", font, mdLblColor), mMD_Players));
-
-	mMD_Grid = std::make_shared<ComponentGrid>(mWindow, Vector2i(2, mMD_Pairs.size()*2 - 1));
-	unsigned int i = 0;
-	for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
-	{
-		mMD_Grid->setEntry(it->first, Vector2i(0, i), false, true);
-		mMD_Grid->setEntry(it->second, Vector2i(1, i), false, it->resize);
-		i += 2;
-	}
-
-	mGrid.setEntry(mMD_Grid, Vector2i(2, 1), false, false);
 
 	// result list
 	mResultList = std::make_shared<ComponentList>(mWindow);
@@ -110,7 +85,8 @@ void ScraperSearchComponent::onSizeChanged()
 
 	// limit thumbnail size using setMaxHeight - we do this instead of letting mGrid call setSize because it maintains the aspect ratio
 	// we also pad a little so it doesn't rub up against the metadata labels
-	mResultThumbnail->setMaxSize(mGrid.getColWidth(1) * boxartCellScale, mGrid.getRowHeight(1));
+	mResultThumbnail->setMaxSize((mGrid.getColWidth(1)+mGrid.getColWidth(2)) * boxartCellScale, (mGrid.getRowHeight(1)+mGrid.getRowHeight(2)));
+	mResultFanart->setMaxSize(mGrid.getColWidth(2), mGrid.getRowHeight(2) * boxartCellScale);
 
 	// metadata
 	resizeMetadata();
@@ -129,44 +105,6 @@ void ScraperSearchComponent::onSizeChanged()
 
 void ScraperSearchComponent::resizeMetadata()
 {
-	mMD_Grid->setSize(mGrid.getColWidth(2), mGrid.getRowHeight(1));
-	if(mMD_Grid->getSize().y() > mMD_Pairs.size())
-	{
-		const int fontHeight = (int)(mMD_Grid->getSize().y() / mMD_Pairs.size() * 0.8f);
-		auto fontLbl = Font::get(fontHeight, FONT_PATH_REGULAR);
-		auto fontComp = Font::get(fontHeight, FONT_PATH_LIGHT);
-
-		// update label fonts
-		float maxLblWidth = 0;
-		for(auto it = mMD_Pairs.begin(); it != mMD_Pairs.end(); it++)
-		{
-			it->first->setFont(fontLbl);
-			it->first->setSize(0, 0);
-			if(it->first->getSize().x() > maxLblWidth)
-				maxLblWidth = it->first->getSize().x() + 6;
-		}
-
-		for(unsigned int i = 0; i < mMD_Pairs.size(); i++)
-		{
-			mMD_Grid->setRowHeightPerc(i*2, (fontLbl->getLetterHeight() + 2) / mMD_Grid->getSize().y());
-		}
-
-		// update component fonts
-		mMD_ReleaseDate->setFont(fontComp);
-		mMD_Developer->setFont(fontComp);
-		mMD_Publisher->setFont(fontComp);
-		mMD_Genre->setFont(fontComp);
-		mMD_Players->setFont(fontComp);
-
-		mMD_Grid->setColWidthPerc(0, maxLblWidth / mMD_Grid->getSize().x());
-
-		// rating is manually sized
-		mMD_Rating->setSize(mMD_Grid->getColWidth(1), fontLbl->getHeight() * 0.65f);
-		mMD_Grid->onSizeChanged();
-
-		// make result font follow label font
-		mResultDesc->setFont(Font::get(fontHeight, FONT_PATH_REGULAR));
-	}
 }
 
 void ScraperSearchComponent::updateViewStyle()
@@ -191,15 +129,8 @@ void ScraperSearchComponent::updateViewStyle()
 		mGrid.setEntry(mDescContainer, Vector2i(3, 0), false, false, Vector2i(1, 3), GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
 	}else{
-		// fake row where name would be
-		mGrid.setEntry(std::make_shared<GuiComponent>(mWindow), Vector2i(1, 0), false, true, Vector2i(2, 1), GridFlags::BORDER_TOP);
-
 		// show result list on the right
-		mGrid.setEntry(mResultList, Vector2i(3, 0), true, true, Vector2i(1, 3), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
-
-		// show description under image/info
-		mGrid.setEntry(mDescContainer, Vector2i(1, 2), false, false, Vector2i(2, 1), GridFlags::BORDER_BOTTOM);
-		mResultDesc->setSize(mDescContainer->getSize().x(), 0); // make desc text wrap at edge of container
+		mGrid.setEntry(mResultList, Vector2i(3, 0), true, true, Vector2i(1, 2), GridFlags::BORDER_LEFT | GridFlags::BORDER_TOP | GridFlags::BORDER_BOTTOM);
 	}
 }
 
@@ -311,26 +242,24 @@ void ScraperSearchComponent::updateInfoPane()
 			mThumbnailReq.reset();
 		}
 
+		if(mSearchType != ALWAYS_ACCEPT_FIRST_RESULT) {
+			mResultFanart->setImage("");
+			const std::string& fanarturl = res.fanartUrl;	
+			if(!fanarturl.empty())
+			{
+				mFanartReq = std::unique_ptr<HttpReq>(new HttpReq(fanarturl));
+			}else{
+				mFanartReq.reset();
+			}
+		}
+
 		// metadata
-		mMD_Rating->setValue(strToUpper(res.mdl.get("rating")));
-		mMD_ReleaseDate->setValue(strToUpper(res.mdl.get("releasedate")));
-		mMD_Developer->setText(strToUpper(res.mdl.get("developer")));
-		mMD_Publisher->setText(strToUpper(res.mdl.get("publisher")));
-		mMD_Genre->setText(strToUpper(res.mdl.get("genre")));
-		mMD_Players->setText(strToUpper(res.mdl.get("players")));
 		mGrid.onSizeChanged();
 	}else{
 		mResultName->setText("");
 		mResultDesc->setText("");
 		mResultThumbnail->setImage("");
-
-		// metadata
-		mMD_Rating->setValue("");
-		mMD_ReleaseDate->setValue("");
-		mMD_Developer->setText("");
-		mMD_Publisher->setText("");
-		mMD_Genre->setText("");
-		mMD_Players->setText("");
+		mResultFanart->setImage("");
 	}
 }
 
@@ -390,6 +319,11 @@ void ScraperSearchComponent::update(int deltaTime)
 		updateThumbnail();
 	}
 
+	if(mFanartReq && mFanartReq->status() != HttpReq::REQ_IN_PROGRESS)
+	{
+		updateFanart();
+	}
+
 	if(mSearchHandle && mSearchHandle->status() != ASYNC_IN_PROGRESS)
 	{
 		auto status = mSearchHandle->status();
@@ -439,6 +373,21 @@ void ScraperSearchComponent::updateThumbnail()
 	}
 
 	mThumbnailReq.reset();
+}
+
+void ScraperSearchComponent::updateFanart()
+{
+	if(mFanartReq && mFanartReq->status() == HttpReq::REQ_SUCCESS)
+	{
+		std::string content = mFanartReq->getContent();
+		mResultFanart->setImage(content.data(), content.length());
+		mGrid.onSizeChanged(); // a hack to fix the thumbnail position since its size changed
+	}else{
+		LOG(LogWarning) << "fanart req failed: " << mFanartReq->getErrorMsg();
+		mResultFanart->setImage("");
+	}
+
+	mFanartReq.reset();
 }
 
 void ScraperSearchComponent::openInputScreen(ScraperSearchParams& params)

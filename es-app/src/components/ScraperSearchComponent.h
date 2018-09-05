@@ -48,6 +48,7 @@ public:
 private:
 	void updateViewStyle();
 	void updateThumbnail();
+	void updateFanart();
 	void updateInfoPane();
 
 	void resizeMetadata();
@@ -66,15 +67,9 @@ private:
 	std::shared_ptr<ScrollableContainer> mDescContainer;
 	std::shared_ptr<TextComponent> mResultDesc;
 	std::shared_ptr<ImageComponent> mResultThumbnail;
+	std::shared_ptr<ImageComponent> mResultFanart;
 	std::shared_ptr<ComponentList> mResultList;
 
-	std::shared_ptr<ComponentGrid> mMD_Grid;
-	std::shared_ptr<RatingComponent> mMD_Rating;
-	std::shared_ptr<DateTimeComponent> mMD_ReleaseDate;
-	std::shared_ptr<TextComponent> mMD_Developer;
-	std::shared_ptr<TextComponent> mMD_Publisher;
-	std::shared_ptr<TextComponent> mMD_Genre;
-	std::shared_ptr<TextComponent> mMD_Players;
 
 	// label-component pair
 	struct MetaDataPair
@@ -99,6 +94,7 @@ private:
 	std::unique_ptr<MDResolveHandle> mMDResolveHandle;
 	std::vector<ScraperSearchResult> mScraperResults;
 	std::unique_ptr<HttpReq> mThumbnailReq;
+	std::unique_ptr<HttpReq> mFanartReq;
 
 	BusyComponent mBusyAnim;
 };

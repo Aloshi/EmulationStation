@@ -31,6 +31,17 @@ std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::
 		("origin", NORMALIZED_PAIR)
 		("path", PATH)
 		("tile", BOOLEAN)
+		("centered", BOOLEAN)
+		("fullscreen", BOOLEAN)
+		("color", COLOR)))
+	("fanart", makeMap(boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("maxSize", NORMALIZED_PAIR)
+		("origin", NORMALIZED_PAIR)
+		("path", PATH)
+		("tile", BOOLEAN)
+		("centered", BOOLEAN)
 		("color", COLOR)))
 	("text", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
@@ -394,7 +405,7 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 		{
 			GuiComponent* comp = NULL;
 			const std::string& t = elem.type;
-			if(t == "image")
+			if((t == "image") || (t=="fanart"))
 				comp = new ImageComponent(window);
 			else if(t == "text")
 				comp = new TextComponent(window);
