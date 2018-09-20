@@ -56,6 +56,9 @@ void ViewController::goToStart()
 				return;
 			}
 		}
+
+		// Requested system doesn't exist
+		Settings::getInstance()->setString("StartupSystem", "");
 	}
 	goToSystemView(SystemData::sSystemVector.at(0));
 }
