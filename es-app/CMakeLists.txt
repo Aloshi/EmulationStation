@@ -30,6 +30,7 @@ set(ES_HEADERS
     # Scrapers
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/Scraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBListScraper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/TheArchiveScraper.h
 
     # Views
@@ -76,6 +77,7 @@ set(ES_SOURCES
     # Scrapers
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/Scraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBScraper.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/GamesDBListScraper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/scrapers/TheArchiveScraper.cpp
 
     # Views
