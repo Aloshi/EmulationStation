@@ -15,11 +15,22 @@ set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 set_property(CACHE GLSystem PROPERTY STRINGS "Desktop OpenGL" "OpenGL ES")
 
 #-------------------------------------------------------------------------------
-#check if we're running on Raspberry Pi
+#check if we're building for Raspberry Pi
 MESSAGE("Looking for bcm_host.h")
+
+# First try the non standard path (raspbian and co)
 if(EXISTS "/opt/vc/include/bcm_host.h")
-    MESSAGE("bcm_host.h found")
+   set(BCMHOST found)
+   set(RPI_ROOT_PATH "/opt/vc")
+endif()
+
+if(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/include/bcm_host.h")
     set(BCMHOST found)
+    set(RPI_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}/usr")
+endif()
+
+if (DEFINED BCMHOST)
+    MESSAGE("bcm_host.h found")
     set(GLSystem "OpenGL ES")
 else()
     MESSAGE("bcm_host.h not found")
@@ -28,7 +39,7 @@ endif()
 #-------------------------------------------------------------------------------
 #check if we're running on olinuxino
 MESSAGE("Looking for libMali.so")
-if(EXISTS "/usr/lib/libMali.so")
+if(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/libMali.so")
     MESSAGE("libMali.so found")
     set(GLSystem "OpenGL ES")
 else()
@@ -112,10 +123,10 @@ endif()
 
 if(DEFINED BCMHOST)
     LIST(APPEND COMMON_INCLUDE_DIRS
-        "/opt/vc/include"
-        "/opt/vc/include/interface/vcos"
-        "/opt/vc/include/interface/vmcs_host/linux"
-        "/opt/vc/include/interface/vcos/pthreads"
+        "${RPI_ROOT_PATH}/include"
+        "${RPI_ROOT_PATH}/include/interface/vcos"
+        "${RPI_ROOT_PATH}/include/interface/vmcs_host/linux"
+        "${RPI_ROOT_PATH}/include/interface/vcos/pthreads"
     )
 else()
     if(${GLSystem} MATCHES "Desktop OpenGL")
@@ -134,7 +145,7 @@ endif()
 if(DEFINED BCMHOST)
     link_directories(
         ${Boost_LIBRARY_DIRS}
-        "/opt/vc/lib"
+        "${CMAKE_FIND_ROOT_PATH}/lib"
     )
 else()
     link_directories(
