@@ -359,7 +359,7 @@ Reference
 * NORMALIZED_PAIR - two decimals, in the range [0..1], delimited by a space.  For example, `0.25 0.5`.  Most commonly used for position (x and y coordinates) and size (width and height).
 * PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` for Linux or `%HOMEPATH%` for Windows).  If the first character is a `.`, it will be expanded to the theme file's directory, allowing you to specify resources relative to the theme file, like so: `./../general_art/myfont.ttf`.
 * BOOLEAN - `true`/`1` or `false`/`0`.
-* COLOR - a hexidecimal RGB or RGBA color (6 or 8 digits).  If 6 digits, will assume the alpha channel is `FF` (not transparent).
+* COLOR - a hexadecimal RGB or RGBA color (6 or 8 digits).  If 6 digits, will assume the alpha channel is `FF` (not transparent).
 * FLOAT - a decimal.
 * STRING - a string of text.
 
@@ -399,7 +399,7 @@ Can be created as an extra.
 	- Possible combinations:
 	- `0 0` - automatically size so text fits on one line (expanding horizontally).
 	- `w 0` - automatically wrap text so it doesn't go beyond `w` (expanding vertically).
-	- `w h` - works like a "text box."  If `h` is non-zero and `h` <= `fontSize` (implying it should be a single line of text), text that goes beyond `w` will be truncated with an elipses (...).
+	- `w h` - works like a "text box."  If `h` is non-zero and `h` <= `fontSize` (implying it should be a single line of text), text that goes beyond `w` will be truncated with an ellipsis (...).
 * `text` - type: STRING.
 * `color` - type: COLOR.
 * `fontPath` - type: PATH.
