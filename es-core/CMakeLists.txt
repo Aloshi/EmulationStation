@@ -159,6 +159,6 @@ set(EMBEDDED_ASSET_SOURCES
 
 list(APPEND CORE_SOURCES ${EMBEDDED_ASSET_SOURCES})
 
-include_directories(${COMMON_INCLUDE_DIRS})
+include_directories(${COMMON_INCLUDE_DIRS} ${DBUS_INCLUDE_DIR} ${DBUS_ARCH_INCLUDE_DIR})
 add_library(es-core STATIC ${CORE_SOURCES} ${CORE_HEADERS})
-target_link_libraries(es-core ${COMMON_LIBRARIES})
+target_link_libraries(es-core ${COMMON_LIBRARIES} ${DBUS_LIBRARIES})
