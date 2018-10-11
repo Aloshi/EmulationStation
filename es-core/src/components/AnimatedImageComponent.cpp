@@ -1,7 +1,12 @@
 #include "components/AnimatedImageComponent.h"
 #include "Log.h"
 
-AnimatedImageComponent::AnimatedImageComponent(Window* window) : GuiComponent(window), mEnabled(false)
+AnimatedImageComponent::AnimatedImageComponent(Window* window) :
+  GuiComponent(window),
+  mLoop(false),
+  mEnabled(false),
+  mFrameAccumulator(0),
+  mCurrentFrame(0)
 {
 }
 
@@ -22,7 +27,7 @@ void AnimatedImageComponent::load(const AnimationDef* def)
 		auto img = std::unique_ptr<ImageComponent>(new ImageComponent(mWindow));
 		img->setResize(mSize.x(), mSize.y());
 		img->setImage(std::string(def->frames[i].path), false);
-		
+
 		mFrames.push_back(ImageFrame(std::move(img), def->frames[i].time));
 	}
 

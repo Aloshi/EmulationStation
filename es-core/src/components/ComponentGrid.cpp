@@ -5,7 +5,7 @@
 
 using namespace GridFlags;
 
-ComponentGrid::ComponentGrid(Window* window, const Eigen::Vector2i& gridDimensions) : GuiComponent(window), 
+ComponentGrid::ComponentGrid(Window* window, const Eigen::Vector2i& gridDimensions) : GuiComponent(window),
 	mGridSize(gridDimensions), mCursor(0, 0)
 {
 	assert(gridDimensions.x() > 0 && gridDimensions.y() > 0);
@@ -40,7 +40,7 @@ float ComponentGrid::getColWidth(int col)
 		if(mColWidths[x] == 0)
 			between++;
 	}
-	
+
 	return (freeWidthPerc * mSize.x()) / between;
 }
 
@@ -58,7 +58,7 @@ float ComponentGrid::getRowHeight(int row)
 		if(mRowHeights[y] == 0)
 			between++;
 	}
-	
+
 	return (freeHeightPerc * mSize.y()) / between;
 }
 
@@ -143,7 +143,7 @@ void ComponentGrid::updateCellComponent(const GridEntry& cell)
 	// center component
 	pos[0] = pos.x() + (size.x() - cell.component->getSize().x()) / 2;
 	pos[1] = pos.y() + (size.y() - cell.component->getSize().y()) / 2;
-	
+
 	cell.component->setPosition(pos);
 }
 
@@ -209,7 +209,7 @@ void ComponentGrid::onSizeChanged()
 ComponentGrid::GridEntry* ComponentGrid::getCellAt(int x, int y)
 {
 	assert(x >= 0 && x < mGridSize.x() && y >= 0 && y < mGridSize.y());
-	
+
 	for(auto it = mCells.begin(); it != mCells.end(); it++)
 	{
 		int xmin = it->pos.x();
@@ -279,7 +279,7 @@ bool ComponentGrid::moveCursor(Eigen::Vector2i dir)
 	GridEntry* currentCursorEntry = getCellAt(mCursor);
 
 	Eigen::Vector2i searchAxis(dir.x() == 0, dir.y() == 0);
-	
+
 	while(mCursor.x() >= 0 && mCursor.y() >= 0 && mCursor.x() < mGridSize.x() && mCursor.y() < mGridSize.y())
 	{
 		mCursor = mCursor + dir;
@@ -360,7 +360,7 @@ void ComponentGrid::render(const Eigen::Affine3f& parentTrans)
 	Eigen::Affine3f trans = parentTrans * getTransform();
 
 	renderChildren(trans);
-	
+
 	// draw cell separators
 	if(mLines.size())
 	{
@@ -425,20 +425,20 @@ std::vector<HelpPrompt> ComponentGrid::getHelpPrompts()
 	GridEntry* e = getCellAt(mCursor);
 	if(e)
 		prompts = e->component->getHelpPrompts();
-	
+
 	bool canScrollVert = mGridSize.y() > 1;
 	bool canScrollHoriz = mGridSize.x() > 1;
 	for(auto it = prompts.begin(); it != prompts.end(); it++)
 	{
-		if(it->first == "up/down/left/right")
+		if(strcmp(it->first, "up/down/left/right") == 0)
 		{
 			canScrollHoriz = false;
 			canScrollVert = false;
 			break;
-		}else if(it->first == "up/down")
+		}else if(strcmp(it->first, "up/down") == 0)
 		{
 			canScrollVert = false;
-		}else if(it->first == "left/right")
+		}else if(strcmp(it->first, "left/right") == 0)
 		{
 			canScrollHoriz = false;
 		}
