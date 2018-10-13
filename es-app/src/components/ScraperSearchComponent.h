@@ -8,7 +8,7 @@
 #include "GuiComponent.h"
 
 class ComponentList;
-class DateTimeComponent;
+class DateTimeEditComponent;
 class ImageComponent;
 class RatingComponent;
 class ScrollableContainer;
@@ -69,7 +69,7 @@ private:
 
 	std::shared_ptr<ComponentGrid> mMD_Grid;
 	std::shared_ptr<RatingComponent> mMD_Rating;
-	std::shared_ptr<DateTimeComponent> mMD_ReleaseDate;
+	std::shared_ptr<DateTimeEditComponent> mMD_ReleaseDate;
 	std::shared_ptr<TextComponent> mMD_Developer;
 	std::shared_ptr<TextComponent> mMD_Publisher;
 	std::shared_ptr<TextComponent> mMD_Genre;

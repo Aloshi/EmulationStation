@@ -37,15 +37,20 @@ public:
 
 	unsigned char getOpacity() const override;
 	void setOpacity(unsigned char opacity) override;
-	
+
 	inline std::shared_ptr<Font> getFont() const { return mFont; }
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
+protected:
+	virtual void onTextChanged();
+
+	std::string mText;
+	std::shared_ptr<Font> mFont;
+
 private:
 	void calculateExtent();
 
-	void onTextChanged();
 	void onColorChanged();
 
 	unsigned int mColor;
@@ -54,10 +59,8 @@ private:
 	unsigned char mBgColorOpacity;
 	bool mRenderBackground;
 
-	std::shared_ptr<Font> mFont;
 	bool mUppercase;
 	Vector2i mAutoCalcExtent;
-	std::string mText;
 	std::shared_ptr<TextCache> mTextCache;
 	Alignment mHorizontalAlignment;
 	Alignment mVerticalAlignment;
