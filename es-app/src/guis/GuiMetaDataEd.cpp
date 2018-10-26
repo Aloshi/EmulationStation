@@ -2,7 +2,7 @@
 
 #include "components/ButtonComponent.h"
 #include "components/ComponentList.h"
-#include "components/DateTimeComponent.h"
+#include "components/DateTimeEditComponent.h"
 #include "components/MenuComponent.h"
 #include "components/RatingComponent.h"
 #include "components/SwitchComponent.h"
@@ -87,21 +87,21 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 			}
 		case MD_DATE:
 			{
-				ed = std::make_shared<DateTimeComponent>(window);
+				ed = std::make_shared<DateTimeEditComponent>(window);
 				row.addElement(ed, false);
 
 				auto spacer = std::make_shared<GuiComponent>(mWindow);
 				spacer->setSize(Renderer::getScreenWidth() * 0.0025f, 0);
 				row.addElement(spacer, false);
 
-				// pass input to the actual DateTimeComponent instead of the spacer
+				// pass input to the actual DateTimeEditComponent instead of the spacer
 				row.input_handler = std::bind(&GuiComponent::input, ed.get(), std::placeholders::_1, std::placeholders::_2);
 
 				break;
 			}
 		case MD_TIME:
 			{
-				ed = std::make_shared<DateTimeComponent>(window, DateTimeComponent::DISP_RELATIVE_TO_NOW);
+				ed = std::make_shared<DateTimeEditComponent>(window, DateTimeEditComponent::DISP_RELATIVE_TO_NOW);
 				row.addElement(ed, false);
 				break;
 			}
