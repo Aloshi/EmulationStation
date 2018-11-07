@@ -110,7 +110,8 @@ fs::path removeCommonPath(const fs::path& path, const fs::path& relativeTo, bool
 		return path;
 	}
 
-	fs::path p = fs::canonical(path);
+	// if it's a symlink we don't want to apply fs::canonical on it, otherwise we'll lose the current parent_path
+	fs::path p = (fs::is_symlink(path) ? fs::canonical(path.parent_path()) / path.filename() : fs::canonical(path));
 	fs::path r = fs::canonical(relativeTo);
 
 	if(p.root_path() != r.root_path())
