@@ -14,13 +14,10 @@ public:
 	// Called when a new file is added, a file is removed, a file's metadata changes, or a file's children are sorted.
 	// NOTE: FILE_SORTED is only reported for the topmost FileData, where the sort started.
 	//       Since sorts are recursive, that FileData's children probably changed too.
-	virtual void onFileChanged(FileData* file, FileChangeType change);
+	virtual void onFileChanged(FileData* file, FileChangeType change) override;
 	
 	// Called whenever the theme changes.
-	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme);
-
-	virtual FileData* getCursor() = 0;
-	virtual void setCursor(FileData*) = 0;
+	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
 	virtual bool input(InputConfig* config, Input input) override;
 

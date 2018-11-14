@@ -80,8 +80,8 @@ public:
 	inline void setLineSpacing(float lineSpacing) { mLineSpacing = lineSpacing; }
 
 protected:
-	virtual void onScroll(int amt) { if(mScrollSound) mScrollSound->play(); }
-	virtual void onCursorChanged(const CursorState& state);
+	virtual void onScroll(int amt) override { if(mScrollSound) mScrollSound->play(); }
+	virtual void onCursorChanged(const CursorState& state) override;
 
 private:
 	static const int MARQUEE_DELAY = 2000;

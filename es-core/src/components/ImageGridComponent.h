@@ -86,7 +86,7 @@ private:
 	void buildImages();
 	void updateImages();
 
-	virtual void onCursorChanged(const CursorState& state);
+	void onCursorChanged(const CursorState& state) override;
 
 	bool mEntriesDirty;
 
