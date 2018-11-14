@@ -2,8 +2,6 @@
 
 #include <string.h>
 
-extern const char* mameNameToRealName[];
-
 namespace PlatformIds
 {
 	const char* PlatformNames[PLATFORM_COUNT + 1] = {
