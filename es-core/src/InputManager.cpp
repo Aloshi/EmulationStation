@@ -101,7 +101,14 @@ void InputManager::addJoystickByDeviceIndex(int id)
 	// set up the prevAxisValues
 	int numAxes = SDL_JoystickNumAxes(joy);
 	mPrevAxisValues[joyId] = new int[numAxes];
-	std::fill(mPrevAxisValues[joyId], mPrevAxisValues[joyId] + numAxes, 0); //initialize array to 0
+	mInitAxisValues[joyId] = new int[numAxes];
+
+	int axis;
+	for (int i = 0; i< numAxes; i++) {
+		axis = SDL_JoystickGetAxis(joy, i);
+		mInitAxisValues[joyId][i] = axis;
+		mPrevAxisValues[joyId][i] = axis;
+	}
 }
 
 void InputManager::removeJoystickByJoystickID(SDL_JoystickID joyId)
@@ -198,21 +205,28 @@ InputConfig* InputManager::getInputConfigByDevice(int device)
 bool InputManager::parseEvent(const SDL_Event& ev, Window* window)
 {
 	bool causedEvent = false;
+	int axis;
 	switch(ev.type)
 	{
 	case SDL_JOYAXISMOTION:
+		axis = ev.jaxis.value;
+		// Check for ABS_Z/ABS_RZ trigger axes which rest at -32768
+		if ((ev.jaxis.axis == 2 || ev.jaxis.axis == 5) && mInitAxisValues[ev.jaxis.which][ev.jaxis.axis] == -32768)
+		{
+			// shift to 0 - 32767.
+			axis = axis / 2 + 16384;
+		}
 		//if it switched boundaries
-		if((abs(ev.jaxis.value) > DEADZONE) != (abs(mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis]) > DEADZONE))
+		if((abs(axis) > DEADZONE) != (abs(mPrevAxisValues[ev.jaxis.which][ev.jaxis.axis]) > DEADZONE))
 		{
 			int normValue;
-			if(abs(ev.jaxis.value) <= DEADZONE)
+			if(abs(axis) <= DEADZONE)
 				normValue = 0;
 			else
-				if(ev.jaxis.value > 0)
+				if(axis > 0)
 					normValue = 1;
 				else
 					normValue = -1;
-
 			window->input(getInputConfigByDevice(ev.jaxis.which), Input(ev.jaxis.which, TYPE_AXIS, ev.jaxis.axis, normValue, false));
 			causedEvent = true;
 		}
