@@ -104,7 +104,7 @@ std::string GridGameListView::getQuickSystemSelectLeftButton()
 
 bool GridGameListView::input(InputConfig* config, Input input)
 {
-	if(config->isMappedTo("left", input) || config->isMappedTo("right", input))
+	if(config->isMappedLike("left", input) || config->isMappedLike("right", input))
 		return GuiComponent::input(config, input);
 
 	return ISimpleGameListView::input(config, input);

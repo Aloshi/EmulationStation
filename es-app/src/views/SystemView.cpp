@@ -150,12 +150,12 @@ bool SystemView::input(InputConfig* config, Input input)
 		{
 		case VERTICAL:
 		case VERTICAL_WHEEL:
-			if (config->isMappedTo("up", input))
+			if (config->isMappedLike("up", input))
 			{
 				listInput(-1);
 				return true;
 			}
-			if (config->isMappedTo("down", input))
+			if (config->isMappedLike("down", input))
 			{
 				listInput(1);
 				return true;
@@ -164,12 +164,12 @@ bool SystemView::input(InputConfig* config, Input input)
 		case HORIZONTAL:
 		case HORIZONTAL_WHEEL:
 		default:
-			if (config->isMappedTo("left", input))
+			if (config->isMappedLike("left", input))
 			{
 				listInput(-1);
 				return true;
 			}
-			if (config->isMappedTo("right", input))
+			if (config->isMappedLike("right", input))
 			{
 				listInput(1);
 				return true;
@@ -191,10 +191,10 @@ bool SystemView::input(InputConfig* config, Input input)
 			return true;
 		}
 	}else{
-		if(config->isMappedTo("left", input) ||
-			config->isMappedTo("right", input) ||
-			config->isMappedTo("up", input) ||
-			config->isMappedTo("down", input))
+		if(config->isMappedLike("left", input) ||
+			config->isMappedLike("right", input) ||
+			config->isMappedLike("up", input) ||
+			config->isMappedLike("down", input))
 			listInput(0);
 		if(!UIModeController::getInstance()->isUIModeKid() && config->isMappedTo("select", input) && Settings::getInstance()->getBool("ScreenSaverControls"))
 		{

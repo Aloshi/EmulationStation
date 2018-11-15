@@ -111,6 +111,21 @@ bool InputConfig::isMappedTo(const std::string& name, Input input)
 	return false;
 }
 
+bool InputConfig::isMappedLike(const std::string& name, Input input)
+{
+	if(name == "left")
+	{
+		return isMappedTo("left", input) || isMappedTo("leftanalogleft", input) || isMappedTo("rightanalogleft", input);
+	}else if(name == "right"){
+		return isMappedTo("right", input) || isMappedTo("leftanalogright", input) || isMappedTo("rightanalogright", input);
+	}else if(name == "up"){
+		return isMappedTo("up", input) || isMappedTo("leftanalogup", input) || isMappedTo("rightanalogup", input);
+	}else if(name == "down"){
+		return isMappedTo("down", input) || isMappedTo("leftanalogdown", input) || isMappedTo("rightanalogdown", input);
+	}
+	return isMappedTo(name, input);
+}
+
 std::vector<std::string> InputConfig::getMappedTo(Input input)
 {
 	std::vector<std::string> maps;

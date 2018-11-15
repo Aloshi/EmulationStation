@@ -75,10 +75,10 @@ bool ComponentList::input(InputConfig* config, Input input)
 	}
 
 	// input handler didn't consume the input - try to scroll
-	if(config->isMappedTo("up", input))
+	if(config->isMappedLike("up", input))
 	{
 		return listInput(input.value != 0 ? -1 : 0);
-	}else if(config->isMappedTo("down", input))
+	}else if(config->isMappedLike("down", input))
 	{
 		return listInput(input.value != 0 ? 1 : 0);
 

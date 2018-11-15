@@ -55,7 +55,7 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 		return true;
 	}
 
-	if(config->isMappedTo("up", input))
+	if(config->isMappedLike("up", input))
 	{
 		if(input.value != 0)
 			setScrollDir(-1);
@@ -63,7 +63,7 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 			setScrollDir(0);
 
 		return true;
-	}else if(config->isMappedTo("down", input))
+	}else if(config->isMappedLike("down", input))
 	{
 		if(input.value != 0)
 			setScrollDir(1);
@@ -71,12 +71,12 @@ bool GuiFastSelect::input(InputConfig* config, Input input)
 			setScrollDir(0);
 
 		return true;
-	}else if(config->isMappedTo("left", input) && input.value != 0)
+	}else if(config->isMappedLike("left", input) && input.value != 0)
 	{
 		mSortId = (mSortId + 1) % FileSorts::SortTypes.size();
 		updateSortText();
 		return true;
-	}else if(config->isMappedTo("right", input) && input.value != 0)
+	}else if(config->isMappedLike("right", input) && input.value != 0)
 	{
 		mSortId--;
 		if(mSortId < 0)

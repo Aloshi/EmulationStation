@@ -118,7 +118,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 			}
 
 			return true;
-		}else if(config->isMappedTo(getQuickSystemSelectRightButton(), input))
+		}else if(config->isMappedLike(getQuickSystemSelectRightButton(), input))
 		{
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
@@ -126,7 +126,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 				ViewController::get()->goToNextGameList();
 				return true;
 			}
-		}else if(config->isMappedTo(getQuickSystemSelectLeftButton(), input))
+		}else if(config->isMappedLike(getQuickSystemSelectLeftButton(), input))
 		{
 			if(Settings::getInstance()->getBool("QuickSystemSelect"))
 			{
