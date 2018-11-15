@@ -18,7 +18,6 @@ std::vector<const char*> settings_dont_save {
 	{ "DebugImage" },
 	{ "ForceKid" },
 	{ "ForceKiosk" },
-	{ "ForceDisableFilters" },
 	{ "IgnoreGamelist" },
 	{ "HideConsole" },
 	{ "ShowExit" },
