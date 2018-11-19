@@ -61,6 +61,7 @@ public:
 	virtual inline void refreshMetadata() { return; };
 
 	virtual std::string getKey();
+	const bool isArcadeAsset();
 	inline std::string getFullPath() { return getPath(); };
 	inline std::string getFileName() { return Utils::FileSystem::getFileName(getPath()); };
 	virtual FileData* getSourceFileData();
