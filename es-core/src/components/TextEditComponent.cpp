@@ -90,9 +90,9 @@ void TextEditComponent::stopEditing()
 
 bool TextEditComponent::input(InputConfig* config, Input input)
 {
-	bool const cursor_left = (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("left", input)) ||
+	bool const cursor_left = (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedLike("left", input)) ||
 		(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_LEFT);
-	bool const cursor_right = (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("right", input)) ||
+	bool const cursor_right = (config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedLike("right", input)) ||
 		(config->getDeviceId() == DEVICE_KEYBOARD && input.id == SDLK_RIGHT);
 
 	if(input.value == 0)
@@ -129,10 +129,10 @@ bool TextEditComponent::input(InputConfig* config, Input input)
 			return true;
 		}
 
-		if(config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("up", input))
+		if(config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedLike("up", input))
 		{
 			// TODO
-		}else if(config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedTo("down", input))
+		}else if(config->getDeviceId() != DEVICE_KEYBOARD && config->isMappedLike("down", input))
 		{
 			// TODO
 		}else if(cursor_left || cursor_right)

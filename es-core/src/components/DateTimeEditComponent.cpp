@@ -54,9 +54,9 @@ bool DateTimeEditComponent::input(InputConfig* config, Input input)
 		}
 
 		int incDir = 0;
-		if(config->isMappedTo("up", input) || config->isMappedTo("pageup", input))
+		if(config->isMappedLike("up", input) || config->isMappedTo("pageup", input))
 			incDir = 1;
-		else if(config->isMappedTo("down", input) || config->isMappedTo("pagedown", input))
+		else if(config->isMappedLike("down", input) || config->isMappedTo("pagedown", input))
 			incDir = -1;
 
 		if(incDir != 0)
@@ -103,7 +103,7 @@ bool DateTimeEditComponent::input(InputConfig* config, Input input)
 			return true;
 		}
 
-		if(config->isMappedTo("right", input))
+		if(config->isMappedLike("right", input))
 		{
 			mEditIndex++;
 			if(mEditIndex >= (int)mCursorBoxes.size())
@@ -111,7 +111,7 @@ bool DateTimeEditComponent::input(InputConfig* config, Input input)
 			return true;
 		}
 		
-		if(config->isMappedTo("left", input))
+		if(config->isMappedLike("left", input))
 		{
 			mEditIndex--;
 			if(mEditIndex < 0)

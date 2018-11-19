@@ -64,7 +64,7 @@ bool UIModeController::inputIsMatch(InputConfig * config, Input input)
 {
 	for (auto valstring : mInputVals)
 	{
-		if (config->isMappedTo(valstring, input) &&
+		if (config->isMappedLike(valstring, input) &&
 			(mPassKeySequence[mPassKeyCounter] == valstring[0]))
 		{
 			mPassKeyCounter++;

@@ -117,13 +117,13 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 	if(input.value != 0)
 	{
 		Vector2i dir = Vector2i::Zero();
-		if(config->isMappedTo("up", input))
+		if(config->isMappedLike("up", input))
 			dir[1 ^ mScrollDirection] = -1;
-		else if(config->isMappedTo("down", input))
+		else if(config->isMappedLike("down", input))
 			dir[1 ^ mScrollDirection] = 1;
-		else if(config->isMappedTo("left", input))
+		else if(config->isMappedLike("left", input))
 			dir[0 ^ mScrollDirection] = -1;
-		else if(config->isMappedTo("right", input))
+		else if(config->isMappedLike("right", input))
 			dir[0 ^ mScrollDirection] = 1;
 
 		if(dir != Vector2i::Zero())
@@ -132,7 +132,7 @@ bool ImageGridComponent<T>::input(InputConfig* config, Input input)
 			return true;
 		}
 	}else{
-		if(config->isMappedTo("up", input) || config->isMappedTo("down", input) || config->isMappedTo("left", input) || config->isMappedTo("right", input))
+		if(config->isMappedLike("up", input) || config->isMappedLike("down", input) || config->isMappedLike("left", input) || config->isMappedLike("right", input))
 		{
 			stopScrolling();
 		}
