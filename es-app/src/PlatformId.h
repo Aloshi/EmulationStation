@@ -58,7 +58,8 @@ namespace PlatformIds
 		PLAYSTATION_VITA,
 		PLAYSTATION_PORTABLE,
 		SUPER_NINTENDO,
-		TURBOGRAFX_16, // (also PC Engine)
+		TURBOGRAFX_16, // (also PC Engine) hucards only
+		TURBOGRAFX_CD, // (also PC Engine) CD-ROM only
 		WONDERSWAN,
 		WONDERSWAN_COLOR,
 		ZX_SPECTRUM,
