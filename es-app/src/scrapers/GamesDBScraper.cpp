@@ -59,6 +59,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(PLAYSTATION_PORTABLE, "Sony PSP")
 	(SUPER_NINTENDO, "Super Nintendo (SNES)")
 	(TURBOGRAFX_16, "TurboGrafx 16")
+	(TURBOGRAFX_CD, "TurboGrafx CD")
 	(WONDERSWAN, "WonderSwan")
 	(WONDERSWAN_COLOR, "WonderSwan Color")
 	(ZX_SPECTRUM, "Sinclair ZX Spectrum");

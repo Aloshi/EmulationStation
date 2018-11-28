@@ -59,6 +59,7 @@ namespace PlatformIds
 		"psp", // playstation portable
 		"snes", // super nintendo entertainment system
 		"pcengine", // turbografx-16/pcengine
+		"pcenginecd", // turbografx-16/pcengine CD-ROM
 		"wonderswan",
 		"wonderswancolor",
 		"zxspectrum",
