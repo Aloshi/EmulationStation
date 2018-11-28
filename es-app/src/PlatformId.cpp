@@ -61,7 +61,8 @@ namespace PlatformIds
 		"psvita",
 		"psp", // playstation portable
 		"snes", // super nintendo entertainment system
-		"pcengine", // turbografx-16/pcengine
+		"pcengine", // (aka turbografx-16) HuCards only
+		"pcenginecd", // (aka turbografx-16) CD-ROMs only
 		"wonderswan",
 		"wonderswancolor",
 		"zxspectrum",

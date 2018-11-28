@@ -64,7 +64,8 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map {
 	{ PLAYSTATION_VITA, "Sony Playstation Vita" },
 	{ PLAYSTATION_PORTABLE, "Sony Playstation Portable" },
 	{ SUPER_NINTENDO, "Super Nintendo (SNES)" },
-	{ TURBOGRAFX_16, "TurboGrafx 16" },
+	{ TURBOGRAFX_16, "TurboGrafx 16" }, // HuCards only
+	{ TURBOGRAFX_CD, "TurboGrafx CD" }, // CD-ROMs only
 	{ WONDERSWAN, "WonderSwan" },
 	{ WONDERSWAN_COLOR, "WonderSwan Color" },
 	{ ZX_SPECTRUM, "Sinclair ZX Spectrum" },
