@@ -2,6 +2,7 @@
 
 #include "FileData.h"
 #include "GamesDBScraper.h"
+#include "ScreenScraper.h"
 #include "Log.h"
 #include "Settings.h"
 #include "SystemData.h"
@@ -9,15 +10,25 @@
 #include <fstream>
 
 const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs {
-	{ "TheGamesDB", &thegamesdb_generate_scraper_requests }
+//	{ "TheGamesDB", &thegamesdb_generate_scraper_requests },
+	{ "ScreenScraper", &screenscraper_generate_scraper_requests }
 };
 
 std::unique_ptr<ScraperSearchHandle> startScraperSearch(const ScraperSearchParams& params)
 {
 	const std::string& name = Settings::getInstance()->getString("Scraper");
-
 	std::unique_ptr<ScraperSearchHandle> handle(new ScraperSearchHandle());
-	scraper_request_funcs.at(name)(params, handle->mRequestQueue, handle->mResults);
+
+	// Check if the Scraper in the settings still exists as a registered scraping source.
+	if (scraper_request_funcs.find(name) == scraper_request_funcs.end())
+	{
+		LOG(LogWarning) << "Configured scraper (" << name << ") unavailable, scraping aborted.";
+	}
+	else
+	{
+		scraper_request_funcs.at(name)(params, handle->mRequestQueue, handle->mResults);
+	}
+
 	return handle;
 }
 
@@ -30,6 +41,12 @@ std::vector<std::string> getScraperList()
 	}
 
 	return list;
+}
+
+bool isValidConfiguredScraper()
+{
+	const std::string& name = Settings::getInstance()->getString("Scraper");
+	return scraper_request_funcs.find(name) != scraper_request_funcs.end();
 }
 
 // ScraperSearchHandle
@@ -126,7 +143,23 @@ MDResolveHandle::MDResolveHandle(const ScraperSearchResult& result, const Scrape
 {
 	if(!result.imageUrl.empty())
 	{
-		std::string imgPath = getSaveAsPath(search, "image", result.imageUrl);
+
+		std::string ext;
+
+		// If we have a file extension returned by the scraper, then use it.
+		// Otherwise, try to guess it by the name of the URL, which point to an image.
+		if (!result.imageType.empty()) 
+		{
+			ext = result.imageType;
+		}else{
+			size_t dot = result.imageUrl.find_last_of('.');
+
+			if (dot != std::string::npos)
+				ext = result.imageUrl.substr(dot, std::string::npos);
+		}
+
+		std::string imgPath = getSaveAsPath(search, "image", ext);     
+
 		mFuncs.push_back(ResolvePair(downloadImageAsync(result.imageUrl, imgPath), [this, imgPath]
 		{
 			mResult.mdl.set("image", imgPath);
@@ -269,7 +302,7 @@ bool resizeImage(const std::string& path, int maxWidth, int maxHeight)
 	return saved;
 }
 
-std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& url)
+std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& suffix, const std::string& extension)
 {
 	const std::string subdirectory = params.system->getName();
 	const std::string name = Utils::FileSystem::getStem(params.game->getPath()) + "-" + suffix;
@@ -284,11 +317,7 @@ std::string getSaveAsPath(const ScraperSearchParams& params, const std::string& 
 	if(!Utils::FileSystem::exists(path))
 		Utils::FileSystem::createDirectory(path);
 
-	size_t dot = url.find_last_of('.');
-	std::string ext;
-	if(dot != std::string::npos)
-		ext = url.substr(dot, std::string::npos);
 
-	path += name + ext;
+	path += name + extension;
 	return path;
 }
