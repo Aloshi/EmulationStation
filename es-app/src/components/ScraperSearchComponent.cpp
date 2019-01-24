@@ -231,14 +231,23 @@ void ScraperSearchComponent::onSearchDone(const std::vector<ScraperSearchResult>
 	unsigned int color = 0x777777FF;
 	if(results.empty())
 	{
-		ComponentListRow row;
-		row.addElement(std::make_shared<TextComponent>(mWindow, "NO GAMES FOUND - SKIP", font, color), true);
+		// Check if the scraper used is still valid
+		if (!isValidConfiguredScraper())
+		{
+			mWindow->pushGui(new GuiMsgBox(mWindow, Utils::String::toUpper("Configured scraper is no longer available.\nPlease change the scraping source in the settings."),
+				"FINISH", mSkipCallback));
+		}
+		else
+		{
+			ComponentListRow row;
+			row.addElement(std::make_shared<TextComponent>(mWindow, "NO GAMES FOUND - SKIP", font, color), true);
 
-		if(mSkipCallback)
-			row.makeAcceptInputHandler(mSkipCallback);
+			if(mSkipCallback)
+				row.makeAcceptInputHandler(mSkipCallback);
 
-		mResultList->addRow(row);
-		mGrid.resetCursor();
+			mResultList->addRow(row);
+			mGrid.resetCursor();
+		}
 	}else{
 		ComponentListRow row;
 		for(size_t i = 0; i < results.size(); i++)
