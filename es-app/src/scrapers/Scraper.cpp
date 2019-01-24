@@ -10,7 +10,7 @@
 #include <fstream>
 
 const std::map<std::string, generate_scraper_requests_func> scraper_request_funcs {
-	{ "TheGamesDB", &thegamesdb_generate_scraper_requests },
+//	{ "TheGamesDB", &thegamesdb_generate_scraper_requests },
 	{ "ScreenScraper", &screenscraper_generate_scraper_requests }
 };
 
