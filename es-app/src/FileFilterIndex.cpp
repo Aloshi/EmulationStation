@@ -248,7 +248,7 @@ void FileFilterIndex::resetFilters()
 void FileFilterIndex::setUIModeFilters()
 {
 	if(!Settings::getInstance()->getBool("ForceDisableFilters")){
-		if (!UIModeController::getInstance()->isUIModeFull())
+		if (UIModeController::getInstance()->isUIModeKiosk())
 		{
 			filterByHidden = true;
 			std::vector<std::string> val = { "FALSE" };
@@ -259,7 +259,7 @@ void FileFilterIndex::setUIModeFilters()
 			filterByKidGame = true;
 			std::vector<std::string> val = { "TRUE" };
 			setFilter(KIDGAME_FILTER, &val);
-		}		
+		}
 	}
 }
 
