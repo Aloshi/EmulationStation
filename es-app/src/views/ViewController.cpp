@@ -65,7 +65,7 @@ void ViewController::goToStart()
 
 void ViewController::ReloadAndGoToStart()
 {
-	mWindow->renderLoadingScreen();
+	mWindow->renderLoadingScreen("Loading...");
 	ViewController::get()->reloadAll();
 	ViewController::get()->goToStart();
 }
@@ -429,8 +429,19 @@ void ViewController::render(const Transform4x4f& parentTrans)
 
 void ViewController::preload()
 {
+	uint32_t i = 0;
 	for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
 	{
+		if(Settings::getInstance()->getBool("SplashScreen") &&
+		   Settings::getInstance()->getBool("SplashScreenProgress"))
+		{
+			i++;
+			char buffer[100];
+			sprintf (buffer, "Loading '%s' (%d/%d)",
+			         (*it)->getFullName().c_str(), i, SystemData::sSystemVector.size());
+			mWindow->renderLoadingScreen(std::string(buffer));
+		}
+
 		(*it)->getIndex()->resetFilters();
 		getGameListView(*it);
 	}
