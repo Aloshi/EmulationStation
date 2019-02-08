@@ -407,6 +407,11 @@ void GuiMenu::openOtherSettings()
 	s->addWithLabel("PARSE GAMESLISTS ONLY", parse_gamelists);
 	s->addSaveFunc([parse_gamelists] { Settings::getInstance()->setBool("ParseGamelistOnly", parse_gamelists->getState()); });
 
+	auto local_art = std::make_shared<SwitchComponent>(mWindow);
+	local_art->setState(Settings::getInstance()->getBool("LocalArt"));
+	s->addWithLabel("SEARCH FOR LOCAL ART", local_art);
+	s->addSaveFunc([local_art] { Settings::getInstance()->setBool("LocalArt", local_art->getState()); });
+
 	// hidden files
 	auto hidden_files = std::make_shared<SwitchComponent>(mWindow);
 	hidden_files->setState(Settings::getInstance()->getBool("ShowHiddenFiles"));

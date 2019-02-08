@@ -54,7 +54,7 @@ const std::string FileData::getThumbnailPath() const
 	std::string thumbnail = metadata.get("thumbnail");
 
 	// no thumbnail, try image
-	if(thumbnail.empty())
+	if(thumbnail.empty() && Settings::getInstance()->getBool("LocalArt"))
 	{
 		thumbnail = metadata.get("image");
 
@@ -115,7 +115,7 @@ const std::string FileData::getVideoPath() const
 	std::string video = metadata.get("video");
 
 	// no video, try to use local video
-	if(video.empty())
+	if(video.empty() && Settings::getInstance()->getBool("LocalArt"))
 	{
 		std::string path = mEnvData->mStartPath + "/images/" + getDisplayName() + "-video.mp4";
 		if(Utils::FileSystem::exists(path))
@@ -130,7 +130,7 @@ const std::string FileData::getMarqueePath() const
 	std::string marquee = metadata.get("marquee");
 
 	// no marquee, try to use local marquee
-	if(marquee.empty())
+	if(marquee.empty() && Settings::getInstance()->getBool("LocalArt"))
 	{
 		const char* extList[2] = { ".png", ".jpg" };
 		for(int i = 0; i < 2; i++)
