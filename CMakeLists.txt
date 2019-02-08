@@ -57,6 +57,7 @@ find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(CURL REQUIRED)
 find_package(VLC REQUIRED)
+find_package(RapidJSON REQUIRED)
 find_package(libCEC)
 
 #add ALSA for Linux
@@ -120,6 +121,7 @@ set(COMMON_INCLUDE_DIRS
     ${SDL2_INCLUDE_DIR}
     ${CURL_INCLUDE_DIR}
     ${VLC_INCLUDE_DIR}
+    ${RAPIDJSON_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
 )
