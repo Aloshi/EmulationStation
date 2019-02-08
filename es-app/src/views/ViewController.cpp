@@ -433,12 +433,12 @@ void ViewController::preload()
 	for(auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
 	{
 		if(Settings::getInstance()->getBool("SplashScreen") &&
-		   Settings::getInstance()->getBool("SplashScreenProgress"))
+			Settings::getInstance()->getBool("SplashScreenProgress"))
 		{
 			i++;
 			char buffer[100];
 			sprintf (buffer, "Loading '%s' (%d/%d)",
-			         (*it)->getFullName().c_str(), i, SystemData::sSystemVector.size());
+				(*it)->getFullName().c_str(), i, SystemData::sSystemVector.size());
 			mWindow->renderLoadingScreen(std::string(buffer));
 		}
 
