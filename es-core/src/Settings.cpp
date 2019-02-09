@@ -129,6 +129,8 @@ void Settings::setDefaults()
 	mBoolMap["SortAllSystems"] = false;
 	mBoolMap["UseCustomCollectionsSystem"] = true;
 
+	mBoolMap["LocalArt"] = false;
+
 	// Audio out device for volume control
 	#ifdef _RPI_
 		mStringMap["AudioDevice"] = "PCM";
