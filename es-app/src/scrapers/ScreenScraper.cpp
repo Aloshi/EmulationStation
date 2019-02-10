@@ -125,11 +125,7 @@ void screenscraper_generate_scraper_requests(const ScraperSearchParams& params,
 
 	ScreenScraperRequest::ScreenScraperConfig ssConfig;
 
-	std::string cleanName = params.nameOverride;
-	if (cleanName.empty())
-		cleanName = params.game->getCleanName();
-
-	path = ssConfig.getGameSearchUrl(cleanName);
+	path = ssConfig.getGameSearchUrl(params.game->getFileName());
 	auto& platforms = params.system->getPlatformIds();
 
 	for (auto platformIt = platforms.cbegin(); platformIt != platforms.cend(); platformIt++)
