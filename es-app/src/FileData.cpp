@@ -54,12 +54,12 @@ const std::string FileData::getThumbnailPath() const
 	std::string thumbnail = metadata.get("thumbnail");
 
 	// no thumbnail, try image
-	if(thumbnail.empty() && Settings::getInstance()->getBool("LocalArt"))
+	if(thumbnail.empty())
 	{
 		thumbnail = metadata.get("image");
 
 		// no image, try to use local image
-		if(thumbnail.empty())
+		if(thumbnail.empty() && Settings::getInstance()->getBool("LocalArt"))
 		{
 			const char* extList[2] = { ".png", ".jpg" };
 			for(int i = 0; i < 2; i++)
