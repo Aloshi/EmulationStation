@@ -32,6 +32,7 @@ There are a few types of metadata:
 
 * `string` - just text.
 * `image_path` - a path to an image. This path should be either the absolute to the image, a path relative to the system games folder that starts with "./" (e.g. `./mm2_image.png`), or a path relative to the home directory that starts with "~/" (e.g. `~/.emulationstation/downloaded_images/nes/mm2-image.png`).  Images will be automatically resized by OpenGL to fit the corresponding `<image>` tag in the current theme.  Smaller images will load faster, so try to keep resolution low!
+* `video_path` - a path to a video. Similar to `image_path`.
 * `float` - a floating-point decimal value (written as a string).
 * `integer` - an integer value (written as a string).
 * `datetime` - a date and, potentially, a time.  These are encoded as an ISO string, in the following format: "%Y%m%dT%H%M%S%F%q".  For example, the release date for Chrono Trigger is encoded as "19950311T000000" (no time specified).
@@ -43,22 +44,24 @@ Some metadata is also marked as "statistic" - these are kept track of by ES and 
 * `name` - string, the displayed name for the game.
 * `desc` - string, a description of the game.  Longer descriptions will automatically scroll, so don't worry about size.
 * `image` - image_path, the path to an image to display for the game (like box art or a screenshot).
-* `thumbnail` - image_path, the path to a smaller image, displayed in image lists like the grid view.  Should be small to ensure quick loading.  *Currently not used.*
+* `thumbnail` - image_path, the path to a smaller image, displayed in image lists like the grid view.  Should be small to ensure quick loading.
+* `video` - video_path, the path to a video to display for the game, for themes that support the _video_ viewstyle.
 * `rating` - float, the rating for the game, expressed as a floating point number between 0 and 1.  Arbitrary values are fine (ES can display half-stars, quarter-stars, etc).
 * `releasedate` - datetime, the date the game was released.  Displayed as date only, time is ignored.
 * `developer` - string, the developer for the game.
 * `publisher` - string, the publisher for the game.
 * `genre` - string, the (primary) genre for the game.
 * `players` - integer, the number of players the game supports.
-* `playcount` - statistic, integer, the number of times this game has been played
+* `playcount` - statistic, integer, the number of times this game has been played.
 * `lastplayed` - statistic, datetime, the last date and time this game was played.
+* `sortname` - string, used in sorting the gamelist in a system, instead of `name`.
 
 
 #### `<folder>`
 * `name` - string, the displayed name for the folder.
 * `desc` - string, the description for the folder.
 * `image` - image_path, the path to an image to display for the folder.
-* `thumbnail` - image_path, the path to a smaller image to display for the folder.  *Currently not used.*
+* `thumbnail` - image_path, the path to a smaller image to display for the folder.
 
 
 Things to be Aware Of
