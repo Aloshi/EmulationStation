@@ -9,21 +9,21 @@ Building
 
 EmulationStation uses some C++11 code, which means you'll need to use at least g++-4.7 on Linux, or VS2010 on Windows, to compile.
 
-EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, FreeImage, FreeType, and cURL.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
+EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, FreeImage, FreeType, cURL and RapidJSON.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
 
 **On Debian/Ubuntu:**
-All of this be easily installed with apt-get:
+All of this be easily installed with `apt-get`:
 ```bash
-sudo apt-get install libsdl2-dev libfreeimage-dev libfreetype6-dev libcurl4-openssl-dev \
+sudo apt-get install libsdl2-dev libfreeimage-dev libfreetype6-dev libcurl4-openssl-dev rapidjson-dev \
   libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid-fallback libvlc-dev \
   libvlccore-dev vlc-bin
 ```
 **On Fedora:**
-All of this be easily installed with dnf ( With rpmfusion activated) :
+All of this be easily installed with `dnf` (with rpmfusion activated) :
 ```bash
 sudo dnf install SDL2-devel freeimage-devel freetype-devel curl-devel \
   alsa-lib-devel mesa-libGL-devel cmake \
-  vlc-devel
+  vlc-devel rapidjson-devel 
 ```
 
 Note this Repository uses a git submodule - to checkout the source and all submodules, use
@@ -57,9 +57,11 @@ Complete Raspberry Pi build instructions at [emulationstation.org](http://emulat
 
 [FreeType2](http://download.savannah.gnu.org/releases/freetype/freetype-2.4.9.tar.bz2) (you'll need to compile)
 
-[SDL2](http://www.libsdl.org/release/SDL2-devel-2.0.3-VC.zip)
+[SDL2](http://www.libsdl.org/release/SDL2-devel-2.0.8-VC.zip)
 
 [cURL](http://curl.haxx.se/download.html) (you'll need to compile or get the pre-compiled DLL version)
+
+[RapisJSON](https://github.com/tencent/rapidjson) (you'll need the `include/rapidsjon` added to the include path)
 
 (Remember to copy necessary .DLLs into the same folder as the executable: probably FreeImage.dll, freetype6.dll, SDL2.dll, libcurl.dll, and zlib1.dll. Exact list depends on if you built your libraries in "static" mode or not.)
 
@@ -96,18 +98,21 @@ The new configuration will be added to the `~/.emulationstation/es_input.cfg` fi
 
 You can use `--help` or `-h` to view a list of command-line options. Briefly outlined here:
 ```
---resolution [width] [height]	- try and force a particular resolution
---gamelist-only		- only display games defined in a gamelist.xml file.
---ignore-gamelist	- do not parse any gamelist.xml files.
---draw-framerate	- draw the framerate.
---no-exit		- do not display 'exit' in the ES menu.
---debug			- show the console window on Windows, do slightly more logging
---windowed		- run ES in a window, works best in conjunction with --resolution [w] [h].
---vsync [1/on or 0/off]	- turn vsync on or off (default is on).
---scrape		- run the interactive command-line metadata scraper.
---no-splash		- don't show the splash screen.
---max-vram [size]	- Max VRAM to use in Mb before swapping. 0 for unlimited.
---force-kiosk		- Force the UI mode to be Kiosk.
+--resolution [width] [height]   try and force a particular resolution
+--gamelist-only                 skip automatic game search, only read from gamelist.xml
+--ignore-gamelist               ignore the gamelist (useful for troubleshooting)
+--draw-framerate                display the framerate
+--no-exit                       don't show the exit option in the menu
+--no-splash                     don't show the splash screen
+--debug                         more logging, show console on Windows
+--scrape                        scrape using command line interface
+--windowed                      not fullscreen, should be used with --resolution
+--vsync [1/on or 0/off]         turn vsync on or off (default is on)
+--max-vram [size]               Max VRAM to use in Mb before swapping. 0 for unlimited
+--force-kid             Force the UI mode to be Kid
+--force-kiosk           Force the UI mode to be Kiosk
+--force-disable-filters         Force the UI to ignore applied filters in gamelist
+--help, -h                      summon a sentient, angry tuba
 ```
 
 As long as ES hasn't frozen, you can always press F4 to close the application.
