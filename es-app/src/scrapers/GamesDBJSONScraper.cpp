@@ -322,12 +322,16 @@ void processGame(const Value& game, const Value& boxart, std::vector<ScraperSear
 		result.mdl.set("players", std::to_string(game["players"].GetInt()));
 	}
 
-	std::string id = std::to_string(getIntOrThrow(game, "id"));
-	if (boxart["data"].HasMember(id.c_str()))
+
+	if (boxart.HasMember("data") && boxart["data"].IsObject())
 	{
-		std::string image = getBoxartImage(boxart["data"][id.c_str()]);
-		result.thumbnailUrl = baseImageUrlThumb + "/" + image;
-		result.imageUrl = baseImageUrlLarge + "/" + image;
+		std::string id = std::to_string(getIntOrThrow(game, "id"));
+		if (boxart["data"].HasMember(id.c_str()))
+		{
+		    std::string image = getBoxartImage(boxart["data"][id.c_str()]);
+		    result.thumbnailUrl = baseImageUrlThumb + "/" + image;
+		    result.imageUrl = baseImageUrlLarge + "/" + image;
+		}
 	}
 
 	results.push_back(result);
