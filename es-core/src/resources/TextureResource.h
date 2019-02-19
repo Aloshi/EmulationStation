@@ -22,6 +22,8 @@ public:
 	bool isInitialized() const;
 	bool isTiled() const;
 	const Eigen::Vector2i& getSize() const;
+
+	GLuint getTextureId();
 	void bind() const;
 	
 	// Warning: will NOT correctly reinitialize when this texture is reloaded (e.g. ES starts/stops playing a game).

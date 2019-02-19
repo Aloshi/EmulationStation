@@ -4,6 +4,7 @@
 #include "platform.h"
 #include <boost/filesystem.hpp>
 #include <boost/assign.hpp>
+#include <boost/lexical_cast.hpp>
 
 Settings* Settings::sInstance = NULL;
 
@@ -67,11 +68,14 @@ void Settings::setDefaults()
 	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
+	mIntMap["SortTypeIndex"] = 0;
 
 	mStringMap["TransitionStyle"] = "fade";
 	mStringMap["ThemeSet"] = "";
 	mStringMap["ScreenSaverBehavior"] = "dim";
 	mStringMap["Scraper"] = "TheGamesDB";
+
+	mTimeMap["LastXMLImportTime"] = (std::time_t)0;
 }
 
 template <typename K, typename V>
@@ -89,6 +93,21 @@ void saveMap(pugi::xml_document& doc, std::map<K, V>& map, const char* type)
 	}
 }
 
+template <>
+void saveMap(pugi::xml_document& doc, std::map<std::string, std::time_t>& map, const char* type)
+{
+	for(auto iter = map.begin(); iter != map.end(); iter++)
+	{
+		// key is on the "don't save" list, so don't save it
+		if(std::find(settings_dont_save.begin(), settings_dont_save.end(), iter->first) != settings_dont_save.end())
+			continue;
+
+		pugi::xml_node node = doc.append_child(type);
+		node.append_attribute("name").set_value(iter->first.c_str());
+		node.append_attribute("value").set_value(std::to_string(iter->second).c_str());
+	}
+}
+
 void Settings::saveFile()
 {
 	const std::string path = getHomePath() + "/.emulationstation/es_settings.cfg";
@@ -98,6 +117,7 @@ void Settings::saveFile()
 	saveMap<std::string, bool>(doc, mBoolMap, "bool");
 	saveMap<std::string, int>(doc, mIntMap, "int");
 	saveMap<std::string, float>(doc, mFloatMap, "float");
+	saveMap<std::string, std::time_t>(doc, mTimeMap, "time");
 
 	//saveMap<std::string, std::string>(doc, mStringMap, "string");
 	for(auto iter = mStringMap.begin(); iter != mStringMap.end(); iter++)
@@ -131,6 +151,8 @@ void Settings::loadFile()
 		setInt(node.attribute("name").as_string(), node.attribute("value").as_int());
 	for(pugi::xml_node node = doc.child("float"); node; node = node.next_sibling("float"))
 		setFloat(node.attribute("name").as_string(), node.attribute("value").as_float());
+	for(pugi::xml_node node = doc.child("time"); node; node = node.next_sibling("time"))
+		setTime(node.attribute("name").as_string(), boost::lexical_cast<std::time_t>(node.attribute("value").as_string()));
 	for(pugi::xml_node node = doc.child("string"); node; node = node.next_sibling("string"))
 		setString(node.attribute("name").as_string(), node.attribute("value").as_string());
 }
@@ -153,3 +175,4 @@ SETTINGS_GETSET(bool, mBoolMap, getBool, setBool);
 SETTINGS_GETSET(int, mIntMap, getInt, setInt);
 SETTINGS_GETSET(float, mFloatMap, getFloat, setFloat);
 SETTINGS_GETSET(const std::string&, mStringMap, getString, setString);
+SETTINGS_GETSET(std::time_t, mTimeMap, getTime, setTime);

@@ -153,7 +153,7 @@ public:
 			addChild(&mRightArrow);
 		}else{
 			mLeftArrow.setImage(":/option_arrow.svg");
-			mLeftArrow.setFlipX(true);
+			mLeftArrow.setFlip(true, false);
 			addChild(&mLeftArrow);
 
 			mRightArrow.setImage(":/option_arrow.svg");

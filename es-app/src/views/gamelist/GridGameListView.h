@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include "views/gamelist/ISimpleGameListView.h"
@@ -8,12 +9,12 @@
 class GridGameListView : public ISimpleGameListView
 {
 public:
-	GridGameListView(Window* window, FileData* root);
+	GridGameListView(Window* window, const FileData& root);
 
 	//virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
-	virtual FileData* getCursor() override;
-	virtual void setCursor(FileData*) override;
+	virtual const FileData& getCursor() override;
+	virtual void setCursor(const FileData& file) override;
 
 	virtual bool input(InputConfig* config, Input input) override;
 
@@ -22,8 +23,9 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 
 protected:
-	virtual void populateList(const std::vector<FileData*>& files) override;
-	virtual void launch(FileData* game) override;
+	virtual void populateList(const std::vector<FileData>& files) override;
+	virtual void launch(FileData& game) override;
 
 	ImageGridComponent<FileData*> mGrid;
 };
+*/

@@ -5,7 +5,7 @@
 #include "Sound.h"
 #include "Settings.h"
 
-ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
+ISimpleGameListView::ISimpleGameListView(Window* window, const FileData& root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window), mThemeExtras(window)
 {
 	mHeaderText.setText("Logo Text");
@@ -22,6 +22,8 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 	addChild(&mHeaderText);
 	addChild(&mBackground);
 	addChild(&mThemeExtras);
+
+	mCursorStack.push(mRoot);
 }
 
 void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
@@ -42,13 +44,19 @@ void ISimpleGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme
 	}
 }
 
-void ISimpleGameListView::onFileChanged(FileData* file, FileChangeType change)
+// we could be tricky here to be efficient;
+// but this shouldn't happen very often so we'll just always repopulate
+void ISimpleGameListView::onFilesChanged()
 {
-	// we could be tricky here to be efficient;
-	// but this shouldn't happen very often so we'll just always repopulate
-	FileData* cursor = getCursor();
-	populateList(cursor->getParent()->getChildren());
+	FileData cursor = getCursor();
+	FileData parent = mCursorStack.top();
+	populateList(parent.getChildren());
 	setCursor(cursor);
+}
+
+void ISimpleGameListView::onMetaDataChanged(const FileData& file)
+{
+	onFilesChanged();
 }
 
 bool ISimpleGameListView::input(InputConfig* config, Input input)
@@ -57,32 +65,34 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 	{
 		if(config->isMappedTo("a", input))
 		{
-			FileData* cursor = getCursor();
-			if(cursor->getType() == GAME)
+			FileData cursor = getCursor();
+			if(cursor.getType() == GAME)
 			{
 				Sound::getFromTheme(getTheme(), getName(), "launch")->play();
 				launch(cursor);
 			}else{
 				// it's a folder
-				if(cursor->getChildren().size() > 0)
+				if(cursor.getChildren().size() > 0)
 				{
 					mCursorStack.push(cursor);
-					populateList(cursor->getChildren());
+					populateList(cursor.getChildren());
 				}
 			}
 				
 			return true;
 		}else if(config->isMappedTo("b", input))
 		{
-			if(mCursorStack.size())
+			if(mCursorStack.top() != mRoot)
 			{
-				populateList(mCursorStack.top()->getParent()->getChildren());
-				setCursor(mCursorStack.top());
+				FileData old_cursor = mCursorStack.top();
 				mCursorStack.pop();
+				populateList(mCursorStack.top().getChildren());
+				setCursor(old_cursor);
+				
 				Sound::getFromTheme(getTheme(), getName(), "back")->play();
 			}else{
 				onFocusLost();
-				ViewController::get()->goToSystemView(getCursor()->getSystem());
+				ViewController::get()->goToSystemView(mRoot.getSystem());
 			}
 
 			return true;

@@ -71,7 +71,7 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
-		cleanName = params.game->getCleanName();
+		cleanName = params.game.getCleanName();
 
 	path += "name=" + HttpReq::urlEncode(cleanName);
 
@@ -126,23 +126,21 @@ void TheGamesDBRequest::process(const std::unique_ptr<HttpReq>& req, std::vector
 	{
 		ScraperSearchResult result;
 
-		result.mdl.set("name", game.child("GameTitle").text().get());
-		result.mdl.set("desc", game.child("Overview").text().get());
+		result.metadata.set("name", game.child("GameTitle").text().get());
+		result.metadata.set("desc", game.child("Overview").text().get());
 
 		boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
-		result.mdl.setTime("releasedate", rd);
+		result.metadata.set("releasedate", rd);
 
-		result.mdl.set("developer", game.child("Developer").text().get());
-		result.mdl.set("publisher", game.child("Publisher").text().get());
-		result.mdl.set("genre", game.child("Genres").first_child().text().get());
-		result.mdl.set("players", game.child("Players").text().get());
+		result.metadata.set("developer", game.child("Developer").text().get());
+		result.metadata.set("publisher", game.child("Publisher").text().get());
+		result.metadata.set("genre", game.child("Genres").first_child().text().get());
+		result.metadata.set("players", game.child("Players").text().get());
 
 		if(Settings::getInstance()->getBool("ScrapeRatings") && game.child("Rating"))
 		{
 			float ratingVal = (game.child("Rating").text().as_int() / 10.0f);
-			std::stringstream ss;
-			ss << ratingVal;
-			result.mdl.set("rating", ss.str());
+			result.metadata.set("rating", ratingVal);
 		}
 
 		pugi::xml_node images = game.child("Images");

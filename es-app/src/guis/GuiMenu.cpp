@@ -9,6 +9,7 @@
 #include "guis/GuiScraperStart.h"
 #include "guis/GuiDetectDevice.h"
 #include "views/ViewController.h"
+#include "SystemManager.h"
 
 #include "components/ButtonComponent.h"
 #include "components/SwitchComponent.h"
@@ -33,8 +34,16 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 	// [version]
 
 	auto openScrapeNow = [this] { mWindow->pushGui(new GuiScraperStart(mWindow)); };
+
+	auto importXMLAndClose = [this] {
+		SystemManager::getInstance()->importGamelistXML(false);
+
+		Window* windowCopy = this->mWindow;
+		while(windowCopy->peekGui() != ViewController::get())
+			delete windowCopy->peekGui();
+	};
 	addEntry("SCRAPER", 0x777777FF, true, 
-		[this, openScrapeNow] { 
+		[this, openScrapeNow, importXMLAndClose] { 
 			auto s = new GuiSettings(mWindow, "SCRAPER");
 
 			// scrape from
@@ -61,6 +70,16 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 			auto scrape_now = std::make_shared<TextComponent>(mWindow, "SCRAPE NOW", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
 			auto bracket = makeArrow(mWindow);
 			row.addElement(scrape_now, true);
+			row.addElement(bracket, false);
+			s->addRow(row);
+
+			// import XML
+			row.elements.clear();
+			row.makeAcceptInputHandler(importXMLAndClose);
+
+			auto import_xml = std::make_shared<TextComponent>(mWindow, "IMPORT FROM XML", Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
+			bracket = makeArrow(mWindow);
+			row.addElement(import_xml, true);
 			row.addElement(bracket, false);
 			s->addRow(row);
 
@@ -158,7 +177,7 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 					Settings::getInstance()->setString("ThemeSet", theme_set->getSelected());
 
 					if(needReload)
-						ViewController::get()->reloadAll(); // TODO - replace this with some sort of signal-based implementation
+						ViewController::get()->reloadAll();
 				});
 			}
 

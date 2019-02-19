@@ -14,7 +14,7 @@ bool IGameListView::input(InputConfig* config, Input input)
 	if(config->isMappedTo("select", input) && input.value)
 	{
 		Sound::getFromTheme(mTheme, getName(), "menuOpen")->play();
-		mWindow->pushGui(new GuiGamelistOptions(mWindow, this->mRoot->getSystem()));
+		mWindow->pushGui(new GuiGamelistOptions(mWindow, this->mRoot.getSystem()));
 		return true;
 
 	// Ctrl-R to reload a view when debugging

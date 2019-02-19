@@ -1,4 +1,4 @@
-#include "views/gamelist/GridGameListView.h"
+/*#include "views/gamelist/GridGameListView.h"
 #include "ThemeData.h"
 #include "Window.h"
 #include "views/ViewController.h"
@@ -57,3 +57,4 @@ std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 	prompts.push_back(HelpPrompt("b", "back"));
 	return prompts;
 }
+*/

@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "GuiComponent.h"
+#include "Util.h"
 #include <boost/date_time.hpp>
 #include <boost/filesystem.hpp>
 
@@ -38,28 +39,62 @@ enum MetaDataListType
 	FOLDER_METADATA
 };
 
-const std::vector<MetaDataDecl>& getMDDByType(MetaDataListType type);
+const std::map< MetaDataListType, std::vector<MetaDataDecl> >& getMDDMap();
 
-class MetaDataList
+// this is just a dumb map meant to hold metadata records
+class MetaDataMap
 {
 public:
-	static MetaDataList createFromXML(MetaDataListType type, pugi::xml_node node, const boost::filesystem::path& relativeTo);
-	void appendToXML(pugi::xml_node parent, bool ignoreDefaults, const boost::filesystem::path& relativeTo) const;
-
-	MetaDataList(MetaDataListType type);
-	
-	void set(const std::string& key, const std::string& value);
-	void setTime(const std::string& key, const boost::posix_time::ptime& time); //times are internally stored as ISO strings (e.g. boost::posix_time::to_iso_string(ptime))
-
-	const std::string& get(const std::string& key) const;
-	int getInt(const std::string& key) const;
-	float getFloat(const std::string& key) const;
-	boost::posix_time::ptime getTime(const std::string& key) const;
+	MetaDataMap(MetaDataListType type);
 
 	inline MetaDataListType getType() const { return mType; }
-	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDByType(getType()); }
+	inline const std::vector<MetaDataDecl>& getMDD() const { return getMDDMap().at(getType()); }
+
+	const std::string& get(const std::string& key) const
+	{
+		return mMap.at(key);
+	}
+
+	// data getters (see .cpp file for specializations)
+	template<typename T>
+	T get(const char* key) const
+	{
+		return boost::lexical_cast<T>(mMap.at(key));
+	}
+
+	template<typename T>
+	T get(const std::string& key) const
+	{
+		return get<T>(key.c_str());
+	}
+
+	// data setters (see .cpp file for specializations)
+	template<typename T>
+	void set(const char* key, const T& value)
+	{
+		mMap[key] = boost::lexical_cast<std::string>(value);
+	}
+
+	template<typename T>
+	void set(const std::string& key, const T& value)
+	{
+		set<T>(key.c_str(), value);
+	}
 
 private:
 	MetaDataListType mType;
 	std::map<std::string, std::string> mMap;
 };
+
+template<>
+inline boost::posix_time::ptime MetaDataMap::get(const char* key) const
+{
+	return string_to_ptime(mMap.at(key), SQLITE_TIME_STRING_FORMAT);
+}
+
+template<>
+inline void MetaDataMap::set(const char* key, const boost::posix_time::ptime& time)
+{
+	mMap[key] = boost::posix_time::to_iso_string(time);
+}
+

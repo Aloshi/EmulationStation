@@ -10,6 +10,7 @@
 
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
+#include "components/VideoComponent.h"
 
 
 // This is a work around for some ambiguity that is introduced in C++11 that boost::assign::map_list_of leave open.
@@ -25,6 +26,14 @@ ElementMapType makeMap(const T& mapInit)
 
 std::map< std::string, ElementMapType > ThemeData::sElementMap = boost::assign::map_list_of
 	("image", makeMap(boost::assign::map_list_of
+		("pos", NORMALIZED_PAIR)
+		("size", NORMALIZED_PAIR)
+		("maxSize", NORMALIZED_PAIR)
+		("origin", NORMALIZED_PAIR)
+		("path", PATH)
+		("tile", BOOLEAN)
+		("color", COLOR)))
+	("video", makeMap(boost::assign::map_list_of
 		("pos", NORMALIZED_PAIR)
 		("size", NORMALIZED_PAIR)
 		("maxSize", NORMALIZED_PAIR)
@@ -398,6 +407,8 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 				comp = new ImageComponent(window);
 			else if(t == "text")
 				comp = new TextComponent(window);
+			else if(t == "video")
+				comp = new VideoComponent(window);
 
 			comp->applyTheme(theme, view, *it, ThemeFlags::ALL);
 			comps.push_back(comp);

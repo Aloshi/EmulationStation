@@ -143,6 +143,11 @@ std::shared_ptr<TextureResource> TextureResource::get(const std::string& path, b
 	}
 }
 
+GLuint TextureResource::getTextureId()
+{
+	return mTextureID;
+}
+
 bool TextureResource::isInitialized() const
 {
 	return mTextureID != 0;
