@@ -432,6 +432,7 @@ void Window::startScreenSaver()
  	{
  		mScreenSaver->stopScreenSaver();
  		mRenderScreenSaver = false;
+ 		mScreenSaver->resetCounts();
 
  		// Tell the GUI components the screensaver has stopped
  		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
