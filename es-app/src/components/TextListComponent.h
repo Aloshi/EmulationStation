@@ -200,7 +200,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 			offset[0] = mHorizontalMargin;
 			break;
 		case ALIGN_CENTER:
-			offset[0] = (mSize.x() - entry.data.textCache->metrics.size.x()) / 2;
+			offset[0] = (int)((mSize.x() - entry.data.textCache->metrics.size.x()) / 2);
 			if(offset[0] < mHorizontalMargin)
 				offset[0] = mHorizontalMargin;
 			break;
