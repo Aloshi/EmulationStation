@@ -108,6 +108,9 @@ bool parseArgs(int argc, char* argv[])
 			Settings::getInstance()->setBool("Debug", true);
 			Settings::getInstance()->setBool("HideConsole", false);
 			Log::setReportingLevel(LogDebug);
+		}else if(strcmp(argv[i], "--fullscreen-borderless") == 0)
+		{
+			Settings::getInstance()->setBool("FullscreenBorderless", true);
 		}else if(strcmp(argv[i], "--windowed") == 0)
 		{
 			Settings::getInstance()->setBool("Windowed", true);

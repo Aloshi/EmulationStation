@@ -24,6 +24,7 @@ std::vector<const char*> settings_dont_save {
 	{ "SplashScreen" },
 	{ "SplashScreenProgress" },
 	{ "VSync" },
+	{ "FullscreenBorderless" },
 	{ "Windowed" },
 	{ "WindowWidth" },
 	{ "WindowHeight" },
@@ -59,6 +60,7 @@ void Settings::setDefaults()
 	mBoolMap["ShowHiddenFiles"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
+	mBoolMap["FullscreenBorderless"] = false;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["SplashScreen"] = true;
 	mBoolMap["SplashScreenProgress"] = true;
