@@ -169,7 +169,7 @@ void ScreenScraperRequest::process(const std::unique_ptr<HttpReq>& req, std::vec
 }
 
 
-void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::vector<ScraperSearchResult>& results)
+void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::vector<ScraperSearchResult>& out_results)
 {
 	pugi::xml_node data = xmldoc.child("Data");
 	pugi::xml_node game = data.child("jeu");
@@ -285,7 +285,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 
 		}
 
-		results.push_back(result);
+		out_results.push_back(result);
 	} // game
 }
 

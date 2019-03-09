@@ -314,7 +314,7 @@ void GridGameListView::remove(FileData *game, bool deleteFile)
 		int gamePos = (int)std::distance(siblings.cbegin(), gameIter);
 		if (gameIter != siblings.cend())
 		{
-			if ((gamePos + 1) < siblings.size())
+			if ((gamePos + 1) < (int)siblings.size())
 			{
 				setCursor(siblings.at(gamePos + 1));
 			} else if ((gamePos - 1) > 0) {
