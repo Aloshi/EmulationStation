@@ -652,22 +652,6 @@ namespace Utils
 
 		} // isHidden
 
-		bool isEquivalent(const std::string& _path1, const std::string& _path2)
-		{
-			std::string path1 = getGenericPath(_path1);
-			std::string path2 = getGenericPath(_path2);
-			struct stat64 info1;
-			struct stat64 info2;
-
-			// check if stat64 succeeded
-			if((stat64(path1.c_str(), &info1) != 0) || (stat64(path2.c_str(), &info2) != 0))
-				return false;
-
-			// check if attributes are identical
-			return ((info1.st_dev == info2.st_dev) && (info1.st_ino == info2.st_ino) && (info1.st_size == info2.st_size) && (info1.st_mtime == info2.st_mtime));
-
-		} // isEquivalent
-
 	} // FileSystem::
 
 } // Utils::
