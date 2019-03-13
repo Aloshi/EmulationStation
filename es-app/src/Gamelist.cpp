@@ -237,11 +237,9 @@ void updateGamelist(SystemData* system)
 					continue;
 				}
 
-				std::string nodePath = Utils::FileSystem::resolveRelativePath(pathNode.text().get(), system->getStartPath(), true);
-				std::string gamePath = (*fit)->getPath();
-				if(nodePath == gamePath || (Utils::FileSystem::exists(nodePath) &&
-				                            Utils::FileSystem::exists(gamePath) &&
-				                            Utils::FileSystem::isEquivalent(nodePath, gamePath)))
+				std::string nodePath = Utils::FileSystem::getCanonicalPath(Utils::FileSystem::resolveRelativePath(pathNode.text().get(), system->getStartPath(), true));
+				std::string gamePath = Utils::FileSystem::getCanonicalPath((*fit)->getPath());
+				if(nodePath == gamePath)
 				{
 					// found it
 					root.remove_child(fileNode);
