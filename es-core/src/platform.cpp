@@ -42,7 +42,8 @@ int runSystemCommand(const std::string& cmd_utf8)
 
 int quitES(const std::string& filename)
 {
-	touch(filename);
+	if (!filename.empty())
+		touch(filename);
 	SDL_Event* quit = new SDL_Event();
 	quit->type = SDL_QUIT;
 	SDL_PushEvent(quit);
