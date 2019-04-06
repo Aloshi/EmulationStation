@@ -28,6 +28,7 @@ private:
 
 	bool assign(Input input, int inputId);
 	void clearAssignment(int inputId);
+	bool filterTrigger(Input input, InputConfig* config);
 
 	void rowDone();
 
