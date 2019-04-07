@@ -74,7 +74,7 @@ public:
 	inline void stopInfoPopup() { if (mInfoPopup) mInfoPopup->stop(); };
 
 	void startScreenSaver();
-	void cancelScreenSaver();
+	bool cancelScreenSaver();
 	void renderScreenSaver();
 
 private:

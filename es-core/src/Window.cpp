@@ -139,10 +139,6 @@ void Window::input(InputConfig* config, Input input)
 					mSleeping = true;
 				}
 			}
-			/*else if(input.value != 0)
-			{
-				return;
-			}*/
 		}
 	}
 
@@ -157,7 +153,8 @@ void Window::input(InputConfig* config, Input input)
 	}
 
 	mTimeSinceLastInput = 0;
-	cancelScreenSaver();
+	if (cancelScreenSaver())
+		return;
 
 	if(config->getDeviceId() == DEVICE_KEYBOARD && input.value && input.id == SDLK_g && SDL_GetModState() & KMOD_LCTRL && Settings::getInstance()->getBool("Debug"))
 	{
@@ -426,7 +423,7 @@ void Window::startScreenSaver()
 	}
 }
 
-void Window::cancelScreenSaver()
+bool Window::cancelScreenSaver()
 {
 	if (mScreenSaver && mRenderScreenSaver)
 	{
@@ -437,7 +434,11 @@ void Window::cancelScreenSaver()
 		// Tell the GUI components the screensaver has stopped
 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
 			(*i)->onScreenSaverDeactivate();
+
+		return true;
 	}
+
+	return false;
 }
 
 void Window::renderScreenSaver()
