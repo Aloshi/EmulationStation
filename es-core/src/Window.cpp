@@ -414,34 +414,34 @@ bool Window::isProcessing()
 }
 
 void Window::startScreenSaver()
- {
- 	if (mScreenSaver && !mRenderScreenSaver)
- 	{
- 		// Tell the GUI components the screensaver is starting
- 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
- 			(*i)->onScreenSaverActivate();
+{
+	if (mScreenSaver && !mRenderScreenSaver)
+	{
+		// Tell the GUI components the screensaver is starting
+		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
+			(*i)->onScreenSaverActivate();
 
- 		mScreenSaver->startScreenSaver();
- 		mRenderScreenSaver = true;
- 	}
- }
+		mScreenSaver->startScreenSaver();
+		mRenderScreenSaver = true;
+	}
+}
 
- void Window::cancelScreenSaver()
- {
- 	if (mScreenSaver && mRenderScreenSaver)
- 	{
- 		mScreenSaver->stopScreenSaver();
- 		mRenderScreenSaver = false;
- 		mScreenSaver->resetCounts();
+void Window::cancelScreenSaver()
+{
+	if (mScreenSaver && mRenderScreenSaver)
+	{
+		mScreenSaver->stopScreenSaver();
+		mRenderScreenSaver = false;
+		mScreenSaver->resetCounts();
 
- 		// Tell the GUI components the screensaver has stopped
- 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
- 			(*i)->onScreenSaverDeactivate();
- 	}
- }
+		// Tell the GUI components the screensaver has stopped
+		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
+			(*i)->onScreenSaverDeactivate();
+	}
+}
 
- void Window::renderScreenSaver()
- {
- 	if (mScreenSaver)
- 		mScreenSaver->renderScreenSaver();
- }
+void Window::renderScreenSaver()
+{
+	if (mScreenSaver)
+		mScreenSaver->renderScreenSaver();
+}
