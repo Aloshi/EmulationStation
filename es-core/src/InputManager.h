@@ -48,6 +48,7 @@ public:
 	void deinit();
 
 	int getNumJoysticks();
+	int getAxisCountByDevice(int deviceId);
 	int getButtonCountByDevice(int deviceId);
 	int getNumConfiguredDevices();
 

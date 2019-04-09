@@ -172,6 +172,12 @@ void InputManager::deinit()
 }
 
 int InputManager::getNumJoysticks() { return (int)mJoysticks.size(); }
+
+int InputManager::getAxisCountByDevice(SDL_JoystickID id)
+{
+	return SDL_JoystickNumAxes(mJoysticks[id]);
+}
+
 int InputManager::getButtonCountByDevice(SDL_JoystickID id)
 {
 	if(id == DEVICE_KEYBOARD)
