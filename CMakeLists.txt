@@ -20,23 +20,23 @@ elseif(GL)
     set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 #-------------------------------------------------------------------------------
 #check if we're running on Raspberry Pi
-elseif(EXISTS "/opt/vc/include/bcm_host.h")
+elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/bcm_host.h")
     MESSAGE("bcm_host.h found")
     set(BCMHOST found)
     set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
 #-------------------------------------------------------------------------------
 #check if we're running on OSMC Vero4K
-elseif(EXISTS "/opt/vero3/lib/libMali.so")
+elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/opt/vero3/lib/libMali.so")
     MESSAGE("libMali.so found")
     set(VERO4K found)
     set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
 #-------------------------------------------------------------------------------
 #check if we're running on olinuxino / odroid / etc
-elseif(EXISTS "/usr/lib/libMali.so" OR
-    EXISTS "/usr/lib/arm-linux-gnueabihf/libMali.so" OR
-    EXISTS "/usr/lib/aarch64-linux-gnu/libMali.so" OR
-    EXISTS "/usr/lib/arm-linux-gnueabihf/mali-egl/libmali.so" OR
-    EXISTS "/usr/lib/arm-linux-gnueabihf/libmali.so")
+elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/libMali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/libMali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/aarch64-linux-gnu/libMali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/mali-egl/libmali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/libmali.so")
     MESSAGE("libMali.so found")
     set(GLSystem "OpenGL ES" CACHE STRING "The OpenGL system to be used")
 else()
@@ -142,15 +142,15 @@ endif()
 
 if(DEFINED BCMHOST)
     LIST(APPEND COMMON_INCLUDE_DIRS
-        "/opt/vc/include"
-        "/opt/vc/include/interface/vcos"
-        "/opt/vc/include/interface/vmcs_host/linux"
-        "/opt/vc/include/interface/vcos/pthreads"
+        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include"
+        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/interface/vcos"
+        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/interface/vmcs_host/linux"
+        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/interface/vcos/pthreads"
     )
 #add include directory for Vero4K
 elseif(DEFINED VERO4K)
     LIST(APPEND COMMON_INCLUDE_DIRS
-        "/opt/vero3/include"
+        "${CMAKE_FIND_ROOT_PATH}/opt/vero3/include"
     )
 else()
     if(${GLSystem} MATCHES "Desktop OpenGL")
@@ -168,11 +168,11 @@ endif()
 #define libraries and directories
 if(DEFINED BCMHOST)
     link_directories(
-        "/opt/vc/lib"
+        "${CMAKE_FIND_ROOT_PATH}/opt/vc/lib"
     )
 elseif(DEFINED VERO4K)
     link_directories(
-        "/opt/vero3/lib"
+        "${CMAKE_FIND_ROOT_PATH}/opt/vero3/lib"
     )
 endif()
 
