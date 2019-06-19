@@ -18,6 +18,11 @@ GuiVideoScreensaverOptions::GuiVideoScreensaverOptions(Window* window, const cha
 		PowerSaver::updateTimeouts();
 	});
 
+	auto stretch_screensaver = std::make_shared<SwitchComponent>(mWindow);
+	stretch_screensaver->setState(Settings::getInstance()->getBool("StretchVideoOnScreenSaver"));
+	addWithLabel("STRETCH VIDEO ON SCREENSAVER", stretch_screensaver);
+	addSaveFunc([stretch_screensaver] { Settings::getInstance()->setBool("StretchVideoOnScreenSaver", stretch_screensaver->getState()); });
+
 #ifdef _RPI_
 	auto ss_omx = std::make_shared<SwitchComponent>(mWindow);
 	ss_omx->setState(Settings::getInstance()->getBool("ScreenSaverOmxPlayer"));
@@ -36,17 +41,49 @@ GuiVideoScreensaverOptions::GuiVideoScreensaverOptions(Window* window, const cha
 	addWithLabel("SHOW GAME INFO ON SCREENSAVER", ss_info);
 	addSaveFunc([ss_info, this] { Settings::getInstance()->setString("ScreenSaverGameInfo", ss_info->getSelected()); });
 
+#ifdef _RPI_
+	ComponentListRow row;
+
+	// Set subtitle position
+	auto ss_omx_subs_align = std::make_shared< OptionListComponent<std::string> >(mWindow, "GAME INFO ALIGNMENT", false);
+	std::vector<std::string> align_mode;
+	align_mode.push_back("left");
+	align_mode.push_back("center");
+	for(auto it = align_mode.cbegin(); it != align_mode.cend(); it++)
+		ss_omx_subs_align->add(*it, *it, Settings::getInstance()->getString("SubtitleAlignment") == *it);
+	addWithLabel("GAME INFO ALIGNMENT", ss_omx_subs_align);
+	addSaveFunc([ss_omx_subs_align, this] { Settings::getInstance()->setString("SubtitleAlignment", ss_omx_subs_align->getSelected()); });
+
+	// Set font size
+	auto ss_omx_font_size = std::make_shared<SliderComponent>(mWindow, 1.f, 64.f, 1.f, "h");
+	ss_omx_font_size->setValue((float)(Settings::getInstance()->getInt("SubtitleSize")));
+	addWithLabel("GAME INFO FONT SIZE", ss_omx_font_size);
+	addSaveFunc([ss_omx_font_size] {
+		int subSize = (int)Math::round(ss_omx_font_size->getValue());
+		Settings::getInstance()->setInt("SubtitleSize", subSize);
+	});
+
+	// Define subtitle font
+	auto ss_omx_font_file = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
+	addEditableTextComponent(row, "PATH TO FONT FILE", ss_omx_font_file, Settings::getInstance()->getString("SubtitleFont"));
+	addSaveFunc([ss_omx_font_file] {
+		Settings::getInstance()->setString("SubtitleFont", ss_omx_font_file->getValue());
+	});
+
+	// Define subtitle italic font
+	auto ss_omx_italic_font_file = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
+	addEditableTextComponent(row, "PATH TO ITALIC FONT FILE", ss_omx_italic_font_file, Settings::getInstance()->getString("SubtitleItalicFont"));
+	addSaveFunc([ss_omx_italic_font_file] {
+		Settings::getInstance()->setString("SubtitleItalicFont", ss_omx_italic_font_file->getValue());
+	});
+#endif
+
 #ifndef _RPI_
 	auto captions_compatibility = std::make_shared<SwitchComponent>(mWindow);
 	captions_compatibility->setState(Settings::getInstance()->getBool("CaptionsCompatibility"));
 	addWithLabel("USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS", captions_compatibility);
 	addSaveFunc([captions_compatibility] { Settings::getInstance()->setBool("CaptionsCompatibility", captions_compatibility->getState()); });
 #endif
-
-	auto stretch_screensaver = std::make_shared<SwitchComponent>(mWindow);
-	stretch_screensaver->setState(Settings::getInstance()->getBool("StretchVideoOnScreenSaver"));
-	addWithLabel("STRETCH VIDEO ON SCREENSAVER", stretch_screensaver);
-	addSaveFunc([stretch_screensaver] { Settings::getInstance()->setBool("StretchVideoOnScreenSaver", stretch_screensaver->getState()); });
 }
 
 GuiVideoScreensaverOptions::~GuiVideoScreensaverOptions()

@@ -156,7 +156,7 @@ void VideoPlayerComponent::startVideo()
 				// We need to specify the layer of 10000 or above to ensure the video is displayed on top
 				// of our SDL display
 
-				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf1, "--orientation", buf2, "", "", "", "", NULL };
+				const char* argv[] = { "", "--layer", "10010", "--loop", "--no-osd", "--aspect-mode", "letterbox", "--vol", "0", "-o", "both","--win", buf1, "--orientation", buf2, "", "", "", "", "", "", "", "", "", "", "", NULL };
 
 				// check if we want to mute the audio
 				if (!Settings::getInstance()->getBool("VideoAudio") || (float)VolumeControl::getInstance()->getVolume() == 0)
@@ -187,6 +187,14 @@ void VideoPlayerComponent::startVideo()
 						argv[15] = "--subtitles";
 						argv[16] = subtitlePath.c_str();
 						argv[17] = mPlayingVideoPath.c_str();
+						argv[18] = "--font";
+						argv[19] = Settings::getInstance()->getString("SubtitleFont").c_str();
+						argv[20] = "--italic-font";
+						argv[21] = Settings::getInstance()->getString("SubtitleItalicFont").c_str();
+						argv[22] = "--font-size";
+						argv[23] = std::to_string(Settings::getInstance()->getInt("SubtitleSize")).c_str();
+						argv[24] = "--align";
+						argv[25] = Settings::getInstance()->getString("SubtitleAlignment").c_str();
 					}
 					else
 					{
