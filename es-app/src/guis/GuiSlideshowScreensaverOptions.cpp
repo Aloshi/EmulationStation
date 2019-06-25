@@ -80,31 +80,3 @@ void GuiSlideshowScreensaverOptions::addWithLabel(ComponentListRow row, const st
 
 	addRow(row);
 }
-
-void GuiSlideshowScreensaverOptions::addEditableTextComponent(ComponentListRow row, const std::string label, std::shared_ptr<GuiComponent> ed, std::string value)
-{
-	row.elements.clear();
-
-	auto lbl = std::make_shared<TextComponent>(mWindow, Utils::String::toUpper(label), Font::get(FONT_SIZE_MEDIUM), 0x777777FF);
-	row.addElement(lbl, true); // label
-
-	row.addElement(ed, true);
-
-	auto spacer = std::make_shared<GuiComponent>(mWindow);
-	spacer->setSize(Renderer::getScreenWidth() * 0.005f, 0);
-	row.addElement(spacer, false);
-
-	auto bracket = std::make_shared<ImageComponent>(mWindow);
-	bracket->setImage(":/arrow.svg");
-	bracket->setResize(Vector2f(0, lbl->getFont()->getLetterHeight()));
-	row.addElement(bracket, false);
-
-	auto updateVal = [ed](const std::string& newVal) { ed->setValue(newVal); }; // ok callback (apply new value to ed)
-	row.makeAcceptInputHandler([this, label, ed, updateVal] {
-		mWindow->pushGui(new GuiTextEditPopup(mWindow, label, ed->getValue(), updateVal, false));
-	});
-
-	assert(ed);
-	addRow(row);
-	ed->setValue(value);
-}
