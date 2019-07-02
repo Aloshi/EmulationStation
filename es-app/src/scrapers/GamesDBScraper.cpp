@@ -1,4 +1,5 @@
 #include "scrapers/GamesDBScraper.h"
+#include "scrapers/json.hpp"
 #include "Log.h"
 #include "pugixml/pugixml.hpp"
 #include "MetaData.h"
@@ -6,6 +7,7 @@
 #include "Util.h"
 #include <boost/assign.hpp>
 
+using json = nlohmann::json;
 using namespace PlatformIds;
 const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::map_list_of
 	(THREEDO, "3DO")
@@ -63,40 +65,40 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(WONDERSWAN_COLOR, "WonderSwan Color")
 	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
 
+std::string TheGamesDBRequest::TheGamesDBAPIKey = "";
 
-void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
-	std::vector<ScraperSearchResult>& results)
+void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, std::vector<ScraperSearchResult>& results)
 {
-	std::string path = "legacy.thegamesdb.net/api/GetGame.php?";
+	std::string path = "https://api.thegamesdb.net/Games/ByGameName?include=boxart&apikey=";
 
 	std::string cleanName = params.nameOverride;
-	if(cleanName.empty())
+	if (cleanName.empty()) {
 		cleanName = params.game->getCleanName();
+	}
 
-	path += "name=" + HttpReq::urlEncode(cleanName);
+	path += TheGamesDBRequest::TheGamesDBAPIKey;
+	path += "&name=" + HttpReq::urlEncode(cleanName);
 
-	if(params.system->getPlatformIds().empty())
-	{
+	// Platforms currently need to be referenced by an integral, unique identifier.
+	if (params.system->getPlatformIds().empty()) {
 		// no platform specified, we're done
 		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
-	}else{
-		// go through the list, we need to split this into multiple requests 
+	} else {
+		// go through the list, we need to split this into multiple requests
 		// because TheGamesDB API either sucks or I don't know how to use it properly...
 		std::string urlBase = path;
 		auto& platforms = params.system->getPlatformIds();
-		for(auto platformIt = platforms.begin(); platformIt != platforms.end(); platformIt++)
-		{
+		for (auto platformIt = platforms.begin(); platformIt != platforms.end(); platformIt++) {
 			path = urlBase;
 			auto mapIt = gamesdb_platformid_map.find(*platformIt);
-			if(mapIt != gamesdb_platformid_map.end())
-			{
-				path += "&platform=";
+			if (mapIt != gamesdb_platformid_map.end()) {
+				path += "&filter=";
 				path += HttpReq::urlEncode(mapIt->second);
-			}else{
+			} else {
 				LOG(LogWarning) << "TheGamesDB scraper warning - no support for platform " << getPlatformName(*platformIt);
 			}
-
-			requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
+			LOG(LogInfo) << "request path: " << path;
+	 		requests.push(std::unique_ptr<ScraperRequest>(new TheGamesDBRequest(results, path)));
 		}
 	}
 }
@@ -104,61 +106,130 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 void TheGamesDBRequest::process(const std::unique_ptr<HttpReq>& req, std::vector<ScraperSearchResult>& results)
 {
 	assert(req->status() == HttpReq::REQ_SUCCESS);
+	std::stringstream ss;
 
-	pugi::xml_document doc;
-	pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
-	if(!parseResult)
-	{
-		std::stringstream ss;
-		ss << "GamesDBRequest - Error parsing XML. \n\t" << parseResult.description() << "";
+	json j;
+	try {
+		j = json::parse(req->getContent());
+	} catch (const json::parse_error e) {
+		ss << "GamesDBRequest - Error parsing JSON. \n\t" << e.what() << "";
 		std::string err = ss.str();
 		setError(err);
 		LOG(LogError) << err;
 		return;
 	}
 
-	pugi::xml_node data = doc.child("Data");
+	if (j["status"].empty() || j["status"] != "Success" || j["data"].empty() || j["data"]["count"].empty() || j["data"]["count"] < 1) {
+		ss << "GamesDBRequest - Invalid response: " << j << "";
+		std::string err = ss.str();
+		setError(err);
+		LOG(LogError) << err;
+		return;
+	}
 
-	std::string baseImageUrl = data.child("baseImgUrl").text().get();
+	LOG(LogInfo) << "gamesdb response: " << j;
 
-	pugi::xml_node game = data.child("Game");
-	while(game && results.size() < MAX_SCRAPER_RESULTS)
-	{
+	json images = j["include"]["boxart"]["data"];
+	std::string baseImageURL = j["include"]["boxart"]["base_url"]["large"];
+	std::string baseThumbURL = j["include"]["boxart"]["base_url"]["thumb"];
+	// bool getRatings = Settings::getInstance()->getBool("ScrapeRatings");
+
+	for (auto g : j["data"]["games"]) {
 		ScraperSearchResult result;
 
-		result.mdl.set("name", game.child("GameTitle").text().get());
-		result.mdl.set("desc", game.child("Overview").text().get());
-
-		boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
-		result.mdl.setTime("releasedate", rd);
-
-		result.mdl.set("developer", game.child("Developer").text().get());
-		result.mdl.set("publisher", game.child("Publisher").text().get());
-		result.mdl.set("genre", game.child("Genres").first_child().text().get());
-		result.mdl.set("players", game.child("Players").text().get());
-
-		if(Settings::getInstance()->getBool("ScrapeRatings") && game.child("Rating"))
-		{
-			float ratingVal = (game.child("Rating").text().as_int() / 10.0f);
-			std::stringstream ss;
-			ss << ratingVal;
-			result.mdl.set("rating", ss.str());
+		if (g["game_title"].is_string()) {
+			result.mdl.set("name", g["game_title"]);
 		}
 
-		pugi::xml_node images = game.child("Images");
+		if (g["overview"].is_string()) {
+			result.mdl.set("desc", g["overview"]);
+		}
 
-		if(images)
-		{
-			pugi::xml_node art = images.find_child_by_attribute("boxart", "side", "front");
+		if (g["release_date"].is_string()) {
+			result.mdl.setTime("releasedate", string_to_ptime(g["release_date"], "%Y-%m-%d"));
+		}
 
-			if(art)
-			{
-				result.thumbnailUrl = baseImageUrl + art.attribute("thumb").as_string();
-				result.imageUrl = baseImageUrl + art.text().get();
+		if (g["players"].is_number()) {
+			result.mdl.set("players", std::to_string((unsigned int)g["players"]));
+		}
+
+		// ratings mean something different these days
+		// if (!g["rating"].empty()) {
+		// 	ss << g["rating"];
+		// 	result.mdl.set("rating", g["rating"]);
+		// 	ss.clear();
+		// }
+
+		std::string id = std::to_string((unsigned long long)g["id"]);
+
+		if (images[id].is_array() && !images[id].empty()) {
+			for (auto i : images[id]) {
+				if (i["side"].is_string() && i["side"] == "front" && i["type"].is_string() && i["type"] == "boxart" && i["filename"].is_string()) {
+					result.imageUrl = baseImageURL + i["filename"].get<std::string>();
+					result.thumbnailUrl = baseThumbURL + i["filename"].get<std::string>();
+					break;
+				}
 			}
 		}
 
 		results.push_back(result);
-		game = game.next_sibling("Game");
 	}
+
+
+	// pugi::xml_document doc;
+	// pugi::xml_parse_result parseResult = doc.load(req->getContent().c_str());
+	// if(!parseResult)
+	// {
+	// 	std::stringstream ss;
+	// 	ss << "GamesDBRequest - Error parsing XML. \n\t" << parseResult.description() << "";
+	// 	std::string err = ss.str();
+	// 	setError(err);
+	// 	LOG(LogError) << err;
+	// 	return;
+	// }
+
+	// pugi::xml_node data = doc.child("Data");
+
+	// std::string baseImageUrl = data.child("baseImgUrl").text().get();
+
+	// pugi::xml_node game = data.child("Game");
+	// while(game && results.size() < MAX_SCRAPER_RESULTS)
+	// {
+	// 	ScraperSearchResult result;
+
+	// 	result.mdl.set("name", game.child("GameTitle").text().get());
+	// 	result.mdl.set("desc", game.child("Overview").text().get());
+
+	// 	boost::posix_time::ptime rd = string_to_ptime(game.child("ReleaseDate").text().get(), "%m/%d/%Y");
+	// 	result.mdl.setTime("releasedate", rd);
+
+	// 	result.mdl.set("developer", game.child("Developer").text().get());
+	// 	result.mdl.set("publisher", game.child("Publisher").text().get());
+	// 	result.mdl.set("genre", game.child("Genres").first_child().text().get());
+	// 	result.mdl.set("players", game.child("Players").text().get());
+
+	// 	if(Settings::getInstance()->getBool("ScrapeRatings") && game.child("Rating"))
+	// 	{
+	// 		float ratingVal = (game.child("Rating").text().as_int() / 10.0f);
+	// 		std::stringstream ss;
+	// 		ss << ratingVal;
+	// 		result.mdl.set("rating", ss.str());
+	// 	}
+
+	// 	pugi::xml_node images = game.child("Images");
+
+	// 	if(images)
+	// 	{
+	// 		pugi::xml_node art = images.find_child_by_attribute("boxart", "side", "front");
+
+	// 		if(art)
+	// 		{
+	// 			result.thumbnailUrl = baseImageUrl + art.attribute("thumb").as_string();
+	// 			result.imageUrl = baseImageUrl + art.text().get();
+	// 		}
+	// 	}
+
+	// 	results.push_back(result);
+	// 	game = game.next_sibling("Game");
+	// }
 }
