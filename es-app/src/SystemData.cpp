@@ -336,7 +336,8 @@ bool SystemData::loadConfig()
 			if (keyNode) {
 				APIKey = keyNode.text().get();
 				if (name == "gamesdb") {
-					TheGamesDBRequest::TheGamesDBAPIKey = APIKey;
+					TheGamesDBRequest::APIkey = APIKey;
+					TheGamesDBRequest::Path = APIPath;
 					LOG(LogInfo) << "Set TheGamesDB API key: '" << APIKey << "'.";
 				} else {
 					LOG(LogError) << "Unkown scraper: '" << name << "' tried to set API Key";
