@@ -222,24 +222,30 @@ namespace Utils
 
 		} // removeParenthesis
 
-		stringVector commaStringToVector(const std::string& _string)
+		stringVector delimitedStringToVector(const std::string& _string, const std::string& _delimiter, bool sort)
 		{
 			stringVector vector;
 			size_t       start = 0;
-			size_t       comma = _string.find(",");
+			size_t       comma = _string.find(_delimiter);
 
 			while(comma != std::string::npos)
 			{
 				vector.push_back(_string.substr(start, comma - start));
 				start = comma + 1;
-				comma = _string.find(",", start);
+				comma = _string.find(_delimiter, start);
 			}
 
 			vector.push_back(_string.substr(start));
-			std::sort(vector.begin(), vector.end());
+			if (sort)
+				std::sort(vector.begin(), vector.end());
 
 			return vector;
 
+		} // delimitedStringToVector
+
+		stringVector commaStringToVector(const std::string& _string, bool sort)
+		{
+			return delimitedStringToVector(_string, ",", sort);
 		} // commaStringToVector
 
 		std::string vectorToCommaString(stringVector _vector)

@@ -538,6 +538,7 @@ Reference
 ## Types of properties:
 
 * NORMALIZED_PAIR - two decimals, in the range [0..1], delimited by a space.  For example, `0.25 0.5`.  Most commonly used for position (x and y coordinates) and size (width and height).
+* NORMALIZED_RECT - four decimals, in the range [0..1], delimited by a space. For example, `0.25 0.5 0.10 0.30`.  Most commonly used for padding to store top, left, bottom and right coordinates.
 * PATH - a path.  If the first character is a `~`, it will be expanded into the environment variable for the home path (`$HOME` for Linux or `%HOMEPATH%` for Windows).  If the first character is a `.`, it will be expanded to the theme file's directory, allowing you to specify resources relative to the theme file, like so: `./../general_art/myfont.ttf`.
 * BOOLEAN - `true`/`1` or `false`/`0`.
 * COLOR - a hexidecimal RGB or RGBA color (6 or 8 digits).  If 6 digits, will assume the alpha channel is `FF` (not transparent).
@@ -586,13 +587,29 @@ Can be created as an extra.
 * `pos` - type: NORMALIZED_PAIR.
 * `size` - type: NORMALIZED_PAIR.
     - The size of the grid. Take care the selected tile can go out of the grid size, so don't position the grid too close to another element or the screen border.
-* `margin` - type: NORMALIZED_PAIR.
+* `margin` - type: NORMALIZED_PAIR. Margin between tiles.
+* `padding` - type: NORMALIZED_RECT.
+    - NEW : Padding for displaying tiles.
+* `autoLayout` - type: NORMALIZED_PAIR.
+    - NEW : Number of column and rows in the grid (integer values).
+* `autoLayoutSelectedZoom` - type: FLOAT.
+    - NEW : Zoom factor to apply when a tile is selected.
 * `gameImage` - type: PATH.
     - The default image used for games which doesn't have an image.
 * `folderImage` - type: PATH.
     - The default image used for folders which doesn't have an image.
+* `imageSource` - type: STRING.
+    - Selects the image to display. `thumbnail` by default, can also be set to `image` or `marquee`. 
 * `scrollDirection` - type: STRING.
     - `vertical` by default, can also be set to `horizontal`. Not that in `horizontal` mod, the tiles are ordered from top to bottom, then from left to right.
+* `centerSelection` - type: BOOLEAN.
+    - `false` by default, when `true` the selected tile will be locked to the center of the grid.
+* `scrollLoop` - type: BOOLEAN.
+    - `false` by default, when `true` the grid will seamlessly loop around when scrolling reaches the end of the list.  Only works when `centerSelection` is `true`.
+* `animate` - type : BOOLEAN.
+    - `true` by default, when  `false` the grid scrolling will not be animated.
+* `zIndex` - type: FLOAT.
+    - z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
 #### gridtile
 

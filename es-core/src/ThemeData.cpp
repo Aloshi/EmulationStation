@@ -3,6 +3,7 @@
 #include "components/ImageComponent.h"
 #include "components/TextComponent.h"
 #include "utils/FileSystemUtil.h"
+#include "utils/StringUtil.h"
 #include "Log.h"
 #include "platform.h"
 #include "Settings.h"
@@ -18,7 +19,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "size", NORMALIZED_PAIR },
 		{ "maxSize", NORMALIZED_PAIR },
 		{ "origin", NORMALIZED_PAIR },
-	 	{ "rotation", FLOAT },
+		{ "rotation", FLOAT },
 		{ "rotationOrigin", NORMALIZED_PAIR },
 		{ "path", PATH },
 		{ "default", PATH },
@@ -32,9 +33,16 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
 		{ "margin", NORMALIZED_PAIR },
+		{ "padding", NORMALIZED_RECT },
+		{ "autoLayout", NORMALIZED_PAIR },
+		{ "autoLayoutSelectedZoom", FLOAT },
 		{ "gameImage", PATH },
 		{ "folderImage", PATH },
-		{ "scrollDirection", STRING } } },
+		{ "imageSource", STRING },
+		{ "scrollDirection", STRING },
+		{ "centerSelection", BOOLEAN },
+		{ "scrollLoop", BOOLEAN },
+		{ "zIndex", FLOAT } } },
 	{ "gridtile", {
 		{ "size", NORMALIZED_PAIR },
 		{ "padding", NORMALIZED_PAIR },
@@ -410,6 +418,25 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 		switch(typeIt->second)
 		{
+		case NORMALIZED_RECT:
+		{
+			Vector4f val;
+
+			auto splits = Utils::String::delimitedStringToVector(str, " ");
+			if (splits.size() == 2)
+			{
+				val = Vector4f((float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()),
+					(float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()));
+			}
+			else if (splits.size() == 4)
+			{
+				val = Vector4f((float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()),
+					(float)atof(splits.at(2).c_str()), (float)atof(splits.at(3).c_str()));
+			}
+
+			element.properties[node.name()] = val;
+			break;
+		}
 		case NORMALIZED_PAIR:
 		{
 			size_t divider = str.find(' ');
