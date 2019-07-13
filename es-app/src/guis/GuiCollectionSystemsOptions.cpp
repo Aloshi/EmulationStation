@@ -75,6 +75,10 @@ void GuiCollectionSystemsOptions::initializeMenu()
 	sortAllSystemsSwitch->setState(Settings::getInstance()->getBool("SortAllSystems"));
 	mMenu.addWithLabel("SORT CUSTOM COLLECTIONS AND SYSTEMS", sortAllSystemsSwitch);
 
+	toggleSystemNameInCollections = std::make_shared<SwitchComponent>(mWindow);
+	toggleSystemNameInCollections->setState(Settings::getInstance()->getBool("CollectionShowSystemInfo"));
+	mMenu.addWithLabel("SHOW SYSTEM NAME IN COLLECTIONS", toggleSystemNameInCollections);
+
 	if(CollectionSystemManager::get()->isEditing())
 	{
 		row.elements.clear();
@@ -170,11 +174,14 @@ void GuiCollectionSystemsOptions::applySettings()
 	bool prevSort = Settings::getInstance()->getBool("SortAllSystems");
 	bool outBundle = bundleCustomCollections->getState();
 	bool prevBundle = Settings::getInstance()->getBool("UseCustomCollectionsSystem");
-	bool needUpdateSettings = prevAuto != outAuto || prevCustom != outCustom || outSort != prevSort || outBundle != prevBundle;
+	bool prevShow = Settings::getInstance()->getBool("CollectionShowSystemInfo");
+	bool outShow = toggleSystemNameInCollections->getState();
+	bool needUpdateSettings = prevAuto != outAuto || prevCustom != outCustom || outSort != prevSort || outBundle != prevBundle || prevShow != outShow ;
 	if (needUpdateSettings)
 	{
 		updateSettings(outAuto, outCustom);
 	}
+
 	delete this;
 }
 
@@ -184,6 +191,7 @@ void GuiCollectionSystemsOptions::updateSettings(std::string newAutoSettings, st
 	Settings::getInstance()->setString("CollectionSystemsCustom", newCustomSettings);
 	Settings::getInstance()->setBool("SortAllSystems", sortAllSystemsSwitch->getState());
 	Settings::getInstance()->setBool("UseCustomCollectionsSystem", bundleCustomCollections->getState());
+	Settings::getInstance()->setBool("CollectionShowSystemInfo", toggleSystemNameInCollections->getState());
 	Settings::getInstance()->saveFile();
 	CollectionSystemManager::get()->loadEnabledListFromSettings();
 	CollectionSystemManager::get()->updateSystemsList();
