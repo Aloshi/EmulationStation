@@ -576,6 +576,8 @@ Can be created as an extra.
 	- If true, the image will be tiled instead of stretched to fit its size.  Useful for backgrounds.
 * `color` - type: COLOR.
 	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.  You can also control the transparency of an image with `<color>FFFFFFAA</color>` - keeping all the pixels their normal color and only affecting the alpha channel.
+* `visible` - type: BOOLEAN.
+    - If true, component will be rendered, otherwise rendering will be skipped.  Can be used to hide elements from a particular view.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
@@ -632,6 +634,8 @@ Can be created as an extra.
 	- If true, image will be shown when selected game does not have a video and no `default` video is configured.
 * `showSnapshotDelay` - type: BOOLEAN
 	- If true, playing of video will be delayed for `delayed` seconds, when game is selected.
+* `visible` - type: BOOLEAN.
+    - If true, component will be rendered, otherwise rendering will be skipped.  Can be used to hide elements from a particular view.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
@@ -662,6 +666,8 @@ Can be created as an extra.
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.  "center" will also align vertically.
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 * `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
+* `visible` - type: BOOLEAN.
+    - If true, component will be rendered, otherwise rendering will be skipped.  Can be used to hide elements from a particular view.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 
@@ -705,10 +711,12 @@ Can be created as an extra.
 * `pos` - type: NORMALIZED_PAIR.
 * `size` - type: NORMALIZED_PAIR.
 * `path` - type: PATH.
-
-EmulationStation borrows the concept of "nine patches" from Android (or "9-Slices"). Currently the implementation is very simple and hard-coded to only use 48x48px images (16x16px for each "patch"). Check the `data/resources` directory for some examples (button.png, frame.png).
+* `visible` - type: BOOLEAN.
+    - If true, component will be rendered, otherwise rendering will be skipped.  Can be used to hide elements from a particular view.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
+
+EmulationStation borrows the concept of "nine patches" from Android (or "9-Slices"). Currently the implementation is very simple and hard-coded to only use 48x48px images (16x16px for each "patch"). Check the `data/resources` directory for some examples (button.png, frame.png).
 
 #### rating
 
@@ -727,6 +735,8 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 	- Path to the "unfilled star" image.  Image must be square (width equals height).
 * `color` - type: COLOR.
 	- Multiply each pixel's color by this color. For example, an all-white image with `<color>FF0000</color>` would become completely red.  You can also control the transparency of an image with `<color>FFFFFFAA</color>` - keeping all the pixels their normal color and only affecting the alpha channel.
+* `visible` - type: BOOLEAN.
+    - If true, component will be rendered, otherwise rendering will be skipped.  Can be used to hide elements from a particular view.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.	
 
@@ -753,6 +763,8 @@ EmulationStation borrows the concept of "nine patches" from Android (or "9-Slice
 	- Valid values are "left", "center", or "right".  Controls alignment on the X axis.  "center" will also align vertically.
 * `forceUppercase` - type: BOOLEAN.  Draw text in uppercase.
 * `lineSpacing` - type: FLOAT.  Controls the space between lines (as a multiple of font height).  Default is 1.5.
+* `visible` - type: BOOLEAN.
+    - If true, component will be rendered, otherwise rendering will be skipped.  Can be used to hide elements from a particular view.
 * `zIndex` - type: FLOAT.
 	- z-index value for component.  Components will be rendered in order of z-index value from low to high.
 * `displayRelative` - type: BOOLEAN.  Renders the datetime as a a relative string (ex: 'x days ago')

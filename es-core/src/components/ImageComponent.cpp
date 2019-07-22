@@ -317,6 +317,9 @@ void ImageComponent::updateColors()
 
 void ImageComponent::render(const Transform4x4f& parentTrans)
 {
+	if (!isVisible())
+		return;
+
 	Transform4x4f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
 
@@ -466,6 +469,11 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		setZIndex(elem->get<float>("zIndex"));
 	else
 		setZIndex(getDefaultZIndex());
+
+	if(properties & ThemeFlags::VISIBLE && elem->has("visible"))
+		setVisible(elem->get<bool>("visible"));
+	else
+		setVisible(true);
 }
 
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()

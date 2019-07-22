@@ -112,6 +112,9 @@ void RatingComponent::updateColors()
 
 void RatingComponent::render(const Transform4x4f& parentTrans)
 {
+	if (!isVisible())
+		return;
+
 	Transform4x4f trans = parentTrans * getTransform();
 	trans.round();
 	Renderer::setMatrix(trans);

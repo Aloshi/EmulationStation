@@ -13,6 +13,9 @@ ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window),
 
 void ScrollableContainer::render(const Transform4x4f& parentTrans)
 {
+	if (!isVisible())
+		return;
+
 	Transform4x4f trans = parentTrans * getTransform();
 
 	Vector2i clipPos((int)trans.translation().x(), (int)trans.translation().y());

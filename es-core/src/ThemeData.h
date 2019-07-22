@@ -41,6 +41,7 @@ namespace ThemeFlags
 		DELAY = 4096,
 		Z_INDEX = 8192,
 		ROTATION = 16384,
+		VISIBLE = 32768,
 		ALL = 0xFFFFFFFF
 	};
 }
