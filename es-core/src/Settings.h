@@ -8,6 +8,7 @@
 class Settings
 {
 public:
+	static const int ONE_MINUTE_IN_MS = 1000 * 60;
 	static Settings* getInstance();
 
 	void loadFile();

@@ -6,7 +6,7 @@
 
 namespace Scripting
 {
-	void fireEvent(const std::string& eventName, const std::string& arg1="", const std::string& arg2="");
+	int fireEvent(const std::string& eventName, const std::string& arg1="", const std::string& arg2="");
 } // Scripting::
 
 #endif //ES_CORE_SCRIPTING_H
