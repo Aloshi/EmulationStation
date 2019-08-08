@@ -25,14 +25,15 @@ public:
 	inline const Vector4f& r2() const { return mR2; }
 	inline const Vector4f& r3() const { return mR3; }
 
-	Transform4x4f& invert   (const Transform4x4f& _other);
-	Transform4x4f& scale    (const Vector3f& _scale);
-	Transform4x4f& rotate   (const float _angle, const Vector3f& _axis);
-	Transform4x4f& rotateX  (const float _angle);
-	Transform4x4f& rotateY  (const float _angle);
-	Transform4x4f& rotateZ  (const float _angle);
-	Transform4x4f& translate(const Vector3f& _translation);
-	Transform4x4f& round    ();
+	Transform4x4f& orthoProjection(float _left, float _right, float _bottom, float _top, float _near, float _far);
+	Transform4x4f& invert         (const Transform4x4f& _other);
+	Transform4x4f& scale          (const Vector3f& _scale);
+	Transform4x4f& rotate         (const float _angle, const Vector3f& _axis);
+	Transform4x4f& rotateX        (const float _angle);
+	Transform4x4f& rotateY        (const float _angle);
+	Transform4x4f& rotateZ        (const float _angle);
+	Transform4x4f& translate      (const Vector3f& _translation);
+	Transform4x4f& round          ();
 
 	inline       Vector3f& translation()       { return mR3.v3(); }
 	inline const Vector3f& translation() const { return mR3.v3(); }
