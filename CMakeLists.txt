@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 option(GLES "Set to ON if targeting OpenGL ES" ${GLES})
 option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
+option(RPI "Set to ON to enable the Raspberry PI video player (omxplayer)" ${RPI})
 
 project(emulationstation-all)
 
@@ -67,7 +68,7 @@ endif()
 
 #-------------------------------------------------------------------------------
 #set up compiler flags and excutable names
-if(DEFINED BCMHOST)
+if(DEFINED BCMHOST OR RPI)
     add_definitions(-D_RPI_)
 endif()
 
