@@ -127,19 +127,32 @@ void screenscraper_generate_scraper_requests(const ScraperSearchParams& params,
 
 	path = ssConfig.getGameSearchUrl(params.game->getFileName());
 	auto& platforms = params.system->getPlatformIds();
+	std::vector<unsigned short> p_ids;
 
+	// Get the IDs of each platform from the ScreenScraper list
 	for (auto platformIt = platforms.cbegin(); platformIt != platforms.cend(); platformIt++)
 	{
 		auto mapIt = screenscraper_platformid_map.find(*platformIt);
 
 		if (mapIt != screenscraper_platformid_map.cend())
 		{
-			path += "&systemeid=";
-			path += HttpReq::urlEncode(std::to_string(mapIt->second));
+			p_ids.push_back(mapIt->second);
 		}else{
 			LOG(LogWarning) << "ScreenScraper: no support for platform " << getPlatformName(*platformIt);
+			// Add the scrape request without a platform/system ID
+			requests.push(std::unique_ptr<ScraperRequest>(new ScreenScraperRequest(requests, results, path)));
 		}
+	}
 
+	// Sort the platform IDs and remove duplicates
+	std::sort(p_ids.begin(), p_ids.end());
+	auto last = std::unique(p_ids.begin(), p_ids.end());
+	p_ids.erase(last, p_ids.end());
+
+	for (auto platform = p_ids.cbegin(); platform != p_ids.cend(); platform++)
+	{
+		path += "&systemeid=";
+		path += HttpReq::urlEncode(std::to_string(*platform));
 		requests.push(std::unique_ptr<ScraperRequest>(new ScreenScraperRequest(requests, results, path)));
 	}
 
