@@ -2,9 +2,8 @@
 #ifndef ES_APP_COMPONENTS_RATING_COMPONENT_H
 #define ES_APP_COMPONENTS_RATING_COMPONENT_H
 
+#include "renderers/Renderer.h"
 #include "GuiComponent.h"
-#include "platform.h"
-#include GLHEADER
 
 class TextureResource;
 
@@ -43,14 +42,7 @@ private:
 
 	float mValue;
 
-	struct Vertex
-	{
-		Vector2f pos;
-		Vector2f tex;
-	} mVertices[12];
-
-
-	GLubyte mColors[12*4];
+	Renderer::Vertex mVertices[8];
 
 	unsigned int mColorShift;
 

@@ -2,14 +2,13 @@
 
 #include "resources/TextureResource.h"
 #include "Log.h"
-#include "Renderer.h"
 #include "ThemeData.h"
 
 NinePatchComponent::NinePatchComponent(Window* window, const std::string& path, unsigned int edgeColor, unsigned int centerColor) : GuiComponent(window),
 	mCornerSize(16, 16),
 	mEdgeColor(edgeColor), mCenterColor(centerColor),
 	mPath(path),
-	mVertices(NULL), mColors(NULL)
+	mVertices(NULL)
 {
 	if(!mPath.empty())
 		buildVertices();
@@ -19,15 +18,18 @@ NinePatchComponent::~NinePatchComponent()
 {
 	if (mVertices != NULL)
 		delete[] mVertices;
-
-	if (mColors != NULL)
-		delete[] mColors;
 }
 
 void NinePatchComponent::updateColors()
 {
-	Renderer::buildGLColorArray(mColors, mEdgeColor, 6 * 9);
-	Renderer::buildGLColorArray(&mColors[4 * 6 * 4], mCenterColor, 6);
+	const unsigned int edgeColor   = Renderer::convertColor(mEdgeColor);
+	const unsigned int centerColor = Renderer::convertColor(mCenterColor);
+
+	for(int i = 0; i < 6*9; ++i)
+		mVertices[i].col = edgeColor;
+
+	for(int i = 6*4; i < 6; ++i)
+		mVertices[(6*4)+i].col = mCenterColor;
 }
 
 void NinePatchComponent::buildVertices()
@@ -35,61 +37,48 @@ void NinePatchComponent::buildVertices()
 	if(mVertices != NULL)
 		delete[] mVertices;
 
-	if(mColors != NULL)
-		delete[] mColors;
-
 	mTexture = TextureResource::get(mPath);
 
 	if(mTexture->getSize() == Vector2i::Zero())
 	{
 		mVertices = NULL;
-		mColors = NULL;
 		LOG(LogWarning) << "NinePatchComponent missing texture!";
 		return;
 	}
 
-	mVertices = new Vertex[6 * 9];
-	mColors = new GLubyte[6 * 9 * 4];
-	updateColors();
+	mVertices = new Renderer::Vertex[6 * 9];
 
 	const Vector2f texSize = Vector2f((float)mTexture->getSize().x(), (float)mTexture->getSize().y());
 
-	float imgSizeX[3] = {mCornerSize.x(), mSize.x() - mCornerSize.x() * 2, mCornerSize.x()};
-	float imgSizeY[3] = {mCornerSize.y(), mSize.y() - mCornerSize.y() * 2, mCornerSize.y()};
-	float imgPosX[3] = {0, imgSizeX[0], imgSizeX[0] + imgSizeX[1]};
-	float imgPosY[3] = {0, imgSizeY[0], imgSizeY[0] + imgSizeY[1]};
+	const float imgSizeX[3] = { mCornerSize.x(), mSize.x() - mCornerSize.x() * 2, mCornerSize.x()};
+	const float imgSizeY[3] = { mCornerSize.y(), mSize.y() - mCornerSize.y() * 2, mCornerSize.y()};
+	const float imgPosX[3]  = { 0, imgSizeX[0], imgSizeX[0] + imgSizeX[1]};
+	const float imgPosY[3]  = { 0, imgSizeY[0], imgSizeY[0] + imgSizeY[1]};
 
 	//the "1 +" in posY and "-" in sizeY is to deal with texture coordinates having a bottom left corner origin vs. verticies having a top left origin
-	float texSizeX[3] = {mCornerSize.x() / texSize.x(), (texSize.x() - mCornerSize.x() * 2) / texSize.x(), mCornerSize.x() / texSize.x()};
-	float texSizeY[3] = {-mCornerSize.y() / texSize.y(), -(texSize.y() - mCornerSize.y() * 2) / texSize.y(), -mCornerSize.y() / texSize.y()};
-	float texPosX[3] = {0, texSizeX[0], texSizeX[0] + texSizeX[1]};
-	float texPosY[3] = {1, 1 + texSizeY[0], 1 + texSizeY[0] + texSizeY[1]};
+	const float texSizeX[3]       = {  mCornerSize.x() / texSize.x(),  (texSize.x() - mCornerSize.x() * 2) / texSize.x(),  mCornerSize.x() / texSize.x() };
+	const float texSizeY[3]       = { -mCornerSize.y() / texSize.y(), -(texSize.y() - mCornerSize.y() * 2) / texSize.y(), -mCornerSize.y() / texSize.y() };
+	const float texPosX[3]        = {  0,     texSizeX[0],     texSizeX[0] + texSizeX[1] };
+	const float texPosY[3]        = {  1, 1 + texSizeY[0], 1 + texSizeY[0] + texSizeY[1] };
 
 	int v = 0;
 	for(int slice = 0; slice < 9; slice++)
 	{
-		int sliceX = slice % 3;
-		int sliceY = slice / 3;
+		const int      sliceX  = slice % 3;
+		const int      sliceY  = slice / 3;
+		const Vector2f imgPos  = Vector2f(imgPosX[sliceX], imgPosY[sliceY]);
+		const Vector2f imgSize = Vector2f(imgSizeX[sliceX], imgSizeY[sliceY]);
+		const Vector2f texPos  = Vector2f(texPosX[sliceX], texPosY[sliceY]);
+		const Vector2f texSize = Vector2f(texSizeX[sliceX], texSizeY[sliceY]);
 
-		Vector2f imgPos = Vector2f(imgPosX[sliceX], imgPosY[sliceY]);
-		Vector2f imgSize = Vector2f(imgSizeX[sliceX], imgSizeY[sliceY]);
+		mVertices[v + 1] = { { imgPos.x()              , imgPos.y()               }, { texPos.x(),               texPos.y()               }, 0 };
+		mVertices[v + 2] = { { imgPos.x()              , imgPos.y() + imgSize.y() }, { texPos.x(),               texPos.y() + texSize.y() }, 0 };
+		mVertices[v + 3] = { { imgPos.x() + imgSize.x(), imgPos.y()               }, { texPos.x() + texSize.x(), texPos.y()               }, 0 };
+		mVertices[v + 4] = { { imgPos.x() + imgSize.x(), imgPos.y() + imgSize.y() }, { texPos.x() + texSize.x(), texPos.y() + texSize.y() }, 0 };
 
-		mVertices[v + 0].pos = imgPos;
-		mVertices[v + 1].pos = imgPos + Vector2f(0, imgSize.y());
-		mVertices[v + 2].pos = imgPos + Vector2f(imgSize.x(), 0);
-		mVertices[v + 3].pos = mVertices[v + 2].pos;
-		mVertices[v + 4].pos = mVertices[v + 1].pos;
-		mVertices[v + 5].pos = imgPos + imgSize;
-
-		Vector2f texPos = Vector2f(texPosX[sliceX], texPosY[sliceY]);
-		Vector2f texSize = Vector2f(texSizeX[sliceX], texSizeY[sliceY]);
-
-		mVertices[v + 0].tex = texPos;
-		mVertices[v + 1].tex = texPos + Vector2f(0, texSize.y());
-		mVertices[v + 2].tex = texPos + Vector2f(texSize.x(), 0);
-		mVertices[v + 3].tex = mVertices[v + 2].tex;
-		mVertices[v + 4].tex = mVertices[v + 1].tex;
-		mVertices[v + 5].tex = texPos + texSize;
+		// make duplicates of first and last vertex so this can be rendered as a triangle strip
+		mVertices[v + 0] = mVertices[v + 1];
+		mVertices[v + 5] = mVertices[v + 4];
 
 		v += 6;
 	}
@@ -99,6 +88,8 @@ void NinePatchComponent::buildVertices()
 	{
 		mVertices[i].pos.round();
 	}
+
+	updateColors();
 }
 
 void NinePatchComponent::render(const Transform4x4f& parentTrans)
@@ -111,27 +102,7 @@ void NinePatchComponent::render(const Transform4x4f& parentTrans)
 		Renderer::setMatrix(trans);
 
 		mTexture->bind();
-
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
-
-		glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
-		glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6 * 9);
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_BLEND);
+		Renderer::drawTriangleStrips(&mVertices[0], 6*9);
 	}
 
 	renderChildren(trans);

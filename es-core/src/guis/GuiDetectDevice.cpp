@@ -6,7 +6,6 @@
 #include "utils/StringUtil.h"
 #include "InputManager.h"
 #include "PowerSaver.h"
-#include "Renderer.h"
 #include "Window.h"
 
 #define HOLD_TIME 1000

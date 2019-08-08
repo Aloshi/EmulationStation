@@ -1,7 +1,5 @@
 #include "components/ComponentList.h"
 
-#include "Renderer.h"
-
 #define TOTAL_HORIZONTAL_PADDING_PX 20
 
 ComponentList::ComponentList(Window* window) : IList<ComponentListRow, void*>(window, LIST_SCROLL_STYLE_SLOW, LIST_NEVER_LOOP)
@@ -204,10 +202,8 @@ void ComponentList::render(const Transform4x4f& parentTrans)
 		// (1 - dst) + 0x77
 
 		const float selectedRowHeight = getRowHeight(mEntries.at(mCursor).data);
-		Renderer::drawRect(0.0f, mSelectorBarOffset, mSize.x(), selectedRowHeight, 0xFFFFFFFF,
-			GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-		Renderer::drawRect(0.0f, mSelectorBarOffset, mSize.x(), selectedRowHeight, 0x777777FF,
-			GL_ONE, GL_ONE);
+		Renderer::drawRect(0.0f, mSelectorBarOffset, mSize.x(), selectedRowHeight, 0xFFFFFFFF, Renderer::Blend::ONE_MINUS_DST_COLOR, Renderer::Blend::ZERO);
+		Renderer::drawRect(0.0f, mSelectorBarOffset, mSize.x(), selectedRowHeight, 0x777777FF, Renderer::Blend::ONE,                 Renderer::Blend::ONE);
 
 		// hack to draw 2px dark on left/right of the bar
 		Renderer::drawRect(0.0f, mSelectorBarOffset, 2.0f, selectedRowHeight, 0x878787FF);

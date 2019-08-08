@@ -3,7 +3,6 @@
 #include "components/ComponentGrid.h"
 #include "components/NinePatchComponent.h"
 #include "components/TextComponent.h"
-#include "Renderer.h"
 #include <SDL_timer.h>
 
 GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :

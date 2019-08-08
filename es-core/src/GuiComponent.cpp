@@ -2,8 +2,8 @@
 
 #include "animations/Animation.h"
 #include "animations/AnimationController.h"
+#include "renderers/Renderer.h"
 #include "Log.h"
-#include "Renderer.h"
 #include "ThemeData.h"
 #include "Window.h"
 #include <algorithm>

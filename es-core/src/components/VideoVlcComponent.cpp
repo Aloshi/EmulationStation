@@ -1,9 +1,9 @@
 #include "components/VideoVlcComponent.h"
 
+#include "renderers/Renderer.h"
 #include "resources/TextureResource.h"
 #include "utils/StringUtil.h"
 #include "PowerSaver.h"
-#include "Renderer.h"
 #include "Settings.h"
 #include <vlc/vlc.h>
 #include <SDL_mutex.h>
@@ -132,8 +132,6 @@ void VideoVlcComponent::resize()
 void VideoVlcComponent::render(const Transform4x4f& parentTrans)
 {
 	VideoComponent::render(parentTrans);
-	float x, y;
-
 	Transform4x4f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
 
@@ -141,73 +139,24 @@ void VideoVlcComponent::render(const Transform4x4f& parentTrans)
 
 	if (mIsPlaying && mContext.valid)
 	{
-		float tex_offs_x = 0.0f;
-		float tex_offs_y = 0.0f;
-		float x2;
-		float y2;
+		const unsigned int fadeIn = (unsigned int)(Math::clamp(0.0f, mFadeIn, 1.0f) * 255.0f);
+		const unsigned int color  = Renderer::convertColor((fadeIn << 24) | (fadeIn << 16) | (fadeIn << 8) | 255);
+		Renderer::Vertex   vertices[4];
 
-		x = 0.0;
-		y = 0.0;
-		x2 = mSize.x();
-		y2 = mSize.y();
-
-		// Define a structure to contain the data for each vertex
-		struct Vertex
-		{
-			Vector2f pos;
-			Vector2f tex;
-			Vector4f colour;
-		} vertices[6];
-
-		// We need two triangles to cover the rectangular area
-		vertices[0].pos[0] = x; 			vertices[0].pos[1] = y;
-		vertices[1].pos[0] = x; 			vertices[1].pos[1] = y2;
-		vertices[2].pos[0] = x2;			vertices[2].pos[1] = y;
-
-		vertices[3].pos[0] = x2;			vertices[3].pos[1] = y;
-		vertices[4].pos[0] = x; 			vertices[4].pos[1] = y2;
-		vertices[5].pos[0] = x2;			vertices[5].pos[1] = y2;
-
-		// Texture coordinates
-		vertices[0].tex[0] = -tex_offs_x; 			vertices[0].tex[1] = -tex_offs_y;
-		vertices[1].tex[0] = -tex_offs_x; 			vertices[1].tex[1] = 1.0f + tex_offs_y;
-		vertices[2].tex[0] = 1.0f + tex_offs_x;		vertices[2].tex[1] = -tex_offs_y;
-
-		vertices[3].tex[0] = 1.0f + tex_offs_x;		vertices[3].tex[1] = -tex_offs_y;
-		vertices[4].tex[0] = -tex_offs_x;			vertices[4].tex[1] = 1.0f + tex_offs_y;
-		vertices[5].tex[0] = 1.0f + tex_offs_x;		vertices[5].tex[1] = 1.0f + tex_offs_y;
-
-		// Colours - use this to fade the video in and out
-		for (int i = 0; i < (4 * 6); ++i) {
-			if ((i%4) < 3)
-				vertices[i / 4].colour[i % 4] = mFadeIn;
-			else
-				vertices[i / 4].colour[i % 4] = 1.0f;
-		}
-
-		glEnable(GL_TEXTURE_2D);
+		vertices[0] = { { 0.0f     , 0.0f      }, { 0.0f, 0.0f }, color };
+		vertices[1] = { { 0.0f     , mSize.y() }, { 0.0f, 1.0f }, color };
+		vertices[2] = { { mSize.x(), 0.0f      }, { 1.0f, 0.0f }, color };
+		vertices[3] = { { mSize.x(), mSize.y() }, { 1.0f, 1.0f }, color };
 
 		// Build a texture for the video frame
 		mTexture->initFromPixels((unsigned char*)mContext.surface->pixels, mContext.surface->w, mContext.surface->h);
 		mTexture->bind();
 
 		// Render it
-		glEnableClientState(GL_COLOR_ARRAY);
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		glColorPointer(4, GL_FLOAT, sizeof(Vertex), &vertices[0].colour);
-		glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].pos);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].tex);
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_COLOR_ARRAY);
-
-		glDisable(GL_TEXTURE_2D);
-	} else {
+		Renderer::drawTriangleStrips(&vertices[0], 4);
+	}
+	else
+	{
 		VideoComponent::renderSnapshot(parentTrans);
 	}
 }

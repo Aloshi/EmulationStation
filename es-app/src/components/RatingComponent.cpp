@@ -1,7 +1,6 @@
 #include "components/RatingComponent.h"
 
 #include "resources/TextureResource.h"
-#include "Renderer.h"
 #include "ThemeData.h"
 
 RatingComponent::RatingComponent(Window* window) : GuiComponent(window), mColorShift(0xFFFFFFFF)
@@ -76,38 +75,29 @@ void RatingComponent::onSizeChanged()
 
 void RatingComponent::updateVertices()
 {
-	const float numStars = NUM_RATING_STARS;
+	const float        numStars = NUM_RATING_STARS;
+	const float        h        = Math::round(getSize().y()); // is the same as a single star's width
+	const float        w        = Math::round(h * mValue * numStars);
+	const float        fw       = Math::round(h * numStars);
+	const unsigned int color    = Renderer::convertColor(mColorShift);
 
-	const float h = Math::round(getSize().y()); // is the same as a single star's width
-	const float w = Math::round(h * mValue * numStars);
-	const float fw = Math::round(h * numStars);
+	mVertices[0] = { { 0.0f, 0.0f }, { 0.0f,              1.0f }, color };
+	mVertices[1] = { { 0.0f, h    }, { 0.0f,              0.0f }, color };
+	mVertices[2] = { { w,    0.0f }, { mValue * numStars, 1.0f }, color };
+	mVertices[3] = { { w,    h    }, { mValue * numStars, 0.0f }, color };
 
-	mVertices[0].pos = Vector2f(0.0f, 0.0f);
-	mVertices[0].tex = Vector2f(0.0f, 1.0f);
-	mVertices[1].pos = Vector2f(w, h);
-	mVertices[1].tex = Vector2f(mValue * numStars, 0.0f);
-	mVertices[2].pos = Vector2f(0.0f, h);
-	mVertices[2].tex = Vector2f(0.0f, 0.0f);
-
-	mVertices[3] = mVertices[0];
-	mVertices[4].pos = Vector2f(w, 0.0f);
-	mVertices[4].tex = Vector2f(mValue * numStars, 1.0f);
-	mVertices[5] = mVertices[1];
-
-	mVertices[6] = mVertices[4];
-	mVertices[7].pos = Vector2f(fw, h);
-	mVertices[7].tex = Vector2f(numStars, 0.0f);
-	mVertices[8] = mVertices[1];
-
-	mVertices[9] = mVertices[6];
-	mVertices[10].pos = Vector2f(fw, 0.0f);
-	mVertices[10].tex = Vector2f(numStars, 1.0f);
-	mVertices[11] = mVertices[7];
+	mVertices[4] = { { 0.0f, 0.0f }, { 0.0f,              1.0f }, color };
+	mVertices[5] = { { 0.0f, h    }, { 0.0f,              0.0f }, color };
+	mVertices[6] = { { fw,   0.0f }, { numStars,          1.0f }, color };
+	mVertices[7] = { { fw,   h    }, { numStars,          0.0f }, color };
 }
 
 void RatingComponent::updateColors()
 {
-	Renderer::buildGLColorArray(mColors, mColorShift, 12);
+	const unsigned int color = Renderer::convertColor(mColorShift);
+
+	for(int i = 0; i < 8; ++i)
+		mVertices[i].col = color;
 }
 
 void RatingComponent::render(const Transform4x4f& parentTrans)
@@ -116,30 +106,11 @@ void RatingComponent::render(const Transform4x4f& parentTrans)
 	trans.round();
 	Renderer::setMatrix(trans);
 
-	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_COLOR_ARRAY);
-	
-	glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
-	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
-	glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
-	
 	mFilledTexture->bind();
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	Renderer::drawTriangleStrips(&mVertices[0], 4);
 
 	mUnfilledTexture->bind();
-	glDrawArrays(GL_TRIANGLES, 6, 6);
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
-	
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
+	Renderer::drawTriangleStrips(&mVertices[4], 4);
 
 	renderChildren(trans);
 }

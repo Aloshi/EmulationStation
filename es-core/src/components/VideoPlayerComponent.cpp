@@ -1,9 +1,9 @@
 #ifdef _RPI_
 #include "components/VideoPlayerComponent.h"
 
+#include "renderers/Renderer.h"
 #include "utils/StringUtil.h"
 #include "AudioManager.h"
-#include "Renderer.h"
 #include "Settings.h"
 #include <fcntl.h>
 #include <unistd.h>
@@ -115,7 +115,7 @@ void VideoPlayerComponent::startVideo()
 
 					case 1:
 					{
-						const int x1 = (int)(Renderer::getScreenOffsetY() + Renderer::getScreenHeight() - y - mSize.y());
+						const int x1 = (int)(Renderer::getScreenWidth() - Renderer::getScreenOffsetY() - y - mSize.y());
 						const int y1 = (int)(Renderer::getScreenOffsetX() + x);
 						const int x2 = (int)(x1 + mSize.y());
 						const int y2 = (int)(y1 + mSize.x());
@@ -125,8 +125,8 @@ void VideoPlayerComponent::startVideo()
 
 					case 2:
 					{
-						const int x1 = (int)(Renderer::getScreenOffsetX() + Renderer::getScreenWidth()  - x - mSize.x());
-						const int y1 = (int)(Renderer::getScreenOffsetY() + Renderer::getScreenHeight() - y - mSize.y());
+						const int x1 = (int)(Renderer::getScreenWidth()  - Renderer::getScreenOffsetX() - x - mSize.x());
+						const int y1 = (int)(Renderer::getScreenHeight() - Renderer::getScreenOffsetY() - y - mSize.y());
 						const int x2 = (int)(x1 + mSize.x());
 						const int y2 = (int)(y1 + mSize.y());
 						sprintf(buf1, "%d,%d,%d,%d", x1, y1, x2, y2);
@@ -136,7 +136,7 @@ void VideoPlayerComponent::startVideo()
 					case 3:
 					{
 						const int x1 = (int)(Renderer::getScreenOffsetY() + y);
-						const int y1 = (int)(Renderer::getScreenOffsetX() + Renderer::getScreenWidth() - x - mSize.x());
+						const int y1 = (int)(Renderer::getScreenHeight() - Renderer::getScreenOffsetX() - x - mSize.x());
 						const int x2 = (int)(x1 + mSize.y());
 						const int y2 = (int)(y1 + mSize.x());
 						sprintf(buf1, "%d,%d,%d,%d", x1, y1, x2, y2);

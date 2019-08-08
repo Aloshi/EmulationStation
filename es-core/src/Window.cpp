@@ -6,7 +6,6 @@
 #include "resources/TextureResource.h"
 #include "InputManager.h"
 #include "Log.h"
-#include "Renderer.h"
 #include "Scripting.h"
 #include <algorithm>
 #include <iomanip>

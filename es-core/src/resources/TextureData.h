@@ -2,8 +2,6 @@
 #ifndef ES_CORE_RESOURCES_TEXTURE_DATA_H
 #define ES_CORE_RESOURCES_TEXTURE_DATA_H
 
-#include "platform.h"
-#include GLHEADER
 #include <mutex>
 #include <string>
 
@@ -53,7 +51,7 @@ private:
 	std::mutex		mMutex;
 	bool			mTile;
 	std::string		mPath;
-	GLuint 			mTextureID;
+	unsigned int	mTextureID;
 	unsigned char*	mDataRGBA;
 	size_t			mWidth;
 	size_t			mHeight;

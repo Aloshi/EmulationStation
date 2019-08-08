@@ -3,7 +3,6 @@
 #include "resources/ResourceManager.h"
 #include "utils/FileSystemUtil.h"
 #include "PowerSaver.h"
-#include "Renderer.h"
 #include "ThemeData.h"
 #include "Window.h"
 #include <SDL_timer.h>

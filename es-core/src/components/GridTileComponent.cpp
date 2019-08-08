@@ -2,7 +2,6 @@
 
 #include "resources/TextureResource.h"
 #include "ThemeData.h"
-#include "Renderer.h"
 
 GridTileComponent::GridTileComponent(Window* window) : GuiComponent(window), mBackground(window)
 {

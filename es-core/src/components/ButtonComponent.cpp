@@ -2,7 +2,6 @@
 
 #include "resources/Font.h"
 #include "utils/StringUtil.h"
-#include "Renderer.h"
 
 ButtonComponent::ButtonComponent(Window* window, const std::string& text, const std::string& helpText, const std::function<void()>& func) : GuiComponent(window),
 	mBox(window, ":/button.png"),

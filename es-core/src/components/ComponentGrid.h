@@ -3,6 +3,7 @@
 #define ES_CORE_COMPONENTS_COMPONENT_GRID_H
 
 #include "math/Vector2i.h"
+#include "renderers/Renderer.h"
 #include "GuiComponent.h"
 
 namespace GridFlags
@@ -96,15 +97,7 @@ private:
 	float* mRowHeights;
 	float* mColWidths;
 	
-	struct Vert
-	{
-		Vert(float xi = 0, float yi = 0) : x(xi), y(yi) {};
-		float x;
-		float y;
-	};
-
-	std::vector<Vert> mLines;
-	std::vector<unsigned int> mLineColors;
+	std::vector<Renderer::Vertex> mLines;
 
 	// Update position & size
 	void updateCellComponent(const GridEntry& cell);

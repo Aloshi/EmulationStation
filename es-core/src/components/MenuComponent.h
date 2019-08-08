@@ -7,7 +7,6 @@
 #include "components/NinePatchComponent.h"
 #include "components/TextComponent.h"
 #include "utils/StringUtil.h"
-#include "Renderer.h"
 
 class ButtonComponent;
 class ImageComponent;
