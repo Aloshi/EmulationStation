@@ -46,7 +46,7 @@ void TextureDataManager::remove(const TextureResource* key)
 	}
 }
 
-std::shared_ptr<TextureData> TextureDataManager::get(const TextureResource* key)
+std::shared_ptr<TextureData> TextureDataManager::get(const TextureResource* key, bool enableLoading)
 {
 	// If it's in the cache then we want to remove it from it's current location and
 	// move it to the top
@@ -63,7 +63,8 @@ std::shared_ptr<TextureData> TextureDataManager::get(const TextureResource* key)
 		mTextureLookup[key] = mTextures.cbegin();
 
 		// Make sure it's loaded or queued for loading
-		load(tex);
+		if (enableLoading && !tex->isLoaded())
+			load(tex);
 	}
 	return tex;
 }
