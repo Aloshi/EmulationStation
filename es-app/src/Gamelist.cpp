@@ -217,11 +217,6 @@ void updateGamelist(SystemData* system)
 		{
 			const char* tag = ((*fit)->getType() == GAME) ? "game" : "folder";
 
-			// check if current file has metadata, if no, skip it as it wont be in the gamelist anyway.
-			if ((*fit)->metadata.isDefault()) {
-				continue;
-			}
-
 			// do not touch if it wasn't changed anyway
 			if (!(*fit)->metadata.wasChanged())
 				continue;

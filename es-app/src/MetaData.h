@@ -55,8 +55,6 @@ public:
 	int getInt(const std::string& key) const;
 	float getFloat(const std::string& key) const;
 
-	bool isDefault();
-
 	bool wasChanged() const;
 	void resetChangedFlag();
 
