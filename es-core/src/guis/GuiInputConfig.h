@@ -52,7 +52,7 @@ private:
 	int mHeldInputId;
 	bool mSkipAxis;
 
-	BusyComponent mBusyAnim;	
+	BusyComponent mBusyAnim;
 };
 
 #endif // ES_CORE_GUIS_GUI_INPUT_CONFIG_H

@@ -6,7 +6,7 @@
 
 class HttpReq;
 
-/* 
+/*
 	Used to asynchronously run an HTTP request.
 	Displays a simple animation on the UI to show the application hasn't frozen.  Can be canceled by the user pressing B.
 

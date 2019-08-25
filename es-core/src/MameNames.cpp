@@ -57,45 +57,45 @@ MameNames::MameNames()
 		NamePair namePair = { gameNode.child("mamename").text().get(), gameNode.child("realname").text().get() };
 		mNamePairs.push_back(namePair);
 	}
-	
+
 	// Read bios
 	xmlpath = ResourceManager::getInstance()->getResourcePath(":/mamebioses.xml");
- 	
+
 	if(!Utils::FileSystem::exists(xmlpath))
 		return;
- 	
+
 	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\"...";
- 	
+
 	result = doc.load_file(xmlpath.c_str());
- 	
+
 	if(!result)
 	{
 		LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
 		return;
 	}
- 	
+
 	for(pugi::xml_node biosNode = doc.child("bios"); biosNode; biosNode = biosNode.next_sibling("bios"))
 	{
 		std::string bios = biosNode.text().get();
 		mMameBioses.push_back(bios);
 	}
-	
+
 	// Read devices
 	xmlpath = ResourceManager::getInstance()->getResourcePath(":/mamedevices.xml");
- 	
+
 	if(!Utils::FileSystem::exists(xmlpath))
 		return;
- 	
+
 	LOG(LogInfo) << "Parsing XML file \"" << xmlpath << "\"...";
- 	
+
 	result = doc.load_file(xmlpath.c_str());
- 	
+
 	if(!result)
 	{
 		LOG(LogError) << "Error parsing XML file \"" << xmlpath << "\"!\n	" << result.description();
 		return;
 	}
- 	
+
 	for(pugi::xml_node deviceNode = doc.child("device"); deviceNode; deviceNode = deviceNode.next_sibling("device"))
 	{
 		std::string device = deviceNode.text().get();
@@ -137,7 +137,7 @@ const bool MameNames::isBios(const std::string& _biosName)
 const bool MameNames::isDevice(const std::string& _deviceName)
 {
 	return MameNames::find(mMameDevices, _deviceName);
-	
+
 } // isDevice
 
 const bool MameNames::find(std::vector<std::string> devices, const std::string& name)
@@ -156,5 +156,5 @@ const bool MameNames::find(std::vector<std::string> devices, const std::string& 
 	}
 
 	return false;
-	
+
 }

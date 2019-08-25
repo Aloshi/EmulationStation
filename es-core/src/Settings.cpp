@@ -33,7 +33,7 @@ std::vector<const char*> settings_dont_save {
 	{ "ScreenHeight" },
 	{ "ScreenOffsetX" },
 	{ "ScreenOffsetY" },
-	{ "ScreenRotate" }	
+	{ "ScreenRotate" }
 };
 
 Settings::Settings()

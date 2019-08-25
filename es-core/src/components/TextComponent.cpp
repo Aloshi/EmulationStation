@@ -4,7 +4,7 @@
 #include "Log.h"
 #include "Settings.h"
 
-TextComponent::TextComponent(Window* window) : GuiComponent(window), 
+TextComponent::TextComponent(Window* window) : GuiComponent(window),
 	mFont(Font::get(FONT_SIZE_MEDIUM)), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true),
 	mHorizontalAlignment(ALIGN_LEFT), mVerticalAlignment(ALIGN_CENTER), mLineSpacing(1.5f), mBgColor(0),
 	mRenderBackground(false)
@@ -12,7 +12,7 @@ TextComponent::TextComponent(Window* window) : GuiComponent(window),
 }
 
 TextComponent::TextComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
-	Vector3f pos, Vector2f size, unsigned int bgcolor) : GuiComponent(window), 
+	Vector3f pos, Vector2f size, unsigned int bgcolor) : GuiComponent(window),
 	mFont(NULL), mUppercase(false), mColor(0x000000FF), mAutoCalcExtent(true, true),
 	mHorizontalAlignment(align), mVerticalAlignment(ALIGN_CENTER), mLineSpacing(1.5f), mBgColor(0),
 	mRenderBackground(false)
@@ -255,7 +255,7 @@ void TextComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const st
 		return;
 
 	if (properties & COLOR && elem->has("color"))
-		setColor(elem->get<unsigned int>("color"));	
+		setColor(elem->get<unsigned int>("color"));
 
 	setRenderBackground(false);
 	if (properties & COLOR && elem->has("backgroundColor")) {

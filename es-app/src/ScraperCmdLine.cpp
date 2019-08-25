@@ -64,7 +64,7 @@ int run_scraper_cmdline()
 
 	std::string system_choice;
 	std::getline(std::cin, system_choice);
-	
+
 	if(system_choice == "y" || system_choice == "Y")
 	{
 		out << "Will scrape all platforms.\n";
@@ -92,7 +92,7 @@ int run_scraper_cmdline()
 			}
 
 			std::getline(std::cin, sys_name);
-			
+
 			if(sys_name.empty())
 				break;
 
@@ -209,7 +209,7 @@ int run_scraper_cmdline()
 
 					int choice = -1;
 					std::string choice_str;
-					
+
 					out << "Your choice: ";
 
 					std::getline(std::cin, choice_str);

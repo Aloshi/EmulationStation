@@ -50,7 +50,7 @@ GuiGamelistFilter::~GuiGamelistFilter()
 void GuiGamelistFilter::addFiltersToMenu()
 {
 	std::vector<FilterDataDecl> decls = mFilterIndex->getFilterDataDecls();
-	
+
 	int skip = 0;
 	if (!UIModeController::getInstance()->isUIModeFull())
 		skip = 1;

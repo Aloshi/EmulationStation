@@ -280,10 +280,10 @@ void FileFilterIndex::debugPrintIndexes()
 	}
 	for (auto x: favoritesIndexAllKeys) {
 		LOG(LogInfo) << "Favorites Index: " << x.first << ": " << x.second;
-	}	
+	}
 	for (auto x : hiddenIndexAllKeys) {
 		LOG(LogInfo) << "Hidden Index: " << x.first << ": " << x.second;
-	}	
+	}
 	for (auto x : kidGameIndexAllKeys) {
 		LOG(LogInfo) << "KidGames Index: " << x.first << ": " << x.second;
 	}

@@ -47,7 +47,7 @@ bool GuiSettings::input(InputConfig* config, Input input)
 			delete window->peekGui();
 		return true;
 	}
-	
+
 	return GuiComponent::input(config, input);
 }
 

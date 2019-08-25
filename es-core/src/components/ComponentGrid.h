@@ -35,7 +35,7 @@ public:
 
 	bool removeEntry(const std::shared_ptr<GuiComponent>& comp);
 
-	void setEntry(const std::shared_ptr<GuiComponent>& comp, const Vector2i& pos, bool canFocus, bool resize = true, 
+	void setEntry(const std::shared_ptr<GuiComponent>& comp, const Vector2i& pos, bool canFocus, bool resize = true,
 		const Vector2i& size = Vector2i(1, 1), unsigned int border = GridFlags::BORDER_NONE, GridFlags::UpdateType updateType = GridFlags::UPDATE_ALWAYS);
 
 	void textInput(const char* text) override;
@@ -83,8 +83,8 @@ private:
 		unsigned int border;
 
 		GridEntry(const Vector2i& p = Vector2i::Zero(), const Vector2i& d = Vector2i::Zero(),
-			const std::shared_ptr<GuiComponent>& cmp = nullptr, bool f = false, bool r = true, 
-			GridFlags::UpdateType u = GridFlags::UPDATE_ALWAYS, unsigned int b = GridFlags::BORDER_NONE) : 
+			const std::shared_ptr<GuiComponent>& cmp = nullptr, bool f = false, bool r = true,
+			GridFlags::UpdateType u = GridFlags::UPDATE_ALWAYS, unsigned int b = GridFlags::BORDER_NONE) :
 			pos(p), dim(d), component(cmp), canFocus(f), resize(r), updateType(u), border(b)
 		{};
 
@@ -96,7 +96,7 @@ private:
 
 	float* mRowHeights;
 	float* mColWidths;
-	
+
 	std::vector<Renderer::Vertex> mLines;
 
 	// Update position & size
@@ -105,7 +105,7 @@ private:
 
 	const GridEntry* getCellAt(int x, int y) const;
 	inline const GridEntry* getCellAt(const Vector2i& pos) const { return getCellAt(pos.x(), pos.y()); }
-	
+
 	Vector2i mGridSize;
 
 	std::vector<GridEntry> mCells;

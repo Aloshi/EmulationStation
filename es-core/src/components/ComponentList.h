@@ -20,10 +20,10 @@ struct ComponentListRow
 
 	// The input handler is called when the user enters any input while this row is highlighted (including up/down).
 	// Return false to let the list try to use it or true if the input has been consumed.
-	// If no input handler is supplied (input_handler == nullptr), the default behavior is to forward the input to 
+	// If no input handler is supplied (input_handler == nullptr), the default behavior is to forward the input to
 	// the rightmost element in the currently selected row.
 	std::function<bool(InputConfig*, Input)> input_handler;
-	
+
 	inline void addElement(const std::shared_ptr<GuiComponent>& component, bool resize_width, bool invert_when_selected = true)
 	{
 		elements.push_back(ComponentListElement(component, resize_width, invert_when_selected));
@@ -62,7 +62,7 @@ public:
 
 	bool moveCursor(int amt);
 	inline int getCursorId() const { return mCursor; }
-	
+
 	float getTotalRowHeight() const;
 	inline float getRowHeight(int row) const { return getRowHeight(mEntries.at(row).data); }
 
@@ -78,7 +78,7 @@ private:
 	void updateCameraOffset();
 	void updateElementPosition(const ComponentListRow& row);
 	void updateElementSize(const ComponentListRow& row);
-	
+
 	float getRowHeight(const ComponentListRow& row) const;
 
 	float mSelectorBarOffset;

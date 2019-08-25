@@ -15,7 +15,7 @@ ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGame
 	mHeaderText.setPosition(0, 0);
 	mHeaderText.setHorizontalAlignment(ALIGN_CENTER);
 	mHeaderText.setDefaultZIndex(50);
-	
+
 	mHeaderImage.setResize(0, mSize.y() * 0.185f);
 	mHeaderImage.setOrigin(0.5f, 0.0f);
 	mHeaderImage.setPosition(mSize.x() / 2, 0);

@@ -17,7 +17,7 @@ public:
 
 	// Monitor input for UI mode change, returns true (consumes input) when UI mode change is triggered.
 	bool listen(InputConfig* config, Input input);
-	
+
 	// Get the current Passphrase as a (unicode) formatted, comma-separated, string.
 	std::string getFormattedPassKeyStr();
 
@@ -33,13 +33,13 @@ private:
 	bool inputIsMatch(InputConfig * config, Input input);
 	bool isValidInput(InputConfig * config, Input input);
 	void logInput(InputConfig * config, Input input);
-	
+
 	// Return UI mode to 'FULL'
-	void unlockUIMode(); 
+	void unlockUIMode();
 
 	static UIModeController * sInstance;
 	const std::vector<std::string> mUIModes = { "Full", "Kiosk", "Kid" };
-	
+
 	// default passkeyseq = "uuddlrlrba", as defined in the setting 'UIMode_passkey'.
 	std::string mPassKeySequence;
 	int mPassKeyCounter;

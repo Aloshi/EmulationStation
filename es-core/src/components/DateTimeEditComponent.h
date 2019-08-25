@@ -46,7 +46,7 @@ private:
 
 	std::string getDisplayString(DisplayMode mode) const;
 	DisplayMode getCurrentDisplayMode() const;
-	
+
 	void updateTextCache();
 
 	Utils::Time::DateTime mTime;

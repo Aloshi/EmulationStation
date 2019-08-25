@@ -54,7 +54,7 @@ public:
 
 	template<typename T>
 	friend ThemeException& operator<<(ThemeException& e, T msg);
-	
+
 	inline void setFiles(const std::deque<std::string>& deque)
 	{
 		*this << "from theme \"" << deque.front() << "\"\n";
