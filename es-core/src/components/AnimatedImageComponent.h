@@ -23,7 +23,7 @@ class AnimatedImageComponent : public GuiComponent
 {
 public:
 	AnimatedImageComponent(Window* window);
-	
+
 	void load(const AnimationDef* def); // no reference to def is kept after loading is complete
 
 	void reset(); // set to frame 0

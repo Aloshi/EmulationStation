@@ -37,14 +37,14 @@ public:
 	using IList<TextListData, T>::stopScrolling;
 
 	TextListComponent(Window* window);
-	
+
 	bool input(InputConfig* config, Input input) override;
 	void update(int deltaTime) override;
 	void render(const Transform4x4f& parentTrans) override;
 	void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	void add(const std::string& name, const T& obj, unsigned int colorId);
-	
+
 	enum Alignment
 	{
 		ALIGN_LEFT,
@@ -63,7 +63,7 @@ public:
 			it->data.textCache.reset();
 	}
 
-	inline void setUppercase(bool /*uppercase*/) 
+	inline void setUppercase(bool /*uppercase*/)
 	{
 		mUppercase = true;
 		for(auto it = mEntries.begin(); it != mEntries.end(); it++)
@@ -106,7 +106,7 @@ private:
 };
 
 template <typename T>
-TextListComponent<T>::TextListComponent(Window* window) : 
+TextListComponent<T>::TextListComponent(Window* window) :
 	IList<TextListData, T>(window), mSelectorImage(window)
 {
 	mMarqueeOffset = 0;
@@ -131,7 +131,7 @@ template <typename T>
 void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 {
 	Transform4x4f trans = parentTrans * getTransform();
-	
+
 	std::shared_ptr<Font>& font = mFont;
 
 	if(size() == 0)
@@ -143,7 +143,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 
 	//number of entries that can fit on the screen simultaniously
 	int screenCount = (int)(mSize.y() / entrySize + 0.5f);
-	
+
 	if(size() >= screenCount)
 	{
 		startEntry = mCursor - screenCount/2;
@@ -174,7 +174,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 	// clip to inside margins
 	Vector3f dim(mSize.x(), mSize.y(), 0);
 	dim = trans * dim - trans.translation();
-	Renderer::pushClipRect(Vector2i((int)(trans.translation().x() + mHorizontalMargin), (int)trans.translation().y()), 
+	Renderer::pushClipRect(Vector2i((int)(trans.translation().x() + mHorizontalMargin), (int)trans.translation().y()),
 		Vector2i((int)(dim.x() - mHorizontalMargin*2), (int)dim.y()));
 
 	for(int i = startEntry; i < listCutoff; i++)
@@ -274,7 +274,7 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 				return true;
 			}
 		}else{
-			if(config->isMappedLike("down", input) || config->isMappedLike("up", input) || 
+			if(config->isMappedLike("down", input) || config->isMappedLike("up", input) ||
 				config->isMappedTo("pagedown", input) || config->isMappedTo("pageup", input))
 			{
 				stopScrolling();

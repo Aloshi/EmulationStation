@@ -298,12 +298,12 @@ void ThemeData::parseVariables(const pugi::xml_node& root)
 {
 	ThemeException error;
 	error.setFiles(mPaths);
-    
+
 	pugi::xml_node variables = root.child("variables");
 
 	if(!variables)
 		return;
-    
+
 	for(pugi::xml_node_iterator it = variables.begin(); it != variables.end(); ++it)
 	{
 		std::string key = it->name();
@@ -335,7 +335,7 @@ void ThemeData::parseViews(const pugi::xml_node& root)
 			viewKey = nameAttr.substr(prevOff, off - prevOff);
 			prevOff = nameAttr.find_first_not_of(delim, off);
 			off = nameAttr.find_first_of(delim, prevOff);
-			
+
 			if (std::find(sSupportedViews.cbegin(), sSupportedViews.cend(), viewKey) != sSupportedViews.cend())
 			{
 				ThemeView& view = mViews.insert(std::pair<std::string, ThemeView>(viewKey, ThemeView())).first->second;
@@ -368,8 +368,8 @@ void ThemeData::parseView(const pugi::xml_node& root, ThemeView& view)
 			std::string elemKey = nameAttr.substr(prevOff, off - prevOff);
 			prevOff = nameAttr.find_first_not_of(delim, off);
 			off = nameAttr.find_first_of(delim, prevOff);
-			
-			parseElement(node, elemTypeIt->second, 
+
+			parseElement(node, elemTypeIt->second,
 				view.elements.insert(std::pair<std::string, ThemeElement>(elemKey, ThemeElement())).first->second);
 
 			if(std::find(view.orderedKeys.cbegin(), view.orderedKeys.cend(), elemKey) == view.orderedKeys.cend())
@@ -386,7 +386,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 	element.type = root.name();
 	element.extra = root.attribute("extra").as_bool(false);
-	
+
 	for(pugi::xml_node node = root.first_child(); node; node = node.next_sibling())
 	{
 		auto typeIt = typeMap.find(node.name());
@@ -400,7 +400,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 		case NORMALIZED_PAIR:
 		{
 			size_t divider = str.find(' ');
-			if(divider == std::string::npos) 
+			if(divider == std::string::npos)
 				throw error << "invalid normalized pair (property \"" << node.name() << "\", value \"" << str.c_str() << "\")";
 
 			std::string first = str.substr(0, divider);
@@ -472,7 +472,7 @@ const ThemeData::ThemeElement* ThemeData::getElement(const std::string& view, co
 
 	if(elemIt->second.type != expectedType && !expectedType.empty())
 	{
-		LOG(LogWarning) << " requested mismatched theme type for [" << view << "." << element << "] - expected \"" 
+		LOG(LogWarning) << " requested mismatched theme type for [" << view << "." << element << "] - expected \""
 			<< expectedType << "\", got \"" << elemIt->second.type << "\"";
 		return NULL;
 	}
@@ -512,7 +512,7 @@ std::vector<GuiComponent*> ThemeData::makeExtras(const std::shared_ptr<ThemeData
 	auto viewIt = theme->mViews.find(view);
 	if(viewIt == theme->mViews.cend())
 		return comps;
-	
+
 	for(auto it = viewIt->second.orderedKeys.cbegin(); it != viewIt->second.orderedKeys.cend(); it++)
 	{
 		ThemeElement& elem = viewIt->second.elements.at(*it);
@@ -540,9 +540,9 @@ std::map<std::string, ThemeSet> ThemeData::getThemeSets()
 
 	static const size_t pathCount = 2;
 	std::string paths[pathCount] =
-	{ 
-		"/etc/emulationstation/themes", 
-		Utils::FileSystem::getHomePath() + "/.emulationstation/themes" 
+	{
+		"/etc/emulationstation/themes",
+		Utils::FileSystem::getHomePath() + "/.emulationstation/themes"
 	};
 
 	for(size_t i = 0; i < pathCount; i++)

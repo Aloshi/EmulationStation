@@ -23,7 +23,7 @@ private:
 	void acceptResult(const ScraperSearchResult& result);
 	void skip();
 	void doNextSearch();
-	
+
 	void finish();
 
 	unsigned int mTotalGames;

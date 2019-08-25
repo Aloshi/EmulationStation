@@ -205,7 +205,7 @@ namespace Utils
 			{
 				done = true;
 
-				for(int i = 0; i < sizeof(remove); i += 2)
+				for(size_t i = 0; i < sizeof(remove); i += 2)
 				{
 					end   = string.find_first_of(remove[i + 1]);
 					start = string.find_last_of( remove[i + 0], end);
@@ -280,14 +280,13 @@ namespace Utils
 
 		} // format
 
-		// Simple XOR scrambling of a string, with an accompanying key
-		std::string scramble(const std::string& _input, const std::string& key)
+		std::string scramble(const std::string& _input, const std::string& _key)
 		{
 			std::string buffer = _input;
 
-			for (size_t i = 0; i < _input.size(); ++i) 
-			{               
-				buffer[i] = _input[i] ^ key[i];
+			for(size_t i = 0; i < _input.size(); ++i)
+			{
+				buffer[i] = _input[i] ^ _key[i];
 			}
 
 			return buffer;

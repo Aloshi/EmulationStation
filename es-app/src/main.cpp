@@ -36,19 +36,19 @@ bool parseArgs(int argc, char* argv[])
 	// We need to process --home before any call to Settings::getInstance(), because settings are loaded from homepath
 	for(int i = 1; i < argc; i++)
 	{
-		if (strcmp(argv[i], "--home") == 0)
+		if(strcmp(argv[i], "--home") == 0)
 		{
-			if (i >= argc - 1)
+			if(i >= argc - 1)
 			{
 				std::cerr << "Invalid home path supplied.";
 				return false;
 			}
-			
+
 			Utils::FileSystem::setHomePath(argv[i + 1]);
 			break;
 		}
 	}
-	
+
 	for(int i = 1; i < argc; i++)
 	{
 		if(strcmp(argv[i], "--resolution") == 0)

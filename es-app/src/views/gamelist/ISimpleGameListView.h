@@ -17,7 +17,7 @@ public:
 	// NOTE: FILE_SORTED is only reported for the topmost FileData, where the sort started.
 	//       Since sorts are recursive, that FileData's children probably changed too.
 	virtual void onFileChanged(FileData* file, FileChangeType change);
-	
+
 	// Called whenever the theme changes.
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme);
 

@@ -39,6 +39,7 @@ namespace Utils
 		bool        isDirectory        (const std::string& _path);
 		bool        isSymlink          (const std::string& _path);
 		bool        isHidden           (const std::string& _path);
+
 	} // FileSystem::
 
 } // Utils::

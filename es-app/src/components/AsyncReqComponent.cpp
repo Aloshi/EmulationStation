@@ -3,11 +3,11 @@
 #include "renderers/Renderer.h"
 #include "HttpReq.h"
 
-AsyncReqComponent::AsyncReqComponent(Window* window, std::shared_ptr<HttpReq> req, std::function<void(std::shared_ptr<HttpReq>)> onSuccess, std::function<void()> onCancel) 
-	: GuiComponent(window), 
+AsyncReqComponent::AsyncReqComponent(Window* window, std::shared_ptr<HttpReq> req, std::function<void(std::shared_ptr<HttpReq>)> onSuccess, std::function<void()> onCancel)
+	: GuiComponent(window),
 	mSuccessFunc(onSuccess), mCancelFunc(onCancel), mTime(0), mRequest(req)
 {
-	
+
 }
 
 bool AsyncReqComponent::input(InputConfig* config, Input input)

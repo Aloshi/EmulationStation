@@ -122,7 +122,7 @@ void Sound::play()
 	{
 		//replay from start. rewind the sample to the beginning
 		mSamplePos = 0;
-		
+
 	}
 	else
 	{

@@ -95,7 +95,7 @@ namespace Utils
 				if(*f == '%')
 				{
 					++f;
-				
+
 					switch(*f++)
 					{
 						case 'Y': // The year [1970,xxxx]
@@ -200,7 +200,7 @@ namespace Utils
 				if(*f == '%')
 				{
 					++f;
-				
+
 					switch(*f++)
 					{
 						case 'Y': // The year, including the century (1900)

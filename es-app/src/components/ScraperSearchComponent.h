@@ -40,7 +40,7 @@ public:
 	void update(int deltaTime) override;
 	void render(const Transform4x4f& parentTrans) override;
 	std::vector<HelpPrompt> getHelpPrompts() override;
-	void onSizeChanged() override;	
+	void onSizeChanged() override;
 	void onFocusGained() override;
 	void onFocusLost() override;
 
@@ -84,7 +84,7 @@ private:
 
 		MetaDataPair(const std::shared_ptr<TextComponent>& f, const std::shared_ptr<GuiComponent>& s, bool r = true) : first(f), second(s), resize(r) {};
 	};
-	
+
 	std::vector<MetaDataPair> mMD_Pairs;
 
 	SearchType mSearchType;

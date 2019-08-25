@@ -96,7 +96,7 @@ void NinePatchComponent::render(const Transform4x4f& parentTrans)
 {
 	Transform4x4f trans = parentTrans * getTransform();
 	trans.round();
-	
+
 	if(mTexture && mVertices != NULL)
 	{
 		Renderer::setMatrix(trans);

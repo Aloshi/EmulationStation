@@ -195,7 +195,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 		std::string region = Utils::String::toLower(ssConfig.region).c_str();
 		std::string language = Utils::String::toLower(ssConfig.language).c_str();
 
-		// Name fallback: US, WOR(LD). ( Xpath: Data/jeu[0]/noms/nom[*] ). 
+		// Name fallback: US, WOR(LD). ( Xpath: Data/jeu[0]/noms/nom[*] ).
 		result.mdl.set("name", find_child_by_attribute_list(game.child("noms"), "nom", "region", { region, "wor", "us" , "ss", "eu", "jp" }).text().get());
 
 		// Description fallback language: EN, WOR(LD)
@@ -256,7 +256,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 
 			// Do an XPath query for media[type='$media_type'], then filter by region
 			// We need to do this because any child of 'medias' has the form
-			// <media type="..." region="..." format="..."> 
+			// <media type="..." region="..." format="...">
 			// and we need to find the right media for the region.
 			pugi::xpath_node_set results = media_list.select_nodes((static_cast<std::string>("media[@type='") + ssConfig.media_name + "']").c_str());
 
@@ -281,7 +281,7 @@ void ScreenScraperRequest::processGame(const pugi::xml_document& xmldoc, std::ve
 
 			if (art)
 			{
-				// Sending a 'softname' containing space will make the image URLs returned by the API also contain the space. 
+				// Sending a 'softname' containing space will make the image URLs returned by the API also contain the space.
 				//  Escape any spaces in the URL here
 				result.imageUrl = Utils::String::replace(art.text().get(), " ", "%20");
 

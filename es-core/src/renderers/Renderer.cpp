@@ -47,7 +47,7 @@ namespace Renderer
 #endif
 			// try creating SDL surface from logo data
 			SDL_Surface* logoSurface = SDL_CreateRGBSurfaceFrom((void*)rawData.data(), (int)width, (int)height, 32, (int)(width * 4), rmask, gmask, bmask, amask);
-			
+
 			if(logoSurface != nullptr)
 			{
 				SDL_SetWindowIcon(sdlWindow, logoSurface);

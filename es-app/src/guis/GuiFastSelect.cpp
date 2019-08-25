@@ -6,7 +6,7 @@
 
 static const std::string LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiComponent(window), 
+GuiFastSelect::GuiFastSelect(Window* window, IGameListView* gamelist) : GuiComponent(window),
 	mBackground(window), mSortText(window), mLetterText(window), mGameList(gamelist)
 {
 	setPosition(Renderer::getScreenWidth() * 0.2f, Renderer::getScreenHeight() * 0.2f);
