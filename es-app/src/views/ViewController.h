@@ -2,9 +2,9 @@
 #ifndef ES_APP_VIEWS_VIEW_CONTROLLER_H
 #define ES_APP_VIEWS_VIEW_CONTROLLER_H
 
+#include "renderers/Renderer.h"
 #include "FileData.h"
 #include "GuiComponent.h"
-#include "Renderer.h"
 #include <vector>
 
 class IGameListView;

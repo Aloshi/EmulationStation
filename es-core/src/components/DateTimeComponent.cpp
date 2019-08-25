@@ -2,7 +2,6 @@
 
 #include "utils/StringUtil.h"
 #include "Log.h"
-#include "Renderer.h"
 #include "Settings.h"
 
 DateTimeComponent::DateTimeComponent(Window* window) : TextComponent(window), mDisplayRelative(false)

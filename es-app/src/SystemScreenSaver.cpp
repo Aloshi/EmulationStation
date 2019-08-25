@@ -11,7 +11,6 @@
 #include "FileFilterIndex.h"
 #include "Log.h"
 #include "PowerSaver.h"
-#include "Renderer.h"
 #include "Sound.h"
 #include "SystemData.h"
 #include <unordered_map>

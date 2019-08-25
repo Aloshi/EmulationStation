@@ -2,7 +2,6 @@
 
 #include "resources/TextureResource.h"
 #include "Log.h"
-#include "Renderer.h"
 #include "Settings.h"
 #include "ThemeData.h"
 
@@ -268,51 +267,36 @@ void ImageComponent::updateVertices()
 
 	// we go through this mess to make sure everything is properly rounded
 	// if we just round vertices at the end, edge cases occur near sizes of 0.5
-	Vector2f size(Math::round(mSize.x()), Math::round(mSize.y()));
-	Vector2f topLeft(size * mTopLeftCrop);
-	Vector2f bottomRight(size * mBottomRightCrop);
+	const Vector2f     size        = { Math::round(mSize.x()), Math::round(mSize.y()) };
+	const Vector2f     topLeft     = { size * mTopLeftCrop };
+	const Vector2f     bottomRight = { size * mBottomRightCrop };
+	const float        px          = mTexture->isTiled() ? mSize.x() / getTextureSize().x() : 1.0f;
+	const float        py          = mTexture->isTiled() ? mSize.y() / getTextureSize().y() : 1.0f;
+	const unsigned int color       = Renderer::convertColor(mColorShift);
 
-	mVertices[0].pos = Vector2f(topLeft.x(), topLeft.y());
-	mVertices[1].pos = Vector2f(topLeft.x(), bottomRight.y());
-	mVertices[2].pos = Vector2f(bottomRight.x(), topLeft.y());
-
-	mVertices[3].pos = Vector2f(bottomRight.x(), topLeft.y());
-	mVertices[4].pos = Vector2f(topLeft.x(), bottomRight.y());
-	mVertices[5].pos = Vector2f(bottomRight.x(), bottomRight.y());
-
-	float px, py;
-	if(mTexture->isTiled())
-	{
-		px = mSize.x() / getTextureSize().x();
-		py = mSize.y() / getTextureSize().y();
-	}else{
-		px = 1;
-		py = 1;
-	}
-
-	mVertices[0].tex = Vector2f(mTopLeftCrop.x(), py - mTopLeftCrop.y());
-	mVertices[1].tex = Vector2f(mTopLeftCrop.x(), 1 - mBottomRightCrop.y());
-	mVertices[2].tex = Vector2f(px * mBottomRightCrop.x(), py - mTopLeftCrop.y());
-
-	mVertices[3].tex = Vector2f(px * mBottomRightCrop.x(), py - mTopLeftCrop.y());
-	mVertices[4].tex = Vector2f(mTopLeftCrop.x(), 1 - mBottomRightCrop.y());
-	mVertices[5].tex = Vector2f(px * mBottomRightCrop.x(), 1 - mBottomRightCrop.y());
+	mVertices[0] = { { topLeft.x(),     topLeft.y()     }, { mTopLeftCrop.x(),          py   - mTopLeftCrop.y()     }, color };
+	mVertices[1] = { { topLeft.x(),     bottomRight.y() }, { mTopLeftCrop.x(),          1.0f - mBottomRightCrop.y() }, color };
+	mVertices[2] = { { bottomRight.x(), topLeft.y()     }, { mBottomRightCrop.x() * px, py   - mTopLeftCrop.y()     }, color };
+	mVertices[3] = { { bottomRight.x(), bottomRight.y() }, { mBottomRightCrop.x() * px, 1.0f - mBottomRightCrop.y() }, color };
 
 	if(mFlipX)
 	{
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < 4; i++)
 			mVertices[i].tex[0] = px - mVertices[i].tex[0];
 	}
 	if(mFlipY)
 	{
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < 4; i++)
 			mVertices[i].tex[1] = py - mVertices[i].tex[1];
 	}
 }
 
 void ImageComponent::updateColors()
 {
-	Renderer::buildGLColorArray(mColors, mColorShift, 6);
+	const unsigned int color = Renderer::convertColor(mColorShift);
+
+	for(int i = 0; i < 4; ++i)
+		mVertices[i].col = color;
 }
 
 void ImageComponent::render(const Transform4x4f& parentTrans)
@@ -334,27 +318,8 @@ void ImageComponent::render(const Transform4x4f& parentTrans)
 			// texture is bound in this case but we want to handle a fade so it doesn't just 'jump' in
 			// when it finally loads
 			fadeIn(mTexture->bind());
+			Renderer::drawTriangleStrips(&mVertices[0], 4);
 
-			glEnable(GL_TEXTURE_2D);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-			glEnableClientState(GL_VERTEX_ARRAY);
-			glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			glEnableClientState(GL_COLOR_ARRAY);
-
-			glVertexPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].pos);
-			glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &mVertices[0].tex);
-			glColorPointer(4, GL_UNSIGNED_BYTE, 0, mColors);
-
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-
-			glDisableClientState(GL_VERTEX_ARRAY);
-			glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-			glDisableClientState(GL_COLOR_ARRAY);
-
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_BLEND);
 		}else{
 			LOG(LogError) << "Image texture is not initialized!";
 			mTexture.reset();

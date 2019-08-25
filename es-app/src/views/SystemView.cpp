@@ -5,7 +5,6 @@
 #include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "Log.h"
-#include "Renderer.h"
 #include "Settings.h"
 #include "SystemData.h"
 #include "Window.h"

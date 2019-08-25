@@ -49,6 +49,45 @@ const Vector3f Transform4x4f::operator*(const Vector3f& _other) const
 
 } // operator*
 
+Transform4x4f& Transform4x4f::orthoProjection(float _left, float _right, float _bottom, float _top, float _near, float _far)
+{
+	float*      tm       = (float*)this;
+	const float o[6]     = {  2 / (_right - _left),
+	                          2 / (_top   - _bottom),
+	                         -2 / (_far   - _near),
+	                         -(_right + _left)   / (_right - _left),
+	                         -(_top   + _bottom) / (_top   - _bottom),
+	                         -(_far   + _near)   / (_far   - _near) };
+	const float temp[12] = { tm[ 0] * o[0],
+	                         tm[ 1] * o[0],
+	                         tm[ 2] * o[0],
+	                         tm[ 4] * o[1],
+	                         tm[ 5] * o[1],
+	                         tm[ 6] * o[1],
+	                         tm[ 8] * o[2],
+	                         tm[ 9] * o[2],
+	                         tm[10] * o[2],
+	                         tm[ 0] * o[3] + tm[ 4] * o[4] + tm[ 8] * o[5] + tm[12],
+	                         tm[ 1] * o[3] + tm[ 5] * o[4] + tm[ 9] * o[5] + tm[13],
+	                         tm[ 2] * o[3] + tm[ 6] * o[4] + tm[10] * o[5] + tm[14] };
+
+	tm[ 0] = temp[ 0];
+	tm[ 1] = temp[ 1];
+	tm[ 2] = temp[ 2];
+	tm[ 4] = temp[ 3];
+	tm[ 5] = temp[ 4];
+	tm[ 6] = temp[ 5];
+	tm[ 8] = temp[ 6];
+	tm[ 9] = temp[ 7];
+	tm[10] = temp[ 8];
+	tm[12] = temp[ 9];
+	tm[13] = temp[10];
+	tm[14] = temp[11];
+
+	return *this;
+
+} // orthoProjection
+
 Transform4x4f& Transform4x4f::invert(const Transform4x4f& _other)
 {
 	float*       tm = (float*)this;
