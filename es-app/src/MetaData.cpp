@@ -140,17 +140,6 @@ float MetaDataList::getFloat(const std::string& key) const
 	return (float)atof(get(key).c_str());
 }
 
-bool MetaDataList::isDefault()
-{
-	const std::vector<MetaDataDecl>& mdd = getMDD();
-
-	for (unsigned int i = 1; i < mMap.size(); i++) {
-		if (mMap.at(mdd[i].key) != mdd[i].defaultValue) return false;
-	}
-
-	return true;
-}
-
 bool MetaDataList::wasChanged() const
 {
 	return mWasChanged;
