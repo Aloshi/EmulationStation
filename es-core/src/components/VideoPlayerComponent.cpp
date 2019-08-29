@@ -30,6 +30,9 @@ VideoPlayerComponent::~VideoPlayerComponent()
 
 void VideoPlayerComponent::render(const Transform4x4f& parentTrans)
 {
+	if (!isVisible())
+		return;
+
 	VideoComponent::render(parentTrans);
 
 	if (!mIsPlaying || mPlayerPid == -1)

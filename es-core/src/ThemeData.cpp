@@ -10,7 +10,7 @@
 #include <algorithm>
 
 std::vector<std::string> ThemeData::sSupportedViews { { "system" }, { "basic" }, { "detailed" }, { "grid" }, { "video" } };
-std::vector<std::string> ThemeData::sSupportedFeatures { { "video" }, { "carousel" }, { "z-index" } };
+std::vector<std::string> ThemeData::sSupportedFeatures { { "video" }, { "carousel" }, { "z-index" }, { "visible" } };
 
 std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> ThemeData::sElementMap {
 	{ "image", {
@@ -24,6 +24,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "default", PATH },
 		{ "tile", BOOLEAN },
 		{ "color", COLOR },
+		{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "imagegrid", {
 		{ "pos", NORMALIZED_PAIR },
@@ -56,6 +57,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "forceUppercase", BOOLEAN },
 		{ "lineSpacing", FLOAT },
 		{ "value", STRING },
+		{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "textlist", {
 		{ "pos", NORMALIZED_PAIR },
@@ -81,11 +83,13 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
 	 	{ "origin", NORMALIZED_PAIR },
-		{ "zIndex", FLOAT } } },
+	 	{ "visible", BOOLEAN },
+	 	{ "zIndex", FLOAT } } },
 	{ "ninepatch", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
 		{ "path", PATH },
+	 	{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "datetime", {
 		{ "pos", NORMALIZED_PAIR },
@@ -103,7 +107,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "value", STRING },
 		{ "format", STRING },
 		{ "displayRelative", BOOLEAN },
-		{ "zIndex", FLOAT } } },
+	 	{ "visible", BOOLEAN },
+	 	{ "zIndex", FLOAT } } },
 	{ "rating", {
 		{ "pos", NORMALIZED_PAIR },
 		{ "size", NORMALIZED_PAIR },
@@ -113,6 +118,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "color", COLOR },
 		{ "filledPath", PATH },
 		{ "unfilledPath", PATH },
+		{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "sound", {
 		{ "path", PATH } } },
@@ -132,7 +138,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "rotationOrigin", NORMALIZED_PAIR },
 		{ "default", PATH },
 		{ "delay", FLOAT },
-		{ "zIndex", FLOAT },
+	 	{ "visible", BOOLEAN },
+	 	{ "zIndex", FLOAT },
 		{ "showSnapshotNoVideo", BOOLEAN },
 		{ "showSnapshotDelay", BOOLEAN } } },
 	{ "carousel", {
