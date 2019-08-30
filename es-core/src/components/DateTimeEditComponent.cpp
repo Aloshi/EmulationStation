@@ -160,7 +160,7 @@ void DateTimeEditComponent::render(const Transform4x4f& parentTrans)
 			if(mEditIndex >= 0 && (unsigned int)mEditIndex < mCursorBoxes.size())
 			{
 				Renderer::drawRect((int)mCursorBoxes[mEditIndex][0], (int)mCursorBoxes[mEditIndex][1],
-					(int)mCursorBoxes[mEditIndex][2], (int)mCursorBoxes[mEditIndex][3], 0x00000022);
+					(int)mCursorBoxes[mEditIndex][2], (int)mCursorBoxes[mEditIndex][3], 0x00000022, 0x00000022);
 			}
 		}
 	}

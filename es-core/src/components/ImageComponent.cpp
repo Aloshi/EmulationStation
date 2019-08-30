@@ -20,8 +20,8 @@ Vector2f ImageComponent::getSize() const
 
 ImageComponent::ImageComponent(Window* window, bool forceLoad, bool dynamic) : GuiComponent(window),
 	mTargetIsMax(false), mTargetIsMin(false), mFlipX(false), mFlipY(false), mTargetSize(0, 0), mColorShift(0xFFFFFFFF),
-	mForceLoad(forceLoad), mDynamic(dynamic), mFadeOpacity(0), mFading(false), mRotateByTargetSize(false),
-	mTopLeftCrop(0.0f, 0.0f), mBottomRightCrop(1.0f, 1.0f)
+	mColorShiftEnd(0xFFFFFFFF), mColorGradientHorizontal(true), mForceLoad(forceLoad), mDynamic(dynamic),
+	mFadeOpacity(0), mFading(false), mRotateByTargetSize(false), mTopLeftCrop(0.0f, 0.0f), mBottomRightCrop(1.0f, 1.0f)
 {
 	updateColors();
 }
@@ -253,6 +253,21 @@ void ImageComponent::setColorShift(unsigned int color)
 	updateColors();
 }
 
+void ImageComponent::setColorShiftEnd(unsigned int color)
+{
+	mColorShiftEnd = color;
+	// Grab the opacity from the color shift because we may need to apply it if
+	// fading textures in
+	mOpacity = color & 0xff;
+	updateColors();
+}
+
+void ImageComponent::setColorGradientHorizontal(bool horizontal)
+{
+	mColorGradientHorizontal = horizontal;
+	updateColors();
+}
+
 void ImageComponent::setOpacity(unsigned char opacity)
 {
 	mOpacity = opacity;
@@ -273,10 +288,11 @@ void ImageComponent::updateVertices()
 	const float        px          = mTexture->isTiled() ? mSize.x() / getTextureSize().x() : 1.0f;
 	const float        py          = mTexture->isTiled() ? mSize.y() / getTextureSize().y() : 1.0f;
 	const unsigned int color       = Renderer::convertColor(mColorShift);
+	const unsigned int colorEnd    = Renderer::convertColor(mColorShiftEnd);
 
 	mVertices[0] = { { topLeft.x(),     topLeft.y()     }, { mTopLeftCrop.x(),          py   - mTopLeftCrop.y()     }, color };
-	mVertices[1] = { { topLeft.x(),     bottomRight.y() }, { mTopLeftCrop.x(),          1.0f - mBottomRightCrop.y() }, color };
-	mVertices[2] = { { bottomRight.x(), topLeft.y()     }, { mBottomRightCrop.x() * px, py   - mTopLeftCrop.y()     }, color };
+	mVertices[1] = { { topLeft.x(),     bottomRight.y() }, { mTopLeftCrop.x(),          1.0f - mBottomRightCrop.y() }, mColorGradientHorizontal ? colorEnd : color };
+	mVertices[2] = { { bottomRight.x(), topLeft.y()     }, { mBottomRightCrop.x() * px, py   - mTopLeftCrop.y()     }, mColorGradientHorizontal ? color : colorEnd };
 	mVertices[3] = { { bottomRight.x(), bottomRight.y() }, { mBottomRightCrop.x() * px, 1.0f - mBottomRightCrop.y() }, color };
 
 	if(mFlipX)
@@ -293,10 +309,13 @@ void ImageComponent::updateVertices()
 
 void ImageComponent::updateColors()
 {
-	const unsigned int color = Renderer::convertColor(mColorShift);
+	const unsigned int color    = Renderer::convertColor(mColorShift);
+	const unsigned int colorEnd = Renderer::convertColor(mColorShiftEnd);
 
-	for(int i = 0; i < 4; ++i)
-		mVertices[i].col = color;
+	mVertices[0].col = color;
+	mVertices[1].col = mColorGradientHorizontal ? colorEnd : color;
+	mVertices[2].col = mColorGradientHorizontal ? color : colorEnd;
+	mVertices[3].col = colorEnd;
 }
 
 void ImageComponent::render(const Transform4x4f& parentTrans)
@@ -311,8 +330,8 @@ void ImageComponent::render(const Transform4x4f& parentTrans)
 	{
 		if(Settings::getInstance()->getBool("DebugImage")) {
 			Vector2f targetSizePos = (mTargetSize - mSize) * mOrigin * -1;
-			Renderer::drawRect(targetSizePos.x(), targetSizePos.y(), mTargetSize.x(), mTargetSize.y(), 0xFF000033);
-			Renderer::drawRect(0.0f, 0.0f, mSize.x(), mSize.y(), 0x00000033);
+			Renderer::drawRect(targetSizePos.x(), targetSizePos.y(), mTargetSize.x(), mTargetSize.y(), 0xFF000033, 0xFF000033);
+			Renderer::drawRect(0.0f, 0.0f, mSize.x(), mSize.y(), 0x00000033, 0x00000033);
 		}
 		if(mTexture->isInitialized())
 		{
@@ -420,8 +439,20 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		setImage(elem->get<std::string>("path"), tile);
 	}
 
-	if(properties & COLOR && elem->has("color"))
-		setColorShift(elem->get<unsigned int>("color"));
+	if(properties & COLOR)
+	{
+		if(elem->has("color"))
+		{
+			setColorShift(elem->get<unsigned int>("color"));
+			setColorShiftEnd(elem->get<unsigned int>("color"));
+		}
+
+		if (elem->has("colorEnd"))
+			setColorShiftEnd(elem->get<unsigned int>("colorEnd"));
+
+		if (elem->has("gradientType"))
+			setColorGradientHorizontal(!(elem->get<std::string>("gradientType").compare("horizontal")));
+	}
 
 	if(properties & ThemeFlags::ROTATION) {
 		if(elem->has("rotation"))
