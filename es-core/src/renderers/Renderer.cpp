@@ -238,20 +238,18 @@ namespace Renderer
 
 	void drawRect(const float _x, const float _y, const float _w, const float _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
-		drawRect((int)Math::round(_x), (int)Math::round(_y), (int)Math::round(_w), (int)Math::round(_h), _color, _colorEnd, horizontalGradient, _srcBlendFactor, _dstBlendFactor);
-
-	} // drawRect
-
-	void drawRect(const int _x, const int _y, const int _w, const int _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
-	{
+		const float        x        = Math::round(_x);
+		const float        y        = Math::round(_y);
+		const float        w        = Math::round(_w);
+		const float        h        = Math::round(_h);
 		const unsigned int color    = convertColor(_color);
 		const unsigned int colorEnd = convertColor(_colorEnd);
 		Vertex             vertices[4];
 
-		vertices[0] = { { (float)(_x     ), (float)(_y     ) }, { 0.0f, 0.0f }, color };
-		vertices[1] = { { (float)(_x     ), (float)(_y + _h) }, { 0.0f, 0.0f }, horizontalGradient ? colorEnd : color };
-		vertices[2] = { { (float)(_x + _w), (float)(_y     ) }, { 0.0f, 0.0f }, horizontalGradient ? color : colorEnd };
-		vertices[3] = { { (float)(_x + _w), (float)(_y + _h) }, { 0.0f, 0.0f }, colorEnd };
+		vertices[0] = { { _x     ,_y      }, { 0.0f, 0.0f }, color };
+		vertices[1] = { { _x     ,_y + _h }, { 0.0f, 0.0f }, horizontalGradient ? colorEnd : color };
+		vertices[2] = { { _x + _w,_y      }, { 0.0f, 0.0f }, horizontalGradient ? color : colorEnd };
+		vertices[3] = { { _x + _w,_y + _h }, { 0.0f, 0.0f }, colorEnd };
 
 		bindTexture(0);
 		drawTriangleStrips(vertices, 4, _srcBlendFactor, _dstBlendFactor);

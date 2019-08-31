@@ -254,8 +254,6 @@ void TextEditComponent::render(const Transform4x4f& parentTrans)
 	Renderer::pushClipRect(clipPos, clipDim);
 
 	trans.translate(Vector3f(-mScrollOffset.x(), -mScrollOffset.y(), 0));
-	trans.round();
-
 	Renderer::setMatrix(trans);
 
 	if(mTextCache)

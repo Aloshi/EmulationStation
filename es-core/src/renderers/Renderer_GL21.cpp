@@ -1,6 +1,7 @@
 #if defined(USE_OPENGL_21)
 
 #include "renderers/Renderer.h"
+#include "math/Transform4x4f.h"
 #include "Log.h"
 #include "Settings.h"
 
@@ -193,8 +194,10 @@ namespace Renderer
 
 	void setMatrix(const Transform4x4f& _matrix)
 	{
+		Transform4x4f matrix = _matrix;
+		matrix.round();
 		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf((GLfloat*)&_matrix);
+		glLoadMatrixf((GLfloat*)&matrix);
 
 	} // setMatrix
 
