@@ -401,19 +401,13 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 {
 	using namespace ThemeFlags;
 
+	GuiComponent::applyTheme(theme, view, element, (properties ^ SIZE) | ((properties & (SIZE | POSITION)) ? ORIGIN : 0));
+
 	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "image");
 	if(!elem)
-	{
 		return;
-	}
 
 	Vector2f scale = getParent() ? getParent()->getSize() : Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-
-	if(properties & POSITION && elem->has("pos"))
-	{
-		Vector2f denormalized = elem->get<Vector2f>("pos") * scale;
-		setPosition(Vector3f(denormalized.x(), denormalized.y(), 0));
-	}
 
 	if(properties & ThemeFlags::SIZE)
 	{
@@ -425,13 +419,8 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 			setMinSize(elem->get<Vector2f>("minSize") * scale);
 	}
 
-	// position + size also implies origin
-	if((properties & ORIGIN || (properties & POSITION && properties & ThemeFlags::SIZE)) && elem->has("origin"))
-		setOrigin(elem->get<Vector2f>("origin"));
-
-	if(elem->has("default")) {
+	if(elem->has("default"))
 		setDefaultImage(elem->get<std::string>("default"));
-	}
 
 	if(properties & PATH && elem->has("path"))
 	{
@@ -453,23 +442,6 @@ void ImageComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		if (elem->has("gradientType"))
 			setColorGradientHorizontal(!(elem->get<std::string>("gradientType").compare("horizontal")));
 	}
-
-	if(properties & ThemeFlags::ROTATION) {
-		if(elem->has("rotation"))
-			setRotationDegrees(elem->get<float>("rotation"));
-		if(elem->has("rotationOrigin"))
-			setRotationOrigin(elem->get<Vector2f>("rotationOrigin"));
-	}
-
-	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
-		setZIndex(elem->get<float>("zIndex"));
-	else
-		setZIndex(getDefaultZIndex());
-
-	if(properties & ThemeFlags::VISIBLE && elem->has("visible"))
-		setVisible(elem->get<bool>("visible"));
-	else
-		setVisible(true);
 }
 
 std::vector<HelpPrompt> ImageComponent::getHelpPrompts()

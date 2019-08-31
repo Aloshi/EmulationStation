@@ -90,6 +90,11 @@ void VideoComponent::onOriginChanged()
 	// Update the embeded static image
 	mStaticImage.setOrigin(mOrigin);
 }
+void VideoComponent::onPositionChanged()
+{
+	// Update the embeded static image
+	mStaticImage.setPosition(mPosition);
+}
 
 void VideoComponent::onSizeChanged()
 {
@@ -175,20 +180,13 @@ void VideoComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 {
 	using namespace ThemeFlags;
 
+	GuiComponent::applyTheme(theme, view, element, (properties ^ SIZE) | ((properties & (SIZE | POSITION)) ? ORIGIN : 0));
+
 	const ThemeData::ThemeElement* elem = theme->getElement(view, element, "video");
 	if(!elem)
-	{
 		return;
-	}
 
 	Vector2f scale = getParent() ? getParent()->getSize() : Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-
-	if ((properties & POSITION) && elem->has("pos"))
-	{
-		Vector2f denormalized = elem->get<Vector2f>("pos") * scale;
-		setPosition(Vector3f(denormalized.x(), denormalized.y(), 0));
-		mStaticImage.setPosition(Vector3f(denormalized.x(), denormalized.y(), 0));
-	}
 
 	if(properties & ThemeFlags::SIZE)
 	{
@@ -197,10 +195,6 @@ void VideoComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 		else if(elem->has("maxSize"))
 			setMaxSize(elem->get<Vector2f>("maxSize") * scale);
 	}
-
-	// position + size also implies origin
-	if (((properties & ORIGIN) || ((properties & POSITION) && (properties & ThemeFlags::SIZE))) && elem->has("origin"))
-		setOrigin(elem->get<Vector2f>("origin"));
 
 	if(elem->has("default"))
 		mConfig.defaultVideoPath = elem->get<std::string>("default");
@@ -213,23 +207,6 @@ void VideoComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const s
 
 	if (elem->has("showSnapshotDelay"))
 		mConfig.showSnapshotDelay = elem->get<bool>("showSnapshotDelay");
-
-	if(properties & ThemeFlags::ROTATION) {
-		if(elem->has("rotation"))
-			setRotationDegrees(elem->get<float>("rotation"));
-		if(elem->has("rotationOrigin"))
-			setRotationOrigin(elem->get<Vector2f>("rotationOrigin"));
-	}
-
-	if(properties & ThemeFlags::Z_INDEX && elem->has("zIndex"))
-		setZIndex(elem->get<float>("zIndex"));
-	else
-		setZIndex(getDefaultZIndex());
-
-	if(properties & ThemeFlags::VISIBLE && elem->has("visible"))
-		setVisible(elem->get<bool>("visible"));
-	else
-		setVisible(true);
 }
 
 std::vector<HelpPrompt> VideoComponent::getHelpPrompts()
