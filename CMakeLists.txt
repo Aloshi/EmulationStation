@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 option(GLES "Set to ON if targeting Embedded OpenGL" ${GLES})
 option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
 option(RPI "Set to ON to enable the Raspberry PI video player (omxplayer)" ${RPI})
+option(CEC "Set to ON to enable CEC" ${CEC})
 
 project(emulationstation-all)
 
@@ -59,7 +60,11 @@ find_package(SDL2 REQUIRED)
 find_package(CURL REQUIRED)
 find_package(VLC REQUIRED)
 find_package(RapidJSON REQUIRED)
-find_package(libCEC)
+
+#add libCEC support
+if(CEC)
+    find_package(libCEC REQUIRED)
+endif()
 
 #add ALSA for Linux
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
