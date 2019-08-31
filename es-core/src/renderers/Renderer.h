@@ -67,7 +67,6 @@ namespace Renderer
 	void        pushClipRect    (const Vector2i& _pos, const Vector2i& _size);
 	void        popClipRect     ();
 	void        drawRect        (const float _x, const float _y, const float _w, const float _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient = false, const Blend::Factor _srcBlendFactor = Blend::SRC_ALPHA, const Blend::Factor _dstBlendFactor = Blend::ONE_MINUS_SRC_ALPHA);
-	void        drawRect        (const int   _x, const int   _y, const int   _w, const int   _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient = false, const Blend::Factor _srcBlendFactor = Blend::SRC_ALPHA, const Blend::Factor _dstBlendFactor = Blend::ONE_MINUS_SRC_ALPHA);
 
 	SDL_Window* getSDLWindow    ();
 	int         getWindowWidth  ();

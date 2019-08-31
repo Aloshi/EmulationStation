@@ -42,7 +42,7 @@ void AsyncReqComponent::render(const Transform4x4f& /*parentTrans*/)
 	Renderer::setMatrix(trans);
 
 	Vector3f point(Math::cosf(mTime * 0.01f) * 12, Math::sinf(mTime * 0.01f) * 12, 0);
-	Renderer::drawRect((int)point.x(), (int)point.y(), 8, 8, 0x0000FFFF, 0x0000FFFF);
+	Renderer::drawRect(point.x(), point.y(), 8.0f, 8.0f, 0x0000FFFF, 0x0000FFFF);
 }
 
 std::vector<HelpPrompt> AsyncReqComponent::getHelpPrompts()

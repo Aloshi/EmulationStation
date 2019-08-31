@@ -61,7 +61,6 @@ void SliderComponent::update(int deltaTime)
 void SliderComponent::render(const Transform4x4f& parentTrans)
 {
 	Transform4x4f trans = parentTrans * getTransform();
-	trans.round();
 	Renderer::setMatrix(trans);
 
 	// render suffix

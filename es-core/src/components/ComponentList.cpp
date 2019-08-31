@@ -161,7 +161,6 @@ void ComponentList::render(const Transform4x4f& parentTrans)
 		return;
 
 	Transform4x4f trans = parentTrans * getTransform();
-	trans.round();
 
 	// clip everything to be inside our bounds
 	Vector3f dim(mSize.x(), mSize.y(), 0);

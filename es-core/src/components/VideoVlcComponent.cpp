@@ -137,7 +137,6 @@ void VideoVlcComponent::render(const Transform4x4f& parentTrans)
 	VideoComponent::render(parentTrans);
 	Transform4x4f trans = parentTrans * getTransform();
 	GuiComponent::renderChildren(trans);
-
 	Renderer::setMatrix(trans);
 
 	if (mIsPlaying && mContext.valid)
@@ -150,6 +149,10 @@ void VideoVlcComponent::render(const Transform4x4f& parentTrans)
 		vertices[1] = { { 0.0f     , mSize.y() }, { 0.0f, 1.0f }, color };
 		vertices[2] = { { mSize.x(), 0.0f      }, { 1.0f, 0.0f }, color };
 		vertices[3] = { { mSize.x(), mSize.y() }, { 1.0f, 1.0f }, color };
+
+		// round vertices
+		for(int i = 0; i < 4; ++i)
+			vertices[i].pos.round();
 
 		// Build a texture for the video frame
 		mTexture->initFromPixels((unsigned char*)mContext.surface->pixels, mContext.surface->w, mContext.surface->h);
