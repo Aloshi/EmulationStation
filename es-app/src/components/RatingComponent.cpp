@@ -76,9 +76,9 @@ void RatingComponent::onSizeChanged()
 void RatingComponent::updateVertices()
 {
 	const float        numStars = NUM_RATING_STARS;
-	const float        h        = Math::round(getSize().y()); // is the same as a single star's width
-	const float        w        = Math::round(h * mValue * numStars);
-	const float        fw       = Math::round(h * numStars);
+	const float        h        = getSize().y(); // is the same as a single star's width
+	const float        w        = getSize().y() * mValue * numStars;
+	const float        fw       = getSize().y() * numStars;
 	const unsigned int color    = Renderer::convertColor(mColorShift);
 
 	mVertices[0] = { { 0.0f, 0.0f }, { 0.0f,              1.0f }, color };
@@ -90,6 +90,10 @@ void RatingComponent::updateVertices()
 	mVertices[5] = { { 0.0f, h    }, { 0.0f,              0.0f }, color };
 	mVertices[6] = { { fw,   0.0f }, { numStars,          1.0f }, color };
 	mVertices[7] = { { fw,   h    }, { numStars,          0.0f }, color };
+
+	// round vertices
+	for(int i = 0; i < 8; ++i)
+		mVertices[i].pos.round();
 }
 
 void RatingComponent::updateColors()

@@ -604,10 +604,14 @@ TextCache* Font::buildTextCache(const std::string& text, Vector2f offset, unsign
 		const Vector2i&    textureSize    = glyph->texture->textureSize;
 		const unsigned int convertedColor = Renderer::convertColor(color);
 
-		vertices[1] = { { Math::round(glyphStartX                                       ), Math::round(y - glyph->bearing.y()                                         ) }, { glyph->texPos.x(),                      glyph->texPos.y()                      }, convertedColor };
-		vertices[2] = { { Math::round(glyphStartX                                       ), Math::round(y - glyph->bearing.y() + (glyph->texSize.y() * textureSize.y())) }, { glyph->texPos.x(),                      glyph->texPos.y() + glyph->texSize.y() }, convertedColor };
-		vertices[3] = { { Math::round(glyphStartX + glyph->texSize.x() * textureSize.x()), Math::round(y - glyph->bearing.y()                                         ) }, { glyph->texPos.x() + glyph->texSize.x(), glyph->texPos.y()                      }, convertedColor };
-		vertices[4] = { { Math::round(glyphStartX + glyph->texSize.x() * textureSize.x()), Math::round(y - glyph->bearing.y() + (glyph->texSize.y() * textureSize.y())) }, { glyph->texPos.x() + glyph->texSize.x(), glyph->texPos.y() + glyph->texSize.y() }, convertedColor };
+		vertices[1] = { { glyphStartX                                       , y - glyph->bearing.y()                                          }, { glyph->texPos.x(),                      glyph->texPos.y()                      }, convertedColor };
+		vertices[2] = { { glyphStartX                                       , y - glyph->bearing.y() + (glyph->texSize.y() * textureSize.y()) }, { glyph->texPos.x(),                      glyph->texPos.y() + glyph->texSize.y() }, convertedColor };
+		vertices[3] = { { glyphStartX + glyph->texSize.x() * textureSize.x(), y - glyph->bearing.y()                                          }, { glyph->texPos.x() + glyph->texSize.x(), glyph->texPos.y()                      }, convertedColor };
+		vertices[4] = { { glyphStartX + glyph->texSize.x() * textureSize.x(), y - glyph->bearing.y() + (glyph->texSize.y() * textureSize.y()) }, { glyph->texPos.x() + glyph->texSize.x(), glyph->texPos.y() + glyph->texSize.y() }, convertedColor };
+
+		// round vertices
+		for(int i = 1; i < 5; ++i)
+			vertices[i].pos.round();
 
 		// make duplicates of first and last vertex so this can be rendered as a triangle strip
 		vertices[0] = vertices[1];

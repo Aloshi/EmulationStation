@@ -56,10 +56,10 @@ void NinePatchComponent::buildVertices()
 	const float imgPosY[3]  = { 0, imgSizeY[0], imgSizeY[0] + imgSizeY[1]};
 
 	//the "1 +" in posY and "-" in sizeY is to deal with texture coordinates having a bottom left corner origin vs. verticies having a top left origin
-	const float texSizeX[3]       = {  mCornerSize.x() / texSize.x(),  (texSize.x() - mCornerSize.x() * 2) / texSize.x(),  mCornerSize.x() / texSize.x() };
-	const float texSizeY[3]       = { -mCornerSize.y() / texSize.y(), -(texSize.y() - mCornerSize.y() * 2) / texSize.y(), -mCornerSize.y() / texSize.y() };
-	const float texPosX[3]        = {  0,     texSizeX[0],     texSizeX[0] + texSizeX[1] };
-	const float texPosY[3]        = {  1, 1 + texSizeY[0], 1 + texSizeY[0] + texSizeY[1] };
+	const float texSizeX[3] = {  mCornerSize.x() / texSize.x(),  (texSize.x() - mCornerSize.x() * 2) / texSize.x(),  mCornerSize.x() / texSize.x() };
+	const float texSizeY[3] = { -mCornerSize.y() / texSize.y(), -(texSize.y() - mCornerSize.y() * 2) / texSize.y(), -mCornerSize.y() / texSize.y() };
+	const float texPosX[3]  = {  0,     texSizeX[0],     texSizeX[0] + texSizeX[1] };
+	const float texPosY[3]  = {  1, 1 + texSizeY[0], 1 + texSizeY[0] + texSizeY[1] };
 
 	int v = 0;
 	for(int slice = 0; slice < 9; slice++)
@@ -76,17 +76,15 @@ void NinePatchComponent::buildVertices()
 		mVertices[v + 3] = { { imgPos.x() + imgSize.x(), imgPos.y()               }, { texPos.x() + texSize.x(), texPos.y()               }, 0 };
 		mVertices[v + 4] = { { imgPos.x() + imgSize.x(), imgPos.y() + imgSize.y() }, { texPos.x() + texSize.x(), texPos.y() + texSize.y() }, 0 };
 
+		// round vertices
+		for(int i = 1; i < 5; ++i)
+			mVertices[v + i].pos.round();
+
 		// make duplicates of first and last vertex so this can be rendered as a triangle strip
 		mVertices[v + 0] = mVertices[v + 1];
 		mVertices[v + 5] = mVertices[v + 4];
 
 		v += 6;
-	}
-
-	// round vertices
-	for(int i = 0; i < 6*9; i++)
-	{
-		mVertices[i].pos.round();
 	}
 
 	updateColors();
