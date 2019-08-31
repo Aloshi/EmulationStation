@@ -41,16 +41,12 @@ std::string RatingComponent::getValue() const
 void RatingComponent::setOpacity(unsigned char opacity)
 {
 	mOpacity = opacity;
-	mColorShift = (mColorShift >> 8 << 8) | mOpacity;
 	updateColors();
 }
 
 void RatingComponent::setColorShift(unsigned int color)
 {
 	mColorShift = color;
-	// Grab the opacity from the color shift because we may need to apply it if
-	// fading textures in
-	mOpacity = color & 0xff;
 	updateColors();
 }
 
@@ -75,21 +71,22 @@ void RatingComponent::onSizeChanged()
 
 void RatingComponent::updateVertices()
 {
-	const float        numStars = NUM_RATING_STARS;
-	const float        h        = getSize().y(); // is the same as a single star's width
-	const float        w        = getSize().y() * mValue * numStars;
-	const float        fw       = getSize().y() * numStars;
-	const unsigned int color    = Renderer::convertColor(mColorShift);
+	const float numStars = NUM_RATING_STARS;
+	const float h        = getSize().y(); // is the same as a single star's width
+	const float w        = getSize().y() * mValue * numStars;
+	const float fw       = getSize().y() * numStars;
 
-	mVertices[0] = { { 0.0f, 0.0f }, { 0.0f,              1.0f }, color };
-	mVertices[1] = { { 0.0f, h    }, { 0.0f,              0.0f }, color };
-	mVertices[2] = { { w,    0.0f }, { mValue * numStars, 1.0f }, color };
-	mVertices[3] = { { w,    h    }, { mValue * numStars, 0.0f }, color };
+	mVertices[0] = { { 0.0f, 0.0f }, { 0.0f,              1.0f }, 0 };
+	mVertices[1] = { { 0.0f, h    }, { 0.0f,              0.0f }, 0 };
+	mVertices[2] = { { w,    0.0f }, { mValue * numStars, 1.0f }, 0 };
+	mVertices[3] = { { w,    h    }, { mValue * numStars, 0.0f }, 0 };
 
-	mVertices[4] = { { 0.0f, 0.0f }, { 0.0f,              1.0f }, color };
-	mVertices[5] = { { 0.0f, h    }, { 0.0f,              0.0f }, color };
-	mVertices[6] = { { fw,   0.0f }, { numStars,          1.0f }, color };
-	mVertices[7] = { { fw,   h    }, { numStars,          0.0f }, color };
+	mVertices[4] = { { 0.0f, 0.0f }, { 0.0f,              1.0f }, 0 };
+	mVertices[5] = { { 0.0f, h    }, { 0.0f,              0.0f }, 0 };
+	mVertices[6] = { { fw,   0.0f }, { numStars,          1.0f }, 0 };
+	mVertices[7] = { { fw,   h    }, { numStars,          0.0f }, 0 };
+
+	updateColors();
 
 	// round vertices
 	for(int i = 0; i < 8; ++i)
@@ -98,7 +95,8 @@ void RatingComponent::updateVertices()
 
 void RatingComponent::updateColors()
 {
-	const unsigned int color = Renderer::convertColor(mColorShift);
+	const float        opacity = mOpacity / 255.0;
+	const unsigned int color   = Renderer::convertColor(mColorShift & 0xFFFFFF00 | (unsigned char)((mColorShift & 0xFF) * opacity));
 
 	for(int i = 0; i < 8; ++i)
 		mVertices[i].col = color;
