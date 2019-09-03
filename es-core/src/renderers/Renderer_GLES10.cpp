@@ -1,6 +1,7 @@
 #if defined(USE_OPENGLES_10)
 
 #include "renderers/Renderer.h"
+#include "math/Transform4x4f.h"
 #include "Log.h"
 #include "Settings.h"
 
