@@ -352,16 +352,28 @@ bool GuiInputConfig::filterTrigger(Input input, InputConfig* config, int inputId
 	  ) && InputManager::getInstance()->getAxisCountByDevice(config->getDeviceId()) == 6)
 	{
 		// digital triggers are unwanted
-		if (input.type == TYPE_BUTTON && (input.id == 6 || input.id == 7))
+		if(input.type == TYPE_BUTTON && (input.id == 6 || input.id == 7))
+		{
+			mHoldingInput = false;
 			return true;
+		}
 	}
 
 	// ignore negative pole for axes 2/5 only when triggers are being configured
-	if((mSkipAxis || strstr(GUI_INPUT_CONFIG_LIST[inputId].name, "Trigger") != NULL) \
-	  && input.type == TYPE_AXIS && (input.id == 2 || input.id == 5) && input.value < 0)
+	if(input.type == TYPE_AXIS && (input.id == 2 || input.id == 5))
 	{
-		mSkipAxis = true;
-		return true;
+		if(strstr(GUI_INPUT_CONFIG_LIST[inputId].name, "Trigger") != NULL)
+		{
+			if(input.value == 1)
+				mSkipAxis = true;
+			else if(input.value == -1)
+				return true;
+		}
+		else if(mSkipAxis)
+		{
+			mSkipAxis = false;
+			return true;
+		}
 	}
 #else
 	(void)input;
