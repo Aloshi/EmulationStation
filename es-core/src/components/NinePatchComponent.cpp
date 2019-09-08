@@ -29,7 +29,7 @@ void NinePatchComponent::updateColors()
 		mVertices[i].col = edgeColor;
 
 	for(int i = 6*4; i < 6; ++i)
-		mVertices[(6*4)+i].col = mCenterColor;
+		mVertices[(6*4)+i].col = centerColor;
 }
 
 void NinePatchComponent::buildVertices()
