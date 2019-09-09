@@ -23,6 +23,7 @@ FileData::FileData(FileType type, const std::string& path, SystemEnvironmentData
 	if(metadata.get("name").empty())
 		metadata.set("name", getDisplayName());
 	mSystemName = system->getName();
+	metadata.resetChangedFlag();
 }
 
 FileData::~FileData()
