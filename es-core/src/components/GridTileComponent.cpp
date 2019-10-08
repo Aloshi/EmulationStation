@@ -60,36 +60,36 @@ void GridTileComponent::update(int deltaTime)
 	resize();
 }
 
-void applyThemeToProperties(const ThemeData::ThemeElement* elem, GridTileProperties properties)
+void applyThemeToProperties(const ThemeData::ThemeElement* elem, GridTileProperties* properties)
 {
 	Vector2f screen = Vector2f((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 
 	if (elem->has("size"))
-		properties.mSize = elem->get<Vector2f>("size") * screen;
+		properties->mSize = elem->get<Vector2f>("size") * screen;
 
 	if (elem->has("padding"))
-		properties.mPadding = elem->get<Vector2f>("padding");
+		properties->mPadding = elem->get<Vector2f>("padding");
 
 	if (elem->has("imageColor"))
-		properties.mImageColor = elem->get<unsigned int>("imageColor");
+		properties->mImageColor = elem->get<unsigned int>("imageColor");
 
 	if (elem->has("backgroundImage"))
-		properties.mBackgroundImage = elem->get<std::string>("backgroundImage");
+		properties->mBackgroundImage = elem->get<std::string>("backgroundImage");
 
 	if (elem->has("backgroundCornerSize"))
-		properties.mBackgroundCornerSize = elem->get<Vector2f>("backgroundCornerSize");
+		properties->mBackgroundCornerSize = elem->get<Vector2f>("backgroundCornerSize");
 
 	if (elem->has("backgroundColor"))
 	{
-		properties.mBackgroundCenterColor = elem->get<unsigned int>("backgroundColor");
-		properties.mBackgroundEdgeColor = elem->get<unsigned int>("backgroundColor");
+		properties->mBackgroundCenterColor = elem->get<unsigned int>("backgroundColor");
+		properties->mBackgroundEdgeColor = elem->get<unsigned int>("backgroundColor");
 	}
 
 	if (elem->has("backgroundCenterColor"))
-		properties.mBackgroundCenterColor = elem->get<unsigned int>("backgroundCenterColor");
+		properties->mBackgroundCenterColor = elem->get<unsigned int>("backgroundCenterColor");
 
 	if (elem->has("backgroundEdgeColor"))
-		properties.mBackgroundEdgeColor = elem->get<unsigned int>("backgroundEdgeColor");
+		properties->mBackgroundEdgeColor = elem->get<unsigned int>("backgroundEdgeColor");
 }
 
 void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& /*element*/, unsigned int /*properties*/)
@@ -99,7 +99,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, cons
 	// Apply theme to the default gridtile
 	const ThemeData::ThemeElement* elem = theme->getElement(view, "default", "gridtile");
 	if (elem)
-		applyThemeToProperties(elem, mDefaultProperties);
+		applyThemeToProperties(elem, &mDefaultProperties);
 
 	// Apply theme to the selected gridtile
 	// NOTE that some of the default gridtile properties influence on the selected gridtile properties
@@ -112,7 +112,7 @@ void GridTileComponent::applyTheme(const std::shared_ptr<ThemeData>& theme, cons
 	mSelectedProperties.mBackgroundCornerSize = mDefaultProperties.mBackgroundCornerSize;
 
 	if (elem)
-		applyThemeToProperties(elem, mSelectedProperties);
+		applyThemeToProperties(elem, &mSelectedProperties);
 }
 
 // Made this a static function because the ImageGridComponent need to know the default tile size
