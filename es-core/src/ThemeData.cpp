@@ -42,6 +42,7 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "scrollDirection", STRING },
 		{ "centerSelection", BOOLEAN },
 		{ "scrollLoop", BOOLEAN },
+		{ "animate", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "gridtile", {
 		{ "size", NORMALIZED_PAIR },
