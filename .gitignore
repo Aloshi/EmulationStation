@@ -29,3 +29,10 @@ CMakeCache.txt
 CMakeFiles
 cmake_install.cmake
 Makefile
+CPackConfig.cmake
+CPackSourceConfig.cmake
+
+# Editors
+.vscode/
+*.sublime-project
+*.sublime-workspace
