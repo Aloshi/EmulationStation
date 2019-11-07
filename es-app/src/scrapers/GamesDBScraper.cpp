@@ -68,13 +68,13 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 	(ZX_SPECTRUM, "Sinclair ZX Spectrum");
 
 std::string TheGamesDBRequest::APIkey = "";
-std::string TheGamesDBRequest::Path = "https://api.thegamesdb.net/Games/ByGameName";
+std::string TheGamesDBRequest::URL = "https://api.thegamesdb.net/"; // the default is the actual, true location.
 std::unordered_map<unsigned int, std::string> TheGamesDBRequest::Genres = {};
 std::unordered_map<unsigned int, std::string> TheGamesDBRequest::Developers = {};
 std::unordered_map<unsigned int, std::string> TheGamesDBRequest::Publishers = {};
 
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, std::vector<ScraperSearchResult>& results) {
-	std::string path = TheGamesDBRequest::Path + "?include=boxart&fields=players,genres,overview,developers,publishers&apikey=";
+	std::string path = TheGamesDBRequest::URL + "Games/ByGameName?include=boxart&fields=players,genres,overview,developers,publishers&apikey=";
 
 	std::string cleanName = params.nameOverride;
 	if (cleanName.empty()) {
@@ -83,6 +83,8 @@ void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std
 
 	path += TheGamesDBRequest::APIkey;
 	path += "&name=" + HttpReq::urlEncode(cleanName);
+
+	LOG(LogInfo) << "Path: " << path;
 
 	// Platforms currently need to be referenced by an integral, unique identifier.
 	if (params.system->getPlatformIds().empty()) {
@@ -233,7 +235,7 @@ std::string TheGamesDBRequest::getGenreByID(unsigned int id) {
 			return "";
 		}
 
-		std::string url = "https://api.thegamesdb.net/Genres?apikey=";
+		std::string url = TheGamesDBRequest::URL + "Genres?apikey=";
 		url += TheGamesDBRequest::APIkey;
 		auto err = simpleSetup(curl, url);
 		if (err != CURLE_OK) {
@@ -293,7 +295,7 @@ std::string TheGamesDBRequest::getDeveloperByID(unsigned int id) {
 			return "";
 		}
 
-		std::string url = "https://api.thegamesdb.net/Developers?apikey=";
+		std::string url = TheGamesDBRequest::URL + "Developers?apikey=";
 		url += TheGamesDBRequest::APIkey;
 		auto err = simpleSetup(curl, url);
 		if (err != CURLE_OK) {
@@ -354,7 +356,7 @@ std::string TheGamesDBRequest::getPublisherByID(unsigned int id) {
 			return "";
 		}
 
-		std::string url = "https://api.thegamesdb.net/Publishers?apikey=";
+		std::string url = TheGamesDBRequest::URL + "Publishers?apikey=";
 		url += TheGamesDBRequest::APIkey;
 		auto err = simpleSetup(curl, url);
 		if (err != CURLE_OK) {

@@ -10,7 +10,7 @@ class TheGamesDBRequest : public ScraperHttpRequest
 {
 public:
 	static std::string APIkey;
-	static std::string Path;
+	static std::string URL;
 	static std::unordered_map<unsigned int, std::string> Genres;
 	static std::unordered_map<unsigned int, std::string> Developers;
 	static std::unordered_map<unsigned int, std::string> Publishers;

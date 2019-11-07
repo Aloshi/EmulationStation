@@ -329,7 +329,7 @@ bool SystemData::loadConfig()
 		LOG(LogInfo) << "loading scraper settings";
 		for (pugi::xml_node scraper = scrapers.child("scraper"); scraper; scraper=scrapers.next_sibling("scraper")) {
 			std::string name = scraper.child("name").text().get();
-			std::string APIPath = scraper.child("path").text().get();
+			std::string URL = scraper.child("url").text().get();
 
 			std::string APIKey;
 			pugi::xml_node keyNode = scraper.child("APIKey");
@@ -337,13 +337,13 @@ bool SystemData::loadConfig()
 				APIKey = keyNode.text().get();
 				if (name == "gamesdb") {
 					TheGamesDBRequest::APIkey = APIKey;
-					TheGamesDBRequest::Path = APIPath;
-					LOG(LogInfo) << "Set TheGamesDB API key: '" << APIKey << "'.";
+					TheGamesDBRequest::URL = URL;
+					LOG(LogInfo) << "Set TheGamesDB API key: '" << APIKey << "'\n\tURL: "<< TheGamesDBRequest::URL << ".";
 				} else {
 					LOG(LogError) << "Unkown scraper: '" << name << "' tried to set API Key";
 				}
 			} else {
-				LOG(LogInfo) << "API '" << name << "' (path: '" << APIPath << "') has no API Key!";
+				LOG(LogInfo) << "API '" << name << "' (path: '" << URL << "') has no API Key!";
 			}
 		}
 	} else {
