@@ -237,8 +237,8 @@ namespace Utils
 			while((offset = path.find("//")) != std::string::npos)
 				path.erase(offset, 1);
 
-			// remove trailing '/'
-			while(path.length() && ((offset = path.find_last_of('/')) == (path.length() - 1)))
+			// remove trailing '/' when the path is more than a simple '/'
+			while(path.length() > 1 && ((offset = path.find_last_of('/')) == (path.length() - 1)))
 				path.erase(offset, 1);
 
 			// return generic path
