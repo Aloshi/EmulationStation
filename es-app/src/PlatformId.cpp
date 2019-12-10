@@ -36,6 +36,7 @@ namespace PlatformIds
 		"nds", // nintendo DS
 		"fds", // Famicom Disk System
 		"nes", // nintendo entertainment system
+		"channelf", // Fairchild ChannelF
 		"gb", // game boy
 		"gba", // game boy advance
 		"gbc", // game boy color
@@ -44,6 +45,7 @@ namespace PlatformIds
 		"wiiu",
 		"virtualboy",
 		"gameandwatch",
+		"openbor",
 		"pc",
 		"sega32x",
 		"segacd",
@@ -63,11 +65,13 @@ namespace PlatformIds
 		"snes", // super nintendo entertainment system
 		"scummvm",
 		"x6800",
+		"solarus",
 		"pcengine", // (aka turbografx-16) HuCards only
 		"pcenginecd", // (aka turbografx-16) CD-ROMs only
 		"wonderswan",
 		"wonderswancolor",
 		"zxspectrum",
+		"zx81",
 		"videopac",
 		"vectrex",
 		"trs-80",
