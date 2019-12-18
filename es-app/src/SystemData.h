@@ -68,6 +68,7 @@ public:
 	void loadTheme();
 
 	FileFilterIndex* getIndex() { return mFilterIndex; };
+	void onMetaDataSavePoint();
 
 private:
 	bool mIsCollectionSystem;
@@ -81,6 +82,7 @@ private:
 	void populateFolder(FileData* folder);
 	void indexAllGameFilters(const FileData* folder);
 	void setIsGameSystemStatus();
+	void writeMetaData();
 
 	FileFilterIndex* mFilterIndex;
 

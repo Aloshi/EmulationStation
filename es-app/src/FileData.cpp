@@ -310,6 +310,8 @@ void FileData::launchGame(Window* window)
 	//update last played time
 	gameToUpdate->metadata.set("lastplayed", Utils::Time::DateTime(Utils::Time::now()));
 	CollectionSystemManager::get()->refreshCollectionSystems(gameToUpdate);
+
+	gameToUpdate->mSystem->onMetaDataSavePoint();
 }
 
 CollectionFileData::CollectionFileData(FileData* file, SystemData* system)

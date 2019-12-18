@@ -1,5 +1,7 @@
 #include "Gamelist.h"
 
+#include <chrono>
+
 #include "utils/FileSystemUtil.h"
 #include "FileData.h"
 #include "FileFilterIndex.h"
@@ -250,6 +252,8 @@ void updateGamelist(SystemData* system)
 		//now write the file
 
 		if (numUpdated > 0) {
+			const auto startTs = std::chrono::system_clock::now();
+
 			//make sure the folders leading up to this path exist (or the write will fail)
 			std::string xmlWritePath(system->getGamelistPath(true));
 			Utils::FileSystem::createDirectory(Utils::FileSystem::getParent(xmlWritePath));
@@ -259,6 +263,9 @@ void updateGamelist(SystemData* system)
 			if (!doc.save_file(xmlWritePath.c_str())) {
 				LOG(LogError) << "Error saving gamelist.xml to \"" << xmlWritePath << "\" (for system " << system->getName() << ")!";
 			}
+
+			const auto endTs = std::chrono::system_clock::now();
+			LOG(LogInfo) << "Saved gamelist.xml for system \"" << system->getName() << "\" in " << std::chrono::duration_cast<std::chrono::milliseconds>(endTs - startTs).count() << " ms";
 		}
 	}else{
 		LOG(LogError) << "Found no root folder for system \"" << system->getName() << "\"!";

@@ -50,11 +50,8 @@ SystemData::SystemData(const std::string& name, const std::string& fullName, Sys
 
 SystemData::~SystemData()
 {
-	//save changed game data back to xml
-	if(!Settings::getInstance()->getBool("IgnoreGamelist") && Settings::getInstance()->getBool("SaveGamelistsOnExit") && !mIsCollectionSystem)
-	{
-		updateGamelist(this);
-	}
+	if(Settings::getInstance()->getString("SaveGamelistsMode") == "on exit")
+		writeMetaData();
 
 	delete mRootFolder;
 	delete mFilterIndex;
@@ -501,4 +498,19 @@ void SystemData::loadTheme()
 		LOG(LogError) << e.what();
 		mTheme = std::make_shared<ThemeData>(); // reset to empty
 	}
+}
+
+void SystemData::writeMetaData() {
+	if(Settings::getInstance()->getBool("IgnoreGamelist") || mIsCollectionSystem)
+		return;
+
+	//save changed game data back to xml
+	updateGamelist(this);
+}
+
+void SystemData::onMetaDataSavePoint() {
+	if(Settings::getInstance()->getString("SaveGamelistsMode") != "always")
+		return;
+
+	writeMetaData();
 }
