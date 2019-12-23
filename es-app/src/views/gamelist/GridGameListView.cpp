@@ -94,12 +94,12 @@ void GridGameListView::setCursor(FileData* file)
 
 std::string GridGameListView::getQuickSystemSelectRightButton()
 {
-	return "pagedown"; //rightshoulder
+	return "rightshoulder";
 }
 
 std::string GridGameListView::getQuickSystemSelectLeftButton()
 {
-	return "pageup"; //leftshoulder
+	return "leftshoulder";
 }
 
 bool GridGameListView::input(InputConfig* config, Input input)
