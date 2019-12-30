@@ -40,3 +40,6 @@ Makefile
 CPackConfig.cmake
 CPackSourceConfig.cmake
 *.cbp
+
+# VSCode
+.vscode/
