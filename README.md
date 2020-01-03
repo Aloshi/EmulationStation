@@ -47,6 +47,11 @@ cmake .
 make
 ```
 
+NOTE: to generate a `Debug` build on Unix/Linux, run the Makefile generation step as:
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug .
+```
+
 **On the Raspberry Pi:**
 
 Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
