@@ -153,7 +153,7 @@ bool TheGamesDBJSONRequestResources::saveResource(HttpReq* req, std::unordered_m
 
 std::unique_ptr<HttpReq> TheGamesDBJSONRequestResources::fetchResource(const std::string& endpoint)
 {
-	std::string path = "https://api.thegamesdb.net";
+	std::string path = "https://api.thegamesdb.net/v1";
 	path += endpoint;
 	path += "?apikey=" + getApiKey();
 

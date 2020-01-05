@@ -103,7 +103,7 @@ void thegamesdb_generate_json_scraper_requests(const ScraperSearchParams& params
 	std::queue<std::unique_ptr<ScraperRequest>>& requests, std::vector<ScraperSearchResult>& results)
 {
 	resources.prepare();
-	std::string path = "https://api.thegamesdb.net";
+	std::string path = "https://api.thegamesdb.net/v1";
 	bool usingGameID = false;
 	const std::string apiKey = std::string("apikey=") + resources.getApiKey();
 	std::string cleanName = params.nameOverride;
