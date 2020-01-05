@@ -10,7 +10,23 @@
 
 namespace Renderer
 {
-	static SDL_GLContext sdlContext = nullptr;
+
+#if defined(_DEBUG)
+#define GL_CHECK_ERROR(Function) (Function, _GLCheckError(#Function))
+
+	static void _GLCheckError(const char* _funcName)
+	{
+		const GLenum errorCode = glGetError();
+
+		if(errorCode != GL_NO_ERROR)
+			LOG(LogError) << "OpenGLES error: " << _funcName << " failed with error code: " << errorCode;
+	}
+#else
+#define GL_CHECK_ERROR(Function) (Function)
+#endif
+
+	static SDL_GLContext sdlContext   = nullptr;
+	static GLuint        whiteTexture = 0;
 
 	static GLenum convertBlendFactor(const Blend::Factor _blendFactor)
 	{
@@ -62,14 +78,16 @@ namespace Renderer
 
 	void setupWindow()
 	{
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,     8);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,   8);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,    8);
-		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,  24);
-		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_CORE);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,           8);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,         8);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,          8);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,        24);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,       1);
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
 	} // setupWindow
 
@@ -78,11 +96,29 @@ namespace Renderer
 		sdlContext = SDL_GL_CreateContext(getSDLWindow());
 		SDL_GL_MakeCurrent(getSDLWindow(), sdlContext);
 
-		glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
+		std::string vendor     = glGetString(GL_VENDOR)     ? (const char*)glGetString(GL_VENDOR)     : "";
+		std::string renderer   = glGetString(GL_RENDERER)   ? (const char*)glGetString(GL_RENDERER)   : "";
+		std::string version    = glGetString(GL_VERSION)    ? (const char*)glGetString(GL_VERSION)    : "";
+		std::string extensions = glGetString(GL_EXTENSIONS) ? (const char*)glGetString(GL_EXTENSIONS) : "";
 
-		std::string glExts = (const char*)glGetString(GL_EXTENSIONS);
+		LOG(LogInfo) << "GL vendor:   " << vendor;
+		LOG(LogInfo) << "GL renderer: " << renderer;
+		LOG(LogInfo) << "GL version:  " << version;
 		LOG(LogInfo) << "Checking available OpenGL extensions...";
-		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (glExts.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
+		std::string glExts = glGetString(GL_EXTENSIONS) ? (const char*)glGetString(GL_EXTENSIONS) : "";
+		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (extensions.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
+
+		uint8_t data[4] = {255, 255, 255, 255};
+		whiteTexture = createTexture(Texture::RGBA, false, true, 1, 1, data);
+
+		GL_CHECK_ERROR(glClearColor(1.0f, 1.0f, 1.0f, 1.0f));
+		GL_CHECK_ERROR(glEnable(GL_TEXTURE_2D));
+		GL_CHECK_ERROR(glEnable(GL_BLEND));
+		GL_CHECK_ERROR(glPixelStorei(GL_PACK_ALIGNMENT, 1));
+		GL_CHECK_ERROR(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
+		GL_CHECK_ERROR(glEnableClientState(GL_VERTEX_ARRAY));
+		GL_CHECK_ERROR(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
+		GL_CHECK_ERROR(glEnableClientState(GL_COLOR_ARRAY));
 
 	} // createContext
 
@@ -98,19 +134,16 @@ namespace Renderer
 		const GLenum type = convertTextureType(_type);
 		unsigned int texture;
 
-		glGenTextures(1, &texture);
-		bindTexture(texture);
+		GL_CHECK_ERROR(glGenTextures(1, &texture));
+		GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, texture));
 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE);
+		GL_CHECK_ERROR(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE));
+		GL_CHECK_ERROR(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _repeat ? GL_REPEAT : GL_CLAMP_TO_EDGE));
 
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _linear ? GL_LINEAR : GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		GL_CHECK_ERROR(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _linear ? GL_LINEAR : GL_NEAREST));
+		GL_CHECK_ERROR(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, type, _width, _height, 0, type, GL_UNSIGNED_BYTE, _data);
+		GL_CHECK_ERROR(glTexImage2D(GL_TEXTURE_2D, 0, type, _width, _height, 0, type, GL_UNSIGNED_BYTE, _data));
 
 		return texture;
 
@@ -118,77 +151,55 @@ namespace Renderer
 
 	void destroyTexture(const unsigned int _texture)
 	{
-		glDeleteTextures(1, &_texture);
+		GL_CHECK_ERROR(glDeleteTextures(1, &_texture));
 
 	} // destroyTexture
 
 	void updateTexture(const unsigned int _texture, const Texture::Type _type, const unsigned int _x, const unsigned _y, const unsigned int _width, const unsigned int _height, void* _data)
 	{
-		bindTexture(_texture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, _x, _y, _width, _height, convertTextureType(_type), GL_UNSIGNED_BYTE, _data);
-		bindTexture(0);
+		const GLenum type = convertTextureType(_type);
+
+		GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, _texture));
+		GL_CHECK_ERROR(glTexSubImage2D(GL_TEXTURE_2D, 0, _x, _y, _width, _height, type, GL_UNSIGNED_BYTE, _data));
+		GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, whiteTexture));
 
 	} // updateTexture
 
 	void bindTexture(const unsigned int _texture)
 	{
-		glBindTexture(GL_TEXTURE_2D, _texture);
-
-		if(_texture == 0) glDisable(GL_TEXTURE_2D);
-		else              glEnable(GL_TEXTURE_2D);
+		if(_texture == 0) GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, whiteTexture));
+		else              GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, _texture));
 
 	} // bindTexture
 
 	void drawLines(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(convertBlendFactor(_srcBlendFactor), convertBlendFactor(_dstBlendFactor));
+		GL_CHECK_ERROR(glVertexPointer(  2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].pos));
+		GL_CHECK_ERROR(glTexCoordPointer(2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].tex));
+		GL_CHECK_ERROR(glColorPointer(   4, GL_UNSIGNED_BYTE, sizeof(Vertex), &_vertices[0].col));
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
+		GL_CHECK_ERROR(glBlendFunc(convertBlendFactor(_srcBlendFactor), convertBlendFactor(_dstBlendFactor)));
 
-		glVertexPointer(  2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].pos);
-		glTexCoordPointer(2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].tex);
-		glColorPointer(   4, GL_UNSIGNED_BYTE, sizeof(Vertex), &_vertices[0].col);
-
-		glDrawArrays(GL_LINES, 0, _numVertices);
-
-		glDisableClientState(GL_COLOR_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-
-		glDisable(GL_BLEND);
+		GL_CHECK_ERROR(glDrawArrays(GL_LINES, 0, _numVertices));
 
 	} // drawLines
 
 	void drawTriangleStrips(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(convertBlendFactor(_srcBlendFactor), convertBlendFactor(_dstBlendFactor));
+		GL_CHECK_ERROR(glVertexPointer(  2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].pos));
+		GL_CHECK_ERROR(glTexCoordPointer(2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].tex));
+		GL_CHECK_ERROR(glColorPointer(   4, GL_UNSIGNED_BYTE, sizeof(Vertex), &_vertices[0].col));
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnableClientState(GL_COLOR_ARRAY);
+		GL_CHECK_ERROR(glBlendFunc(convertBlendFactor(_srcBlendFactor), convertBlendFactor(_dstBlendFactor)));
 
-		glVertexPointer(  2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].pos);
-		glTexCoordPointer(2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].tex);
-		glColorPointer(   4, GL_UNSIGNED_BYTE, sizeof(Vertex), &_vertices[0].col);
-
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, _numVertices);
-
-		glDisableClientState(GL_COLOR_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-
-		glDisable(GL_BLEND);
+		GL_CHECK_ERROR(glDrawArrays(GL_TRIANGLE_STRIP, 0, _numVertices));
 
 	} // drawTriangleStrips
 
 	void setProjection(const Transform4x4f& _projection)
 	{
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf((GLfloat*)&_projection);
+		GL_CHECK_ERROR(glMatrixMode(GL_PROJECTION));
+		GL_CHECK_ERROR(glLoadMatrixf((GLfloat*)&_projection));
 
 	} // setProjection
 
@@ -196,15 +207,16 @@ namespace Renderer
 	{
 		Transform4x4f matrix = _matrix;
 		matrix.round();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf((GLfloat*)&matrix);
+
+		GL_CHECK_ERROR(glMatrixMode(GL_MODELVIEW));
+		GL_CHECK_ERROR(glLoadMatrixf((GLfloat*)&matrix));
 
 	} // setMatrix
 
 	void setViewport(const Rect& _viewport)
 	{
 		// glViewport starts at the bottom left of the window
-		glViewport( _viewport.x, getWindowHeight() - _viewport.y - _viewport.h, _viewport.w, _viewport.h);
+		GL_CHECK_ERROR(glViewport( _viewport.x, getWindowHeight() - _viewport.y - _viewport.h, _viewport.w, _viewport.h));
 
 	} // setViewport
 
@@ -212,13 +224,13 @@ namespace Renderer
 	{
 		if((_scissor.x == 0) && (_scissor.y == 0) && (_scissor.w == 0) && (_scissor.h == 0))
 		{
-			glDisable(GL_SCISSOR_TEST);
+			GL_CHECK_ERROR(glDisable(GL_SCISSOR_TEST));
 		}
 		else
 		{
 			// glScissor starts at the bottom left of the window
-			glScissor(_scissor.x, getWindowHeight() - _scissor.y - _scissor.h, _scissor.w, _scissor.h);
-			glEnable(GL_SCISSOR_TEST);
+			GL_CHECK_ERROR(glScissor(_scissor.x, getWindowHeight() - _scissor.y - _scissor.h, _scissor.w, _scissor.h));
+			GL_CHECK_ERROR(glEnable(GL_SCISSOR_TEST));
 		}
 
 	} // setScissor
@@ -245,7 +257,7 @@ namespace Renderer
 	void swapBuffers()
 	{
 		SDL_GL_SwapWindow(getSDLWindow());
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GL_CHECK_ERROR(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
 	} // swapBuffers
 
