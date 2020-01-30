@@ -31,6 +31,7 @@ private:
 	void initMDLabels();
 	void initMDValues();
 
+	ImageComponent mThumbnail;
 	ImageComponent mMarquee;
 	VideoComponent* mVideo;
 	ImageComponent mImage;
