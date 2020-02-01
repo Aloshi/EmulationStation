@@ -269,20 +269,20 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 				listInput(-1);
 				return true;
 			}
-			if(config->isMappedTo("pagedown", input))
+			if(config->isMappedLike("rightshoulder", input))
 			{
 				listInput(10);
 				return true;
 			}
 
-			if(config->isMappedTo("pageup", input))
+			if(config->isMappedLike("leftshoulder", input))
 			{
 				listInput(-10);
 				return true;
 			}
 		}else{
 			if(config->isMappedLike("down", input) || config->isMappedLike("up", input) ||
-				config->isMappedTo("pagedown", input) || config->isMappedTo("pageup", input))
+				config->isMappedLike("rightshoulder", input) || config->isMappedTo("leftshoulder", input))
 			{
 				stopScrolling();
 			}

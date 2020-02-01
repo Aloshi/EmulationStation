@@ -53,9 +53,9 @@ bool DateTimeEditComponent::input(InputConfig* config, Input input)
 		}
 
 		int incDir = 0;
-		if(config->isMappedLike("up", input) || config->isMappedTo("pageup", input))
+		if(config->isMappedLike("up", input) || config->isMappedLike("leftshoulder", input))
 			incDir = 1;
-		else if(config->isMappedLike("down", input) || config->isMappedTo("pagedown", input))
+		else if(config->isMappedLike("down", input) || config->isMappedLike("rightshoulder", input))
 			incDir = -1;
 
 		if(incDir != 0)
