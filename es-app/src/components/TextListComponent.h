@@ -282,7 +282,7 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 			}
 		}else{
 			if(config->isMappedLike("down", input) || config->isMappedLike("up", input) ||
-				config->isMappedLike("rightshoulder", input) || config->isMappedTo("leftshoulder", input))
+				config->isMappedLike("rightshoulder", input) || config->isMappedLike("leftshoulder", input))
 			{
 				stopScrolling();
 			}
