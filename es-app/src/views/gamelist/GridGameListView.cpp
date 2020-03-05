@@ -115,6 +115,11 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	updateInfoPanel();
 }
 
+GridGameListView::~GridGameListView()
+{
+	delete mVideo;
+}
+
 FileData* GridGameListView::getCursor()
 {
 	return mGrid.getSelected();
@@ -219,7 +224,10 @@ void GridGameListView::onThemeChanged(const std::shared_ptr<ThemeData>& theme)
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescription.applyTheme(theme, getName(), "md_description", ALL ^ (POSITION | ThemeFlags::SIZE | ThemeFlags::ORIGIN | TEXT | ROTATION));
 
+	// Repopulate list in case new theme is displaying a different image.  Preserve selection.
+	FileData* file = mGrid.getSelected();
 	populateList(mRoot->getChildrenListToDisplay());
+	mGrid.setCursor(file);
 
 	sortChildren();
 }
@@ -473,4 +481,16 @@ std::vector<HelpPrompt> GridGameListView::getHelpPrompts()
 		prompts.push_back(HelpPrompt("y", prompt));
 	}
 	return prompts;
+}
+
+void GridGameListView::update(int deltaTime)
+{
+	ISimpleGameListView::update(deltaTime);
+	mVideo->update(deltaTime);
+}
+
+void GridGameListView::onShow()
+{
+	GuiComponent::onShow();
+	updateInfoPanel();
 }
