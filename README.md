@@ -51,6 +51,31 @@ cmake .
 make
 ```
 
+**On RHEL/CentOS 7:**
+Enable the EPEL repository:
+```bash
+yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+```
+
+Enable the optional repository on RHEL7 only:
+```bash
+subscription-manager repos --enable=rhel-7-server-optional-rpms
+```
+
+Install the necessary packages:
+```bash
+yum install git cmake make gcc gcc-c++ SDL2-devel boost-devel freeimage-devel \
+  freetype-devel eigen3-devel libcurl-devel mesa-libGL-devel \
+  alsa-plugins-pulseaudio alsa-lib-devel
+```
+
+Generate and build the Makefile with CMake:
+```bash
+cd EmulationStation
+cmake .
+make
+```
+
 **On the Raspberry Pi:**
 
 Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
