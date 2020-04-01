@@ -111,7 +111,7 @@ namespace Renderer
 		uint8_t data[4] = {255, 255, 255, 255};
 		whiteTexture = createTexture(Texture::RGBA, false, true, 1, 1, data);
 
-		GL_CHECK_ERROR(glClearColor(1.0f, 1.0f, 1.0f, 1.0f));
+		GL_CHECK_ERROR(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 		GL_CHECK_ERROR(glEnable(GL_TEXTURE_2D));
 		GL_CHECK_ERROR(glEnable(GL_BLEND));
 		GL_CHECK_ERROR(glPixelStorei(GL_PACK_ALIGNMENT, 1));
