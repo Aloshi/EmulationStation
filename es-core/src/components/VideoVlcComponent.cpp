@@ -220,7 +220,8 @@ void VideoVlcComponent::handleLooping()
 		libvlc_state_t state = libvlc_media_player_get_state(mMediaPlayer);
 		if (state == libvlc_Ended)
 		{
-			if (!Settings::getInstance()->getBool("VideoAudio"))
+			if (!Settings::getInstance()->getBool("VideoAudio") ||
+				(Settings::getInstance()->getBool("ScreenSaverVideoMute") && mScreensaverMode))
 			{
 				libvlc_audio_set_mute(mMediaPlayer, 1);
 			}
@@ -295,7 +296,8 @@ void VideoVlcComponent::startVideo()
 					// Setup the media player
 					mMediaPlayer = libvlc_media_player_new_from_media(mMedia);
 
-					if (!Settings::getInstance()->getBool("VideoAudio"))
+					if (!Settings::getInstance()->getBool("VideoAudio") ||
+						(Settings::getInstance()->getBool("ScreenSaverVideoMute") && mScreensaverMode))
 					{
 						libvlc_audio_set_mute(mMediaPlayer, 1);
 					}
