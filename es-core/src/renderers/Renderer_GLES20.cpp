@@ -1,11 +1,11 @@
-#if defined(USE_OPENGLES_10)
+#if defined(USE_OPENGLES_20)
 
 #include "renderers/Renderer.h"
 #include "math/Transform4x4f.h"
 #include "Log.h"
 #include "Settings.h"
 
-#include <SDL_opengles.h>
+#include <SDL_opengles2.h>
 #include <SDL.h>
 
 namespace Renderer
@@ -25,8 +25,167 @@ namespace Renderer
 #define GL_CHECK_ERROR(Function) (Function)
 #endif
 
-	static SDL_GLContext sdlContext   = nullptr;
-	static GLuint        whiteTexture = 0;
+	static SDL_GLContext sdlContext       = nullptr;
+	static Transform4x4f projectionMatrix = Transform4x4f::Identity();
+	static Transform4x4f worldViewMatrix  = Transform4x4f::Identity();
+	static GLuint        shaderProgram    = 0;
+	static GLint         mvpUniform       = 0;
+	static GLint         texAttrib        = 0;
+	static GLint         colAttrib        = 0;
+	static GLint         posAttrib        = 0;
+	static GLuint        vertexBuffer     = 0;
+	static GLuint        whiteTexture     = 0;
+
+	static void setupShaders()
+	{
+		// vertex shader
+		const GLchar* vertexSource =
+			"uniform   mat4 u_mvp; \n"
+			"attribute vec2 a_pos; \n"
+			"attribute vec2 a_tex; \n"
+			"attribute vec4 a_col; \n"
+			"varying   vec2 v_tex; \n"
+			"varying   vec4 v_col; \n"
+			"void main(void)                                     \n"
+			"{                                                   \n"
+			"    gl_Position = u_mvp * vec4(a_pos.xy, 0.0, 1.0); \n"
+			"    v_tex       = a_tex;                            \n"
+			"    v_col       = a_col;                            \n"
+			"}                                                   \n";
+
+		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+		GL_CHECK_ERROR(glShaderSource(vertexShader, 1, &vertexSource, nullptr));
+		GL_CHECK_ERROR(glCompileShader(vertexShader));
+
+		{
+			GLint isCompiled = GL_FALSE;
+			GLint maxLength  = 0;
+
+			GL_CHECK_ERROR(glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled));
+			GL_CHECK_ERROR(glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength));
+
+			if(maxLength > 1)
+			{
+				char* infoLog = new char[maxLength + 1];
+
+				GL_CHECK_ERROR(glGetShaderInfoLog(vertexShader, maxLength, &maxLength, infoLog));
+
+				if(isCompiled == GL_FALSE)
+				{
+					LOG(LogError) << "GLSL Vertex Compile Error\n" << infoLog;
+				}
+				else
+				{
+					if(strstr(infoLog, "WARNING") || strstr(infoLog, "warning") || strstr(infoLog, "Warning"))
+						LOG(LogWarning) << "GLSL Vertex Compile Warning\n" << infoLog;
+					else
+						LOG(LogInfo) << "GLSL Vertex Compile Message\n" << infoLog;
+				}
+
+				delete[] infoLog;
+			}
+		}
+
+		// fragment shader
+		const GLchar* fragmentSource =
+			"precision highp float;     \n"
+			"uniform   sampler2D u_tex; \n"
+			"varying   vec2      v_tex; \n"
+			"varying   vec4      v_col; \n"
+			"void main(void)                                     \n"
+			"{                                                   \n"
+			"    gl_FragColor = texture2D(u_tex, v_tex) * v_col; \n"
+			"}                                                   \n";
+
+		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+		GL_CHECK_ERROR(glShaderSource(fragmentShader, 1, &fragmentSource, nullptr));
+		GL_CHECK_ERROR(glCompileShader(fragmentShader));
+
+		{
+			GLint isCompiled = GL_FALSE;
+			GLint maxLength  = 0;
+
+			GL_CHECK_ERROR(glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled));
+			GL_CHECK_ERROR(glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength));
+
+			if(maxLength > 1)
+			{
+				char* infoLog = new char[maxLength + 1];
+
+				GL_CHECK_ERROR(glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, infoLog));
+
+				if(isCompiled == GL_FALSE)
+				{
+					LOG(LogError) << "GLSL Fragment Compile Error\n" << infoLog;
+				}
+				else
+				{
+					if(strstr(infoLog, "WARNING") || strstr(infoLog, "warning") || strstr(infoLog, "Warning"))
+						LOG(LogWarning) << "GLSL Fragment Compile Warning\n" << infoLog;
+					else
+						LOG(LogInfo) << "GLSL Fragment Compile Message\n" << infoLog;
+				}
+
+				delete[] infoLog;
+			}
+		}
+
+		// shader program
+		shaderProgram = glCreateProgram();
+		GL_CHECK_ERROR(glAttachShader(shaderProgram, vertexShader));
+		GL_CHECK_ERROR(glAttachShader(shaderProgram, fragmentShader));
+
+		GL_CHECK_ERROR(glLinkProgram(shaderProgram));
+
+		{
+			GLint isCompiled = GL_FALSE;
+			GLint maxLength  = 0;
+
+			GL_CHECK_ERROR(glGetProgramiv(shaderProgram, GL_LINK_STATUS, &isCompiled));
+			GL_CHECK_ERROR(glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &maxLength));
+
+			if(maxLength > 1)
+			{
+				char* infoLog = new char[maxLength + 1];
+
+				GL_CHECK_ERROR(glGetProgramInfoLog(shaderProgram, maxLength, &maxLength, infoLog));
+
+				if(isCompiled == GL_FALSE)
+				{
+					LOG(LogError) << "GLSL Link Error\n" << infoLog;
+				}
+				else
+				{
+					if(strstr(infoLog, "WARNING") || strstr(infoLog, "warning") || strstr(infoLog, "Warning"))
+						LOG(LogWarning) << "GLSL Link Warning\n" << infoLog;
+					else
+						LOG(LogInfo) << "GLSL Link Message\n" << infoLog;
+				}
+
+				delete[] infoLog;
+			}
+		}
+
+		GL_CHECK_ERROR(glUseProgram(shaderProgram));
+
+		mvpUniform       = glGetUniformLocation(shaderProgram, "u_mvp");
+		posAttrib        = glGetAttribLocation(shaderProgram, "a_pos");
+		texAttrib        = glGetAttribLocation(shaderProgram, "a_tex");
+		colAttrib        = glGetAttribLocation(shaderProgram, "a_col");
+		GLint texUniform = glGetUniformLocation(shaderProgram, "u_tex");
+		GL_CHECK_ERROR(glEnableVertexAttribArray(posAttrib));
+		GL_CHECK_ERROR(glEnableVertexAttribArray(texAttrib));
+		GL_CHECK_ERROR(glEnableVertexAttribArray(colAttrib));
+		GL_CHECK_ERROR(glUniform1i(texUniform, 0));
+
+	} // setupShaders
+
+	static void setupVertexBuffer()
+	{
+		GL_CHECK_ERROR(glGenBuffers(1, &vertexBuffer));
+		GL_CHECK_ERROR(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
+
+	} // setupVertexBuffer
 
 	static GLenum convertBlendFactor(const Blend::Factor _blendFactor)
 	{
@@ -51,9 +210,9 @@ namespace Renderer
 	{
 		switch(_type)
 		{
-			case Texture::RGBA:  { return GL_RGBA;  } break;
-			case Texture::ALPHA: { return GL_ALPHA; } break;
-			default:             { return GL_ZERO;  }
+			case Texture::RGBA:  { return GL_RGBA;            } break;
+			case Texture::ALPHA: { return GL_LUMINANCE_ALPHA; } break;
+			default:             { return GL_ZERO;            }
 		}
 
 	} // convertTextureType
@@ -79,7 +238,7 @@ namespace Renderer
 	void setupWindow()
 	{
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,  SDL_GL_CONTEXT_PROFILE_ES);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,           8);
@@ -108,17 +267,17 @@ namespace Renderer
 		std::string glExts = glGetString(GL_EXTENSIONS) ? (const char*)glGetString(GL_EXTENSIONS) : "";
 		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (extensions.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
 
+		setupShaders();
+		setupVertexBuffer();
+
 		uint8_t data[4] = {255, 255, 255, 255};
 		whiteTexture = createTexture(Texture::RGBA, false, true, 1, 1, data);
 
 		GL_CHECK_ERROR(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-		GL_CHECK_ERROR(glEnable(GL_TEXTURE_2D));
+		GL_CHECK_ERROR(glActiveTexture(GL_TEXTURE0));
 		GL_CHECK_ERROR(glEnable(GL_BLEND));
 		GL_CHECK_ERROR(glPixelStorei(GL_PACK_ALIGNMENT, 1));
 		GL_CHECK_ERROR(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
-		GL_CHECK_ERROR(glEnableClientState(GL_VERTEX_ARRAY));
-		GL_CHECK_ERROR(glEnableClientState(GL_TEXTURE_COORD_ARRAY));
-		GL_CHECK_ERROR(glEnableClientState(GL_COLOR_ARRAY));
 
 	} // createContext
 
@@ -143,7 +302,26 @@ namespace Renderer
 		GL_CHECK_ERROR(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _linear ? GL_LINEAR : GL_NEAREST));
 		GL_CHECK_ERROR(glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 
-		GL_CHECK_ERROR(glTexImage2D(GL_TEXTURE_2D, 0, type, _width, _height, 0, type, GL_UNSIGNED_BYTE, _data));
+		// Regular GL_ALPHA textures are black + alpha in shaders
+		// Create a GL_LUMINANCE_ALPHA texture instead so its white + alpha
+		if(type == GL_LUMINANCE_ALPHA)
+		{
+			uint8_t* a_data  = (uint8_t*)_data;
+			uint8_t* la_data = new uint8_t[_width * _height * 2];
+			for(uint32_t i=0; i<(_width * _height); ++i)
+			{
+				la_data[(i * 2) + 0] = 255;
+				la_data[(i * 2) + 1] = a_data ? a_data[i] : 255;
+			}
+
+			GL_CHECK_ERROR(glTexImage2D(GL_TEXTURE_2D, 0, type, _width, _height, 0, type, GL_UNSIGNED_BYTE, la_data));
+
+			delete[] la_data;
+		}
+		else
+		{
+			GL_CHECK_ERROR(glTexImage2D(GL_TEXTURE_2D, 0, type, _width, _height, 0, type, GL_UNSIGNED_BYTE, _data));
+		}
 
 		return texture;
 
@@ -160,7 +338,28 @@ namespace Renderer
 		const GLenum type = convertTextureType(_type);
 
 		GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, _texture));
-		GL_CHECK_ERROR(glTexSubImage2D(GL_TEXTURE_2D, 0, _x, _y, _width, _height, type, GL_UNSIGNED_BYTE, _data));
+
+		// Regular GL_ALPHA textures are black + alpha in shaders
+		// Create a GL_LUMINANCE_ALPHA texture instead so its white + alpha
+		if(type == GL_LUMINANCE_ALPHA)
+		{
+			uint8_t* a_data  = (uint8_t*)_data;
+			uint8_t* la_data = new uint8_t[_width * _height * 2];
+			for(uint32_t i=0; i<(_width * _height); ++i)
+			{
+				la_data[(i * 2) + 0] = 255;
+				la_data[(i * 2) + 1] = a_data ? a_data[i] : 255;
+			}
+
+			GL_CHECK_ERROR(glTexSubImage2D(GL_TEXTURE_2D, 0, _x, _y, _width, _height, type, GL_UNSIGNED_BYTE, la_data));
+
+			delete[] la_data;
+		}
+		else
+		{
+			GL_CHECK_ERROR(glTexSubImage2D(GL_TEXTURE_2D, 0, _x, _y, _width, _height, type, GL_UNSIGNED_BYTE, _data));
+		}
+
 		GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, whiteTexture));
 
 	} // updateTexture
@@ -174,10 +373,11 @@ namespace Renderer
 
 	void drawLines(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
-		GL_CHECK_ERROR(glVertexPointer(  2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].pos));
-		GL_CHECK_ERROR(glTexCoordPointer(2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].tex));
-		GL_CHECK_ERROR(glColorPointer(   4, GL_UNSIGNED_BYTE, sizeof(Vertex), &_vertices[0].col));
+		GL_CHECK_ERROR(glVertexAttribPointer(posAttrib, 2, GL_FLOAT,         GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, pos)));
+		GL_CHECK_ERROR(glVertexAttribPointer(texAttrib, 2, GL_FLOAT,         GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, tex)));
+		GL_CHECK_ERROR(glVertexAttribPointer(colAttrib, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(Vertex), (const void*)offsetof(Vertex, col)));
 
+		GL_CHECK_ERROR(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * _numVertices, _vertices, GL_DYNAMIC_DRAW));
 		GL_CHECK_ERROR(glBlendFunc(convertBlendFactor(_srcBlendFactor), convertBlendFactor(_dstBlendFactor)));
 
 		GL_CHECK_ERROR(glDrawArrays(GL_LINES, 0, _numVertices));
@@ -186,10 +386,11 @@ namespace Renderer
 
 	void drawTriangleStrips(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
-		GL_CHECK_ERROR(glVertexPointer(  2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].pos));
-		GL_CHECK_ERROR(glTexCoordPointer(2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].tex));
-		GL_CHECK_ERROR(glColorPointer(   4, GL_UNSIGNED_BYTE, sizeof(Vertex), &_vertices[0].col));
+		GL_CHECK_ERROR(glVertexAttribPointer(posAttrib, 2, GL_FLOAT,         GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, pos)));
+		GL_CHECK_ERROR(glVertexAttribPointer(texAttrib, 2, GL_FLOAT,         GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, tex)));
+		GL_CHECK_ERROR(glVertexAttribPointer(colAttrib, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(Vertex), (const void*)offsetof(Vertex, col)));
 
+		GL_CHECK_ERROR(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * _numVertices, _vertices, GL_DYNAMIC_DRAW));
 		GL_CHECK_ERROR(glBlendFunc(convertBlendFactor(_srcBlendFactor), convertBlendFactor(_dstBlendFactor)));
 
 		GL_CHECK_ERROR(glDrawArrays(GL_TRIANGLE_STRIP, 0, _numVertices));
@@ -198,18 +399,20 @@ namespace Renderer
 
 	void setProjection(const Transform4x4f& _projection)
 	{
-		GL_CHECK_ERROR(glMatrixMode(GL_PROJECTION));
-		GL_CHECK_ERROR(glLoadMatrixf((GLfloat*)&_projection));
+		projectionMatrix = _projection;
+
+		Transform4x4f mvpMatrix = projectionMatrix * worldViewMatrix;
+		GL_CHECK_ERROR(glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, (float*)&mvpMatrix));
 
 	} // setProjection
 
 	void setMatrix(const Transform4x4f& _matrix)
 	{
-		Transform4x4f matrix = _matrix;
-		matrix.round();
+		worldViewMatrix = _matrix;
+		worldViewMatrix.round();
 
-		GL_CHECK_ERROR(glMatrixMode(GL_MODELVIEW));
-		GL_CHECK_ERROR(glLoadMatrixf((GLfloat*)&matrix));
+		Transform4x4f mvpMatrix = projectionMatrix * worldViewMatrix;
+		GL_CHECK_ERROR(glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, (float*)&mvpMatrix));
 
 	} // setMatrix
 
@@ -263,4 +466,4 @@ namespace Renderer
 
 } // Renderer::
 
-#endif // USE_OPENGLES_10
+#endif // USE_OPENGLES_20
