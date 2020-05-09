@@ -39,7 +39,7 @@ namespace Scripting
                     }
                 }
                 LOG(LogDebug) << "  executing: " << script;
-                runSystemCommand(script);
+                return runSystemCommand(script);
             }
         }
     }
