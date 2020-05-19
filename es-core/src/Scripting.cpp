@@ -21,6 +21,7 @@ namespace Scripting
         test = Utils::FileSystem::getHomePath() + "/.emulationstation/scripts/" + eventName;
         if(Utils::FileSystem::exists(test))
             scriptDirList.push_back(test);
+        int ret = 0;
         // loop over found script paths per event and over scripts found in eventName folder.
         for(std::list<std::string>::const_iterator dirIt = scriptDirList.cbegin(); dirIt != scriptDirList.cend(); ++dirIt) {
             std::list<std::string> scripts = Utils::FileSystem::getDirContent(*dirIt);
@@ -38,10 +39,15 @@ namespace Scripting
                         script += " \"" + arg2 + "\"";
                     }
                 }
-                LOG(LogDebug) << "  executing: " << script;
-                return runSystemCommand(script);
+                LOG(LogDebug) << "executing: " << script;
+                ret = runSystemCommand(script);
+                if (ret != 0) {
+                    LOG(LogWarning) << script << " failed with rc != 0. Skipping further processing of scripts.";
+                    return ret;
+                }
             }
         }
+        return ret;
     }
 
 } // Scripting::
