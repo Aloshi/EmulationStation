@@ -2,8 +2,17 @@ cmake_minimum_required(VERSION 2.8)
 
 option(GLES "Set to ON if targeting Embedded OpenGL" ${GLES})
 option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
-option(RPI "Set to ON to enable the Raspberry PI video player (omxplayer)" ${RPI})
+option(RPI "Set to ON to enable the Raspberry PI video player (omxplayer) and audio options" ${RPI})
 option(CEC "Set to ON to enable CEC" ${CEC})
+
+# GLES implementation overrides
+option(USE_MESA_GLES "Set to ON to select the MESA OpenGL ES driver" ${USE_MESA_GLES})
+option(USE_GLES1 "Set to ON to force usage of the OpenGLES v1 renderer" ${USE_GLES1})
+
+# OpenGL library preference (https://cmake.org/cmake/help/git-stage/policy/CMP0072.html)
+if(POLICY CMP0072)
+   cmake_policy(SET CMP0072 NEW)
+endif()
 
 project(emulationstation-all)
 
@@ -14,46 +23,67 @@ LIST(APPEND CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_SOURCE_DIR}/CMake/Packages
 )
 
-#-------------------------------------------------------------------------------
+# default GLES2/GLES library, can be overriden depending on platform
+set(HINT_GLES_LIBNAME GLESv2)
+
 #set up OpenGL system variable
 if(GLES)
     set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
 elseif(GL)
     set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
-#-------------------------------------------------------------------------------
-#check if we're running on Raspberry Pi
+
+# check if the MESA GLES library is requested
+elseif(USE_MESA_GLES)
+    set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
+
+#check if we're running on Raspberry Pi (legacy drivers)
 elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/bcm_host.h")
-    MESSAGE("bcm_host.h found")
     set(BCMHOST found)
     set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
-#-------------------------------------------------------------------------------
-#check if we're running on OSMC Vero4K
+    set(HINT_GLES_INCDIR "/opt/vc/include")
+    set(HINT_GLES_LIBDIR "/opt/vc/lib")
+    set(HINT_GLES_LIBNAME brcmGLESv2)
+    set(GLES_EXTRA_LIBRARIES bcm_host)
+
+#check if we're running on OSMC Vero4K[+]
 elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/opt/vero3/lib/libMali.so")
-    MESSAGE("libMali.so found")
     set(VERO4K found)
+    add_definitions(-D_VERO4K_)
     set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
-#-------------------------------------------------------------------------------
+    set(HINT_GLES_INCDIR "/opt/vero3/include")
+    set(HINT_GLES_LIBDIR "/opt/vero3/lib")
+    set(HINT_GLES_LIBNAME Mali)
+    set(GLES_EXTRA_LIBRARIES EGL)
+
 #check if we're running on olinuxino / odroid / etc
-elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/libMali.so" OR
-    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/libMali.so" OR
-    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/aarch64-linux-gnu/libMali.so" OR
-    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/mali-egl/libmali.so" OR
-    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/arm-linux-gnueabihf/libmali.so")
-    MESSAGE("libMali.so found")
+elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/libMali.so")
     set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
+    set(HINT_GLES_LIBNAME Mali)
+
 else()
     set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 endif(GLES)
 
 set_property(CACHE GLSystem PROPERTY STRINGS "Desktop OpenGL" "Embedded OpenGL")
 
-#finding necessary packages
-#-------------------------------------------------------------------------------
 if(${GLSystem} MATCHES "Desktop OpenGL")
     find_package(OpenGL REQUIRED)
+    add_definitions(-DUSE_OPENGL_14)
 else()
-    find_package(OpenGLES REQUIRED)
+    if(NOT USE_GLES1)
+      find_package(OpenGLES2 QUIET REQUIRED)
+      message(STATUS "Found GLESv2: ${OPENGLES2_LIBRARIES}")
+      set(OPENGLES_LIBRARIES ${OPENGLES2_LIBRARIES})
+      set(OPENGLES_INCLUDE_DIRS ${OPENGLES2_INCLUDE_DIRS})
+      add_definitions(-DUSE_OPENGLES_20)
+    else()
+      set(HINT_GLES_LIBNAME GLESv1_CM)
+      find_package(OpenGLES QUIET REQUIRED)
+      message(STATUS "Found GLES: ${OPENGLES_LIBRARIES}")
+      add_definitions(-DUSE_OPENGLES_10)
+    endif()
 endif()
+
 find_package(Freetype REQUIRED)
 find_package(FreeImage REQUIRED)
 find_package(SDL2 REQUIRED)
@@ -77,10 +107,6 @@ if(DEFINED BCMHOST OR RPI)
     add_definitions(-D_RPI_)
 endif()
 
-if(DEFINED VERO4K)
-    add_definitions(-D_VERO4K_)
-endif()
-
 if(DEFINED libCEC_FOUND)
     add_definitions(-DHAVE_LIBCEC)
 endif()
@@ -94,6 +120,9 @@ if(MSVC)
     add_definitions(-DNOMINMAX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
+
+    # Set the start-up project to in VS to 'emulationstation'
+    set(VS_STARTUP_PROJECT "emulationstation")
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -104,24 +133,19 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     endif()
 
     #set up compiler flags for GCC
-if (CMAKE_BUILD_TYPE MATCHES Debug)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O0") #support C++11 for std::, optimize
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O0")
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O2") #support C++11 for std::, optimize
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O2")  #-s = strip binary
+    if (CMAKE_BUILD_TYPE MATCHES Debug)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O0") #support C++11 for std::, optimize
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O0")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-attributes -O2") #support C++11 for std::, optimize
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -O2")  #-s = strip binary
 endif()
-endif()
-
-if(${GLSystem} MATCHES "Desktop OpenGL")
-    add_definitions(-DUSE_OPENGL_14)
-else()
-    add_definitions(-DUSE_OPENGLES_10)
 endif()
 
 # Enable additional defines for the Debug build configuration
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
+
 
 #-------------------------------------------------------------------------------
 #add include directories
@@ -135,6 +159,16 @@ set(COMMON_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/external
     ${CMAKE_CURRENT_SOURCE_DIR}/es-core/src
 )
+
+if(${GLSystem} MATCHES "Desktop OpenGL")
+        LIST(APPEND COMMON_INCLUDE_DIRS
+            ${OPENGL_INCLUDE_DIRS}
+        )
+else()
+        LIST(APPEND COMMON_INCLUDE_DIRS
+            ${OPENGLES_INCLUDE_DIRS}
+        )
+endif()
 
 #add libCEC_INCLUDE_DIR
 if(DEFINED libCEC_FOUND)
@@ -150,41 +184,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     )
 endif()
 
-if(DEFINED BCMHOST)
-    LIST(APPEND COMMON_INCLUDE_DIRS
-        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include"
-        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/interface/vcos"
-        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/interface/vmcs_host/linux"
-        "${CMAKE_FIND_ROOT_PATH}/opt/vc/include/interface/vcos/pthreads"
-    )
-#add include directory for Vero4K
-elseif(DEFINED VERO4K)
-    LIST(APPEND COMMON_INCLUDE_DIRS
-        "${CMAKE_FIND_ROOT_PATH}/opt/vero3/include"
-    )
-else()
-    if(${GLSystem} MATCHES "Desktop OpenGL")
-        LIST(APPEND COMMON_INCLUDE_DIRS
-            ${OPENGL_INCLUDE_DIR}
-        )
-    else()
-        LIST(APPEND COMMON_INCLUDE_DIRS
-            ${OPENGLES_INCLUDE_DIR}
-        )
-    endif()
-endif()
-
 #-------------------------------------------------------------------------------
 #define libraries and directories
-if(DEFINED BCMHOST)
-    link_directories(
-        "${CMAKE_FIND_ROOT_PATH}/opt/vc/lib"
-    )
-elseif(DEFINED VERO4K)
-    link_directories(
-        "${CMAKE_FIND_ROOT_PATH}/opt/vero3/lib"
-    )
-endif()
 
 set(COMMON_LIBRARIES
     ${FREETYPE_LIBRARIES}
@@ -216,34 +217,26 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     )
 endif()
 
-if(DEFINED BCMHOST)
+if(MSVC)
     LIST(APPEND COMMON_LIBRARIES
-        bcm_host
-        brcmEGL
-        ${OPENGLES_LIBRARIES}
+        winmm
     )
-elseif(DEFINED VERO4K)
+endif()
+
+if(DEFINED HINT_GLES_LIBDIR)
+    link_directories("${HINT_GLES_LIBDIR}")
+endif()
+
+if(${GLSystem} MATCHES "Desktop OpenGL")
     LIST(APPEND COMMON_LIBRARIES
-        EGL
-        ${OPENGLES_LIBRARIES}
+        ${OPENGL_LIBRARIES}
     )
 else()
-    if(MSVC)
-        LIST(APPEND COMMON_LIBRARIES
-            winmm
-        )
-    endif()
-    if(${GLSystem} MATCHES "Desktop OpenGL")
-        LIST(APPEND COMMON_LIBRARIES
-            ${OPENGL_LIBRARIES}
-        )
-    else()
-        LIST(APPEND COMMON_LIBRARIES
-            EGL
-            ${OPENGLES_LIBRARIES}
-        )
-    endif()
+    LIST(APPEND COMMON_LIBRARIES
+        ${OPENGLES_LIBRARIES} ${GLES_EXTRA_LIBRARIES}
+    )
 endif()
+
 
 #-------------------------------------------------------------------------------
 # set up build directories
