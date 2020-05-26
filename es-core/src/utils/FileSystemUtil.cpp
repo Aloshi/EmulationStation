@@ -668,6 +668,20 @@ namespace Utils
 			return false;
 
 		} // isHidden
+#ifndef WIN32 // osx / linux
+		bool isExecutable(const std::string& _path) {
+			struct stat64 st;
+			if(stat64(_path.c_str(), &st) == 0){
+				mode_t perm = st.st_mode;
+				// regular files and executables but not setuid, setgid, shared text (mode 0755)
+				mode_t mask = S_IFREG | S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
+				if(perm & mask == perm){
+					return true;
+				}
+			}
+			return false;
+		} // isExecutable
+#endif
 
 	} // FileSystem::
 

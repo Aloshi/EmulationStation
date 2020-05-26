@@ -82,7 +82,9 @@ void Settings::setDefaults()
 	mBoolMap["DebugText"] = false;
 	mBoolMap["DebugImage"] = false;
 
-	mIntMap["ScreenSaverTime"] = 5*60*1000; // 5 minutes
+	mIntMap["ScreenSaverTime"] = 5 * Settings::ONE_MINUTE_IN_MS;
+	mIntMap["SystemSleepTime"] = 0 * Settings::ONE_MINUTE_IN_MS;
+	mBoolMap["SystemSleepTimeHintDisplayed"] = false;
 	mIntMap["ScraperResizeWidth"] = 400;
 	mIntMap["ScraperResizeHeight"] = 0;
 	#ifdef _RPI_

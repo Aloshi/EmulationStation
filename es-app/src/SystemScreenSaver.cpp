@@ -224,7 +224,7 @@ void SystemScreenSaver::renderScreenSaver()
 		Renderer::setMatrix(Transform4x4f::Identity());
 		Renderer::drawRect(0.0f, 0.0f, Renderer::getScreenWidth(), Renderer::getScreenHeight(), 0x000000FF, 0x000000FF);
 
-		// Only render the video if the state requires it
+		// Only render the image if the state requires it
 		if ((int)mState >= STATE_FADE_IN_VIDEO)
 		{
 			if (mImageScreensaver->hasImage())

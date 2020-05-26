@@ -271,13 +271,10 @@ void Window::render()
 
 	if(mTimeSinceLastInput >= screensaverTime && screensaverTime != 0)
 	{
-		if (!isProcessing() && mAllowSleep && (!mScreenSaver || mScreenSaver->allowSleep()))
-		{
-			// go to sleep
-			if (mSleeping == false) {
-				mSleeping = true;
-				onSleep();
-			}
+		unsigned int systemSleepTime = (unsigned int)Settings::getInstance()->getInt("SystemSleepTime");
+		if(!isProcessing() && mAllowSleep && systemSleepTime != 0 && mTimeSinceLastInput >= systemSleepTime) {
+			mSleeping = true;
+			onSleep();
 		}
 	}
 }
@@ -400,7 +397,19 @@ void Window::setHelpPrompts(const std::vector<HelpPrompt>& prompts, const HelpSt
 
 void Window::onSleep()
 {
-	Scripting::fireEvent("sleep");
+	if (Settings::getInstance()->getBool("Windowed")) {
+		LOG(LogInfo) << "running windowed. No further onSleep() processing.";
+		return;
+	}
+
+	int gotErrors = Scripting::fireEvent("sleep");
+
+	if (gotErrors == 0 && mScreenSaver && mRenderScreenSaver)
+	{
+		mScreenSaver->stopScreenSaver();
+		mRenderScreenSaver = false;
+		mScreenSaver->resetCounts();
+	}
 }
 
 void Window::onWake()
@@ -423,6 +432,7 @@ void Window::startScreenSaver()
 
 		mScreenSaver->startScreenSaver();
 		mRenderScreenSaver = true;
+		Scripting::fireEvent("screensaver-start");
 	}
 }
 
@@ -433,6 +443,7 @@ bool Window::cancelScreenSaver()
 		mScreenSaver->stopScreenSaver();
 		mRenderScreenSaver = false;
 		mScreenSaver->resetCounts();
+		Scripting::fireEvent("screensaver-stop");
 
 		// Tell the GUI components the screensaver has stopped
 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
