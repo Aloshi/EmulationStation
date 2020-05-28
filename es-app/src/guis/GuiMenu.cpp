@@ -103,12 +103,6 @@ void GuiMenu::openSoundSettings()
 		// audio card
 		auto audio_card = std::make_shared< OptionListComponent<std::string> >(mWindow, "AUDIO CARD", false);
 		std::vector<std::string> audio_cards;
-	#ifdef _RPI_
-		// RPi Specific  Audio Cards
-		audio_cards.push_back("local");
-		audio_cards.push_back("hdmi");
-		audio_cards.push_back("both");
-	#endif
 		audio_cards.push_back("default");
 		audio_cards.push_back("sysdefault");
 		audio_cards.push_back("dmix");
@@ -133,6 +127,8 @@ void GuiMenu::openSoundSettings()
 		auto vol_dev = std::make_shared< OptionListComponent<std::string> >(mWindow, "AUDIO DEVICE", false);
 		std::vector<std::string> transitions;
 		transitions.push_back("PCM");
+		transitions.push_back("HDMI");
+		transitions.push_back("Headphone");
 		transitions.push_back("Speaker");
 		transitions.push_back("Master");
 		transitions.push_back("Digital");
@@ -180,6 +176,7 @@ void GuiMenu::openSoundSettings()
 		omx_cards.push_back("local");
 		omx_cards.push_back("hdmi");
 		omx_cards.push_back("both");
+		omx_cards.push_back("alsa");
 		omx_cards.push_back("alsa:hw:0,0");
 		omx_cards.push_back("alsa:hw:1,0");
 		if (Settings::getInstance()->getString("OMXAudioDev") != "") {
