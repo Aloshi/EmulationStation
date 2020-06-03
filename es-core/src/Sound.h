@@ -5,6 +5,7 @@
 #include "SDL_audio.h"
 #include <map>
 #include <memory>
+#include <string>
 
 class ThemeData;
 

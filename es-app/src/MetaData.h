@@ -4,6 +4,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 namespace pugi { class xml_node; }
 
