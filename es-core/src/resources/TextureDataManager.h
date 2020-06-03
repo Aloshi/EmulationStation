@@ -63,7 +63,7 @@ public:
 	// will be deleted when the other thread has finished with it
 	void remove(const TextureResource* key);
 
-	std::shared_ptr<TextureData> get(const TextureResource* key);
+	std::shared_ptr<TextureData> get(const TextureResource* key, bool enableLoading = true);
 	bool bind(const TextureResource* key);
 
 	// Get the total size of all textures managed by this object, loaded and unloaded in bytes

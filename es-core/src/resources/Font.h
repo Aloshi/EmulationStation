@@ -53,8 +53,8 @@ public:
 	float getHeight(float lineSpacing = 1.5f) const;
 	float getLetterHeight();
 
-	void unload(std::shared_ptr<ResourceManager>& rm) override;
-	void reload(std::shared_ptr<ResourceManager>& rm) override;
+	bool unload() override;
+	void reload() override;
 
 	int getSize() const;
 	inline const std::string& getPath() const { return mPath; }
@@ -130,6 +130,8 @@ private:
 	const std::string mPath;
 
 	float getNewlineStartOffset(const std::string& text, const unsigned int& charStart, const float& xLen, const Alignment& alignment);
+
+	bool mLoaded;
 
 	friend TextCache;
 };

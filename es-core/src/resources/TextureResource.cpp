@@ -83,7 +83,7 @@ bool TextureResource::isTiled() const
 {
 	if (mTextureData != nullptr)
 		return mTextureData->tiled();
-	std::shared_ptr<TextureData> data = sTextureDataManager.get(this);
+	std::shared_ptr<TextureData> data = sTextureDataManager.get(this, false);
 	return data->tiled();
 }
 
@@ -199,23 +199,36 @@ size_t TextureResource::getTotalTextureSize()
 	return total;
 }
 
-void TextureResource::unload(std::shared_ptr<ResourceManager>& /*rm*/)
+bool TextureResource::unload()
 {
 	// Release the texture's resources
 	std::shared_ptr<TextureData> data;
 	if (mTextureData == nullptr)
-		data = sTextureDataManager.get(this);
+		data = sTextureDataManager.get(this, false);
 	else
 		data = mTextureData;
 
-	data->releaseVRAM();
-	data->releaseRAM();
+	if (data != nullptr && data->isLoaded())
+	{
+		data->releaseVRAM();
+		data->releaseRAM();
+
+		return true;
+	}
+
+	return false;
 }
 
-void TextureResource::reload(std::shared_ptr<ResourceManager>& /*rm*/)
+void TextureResource::reload()
 {
 	// For dynamically loaded textures the texture manager will load them on demand.
 	// For manually loaded textures we have to reload them here
-	if (mTextureData)
+	if (mTextureData && !mTextureData->isLoaded())
 		mTextureData->load();
+
+	// Uncomment this 2 lines in future release in order to reload texture VRAM exactly as it was before
+	// This is commented because it needs true images async loading, or it will be very long
+
+	// else if (mTextureData == nullptr)
+	//	 sTextureDataManager.get(this);
 }
