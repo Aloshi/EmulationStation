@@ -141,6 +141,7 @@ set(CORE_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer_GL21.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer_GLES10.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer_GLES20.cpp
 
 	# Resources
 	${CMAKE_CURRENT_SOURCE_DIR}/src/resources/Font.cpp
