@@ -139,6 +139,7 @@ set(CORE_SOURCES
 
 	# Renderer
 	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer_GL14.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer_GL21.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer_GLES10.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/renderers/Renderer_GLES20.cpp

@@ -114,7 +114,7 @@ endif()
 endif()
 
 if(${GLSystem} MATCHES "Desktop OpenGL")
-    add_definitions(-DUSE_OPENGL_21)
+    add_definitions(-DUSE_OPENGL_14)
 else()
     add_definitions(-DUSE_OPENGLES_10)
 endif()
