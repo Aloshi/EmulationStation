@@ -15,8 +15,9 @@ struct InputConfigStructure
 	const char* icon;
 };
 
-static const std::array<InputConfigStructure, 25> GUI_INPUT_CONFIG_LIST =
-{{
+static const int inputCount = 25;
+static const InputConfigStructure GUI_INPUT_CONFIG_LIST[inputCount] =
+{
 	{ "Up",               false, "D-PAD UP",           ":/help/dpad_up.svg" },
 	{ "Down",             false, "D-PAD DOWN",         ":/help/dpad_down.svg" },
 	{ "Left",             false, "D-PAD LEFT",         ":/help/dpad_left.svg" },
@@ -42,7 +43,7 @@ static const std::array<InputConfigStructure, 25> GUI_INPUT_CONFIG_LIST =
 	{ "RightAnalogLeft",  true,  "RIGHT ANALOG LEFT",  ":/help/analog_left.svg" },
 	{ "RightAnalogRight", true,  "RIGHT ANALOG RIGHT", ":/help/analog_right.svg" },
 	{ "HotKeyEnable",     true,  "HOTKEY ENABLE",      ":/help/button_hotkey.svg" }
-}};
+};
 
 //MasterVolUp and MasterVolDown are also hooked up, but do not appear on this screen.
 //If you want, you can manually add them to es_input.cfg.
@@ -81,7 +82,6 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 	mGrid.setEntry(mSubtitle1, Vector2i(0, 2), false, true);
 
 	mSubtitle2 = std::make_shared<TextComponent>(mWindow, "HOLD ANY BUTTON TO SKIP", Font::get(FONT_SIZE_SMALL), 0x999999FF, ALIGN_CENTER);
-	static_assert(GUI_INPUT_CONFIG_LIST.size() > 0);
 	mSubtitle2->setOpacity(GUI_INPUT_CONFIG_LIST[0].skippable * 255);
 	mGrid.setEntry(mSubtitle2, Vector2i(0, 3), false, true);
 
@@ -89,7 +89,7 @@ GuiInputConfig::GuiInputConfig(Window* window, InputConfig* target, bool reconfi
 
 	mList = std::make_shared<ComponentList>(mWindow);
 	mGrid.setEntry(mList, Vector2i(0, 5), true, true);
-	for(int i = 0; i < GUI_INPUT_CONFIG_LIST.size(); i++)
+	for(int i = 0; i < inputCount; i++)
 	{
 		ComponentListRow row;
 
