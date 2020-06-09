@@ -93,16 +93,16 @@ void ResourceManager::unloadAll()
 {
 	auto iter = mReloadables.cbegin();
 	while(iter != mReloadables.cend())
-	{					
+	{
 		std::shared_ptr<ReloadableInfo> info = *iter;
 
 		if (!info->data.expired())
-		{		
+		{
 			info->reload = info->data.lock()->unload();
 			iter++;
 		}
 		else
-			iter = mReloadables.erase(iter);		
+			iter = mReloadables.erase(iter);
 	}
 }
 
@@ -124,7 +124,7 @@ void ResourceManager::reloadAll()
 			iter++;
 		}
 		else
-			iter = mReloadables.erase(iter);		
+			iter = mReloadables.erase(iter);
 	}
 }
 
@@ -132,6 +132,6 @@ void ResourceManager::addReloadable(std::weak_ptr<IReloadable> reloadable)
 {
 	std::shared_ptr<ReloadableInfo> info = std::make_shared<ReloadableInfo>();
 	info->data = reloadable;
-	info->reload = false;	
+	info->reload = false;
 	mReloadables.push_back(info);
 }

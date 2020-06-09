@@ -49,10 +49,10 @@ private:
 	{
 	public:
 		std::weak_ptr<IReloadable> data;
-		bool reload;		
+		bool reload;
 	};
 
-	std::list<std::shared_ptr<ReloadableInfo>> mReloadables; //  std::weak_ptr<IReloadable> 
+	std::list<std::shared_ptr<ReloadableInfo>> mReloadables; //  std::weak_ptr<IReloadable>
 };
 
 #endif // ES_CORE_RESOURCES_RESOURCE_MANAGER_H
