@@ -68,7 +68,7 @@ protected:
 private:
 	// TILES
 	void buildTiles();
-	void updateTiles(bool ascending = true, bool allowAnimation = true, bool updateSelectedState = true);
+	void updateTiles(bool allowAnimation = true, bool updateSelectedState = true);
 	void updateTileAtPos(int tilePos, int imgPos, bool allowAnimation, bool updateSelectedState);
 	void calcGridDimension();
 	bool isScrollLoop();
@@ -406,7 +406,7 @@ void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 	{
 		startPos = 0;
 		((GuiComponent*)this)->cancelAnimation(2);
-		updateTiles(direction, false, false);
+		updateTiles(false, false);
 	}
 
 	if (mAnimate) {
@@ -476,7 +476,7 @@ void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 
 	if (lastCursor < 0 || !mAnimate)
 	{
-		updateTiles(direction, mAnimate && (lastCursor >= 0 || isScrollLoop()));
+		updateTiles(mAnimate && (lastCursor >= 0 || isScrollLoop()));
 
 		if (mCursorChangedCallback)
 			mCursorChangedCallback(state);
@@ -501,9 +501,9 @@ void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 		mCamera = t;
 	};
 
-	((GuiComponent*)this)->setAnimation(new LambdaAnimation(func, 250), 0, [this, direction] {
+	((GuiComponent*)this)->setAnimation(new LambdaAnimation(func, 250), 0, [this] {
 		mCamera = 0;
-		updateTiles(direction, false);
+		updateTiles(false);
 	}, false, 2);
 }
 
@@ -571,7 +571,7 @@ void ImageGridComponent<T>::buildTiles()
 }
 
 template<typename T>
-void ImageGridComponent<T>::updateTiles(bool ascending, bool allowAnimation, bool updateSelectedState)
+void ImageGridComponent<T>::updateTiles(bool allowAnimation, bool updateSelectedState)
 {
 	if (!mTiles.size())
 		return;
@@ -590,7 +590,7 @@ void ImageGridComponent<T>::updateTiles(bool ascending, bool allowAnimation, boo
 		return;
 	}
 
-	// Temporary store previous texture so they can't be unloaded
+	// Temporary store previous textures so they can't be unloaded
 	std::vector<std::shared_ptr<TextureResource>> previousTextures;
 	for (int ti = 0; ti < (int)mTiles.size(); ti++)
 	{
@@ -598,23 +598,10 @@ void ImageGridComponent<T>::updateTiles(bool ascending, bool allowAnimation, boo
 		previousTextures.push_back(tile->getTexture());
 	}
 
-	// If going down, update from top to bottom
-	// If going up, update from bottom to top
-	int scrollDirection = ascending ? 1 : -1;
-	int ti = ascending ? 0 : (int)mTiles.size() - 1;
-	int end = ascending ? (int)mTiles.size() : -1;
-	int img = mStartPosition + ti;
-
-	img -= EXTRAITEMS * (isVertical() ? mGridDimension.x() : mGridDimension.y());
-
 	// Update the tiles
-	while (ti != end)
-	{
-		updateTileAtPos(ti, img, allowAnimation, updateSelectedState);
-
-		ti += scrollDirection;
-		img += scrollDirection;
-	}
+	int firstImg = mStartPosition - EXTRAITEMS * (isVertical() ? mGridDimension.x() : mGridDimension.y());
+	for (int ti = 0; ti < (int)mTiles.size(); ti++)
+		updateTileAtPos(ti, firstImg + ti, allowAnimation, updateSelectedState);
 
 	if (updateSelectedState)
 		mLastCursor = mCursor;
