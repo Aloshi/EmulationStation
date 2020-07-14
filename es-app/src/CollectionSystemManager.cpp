@@ -626,7 +626,8 @@ void CollectionSystemManager::updateCollectionFolderMetadata(SystemData* sys)
 			}
 		}
 
-		desc = "This collection contains " + std::to_string(games_counter) + " games, including " + games_list;
+		desc = "This collection contains " + std::to_string(games_counter) + " game"
+				+ (games_counter == 1 ? "" : "s") + ", including " + games_list;
 
 		FileData* randomGame = sys->getRandomGame();
 
