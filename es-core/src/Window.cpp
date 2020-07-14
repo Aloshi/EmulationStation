@@ -127,6 +127,8 @@ void Window::input(InputConfig* config, Input input)
 					if (input.value != 0) {
 						// handle screensaver control
 						mScreenSaver->nextVideo();
+						// user input resets sleep time counter
+						mTimeSinceLastInput = 0;
 					}
 					return;
 				}
