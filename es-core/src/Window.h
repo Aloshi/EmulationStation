@@ -25,7 +25,7 @@ public:
 	public:
 		virtual void startScreenSaver() = 0;
 		virtual void stopScreenSaver() = 0;
-		virtual void nextVideo() = 0;
+		virtual void nextMediaItem() = 0;
 		virtual void renderScreenSaver() = 0;
 		virtual bool allowSleep() = 0;
 		virtual void update(int deltaTime) = 0;
@@ -80,15 +80,16 @@ public:
 private:
 	void onSleep();
 	void onWake();
+	bool inputDuringScreensaver(InputConfig* config, Input input);
 
 	// Returns true if at least one component on the stack is processing
 	bool isProcessing();
 
-	HelpComponent* mHelp;
+	HelpComponent*	mHelp;
 	ImageComponent* mBackgroundOverlay;
 	ScreenSaver*	mScreenSaver;
-	InfoPopup*		mInfoPopup;
-	bool			mRenderScreenSaver;
+	InfoPopup*	mInfoPopup;
+	bool		mRenderScreenSaver;
 
 	std::vector<GuiComponent*> mGuiStack;
 

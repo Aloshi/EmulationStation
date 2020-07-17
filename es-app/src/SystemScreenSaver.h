@@ -17,7 +17,7 @@ public:
 
 	virtual void startScreenSaver();
 	virtual void stopScreenSaver();
-	virtual void nextVideo();
+	virtual void nextMediaItem();
 	virtual void renderScreenSaver();
 	virtual bool allowSleep();
 	virtual void update(int deltaTime);
@@ -55,11 +55,11 @@ private:
 	Window*			mWindow;
 	STATE			mState;
 	float			mOpacity;
-	int				mTimer;
+	int			mTimer;
 	FileData*		mCurrentGame;
 	std::string		mGameName;
 	std::string		mSystemName;
-	int 			mVideoChangeTime;
+	int 			mSwapTimeout;
 	std::shared_ptr<Sound>	mBackgroundAudio;
 	bool			mStopBackgroundAudio;
 };
