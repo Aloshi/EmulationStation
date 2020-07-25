@@ -38,7 +38,7 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	if(!Utils::FileSystem::exists(path))
 		Utils::FileSystem::createDirectory(path);
 	srand((unsigned int)time(NULL));
-	mVideoChangeTime = 30000;
+	mSwapTimeout = 30000;
 }
 
 SystemScreenSaver::~SystemScreenSaver()
@@ -70,7 +70,7 @@ void SystemScreenSaver::startScreenSaver()
 		mState =  PowerSaver::getMode() == PowerSaver::INSTANT
 					? STATE_SCREENSAVER_ACTIVE
 					: STATE_FADE_OUT_WINDOW;
-		mVideoChangeTime = Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout");
+		mSwapTimeout = Settings::getInstance()->getInt("ScreenSaverSwapVideoTimeout");
 		mOpacity = 0.0f;
 
 		// Load a random video
@@ -122,7 +122,7 @@ void SystemScreenSaver::startScreenSaver()
 		mState =  PowerSaver::getMode() == PowerSaver::INSTANT
 					? STATE_SCREENSAVER_ACTIVE
 					: STATE_FADE_OUT_WINDOW;
-		mVideoChangeTime = Settings::getInstance()->getInt("ScreenSaverSwapImageTimeout");
+		mSwapTimeout = Settings::getInstance()->getInt("ScreenSaverSwapImageTimeout");
 		mOpacity = 0.0f;
 
 		// Load a random image
@@ -431,22 +431,22 @@ void SystemScreenSaver::update(int deltaTime)
 	}
 	else if (mState == STATE_SCREENSAVER_ACTIVE)
 	{
-		// Update the timer that swaps the videos
+		// Update the timer that swaps the videos/images
 		mTimer += deltaTime;
-		if (mTimer > mVideoChangeTime)
+		if (mTimer > mSwapTimeout)
 		{
-			nextVideo();
+			nextMediaItem();
 		}
 	}
 
-	// If we have a loaded video then update it
+	// If we have a loaded video/image then update it
 	if (mVideoScreensaver)
 		mVideoScreensaver->update(deltaTime);
-	if (mImageScreensaver)
+	else if (mImageScreensaver)
 		mImageScreensaver->update(deltaTime);
 }
 
-void SystemScreenSaver::nextVideo() {
+void SystemScreenSaver::nextMediaItem() {
 	mStopBackgroundAudio = false;
 	stopScreenSaver();
 	startScreenSaver();
@@ -466,9 +466,6 @@ void SystemScreenSaver::launchGame()
 		ViewController::get()->goToGameList(mCurrentGame->getSystem());
 		IGameListView* view = ViewController::get()->getGameListView(mCurrentGame->getSystem()).get();
 		view->setCursor(mCurrentGame);
-		if (Settings::getInstance()->getBool("ScreenSaverControls"))
-		{
-			view->launch(mCurrentGame);
-		}
+		view->launch(mCurrentGame);
 	}
 }
