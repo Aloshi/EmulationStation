@@ -25,6 +25,7 @@ namespace PlatformIds
 		BBC_MICRO,
 		COLECOVISION,
 		COMMODORE_64,
+		DAPHNE,
 		INTELLIVISION,
 		MAC_OS,
 		XBOX,
