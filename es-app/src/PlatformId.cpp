@@ -66,7 +66,7 @@ namespace PlatformIds
 		"snes", // super nintendo entertainment system
 		"scummvm",
 		"x1",
-		"x6800",
+		"x68000",
 		"solarus",
 		"moto", // Thomson MO/TO
 		"pc88", // NEC PC-8801
