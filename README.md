@@ -7,6 +7,8 @@ EmulationStation is a cross-platform graphical front-end for emulators with cont
 Building
 ========
 
+**Building on Linux**
+
 EmulationStation uses some C++11 code, which means you'll need to use at least g++-4.7 on Linux, or VS2010 on Windows, to compile.
 
 EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, FreeImage, FreeType, cURL and RapidJSON.  You also should probably install the `fonts-droid` package which contains fallback fonts for Chinese/Japanese/Korean characters, but ES will still work fine without it (this package is only used at run-time).
@@ -15,7 +17,7 @@ EmulationStation has a few dependencies. For building, you'll need CMake, SDL2, 
 All of this be easily installed with `apt-get`:
 ```bash
 sudo apt-get install libsdl2-dev libfreeimage-dev libfreetype6-dev libcurl4-openssl-dev rapidjson-dev \
-  libasound2-dev libgl1-mesa-dev build-essential cmake fonts-droid-fallback libvlc-dev \
+  libasound2-dev libgles2-mesa-dev build-essential cmake fonts-droid-fallback libvlc-dev \
   libvlccore-dev vlc-bin
 ```
 **On Fedora:**
@@ -26,7 +28,7 @@ sudo dnf install SDL2-devel freeimage-devel freetype-devel curl-devel \
   vlc-devel rapidjson-devel 
 ```
 
-Note this Repository uses a git submodule - to checkout the source and all submodules, use
+**Note**: this repository uses a git submodule - to checkout the source and all submodules, use
 
 ```bash
 git clone --recursive https://github.com/RetroPie/EmulationStation.git
@@ -52,11 +54,20 @@ NOTE: to generate a `Debug` build on Unix/Linux, run the Makefile generation ste
 cmake -DCMAKE_BUILD_TYPE=Debug .
 ```
 
-**On the Raspberry Pi:**
+**On the Raspberry Pi**  
 
-Complete Raspberry Pi build instructions at [emulationstation.org](http://emulationstation.org/gettingstarted.html#install_rpi_standalone).
+* Choosing a GLES implementation.
 
-**On Windows:**
+   * if the Pi system uses the legacy/Broadcom driver, install the `libraspberry-dev` package before running `cmake` to configure the build
+   * if the Pi system uses the Mesa VC3/V3D GL driver, build using `-DUSE_MESA_GLES=On` to choose the MESA GLES implementation. This option is _mandatory_ when compiling for a Pi4 system, since the legacy GL drivers are not supported anymore on this system.
+
+* Support for using `omxplayer` to play video previews in the gamelist is enabled by adding `-DRPI=On` to the build options
+
+**GLES build notes**
+
+ If your system doesn't have a working GLESv2 implementation, the GLESv1 legacy renderer can be compiled in by adding `-DUSE_GLES1=On` to the build options.
+
+**Building on Windows**
 
 [FreeImage](http://downloads.sourceforge.net/freeimage/FreeImage3154Win32.zip)
 
