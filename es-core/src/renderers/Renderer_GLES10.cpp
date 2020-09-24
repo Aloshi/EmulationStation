@@ -105,7 +105,6 @@ namespace Renderer
 		LOG(LogInfo) << "GL renderer: " << renderer;
 		LOG(LogInfo) << "GL version:  " << version;
 		LOG(LogInfo) << "Checking available OpenGL extensions...";
-		std::string glExts = glGetString(GL_EXTENSIONS) ? (const char*)glGetString(GL_EXTENSIONS) : "";
 		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (extensions.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
 
 		uint8_t data[4] = {255, 255, 255, 255};
