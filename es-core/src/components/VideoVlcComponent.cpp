@@ -272,12 +272,22 @@ void VideoVlcComponent::startVideo()
 				// Make sure we found a valid video track
 				if ((mVideoWidth > 0) && (mVideoHeight > 0))
 				{
-#ifndef _RPI_
 					if (mScreensaverMode)
 					{
-						if(!Settings::getInstance()->getBool("CaptionsCompatibility")) {
+						std::string resolution = Settings::getInstance()->getString("VlcScreenSaverResolution");
+						if(resolution != "original") {
+							float scale = 1;			
+							if (resolution == "low")
+								// 25% of screen resolution
+								scale = 0.25;
+							if (resolution == "medium")
+								// 50% of screen resolution
+								scale = 0.5;
+							if (resolution == "high")
+								// 75% of screen resolution
+								scale = 0.75;
 
-							Vector2f resizeScale((Renderer::getScreenWidth() / (float)mVideoWidth), (Renderer::getScreenHeight() / (float)mVideoHeight));
+							Vector2f resizeScale((Renderer::getScreenWidth() / (float)mVideoWidth) * scale, (Renderer::getScreenHeight() / (float)mVideoHeight) * scale);
 
 							if(resizeScale.x() < resizeScale.y())
 							{
@@ -289,7 +299,6 @@ void VideoVlcComponent::startVideo()
 							}
 						}
 					}
-#endif
 					PowerSaver::pause();
 					setupContext();
 

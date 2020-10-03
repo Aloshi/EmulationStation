@@ -132,7 +132,7 @@ void Settings::setDefaults()
 
 	mBoolMap["VideoAudio"] = true;
 	mBoolMap["ScreenSaverVideoMute"] = false;
-	mBoolMap["CaptionsCompatibility"] = true;
+	mStringMap["VlcScreenSaverResolution"] = "original";
 	// Audio out device for Video playback using OMX player.
 	mStringMap["OMXAudioDev"] = "both";
 	mStringMap["CollectionSystemsAuto"] = "";
