@@ -140,6 +140,7 @@ void Settings::setDefaults()
 	mBoolMap["CollectionShowSystemInfo"] = true;
 	mBoolMap["SortAllSystems"] = false;
 	mBoolMap["UseCustomCollectionsSystem"] = true;
+	mBoolMap["BackgroundIndexing"] = false;
 
 	mBoolMap["LocalArt"] = false;
 

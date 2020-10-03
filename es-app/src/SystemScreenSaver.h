@@ -3,6 +3,7 @@
 #define ES_APP_SYSTEM_SCREEN_SAVER_H
 
 #include "Window.h"
+#include <thread>
 
 class ImageComponent;
 class Sound;
@@ -36,6 +37,8 @@ private:
 	void pickRandomGameListImage(std::string& path);
 	void pickRandomCustomImage(std::string& path);
 
+	void backgroundIndexing();
+
 	void input(InputConfig* config, Input input);
 
 	enum STATE {
@@ -62,6 +65,9 @@ private:
 	int 			mSwapTimeout;
 	std::shared_ptr<Sound>	mBackgroundAudio;
 	bool			mStopBackgroundAudio;
+
+	std::thread*				mThread;
+	bool 						mExit;
 };
 
 #endif // ES_APP_SYSTEM_SCREEN_SAVER_H
