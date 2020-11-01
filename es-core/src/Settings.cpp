@@ -145,7 +145,7 @@ void Settings::setDefaults()
 
 	// Audio out device for volume control
 	#ifdef _RPI_
-		mStringMap["AudioDevice"] = "PCM";
+		mStringMap["AudioDevice"] = "HDMI";
 	#else
 		mStringMap["AudioDevice"] = "Master";
 	#endif
