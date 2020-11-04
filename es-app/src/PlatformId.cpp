@@ -24,6 +24,7 @@ namespace PlatformIds
 		"bbcmicro",
 		"colecovision",
 		"c64", // commodore 64
+		"daphne",
 		"intellivision",
 		"macintosh",
 		"xbox",
