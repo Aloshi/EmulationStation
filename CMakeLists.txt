@@ -56,10 +56,12 @@ elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/opt/vero3/lib/libMali.so")
     set(GLES_EXTRA_LIBRARIES EGL)
 
 #check if we're running on olinuxino / odroid / etc
-elseif(EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/libMali.so")
-    set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
-    set(HINT_GLES_LIBNAME Mali)
-
+elseif(
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/libMali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/libmali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/libMali.so" OR
+    EXISTS "${CMAKE_FIND_ROOT_PATH}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/mali-egl/libmali.so")
+        set(GLSystem "Embedded OpenGL" CACHE STRING "The OpenGL system to be used")
 else()
     set(GLSystem "Desktop OpenGL" CACHE STRING "The OpenGL system to be used")
 endif(GLES)
