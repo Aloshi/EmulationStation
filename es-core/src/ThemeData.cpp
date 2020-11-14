@@ -329,7 +329,7 @@ void ThemeData::parseVariables(const pugi::xml_node& root)
 	for(pugi::xml_node_iterator it = variables.begin(); it != variables.end(); ++it)
 	{
 		std::string key = it->name();
-		std::string val = it->text().as_string();
+		std::string val = resolvePlaceholders(it->text().as_string());
 
 		if (!val.empty())
 			mVariables.insert(std::pair<std::string, std::string>(key, val));
