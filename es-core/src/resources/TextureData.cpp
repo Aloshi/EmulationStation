@@ -175,7 +175,7 @@ bool TextureData::uploadAndBind()
 			return false;
 
 		// Upload texture
-		mTextureID = Renderer::createTexture(Renderer::Texture::RGBA, true, mTile, mWidth, mHeight, mDataRGBA);
+		mTextureID = Renderer::createTexture(Renderer::Texture::RGBA, true, mTile, (int)mWidth, (int)mHeight, mDataRGBA);
 	}
 	return true;
 }
