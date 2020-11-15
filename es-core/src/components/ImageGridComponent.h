@@ -395,7 +395,7 @@ void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 	int oldCol = (mLastCursor / dimOpposite);
 	int col = (mCursor / dimOpposite);
 
-	int lastCol = ((mEntries.size() - 1) / dimOpposite);
+	int lastCol = (((int)mEntries.size() - 1) / dimOpposite);
 
 	int lastScroll = std::max(0, (lastCol + 1 - dimScrollable));
 
@@ -421,9 +421,9 @@ void ImageGridComponent<T>::onCursorChanged(const CursorState& state)
 		int newIdx = mCursor - mStartPosition + (dimOpposite * EXTRAITEMS);
 		if (isScrollLoop()) {
 			if (newIdx < 0)
-				newIdx += mEntries.size();
+				newIdx += (int)mEntries.size();
 			else if (newIdx >= mTiles.size())
-				newIdx -= mEntries.size();
+				newIdx -= (int)mEntries.size();
 		}
 
 		if (newIdx >= 0 && newIdx < mTiles.size())
@@ -630,9 +630,9 @@ void ImageGridComponent<T>::updateTileAtPos(int tilePos, int imgPos, bool allowA
 	if(isScrollLoop())
 	{
 		if (imgPos < 0)
-			imgPos += mEntries.size();
+			imgPos += (int)mEntries.size();
 		else if (imgPos >= size())
-			imgPos -= mEntries.size();
+			imgPos -= (int)mEntries.size();
 	}
 
 	// If we have more tiles than we have to display images on screen, hide them

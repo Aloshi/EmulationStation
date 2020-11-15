@@ -363,7 +363,7 @@ void ComponentGrid::render(const Transform4x4f& parentTrans)
 	{
 		Renderer::setMatrix(trans);
 		Renderer::bindTexture(0);
-		Renderer::drawLines(&mLines[0], mLines.size());
+		Renderer::drawLines(&mLines[0], (int)mLines.size());
 	}
 }
 

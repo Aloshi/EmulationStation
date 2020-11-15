@@ -412,7 +412,7 @@ void Font::renderTextCache(TextCache* cache)
 		auto vertexList = *it;
 
 		Renderer::bindTexture(*it->textureIdPtr);
-		Renderer::drawTriangleStrips(&it->verts[0], it->verts.size());
+		Renderer::drawTriangleStrips(&it->verts[0], (int)it->verts.size());
 	}
 }
 
