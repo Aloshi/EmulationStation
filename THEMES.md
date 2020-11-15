@@ -285,6 +285,7 @@ You can now change the order in which elements are rendered by setting `zIndex` 
 * Media
 	* `image name="md_image"` - 30
 	* `video name="md_video"` - 30
+	* `image name="md_thumbnail"` - 35
 	* `image name="md_marquee"` - 35
 * Metadata - 40
 	* Labels
