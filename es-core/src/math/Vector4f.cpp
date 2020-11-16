@@ -1,5 +1,7 @@
 #include "math/Vector4f.h"
 
+//////////////////////////////////////////////////////////////////////////
+
 Vector4f& Vector4f::round()
 {
 	mX = (float)(int)(mX + 0.5f);
@@ -10,6 +12,8 @@ Vector4f& Vector4f::round()
 	return *this;
 
 } // round
+
+//////////////////////////////////////////////////////////////////////////
 
 Vector4f& Vector4f::lerp(const Vector4f& _start, const Vector4f& _end, const float _fraction)
 {

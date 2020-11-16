@@ -88,7 +88,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mDescription.setFont(Font::get(FONT_SIZE_SMALL));
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
-	
+
 	// Image
 	// Default to off the screen
 	mImage.setOrigin(0.5f, 0.5f);
@@ -326,7 +326,7 @@ void GridGameListView::updateInfoPanel()
 		mVideo->setImage(file->getThumbnailPath());
 		mMarquee.setImage(file->getMarqueePath());
 		mImage.setImage(file->getImagePath());
- 
+
 		mDescription.setText(file->metadata.get("desc"));
 		mDescContainer.reset();
 
@@ -383,7 +383,7 @@ void GridGameListView::addPlaceholder()
 }
 
 void GridGameListView::launch(FileData* game)
-{	
+{
 	float screenWidth = (float) Renderer::getScreenWidth();
 	float screenHeight = (float) Renderer::getScreenHeight();
 
@@ -400,7 +400,7 @@ void GridGameListView::launch(FileData* game)
 		 mImage.getPosition().y() < screenHeight && mImage.getPosition().y() > 2.0f))
 	{
 		target = Vector3f(mImage.getCenter().x(), mImage.getCenter().y(), 0);
-	}	
+	}
 	else if(mVideo->getPosition().x() < screenWidth && mVideo->getPosition().x() > 0.0f &&
 		 mVideo->getPosition().y() < screenHeight && mVideo->getPosition().y() > 0.0f)
 	{

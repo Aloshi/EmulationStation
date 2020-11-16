@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <stdarg.h>
 
+//////////////////////////////////////////////////////////////////////////
+
 namespace Utils
 {
 	namespace String
@@ -48,6 +50,8 @@ namespace Utils
 
 		} // chars2Unicode
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string unicode2Chars(const unsigned int _unicode)
 		{
 			std::string result;
@@ -84,6 +88,8 @@ namespace Utils
 
 		} // unicode2Chars
 
+//////////////////////////////////////////////////////////////////////////
+
 		size_t nextCursor(const std::string& _string, const size_t _cursor)
 		{
 			size_t result = _cursor;
@@ -100,6 +106,8 @@ namespace Utils
 
 		} // nextCursor
 
+//////////////////////////////////////////////////////////////////////////
+
 		size_t prevCursor(const std::string& _string, const size_t _cursor)
 		{
 			size_t result = _cursor;
@@ -115,6 +123,8 @@ namespace Utils
 			return result;
 
 		} // prevCursor
+
+//////////////////////////////////////////////////////////////////////////
 
 		size_t moveCursor(const std::string& _string, const size_t _cursor, const int _amount)
 		{
@@ -135,6 +145,8 @@ namespace Utils
 
 		} // moveCursor
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string toLower(const std::string& _string)
 		{
 			std::string string;
@@ -146,6 +158,8 @@ namespace Utils
 
 		} // toLower
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string toUpper(const std::string& _string)
 		{
 			std::string string;
@@ -156,6 +170,8 @@ namespace Utils
 			return string;
 
 		} // toUpper
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string trim(const std::string& _string)
 		{
@@ -169,6 +185,8 @@ namespace Utils
 
 		} // trim
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string replace(const std::string& _string, const std::string& _replace, const std::string& _with)
 		{
 			std::string string = _string;
@@ -181,17 +199,23 @@ namespace Utils
 
 		} // replace
 
+//////////////////////////////////////////////////////////////////////////
+
 		bool startsWith(const std::string& _string, const std::string& _start)
 		{
 			return (_string.find(_start) == 0);
 
 		} // startsWith
 
+//////////////////////////////////////////////////////////////////////////
+
 		bool endsWith(const std::string& _string, const std::string& _end)
 		{
 			return (_string.find(_end) == (_string.size() - _end.size()));
 
 		} // endsWith
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string removeParenthesis(const std::string& _string)
 		{
@@ -222,6 +246,8 @@ namespace Utils
 
 		} // removeParenthesis
 
+//////////////////////////////////////////////////////////////////////////
+
 		stringVector delimitedStringToVector(const std::string& _string, const std::string& _delimiter, bool sort)
 		{
 			stringVector vector;
@@ -243,10 +269,15 @@ namespace Utils
 
 		} // delimitedStringToVector
 
+//////////////////////////////////////////////////////////////////////////
+
 		stringVector commaStringToVector(const std::string& _string, bool sort)
 		{
 			return delimitedStringToVector(_string, ",", sort);
+
 		} // commaStringToVector
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string vectorToCommaString(stringVector _vector)
 		{
@@ -260,6 +291,8 @@ namespace Utils
 			return string;
 
 		} // vectorToCommaString
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string format(const char* _format, ...)
 		{
@@ -285,6 +318,8 @@ namespace Utils
 			return out;
 
 		} // format
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string scramble(const std::string& _input, const std::string& _key)
 		{

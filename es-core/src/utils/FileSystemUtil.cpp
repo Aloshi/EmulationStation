@@ -21,12 +21,16 @@
 #include <unistd.h>
 #endif // _WIN32
 
+//////////////////////////////////////////////////////////////////////////
+
 namespace Utils
 {
 	namespace FileSystem
 	{
 		static std::string homePath = "";
 		static std::string exePath  = "";
+
+//////////////////////////////////////////////////////////////////////////
 
 #if defined(_WIN32)
 		static std::string convertFromWideString(const std::wstring wstring)
@@ -41,6 +45,8 @@ namespace Utils
 
 		} // convertFromWideString
 #endif // _WIN32
+
+//////////////////////////////////////////////////////////////////////////
 
 		stringList getDirContent(const std::string& _path, const bool _recursive)
 		{
@@ -102,7 +108,7 @@ namespace Utils
 
 					closedir(dir);
 				}
-#endif // _WIN32
+#endif // !_WIN32
 
 			}
 
@@ -113,6 +119,8 @@ namespace Utils
 			return contentList;
 
 		} // getDirContent
+
+//////////////////////////////////////////////////////////////////////////
 
 		stringList getPathList(const std::string& _path)
 		{
@@ -139,11 +147,15 @@ namespace Utils
 
 		} // getPathList
 
+//////////////////////////////////////////////////////////////////////////
+
 		void setHomePath(const std::string& _path)
 		{
 			homePath = getGenericPath(_path);
 
 		} // setHomePath
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string getHomePath()
 		{
@@ -183,6 +195,8 @@ namespace Utils
 
 		} // getHomePath
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string getCWDPath()
 		{
 			char temp[512];
@@ -192,6 +206,8 @@ namespace Utils
 
 		} // getCWDPath
 
+//////////////////////////////////////////////////////////////////////////
+
 		void setExePath(const std::string& _path)
 		{
 			constexpr int path_max = 32767;
@@ -199,11 +215,12 @@ namespace Utils
 			std::wstring result(path_max, 0);
 			if(GetModuleFileNameW(nullptr, &result[0], path_max) != 0)
 				exePath = convertFromWideString(result);
-#else
+#else // _WIN32
 			std::string result(path_max, 0);
 			if(readlink("/proc/self/exe", &result[0], path_max) != -1)
 				exePath = result;
-#endif
+#endif // !_WIN32
+
 			exePath = getCanonicalPath(exePath);
 
 			// Fallback to argv[0] if everything else fails
@@ -214,6 +231,8 @@ namespace Utils
 
 		} // setExePath
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string getExePath()
 		{
 			// return constructed exepath
@@ -221,17 +240,23 @@ namespace Utils
 
 		} // getExePath
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string getPreferredPath(const std::string& _path)
 		{
 			std::string path   = _path;
 			size_t      offset = std::string::npos;
+
 #if defined(_WIN32)
 			// convert '/' to '\\'
 			while((offset = path.find('/')) != std::string::npos)
 				path.replace(offset, 1, "\\");
 #endif // _WIN32
+
 			return path;
 		}
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string getGenericPath(const std::string& _path)
 		{
@@ -258,6 +283,8 @@ namespace Utils
 			return path;
 
 		} // getGenericPath
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string getEscapedPath(const std::string& _path)
 		{
@@ -292,9 +319,11 @@ namespace Utils
 
 			// return escaped path
 			return path;
-#endif // _WIN32
+#endif // !_WIN32
 
 		} // getEscapedPath
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string getCanonicalPath(const std::string& _path)
 		{
@@ -336,7 +365,7 @@ namespace Utils
 #else // _WIN32
 					// append folder to path
 					path += ("/" + (*it));
-#endif // _WIN32
+#endif // !_WIN32
 
 					// resolve symlink
 					if(isSymlink(path))
@@ -365,6 +394,8 @@ namespace Utils
 
 		} // getCanonicalPath
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string getAbsolutePath(const std::string& _path, const std::string& _base)
 		{
 			std::string path = getGenericPath(_path);
@@ -374,6 +405,8 @@ namespace Utils
 			return isAbsolute(path) ? path : getGenericPath(base + "/" + path);
 
 		} // getAbsolutePath
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string getParent(const std::string& _path)
 		{
@@ -389,6 +422,8 @@ namespace Utils
 
 		} // getParent
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string getFileName(const std::string& _path)
 		{
 			std::string path   = getGenericPath(_path);
@@ -402,6 +437,8 @@ namespace Utils
 			return path;
 
 		} // getFileName
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string getStem(const std::string& _path)
 		{
@@ -421,6 +458,8 @@ namespace Utils
 
 		} // getStem
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string getExtension(const std::string& _path)
 		{
 			std::string fileName = getFileName(_path);
@@ -438,6 +477,8 @@ namespace Utils
 			return ".";
 
 		} // getExtension
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
 		{
@@ -460,6 +501,8 @@ namespace Utils
 			return path;
 
 		} // resolveRelativePath
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string createRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
 		{
@@ -484,6 +527,8 @@ namespace Utils
 
 		} // createRelativePath
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string removeCommonPath(const std::string& _path, const std::string& _common, bool& _contains)
 		{
 			std::string path   = getGenericPath(_path);
@@ -501,6 +546,8 @@ namespace Utils
 			return path;
 
 		} // removeCommonPath
+
+//////////////////////////////////////////////////////////////////////////
 
 		std::string resolveSymlink(const std::string& _path)
 		{
@@ -530,12 +577,14 @@ namespace Utils
 				if(readlink(path.c_str(), (char*)resolved.data(), resolved.size()) > 0)
 					resolved = getGenericPath(resolved);
 			}
-#endif // _WIN32
+#endif // !_WIN32
 
 			// return resolved path
 			return resolved;
 
 		} // resolveSymlink
+
+//////////////////////////////////////////////////////////////////////////
 
 		bool removeFile(const std::string& _path)
 		{
@@ -549,6 +598,8 @@ namespace Utils
 			return (unlink(path.c_str()) == 0);
 
 		} // removeFile
+
+//////////////////////////////////////////////////////////////////////////
 
 		bool createDirectory(const std::string& _path)
 		{
@@ -574,6 +625,8 @@ namespace Utils
 
 		} // createDirectory
 
+//////////////////////////////////////////////////////////////////////////
+
 		bool exists(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
@@ -584,6 +637,8 @@ namespace Utils
 
 		} // exists
 
+//////////////////////////////////////////////////////////////////////////
+
 		bool isAbsolute(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
@@ -592,9 +647,11 @@ namespace Utils
 			return ((path.size() > 1) && (path[1] == ':'));
 #else // _WIN32
 			return ((path.size() > 0) && (path[0] == '/'));
-#endif // _WIN32
+#endif // !_WIN32
 
 		} // isAbsolute
+
+//////////////////////////////////////////////////////////////////////////
 
 		bool isRegularFile(const std::string& _path)
 		{
@@ -610,6 +667,8 @@ namespace Utils
 
 		} // isRegularFile
 
+//////////////////////////////////////////////////////////////////////////
+
 		bool isDirectory(const std::string& _path)
 		{
 			std::string path = getGenericPath(_path);
@@ -623,6 +682,8 @@ namespace Utils
 			return (S_ISDIR(info.st_mode));
 
 		} // isDirectory
+
+//////////////////////////////////////////////////////////////////////////
 
 		bool isSymlink(const std::string& _path)
 		{
@@ -642,12 +703,14 @@ namespace Utils
 
 			// check for S_IFLNK attribute
 			return (S_ISLNK(info.st_mode));
-#endif // _WIN32
+#endif // !_WIN32
 
 			// not a symlink
 			return false;
 
 		} // isSymlink
+
+//////////////////////////////////////////////////////////////////////////
 
 		bool isHidden(const std::string& _path)
 		{

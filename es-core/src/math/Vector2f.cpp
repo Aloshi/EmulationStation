@@ -1,5 +1,7 @@
 #include "math/Vector2f.h"
 
+//////////////////////////////////////////////////////////////////////////
+
 Vector2f& Vector2f::round()
 {
 	mX = (float)(int)(mX + 0.5f);
@@ -8,6 +10,8 @@ Vector2f& Vector2f::round()
 	return *this;
 
 } // round
+
+//////////////////////////////////////////////////////////////////////////
 
 Vector2f& Vector2f::lerp(const Vector2f& _start, const Vector2f& _end, const float _fraction)
 {

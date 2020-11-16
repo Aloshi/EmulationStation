@@ -1,5 +1,7 @@
 #include "math/Transform4x4f.h"
 
+//////////////////////////////////////////////////////////////////////////
+
 const Transform4x4f Transform4x4f::operator*(const Transform4x4f& _other) const
 {
 	const float* tm = (float*)this;
@@ -35,6 +37,8 @@ const Transform4x4f Transform4x4f::operator*(const Transform4x4f& _other) const
 
 } // operator*
 
+//////////////////////////////////////////////////////////////////////////
+
 const Vector3f Transform4x4f::operator*(const Vector3f& _other) const
 {
 	const float* tm = (float*)this;
@@ -48,6 +52,8 @@ const Vector3f Transform4x4f::operator*(const Vector3f& _other) const
 	};
 
 } // operator*
+
+//////////////////////////////////////////////////////////////////////////
 
 Transform4x4f& Transform4x4f::orthoProjection(float _left, float _right, float _bottom, float _top, float _near, float _far)
 {
@@ -87,6 +93,8 @@ Transform4x4f& Transform4x4f::orthoProjection(float _left, float _right, float _
 	return *this;
 
 } // orthoProjection
+
+//////////////////////////////////////////////////////////////////////////
 
 Transform4x4f& Transform4x4f::invert(const Transform4x4f& _other)
 {
@@ -154,6 +162,8 @@ Transform4x4f& Transform4x4f::invert(const Transform4x4f& _other)
 
 } // invert
 
+//////////////////////////////////////////////////////////////////////////
+
 Transform4x4f& Transform4x4f::scale(const Vector3f& _scale)
 {
 	float*       tm = (float*)this;
@@ -172,6 +182,8 @@ Transform4x4f& Transform4x4f::scale(const Vector3f& _scale)
 	return *this;
 
 } // scale
+
+//////////////////////////////////////////////////////////////////////////
 
 Transform4x4f& Transform4x4f::rotate(const float _angle, const Vector3f& _axis)
 {
@@ -222,6 +234,8 @@ Transform4x4f& Transform4x4f::rotate(const float _angle, const Vector3f& _axis)
 
 }; // rotate
 
+//////////////////////////////////////////////////////////////////////////
+
 Transform4x4f& Transform4x4f::rotateX(const float _angle)
 {
 	float*      tm      = (float*)this;
@@ -244,6 +258,8 @@ Transform4x4f& Transform4x4f::rotateX(const float _angle)
 	return *this;
 
 }; // rotateX
+
+//////////////////////////////////////////////////////////////////////////
 
 Transform4x4f& Transform4x4f::rotateY(const float _angle)
 {
@@ -268,6 +284,8 @@ Transform4x4f& Transform4x4f::rotateY(const float _angle)
 
 }; // rotateY
 
+//////////////////////////////////////////////////////////////////////////
+
 Transform4x4f& Transform4x4f::rotateZ(const float _angle)
 {
 	float*      tm      = (float*)this;
@@ -291,6 +309,8 @@ Transform4x4f& Transform4x4f::rotateZ(const float _angle)
 
 }; // rotateZ
 
+//////////////////////////////////////////////////////////////////////////
+
 Transform4x4f& Transform4x4f::translate(const Vector3f& _translation)
 {
 	float*       tm = (float*)this;
@@ -303,6 +323,8 @@ Transform4x4f& Transform4x4f::translate(const Vector3f& _translation)
 	return *this;
 
 } // translate
+
+//////////////////////////////////////////////////////////////////////////
 
 Transform4x4f& Transform4x4f::round()
 {

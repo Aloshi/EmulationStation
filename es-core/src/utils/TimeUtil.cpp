@@ -2,6 +2,8 @@
 
 #include <time.h>
 
+//////////////////////////////////////////////////////////////////////////
+
 namespace Utils
 {
 	namespace Time
@@ -12,30 +14,40 @@ namespace Utils
 			mTimeStruct = { 0, 0, 0, 1, 0, 0, 0, 0, -1 };
 			mIsoString  = "00000000T000000";
 
-		} // DateTime::DateTime
+		} // DateTime
+
+//////////////////////////////////////////////////////////////////////////
 
 		DateTime::DateTime(const time_t& _time)
 		{
 			setTime(_time);
 
-		} // DateTime::DateTime
+		} // DateTime
+
+//////////////////////////////////////////////////////////////////////////
 
 		DateTime::DateTime(const tm& _timeStruct)
 		{
 			setTimeStruct(_timeStruct);
 
-		} // DateTime::DateTime
+		} // DateTime
+
+//////////////////////////////////////////////////////////////////////////
 
 		DateTime::DateTime(const std::string& _isoString)
 		{
 			setIsoString(_isoString);
 
-		} // DateTime::DateTime
+		} // DateTime
+
+//////////////////////////////////////////////////////////////////////////
 
 		DateTime::~DateTime()
 		{
 
-		} // DateTime::~DateTime
+		} // ~DateTime
+
+//////////////////////////////////////////////////////////////////////////
 
 		void DateTime::setTime(const time_t& _time)
 		{
@@ -43,19 +55,25 @@ namespace Utils
 			mTimeStruct = *localtime(&mTime);
 			mIsoString  = timeToString(mTime);
 
-		} // DateTime::setTime
+		} // setTime
+
+//////////////////////////////////////////////////////////////////////////
 
 		void DateTime::setTimeStruct(const tm& _timeStruct)
 		{
 			setTime(mktime((tm*)&_timeStruct));
 
-		} // DateTime::setTimeStruct
+		} // setTimeStruct
+
+//////////////////////////////////////////////////////////////////////////
 
 		void DateTime::setIsoString(const std::string& _isoString)
 		{
 			setTime(stringToTime(_isoString));
 
-		} // DateTime::setIsoString
+		} // setIsoString
+
+//////////////////////////////////////////////////////////////////////////
 
 		Duration::Duration(const time_t& _time)
 		{
@@ -65,12 +83,16 @@ namespace Utils
 			mMinutes      = ((mTotalSeconds % (60*60)) - (mTotalSeconds % (60))) / 60;
 			mSeconds      = mTotalSeconds % 60;
 
-		} // Duration::Duration
+		} // Duration
+
+//////////////////////////////////////////////////////////////////////////
 
 		Duration::~Duration()
 		{
 
-		} // Duration::~Duration
+		} // ~Duration
+
+//////////////////////////////////////////////////////////////////////////
 
 		time_t now()
 		{
@@ -79,6 +101,8 @@ namespace Utils
 			return time;
 
 		} // now
+
+//////////////////////////////////////////////////////////////////////////
 
 		time_t stringToTime(const std::string& _string, const std::string& _format)
 		{
@@ -188,12 +212,14 @@ namespace Utils
 
 		} // stringToTime
 
+//////////////////////////////////////////////////////////////////////////
+
 		std::string timeToString(const time_t& _time, const std::string& _format)
 		{
-			const char* f = _format.c_str();
-			const tm timeStruct = *localtime(&_time);
-			char buf[256] = { '\0' };
-			char* s = buf;
+			const char* f          = _format.c_str();
+			const tm    timeStruct = *localtime(&_time);
+			char        buf[256]   = { '\0' };
+			char*       s          = buf;
 
 			while(*f)
 			{
@@ -262,6 +288,8 @@ namespace Utils
 
 		} // timeToString
 
+//////////////////////////////////////////////////////////////////////////
+
 		int daysInMonth(const int _year, const int _month)
 		{
 			tm timeStruct = { 0, 0, 0, 0, _month, _year - 1900, 0, 0, -1 };
@@ -270,6 +298,8 @@ namespace Utils
 			return timeStruct.tm_mday;
 
 		} // daysInMonth
+
+//////////////////////////////////////////////////////////////////////////
 
 		int daysInYear(const int _year)
 		{

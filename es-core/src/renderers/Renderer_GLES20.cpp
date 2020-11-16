@@ -8,6 +8,8 @@
 #include <SDL_opengles2.h>
 #include <SDL.h>
 
+//////////////////////////////////////////////////////////////////////////
+
 namespace Renderer
 {
 
@@ -25,6 +27,8 @@ namespace Renderer
 #define GL_CHECK_ERROR(Function) (Function)
 #endif
 
+//////////////////////////////////////////////////////////////////////////
+
 	static SDL_GLContext sdlContext       = nullptr;
 	static Transform4x4f projectionMatrix = Transform4x4f::Identity();
 	static Transform4x4f worldViewMatrix  = Transform4x4f::Identity();
@@ -35,6 +39,8 @@ namespace Renderer
 	static GLint         posAttrib        = 0;
 	static GLuint        vertexBuffer     = 0;
 	static GLuint        whiteTexture     = 0;
+
+//////////////////////////////////////////////////////////////////////////
 
 	static void setupShaders()
 	{
@@ -180,12 +186,16 @@ namespace Renderer
 
 	} // setupShaders
 
+//////////////////////////////////////////////////////////////////////////
+
 	static void setupVertexBuffer()
 	{
 		GL_CHECK_ERROR(glGenBuffers(1, &vertexBuffer));
 		GL_CHECK_ERROR(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
 
 	} // setupVertexBuffer
+
+//////////////////////////////////////////////////////////////////////////
 
 	static GLenum convertBlendFactor(const Blend::Factor _blendFactor)
 	{
@@ -206,6 +216,8 @@ namespace Renderer
 
 	} // convertBlendFactor
 
+//////////////////////////////////////////////////////////////////////////
+
 	static GLenum convertTextureType(const Texture::Type _type)
 	{
 		switch(_type)
@@ -216,6 +228,8 @@ namespace Renderer
 		}
 
 	} // convertTextureType
+
+//////////////////////////////////////////////////////////////////////////
 
 	unsigned int convertColor(const unsigned int _color)
 	{
@@ -229,11 +243,15 @@ namespace Renderer
 
 	} // convertColor
 
+//////////////////////////////////////////////////////////////////////////
+
 	unsigned int getWindowFlags()
 	{
 		return SDL_WINDOW_OPENGL;
 
 	} // getWindowFlags
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setupWindow()
 	{
@@ -249,6 +267,8 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
 	} // setupWindow
+
+//////////////////////////////////////////////////////////////////////////
 
 	void createContext()
 	{
@@ -280,12 +300,16 @@ namespace Renderer
 
 	} // createContext
 
+//////////////////////////////////////////////////////////////////////////
+
 	void destroyContext()
 	{
 		SDL_GL_DeleteContext(sdlContext);
 		sdlContext = nullptr;
 
 	} // destroyContext
+
+//////////////////////////////////////////////////////////////////////////
 
 	unsigned int createTexture(const Texture::Type _type, const bool _linear, const bool _repeat, const unsigned int _width, const unsigned int _height, void* _data)
 	{
@@ -326,11 +350,15 @@ namespace Renderer
 
 	} // createTexture
 
+//////////////////////////////////////////////////////////////////////////
+
 	void destroyTexture(const unsigned int _texture)
 	{
 		GL_CHECK_ERROR(glDeleteTextures(1, &_texture));
 
 	} // destroyTexture
+
+//////////////////////////////////////////////////////////////////////////
 
 	void updateTexture(const unsigned int _texture, const Texture::Type _type, const unsigned int _x, const unsigned _y, const unsigned int _width, const unsigned int _height, void* _data)
 	{
@@ -363,12 +391,16 @@ namespace Renderer
 
 	} // updateTexture
 
+//////////////////////////////////////////////////////////////////////////
+
 	void bindTexture(const unsigned int _texture)
 	{
 		if(_texture == 0) GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, whiteTexture));
 		else              GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, _texture));
 
 	} // bindTexture
+
+//////////////////////////////////////////////////////////////////////////
 
 	void drawLines(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
@@ -383,6 +415,8 @@ namespace Renderer
 
 	} // drawLines
 
+//////////////////////////////////////////////////////////////////////////
+
 	void drawTriangleStrips(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
 		GL_CHECK_ERROR(glVertexAttribPointer(posAttrib, 2, GL_FLOAT,         GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, pos)));
@@ -396,6 +430,8 @@ namespace Renderer
 
 	} // drawTriangleStrips
 
+//////////////////////////////////////////////////////////////////////////
+
 	void setProjection(const Transform4x4f& _projection)
 	{
 		projectionMatrix = _projection;
@@ -404,6 +440,8 @@ namespace Renderer
 		GL_CHECK_ERROR(glUniformMatrix4fv(mvpUniform, 1, GL_FALSE, (float*)&mvpMatrix));
 
 	} // setProjection
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setMatrix(const Transform4x4f& _matrix)
 	{
@@ -415,12 +453,16 @@ namespace Renderer
 
 	} // setMatrix
 
+//////////////////////////////////////////////////////////////////////////
+
 	void setViewport(const Rect& _viewport)
 	{
 		// glViewport starts at the bottom left of the window
 		GL_CHECK_ERROR(glViewport( _viewport.x, getWindowHeight() - _viewport.y - _viewport.h, _viewport.w, _viewport.h));
 
 	} // setViewport
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setScissor(const Rect& _scissor)
 	{
@@ -436,6 +478,8 @@ namespace Renderer
 		}
 
 	} // setScissor
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setSwapInterval()
 	{
@@ -455,6 +499,8 @@ namespace Renderer
 			SDL_GL_SetSwapInterval(0);
 
 	} // setSwapInterval
+
+//////////////////////////////////////////////////////////////////////////
 
 	void swapBuffers()
 	{

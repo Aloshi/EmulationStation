@@ -72,7 +72,7 @@ namespace PlatformIds
 		SOLARUS,
 		THOMSON_MOTO,
 		NEC_PC_8801,
-		NEC_PC_9801, 
+		NEC_PC_9801,
 		TURBOGRAFX_16, // (aka PC Engine) HuCards only
 		TURBOGRAFX_CD, // (aka PC Engine) CD-ROMs only
 		WONDERSWAN,
