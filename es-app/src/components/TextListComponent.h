@@ -148,7 +148,7 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 	int startEntry = 0;
 
 	//number of entries that can fit on the screen simultaniously
-	int screenCount = (int)(mSize.y() / entrySize + 0.5f);
+	int screenCount = (int)(mSize.y() / entrySize);
 
 	if(size() >= screenCount)
 	{
