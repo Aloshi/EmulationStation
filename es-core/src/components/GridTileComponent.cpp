@@ -68,7 +68,7 @@ void applyThemeToProperties(const ThemeData::ThemeElement* elem, GridTilePropert
 		properties->mSize = elem->get<Vector2f>("size") * screen;
 
 	if (elem->has("padding"))
-		properties->mPadding = elem->get<Vector2f>("padding");
+		properties->mPadding = elem->get<Vector2f>("padding") * screen;
 
 	if (elem->has("imageColor"))
 		properties->mImageColor = elem->get<unsigned int>("imageColor");
@@ -77,7 +77,7 @@ void applyThemeToProperties(const ThemeData::ThemeElement* elem, GridTilePropert
 		properties->mBackgroundImage = elem->get<std::string>("backgroundImage");
 
 	if (elem->has("backgroundCornerSize"))
-		properties->mBackgroundCornerSize = elem->get<Vector2f>("backgroundCornerSize");
+		properties->mBackgroundCornerSize = elem->get<Vector2f>("backgroundCornerSize") * screen;
 
 	if (elem->has("backgroundColor"))
 	{
