@@ -89,26 +89,32 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	mDescription.setSize(mDescContainer.getSize().x(), 0);
 	mDescContainer.addChild(&mDescription);
 	
-	mMarquee.setOrigin(0.5f, 0.5f);
-	mMarquee.setPosition(mSize.x() * 0.25f, mSize.y() * 0.10f);
-	mMarquee.setMaxSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.18f);
-	mMarquee.setDefaultZIndex(35);
-	mMarquee.setVisible(false);
-	addChild(&mMarquee);
-
+	// Image
+	// Default to off the screen
 	mImage.setOrigin(0.5f, 0.5f);
 	mImage.setPosition(2.0f, 2.0f);
-	mImage.setMaxSize(1.0f, 1.0f);
-	mImage.setDefaultZIndex(10);
+	mImage.setMaxSize(mSize.x(), mSize.y());
+	mImage.setDefaultZIndex(30);
 	mImage.setVisible(false);
 	addChild(&mImage);
 
+	// Video
+	// Default to off the screen
 	mVideo->setOrigin(0.5f, 0.5f);
-	mVideo->setPosition(mSize.x() * 0.25f, mSize.y() * 0.4f);
-	mVideo->setSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.4f);
-	mVideo->setDefaultZIndex(15);
+	mVideo->setPosition(2.0f, 2.0f);
+	mVideo->setSize(mSize.x(), mSize.y());
+	mVideo->setDefaultZIndex(30);
 	mVideo->setVisible(false);
 	addChild(mVideo);
+
+	// Marquee
+	// Default to off the screen
+	mMarquee.setOrigin(0.5f, 0.5f);
+	mMarquee.setPosition(2.0f, 2.0f);
+	mMarquee.setMaxSize(mSize.x(), mSize.y());
+	mMarquee.setDefaultZIndex(35);
+	mMarquee.setVisible(false);
+	addChild(&mMarquee);
 
 	initMDLabels();
 	initMDValues();

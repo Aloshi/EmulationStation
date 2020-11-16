@@ -26,29 +26,30 @@ DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	mList.setAlignment(TextListComponent<FileData*>::ALIGN_LEFT);
 	mList.setCursorChangedCallback([&](const CursorState& /*state*/) { updateInfoPanel(); });
 
-	// Thumbnail
-	mThumbnail.setOrigin(0.5f, 0.5f);
-	mThumbnail.setPosition(2.0f, 2.0f);
-	mThumbnail.setVisible(false);
-	mThumbnail.setMaxSize(mSize.x() * (0.25f - 2*padding), mSize.y() * 0.10f);
-	mThumbnail.setDefaultZIndex(25);
-	addChild(&mThumbnail);
-
-	// Marquee
-	mMarquee.setOrigin(0.5f, 0.5f);
-	// Default to off the screen
-	mMarquee.setPosition(2.0f, 2.0f);
-	mMarquee.setVisible(false);
-	mMarquee.setMaxSize(mSize.x() * (0.5f - 2*padding), mSize.y() * 0.18f);
-	mMarquee.setDefaultZIndex(35);
-	addChild(&mMarquee);
-
-	// image
+	// Image
 	mImage.setOrigin(0.5f, 0.5f);
 	mImage.setPosition(mSize.x() * 0.25f, mList.getPosition().y() + mSize.y() * 0.2125f);
 	mImage.setMaxSize(mSize.x() * (0.50f - 2*padding), mSize.y() * 0.4f);
 	mImage.setDefaultZIndex(30);
 	addChild(&mImage);
+
+	// Thumbnail
+	// Default to off the screen
+	mThumbnail.setOrigin(0.5f, 0.5f);
+	mThumbnail.setPosition(2.0f, 2.0f);
+	mThumbnail.setMaxSize(mSize.x(), mSize.y());
+	mThumbnail.setDefaultZIndex(35);
+	mThumbnail.setVisible(false);
+	addChild(&mThumbnail);
+
+	// Marquee
+	// Default to off the screen
+	mMarquee.setOrigin(0.5f, 0.5f);
+	mMarquee.setPosition(2.0f, 2.0f);
+	mMarquee.setMaxSize(mSize.x(), mSize.y());
+	mMarquee.setDefaultZIndex(35);
+	mMarquee.setVisible(false);
+	addChild(&mMarquee);
 
 	// metadata labels + values
 	mLblRating.setText("Rating: ");
