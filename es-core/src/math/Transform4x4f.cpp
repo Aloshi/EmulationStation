@@ -330,9 +330,9 @@ Transform4x4f& Transform4x4f::round()
 {
 	float* tm = (float*)this;
 
-	tm[12] = (float)(int)(tm[12] + 0.5f);
-	tm[13] = (float)(int)(tm[13] + 0.5f);
-	tm[14] = (float)(int)(tm[14] + 0.5f);
+	tm[12] = Math::round(tm[12]);
+	tm[13] = Math::round(tm[13]);
+	tm[14] = Math::round(tm[14]);
 
 	return *this;
 

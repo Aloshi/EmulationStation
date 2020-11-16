@@ -16,6 +16,7 @@ namespace Math
 
 	int   min         (const int _num1, const int _num2);
 	int   max         (const int _num1, const int _num2);
+	int   clamp       (const int _num, const int _min, const int _max);
 	float min         (const float _num1, const float _num2);
 	float max         (const float _num1, const float _num2);
 	float clamp       (const float _num, const float _min, const float _max);

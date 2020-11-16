@@ -24,8 +24,7 @@ namespace Utils
 		bool         endsWith               (const std::string& _string, const std::string& _end);
 		std::string  removeParenthesis      (const std::string& _string);
 		stringVector delimitedStringToVector(const std::string& _string, const std::string& _delimiter, bool sort = false);
-		stringVector commaStringToVector    (const std::string& _string, bool sort = false);
-		std::string  vectorToCommaString    (stringVector _vector);
+		std::string  vectorToDelimitedString(stringVector _vector, const std::string& _delimiter);
 		std::string  format                 (const char* _string, ...);
 		std::string  scramble               (const std::string& _input, const std::string& key);
 

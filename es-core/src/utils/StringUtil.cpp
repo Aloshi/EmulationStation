@@ -271,26 +271,18 @@ namespace Utils
 
 //////////////////////////////////////////////////////////////////////////
 
-		stringVector commaStringToVector(const std::string& _string, bool sort)
-		{
-			return delimitedStringToVector(_string, ",", sort);
-
-		} // commaStringToVector
-
-//////////////////////////////////////////////////////////////////////////
-
-		std::string vectorToCommaString(stringVector _vector)
+		std::string vectorToDelimitedString(stringVector _vector, const std::string& _delimiter)
 		{
 			std::string string;
 
 			std::sort(_vector.begin(), _vector.end());
 
 			for(stringVector::const_iterator it = _vector.cbegin(); it != _vector.cend(); ++it)
-				string += (string.length() ? "," : "") + (*it);
+				string += (string.length() ? _delimiter : "") + (*it);
 
 			return string;
 
-		} // vectorToCommaString
+		} // vectorToDelimitedString
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -326,9 +318,7 @@ namespace Utils
 			std::string buffer = _input;
 
 			for(size_t i = 0; i < _input.size(); ++i)
-			{
 				buffer[i] = _input[i] ^ _key[i];
-			}
 
 			return buffer;
 

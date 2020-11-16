@@ -55,6 +55,14 @@ namespace Math
 
 //////////////////////////////////////////////////////////////////////////
 
+	int clamp(const int _min, const int _max, const int _num)
+	{
+		return max(min(_num, _max), _min);
+
+	} // clamp
+
+//////////////////////////////////////////////////////////////////////////
+
 	float min(const float _num1, const float _num2)
 	{
 		return (_num1 < _num2) ? _num1 : _num2;
@@ -81,7 +89,7 @@ namespace Math
 
 	float round(const float _num)
 	{
-		return (float)(int)(_num + 0.5);
+		return floorf(_num + 0.5);
 
 	} // round
 
@@ -89,7 +97,7 @@ namespace Math
 
 	float lerp(const float _start, const float _end, const float _fraction)
 	{
-		return (_start + ((_end - _start) * clamp(0, 1, _fraction)));
+		return (_start + ((_end - _start) * clamp(0.0f, 1.0f, _fraction)));
 
 	} // lerp
 
@@ -97,7 +105,7 @@ namespace Math
 
 	float smoothStep(const float _left, const float _right, const float _x)
 	{
-		const float x = clamp(0, 1, (_x - _left)/(_right - _left));
+		const float x = clamp(0.0f, 1.0f, (_x - _left)/(_right - _left));
 		return x * x * (3 - (2 * x));
 
 	} // smoothStep
@@ -106,7 +114,7 @@ namespace Math
 
 	float smootherStep(const float _left, const float _right, const float _x)
 	{
-		const float x = clamp(0, 1, (_x - _left)/(_right - _left));
+		const float x = clamp(0.0f, 1.0f, (_x - _left)/(_right - _left));
 		return x * x * x * (x * ((x * 6) - 15) + 10);
 
 	} // smootherStep

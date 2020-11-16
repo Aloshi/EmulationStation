@@ -21,7 +21,7 @@ namespace Renderer
 		const GLenum errorCode = glGetError();
 
 		if(errorCode != GL_NO_ERROR)
-			LOG(LogError) << "OpenGLES error: " << _funcName << " failed with error code: " << errorCode;
+			LOG(LogError) << "GL error: " << _funcName << " failed with error code: " << errorCode;
 	}
 #else
 #define GL_CHECK_ERROR(Function) (Function)
@@ -71,10 +71,10 @@ namespace Renderer
 	unsigned int convertColor(const unsigned int _color)
 	{
 		// convert from rgba to abgr
-		unsigned char r = ((_color & 0xff000000) >> 24) & 255;
-		unsigned char g = ((_color & 0x00ff0000) >> 16) & 255;
-		unsigned char b = ((_color & 0x0000ff00) >>  8) & 255;
-		unsigned char a = ((_color & 0x000000ff)      ) & 255;
+		const unsigned char r = ((_color & 0xff000000) >> 24) & 255;
+		const unsigned char g = ((_color & 0x00ff0000) >> 16) & 255;
+		const unsigned char b = ((_color & 0x0000ff00) >>  8) & 255;
+		const unsigned char a = ((_color & 0x000000ff)      ) & 255;
 
 		return ((a << 24) | (b << 16) | (g << 8) | (r));
 
@@ -112,10 +112,10 @@ namespace Renderer
 		sdlContext = SDL_GL_CreateContext(getSDLWindow());
 		SDL_GL_MakeCurrent(getSDLWindow(), sdlContext);
 
-		std::string vendor     = glGetString(GL_VENDOR)     ? (const char*)glGetString(GL_VENDOR)     : "";
-		std::string renderer   = glGetString(GL_RENDERER)   ? (const char*)glGetString(GL_RENDERER)   : "";
-		std::string version    = glGetString(GL_VERSION)    ? (const char*)glGetString(GL_VERSION)    : "";
-		std::string extensions = glGetString(GL_EXTENSIONS) ? (const char*)glGetString(GL_EXTENSIONS) : "";
+		const std::string vendor     = glGetString(GL_VENDOR)     ? (const char*)glGetString(GL_VENDOR)     : "";
+		const std::string renderer   = glGetString(GL_RENDERER)   ? (const char*)glGetString(GL_RENDERER)   : "";
+		const std::string version    = glGetString(GL_VERSION)    ? (const char*)glGetString(GL_VERSION)    : "";
+		const std::string extensions = glGetString(GL_EXTENSIONS) ? (const char*)glGetString(GL_EXTENSIONS) : "";
 
 		LOG(LogInfo) << "GL vendor:   " << vendor;
 		LOG(LogInfo) << "GL renderer: " << renderer;
@@ -123,7 +123,7 @@ namespace Renderer
 		LOG(LogInfo) << "Checking available OpenGL extensions...";
 		LOG(LogInfo) << " ARB_texture_non_power_of_two: " << (extensions.find("ARB_texture_non_power_of_two") != std::string::npos ? "ok" : "MISSING");
 
-		uint8_t data[4] = {255, 255, 255, 255};
+		const uint8_t data[4] = {255, 255, 255, 255};
 		whiteTexture = createTexture(Texture::RGBA, false, true, 1, 1, data);
 
 		GL_CHECK_ERROR(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
@@ -148,7 +148,7 @@ namespace Renderer
 
 //////////////////////////////////////////////////////////////////////////
 
-	unsigned int createTexture(const Texture::Type _type, const bool _linear, const bool _repeat, const unsigned int _width, const unsigned int _height, void* _data)
+	unsigned int createTexture(const Texture::Type _type, const bool _linear, const bool _repeat, const unsigned int _width, const unsigned int _height, const void* _data)
 	{
 		const GLenum type = convertTextureType(_type);
 		unsigned int texture;
@@ -178,7 +178,7 @@ namespace Renderer
 
 //////////////////////////////////////////////////////////////////////////
 
-	void updateTexture(const unsigned int _texture, const Texture::Type _type, const unsigned int _x, const unsigned _y, const unsigned int _width, const unsigned int _height, void* _data)
+	void updateTexture(const unsigned int _texture, const Texture::Type _type, const unsigned int _x, const unsigned _y, const unsigned int _width, const unsigned int _height, const void* _data)
 	{
 		const GLenum type = convertTextureType(_type);
 
