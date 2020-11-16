@@ -8,6 +8,8 @@
 #include <SDL_opengles.h>
 #include <SDL.h>
 
+//////////////////////////////////////////////////////////////////////////
+
 namespace Renderer
 {
 
@@ -25,8 +27,12 @@ namespace Renderer
 #define GL_CHECK_ERROR(Function) (Function)
 #endif
 
+//////////////////////////////////////////////////////////////////////////
+
 	static SDL_GLContext sdlContext   = nullptr;
 	static GLuint        whiteTexture = 0;
+
+//////////////////////////////////////////////////////////////////////////
 
 	static GLenum convertBlendFactor(const Blend::Factor _blendFactor)
 	{
@@ -47,6 +53,8 @@ namespace Renderer
 
 	} // convertBlendFactor
 
+//////////////////////////////////////////////////////////////////////////
+
 	static GLenum convertTextureType(const Texture::Type _type)
 	{
 		switch(_type)
@@ -57,6 +65,8 @@ namespace Renderer
 		}
 
 	} // convertTextureType
+
+//////////////////////////////////////////////////////////////////////////
 
 	unsigned int convertColor(const unsigned int _color)
 	{
@@ -70,11 +80,15 @@ namespace Renderer
 
 	} // convertColor
 
+//////////////////////////////////////////////////////////////////////////
+
 	unsigned int getWindowFlags()
 	{
 		return SDL_WINDOW_OPENGL;
 
 	} // getWindowFlags
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setupWindow()
 	{
@@ -90,6 +104,8 @@ namespace Renderer
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 
 	} // setupWindow
+
+//////////////////////////////////////////////////////////////////////////
 
 	void createContext()
 	{
@@ -121,12 +137,16 @@ namespace Renderer
 
 	} // createContext
 
+//////////////////////////////////////////////////////////////////////////
+
 	void destroyContext()
 	{
 		SDL_GL_DeleteContext(sdlContext);
 		sdlContext = nullptr;
 
 	} // destroyContext
+
+//////////////////////////////////////////////////////////////////////////
 
 	unsigned int createTexture(const Texture::Type _type, const bool _linear, const bool _repeat, const unsigned int _width, const unsigned int _height, void* _data)
 	{
@@ -148,11 +168,15 @@ namespace Renderer
 
 	} // createTexture
 
+//////////////////////////////////////////////////////////////////////////
+
 	void destroyTexture(const unsigned int _texture)
 	{
 		GL_CHECK_ERROR(glDeleteTextures(1, &_texture));
 
 	} // destroyTexture
+
+//////////////////////////////////////////////////////////////////////////
 
 	void updateTexture(const unsigned int _texture, const Texture::Type _type, const unsigned int _x, const unsigned _y, const unsigned int _width, const unsigned int _height, void* _data)
 	{
@@ -164,12 +188,16 @@ namespace Renderer
 
 	} // updateTexture
 
+//////////////////////////////////////////////////////////////////////////
+
 	void bindTexture(const unsigned int _texture)
 	{
 		if(_texture == 0) GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, whiteTexture));
 		else              GL_CHECK_ERROR(glBindTexture(GL_TEXTURE_2D, _texture));
 
 	} // bindTexture
+
+//////////////////////////////////////////////////////////////////////////
 
 	void drawLines(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
@@ -183,6 +211,8 @@ namespace Renderer
 
 	} // drawLines
 
+//////////////////////////////////////////////////////////////////////////
+
 	void drawTriangleStrips(const Vertex* _vertices, const unsigned int _numVertices, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
 		GL_CHECK_ERROR(glVertexPointer(  2, GL_FLOAT,         sizeof(Vertex), &_vertices[0].pos));
@@ -195,12 +225,16 @@ namespace Renderer
 
 	} // drawTriangleStrips
 
+//////////////////////////////////////////////////////////////////////////
+
 	void setProjection(const Transform4x4f& _projection)
 	{
 		GL_CHECK_ERROR(glMatrixMode(GL_PROJECTION));
 		GL_CHECK_ERROR(glLoadMatrixf((GLfloat*)&_projection));
 
 	} // setProjection
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setMatrix(const Transform4x4f& _matrix)
 	{
@@ -212,12 +246,16 @@ namespace Renderer
 
 	} // setMatrix
 
+//////////////////////////////////////////////////////////////////////////
+
 	void setViewport(const Rect& _viewport)
 	{
 		// glViewport starts at the bottom left of the window
 		GL_CHECK_ERROR(glViewport( _viewport.x, getWindowHeight() - _viewport.y - _viewport.h, _viewport.w, _viewport.h));
 
 	} // setViewport
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setScissor(const Rect& _scissor)
 	{
@@ -233,6 +271,8 @@ namespace Renderer
 		}
 
 	} // setScissor
+
+//////////////////////////////////////////////////////////////////////////
 
 	void setSwapInterval()
 	{
@@ -252,6 +292,8 @@ namespace Renderer
 			SDL_GL_SetSwapInterval(0);
 
 	} // setSwapInterval
+
+//////////////////////////////////////////////////////////////////////////
 
 	void swapBuffers()
 	{

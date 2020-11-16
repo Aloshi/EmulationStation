@@ -10,6 +10,8 @@
 #include <SDL.h>
 #include <stack>
 
+//////////////////////////////////////////////////////////////////////////
+
 namespace Renderer
 {
 	static std::stack<Rect> clipStack;
@@ -22,6 +24,8 @@ namespace Renderer
 	static int              screenOffsetY      = 0;
 	static int              screenRotate       = 0;
 	static bool             initialCursorState = 1;
+
+//////////////////////////////////////////////////////////////////////////
 
 	static void setIcon()
 	{
@@ -56,6 +60,8 @@ namespace Renderer
 		}
 
 	} // setIcon
+
+//////////////////////////////////////////////////////////////////////////
 
 	static bool createWindow()
 	{
@@ -99,6 +105,8 @@ namespace Renderer
 
 	} // createWindow
 
+//////////////////////////////////////////////////////////////////////////
+
 	static void destroyWindow()
 	{
 		destroyContext();
@@ -111,6 +119,8 @@ namespace Renderer
 		SDL_Quit();
 
 	} // destroyWindow
+
+//////////////////////////////////////////////////////////////////////////
 
 	bool init()
 	{
@@ -181,11 +191,15 @@ namespace Renderer
 
 	} // init
 
+//////////////////////////////////////////////////////////////////////////
+
 	void deinit()
 	{
 		destroyWindow();
 
 	} // deinit
+
+//////////////////////////////////////////////////////////////////////////
 
 	void pushClipRect(const Vector2i& _pos, const Vector2i& _size)
 	{
@@ -221,6 +235,8 @@ namespace Renderer
 
 	} // pushClipRect
 
+//////////////////////////////////////////////////////////////////////////
+
 	void popClipRect()
 	{
 		if(clipStack.empty())
@@ -235,6 +251,8 @@ namespace Renderer
 		else                  setScissor(clipStack.top());
 
 	} // popClipRect
+
+//////////////////////////////////////////////////////////////////////////
 
 	void drawRect(const float _x, const float _y, const float _w, const float _h, const unsigned int _color, const unsigned int _colorEnd, bool horizontalGradient, const Blend::Factor _srcBlendFactor, const Blend::Factor _dstBlendFactor)
 	{
@@ -255,6 +273,8 @@ namespace Renderer
 		drawTriangleStrips(vertices, 4, _srcBlendFactor, _dstBlendFactor);
 
 	} // drawRect
+
+//////////////////////////////////////////////////////////////////////////
 
 	SDL_Window* getSDLWindow()     { return sdlWindow; }
 	int         getWindowWidth()   { return windowWidth; }

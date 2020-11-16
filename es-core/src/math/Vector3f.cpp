@@ -1,5 +1,7 @@
 #include "math/Vector3f.h"
 
+//////////////////////////////////////////////////////////////////////////
+
 Vector3f& Vector3f::round()
 {
 	mX = (float)(int)(mX + 0.5f);
@@ -9,6 +11,8 @@ Vector3f& Vector3f::round()
 	return *this;
 
 } // round
+
+//////////////////////////////////////////////////////////////////////////
 
 Vector3f& Vector3f::lerp(const Vector3f& _start, const Vector3f& _end, const float _fraction)
 {
