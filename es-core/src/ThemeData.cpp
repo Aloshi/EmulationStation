@@ -15,9 +15,9 @@ std::vector<std::string> ThemeData::sSupportedFeatures { { "video" }, { "carouse
 
 std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> ThemeData::sElementMap {
 	{ "image", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
-		{ "maxSize", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
+		{ "maxSize", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
 		{ "rotation", FLOAT },
 		{ "rotationOrigin", NORMALIZED_PAIR },
@@ -30,10 +30,10 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "imagegrid", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
-		{ "margin", NORMALIZED_PAIR },
-		{ "padding", NORMALIZED_RECT },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
+		{ "margin", RESOLUTION_PAIR },
+		{ "padding", RESOLUTION_RECT },
 		{ "autoLayout", NORMALIZED_PAIR },
 		{ "autoLayoutSelectedZoom", FLOAT },
 		{ "gameImage", PATH },
@@ -45,24 +45,24 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "animate", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "gridtile", {
-		{ "size", NORMALIZED_PAIR },
-		{ "padding", NORMALIZED_PAIR },
+		{ "size", RESOLUTION_PAIR },
+		{ "padding", RESOLUTION_PAIR },
 		{ "imageColor", COLOR },
 		{ "backgroundImage", PATH },
-		{ "backgroundCornerSize", NORMALIZED_PAIR },
+		{ "backgroundCornerSize", RESOLUTION_PAIR },
 		{ "backgroundColor", COLOR },
 		{ "backgroundCenterColor", COLOR },
 		{ "backgroundEdgeColor", COLOR } } },
 	{ "text", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
 		{ "rotation", FLOAT },
 		{ "rotationOrigin", NORMALIZED_PAIR },
 		{ "text", STRING },
 		{ "backgroundColor", COLOR },
 		{ "fontPath", PATH },
-		{ "fontSize", FLOAT },
+		{ "fontSize", RESOLUTION_FLOAT },
 		{ "color", COLOR },
 		{ "alignment", STRING },
 		{ "forceUppercase", BOOLEAN },
@@ -71,11 +71,11 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "textlist", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
-		{ "selectorHeight", FLOAT },
-		{ "selectorOffsetY", FLOAT },
+		{ "selectorHeight", RESOLUTION_FLOAT },
+		{ "selectorOffsetY", RESOLUTION_FLOAT },
 		{ "selectorColor", COLOR },
 		{ "selectorColorEnd", COLOR },
 		{ "selectorGradientType", STRING },
@@ -85,34 +85,34 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "primaryColor", COLOR },
 		{ "secondaryColor", COLOR },
 		{ "fontPath", PATH },
-		{ "fontSize", FLOAT },
+		{ "fontSize", RESOLUTION_FLOAT },
 		{ "scrollSound", PATH },
 		{ "alignment", STRING },
-		{ "horizontalMargin", FLOAT },
+		{ "horizontalMargin", RESOLUTION_FLOAT },
 		{ "forceUppercase", BOOLEAN },
 		{ "lineSpacing", FLOAT },
 		{ "zIndex", FLOAT } } },
 	{ "container", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
 	 	{ "origin", NORMALIZED_PAIR },
 	 	{ "visible", BOOLEAN },
 	 	{ "zIndex", FLOAT } } },
 	{ "ninepatch", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
 		{ "path", PATH },
 	 	{ "visible", BOOLEAN },
 		{ "zIndex", FLOAT } } },
 	{ "datetime", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
 		{ "rotation", FLOAT },
 		{ "rotationOrigin", NORMALIZED_PAIR },
 		{ "backgroundColor", COLOR },
 		{ "fontPath", PATH },
-		{ "fontSize", FLOAT },
+		{ "fontSize", RESOLUTION_FLOAT },
 		{ "color", COLOR },
 		{ "alignment", STRING },
 		{ "forceUppercase", BOOLEAN },
@@ -123,8 +123,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 	 	{ "visible", BOOLEAN },
 	 	{ "zIndex", FLOAT } } },
 	{ "rating", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
 		{ "rotation", FLOAT },
 		{ "rotationOrigin", NORMALIZED_PAIR },
@@ -136,16 +136,16 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 	{ "sound", {
 		{ "path", PATH } } },
 	{ "helpsystem", {
-		{ "pos", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
 		{ "textColor", COLOR },
 		{ "iconColor", COLOR },
 		{ "fontPath", PATH },
-		{ "fontSize", FLOAT } } },
+		{ "fontSize", RESOLUTION_FLOAT } } },
 	{ "video", {
-		{ "pos", NORMALIZED_PAIR },
-		{ "size", NORMALIZED_PAIR },
-		{ "maxSize", NORMALIZED_PAIR },
+		{ "pos", RESOLUTION_PAIR },
+		{ "size", RESOLUTION_PAIR },
+		{ "maxSize", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
 		{ "rotation", FLOAT },
 		{ "rotationOrigin", NORMALIZED_PAIR },
@@ -157,8 +157,8 @@ std::map<std::string, std::map<std::string, ThemeData::ElementPropertyType>> The
 		{ "showSnapshotDelay", BOOLEAN } } },
 	{ "carousel", {
 		{ "type", STRING },
-		{ "size", NORMALIZED_PAIR },
-		{ "pos", NORMALIZED_PAIR },
+		{ "size", RESOLUTION_PAIR },
+		{ "pos", RESOLUTION_PAIR },
 		{ "origin", NORMALIZED_PAIR },
 		{ "color", COLOR },
 		{ "colorEnd", COLOR },
@@ -222,6 +222,7 @@ std::string resolvePlaceholders(const char* in)
 ThemeData::ThemeData()
 {
 	mVersion = 0;
+	mResolution = { 1, 1 };
 }
 
 void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const std::string& path)
@@ -235,6 +236,7 @@ void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const st
 		throw error << "File does not exist!";
 
 	mVersion = 0;
+	mResolution = { 1, 1 };
 	mViews.clear();
 	mVariables.clear();
 
@@ -256,6 +258,23 @@ void ThemeData::loadFile(std::map<std::string, std::string> sysDataMap, const st
 
 	if(mVersion < MINIMUM_THEME_FORMAT_VERSION)
 		throw error << "Theme uses format version " << mVersion << ". Minimum supported version is " << MINIMUM_THEME_FORMAT_VERSION << ".";
+
+	// parse resolution
+	std::string resolution = root.child("resolution").text().as_string("");
+
+	if(resolution.size())
+	{
+		size_t divider = resolution.find(' ');
+
+		if(divider != std::string::npos)
+		{
+			std::string w = resolution.substr(0, divider);
+			std::string h = resolution.substr(divider, std::string::npos);
+
+			mResolution.x() = (float)atof(w.c_str());
+			mResolution.y() = (float)atof(h.c_str());
+		}
+	}
 
 	parseVariables(root);
 	parseIncludes(root);
@@ -419,6 +438,45 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 
 		switch(typeIt->second)
 		{
+		case RESOLUTION_RECT:
+		{
+			Vector4f val;
+
+			auto splits = Utils::String::delimitedStringToVector(str, " ");
+			if (splits.size() == 2)
+			{
+				val = Vector4f((float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()),
+					(float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()));
+			}
+			else if (splits.size() == 4)
+			{
+				val = Vector4f((float)atof(splits.at(0).c_str()), (float)atof(splits.at(1).c_str()),
+					(float)atof(splits.at(2).c_str()), (float)atof(splits.at(3).c_str()));
+			}
+
+			element.properties[node.name()] = val / Vector4f(mResolution.x(), mResolution.y(), mResolution.x(), mResolution.y());
+			break;
+		}
+		case RESOLUTION_PAIR:
+		{
+			size_t divider = str.find(' ');
+			if(divider == std::string::npos)
+				throw error << "invalid normalized pair (property \"" << node.name() << "\", value \"" << str.c_str() << "\")";
+
+			std::string first = str.substr(0, divider);
+			std::string second = str.substr(divider, std::string::npos);
+
+			Vector2f val((float)atof(first.c_str()), (float)atof(second.c_str()));
+
+			element.properties[node.name()] = val / mResolution;
+			break;
+		}
+		case RESOLUTION_FLOAT:
+		{
+			float val = static_cast<float>(strtod(str.c_str(), 0));
+			element.properties[node.name()] = val / mResolution.y();
+			break;
+		}
 		case NORMALIZED_RECT:
 		{
 			Vector4f val;
