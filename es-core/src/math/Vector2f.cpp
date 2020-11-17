@@ -4,8 +4,8 @@
 
 Vector2f& Vector2f::round()
 {
-	mX = (float)(int)(mX + 0.5f);
-	mY = (float)(int)(mY + 0.5f);
+	mX = Math::round(mX);
+	mY = Math::round(mY);
 
 	return *this;
 

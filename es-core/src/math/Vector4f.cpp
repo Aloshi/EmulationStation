@@ -4,10 +4,10 @@
 
 Vector4f& Vector4f::round()
 {
-	mX = (float)(int)(mX + 0.5f);
-	mY = (float)(int)(mY + 0.5f);
-	mZ = (float)(int)(mZ + 0.5f);
-	mW = (float)(int)(mW + 0.5f);
+	mX = Math::round(mX);
+	mY = Math::round(mY);
+	mZ = Math::round(mZ);
+	mW = Math::round(mW);
 
 	return *this;
 
