@@ -7,7 +7,7 @@ TextureDataManager		TextureResource::sTextureDataManager;
 std::map< TextureResource::TextureKeyType, std::weak_ptr<TextureResource> > TextureResource::sTextureMap;
 std::set<TextureResource*> 	TextureResource::sAllTextures;
 
-TextureResource::TextureResource(const std::string& path, bool tile, bool dynamic) : mTextureData(nullptr), mForceLoad(false)
+TextureResource::TextureResource(const std::string& path, bool tile, bool dynamic) : mTextureData(nullptr), mSize(0.0f, 0.0f), mSourceSize(0.0f, 0.0f), mForceLoad(false)
 {
 	// Create a texture data object for this texture
 	if (!path.empty())
