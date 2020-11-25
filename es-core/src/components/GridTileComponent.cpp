@@ -4,7 +4,7 @@
 #include "resources/TextureResource.h"
 #include "ThemeData.h"
 
-GridTileComponent::GridTileComponent(Window* window) : GuiComponent(window), mBackground(window)
+GridTileComponent::GridTileComponent(Window* window) : GuiComponent(window), mBackground(window, ":/frame.png")
 {
 	mDefaultProperties.mSize = getDefaultTileSize();
 	mDefaultProperties.mPadding = Vector2f(16.0f, 16.0f);
