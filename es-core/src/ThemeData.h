@@ -144,6 +144,9 @@ public:
 
 	enum ElementPropertyType
 	{
+		RESOLUTION_RECT,
+		RESOLUTION_PAIR,
+		RESOLUTION_FLOAT,
 		NORMALIZED_RECT,
 		NORMALIZED_PAIR,
 		PATH,
@@ -172,6 +175,7 @@ private:
 
 	std::deque<std::string> mPaths;
 	float mVersion;
+	Vector2f mResolution;
 
 	void parseFeatures(const pugi::xml_node& themeRoot);
 	void parseIncludes(const pugi::xml_node& themeRoot);
