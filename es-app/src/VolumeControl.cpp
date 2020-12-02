@@ -173,7 +173,7 @@ void VolumeControl::init()
 				mixerLineControls.cbmxctrl = sizeof(MIXERCONTROL);
 				if (mixerGetLineControls((HMIXEROBJ)mixerHandle, &mixerLineControls, MIXER_GETLINECONTROLSF_ONEBYTYPE) != MMSYSERR_NOERROR)
 				{
-					LOG(LogError) << "VolumeControl::getVolume() - Failed to get mixer volume control!";
+					LOG(LogError) << "VolumeControl::init() - Failed to get mixer volume control!";
 					mixerClose(mixerHandle);
 					mixerHandle = nullptr;
 				}
@@ -364,12 +364,12 @@ void VolumeControl::setVolume(int volume)
 			if (snd_mixer_selem_set_playback_volume(mixerElem, SND_MIXER_SCHN_FRONT_LEFT, rawVolume) < 0
 				|| snd_mixer_selem_set_playback_volume(mixerElem, SND_MIXER_SCHN_FRONT_RIGHT, rawVolume) < 0)
 			{
-				LOG(LogError) << "VolumeControl::getVolume() - Failed to set mixer volume!";
+				LOG(LogError) << "VolumeControl::setVolume() - Failed to set mixer volume!";
 			}
 		}
 		else
 		{
-			LOG(LogError) << "VolumeControl::getVolume() - Failed to get volume range!";
+			LOG(LogError) << "VolumeControl::setVolume() - Failed to get volume range!";
 		}
 	}
 #elif defined(WIN32) || defined(_WIN32)
