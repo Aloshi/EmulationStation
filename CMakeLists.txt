@@ -10,8 +10,9 @@ option(USE_MESA_GLES "Set to ON to select the MESA OpenGL ES driver" ${USE_MESA_
 option(USE_GLES1 "Set to ON to force usage of the OpenGLES v1 renderer" ${USE_GLES1})
 
 # OpenGL library preference (https://cmake.org/cmake/help/git-stage/policy/CMP0072.html)
+# Set it to OLD to appease older proprietary drivers without libglvnd support
 if(POLICY CMP0072)
-   cmake_policy(SET CMP0072 NEW)
+   cmake_policy(SET CMP0072 OLD)
 endif()
 
 project(emulationstation-all)
