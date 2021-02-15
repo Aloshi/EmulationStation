@@ -28,6 +28,8 @@ public:
 	virtual void launch(FileData* game) = 0;
 
 protected:
+	static const int DESCRIPTION_SCROLL_DELAY = 5 * 1000; // five secs
+
 	virtual std::string getQuickSystemSelectRightButton() = 0;
 	virtual std::string getQuickSystemSelectLeftButton() = 0;
 	virtual void populateList(const std::vector<FileData*>& files) = 0;

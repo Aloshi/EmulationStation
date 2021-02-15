@@ -7,8 +7,8 @@
 #define AUTO_SCROLL_DELAY 1000 // ms to wait before we start to scroll
 #define AUTO_SCROLL_SPEED 50 // ms between scrolls
 
-ScrollableContainer::ScrollableContainer(Window* window) : GuiComponent(window),
-	mAutoScrollDelay(0), mAutoScrollSpeed(0), mAutoScrollAccumulator(0), mScrollPos(0, 0), mScrollDir(0, 0), mAutoScrollResetAccumulator(0)
+ScrollableContainer::ScrollableContainer(Window* window, int scrollDelay) : GuiComponent(window),
+	mAutoScrollDelay(scrollDelay), mAutoScrollSpeed(0), mAutoScrollAccumulator(0), mScrollPos(0, 0), mScrollDir(0, 0), mAutoScrollResetAccumulator(0)
 {
 }
 
@@ -39,7 +39,10 @@ void ScrollableContainer::setAutoScroll(bool autoScroll)
 	if(autoScroll)
 	{
 		mScrollDir = Vector2f(0, 1);
-		mAutoScrollDelay = AUTO_SCROLL_DELAY;
+		if (mAutoScrollDelay == 0)
+		{
+			mAutoScrollDelay = AUTO_SCROLL_DELAY;
+		}
 		mAutoScrollSpeed = AUTO_SCROLL_SPEED;
 		reset();
 	}else{

@@ -5,7 +5,7 @@
 
 DetailedGameListView::DetailedGameListView(Window* window, FileData* root) :
 	BasicGameListView(window, root),
-	mDescContainer(window), mDescription(window),
+	mDescContainer(window, DESCRIPTION_SCROLL_DELAY), mDescription(window),
 	mThumbnail(window),
 	mMarquee(window),
 	mImage(window),
@@ -307,4 +307,8 @@ std::vector<GuiComponent*> DetailedGameListView::getMDValues()
 	ret.push_back(&mLastPlayed);
 	ret.push_back(&mPlayCount);
 	return ret;
+}
+
+void DetailedGameListView::onFocusLost() {
+	mDescContainer.reset();
 }
