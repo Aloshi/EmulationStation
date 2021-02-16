@@ -740,16 +740,17 @@ namespace Utils
 		{
 			const std::string path = getGenericPath(_path);
 
-			// regular files and executables but not setuid, setgid, shared text (mode 0755)
-			const mode_t  mask = S_IFREG | S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
+			// regular files and executables, but not setuid, setgid, shared text
+			const mode_t mask = S_IFREG;
+			const mode_t mask_exec = S_IXUSR | S_IXGRP | S_IXOTH;
 			struct stat64 info;
 
 			// check if stat64 succeeded
 			if(stat64(path.c_str(), &info) != 0)
 				return false;
 
-			// check for mask attributes only
-			return ((info.st_mode & mask) == info.st_mode);
+			// check for mask attributes
+			return (info.st_mode & mask) == mask && (info.st_mode & mask_exec) != 0;
 
 		} // isExecutable
 #endif // !_WIN32
