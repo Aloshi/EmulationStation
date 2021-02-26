@@ -183,6 +183,8 @@ void updateGamelist(SystemData* system)
 	pugi::xml_node root;
 	std::string xmlReadPath = system->getGamelistPath(false);
 
+	std::string relativeTo = system->getStartPath();
+
 	if(Utils::FileSystem::exists(xmlReadPath))
 	{
 		//parse an existing file first
@@ -205,6 +207,8 @@ void updateGamelist(SystemData* system)
 		root = doc.append_child("gameList");
 	}
 
+	std::vector<FileData*> changedGames;
+	std::vector<FileData*> changedFolders;
 
 	//now we have all the information from the XML. now iterate through all our games and add information from there
 	FileData* rootFolder = system->getRootFolder();
@@ -214,42 +218,81 @@ void updateGamelist(SystemData* system)
 
 		//get only files, no folders
 		std::vector<FileData*> files = rootFolder->getFilesRecursive(GAME | FOLDER);
-		//iterate through all files, checking if they're already in the XML
+		
+		// Stage 1: iterate through all files in memory, checking for changes
 		for(std::vector<FileData*>::const_iterator fit = files.cbegin(); fit != files.cend(); ++fit)
 		{
-			const char* tag = ((*fit)->getType() == GAME) ? "game" : "folder";
 
 			// do not touch if it wasn't changed anyway
 			if (!(*fit)->metadata.wasChanged())
 				continue;
-
-			// check if the file already exists in the XML
-			// if it does, remove it before adding
-			for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
+			
+			// adding item to changed list
+			if ((*fit)->getType() == GAME) 
 			{
-				pugi::xml_node pathNode = fileNode.child("path");
-				if(!pathNode)
-				{
-					LOG(LogError) << "<" << tag << "> node contains no <path> child!";
-					continue;
-				}
-
-				std::string nodePath = Utils::FileSystem::getCanonicalPath(Utils::FileSystem::resolveRelativePath(pathNode.text().get(), system->getStartPath(), true));
-				std::string gamePath = Utils::FileSystem::getCanonicalPath((*fit)->getPath());
-				if(nodePath == gamePath)
-				{
-					// found it
-					root.remove_child(fileNode);
-					break;
-				}
+				changedGames.push_back((*fit));	
 			}
-
-			// it was either removed or never existed to begin with; either way, we can add it now
-			addFileDataNode(root, *fit, tag, system);
-			++numUpdated;
+			else 
+			{
+				changedFolders.push_back((*fit));
+			}
 		}
 
-		//now write the file
+
+		// Stage 2: iterate XML if needed, to remove and add changed items
+		const char* tagList[2] = { "game", "folder" };
+		FileType typeList[2] = { GAME, FOLDER };
+		std::vector<FileData*> changedList[2] = { changedGames, changedFolders };
+		
+		for(int i = 0; i < 2; i++)
+		{
+			const char* tag = tagList[i];
+			std::vector<FileData*> changes = changedList[i];
+
+			// if changed items of this type
+			if (changes.size() > 0) {
+				// check if the item already exists in the XML
+				// if it does, remove all corresponding items before adding
+				for(pugi::xml_node fileNode = root.child(tag); fileNode; )
+				{
+					pugi::xml_node pathNode = fileNode.child("path");
+
+					// we need this as we were deleting the iterator and things would become inconsistent
+					pugi::xml_node nextNode = fileNode.next_sibling(tag);
+
+					if(!pathNode)
+					{
+						LOG(LogError) << "<" << tag << "> node contains no <path> child!";
+						continue;
+					}
+
+					// apply the same transformation as in Gamelist::parseGamelist
+					std::string xmlpath = Utils::FileSystem::resolveRelativePath(pathNode.text().get(), relativeTo, false);
+					
+					for(std::vector<FileData*>::const_iterator cfit = changes.cbegin(); cfit != changes.cend(); ++cfit)
+					{
+						if(xmlpath == (*cfit)->getPath())
+						{
+							// found it
+							root.remove_child(fileNode);
+							break;
+						}
+					}
+					fileNode = nextNode;
+
+				}
+
+				// add items to XML
+				for(std::vector<FileData*>::const_iterator cfit = changes.cbegin(); cfit != changes.cend(); ++cfit)
+				{
+					// it was either removed or never existed to begin with; either way, we can add it now
+					addFileDataNode(root, *cfit, tag, system);
+					++numUpdated;
+				}
+			}
+		}
+
+		// now write the file
 
 		if (numUpdated > 0) {
 			const auto startTs = std::chrono::system_clock::now();
