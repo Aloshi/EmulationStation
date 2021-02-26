@@ -41,6 +41,24 @@ GuiVideoScreensaverOptions::GuiVideoScreensaverOptions(Window* window, const cha
 	addWithLabel("SHOW GAME INFO ON SCREENSAVER", ss_info);
 	addSaveFunc([ss_info, this] { Settings::getInstance()->setString("ScreenSaverGameInfo", ss_info->getSelected()); });
 
+	auto ss_video_mute = std::make_shared<SwitchComponent>(mWindow);
+	ss_video_mute->setState(Settings::getInstance()->getBool("ScreenSaverVideoMute"));
+	addWithLabel("MUTE SCREENSAVER AUDIO", ss_video_mute);
+	addSaveFunc([ss_video_mute] { Settings::getInstance()->setBool("ScreenSaverVideoMute", ss_video_mute->getState()); });
+
+
+	auto ss_vlc_resolution = std::make_shared< OptionListComponent<std::string> >(mWindow, "GAME INFO ALIGNMENT", false);
+	std::vector<std::string> vlc_res;
+	vlc_res.push_back("original"); // renders at original video resolution, stretched to fit screen
+	vlc_res.push_back("low"); // 25% of screen resolution
+	vlc_res.push_back("medium"); // 50% of screen resolution
+	vlc_res.push_back("high"); // 75% of screen resolution
+	vlc_res.push_back("max"); // full screen resolution
+	for(auto it = vlc_res.cbegin(); it != vlc_res.cend(); it++)
+		ss_vlc_resolution->add(*it, *it, Settings::getInstance()->getString("VlcScreenSaverResolution") == *it);
+	addWithLabel("VLC: SCREENSAVER VIDEO RESOLUTION", ss_vlc_resolution);
+	addSaveFunc([ss_vlc_resolution, this] { Settings::getInstance()->setString("VlcScreenSaverResolution", ss_vlc_resolution->getSelected()); });
+
 #ifdef _RPI_
 	ComponentListRow row;
 
@@ -51,43 +69,31 @@ GuiVideoScreensaverOptions::GuiVideoScreensaverOptions(Window* window, const cha
 	align_mode.push_back("center");
 	for(auto it = align_mode.cbegin(); it != align_mode.cend(); it++)
 		ss_omx_subs_align->add(*it, *it, Settings::getInstance()->getString("SubtitleAlignment") == *it);
-	addWithLabel("GAME INFO ALIGNMENT", ss_omx_subs_align);
+	addWithLabel("OMX: GAME INFO ALIGNMENT", ss_omx_subs_align);
 	addSaveFunc([ss_omx_subs_align, this] { Settings::getInstance()->setString("SubtitleAlignment", ss_omx_subs_align->getSelected()); });
 
 	// Set font size
 	auto ss_omx_font_size = std::make_shared<SliderComponent>(mWindow, 1.f, 64.f, 1.f, "h");
 	ss_omx_font_size->setValue((float)(Settings::getInstance()->getInt("SubtitleSize")));
-	addWithLabel("GAME INFO FONT SIZE", ss_omx_font_size);
+	addWithLabel("OMX: GAME INFO FONT SIZE", ss_omx_font_size);
 	addSaveFunc([ss_omx_font_size] {
 		int subSize = (int)Math::round(ss_omx_font_size->getValue());
 		Settings::getInstance()->setInt("SubtitleSize", subSize);
 	});
 
-	auto ss_video_mute = std::make_shared<SwitchComponent>(mWindow);
-	ss_video_mute->setState(Settings::getInstance()->getBool("ScreenSaverVideoMute"));
-	addWithLabel("MUTE SCREENSAVER AUDIO", ss_video_mute);
-	addSaveFunc([ss_video_mute] { Settings::getInstance()->setBool("ScreenSaverVideoMute", ss_video_mute->getState()); });
-
 	// Define subtitle font
 	auto ss_omx_font_file = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
-	addEditableTextComponent(row, "PATH TO FONT FILE", ss_omx_font_file, Settings::getInstance()->getString("SubtitleFont"));
+	addEditableTextComponent(row, "OMX: PATH TO FONT FILE", ss_omx_font_file, Settings::getInstance()->getString("SubtitleFont"));
 	addSaveFunc([ss_omx_font_file] {
 		Settings::getInstance()->setString("SubtitleFont", ss_omx_font_file->getValue());
 	});
 
 	// Define subtitle italic font
 	auto ss_omx_italic_font_file = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
-	addEditableTextComponent(row, "PATH TO ITALIC FONT FILE", ss_omx_italic_font_file, Settings::getInstance()->getString("SubtitleItalicFont"));
+	addEditableTextComponent(row, "OMX: PATH TO ITALIC FONT FILE", ss_omx_italic_font_file, Settings::getInstance()->getString("SubtitleItalicFont"));
 	addSaveFunc([ss_omx_italic_font_file] {
 		Settings::getInstance()->setString("SubtitleItalicFont", ss_omx_italic_font_file->getValue());
 	});
-#endif
-
-#ifndef _RPI_
-	auto captions_compatibility = std::make_shared<SwitchComponent>(mWindow);
-	captions_compatibility->setState(Settings::getInstance()->getBool("CaptionsCompatibility"));
-	addWithLabel("USE COMPATIBLE LOW RESOLUTION FOR CAPTIONS", captions_compatibility);
-	addSaveFunc([captions_compatibility] { Settings::getInstance()->setBool("CaptionsCompatibility", captions_compatibility->getState()); });
 #endif
 }
 
