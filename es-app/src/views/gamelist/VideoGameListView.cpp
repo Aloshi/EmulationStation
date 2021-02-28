@@ -31,6 +31,7 @@ VideoGameListView::VideoGameListView(Window* window, FileData* root) :
 
 	// Create the correct type of video window
 #ifdef _RPI_
+	Utils::FileSystem::removeFile(getTitlePath());
 	if (Settings::getInstance()->getBool("VideoOmxPlayer"))
 		mVideo = new VideoPlayerComponent(window, "");
 	else
@@ -246,8 +247,6 @@ void VideoGameListView::initMDValues()
 void VideoGameListView::updateInfoPanel()
 {
 	FileData* file = (mList.size() == 0 || mList.isScrolling()) ? NULL : mList.getSelected();
-
-	Utils::FileSystem::removeFile(getTitlePath());
 
 	bool fadingOut;
 	if(file == NULL)

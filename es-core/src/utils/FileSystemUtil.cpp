@@ -4,6 +4,7 @@
 
 #include <sys/stat.h>
 #include <string.h>
+#include <map>
 
 #if defined(_WIN32)
 // because windows...
@@ -29,6 +30,7 @@ namespace Utils
 	{
 		static std::string homePath = "";
 		static std::string exePath  = "";
+		static std::map<std::string, bool> mPathExistsIndex = std::map<std::string, bool>();
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -595,8 +597,14 @@ namespace Utils
 			if(!exists(path))
 				return true;
 
+			bool removed = (unlink(path.c_str()) == 0);
+			
+			// if removed, let's remove it from the index
+			if (removed)
+				mPathExistsIndex[_path] = false;
+
 			// try to remove file
-			return (unlink(path.c_str()) == 0);
+			return removed;
 
 		} // removeFile
 
@@ -630,11 +638,15 @@ namespace Utils
 
 		bool exists(const std::string& _path)
 		{
-			const std::string path = getGenericPath(_path);
-			struct stat64     info;
+			if (mPathExistsIndex.find(_path) == mPathExistsIndex.cend())
+			{
+				const std::string path = getGenericPath(_path);
+				struct stat64 info;
+				// check if stat64 succeeded
+				mPathExistsIndex[_path] = (stat64(path.c_str(), &info) == 0);
+			}
 
-			// check if stat64 succeeded
-			return (stat64(path.c_str(), &info) == 0);
+			return mPathExistsIndex.at(_path);
 
 		} // exists
 
