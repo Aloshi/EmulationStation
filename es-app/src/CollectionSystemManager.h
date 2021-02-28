@@ -76,6 +76,8 @@ public:
 	SystemData* getSystemToView(SystemData* sys);
 	void updateCollectionFolderMetadata(SystemData* sys);
 
+	SystemData* getAllGamesCollection();
+
 private:
 	static CollectionSystemManager* sInstance;
 	SystemEnvironmentData* mCollectionEnvData;
@@ -89,7 +91,6 @@ private:
 
 	void initAutoCollectionSystems();
 	void initCustomCollectionSystems();
-	SystemData* getAllGamesCollection();
 	SystemData* createNewCollectionEntry(std::string name, CollectionSystemDecl sysDecl, bool index = true);
 	void populateAutoCollection(CollectionSystemData* sysData);
 	void populateCustomCollection(CollectionSystemData* sysData);

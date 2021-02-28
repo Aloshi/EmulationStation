@@ -4,6 +4,7 @@
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
+#include "CollectionSystemManager.h"
 #include "utils/FileSystemUtil.h"
 #include "views/gamelist/IGameListView.h"
 #include "views/ViewController.h"
@@ -15,7 +16,10 @@
 #include "SystemData.h"
 #include <unordered_map>
 #include <time.h>
+#include <chrono>
 #define FADE_TIME 			300
+
+static int lastIndex = 0;
 
 SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mVideoScreensaver(NULL),
@@ -63,6 +67,13 @@ bool SystemScreenSaver::isScreenSaverActive()
 
 void SystemScreenSaver::startScreenSaver()
 {
+	// if set to index files in background, start thread
+	if (Settings::getInstance()->getBool("BackgroundIndexing"))
+	{
+		mExit = false;
+		mThread = new std::thread(&SystemScreenSaver::backgroundIndexing, this);
+	}
+
 	std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
 	if (!mVideoScreensaver && (screensaver_behavior == "random video"))
 	{
@@ -197,6 +208,14 @@ void SystemScreenSaver::stopScreenSaver()
 	delete mImageScreensaver;
 	mImageScreensaver = NULL;
 
+	// Exit the indexing thread
+	if (Settings::getInstance()->getBool("BackgroundIndexing"))
+	{
+		mExit = true;
+		mThread->join();
+		delete mThread;
+	}
+
 	// we need this to loop through different videos
 	mState = STATE_INACTIVE;
 	PowerSaver::runningScreenSaver(false);
@@ -251,6 +270,28 @@ void SystemScreenSaver::renderScreenSaver()
 		unsigned char color = screensaver_behavior == "dim" ? 0x000000A0 : 0x000000FF;
 		Renderer::drawRect(0.0f, 0.0f, Renderer::getScreenWidth(), Renderer::getScreenHeight(), color, color);
 	}
+}
+
+void SystemScreenSaver::backgroundIndexing()
+{
+	LOG(LogDebug) << "Background indexing starting.";
+
+	// get the list of all games
+	SystemData* all = CollectionSystemManager::get()->getAllGamesCollection();
+	std::vector<FileData*> files = all->getRootFolder()->getFilesRecursive(GAME);
+	
+	const auto startTs = std::chrono::system_clock::now();
+	for (lastIndex; lastIndex < files.size(); lastIndex++)
+	{
+		if(mExit)
+			break;
+		Utils::FileSystem::exists(files.at(lastIndex)->getVideoPath());
+		Utils::FileSystem::exists(files.at(lastIndex)->getMarqueePath());
+		Utils::FileSystem::exists(files.at(lastIndex)->getThumbnailPath());
+		Utils::FileSystem::exists(files.at(lastIndex)->getImagePath());
+	}
+	auto endTs = std::chrono::system_clock::now();
+	LOG(LogDebug) << "Indexed a total of " << lastIndex << " entries in " << std::chrono::duration_cast<std::chrono::milliseconds>(endTs - startTs).count() << " ms. Stopping.";		
 }
 
 unsigned long SystemScreenSaver::countGameListNodes(const char *nodeName)

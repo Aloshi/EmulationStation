@@ -453,6 +453,12 @@ void GuiMenu::openOtherSettings()
 
 #endif
 
+	// hidden files
+	auto background_indexing = std::make_shared<SwitchComponent>(mWindow);
+	background_indexing->setState(Settings::getInstance()->getBool("BackgroundIndexing"));
+	s->addWithLabel("INDEX FILES DURING SCREENSAVER", background_indexing);
+	s->addSaveFunc([background_indexing] { Settings::getInstance()->setBool("BackgroundIndexing", background_indexing->getState()); });
+
 	// framerate
 	auto framerate = std::make_shared<SwitchComponent>(mWindow);
 	framerate->setState(Settings::getInstance()->getBool("DrawFramerate"));
