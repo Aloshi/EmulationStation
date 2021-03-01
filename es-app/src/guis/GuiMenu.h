@@ -4,6 +4,8 @@
 
 #include "components/MenuComponent.h"
 #include "GuiComponent.h"
+#include "components/OptionListComponent.h"
+#include "FileData.h"
 
 class GuiMenu : public GuiComponent
 {
@@ -29,6 +31,9 @@ private:
 
 	MenuComponent mMenu;
 	TextComponent mVersion;
+
+	typedef OptionListComponent<const FileData::SortType*> SortList;
+	std::shared_ptr<SortList> mListSort;
 };
 
 #endif // ES_APP_GUIS_GUI_MENU_H

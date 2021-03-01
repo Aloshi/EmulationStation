@@ -19,6 +19,9 @@
 #include <SDL_events.h>
 #include <algorithm>
 #include "platform.h"
+#include "FileSorts.h"
+#include "views/gamelist/IGameListView.h"
+#include "guis/GuiInfoPopup.h"
 
 GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MENU"), mVersion(window)
 {
@@ -330,6 +333,32 @@ void GuiMenu::openUISettings()
 		Settings::getInstance()->setString("GamelistViewStyle", gamelist_style->getSelected());
 		if (needReload)
 			ViewController::get()->reloadAll();
+	});
+
+	// Optionally ignore leading articles when sorting game titles
+	auto ignore_articles = std::make_shared<SwitchComponent>(mWindow);
+	ignore_articles->setState(Settings::getInstance()->getBool("IgnoreLeadingArticles"));
+	s->addWithLabel("IGNORE ARTICLES (NAME SORT ONLY)", ignore_articles);
+	s->addSaveFunc([ignore_articles, window] {
+		bool articles_are_ignored = Settings::getInstance()->getBool("IgnoreLeadingArticles");
+		Settings::getInstance()->setBool("IgnoreLeadingArticles", ignore_articles->getState());
+		if (ignore_articles->getState() != articles_are_ignored)
+		{
+			//For each system...
+			for (auto it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); it++)
+			{
+				//Apply sort recursively
+				FileData* root = (*it)->getRootFolder();
+				root->sort(getSortTypeFromString(root->getSortName()));
+
+				//Notify that the root folder was sorted
+				ViewController::get()->getGameListView((*it))->onFileChanged(root, FILE_SORTED);
+			}
+
+			//Display popup to inform user
+			GuiInfoPopup* popup = new GuiInfoPopup(window, "Files sorted", 4000);
+			window->setInfoPopup(popup);
+		}
 	});
 
 	// Optionally start in selected system
