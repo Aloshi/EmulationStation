@@ -49,7 +49,7 @@ public:
 	static void deinit();
 	void saveCustomCollection(SystemData* sys);
 
-	void loadCollectionSystems();
+	void loadCollectionSystems(bool async=false);
 	void loadEnabledListFromSettings();
 	void updateSystemsList();
 
