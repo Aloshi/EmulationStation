@@ -76,6 +76,7 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 
 		mMenu.addWithLabel("SORT GAMES BY", mListSort);
 	}
+	
 	// show filtered menu
 	if(!Settings::getInstance()->getBool("ForceDisableFilters"))
 	{

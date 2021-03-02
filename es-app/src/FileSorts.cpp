@@ -1,9 +1,12 @@
 #include "FileSorts.h"
 
 #include "utils/StringUtil.h"
+#include "Settings.h"
+#include "Log.h"
 
 namespace FileSorts
 {
+
 	const FileData::SortType typesArr[] = {
 		FileData::SortType(&compareName, true, "filename, ascending"),
 		FileData::SortType(&compareName, false, "filename, descending"),
@@ -50,6 +53,9 @@ namespace FileSorts
 		if(name2.empty()){
 			name2 = Utils::String::toUpper(file2->metadata.get("name"));
 		}
+
+		ignoreLeadingArticles(name1, name2);
+
 		return name1.compare(name2) < 0;
 	}
 
@@ -115,4 +121,31 @@ namespace FileSorts
 		std::string system2 = Utils::String::toUpper(file2->getSystemName());
 		return system1.compare(system2) < 0;
 	}
+
+	//If option is enabled, ignore leading articles by temporarily modifying the name prior to sorting
+	//(Artciles are defined within the settings config file)
+	void ignoreLeadingArticles(std::string &name1, std::string &name2) {
+
+		if (Settings::getInstance()->getBool("IgnoreLeadingArticles"))
+		{
+
+			std::vector<std::string> articles = Utils::String::delimitedStringToVector(Settings::getInstance()->getString("LeadingArticles"), ",");
+
+			for(Utils::String::stringVector::iterator it = articles.begin(); it != articles.end(); it++)
+			{
+			
+				if (Utils::String::startsWith(Utils::String::toUpper(name1), Utils::String::toUpper(it[0]) + " ")) {
+					name1 = Utils::String::replace(Utils::String::toUpper(name1), Utils::String::toUpper(it[0]) + " ", "");
+				}
+
+				if (Utils::String::startsWith(Utils::String::toUpper(name2), Utils::String::toUpper(it[0]) + " ")) {
+					name2 = Utils::String::replace(Utils::String::toUpper(name2), Utils::String::toUpper(it[0]) + " ", "");
+				}
+
+			}
+
+		}
+
+	}
+
 };
