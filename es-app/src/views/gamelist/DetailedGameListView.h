@@ -18,6 +18,8 @@ public:
 
 	virtual void launch(FileData* game) override;
 
+	void onFocusLost() override;
+
 private:
 	void updateInfoPanel();
 

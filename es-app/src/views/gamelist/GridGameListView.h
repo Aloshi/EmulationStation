@@ -29,6 +29,8 @@ public:
 	virtual std::vector<HelpPrompt> getHelpPrompts() override;
 	virtual void launch(FileData* game) override;
 
+	void onFocusLost(void) override;
+
 protected:
 	virtual void update(int deltaTime) override;
 	virtual std::string getQuickSystemSelectRightButton() override;
