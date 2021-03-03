@@ -31,6 +31,7 @@ namespace PlatformIds
 		"xbox360",
 		"msx",
 		"neogeo",
+		"neogeocd",
 		"ngp", // neo geo pocket
 		"ngpc", // neo geo pocket color
 		"n3ds", // nintendo 3DS
@@ -38,6 +39,7 @@ namespace PlatformIds
 		"nds", // nintendo DS
 		"fds", // Famicom Disk System
 		"nes", // nintendo entertainment system
+		"pokemonmini",
 		"channelf", // Fairchild ChannelF
 		"gb", // game boy
 		"gba", // game boy advance
