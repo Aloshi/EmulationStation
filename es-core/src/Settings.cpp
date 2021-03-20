@@ -77,6 +77,8 @@ void Settings::setDefaults()
 	mBoolMap["QuickSystemSelect"] = true;
 	mBoolMap["MoveCarousel"] = true;
 
+	mBoolMap["ThreadedLoading"] = true;
+
 	mBoolMap["Debug"] = false;
 	mBoolMap["DebugGrid"] = false;
 	mBoolMap["DebugText"] = false;

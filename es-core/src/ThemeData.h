@@ -185,6 +185,9 @@ private:
 	void parseElement(const pugi::xml_node& elementNode, const std::map<std::string, ElementPropertyType>& typeMap, ThemeElement& element);
 
 	std::map<std::string, ThemeView> mViews;
+
+	std::string resolvePlaceholders(const char* in);
+	std::map<std::string, std::string> mVariables;
 };
 
 #endif // ES_CORE_THEME_DATA_H

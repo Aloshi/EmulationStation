@@ -124,7 +124,7 @@ void CollectionSystemManager::saveCustomCollection(SystemData* sys)
 
 /* Methods to load all Collections into memory, and handle enabling the active ones */
 // loads all Collection Systems
-void CollectionSystemManager::loadCollectionSystems()
+void CollectionSystemManager::loadCollectionSystems(bool async)
 {
 	initAutoCollectionSystems();
 	CollectionSystemDecl decl = mCollectionSystemDeclsIndex[myCollectionsName];
@@ -135,8 +135,10 @@ void CollectionSystemManager::loadCollectionSystems()
 	{
 		// Now see which ones are enabled
 		loadEnabledListFromSettings();
+
 		// add to the main System Vector, and create Views as needed
-		updateSystemsList();
+		if (!async)
+			updateSystemsList();
 	}
 }
 

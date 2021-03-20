@@ -8,9 +8,12 @@
 #include <string>
 #include <vector>
 
+#include <pugixml/src/pugixml.hpp>
+
 class FileData;
 class FileFilterIndex;
 class ThemeData;
+class Window;
 
 struct SystemEnvironmentData
 {
@@ -46,7 +49,7 @@ public:
 	unsigned int getDisplayedGameCount() const;
 
 	static void deleteSystems();
-	static bool loadConfig(); //Load the system config file at getConfigPath(). Returns true if no errors were encountered. An example will be written if the file doesn't exist.
+	static bool loadConfig(Window* window); //Load the system config file at getConfigPath(). Returns true if no errors were encountered. An example will be written if the file doesn't exist.
 	static void writeExampleConfig(const std::string& path);
 	static std::string getConfigPath(bool forWrite); // if forWrite, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 
@@ -71,6 +74,8 @@ public:
 	void onMetaDataSavePoint();
 
 private:
+	static SystemData* loadSystem(pugi::xml_node system);
+
 	bool mIsCollectionSystem;
 	bool mIsGameSystem;
 	std::string mName;
