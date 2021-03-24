@@ -182,7 +182,7 @@ bool Window::inputDuringScreensaver(InputConfig* config, Input input)
 		else if (is_start_input)
 		{
 			bool slideshow_custom_images = Settings::getInstance()->getBool("SlideshowScreenSaverCustomImageSource");
-			if (!slideshow_custom_images)
+			if (screensaver_type == "random video" || !slideshow_custom_images)
 			{
 				mScreenSaver->launchGame();
 			}
