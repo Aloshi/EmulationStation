@@ -27,23 +27,16 @@ GuiMenu::GuiMenu(Window* window) : GuiComponent(window), mMenu(window, "MAIN MEN
 {
 	bool isFullUI = UIModeController::getInstance()->isUIModeFull();
 
-	if (isFullUI)
+	if (isFullUI) {
 		addEntry("SCRAPER", 0x777777FF, true, [this] { openScraperSettings(); });
-
-	addEntry("SOUND SETTINGS", 0x777777FF, true, [this] { openSoundSettings(); });
-
-
-	if (isFullUI)
+		addEntry("SOUND SETTINGS", 0x777777FF, true, [this] { openSoundSettings(); });
 		addEntry("UI SETTINGS", 0x777777FF, true, [this] { openUISettings(); });
-
-	if (isFullUI)
 		addEntry("GAME COLLECTION SETTINGS", 0x777777FF, true, [this] { openCollectionSystemSettings(); });
-
-	if (isFullUI)
 		addEntry("OTHER SETTINGS", 0x777777FF, true, [this] { openOtherSettings(); });
-
-	if (isFullUI)
 		addEntry("CONFIGURE INPUT", 0x777777FF, true, [this] { openConfigInput(); });
+	} else {
+		addEntry("SOUND SETTINGS", 0x777777FF, true, [this] { openSoundSettings(); });
+	}
 
 	addEntry("QUIT", 0x777777FF, true, [this] {openQuitMenu(); });
 
