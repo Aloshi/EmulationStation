@@ -105,7 +105,7 @@ void VideoComponent::onSizeChanged()
 bool VideoComponent::setVideo(std::string path)
 {
 	// Convert the path into a generic format
-	std::string fullPath = Utils::FileSystem::getAbsolutePath(path);
+	std::string fullPath = path.empty() ? path : Utils::FileSystem::getAbsolutePath(path);
 
 	// Check that it's changed
 	if (fullPath == mVideoPath)
