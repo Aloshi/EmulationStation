@@ -5,8 +5,8 @@
 #include "components/TextComponent.h"
 #include <SDL_timer.h>
 
-GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration) :
-	GuiComponent(window), mMessage(message), mDuration(duration), running(true)
+GuiInfoPopup::GuiInfoPopup(Window* window, std::string message, int duration, int fadein, int fadeout) :
+	GuiComponent(window), mMessage(message), mDuration(duration), mFadein(fadein), mFadeout(fadeout), running(true)
 {
 	mFrame = new NinePatchComponent(window);
 	float maxWidth = Renderer::getScreenWidth() * 0.9f;
@@ -96,16 +96,16 @@ bool GuiInfoPopup::updateState()
 		running = false;
 		return false;
 	}
-	else if (curTime - mStartTime <= 500) {
-		alpha = ((curTime - mStartTime)*255/500);
+	else if (curTime - mStartTime <= mFadein) {
+		alpha = (curTime - mStartTime) * 255 / mFadein;
 	}
-	else if (curTime - mStartTime < mDuration - 500)
+	else if (curTime - mStartTime < mDuration - mFadeout)
 	{
 		alpha = 255;
 	}
 	else
 	{
-		alpha = ((-(curTime - mStartTime - mDuration)*255)/500);
+		alpha = -(curTime - mStartTime - mDuration) * 255 / mFadeout;
 	}
 	mGrid->setOpacity((unsigned char)alpha);
 

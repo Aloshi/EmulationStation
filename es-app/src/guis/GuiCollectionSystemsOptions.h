@@ -31,6 +31,7 @@ private:
 	std::shared_ptr<SwitchComponent> sortAllSystemsSwitch;
 	std::shared_ptr<SwitchComponent> bundleCustomCollections;
 	std::shared_ptr<SwitchComponent> toggleSystemNameInCollections;
+	std::shared_ptr<SwitchComponent> doublePressToRemoveFavs;
 	MenuComponent mMenu;
 	SystemData* mSystem;
 };

@@ -11,13 +11,15 @@ class NinePatchComponent;
 class GuiInfoPopup : public GuiComponent, public Window::InfoPopup
 {
 public:
-	GuiInfoPopup(Window* window, std::string message, int duration);
+	GuiInfoPopup(Window* window, std::string message, int duration, int fadein = 500, int fadeout = 500);
 	~GuiInfoPopup();
 	void render(const Transform4x4f& parentTrans) override;
 	inline void stop() { running = false; };
 private:
 	std::string mMessage;
 	int mDuration;
+	int mFadein;
+	int mFadeout;
 	int alpha;
 	bool updateState();
 	int mStartTime;
