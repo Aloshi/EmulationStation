@@ -354,6 +354,14 @@ void GuiMenu::openUISettings()
 		}
 	});
 
+	// lb/rb uses full screen size paging instead of -10/+10 steps
+	auto use_fullscreen_paging = std::make_shared<SwitchComponent>(mWindow);
+	use_fullscreen_paging->setState(Settings::getInstance()->getBool("UseFullscreenPaging"));
+	s->addWithLabel("USE FULL SCREEN PAGING FOR LB/RB", use_fullscreen_paging);
+	s->addSaveFunc([use_fullscreen_paging] {
+		Settings::getInstance()->setBool("UseFullscreenPaging", use_fullscreen_paging->getState());
+	});
+
 	// Optionally start in selected system
 	auto systemfocus_list = std::make_shared< OptionListComponent<std::string> >(mWindow, "START ON SYSTEM", false);
 	systemfocus_list->add("NONE", "", Settings::getInstance()->getString("StartupSystem") == "");

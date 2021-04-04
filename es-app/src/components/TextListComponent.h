@@ -6,6 +6,7 @@
 #include "math/Misc.h"
 #include "utils/StringUtil.h"
 #include "Log.h"
+#include "Settings.h"
 #include "Sound.h"
 #include <memory>
 
@@ -105,6 +106,10 @@ private:
 	std::string mScrollSound;
 	static const unsigned int COLOR_ID_COUNT = 2;
 	unsigned int mColors[COLOR_ID_COUNT];
+	unsigned int mScreenCount;
+	int mStartEntry = 0;
+	unsigned int mCursorPrev = 1;
+	bool mOneEntryUpDn = true;
 
 	ImageComponent mSelectorImage;
 };
@@ -123,7 +128,7 @@ TextListComponent<T>::TextListComponent(Window* window) :
 	mFont = Font::get(FONT_SIZE_MEDIUM);
 	mUppercase = false;
 	mLineSpacing = 1.5f;
-	mSelectorHeight = mFont->getSize() * 1.5f;
+	mSelectorHeight = mFont->getSize() * mLineSpacing;
 	mSelectorOffsetY = 0;
 	mSelectorColor = 0x000000FF;
 	mSelectorColorEnd = 0x000000FF;
@@ -145,35 +150,49 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 
 	const float entrySize = Math::max(font->getHeight(1.0), (float)font->getSize()) * mLineSpacing;
 
-	int startEntry = 0;
 
-	//number of entries that can fit on the screen simultaniously
-	int screenCount = (int)(mSize.y() / entrySize);
+	// number of entries that can fit on the screen simultaniously
+	mScreenCount = (int)(mSize.y() / entrySize);
 
-	if(size() >= screenCount)
+	if (mCursor != mCursorPrev)
 	{
-		startEntry = mCursor - screenCount/2;
-		if(startEntry < 0)
-			startEntry = 0;
-		if(startEntry >= size() - screenCount)
-			startEntry = size() - screenCount;
+		int fromTop = mCursorPrev - mStartEntry;
+		bool cursorCentered = fromTop == mScreenCount/2;
+		mStartEntry = 0;
+
+		if(size() >= mScreenCount)
+		{
+			if (Settings::getInstance()->getBool("UseFullscreenPaging")
+				&& (mCursor > mScreenCount/2 || mCursor < size() - (mScreenCount - mScreenCount/2))
+				&& !cursorCentered && !mOneEntryUpDn)
+			{
+				mStartEntry = mCursor - fromTop;
+			} else {
+				mStartEntry = mCursor - mScreenCount/2;
+			}
+
+			// bounds check
+			if(mStartEntry < 0)
+				mStartEntry = 0;
+			else if(mStartEntry >= size() - mScreenCount)
+				mStartEntry = size() - mScreenCount;
+		}
+		mCursorPrev = mCursor;
 	}
 
-	float y = 0;
-
-	int listCutoff = startEntry + screenCount;
+	unsigned int listCutoff = mStartEntry + mScreenCount;
 	if(listCutoff > size())
 		listCutoff = size();
 
 	// draw selector bar
-	if(startEntry < listCutoff)
+	if(mStartEntry < listCutoff)
 	{
 		if (mSelectorImage.hasImage()) {
-			mSelectorImage.setPosition(0.f, (mCursor - startEntry)*entrySize + mSelectorOffsetY, 0.f);
+			mSelectorImage.setPosition(0.f, (mCursor - mStartEntry)*entrySize + mSelectorOffsetY, 0.f);
 			mSelectorImage.render(trans);
 		} else {
 			Renderer::setMatrix(trans);
-			Renderer::drawRect(0.0f, (mCursor - startEntry)*entrySize + mSelectorOffsetY, mSize.x(),
+			Renderer::drawRect(0.0f, (mCursor - mStartEntry)*entrySize + mSelectorOffsetY, mSize.x(),
 					mSelectorHeight, mSelectorColor, mSelectorColorEnd, mSelectorColorGradientHorizontal);
 		}
 	}
@@ -184,7 +203,8 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 	Renderer::pushClipRect(Vector2i((int)(trans.translation().x() + mHorizontalMargin), (int)trans.translation().y()),
 		Vector2i((int)(dim.x() - mHorizontalMargin*2), (int)dim.y()));
 
-	for(int i = startEntry; i < listCutoff; i++)
+	float y = 0;
+	for(int i = mStartEntry; i < listCutoff; i++)
 	{
 		typename IList<TextListData, T>::Entry& entry = mEntries.at((unsigned int)i);
 
@@ -261,23 +281,29 @@ bool TextListComponent<T>::input(InputConfig* config, Input input)
 			if(config->isMappedLike("down", input))
 			{
 				listInput(1);
+				mOneEntryUpDn = true;
 				return true;
 			}
 
 			if(config->isMappedLike("up", input))
 			{
 				listInput(-1);
+				mOneEntryUpDn = true;
 				return true;
 			}
 			if(config->isMappedLike("rightshoulder", input))
 			{
-				listInput(10);
+				int delta = Settings::getInstance()->getBool("UseFullscreenPaging") ? mScreenCount : 10;
+				listInput(delta);
+				mOneEntryUpDn = false;
 				return true;
 			}
 
 			if(config->isMappedLike("leftshoulder", input))
 			{
-				listInput(-10);
+				int delta = Settings::getInstance()->getBool("UseFullscreenPaging") ? mScreenCount : 10;
+				listInput(-delta);
+				mOneEntryUpDn = false;
 				return true;
 			}
 		}else{
