@@ -71,7 +71,7 @@ public:
 	void exitEditMode();
 	inline bool isEditing() { return mIsEditingCustom; };
 	inline std::string getEditingCollection() { return mEditingCollection; };
-	bool toggleGameInCollection(FileData* file);
+	bool toggleGameInCollection(FileData* file, int presscount);
 
 	SystemData* getSystemToView(SystemData* sys);
 	void updateCollectionFolderMetadata(SystemData* sys);
@@ -109,6 +109,8 @@ private:
 	bool themeFolderExists(std::string folder);
 
 	bool includeFileInAutoCollections(FileData* file);
+
+	bool needDoublePress(int presscount);
 
 	SystemData* mCustomCollectionsBundle;
 };

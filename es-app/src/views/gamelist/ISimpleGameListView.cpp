@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "Sound.h"
 #include "SystemData.h"
+#include <SDL_timer.h>
 
 ISimpleGameListView::ISimpleGameListView(Window* window, FileData* root) : IGameListView(window, root),
 	mHeaderText(window), mHeaderImage(window), mBackground(window)
@@ -150,7 +151,8 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 		{
 			if(mRoot->getSystem()->isGameSystem())
 			{
-				if(CollectionSystemManager::get()->toggleGameInCollection(getCursor()))
+				int presscount = getPressCountInDuration();
+				if (CollectionSystemManager::get()->toggleGameInCollection(getCursor(), presscount))
 				{
 					return true;
 				}
@@ -162,11 +164,12 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 }
 
 
-
-
-
-
-
-
-
-
+int ISimpleGameListView::getPressCountInDuration() {
+	Uint32 now = SDL_GetTicks();
+	if (now - firstPressMs < DOUBLE_PRESS_DETECTION_DURATION) {
+		return 2;
+	} else {
+		firstPressMs = now;
+		return 1;
+	}
+}
