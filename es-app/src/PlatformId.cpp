@@ -39,7 +39,7 @@ namespace PlatformIds
 		"nds", // nintendo DS
 		"fds", // Famicom Disk System
 		"nes", // nintendo entertainment system
-		"pokemonmini",
+		"pokemini",
 		"channelf", // Fairchild ChannelF
 		"gb", // game boy
 		"gba", // game boy advance
