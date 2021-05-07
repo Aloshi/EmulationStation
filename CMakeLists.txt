@@ -4,6 +4,7 @@ option(GLES "Set to ON if targeting Embedded OpenGL" ${GLES})
 option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
 option(RPI "Set to ON to enable the Raspberry PI video player (omxplayer) and audio options" ${RPI})
 option(CEC "Set to ON to enable CEC" ${CEC})
+option(PROFILING "Set to ON to enable profiling" ${PROFILING})
 
 # GLES implementation overrides
 option(USE_MESA_GLES "Set to ON to select the MESA OpenGL ES driver" ${USE_MESA_GLES})
@@ -111,6 +112,10 @@ endif()
 
 if(DEFINED libCEC_FOUND)
     add_definitions(-DHAVE_LIBCEC)
+endif()
+
+if(PROFILING)
+    add_definitions(-DUSE_PROFILING)
 endif()
 
 #-------------------------------------------------------------------------------
