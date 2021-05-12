@@ -67,7 +67,7 @@ const std::map<PlatformId, const char*> gamesdb_platformid_map = boost::assign::
 void thegamesdb_generate_scraper_requests(const ScraperSearchParams& params, std::queue< std::unique_ptr<ScraperRequest> >& requests, 
 	std::vector<ScraperSearchResult>& results)
 {
-	std::string path = "thegamesdb.net/api/GetGame.php?";
+	std::string path = "legacy.thegamesdb.net/api/GetGame.php?";
 
 	std::string cleanName = params.nameOverride;
 	if(cleanName.empty())
