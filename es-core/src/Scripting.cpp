@@ -5,7 +5,7 @@
 
 namespace Scripting
 {
-    int fireEvent(const std::string& eventName, const std::string& arg1, const std::string& arg2)
+    int fireEvent(const std::string& eventName, const std::string& arg1, const std::string& arg2, const std::string& arg3)
     {
         LOG(LogDebug) << "fireEvent: " << eventName << " " << arg1 << " " << arg2;
 
@@ -37,6 +37,9 @@ namespace Scripting
                     script += " \"" + arg1 + "\"";
                     if (arg2.length() > 0) {
                         script += " \"" + arg2 + "\"";
+			if (arg3.length() > 0) {
+			    script += " \"" + arg3 + "\"";
+			}
                     }
                 }
                 LOG(LogDebug) << "executing: " << script;

@@ -13,6 +13,7 @@
 #include "views/UIModeController.h"
 #include "FileFilterIndex.h"
 #include "Log.h"
+#include "Scripting.h"
 #include "Settings.h"
 #include "SystemData.h"
 #include "Window.h"
@@ -53,6 +54,7 @@ void ViewController::goToStart()
 			if ((*it)->getName() == requestedSystem)
 			{
 				goToGameList(*it);
+				Scripting::fireEvent("system-select", requestedSystem, "requestedsystem");
 				return;
 			}
 		}
@@ -61,6 +63,7 @@ void ViewController::goToStart()
 		Settings::getInstance()->setString("StartupSystem", "");
 	}
 	goToSystemView(SystemData::sSystemVector.at(0));
+	Scripting::fireEvent("system-select", SystemData::sSystemVector.at(0)->getName(), "gotostart");
 }
 
 void ViewController::ReloadAndGoToStart()

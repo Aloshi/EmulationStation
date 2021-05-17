@@ -12,6 +12,7 @@
 #include "FileFilterIndex.h"
 #include "Log.h"
 #include "PowerSaver.h"
+#include "Scripting.h"
 #include "Sound.h"
 #include "SystemData.h"
 #include <unordered_map>
@@ -106,6 +107,9 @@ void SystemScreenSaver::startScreenSaver()
 #else
 			mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
 #endif
+			if (mCurrentGame != NULL) {
+				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName());
+			}
 
 			mVideoScreensaver->topWindow(true);
 			mVideoScreensaver->setOrigin(0.5f, 0.5f);
@@ -183,9 +187,17 @@ void SystemScreenSaver::startScreenSaver()
 
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
+		if (mCurrentGame != NULL) {
+			Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName());
+		}
 		return;
 	}
 	// No videos. Just use a standard screensaver
+        if (mCurrentGame != NULL) {
+            Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName());
+        } else {
+            Scripting::fireEvent("screensaver-game-select");
+        }
 	mState = STATE_SCREENSAVER_ACTIVE;
 	mCurrentGame = NULL;
 }
