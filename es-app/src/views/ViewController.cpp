@@ -54,7 +54,12 @@ void ViewController::goToStart()
 			if ((*it)->getName() == requestedSystem)
 			{
 				goToGameList(*it);
-				Scripting::fireEvent("system-select", requestedSystem, "requestedsystem");
+                                Scripting::fireEvent("system-select", requestedSystem, "requestedsystem");
+				FileData* cursor = getGameListView(*it)->getCursor();
+				if (cursor != NULL)
+				{
+					Scripting::fireEvent("game-select", requestedSystem, cursor->getFileName(), cursor->getName(), "requestedgame");
+				}
 				return;
 			}
 		}
