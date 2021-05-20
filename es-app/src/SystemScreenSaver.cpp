@@ -108,7 +108,9 @@ void SystemScreenSaver::startScreenSaver()
 			mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
 #endif
 			if (mCurrentGame != NULL) {
-				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName());
+				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "randomvideo");
+			} else {
+				Scripting::fireEvent("screensaver-game-select", "NULL", "NULL", "NULL", "randomvideo");
 			}
 
 			mVideoScreensaver->topWindow(true);
@@ -188,15 +190,17 @@ void SystemScreenSaver::startScreenSaver()
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
 		if (mCurrentGame != NULL) {
-			Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName());
+			Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "slideshow");
+		} else {
+			Scripting::fireEvent("screensaver-game-select", "NULL", "NULL", "NULL", "slideshow");
 		}
 		return;
 	}
 	// No videos. Just use a standard screensaver
         if (mCurrentGame != NULL) {
-            Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName());
+            Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "novideo");
         } else {
-            Scripting::fireEvent("screensaver-game-select");
+            Scripting::fireEvent("screensaver-game-select", "NULL", "NULL", "NULL", "novideo");
         }
 	mState = STATE_SCREENSAVER_ACTIVE;
 	mCurrentGame = NULL;

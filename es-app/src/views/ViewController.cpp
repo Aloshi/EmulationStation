@@ -60,6 +60,10 @@ void ViewController::goToStart()
 				{
 					Scripting::fireEvent("game-select", requestedSystem, cursor->getFileName(), cursor->getName(), "requestedgame");
 				}
+				else
+				{
+					Scripting::fireEvent("game-select", "NULL", "NULL", "NULL", "requestedgame");
+				}
 				return;
 			}
 		}
