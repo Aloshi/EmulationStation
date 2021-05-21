@@ -22,6 +22,7 @@ std::vector<const char*> settings_dont_save {
 	{ "IgnoreGamelist" },
 	{ "HideConsole" },
 	{ "ShowExit" },
+	{ "ConfirmQuit" },
 	{ "SplashScreen" },
 	{ "SplashScreenProgress" },
 	{ "VSync" },
@@ -60,6 +61,7 @@ void Settings::setDefaults()
 	mBoolMap["ShowHiddenFiles"] = false;
 	mBoolMap["DrawFramerate"] = false;
 	mBoolMap["ShowExit"] = true;
+	mBoolMap["ConfirmQuit"] = true;
 	mBoolMap["FullscreenBorderless"] = false;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["SplashScreen"] = true;

@@ -117,6 +117,9 @@ bool parseArgs(int argc, char* argv[])
 		}else if(strcmp(argv[i], "--no-exit") == 0)
 		{
 			Settings::getInstance()->setBool("ShowExit", false);
+		}else if(strcmp(argv[i], "--no-confirm-quit") == 0)
+		{
+			Settings::getInstance()->setBool("ConfirmQuit", false);
 		}else if(strcmp(argv[i], "--no-splash") == 0)
 		{
 			Settings::getInstance()->setBool("SplashScreen", false);
@@ -180,6 +183,7 @@ bool parseArgs(int argc, char* argv[])
 				"--ignore-gamelist              ignore the gamelist (useful for troubleshooting)\n"
 				"--draw-framerate               display the framerate\n"
 				"--no-exit                      don't show the exit option in the menu\n"
+				"--no-confirm-quit              omit confirm dialog on actions of quit menu\n"
 				"--no-splash                    don't show the splash screen\n"
 				"--debug                        more logging, show console on Windows\n"
 				"--scrape                       scrape using command line interface\n"
