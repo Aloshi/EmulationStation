@@ -365,9 +365,6 @@ int main(int argc, char* argv[])
 		return run_scraper_cmdline();
 	}
 
-	//dont generate joystick events while we're loading (hopefully fixes "automatically started emulator" bug)
-	SDL_JoystickEventState(SDL_DISABLE);
-
 	// preload what we can right away instead of waiting for the user to select it
 	// this makes for no delays when accessing content, but a longer startup time
 	ViewController::get()->preload();
@@ -386,8 +383,15 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	//generate joystick events since we're done loading
-	SDL_JoystickEventState(SDL_ENABLE);
+	// flush any queued events before showing the UI and starting the input handling loop
+	const Uint32 event_list[] = {
+			SDL_JOYAXISMOTION, SDL_JOYBALLMOTION, SDL_JOYHATMOTION, SDL_JOYBUTTONDOWN, SDL_JOYBUTTONUP,
+			SDL_KEYDOWN, SDL_KEYUP
+		};
+	SDL_PumpEvents();
+	for(Uint32 ev_type: event_list) {
+		SDL_FlushEvent(ev_type);
+	}
 
 	int lastTime = SDL_GetTicks();
 	int ps_time = SDL_GetTicks();
