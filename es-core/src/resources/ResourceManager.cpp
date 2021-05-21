@@ -68,15 +68,21 @@ ResourceData ResourceManager::loadFile(const std::string& path) const
 	std::ifstream stream(path, std::ios::binary);
 
 	stream.seekg(0, stream.end);
-	size_t size = (size_t)stream.tellg();
+	std::ifstream::pos_type size = stream.tellg();
 	stream.seekg(0, stream.beg);
+	if(size>0)
+	{
+		//supply custom deleter to properly free array
+		std::shared_ptr<unsigned char> data(new unsigned char[size], array_deleter);
+		stream.read((char*)data.get(), size);
+		stream.close();
 
-	//supply custom deleter to properly free array
-	std::shared_ptr<unsigned char> data(new unsigned char[size], array_deleter);
-	stream.read((char*)data.get(), size);
-	stream.close();
+		ResourceData ret = {data, (size_t)size};
+		return ret;
+	}
 
-	ResourceData ret = {data, size};
+	//error reading file, return an "empty" ResourceData
+	ResourceData ret = {NULL, 0};
 	return ret;
 }
 
