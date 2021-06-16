@@ -439,7 +439,6 @@ void Window::onSleep()
 	{
 		mScreenSaver->stopScreenSaver();
 		mRenderScreenSaver = false;
-		mScreenSaver->resetCounts();
 	}
 }
 
@@ -473,7 +472,6 @@ bool Window::cancelScreenSaver()
 	{
 		mScreenSaver->stopScreenSaver();
 		mRenderScreenSaver = false;
-		mScreenSaver->resetCounts();
 		Scripting::fireEvent("screensaver-stop");
 
 		// Tell the GUI components the screensaver has stopped
