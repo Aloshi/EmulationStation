@@ -11,6 +11,7 @@
 #include "FileData.h"
 #include "FileFilterIndex.h"
 #include "Log.h"
+#include "utils/ProfilingUtil.h"
 #include "PowerSaver.h"
 #include "Scripting.h"
 #include "Sound.h"
@@ -107,12 +108,10 @@ void SystemScreenSaver::startScreenSaver()
 #else
 			mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
 #endif
-			if (mCurrentGame != NULL) {
+			if (mCurrentGame != NULL) 
+			{
 				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "randomvideo");
-			} else {
-				Scripting::fireEvent("screensaver-game-select", "NULL", "NULL", "NULL", "randomvideo");
 			}
-
 			mVideoScreensaver->topWindow(true);
 			mVideoScreensaver->setOrigin(0.5f, 0.5f);
 			mVideoScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
@@ -189,19 +188,13 @@ void SystemScreenSaver::startScreenSaver()
 
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
-		if (mCurrentGame != NULL) {
+		if (mCurrentGame != NULL) 
+		{
 			Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "slideshow");
-		} else {
-			Scripting::fireEvent("screensaver-game-select", "NULL", "NULL", "NULL", "slideshow");
 		}
 		return;
 	}
 	// No videos. Just use a standard screensaver
-        if (mCurrentGame != NULL) {
-            Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "novideo");
-        } else {
-            Scripting::fireEvent("screensaver-game-select", "NULL", "NULL", "NULL", "novideo");
-        }
 	mState = STATE_SCREENSAVER_ACTIVE;
 	mCurrentGame = NULL;
 }
