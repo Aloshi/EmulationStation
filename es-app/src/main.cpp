@@ -256,8 +256,6 @@ void onExit()
 
 int main(int argc, char* argv[])
 {
-	srand((unsigned int)time(NULL));
-
 	std::locale::global(std::locale("C"));
 
 	if(!parseArgs(argc, argv))

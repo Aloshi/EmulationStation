@@ -32,7 +32,6 @@ public:
 		virtual bool isScreenSaverActive() = 0;
 		virtual FileData* getCurrentGame() = 0;
 		virtual void launchGame() = 0;
-		virtual void resetCounts() = 0;
 	};
 
 	class InfoPopup {

@@ -5,6 +5,7 @@
 #include "PlatformId.h"
 #include <algorithm>
 #include <memory>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -54,6 +55,8 @@ public:
 	static std::string getConfigPath(bool forWrite); // if forWrite, will only return ~/.emulationstation/es_systems.cfg, never /etc/emulationstation/es_systems.cfg
 
 	static std::vector<SystemData*> sSystemVector;
+	static std::vector<SystemData*> sSystemVectorShuffled;
+	static std::ranlux48 sURNG;
 
 	inline std::vector<SystemData*>::const_iterator getIterator() const { return std::find(sSystemVector.cbegin(), sSystemVector.cend(), this); };
 	inline std::vector<SystemData*>::const_reverse_iterator getRevIterator() const { return std::find(sSystemVector.crbegin(), sSystemVector.crend(), this); };
@@ -64,6 +67,7 @@ public:
 
 	SystemData* getNext() const;
 	SystemData* getPrev() const;
+
 	static SystemData* getRandomSystem();
 	FileData* getRandomGame();
 
@@ -92,6 +96,8 @@ private:
 	FileFilterIndex* mFilterIndex;
 
 	FileData* mRootFolder;
+	// for getRandomGame()
+	std::vector<FileData*> mGamesShuffled;
 };
 
 #endif // ES_APP_SYSTEM_DATA_H
