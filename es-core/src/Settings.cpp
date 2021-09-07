@@ -115,7 +115,7 @@ void Settings::setDefaults()
 	mStringMap["SlideshowScreenSaverBackgroundAudioFile"] = Utils::FileSystem::getHomePath() + "/.emulationstation/slideshow/audio/slideshow_bg.wav";
 	mBoolMap["SlideshowScreenSaverCustomImageSource"] = false;
 	mStringMap["SlideshowScreenSaverImageDir"] = Utils::FileSystem::getHomePath() + "/.emulationstation/slideshow/image";
-	mStringMap["SlideshowScreenSaverImageFilter"] = ".png,.jpg";
+	mStringMap["SlideshowScreenSaverImageFilter"] = ".png,.jpg,.mp4,.avi";
 	mBoolMap["SlideshowScreenSaverRecurse"] = false;
 
 	// This setting only applies to raspberry pi but set it for all platforms so

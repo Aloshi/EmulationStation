@@ -32,6 +32,8 @@ private:
 	void pickRandomVideo(std::string& path);
 	void pickRandomGameListImage(std::string& path);
 	void pickRandomCustomImage(std::string& path);
+	void setVideoScreensaver(std::string& path);
+	void setImageScreensaver(std::string& path);
 	std::vector<std::string> getCustomImageFiles(const std::string &imageDir);
 	std::vector<FileData*> getAllGamelistNodes();
 	void backgroundIndexing();

@@ -61,6 +61,61 @@ bool SystemScreenSaver::isScreenSaverActive()
 	return (mState != STATE_INACTIVE);
 }
 
+void SystemScreenSaver::setVideoScreensaver(std::string& path)
+{
+	#ifdef _RPI_
+	// Create the correct type of video component
+	if (Settings::getInstance()->getBool("ScreenSaverOmxPlayer"))
+		mVideoScreensaver = new VideoPlayerComponent(mWindow, getTitlePath());
+	else
+		mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
+	#else
+	mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
+	#endif
+
+	mVideoScreensaver->topWindow(true);
+	mVideoScreensaver->setOrigin(0.5f, 0.5f);
+	mVideoScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
+
+	if (Settings::getInstance()->getBool("StretchVideoOnScreenSaver"))
+	{
+		mVideoScreensaver->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	}
+	else
+	{
+		mVideoScreensaver->setMaxSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+	}
+	mVideoScreensaver->setVideo(path);
+	mVideoScreensaver->setScreensaverMode(true);
+	mVideoScreensaver->onShow();
+	PowerSaver::runningScreenSaver(true);
+	mTimer = 0;
+	return;
+}
+
+void SystemScreenSaver::setImageScreensaver(std::string& path)
+{
+	if (!mImageScreensaver)
+		{
+			mImageScreensaver = new ImageComponent(mWindow, false, false);
+		}
+
+		mTimer = 0;
+
+		mImageScreensaver->setImage(path);
+		mImageScreensaver->setOrigin(0.5f, 0.5f);
+		mImageScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
+
+		if (Settings::getInstance()->getBool("SlideshowScreenSaverStretch"))
+		{
+			mImageScreensaver->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+		}
+		else
+		{
+			mImageScreensaver->setMaxSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+		}
+}
+
 void SystemScreenSaver::startScreenSaver()
 {
 	// if set to index files in background, start thread
@@ -93,33 +148,7 @@ void SystemScreenSaver::startScreenSaver()
 
 		if (!path.empty() && Utils::FileSystem::exists(path))
 		{
-#ifdef _RPI_
-			// Create the correct type of video component
-			if (Settings::getInstance()->getBool("ScreenSaverOmxPlayer"))
-				mVideoScreensaver = new VideoPlayerComponent(mWindow, getTitlePath());
-			else
-				mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
-#else
-			mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
-#endif
-
-			mVideoScreensaver->topWindow(true);
-			mVideoScreensaver->setOrigin(0.5f, 0.5f);
-			mVideoScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
-
-			if (Settings::getInstance()->getBool("StretchVideoOnScreenSaver"))
-			{
-				mVideoScreensaver->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-			}
-			else
-			{
-				mVideoScreensaver->setMaxSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
-			}
-			mVideoScreensaver->setVideo(path);
-			mVideoScreensaver->setScreensaverMode(true);
-			mVideoScreensaver->onShow();
-			PowerSaver::runningScreenSaver(true);
-			mTimer = 0;
+			setVideoScreensaver(path);
 			return;
 		}
 	}
@@ -145,24 +174,15 @@ void SystemScreenSaver::startScreenSaver()
 			pickRandomGameListImage(path);
 		}
 
-		if (!mImageScreensaver)
+		// Check if file has a known video extension
+		std::string pathExtension = path.substr(path.find_last_of(".") + 1);
+		if (pathExtension == "mp4" || pathExtension == "avi")
 		{
-			mImageScreensaver = new ImageComponent(mWindow, false, false);
-		}
-
-		mTimer = 0;
-
-		mImageScreensaver->setImage(path);
-		mImageScreensaver->setOrigin(0.5f, 0.5f);
-		mImageScreensaver->setPosition(Renderer::getScreenWidth() / 2.0f, Renderer::getScreenHeight() / 2.0f);
-
-		if (Settings::getInstance()->getBool("SlideshowScreenSaverStretch"))
-		{
-			mImageScreensaver->setResize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+			setVideoScreensaver(path);
 		}
 		else
 		{
-			mImageScreensaver->setMaxSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
+			setImageScreensaver(path);
 		}
 
 		std::string bg_audio_file = Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile");
