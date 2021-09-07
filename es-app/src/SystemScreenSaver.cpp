@@ -176,7 +176,8 @@ void SystemScreenSaver::startScreenSaver()
 
 		// Check if file has a known video extension
 		std::string pathExtension = path.substr(path.find_last_of(".") + 1);
-		if (pathExtension == "mp4" || pathExtension == "avi")
+		std::vector<std::string> videoExtensions {"mp4", "avi"};
+		if (std::find(videoExtensions.begin(), videoExtensions.end(), pathExtension) != videoExtensions.end()) 
 		{
 			setVideoScreensaver(path);
 		}
