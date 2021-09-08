@@ -63,15 +63,15 @@ bool SystemScreenSaver::isScreenSaverActive()
 
 void SystemScreenSaver::setVideoScreensaver(std::string& path)
 {
-	#ifdef _RPI_
+#ifdef _RPI_
 	// Create the correct type of video component
 	if (Settings::getInstance()->getBool("ScreenSaverOmxPlayer"))
 		mVideoScreensaver = new VideoPlayerComponent(mWindow, getTitlePath());
 	else
 		mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
-	#else
+#else
 	mVideoScreensaver = new VideoVlcComponent(mWindow, getTitlePath());
-	#endif
+#endif
 
 	mVideoScreensaver->topWindow(true);
 	mVideoScreensaver->setOrigin(0.5f, 0.5f);
