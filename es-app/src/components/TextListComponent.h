@@ -184,15 +184,17 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 	if(listCutoff > size())
 		listCutoff = size();
 
+	float y = (mSize.y() - (mScreenCount * entrySize)) * 0.5f;
+
 	// draw selector bar
 	if(mStartEntry < listCutoff)
 	{
 		if (mSelectorImage.hasImage()) {
-			mSelectorImage.setPosition(0.f, (mCursor - mStartEntry)*entrySize + mSelectorOffsetY, 0.f);
+			mSelectorImage.setPosition(0.f, y + (mCursor - mStartEntry)*entrySize + mSelectorOffsetY, 0.f);
 			mSelectorImage.render(trans);
 		} else {
 			Renderer::setMatrix(trans);
-			Renderer::drawRect(0.0f, (mCursor - mStartEntry)*entrySize + mSelectorOffsetY, mSize.x(),
+			Renderer::drawRect(0.0f, y + (mCursor - mStartEntry)*entrySize + mSelectorOffsetY, mSize.x(),
 					mSelectorHeight, mSelectorColor, mSelectorColorEnd, mSelectorColorGradientHorizontal);
 		}
 	}
@@ -203,7 +205,6 @@ void TextListComponent<T>::render(const Transform4x4f& parentTrans)
 	Renderer::pushClipRect(Vector2i((int)(trans.translation().x() + mHorizontalMargin), (int)trans.translation().y()),
 		Vector2i((int)(dim.x() - mHorizontalMargin*2), (int)dim.y()));
 
-	float y = 0;
 	for(int i = mStartEntry; i < listCutoff; i++)
 	{
 		typename IList<TextListData, T>::Entry& entry = mEntries.at((unsigned int)i);
