@@ -11,7 +11,6 @@
 #include "FileData.h"
 #include "FileFilterIndex.h"
 #include "Log.h"
-#include "utils/ProfilingUtil.h"
 #include "PowerSaver.h"
 #include "Scripting.h"
 #include "Sound.h"
