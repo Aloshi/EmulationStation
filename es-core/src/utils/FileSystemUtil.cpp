@@ -505,8 +505,12 @@ namespace Utils
 			if(_allowHome && (path[0] == '~') && (path[1] == '/'))
 				return (getHomePath() + &(path[1]));
 
-			// nothing to resolve
-			return path;
+                        // absolute path
+                        if(path[0] == '/')
+                                return path;
+ 
+                        // concatenate paths
+                        return (relativeTo + '/' + path);
 
 		} // resolveRelativePath
 
