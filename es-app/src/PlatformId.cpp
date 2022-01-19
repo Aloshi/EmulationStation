@@ -49,6 +49,7 @@ namespace PlatformIds
 		"wiiu",
 		"virtualboy",
 		"gameandwatch",
+		"switch", // Nintendo Switch
 		"openbor",
 		"pc",
 		"sega32x",
@@ -60,6 +61,7 @@ namespace PlatformIds
 		"megadrive", // sega megadrive
 		"saturn", // sega saturn
 		"sg-1000",
+		"samcoupe",
 		"psx",
 		"ps2",
 		"ps3",
@@ -71,11 +73,14 @@ namespace PlatformIds
 		"x1",
 		"x68000",
 		"solarus",
+		"pico8",
+		"tic80",
 		"moto", // Thomson MO/TO
 		"pc88", // NEC PC-8801
 		"pc98", // NEC PC-9801
 		"pcengine", // (aka turbografx-16) HuCards only
 		"pcenginecd", // (aka turbografx-16) CD-ROMs only
+		"pcfx",
 		"wonderswan",
 		"wonderswancolor",
 		"zxspectrum",
@@ -84,6 +89,7 @@ namespace PlatformIds
 		"vectrex",
 		"trs-80",
 		"coco",
+		"zmachine",
 
 		"ignore", // do not allow scraping for this system
 		"invalid"

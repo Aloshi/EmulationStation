@@ -50,6 +50,7 @@ namespace PlatformIds
 		NINTENDO_WII_U,
 		NINTENDO_VIRTUAL_BOY,
 		NINTENDO_GAME_AND_WATCH,
+		NINTENDO_SWITCH,
 		OPENBOR,
 		PC,
 		SEGA_32X,
@@ -61,6 +62,7 @@ namespace PlatformIds
 		SEGA_MEGA_DRIVE,
 		SEGA_SATURN,
 		SEGA_SG1000,
+		SAM_COUPE,
 		PLAYSTATION,
 		PLAYSTATION_2,
 		PLAYSTATION_3,
@@ -72,11 +74,14 @@ namespace PlatformIds
 		SHARP_X1,
 		SHARP_X6800,
 		SOLARUS,
+		PICO_8,
+		TIC_80,
 		THOMSON_MOTO,
 		NEC_PC_8801,
 		NEC_PC_9801,
 		TURBOGRAFX_16, // (aka PC Engine) HuCards only
 		TURBOGRAFX_CD, // (aka PC Engine) CD-ROMs only
+		NEC_PCFX,
 		WONDERSWAN,
 		WONDERSWAN_COLOR,
 		ZX_SPECTRUM,
@@ -85,6 +90,7 @@ namespace PlatformIds
 		VECTREX,
 		TRS80_COLOR_COMPUTER,
 		TANDY,
+		ZMACHINE,
 
 		PLATFORM_IGNORE, // do not allow scraping for this system
 		PLATFORM_COUNT

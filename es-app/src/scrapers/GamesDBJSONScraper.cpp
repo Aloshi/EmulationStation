@@ -74,6 +74,7 @@ const std::map<PlatformId, std::string> gamesdb_new_platformid_map{
 	{ NINTENDO_WII_U, "38" },
 	{ NINTENDO_VIRTUAL_BOY, "4918" },
 	{ NINTENDO_GAME_AND_WATCH, "4950" },
+	{ NINTENDO_SWITCH, "4971" },
 	{ PC, "1" },
 	{ SEGA_32X, "33" },
 	{ SEGA_CD, "21" },
@@ -84,6 +85,7 @@ const std::map<PlatformId, std::string> gamesdb_new_platformid_map{
 	{ SEGA_MEGA_DRIVE, "36" },
 	{ SEGA_SATURN, "17" },
 	{ SEGA_SG1000, "4949" },
+	{ SAM_COUPE, "4979" },
 	{ PLAYSTATION, "10" },
 	{ PLAYSTATION_2, "11" },
 	{ PLAYSTATION_3, "12" },
@@ -97,9 +99,11 @@ const std::map<PlatformId, std::string> gamesdb_new_platformid_map{
 	{ NEC_PC_9801, "4934"},
 	{ TURBOGRAFX_16, "34" },   // HuCards only
 	{ TURBOGRAFX_CD, "4955" }, // CD-ROMs only
+	{ NEC_PCFX, "4930" },
 	{ WONDERSWAN, "4925" },
 	{ WONDERSWAN_COLOR, "4926" },
 	{ ZX_SPECTRUM, "4913" },
+	{ ZX81_SINCLAR, "5010" },
 	{ VIDEOPAC_ODYSSEY2, "4927" },
 	{ VECTREX, "4939" },
 	{ TRS80_COLOR_COMPUTER, "4941" },
