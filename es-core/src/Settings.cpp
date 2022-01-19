@@ -110,12 +110,13 @@ void Settings::setDefaults()
 	mBoolMap["StretchVideoOnScreenSaver"] = false;
 	mStringMap["PowerSaverMode"] = "disabled";
 
-	mIntMap["ScreenSaverSwapImageTimeout"] = 10000;
+	mIntMap["ScreenSaverSwapMediaTimeout"] = 10000;
 	mBoolMap["SlideshowScreenSaverStretch"] = false;
 	mStringMap["SlideshowScreenSaverBackgroundAudioFile"] = Utils::FileSystem::getHomePath() + "/.emulationstation/slideshow/audio/slideshow_bg.wav";
-	mBoolMap["SlideshowScreenSaverCustomImageSource"] = false;
-	mStringMap["SlideshowScreenSaverImageDir"] = Utils::FileSystem::getHomePath() + "/.emulationstation/slideshow/image";
+	mBoolMap["SlideshowScreenSaverCustomMediaSource"] = false;
+	mStringMap["SlideshowScreenSaverMediaDir"] = Utils::FileSystem::getHomePath() + "/.emulationstation/slideshow/media";
 	mStringMap["SlideshowScreenSaverImageFilter"] = ".png,.jpg";
+	mStringMap["SlideshowScreenSaverVideoFilter"] = ".mp4,.avi";
 	mBoolMap["SlideshowScreenSaverRecurse"] = false;
 
 	// This setting only applies to raspberry pi but set it for all platforms so
@@ -246,6 +247,16 @@ void Settings::loadFile()
 	processBackwardCompatibility();
 }
 
+template<typename Map>
+void Settings::renameSetting(Map& map, std::string&& oldName, std::string&& newName)
+{
+	typename Map::const_iterator it = map.find(oldName);
+	if (it != map.end()) {
+		map[newName] = it->second;
+		map.erase(it);
+	}
+}
+
 void Settings::processBackwardCompatibility()
 {
 	{	// SaveGamelistsOnExit -> SaveGamelistsMode
@@ -255,7 +266,14 @@ void Settings::processBackwardCompatibility()
 			mBoolMap.erase(it);
 		}
 	}
+
+	{ // ScreenSaverSlideShow Image -> Media
+		renameSetting<std::map<std::string, int>>(mIntMap, std::string("ScreenSaverSwapImageTimeout"), std::string("ScreenSaverSwapMediaTimeout"));
+		renameSetting<std::map<std::string, bool>>(mBoolMap, std::string("SlideshowScreenSaverCustomImageSource"), std::string("SlideshowScreenSaverCustomMediaSource"));
+		renameSetting<std::map<std::string, std::string>>(mStringMap, std::string("SlideshowScreenSaverImageDir"), std::string("SlideshowScreenSaverMediaDir"));
+	}
 }
+
 
 //Print a warning message if the setting we're trying to get doesn't already exist in the map, then return the value in the map.
 #define SETTINGS_GETSET(type, mapName, getMethodName, setMethodName) type Settings::getMethodName(const std::string& name) \

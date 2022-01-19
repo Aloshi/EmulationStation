@@ -11,20 +11,20 @@ GuiSlideshowScreensaverOptions::GuiSlideshowScreensaverOptions(Window* window, c
 {
 	ComponentListRow row;
 
-	// image duration (seconds)
-	auto sss_image_sec = std::make_shared<SliderComponent>(mWindow, 1.f, 60.f, 1.f, "s");
-	sss_image_sec->setValue((float)(Settings::getInstance()->getInt("ScreenSaverSwapImageTimeout") / (1000)));
-	addWithLabel(row, "SWAP IMAGE AFTER (SECS)", sss_image_sec);
-	addSaveFunc([sss_image_sec] {
-		int playNextTimeout = (int)Math::round(sss_image_sec->getValue()) * (1000);
-		Settings::getInstance()->setInt("ScreenSaverSwapImageTimeout", playNextTimeout);
+	// media duration (seconds)
+	auto sss_media_sec = std::make_shared<SliderComponent>(mWindow, 1.f, 60.f, 1.f, "s");
+	sss_media_sec->setValue((float)(Settings::getInstance()->getInt("ScreenSaverSwapMediaTimeout") / (1000)));
+	addWithLabel(row, "SWAP MEDIA AFTER (SECS)", sss_media_sec);
+	addSaveFunc([sss_media_sec] {
+		int playNextTimeout = (int)Math::round(sss_media_sec->getValue()) * (1000);
+		Settings::getInstance()->setInt("ScreenSaverSwapMediaTimeout", playNextTimeout);
 		PowerSaver::updateTimeouts();
 	});
 
 	// stretch
 	auto sss_stretch = std::make_shared<SwitchComponent>(mWindow);
 	sss_stretch->setState(Settings::getInstance()->getBool("SlideshowScreenSaverStretch"));
-	addWithLabel(row, "STRETCH IMAGES", sss_stretch);
+	addWithLabel(row, "STRETCH MEDIA", sss_stretch);
 	addSaveFunc([sss_stretch] {
 		Settings::getInstance()->setBool("SlideshowScreenSaverStretch", sss_stretch->getState());
 	});
@@ -36,23 +36,23 @@ GuiSlideshowScreensaverOptions::GuiSlideshowScreensaverOptions(Window* window, c
 		Settings::getInstance()->setString("SlideshowScreenSaverBackgroundAudioFile", sss_bg_audio_file->getValue());
 	});
 
-	// image source
+	// media source
 	auto sss_custom_source = std::make_shared<SwitchComponent>(mWindow);
-	sss_custom_source->setState(Settings::getInstance()->getBool("SlideshowScreenSaverCustomImageSource"));
-	addWithLabel(row, "USE CUSTOM IMAGES", sss_custom_source);
-	addSaveFunc([sss_custom_source] { Settings::getInstance()->setBool("SlideshowScreenSaverCustomImageSource", sss_custom_source->getState()); });
+	sss_custom_source->setState(Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource"));
+	addWithLabel(row, "USE CUSTOM MEDIA", sss_custom_source);
+	addSaveFunc([sss_custom_source] { Settings::getInstance()->setBool("SlideshowScreenSaverCustomMediaSource", sss_custom_source->getState()); });
 
-	// custom image directory
-	auto sss_image_dir = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
-	addEditableTextComponent(row, "CUSTOM IMAGE DIR", sss_image_dir, Settings::getInstance()->getString("SlideshowScreenSaverImageDir"));
-	addSaveFunc([sss_image_dir] {
-		Settings::getInstance()->setString("SlideshowScreenSaverImageDir", sss_image_dir->getValue());
+	// custom media directory
+	auto sss_media_dir = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
+	addEditableTextComponent(row, "CUSTOM MEDIA DIR", sss_media_dir, Settings::getInstance()->getString("SlideshowScreenSaverMediaDir"));
+	addSaveFunc([sss_media_dir] {
+		Settings::getInstance()->setString("SlideshowScreenSaverMediaDir", sss_media_dir->getValue());
 	});
 
-	// recurse custom image directory
+	// recurse custom media directory
 	auto sss_recurse = std::make_shared<SwitchComponent>(mWindow);
 	sss_recurse->setState(Settings::getInstance()->getBool("SlideshowScreenSaverRecurse"));
-	addWithLabel(row, "CUSTOM IMAGE DIR RECURSIVE", sss_recurse);
+	addWithLabel(row, "CUSTOM MEDIA DIR RECURSIVE", sss_recurse);
 	addSaveFunc([sss_recurse] {
 		Settings::getInstance()->setBool("SlideshowScreenSaverRecurse", sss_recurse->getState());
 	});
@@ -62,6 +62,13 @@ GuiSlideshowScreensaverOptions::GuiSlideshowScreensaverOptions(Window* window, c
 	addEditableTextComponent(row, "CUSTOM IMAGE FILTER", sss_image_filter, Settings::getInstance()->getString("SlideshowScreenSaverImageFilter"));
 	addSaveFunc([sss_image_filter] {
 		Settings::getInstance()->setString("SlideshowScreenSaverImageFilter", sss_image_filter->getValue());
+	});
+
+	// custom video filter
+	auto sss_video_filter = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
+	addEditableTextComponent(row, "CUSTOM VIDEO FILTER", sss_video_filter, Settings::getInstance()->getString("SlideshowScreenSaverVideoFilter"));
+	addSaveFunc([sss_video_filter] {
+		Settings::getInstance()->setString("SlideshowScreenSaverVideoFilter", sss_video_filter->getValue());
 	});
 }
 

@@ -31,8 +31,11 @@ private:
 	void pickGameListNode(const char *nodeName, std::string& path);
 	void pickRandomVideo(std::string& path);
 	void pickRandomGameListImage(std::string& path);
-	void pickRandomCustomImage(std::string& path);
-	std::vector<std::string> getCustomImageFiles(const std::string &imageDir);
+	void pickRandomCustomMedia(std::string& path);
+	void setVideoScreensaver(std::string& path);
+	void setImageScreensaver(std::string& path);
+	bool isFileVideo(std::string& path);
+	std::vector<std::string> getCustomMediaFiles(const std::string &mediaDir);
 	std::vector<FileData*> getAllGamelistNodes();
 	void backgroundIndexing();
 
@@ -57,7 +60,7 @@ private:
 	std::shared_ptr<Sound>	mBackgroundAudio;
 	bool			mStopBackgroundAudio;
 	std::vector<FileData*> 		mAllFiles;
-	std::vector<std::string>	mCustomImageFiles;
+	std::vector<std::string>	mCustomMediaFiles;
 	int 				mAllFilesSize;
 	std::thread*				mThread;
 	bool 						mExit;

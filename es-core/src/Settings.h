@@ -31,9 +31,10 @@ private:
 
 	Settings();
 
-	//Clear everything and load default values.
-	void setDefaults();
+	void setDefaults();		//Clear everything and load default values.
 	void processBackwardCompatibility();
+	template<typename Map>
+	void renameSetting(Map& map, std::string&& oldName, std::string&& newName);
 
 	std::map<std::string, bool> mBoolMap;
 	std::map<std::string, int> mIntMap;
