@@ -164,7 +164,7 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 	FileData* cursor = getCursor();
 	SystemData* system = this->mRoot->getSystem();
     	if (system != NULL) {
-            Scripting::fireEvent("game-select", system->getName(), cursor->getFileName(), cursor->getName(), "input");
+            Scripting::fireEvent("game-select", system->getName(), cursor->getPath(), cursor->getName(), "input");
         }
 	else
 	{

@@ -109,7 +109,7 @@ void SystemScreenSaver::startScreenSaver()
 #endif
 			if (mCurrentGame != NULL) 
 			{
-				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "randomvideo");
+				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getPath(), mCurrentGame->getName(), "randomvideo");
 			}
 			mVideoScreensaver->topWindow(true);
 			mVideoScreensaver->setOrigin(0.5f, 0.5f);

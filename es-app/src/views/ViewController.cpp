@@ -58,7 +58,7 @@ void ViewController::goToStart()
 				FileData* cursor = getGameListView(*it)->getCursor();
 				if (cursor != NULL)
 				{
-					Scripting::fireEvent("game-select", requestedSystem, cursor->getFileName(), cursor->getName(), "requestedgame");
+					Scripting::fireEvent("game-select", requestedSystem, cursor->getPath(), cursor->getName(), "requestedgame");
 				}
 				else
 				{
