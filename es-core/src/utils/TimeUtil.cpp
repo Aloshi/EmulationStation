@@ -216,19 +216,20 @@ namespace Utils
 
 		std::string timeToString(const time_t& _time, const std::string& _format)
 		{
-			const char* f          = _format.c_str();
-			const tm    timeStruct = *localtime(&_time);
-			char        buf[256]   = { '\0' };
-			const int   MAX_LENGTH = 256;
+			const tm  timeStruct = *localtime(&_time);
+			char      buf[256]   = { '\0' };
+			const int MAX_LENGTH = 256;
 
 			// Use strftime to format the string
-			if (!strftime(buf, MAX_LENGTH, _format.c_str(), &timeStruct)) {
+			if(!strftime(buf, MAX_LENGTH, _format.c_str(), &timeStruct))
+			{
 				return "";
 			}
 			else 
 			{
 				return std::string(buf);
 			}
+
 		} // timeToString
 
 //////////////////////////////////////////////////////////////////////////
