@@ -340,7 +340,7 @@ std::vector<FileData*> SystemScreenSaver::getAllGamelistNodes()
 
 void SystemScreenSaver::pickGameListNode(const char *nodeName, std::string& path)
 {
-	FileData *itf;
+	FileData *itf = nullptr;
 	bool found =  false;
 	int missCtr = 0;
 	while (!found) {
