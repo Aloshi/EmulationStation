@@ -2,6 +2,10 @@
 #include "Log.h"
 #include "platform.h"
 #include "utils/FileSystemUtil.h"
+#ifndef WIN32
+#include <errno.h>
+#include <string.h>
+#endif
 
 namespace Scripting
 {
@@ -28,7 +32,7 @@ namespace Scripting
             for (std::list<std::string>::const_iterator it = scripts.cbegin(); it != scripts.cend(); ++it) {
 #ifndef WIN32 // osx / linux
                 if (!Utils::FileSystem::isExecutable(*it)) {
-                    LOG(LogWarning) << *it << " is not executable. Did you 'chmod u+x'?. Skipping this script.";
+                    LOG(LogWarning) << *it << " is not executable. Review file permissions.";
                     continue;
                 }
 #endif
@@ -42,7 +46,13 @@ namespace Scripting
                 LOG(LogDebug) << "executing: " << script;
                 ret = runSystemCommand(script);
                 if (ret != 0) {
-                    LOG(LogWarning) << script << " failed with rc != 0. Skipping further processing of scripts.";
+                    LOG(LogWarning) << script << " failed with exit code != 0. Terminating processing for this event.";
+#ifndef WIN32
+                    if (ENOENT == errno) {
+                        LOG(LogWarning) << "Exit code: " << errno << " (" << strerror(errno) << ")";
+                        LOG(LogWarning) << "It is not executable by the current user (usually 'pi'). Review file permissions.";
+                    }
+#endif
                     return ret;
                 }
             }
