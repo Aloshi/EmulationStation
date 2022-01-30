@@ -501,6 +501,10 @@ bool Font::isWhiteSpace(unsigned int c)
 std::string Font::wrapText(std::string text, float maxWidth)
 {
 	std::string out = "";
+
+	if(maxWidth <= 0)
+		return out;
+
 	while(text.length() > 0)  // find next cut-point
 	{
 		size_t cursor = 0;
