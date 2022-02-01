@@ -216,75 +216,19 @@ namespace Utils
 
 		std::string timeToString(const time_t& _time, const std::string& _format)
 		{
-			const char* f          = _format.c_str();
-			const tm    timeStruct = *localtime(&_time);
-			char        buf[256]   = { '\0' };
-			char*       s          = buf;
+			const tm  timeStruct = *localtime(&_time);
+			char      buf[256]   = { '\0' };
+			const int MAX_LENGTH = 256;
 
-			while(*f)
+			// Use strftime to format the string
+			if(!strftime(buf, MAX_LENGTH, _format.c_str(), &timeStruct))
 			{
-				if(*f == '%')
-				{
-					++f;
-
-					switch(*f++)
-					{
-						case 'Y': // The year, including the century (1900)
-						{
-							const int year = timeStruct.tm_year + 1900;
-							*s++ = (char)((year - (year % 1000)) / 1000) + '0';
-							*s++ = (char)(((year % 1000) - (year % 100)) / 100) + '0';
-							*s++ = (char)(((year % 100) - (year % 10)) / 10) + '0';
-							*s++ = (char)(year % 10) + '0';
-						}
-						break;
-
-						case 'm': // The month number [00,11]
-						{
-							const int mon = timeStruct.tm_mon + 1;
-							*s++ = (char)(mon / 10) + '0';
-							*s++ = (char)(mon % 10) + '0';
-						}
-						break;
-
-						case 'd': // The day of the month [01,31]
-						{
-							*s++ = (char)(timeStruct.tm_mday / 10) + '0';
-							*s++ = (char)(timeStruct.tm_mday % 10) + '0';
-						}
-						break;
-
-						case 'H': // The hour (24-hour clock) [00,23]
-						{
-							*s++ = (char)(timeStruct.tm_hour / 10) + '0';
-							*s++ = (char)(timeStruct.tm_hour % 10) + '0';
-						}
-						break;
-
-						case 'M': // The minute [00,59]
-						{
-							*s++ = (char)(timeStruct.tm_min / 10) + '0';
-							*s++ = (char)(timeStruct.tm_min % 10) + '0';
-						}
-						break;
-
-						case 'S': // The second [00,59]
-						{
-							*s++ = (char)(timeStruct.tm_sec / 10) + '0';
-							*s++ = (char)(timeStruct.tm_sec % 10) + '0';
-						}
-						break;
-					}
-				}
-				else
-				{
-					*s++ = *f++;
-				}
-
-				*s = '\0';
+				return "";
 			}
-
-			return std::string(buf);
+			else 
+			{
+				return std::string(buf);
+			}
 
 		} // timeToString
 

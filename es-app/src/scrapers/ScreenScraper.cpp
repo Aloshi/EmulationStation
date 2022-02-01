@@ -58,6 +58,7 @@ const std::map<PlatformId, unsigned short> screenscraper_platformid_map{
 	{ NINTENDO_WII_U, 18 },
 	{ NINTENDO_VIRTUAL_BOY, 11 },
 	{ NINTENDO_GAME_AND_WATCH, 52 },
+	{ NINTENDO_SWITCH, 225 },
 	{ PC, 135 },
 	{ OPENBOR, 214 },
 	{ SCUMMVM, 123},
@@ -70,9 +71,12 @@ const std::map<PlatformId, unsigned short> screenscraper_platformid_map{
 	{ SEGA_MEGA_DRIVE, 1 },
 	{ SEGA_SATURN, 22 },
 	{ SEGA_SG1000, 109 },
+	{ SAM_COUPE, 213 },
 	{ SHARP_X1, 220},
 	{ SHARP_X6800, 79},
 	{ SOLARUS, 223 },
+	{ PICO_8, 234 },
+	{ TIC_80, 222 },
 	{ THOMSON_MOTO, 141},
 	{ NEC_PC_8801, 221},
 	{ NEC_PC_9801, 208},
@@ -85,6 +89,7 @@ const std::map<PlatformId, unsigned short> screenscraper_platformid_map{
 	{ SUPER_NINTENDO, 4 },
 	{ TURBOGRAFX_16, 31 },
 	{ TURBOGRAFX_CD, 114 },
+	{ NEC_PCFX, 72 },
 	{ WONDERSWAN, 45 },
 	{ WONDERSWAN_COLOR, 46 },
 	{ ZX_SPECTRUM, 76 },
@@ -92,7 +97,8 @@ const std::map<PlatformId, unsigned short> screenscraper_platformid_map{
 	{ VIDEOPAC_ODYSSEY2, 104 },
 	{ VECTREX, 102 },
 	{ TRS80_COLOR_COMPUTER, 144 },
-	{ TANDY, 144 }
+	{ TANDY, 144 },
+	{ ZMACHINE, 21 }
 };
 
 
@@ -136,7 +142,9 @@ void screenscraper_generate_scraper_requests(const ScraperSearchParams& params,
 
 	ScreenScraperRequest::ScreenScraperConfig ssConfig;
 
-	path = ssConfig.getGameSearchUrl(params.game->getFileName());
+	// Check if the user has overridden the file name
+	path = ssConfig.getGameSearchUrl(params.nameOverride.empty() ? params.game->getFileName() : params.nameOverride);
+
 	auto& platforms = params.system->getPlatformIds();
 	std::vector<unsigned short> p_ids;
 

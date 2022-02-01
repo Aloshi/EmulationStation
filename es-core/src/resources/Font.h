@@ -42,6 +42,7 @@ public:
 	virtual ~Font();
 
 	Vector2f sizeText(std::string text, float lineSpacing = 1.5f); // Returns the expected size of a string when rendered.  Extra spacing is applied to the Y axis.
+	Vector2f sizeCodePoint(unsigned int, float lineSpacing = 1.5f); // Returns the expected size of a Unicode code point.
 	TextCache* buildTextCache(const std::string& text, float offsetX, float offsetY, unsigned int color);
 	TextCache* buildTextCache(const std::string& text, Vector2f offset, unsigned int color, float xLen, Alignment alignment = ALIGN_LEFT, float lineSpacing = 1.5f);
 	void renderTextCache(TextCache* cache);
@@ -123,6 +124,8 @@ private:
 	std::map<unsigned int, Glyph> mGlyphMap;
 
 	Glyph* getGlyph(unsigned int id);
+
+	bool isWhiteSpace(unsigned int c);
 
 	int mMaxGlyphHeight;
 

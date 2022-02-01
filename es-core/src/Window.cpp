@@ -181,7 +181,7 @@ bool Window::inputDuringScreensaver(InputConfig* config, Input input)
 		}
 		else if (is_start_input)
 		{
-			bool slideshow_custom_images = Settings::getInstance()->getBool("SlideshowScreenSaverCustomImageSource");
+			bool slideshow_custom_images = Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource");
 			if (screensaver_type == "random video" || !slideshow_custom_images)
 			{
 				mScreenSaver->launchGame();
@@ -439,7 +439,6 @@ void Window::onSleep()
 	{
 		mScreenSaver->stopScreenSaver();
 		mRenderScreenSaver = false;
-		mScreenSaver->resetCounts();
 	}
 }
 
@@ -473,7 +472,6 @@ bool Window::cancelScreenSaver()
 	{
 		mScreenSaver->stopScreenSaver();
 		mRenderScreenSaver = false;
-		mScreenSaver->resetCounts();
 		Scripting::fireEvent("screensaver-stop");
 
 		// Tell the GUI components the screensaver has stopped

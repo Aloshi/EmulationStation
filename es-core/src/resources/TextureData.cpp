@@ -46,7 +46,7 @@ bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length
 
 	NSVGimage* svgImage = nsvgParse(copy, "px", DPI);
 	free(copy);
-	if (!svgImage)
+	if (!svgImage || (svgImage->width == 0) || (svgImage->height == 0))
 	{
 		LOG(LogError) << "Error parsing SVG image.";
 		return false;
@@ -54,24 +54,13 @@ bool TextureData::initSVGFromMemory(const unsigned char* fileData, size_t length
 
 	// We want to rasterise this texture at a specific resolution. If the source size
 	// variables are set then use them otherwise set them from the parsed file
-	if ((mSourceWidth == 0.0f) && (mSourceHeight == 0.0f))
-	{
-		mSourceWidth = svgImage->width;
+	if (mSourceHeight == 0.0f)
 		mSourceHeight = svgImage->height;
-	}
+
+	mSourceWidth = (mSourceHeight * svgImage->width) / svgImage->height;
+
 	mWidth = (size_t)Math::round(mSourceWidth);
 	mHeight = (size_t)Math::round(mSourceHeight);
-
-	if (mWidth == 0)
-	{
-		// auto scale width to keep aspect
-		mWidth = (size_t)Math::round(((float)mHeight / svgImage->height) * svgImage->width);
-	}
-	else if (mHeight == 0)
-	{
-		// auto scale height to keep aspect
-		mHeight = (size_t)Math::round(((float)mWidth / svgImage->width) * svgImage->height);
-	}
 
 	unsigned char* dataRGBA = new unsigned char[mWidth * mHeight * 4];
 
