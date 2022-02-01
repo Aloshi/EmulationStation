@@ -12,6 +12,7 @@
 #include "FileFilterIndex.h"
 #include "Log.h"
 #include "PowerSaver.h"
+#include "Scripting.h"
 #include "Sound.h"
 #include "SystemData.h"
 #include <algorithm>
@@ -95,7 +96,7 @@ void SystemScreenSaver::setVideoScreensaver(std::string& path)
 
 void SystemScreenSaver::setImageScreensaver(std::string& path)
 {
-	if (!mImageScreensaver)
+		if (!mImageScreensaver)
 		{
 			mImageScreensaver = new ImageComponent(mWindow, false, false);
 		}
@@ -159,6 +160,10 @@ void SystemScreenSaver::startScreenSaver()
 		if (!path.empty() && Utils::FileSystem::exists(path))
 		{
 			setVideoScreensaver(path);
+			if (mCurrentGame != NULL) 
+			{
+				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getPath(), mCurrentGame->getName(), "randomvideo");
+			}
 			return;
 		}
 	}
@@ -207,6 +212,10 @@ void SystemScreenSaver::startScreenSaver()
 
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
+		if (mCurrentGame != NULL) 
+		{
+			Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "slideshow");
+		}
 		return;
 	}
 	// No videos. Just use a standard screensaver

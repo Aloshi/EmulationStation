@@ -3,6 +3,7 @@
 #include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
+#include "Scripting.h"
 #include "Settings.h"
 #include "Sound.h"
 #include "SystemData.h"
@@ -160,6 +161,15 @@ bool ISimpleGameListView::input(InputConfig* config, Input input)
 		}
 	}
 
+	FileData* cursor = getCursor();
+	SystemData* system = this->mRoot->getSystem();
+    	if (system != NULL) {
+            Scripting::fireEvent("game-select", system->getName(), cursor->getPath(), cursor->getName(), "input");
+        }
+	else
+	{
+	    Scripting::fireEvent("game-select", "NULL", "NULL", "NULL", "input");
+	}
 	return IGameListView::input(config, input);
 }
 
