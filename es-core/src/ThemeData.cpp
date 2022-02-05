@@ -288,7 +288,7 @@ void ThemeData::parseIncludes(const pugi::xml_node& root)
 	for(pugi::xml_node node = root.child("include"); node; node = node.next_sibling("include"))
 	{
 		std::string relPath = resolvePlaceholders(node.text().as_string());
-		std::string path = Utils::FileSystem::resolveRelativePath(relPath, mPaths.back(), true);
+		std::string path = Utils::FileSystem::resolveRelativePath(relPath, mPaths.back(), true, false);
 		if(!ResourceManager::getInstance()->fileExists(path))
 			throw error << "Included file \"" << relPath << "\" not found! (resolved to \"" << path << "\")";
 
@@ -513,7 +513,7 @@ void ThemeData::parseElement(const pugi::xml_node& root, const std::map<std::str
 			break;
 		case PATH:
 		{
-			std::string path = Utils::FileSystem::resolveRelativePath(str, mPaths.back(), true);
+			std::string path = Utils::FileSystem::resolveRelativePath(str, mPaths.back(), true, false);
 			if(!ResourceManager::getInstance()->fileExists(path))
 			{
 				std::stringstream ss;

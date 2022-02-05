@@ -15,7 +15,7 @@ FileData* findOrCreateFile(SystemData* system, const std::string& path, FileType
 	// first, verify that path is within the system's root folder
 	FileData* root = system->getRootFolder();
 	bool contains = false;
-	std::string relative = Utils::FileSystem::removeCommonPath(path, root->getPath(), contains);
+	std::string relative = Utils::FileSystem::removeCommonPath(path, root->getPath(), contains, true);
 
 	if(!contains)
 	{
@@ -117,7 +117,7 @@ void parseGamelist(SystemData* system)
 		FileType type = typeList[i];
 		for(pugi::xml_node fileNode = root.child(tag); fileNode; fileNode = fileNode.next_sibling(tag))
 		{
-			const std::string path = Utils::FileSystem::resolveRelativePath(fileNode.child("path").text().get(), relativeTo, false);
+			const std::string path = Utils::FileSystem::resolveRelativePath(fileNode.child("path").text().get(), relativeTo, false, true);
 
 			if(!trustGamelist && !Utils::FileSystem::exists(path))
 			{
@@ -165,7 +165,7 @@ void addFileDataNode(pugi::xml_node& parent, const FileData* file, const char* t
 		//there's something useful in there so we'll keep the node, add the path
 
 		// try and make the path relative if we can so things still work if we change the rom folder location in the future
-		newNode.prepend_child("path").text().set(Utils::FileSystem::createRelativePath(file->getPath(), system->getStartPath(), false).c_str());
+		newNode.prepend_child("path").text().set(Utils::FileSystem::createRelativePath(file->getPath(), system->getStartPath(), false, true).c_str());
 	}
 }
 
@@ -267,7 +267,7 @@ void updateGamelist(SystemData* system)
 					}
 
 					// apply the same transformation as in Gamelist::parseGamelist
-					std::string xmlpath = Utils::FileSystem::resolveRelativePath(pathNode.text().get(), relativeTo, false);
+					std::string xmlpath = Utils::FileSystem::resolveRelativePath(pathNode.text().get(), relativeTo, false, true);
 					
 					for(std::vector<FileData*>::const_iterator cfit = changes.cbegin(); cfit != changes.cend(); ++cfit)
 					{
