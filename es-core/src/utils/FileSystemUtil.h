@@ -27,9 +27,9 @@ namespace Utils
 		std::string getFileName        (const std::string& _path);
 		std::string getStem            (const std::string& _path);
 		std::string getExtension       (const std::string& _path);
-		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome);
-		std::string createRelativePath (const std::string& _path, const std::string& _relativeTo, const bool _allowHome);
-		std::string removeCommonPath   (const std::string& _path, const std::string& _common, bool& _contains);
+		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome, const bool _skipDirectoryCheck);
+		std::string createRelativePath (const std::string& _path, const std::string& _relativeTo, const bool _allowHome, const bool _skipDirectoryCheck);
+		std::string removeCommonPath   (const std::string& _path, const std::string& _common, bool& _contains, const bool _skipDirectoryCheck);
 		std::string resolveSymlink     (const std::string& _path);
 		bool        removeFile         (const std::string& _path);
 		bool        createDirectory    (const std::string& _path);

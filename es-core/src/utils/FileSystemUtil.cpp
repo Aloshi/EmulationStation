@@ -486,10 +486,10 @@ namespace Utils
 
 //////////////////////////////////////////////////////////////////////////
 
-		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
+		std::string resolveRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome, const bool _skipDirectoryCheck)
 		{
 			const std::string path       = getGenericPath(_path);
-			const std::string relativeTo = isDirectory(_relativeTo) ? getGenericPath(_relativeTo) : getParent(_relativeTo);
+			const std::string relativeTo = (_skipDirectoryCheck || isDirectory(_relativeTo)) ? getGenericPath(_relativeTo) : getParent(_relativeTo);
 
 			// nothing to resolve
 			if(!path.length())
@@ -503,21 +503,21 @@ namespace Utils
 			if(_allowHome && (path[0] == '~') && (path[1] == '/'))
 				return (getHomePath() + &(path[1]));
 
-                        // absolute path
-                        if(path[0] == '/')
-                                return path;
- 
-                        // concatenate paths
-                        return (relativeTo + '/' + path);
+			// absolute path
+			if(path[0] == '/')
+				return path;
+
+			// concatenate paths
+			return (relativeTo + '/' + path);
 
 		} // resolveRelativePath
 
 //////////////////////////////////////////////////////////////////////////
 
-		std::string createRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome)
+		std::string createRelativePath(const std::string& _path, const std::string& _relativeTo, const bool _allowHome, const bool _skipDirectoryCheck)
 		{
 			bool        contains = false;
-			std::string path     = removeCommonPath(_path, _relativeTo, contains);
+			std::string path     = removeCommonPath(_path, _relativeTo, contains, _skipDirectoryCheck);
 
 			// success
 			if(contains)
@@ -525,7 +525,7 @@ namespace Utils
 
 			if(_allowHome)
 			{
-				path = removeCommonPath(_path, getHomePath(), contains);
+				path = removeCommonPath(_path, getHomePath(), contains, true);
 
 				// success
 				if(contains)
@@ -539,10 +539,10 @@ namespace Utils
 
 //////////////////////////////////////////////////////////////////////////
 
-		std::string removeCommonPath(const std::string& _path, const std::string& _common, bool& _contains)
+		std::string removeCommonPath(const std::string& _path, const std::string& _common, bool& _contains, const bool _skipDirectoryCheck)
 		{
 			const std::string path   = getGenericPath(_path);
-			const std::string common = isDirectory(_common) ? getGenericPath(_common) : getParent(_common);
+			const std::string common = (_skipDirectoryCheck || isDirectory(_common)) ? getGenericPath(_common) : getParent(_common);
 
 			// check if path contains common
 			if(path.find(common) == 0)
@@ -648,7 +648,7 @@ namespace Utils
 		{
 			const std::unique_lock<std::recursive_mutex> lock(mutex);
 
-			if (pathExistsIndex.find(_path) == pathExistsIndex.cend())
+			if(pathExistsIndex.find(_path) == pathExistsIndex.cend())
 			{
 				const std::string path = getGenericPath(_path);
 				struct stat64 info;
