@@ -401,4 +401,5 @@ void VideoGameListView::onShow()
 
 void VideoGameListView::onFocusLost() {
 	mDescContainer.reset();
+	mList.stopScrolling(true);
 }

@@ -161,3 +161,7 @@ std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
 	}
 	return prompts;
 }
+
+void BasicGameListView::onFocusLost() {
+	mList.stopScrolling(true);
+}
