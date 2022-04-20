@@ -542,6 +542,8 @@ SystemData* SystemData::getRandomSystem()
 	if (sSystemVectorShuffled.empty())
 	{
 		std::copy_if(sSystemVector.begin(), sSystemVector.end(), std::back_inserter(sSystemVectorShuffled), [](SystemData *sd){ return sd->isGameSystem(); });
+		if (sSystemVectorShuffled.empty()) return NULL;
+
 		std::shuffle(sSystemVectorShuffled.begin(), sSystemVectorShuffled.end(), sURNG);
 	}
 
