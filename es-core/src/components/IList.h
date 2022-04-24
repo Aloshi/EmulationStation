@@ -103,10 +103,16 @@ public:
 		return mScrollVelocity;
 	}
 
-	void stopScrolling()
+	void stopScrolling(bool focusLost = false)
 	{
+		if (focusLost) {
+			// force remove overlay (large two letter display in center) when user scrolls
+			// at max speed through list and then abruptly leaves the system
+			mTitleOverlayOpacity = 0;
+		}
 		listInput(0);
 		onCursorChanged(CURSOR_STOPPED);
+
 	}
 
 	void clear()

@@ -311,4 +311,5 @@ std::vector<GuiComponent*> DetailedGameListView::getMDValues()
 
 void DetailedGameListView::onFocusLost() {
 	mDescContainer.reset();
+	mList.stopScrolling(true);
 }
