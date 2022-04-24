@@ -24,7 +24,6 @@ std::vector<const char*> settings_dont_save {
 	{ "ShowExit" },
 	{ "ConfirmQuit" },
 	{ "SplashScreen" },
-	{ "SplashScreenProgress" },
 	{ "VSync" },
 	{ "FullscreenBorderless" },
 	{ "Windowed" },
@@ -65,7 +64,6 @@ void Settings::setDefaults()
 	mBoolMap["FullscreenBorderless"] = false;
 	mBoolMap["Windowed"] = false;
 	mBoolMap["SplashScreen"] = true;
-	mBoolMap["SplashScreenProgress"] = true;
 	mStringMap["StartupSystem"] = "";
 	mBoolMap["DisableKidStartMenu"] = true;
 

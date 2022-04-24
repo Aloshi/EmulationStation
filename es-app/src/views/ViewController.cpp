@@ -451,7 +451,7 @@ void ViewController::preload()
 	int i = 1;
 	int max = SystemData::sSystemVector.size() + 1;
 
-	bool splash = Settings::getInstance()->getBool("SplashScreen") && Settings::getInstance()->getBool("SplashScreenProgress");
+	bool splash = Settings::getInstance()->getBool("SplashScreen");
 	if (splash)
 		mWindow->renderLoadingScreen("Preloading UI", (float)i / (float)max);
 

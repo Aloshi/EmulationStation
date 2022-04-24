@@ -172,30 +172,52 @@ bool parseArgs(int argc, char* argv[])
 			std::cout <<
 				"EmulationStation, a graphical front-end for ROM browsing.\n"
 				"Written by Alec \"Aloshi\" Lofquist.\n"
-				"Version " << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING << "\n\n"
+				"Version " << PROGRAM_VERSION_STRING << ", built " << PROGRAM_BUILT_STRING << "\n"
 				"Command line arguments:\n"
-				"--resolution [width] [height]  try and force a particular resolution\n"
-				"--screenrotate [n]             rotate a quarter turn clockwise for each n\n"
-				"--screensize [width] [height]  for a canvas smaller than the full resolution,\n"
+				"\nGeometry settings:\n"
+				"--resolution WIDTH HEIGHT      try and force a particular resolution\n"
+				"--screenrotate N               rotate a quarter turn clockwise for each N\n"
+				"--screensize WIDTH HEIGHT      for a canvas smaller than the full resolution,\n"
 				"                               or if rotating into portrait mode\n"
-				"--screenoffset [x] [y]         move the canvas by x,y pixels\n"
-				"--gamelist-only                skip automatic game search, only read from gamelist.xml\n"
-				"--ignore-gamelist              ignore the gamelist (useful for troubleshooting)\n"
-				"--draw-framerate               display the framerate\n"
-				"--no-exit                      don't show the exit option in the menu\n"
-				"--no-confirm-quit              omit confirm dialog on actions of quit menu\n"
-				"--no-splash                    don't show the splash screen\n"
-				"--debug                        more logging, show console on Windows\n"
-				"--scrape                       scrape using command line interface\n"
+				"--screenoffset X Y             move the canvas by x,y pixels\n"
 				"--windowed                     not fullscreen, should be used with --resolution\n"
-				"--vsync [1/on or 0/off]        turn vsync on or off (default is on)\n"
-				"--max-vram [size]              max VRAM to use in MB before swapping. 0 for unlimited\n"
+				"\nGame and settings visibility in ES and behaviour of ES:\n"
+				"--force-disable-filters        force the UI to ignore applied filters on\n"
+				"                               gamelist (p)\n"
 				"--force-kid                    force the UI mode to be Kid\n"
 				"--force-kiosk                  force the UI mode to be Kiosk\n"
-				"--force-disable-filters        force the UI to ignore applied filters in gamelist\n"
-				"--home [path]                  directory to use as home path\n"
+				"--no-confirm-quit              omit confirm dialog on actions of quit menu\n"
+				"--no-exit                      don't show the exit option in the menu\n"
+				"--no-splash                    don't show the splash screen\n"
+				"\nGamelist related:\n"
+				"--gamelist-only                use gamelist.xml as trusted source and do not\n"
+				"                               check any path entries of gamelist.xml (p)\n"
+				"--ignore-gamelist              do not read gamelist.xml files (useful for\n"
+				"                               troubleshooting)\n"
+				"\nAdvanced settings:\n"
+				"--debug                        more logging, show console on Windows. Enables\n"
+				"                               these keyboard shortcuts with left CTRL-key:\n"
+				"                               +G: Toggle Gridlayout boundary boxes\n"
+				"                               +I: Toggle image boundary box\n"
+				"                               +R: Reload all UI views (theme, gamelist, system)\n"
+				"                               +T: Toggle textcomponent boundary box\n"
+				"--draw-framerate               display the framerate (p)\n"
+				"--max-vram SIZE                maximum VRAM to use in MB before swapping,\n"
+				"                               use 0 for unlimited (p)\n"
+				"--show-hidden-files            show also hidden files of filesystem, no effect\n"
+				"                               if --gamelist-only is also set (p)\n"
+				"--vsync 1|0                    turn vsync on (1) or off (0) (default is on)\n"
+				"\nGeneric switches:\n"
 				"--help, -h                     summon a sentient, angry tuba\n\n"
-				"More information available in README.md.\n";
+				"--home PATH                    directory to use as home folder for\n"
+				"                               .emulationstation/es_settings.cfg, aso.\n"
+				"                               Subfolder .emulationstation/ will be created.\n"
+				"\nScrape mode:\n"
+				"--scrape                       scrape using command line interface\n\n"
+				"Note: Switches marked (p) will be persisted in es_settings.cfg when any\n"
+				"setting is changed via EmulationStation UI.\n\n"
+				"Please refer to the online documentation for additional information:\n"
+				"https://retropie.org.uk/docs/EmulationStation/\n";
 			return false; //exit after printing help
 		}
 	}
@@ -320,7 +342,6 @@ int main(int argc, char* argv[])
 	window.pushGui(ViewController::get());
 
 	bool splashScreen = Settings::getInstance()->getBool("SplashScreen");
-	bool splashScreenProgress = Settings::getInstance()->getBool("SplashScreenProgress");
 
 	if(!scrape_cmdline)
 	{
@@ -332,15 +353,13 @@ int main(int argc, char* argv[])
 
 		if (splashScreen)
 		{
-			std::string progressText = "Loading...";
-			if (splashScreenProgress)
-				progressText = "Loading system config...";
+			std::string progressText = "Loading system config...";
 			window.renderLoadingScreen(progressText);
 		}
 	}
 
 	const char* errorMsg = NULL;
-	if(!loadSystemConfigFile(splashScreen && splashScreenProgress ? &window : nullptr, &errorMsg))
+	if(!loadSystemConfigFile(splashScreen ? &window : nullptr, &errorMsg))
 	{
 		// something went terribly wrong
 		if(errorMsg == NULL)
@@ -371,7 +390,7 @@ int main(int argc, char* argv[])
 	// this makes for no delays when accessing content, but a longer startup time
 	ViewController::get()->preload();
 
-	if(splashScreen && splashScreenProgress)
+	if(splashScreen)
 		window.renderLoadingScreen("Done.");
 
 	//choose which GUI to open depending on if an input configuration already exists
