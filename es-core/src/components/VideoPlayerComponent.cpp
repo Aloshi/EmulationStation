@@ -237,9 +237,18 @@ void VideoPlayerComponent::startVideo()
 
 void catch_child(int sig_num)
 {
-    /* when we get here, we know there's a zombie child waiting */
-    int child_status;
-    wait(&child_status);
+	// When we get here, we know there's at least 1 zombie child waiting.  There
+	// may be others if, for example, a Scripting event was fired at the same time
+	// that the video was stopped.
+	while (1)
+	{
+		int child_status;
+		pid_t pid = waitpid(-1, &child_status, WNOHANG);
+		if (pid <= 0)
+		{
+			break;
+		}
+	}
 }
 
 void VideoPlayerComponent::stopVideo()
