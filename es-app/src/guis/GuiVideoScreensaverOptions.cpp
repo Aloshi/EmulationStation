@@ -47,7 +47,7 @@ GuiVideoScreensaverOptions::GuiVideoScreensaverOptions(Window* window, const cha
 	addSaveFunc([ss_video_mute] { Settings::getInstance()->setBool("ScreenSaverVideoMute", ss_video_mute->getState()); });
 
 
-	auto ss_vlc_resolution = std::make_shared< OptionListComponent<std::string> >(mWindow, "GAME INFO ALIGNMENT", false);
+	auto ss_vlc_resolution = std::make_shared< OptionListComponent<std::string> >(mWindow, "VIDEO RESOLUTION", false);
 	std::vector<std::string> vlc_res;
 	vlc_res.push_back("original"); // renders at original video resolution, stretched to fit screen
 	vlc_res.push_back("low"); // 25% of screen resolution
