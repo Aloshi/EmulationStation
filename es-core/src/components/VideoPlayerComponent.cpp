@@ -1,4 +1,4 @@
-#ifdef _RPI_
+#ifdef _OMX_
 #include "components/VideoPlayerComponent.h"
 
 #include "renderers/Renderer.h"
