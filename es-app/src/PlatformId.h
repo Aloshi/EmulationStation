@@ -90,6 +90,8 @@ namespace PlatformIds
 		VECTREX,
 		TRS80_COLOR_COMPUTER,
 		TANDY,
+		TI_99,
+		DRAGON32,
 		ZMACHINE,
 
 		PLATFORM_IGNORE, // do not allow scraping for this system
