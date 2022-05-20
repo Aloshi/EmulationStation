@@ -89,6 +89,8 @@ namespace PlatformIds
 		"vectrex",
 		"trs-80",
 		"coco",
+		"ti99",
+		"dragon32",
 		"zmachine",
 
 		"ignore", // do not allow scraping for this system
