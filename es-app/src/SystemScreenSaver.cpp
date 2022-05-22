@@ -1,6 +1,6 @@
 #include "SystemScreenSaver.h"
 
-#ifdef _RPI_
+#ifdef _OMX_
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
@@ -64,7 +64,7 @@ bool SystemScreenSaver::isScreenSaverActive()
 
 void SystemScreenSaver::setVideoScreensaver(std::string& path)
 {
-#ifdef _RPI_
+#ifdef _OMX_
 	// Create the correct type of video component
 	if (Settings::getInstance()->getBool("ScreenSaverOmxPlayer"))
 		mVideoScreensaver = new VideoPlayerComponent(mWindow, getTitlePath());

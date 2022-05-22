@@ -54,14 +54,18 @@ NOTE: to generate a `Debug` build on Unix/Linux, run the Makefile generation ste
 cmake -DCMAKE_BUILD_TYPE=Debug .
 ```
 
-**On the Raspberry Pi**  
+**On the Raspberry Pi**
 
 * Choosing a GLES implementation.
 
    * if the Pi system uses the legacy/Broadcom driver, install the `libraspberry-dev` package before running `cmake` to configure the build
-   * if the Pi system uses the Mesa VC3/V3D GL driver, build using `-DUSE_MESA_GLES=On` to choose the MESA GLES implementation. This option is _mandatory_ when compiling for a Pi4 system, since the legacy GL drivers are not supported anymore on this system.
+   * if the Pi system uses the Mesa VC4/V3D GL driver, build using `-DUSE_MESA_GLES=On` to choose the MESA GLES implementation. This option is _mandatory_ when compiling for a Pi4 system, since the legacy GL drivers are not supported anymore on this system.
 
-* Support for using `omxplayer` to play video previews in the gamelist is enabled by adding `-DRPI=On` to the build options
+  NOTE: Starting with RasPI OS 'Bullseye', the legacy/Broadcom drivers are not supported anymore, so `-DUSE_MESA_GLES=On` should be used.
+
+* Enable the audio/memory defaults by adding `-DRPI=On` to the build options
+* Support for using `omxplayer` to play video previews in the gamelist is enabled by adding `-DOMX=On` to the build options.
+  NOTE: `omxplayer` support is not available on 64bit RasPI OS or in the default RasPI OS 'Bullseye' configuration.
 
 **GLES build notes**
 

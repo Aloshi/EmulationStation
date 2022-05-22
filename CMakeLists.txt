@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 option(GLES "Set to ON if targeting Embedded OpenGL" ${GLES})
 option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
-option(RPI "Set to ON to enable the Raspberry PI video player (omxplayer) and audio options" ${RPI})
+option(RPI "Set to ON to enable the Raspberry PI memory and audio options" ${RPI})
+option(OMX "Set to On to enable OMXPlayer for video snapshots" ${OMX})
 option(CEC "Set to ON to enable CEC" ${CEC})
 option(PROFILING "Set to ON to enable profiling" ${PROFILING})
 
@@ -108,6 +109,10 @@ endif()
 #set up compiler flags and excutable names
 if(DEFINED BCMHOST OR RPI)
     add_definitions(-D_RPI_)
+endif()
+
+if(OMX)
+    add_definitions(-D_OMX_)
 endif()
 
 if(DEFINED libCEC_FOUND)

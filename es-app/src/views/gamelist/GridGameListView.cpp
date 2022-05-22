@@ -6,7 +6,7 @@
 #include "CollectionSystemManager.h"
 #include "Settings.h"
 #include "SystemData.h"
-#ifdef _RPI_
+#ifdef _OMX_
 #include "components/VideoPlayerComponent.h"
 #endif
 #include "components/VideoVlcComponent.h"
@@ -29,7 +29,7 @@ GridGameListView::GridGameListView(Window* window, FileData* root) :
 	const float padding = 0.01f;
 
 // Create the correct type of video window
-#ifdef _RPI_
+#ifdef _OMX_
 	if (Settings::getInstance()->getBool("VideoOmxPlayer"))
 		mVideo = new VideoPlayerComponent(window, "");
 	else

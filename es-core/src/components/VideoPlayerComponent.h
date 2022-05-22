@@ -1,4 +1,4 @@
-#ifdef _RPI_
+#ifdef _OMX_
 #pragma once
 #ifndef ES_CORE_COMPONENTS_VIDEO_PLAYER_COMPONENT_H
 #define ES_CORE_COMPONENTS_VIDEO_PLAYER_COMPONENT_H
@@ -38,4 +38,4 @@ private:
 };
 
 #endif // ES_CORE_COMPONENTS_VIDEO_PLAYER_COMPONENT_H
-#endif // _RPI_
+#endif // _OMX_
