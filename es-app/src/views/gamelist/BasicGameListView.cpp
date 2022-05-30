@@ -115,7 +115,53 @@ void BasicGameListView::launch(FileData* game)
 void BasicGameListView::remove(FileData *game, bool deleteFile)
 {
 	if (deleteFile)
+	{
 		Utils::FileSystem::removeFile(game->getPath());  // actually delete the file on the filesystem
+
+		// we want to delete related/scraped files, but check first if resources are shared with another game
+		bool keepVideo     = game->getVideoPath().empty();
+		bool keepMarquee   = game->getMarqueePath().empty();
+		bool keepThumbnail = game->getThumbnailPath().empty();
+		bool keepImage     = game->getImagePath().empty();
+
+		for (auto system : SystemData::sSystemVector)
+		{
+			// skip checking if we determined we need to keep the resources
+			if (keepVideo && keepMarquee && keepImage && keepThumbnail)
+				break;
+
+			if (!system->isGameSystem() || system->isCollection())
+				continue;
+
+			for (auto entry : system->getRootFolder()->getChildren()) {
+				if (entry == game) // skip the game's own entry
+					continue;
+
+				if (!keepVideo && (game->getVideoPath() == entry->getVideoPath()))
+					keepVideo = true;
+
+				if (!keepMarquee && (game->getMarqueePath() == entry->getMarqueePath()))
+					keepMarquee = true;
+
+				// Thumbnail/Image can be used inter-changeably, so check for both in game's resources
+				if (!keepThumbnail && (game->getThumbnailPath() == entry->getThumbnailPath() || game->getThumbnailPath() == entry->getImagePath()))
+					keepThumbnail = true;
+
+				if (!keepImage && (game->getImagePath() == entry->getImagePath() || game->getImagePath() == entry->getThumbnailPath()))
+					keepImage = true;
+			}
+		}
+
+		// delete the resources that are not shared
+		if (!keepVideo)
+			Utils::FileSystem::removeFile(game->getVideoPath());
+		if (!keepImage)
+			Utils::FileSystem::removeFile(game->getImagePath());
+		if (!keepThumbnail)
+			Utils::FileSystem::removeFile(game->getThumbnailPath());
+		if (!keepMarquee)
+			Utils::FileSystem::removeFile(game->getMarqueePath());
+	}
 	FileData* parent = game->getParent();
 	if (getCursor() == game)                     // Select next element in list, or prev if none
 	{
