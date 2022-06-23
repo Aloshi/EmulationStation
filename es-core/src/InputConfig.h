@@ -102,9 +102,14 @@ public:
 	void mapInput(const std::string& name, Input input);
 	void unmapInput(const std::string& name); // unmap all Inputs mapped to this name
 
-	inline int getDeviceId() const { return mDeviceId; };
+	inline int getDeviceId() const { return mDeviceId; }
 	inline const std::string& getDeviceName() { return mDeviceName; }
 	inline const std::string& getDeviceGUIDString() { return mDeviceGUID; }
+	inline const unsigned short getVendorId() { return mVendorId; }
+	inline const unsigned short getProductId() { return mProductId; }
+
+	inline void setVendorId(unsigned short vendorID) { mVendorId = vendorID; }
+	inline void setProductId(unsigned short productID) { mProductId = productID; }
 
 	//Returns true if Input is mapped to this name, false otherwise.
 	bool isMappedTo(const std::string& name, Input input);
@@ -127,6 +132,9 @@ private:
 	const int mDeviceId;
 	const std::string mDeviceName;
 	const std::string mDeviceGUID;
+
+	unsigned short mVendorId;
+	unsigned short mProductId;
 };
 
 #endif // ES_CORE_INPUT_CONFIG_H
