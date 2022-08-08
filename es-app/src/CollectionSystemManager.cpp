@@ -260,7 +260,7 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 			// found and we are removing
 			if (name == "favorites" && file->metadata.get("favorite") == "false") {
 				// need to check if still marked as favorite, if not remove
-				ViewController::get()->getGameListView(curSys).get()->remove(collectionEntry, false);
+				ViewController::get()->getGameListView(curSys).get()->remove(collectionEntry, false, true);
 			}
 			else
 			{
@@ -298,8 +298,9 @@ void CollectionSystemManager::trimCollectionCount(FileData* rootFolder, int limi
 	while ((int)rootFolder->getChildrenListToDisplay().size() > limit)
 	{
 		CollectionFileData* gameToRemove = (CollectionFileData*)rootFolder->getChildrenListToDisplay().back();
-		ViewController::get()->getGameListView(curSys).get()->remove(gameToRemove, false);
+		ViewController::get()->getGameListView(curSys).get()->remove(gameToRemove, false, false);
 	}
+	ViewController::get()->onFileChanged(rootFolder, FILE_REMOVED);
 }
 
 // deletes all collection files from collection systems related to the source file
@@ -323,7 +324,7 @@ void CollectionSystemManager::deleteCollectionFiles(FileData* file)
 				sysDataIt->second.needsSave = true;
 				FileData* collectionEntry = children.at(key);
 				SystemData* systemViewToUpdate = getSystemToView(sysDataIt->second.system);
-				ViewController::get()->getGameListView(systemViewToUpdate).get()->remove(collectionEntry, false);
+				ViewController::get()->getGameListView(systemViewToUpdate).get()->remove(collectionEntry, false, true);
 			}
 		}
 	}
@@ -495,7 +496,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file, int pressco
 				{
 					systemViewToUpdate->getIndex()->removeFromIndex(collectionEntry);
 				}
-				ViewController::get()->getGameListView(systemViewToUpdate).get()->remove(collectionEntry, false);
+				ViewController::get()->getGameListView(systemViewToUpdate).get()->remove(collectionEntry, false, true);
 			}
 			else
 			{

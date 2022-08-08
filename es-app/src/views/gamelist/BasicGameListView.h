@@ -29,7 +29,7 @@ protected:
 	virtual std::string getQuickSystemSelectRightButton() override;
 	virtual std::string getQuickSystemSelectLeftButton() override;
 	virtual void populateList(const std::vector<FileData*>& files) override;
-	virtual void remove(FileData* game, bool deleteFile) override;
+	virtual void remove(FileData* game, bool deleteFile, bool refreshView=true) override;
 	virtual void addPlaceholder();
 
 	TextListComponent<FileData*> mList;

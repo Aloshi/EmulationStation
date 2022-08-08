@@ -112,7 +112,7 @@ void BasicGameListView::launch(FileData* game)
 	ViewController::get()->launch(game);
 }
 
-void BasicGameListView::remove(FileData *game, bool deleteFile)
+void BasicGameListView::remove(FileData *game, bool deleteFile, bool refreshView)
 {
 	if (deleteFile)
 	{
@@ -184,7 +184,8 @@ void BasicGameListView::remove(FileData *game, bool deleteFile)
 		addPlaceholder();
 	}
 	delete game;                                 // remove before repopulating (removes from parent)
-	onFileChanged(parent, FILE_REMOVED);           // update the view, with game removed
+	if(refreshView)
+		onFileChanged(parent, FILE_REMOVED);     // update the view, with game removed
 }
 
 std::vector<HelpPrompt> BasicGameListView::getHelpPrompts()
