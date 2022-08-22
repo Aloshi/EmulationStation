@@ -4,7 +4,6 @@
 #include "components/ImageComponent.h"
 #include "resources/Font.h"
 #include "resources/TextureResource.h"
-#include "InputManager.h"
 #include "Log.h"
 #include "Scripting.h"
 #include <algorithm>
@@ -78,8 +77,6 @@ bool Window::init()
 		return false;
 	}
 
-	InputManager::getInstance()->init();
-
 	ResourceManager::getInstance()->reloadAll();
 
 	//keep a reference to the default fonts, so they don't keep getting destroyed/recreated
@@ -107,7 +104,6 @@ void Window::deinit()
 	{
 		(*i)->onHide();
 	}
-	InputManager::getInstance()->deinit();
 	ResourceManager::getInstance()->unloadAll();
 	Renderer::deinit();
 }
