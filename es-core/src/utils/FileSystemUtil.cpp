@@ -628,7 +628,10 @@ namespace Utils
 
 			// try to create directory
 			if(mkdir(path.c_str(), 0755) == 0)
+			{
+				pathExistsIndex[_path] = true;
 				return true;
+			}
 
 			// failed to create directory, try to create the parent
 			const std::string parent = getParent(path);
@@ -638,7 +641,11 @@ namespace Utils
 				createDirectory(parent);
 
 			// try to create directory again now that the parent should exist
-			return (mkdir(path.c_str(), 0755) == 0);
+			bool created = (mkdir(path.c_str(), 0755) == 0);
+			if(created)
+				pathExistsIndex[_path] = true;
+
+			return created;
 
 		} // createDirectory
 
