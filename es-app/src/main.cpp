@@ -393,6 +393,8 @@ int main(int argc, char* argv[])
 	if(splashScreen)
 		window.renderLoadingScreen("Done.");
 
+	InputManager::getInstance()->init();
+
 	//choose which GUI to open depending on if an input configuration already exists
 	if(errorMsg == NULL)
 	{
@@ -402,16 +404,6 @@ int main(int argc, char* argv[])
 		}else{
 			window.pushGui(new GuiDetectDevice(&window, true, [] { ViewController::get()->goToStart(); }));
 		}
-	}
-
-	// flush any queued events before showing the UI and starting the input handling loop
-	const Uint32 event_list[] = {
-			SDL_JOYAXISMOTION, SDL_JOYBALLMOTION, SDL_JOYHATMOTION, SDL_JOYBUTTONDOWN, SDL_JOYBUTTONUP,
-			SDL_KEYDOWN, SDL_KEYUP
-		};
-	SDL_PumpEvents();
-	for(Uint32 ev_type: event_list) {
-		SDL_FlushEvent(ev_type);
 	}
 
 	int lastTime = SDL_GetTicks();
@@ -473,6 +465,8 @@ int main(int argc, char* argv[])
 
 	while(window.peekGui() != ViewController::get())
 		delete window.peekGui();
+
+	InputManager::getInstance()->deinit();
 	window.deinit();
 
 	MameNames::deinit();
