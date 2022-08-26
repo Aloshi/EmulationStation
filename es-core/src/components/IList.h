@@ -59,6 +59,7 @@ public:
 
 protected:
 	int mCursor;
+	int mViewportTop;
 
 	int mScrollTier;
 	int mScrollVelocity;
@@ -81,6 +82,7 @@ public:
 		mGradient(window), mTierList(tierList), mLoopType(loopType)
 	{
 		mCursor = 0;
+		mViewportTop = 0;
 		mScrollTier = 0;
 		mScrollVelocity = 0;
 		mScrollTierAccumulator = 0;
@@ -156,6 +158,16 @@ public:
 		}
 
 		return false;
+	}
+
+	void setViewportTop(int index)
+	{
+		mViewportTop = index;
+	}
+
+	int getViewportTop()
+	{
+		return mViewportTop;
 	}
 
 	// entry management
