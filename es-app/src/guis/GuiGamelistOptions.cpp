@@ -194,7 +194,7 @@ void GuiGamelistOptions::openMetaDataEd()
 	{
 		deleteBtnFunc = [this, file] {
 			CollectionSystemManager::get()->deleteCollectionFiles(file);
-			ViewController::get()->getGameListView(file->getSystem()).get()->remove(file, true);
+			ViewController::get()->getGameListView(file->getSystem()).get()->remove(file, true, true);
 		};
 	}
 

@@ -411,7 +411,7 @@ void GridGameListView::launch(FileData* game)
 
 }
 
-void GridGameListView::remove(FileData *game, bool deleteFile)
+void GridGameListView::remove(FileData *game, bool deleteFile, bool refreshView)
 {
 	if (deleteFile)
 		Utils::FileSystem::removeFile(game->getPath());  // actually delete the file on the filesystem
@@ -437,7 +437,9 @@ void GridGameListView::remove(FileData *game, bool deleteFile)
 		addPlaceholder();
 	}
 	delete game;                                 // remove before repopulating (removes from parent)
-	onFileChanged(parent, FILE_REMOVED);           // update the view, with game removed
+
+	if(refreshView)
+		onFileChanged(parent, FILE_REMOVED);     // update the view, with game removed
 }
 
 std::vector<TextComponent*> GridGameListView::getMDLabels()
