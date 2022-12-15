@@ -366,7 +366,6 @@ void InputManager::writeDeviceConfig(InputConfig* config)
 					path = getTemporaryConfigPath();
 					doc.reset();
 					root = doc.append_child("inputList");
-					root.append_copy(actionnode);
 				}
 				else
 				{
