@@ -54,7 +54,7 @@ void ViewController::goToStart()
 			if ((*it)->getName() == requestedSystem)
 			{
 				goToGameList(*it);
-                                Scripting::fireEvent("system-select", requestedSystem, "requestedsystem");
+				Scripting::fireEvent("system-select", requestedSystem, "requestedsystem");
 				FileData* cursor = getGameListView(*it)->getCursor();
 				if (cursor != NULL)
 				{
@@ -193,11 +193,50 @@ void ViewController::playViewTransition()
 		}else{
 			advanceAnimation(0, (int)(mFadeOpacity * FADE_DURATION));
 		}
-	} else if (transition_style == "slide"){
+	}
+	else if (transition_style == "slide")
+	{
 		// slide or simple slide
-		setAnimation(new MoveCameraAnimation(mCamera, target));
+		bool inGamelistNav = -mCamera.translation().y() == target.y() // not in/out gamelist nav
+			&& -mCamera.translation().x() - target.x(); // left/right movement
+		cancelAnimation(0);
+		Vector3f tgt = Vector3f(target);
+		Vector3f positionOrig;
+		if (inGamelistNav) {
+			const float screenWidth = (float)Renderer::getScreenWidth();
+			if (-mCamera.translation().x() - tgt.x() >= 2 * screenWidth)
+			{
+				// right rollover
+				mLockInput = true;
+				tgt.x() = screenWidth * mGameListViews.size();
+			}
+			else if (-mCamera.translation().x() - tgt.x() <= 2 * -screenWidth)
+			{
+				// left rollover
+				mLockInput = true;
+				tgt.x() = -screenWidth;
+			}
+			// deny any further input on rollover as mCurrentView would be
+			// different on subsequent animations, resulting in restoring
+			// a unrelated mCurrentView/mCamera with the original position
+			if (mLockInput)
+			{
+				positionOrig = Vector3f(mCurrentView->getPosition());
+				mCurrentView->setPosition(tgt.x(), tgt.y());
+			}
+		}
+
+		setAnimation(new MoveCameraAnimation(mCamera, tgt), 0, [this, positionOrig] {
+			if (mLockInput) {
+				mCurrentView->setPosition(positionOrig);
+				mCamera.translation() = -positionOrig;
+			}
+			mLockInput = false;
+		});
 		updateHelpPrompts(); // update help prompts immediately
-	} else {
+	}
+	else
+	{
 		// instant
 		setAnimation(new LambdaAnimation(
 			[this, target](float /*t*/)
