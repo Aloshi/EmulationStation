@@ -526,7 +526,11 @@ std::string Font::wrapText(std::string text, float maxWidth)
 			}
 		}
 
-		if(cursor == text.length()) // arrived at end of text.
+		if(cursor == text.length() && lineWidth <= maxWidth)
+		// arrived at end of text while being in bounds of textbox
+		// second clause is mandatory for short descriptions which coincidentially
+		// ending with cursor at text end but slightly overrunning the bounding box
+		// to be wrapped on the next line, thus have to hit the else branch
 		{
 			out += text;
 			text.erase();
