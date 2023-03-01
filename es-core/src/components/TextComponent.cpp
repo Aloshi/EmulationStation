@@ -158,11 +158,9 @@ void TextComponent::calculateExtent()
 	if(mAutoCalcExtent.x())
 	{
 		mSize = mFont->sizeText(mUppercase ? Utils::String::toUpper(mText) : mText, mLineSpacing);
-	}else{
-		if(mAutoCalcExtent.y())
-		{
-			mSize[1] = mFont->sizeWrappedText(mUppercase ? Utils::String::toUpper(mText) : mText, getSize().x(), mLineSpacing).y();
-		}
+	}else if(mAutoCalcExtent.y())
+	{
+		mSize.y() = mFont->sizeWrappedText(mUppercase ? Utils::String::toUpper(mText) : mText, getSize().x(), mLineSpacing).y();
 	}
 }
 
@@ -179,8 +177,7 @@ void TextComponent::onTextChanged()
 	std::string text = mUppercase ? Utils::String::toUpper(mText) : mText;
 
 	std::shared_ptr<Font> f = mFont;
-	const bool isMultiline = (mSize.y() == 0 || mSize.y() > f->getHeight()*1.2f);
-
+	const bool isMultiline = (mSize.y() == 0 || mSize.y() > f->getHeight(mLineSpacing));
 	bool addAbbrev = false;
 	if(!isMultiline)
 	{
