@@ -286,8 +286,10 @@ void ViewController::launch(FileData* game, Vector3f center)
 			game->launchGame(mWindow);
 			setAnimation(new LambdaAnimation(fadeFunc, 800), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
-			if (mCurrentView)
+			if (mCurrentView) {
+				this->getGameListView(game->getSystem())->setViewportTop(-1);
 				mCurrentView->onShow();
+			}
 		});
 	} else if (transition_style == "slide"){
 		// move camera to zoom in on center + fade out, launch game, come back in
@@ -297,8 +299,10 @@ void ViewController::launch(FileData* game, Vector3f center)
 			mCamera = origCamera;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 600), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
-			if (mCurrentView)
+			if (mCurrentView) {
+				this->getGameListView(game->getSystem())->setViewportTop(-1);
 				mCurrentView->onShow();
+			}
 		});
 	} else { // instant
 		setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, [this, origCamera, center, game]
@@ -307,8 +311,10 @@ void ViewController::launch(FileData* game, Vector3f center)
 			mCamera = origCamera;
 			setAnimation(new LaunchAnimation(mCamera, mFadeOpacity, center, 10), 0, [this] { mLockInput = false; }, true);
 			this->onFileChanged(game, FILE_METADATA_CHANGED);
-			if (mCurrentView)
+			if (mCurrentView) {
+				this->getGameListView(game->getSystem())->setViewportTop(-1);
 				mCurrentView->onShow();
+			}
 		});
 	}
 }
@@ -516,6 +522,7 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 			bool isCurrent = (mCurrentView == it->second);
 			SystemData* system = it->first;
 			FileData* cursor = view->getCursor();
+			int viewportTop = view->getViewportTop();
 			mGameListViews.erase(it);
 
 			if(reloadTheme)
@@ -526,6 +533,7 @@ void ViewController::reloadGameListView(IGameListView* view, bool reloadTheme)
 			// to counter having come from a placeholder
 			if (!cursor->isPlaceHolder()) {
 				newView->setCursor(cursor);
+				newView->setViewportTop(viewportTop);
 			}
 			if(isCurrent)
 				mCurrentView = newView;
@@ -543,9 +551,11 @@ void ViewController::reloadAll()
 {
 	// clear all gamelistviews
 	std::map<SystemData*, FileData*> cursorMap;
+	std::map<SystemData*, int> viewportTopMap;
 	for(auto it = mGameListViews.cbegin(); it != mGameListViews.cend(); it++)
 	{
 		cursorMap[it->first] = it->second->getCursor();
+		viewportTopMap[it->first] = it->second->getViewportTop();
 	}
 	mGameListViews.clear();
 
@@ -556,6 +566,12 @@ void ViewController::reloadAll()
 		it->first->loadTheme();
 		it->first->getIndex()->resetFilters();
 		getGameListView(it->first)->setCursor(it->second);
+	}
+
+	// restore index of first list item on display
+	for(auto it = viewportTopMap.cbegin(); it != viewportTopMap.cend(); it++)
+	{
+		getGameListView(it->first)->setViewportTop(it->second);
 	}
 
 	// Rebuild SystemListView
