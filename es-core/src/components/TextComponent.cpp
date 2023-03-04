@@ -153,59 +153,56 @@ void TextComponent::render(const Transform4x4f& parentTrans)
 	}
 }
 
-void TextComponent::calculateExtent()
+std::string TextComponent::calculateExtent()
 {
+	std::string text = mUppercase ? Utils::String::toUpper(mText) : mText;
 	if(mAutoCalcExtent.x())
 	{
-		mSize = mFont->sizeText(mUppercase ? Utils::String::toUpper(mText) : mText, mLineSpacing);
+		mSize = mFont->sizeText(text, mLineSpacing);
 	}else if(mAutoCalcExtent.y())
 	{
-		mSize.y() = mFont->sizeWrappedText(mUppercase ? Utils::String::toUpper(mText) : mText, getSize().x(), mLineSpacing).y();
+		text = mFont->wrapText(text, getSize().x());
+		mSize.y() = mFont->sizeText(text, mLineSpacing).y();
 	}
+	return text;
 }
 
 void TextComponent::onTextChanged()
 {
-	calculateExtent();
-
 	if(!mFont || mText.empty())
 	{
 		mTextCache.reset();
 		return;
 	}
 
-	std::string text = mUppercase ? Utils::String::toUpper(mText) : mText;
-
 	std::shared_ptr<Font> f = mFont;
-	const bool isMultiline = (mSize.y() == 0 || mSize.y() > f->getHeight(mLineSpacing));
-	bool addAbbrev = false;
-	if(!isMultiline)
+	std::string text = calculateExtent();
+	const bool oneLiner = mSize.y() > 0 && mSize.y() <= f->getHeight(mLineSpacing);
+
+	if(oneLiner)
 	{
+		bool addAbbrev = false;
 		size_t newline = text.find('\n');
 		text = text.substr(0, newline); // single line of text - stop at the first newline since it'll mess everything up
-		addAbbrev = newline != std::string::npos;
-	}
+		Vector2f size = f->sizeText(text);
+		addAbbrev = newline != std::string::npos || size.x() > mSize.x();
 
-	Vector2f size = f->sizeText(text);
-	if(!isMultiline && mSize.x() && text.size() && (size.x() > mSize.x() || addAbbrev))
-	{
-		// abbreviate text
-		const std::string abbrev = "...";
-		Vector2f abbrevSize = f->sizeText(abbrev);
-
-		while(text.size() && size.x() + abbrevSize.x() > mSize.x())
+		if(addAbbrev)
 		{
-			size_t newSize = Utils::String::prevCursor(text, text.size());
-			text.erase(newSize, text.size() - newSize);
-			size = f->sizeText(text);
+			// abbreviate text
+			const std::string abbrev = "...";
+			Vector2f abbrevSize = f->sizeText(abbrev);
+
+			while(text.size() && size.x() + abbrevSize.x() > mSize.x())
+			{
+				size_t newSize = Utils::String::prevCursor(text, text.size());
+				text.erase(newSize, text.size() - newSize);
+				size = f->sizeText(text);
+			}
+			text.append(abbrev);
 		}
-
-		text.append(abbrev);
-
-		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(text, Vector2f(0, 0), (mColor >> 8 << 8) | mOpacity, mSize.x(), mHorizontalAlignment, mLineSpacing));
-	}else{
-		mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(f->wrapText(text, mSize.x()), Vector2f(0, 0), (mColor >> 8 << 8) | mOpacity, mSize.x(), mHorizontalAlignment, mLineSpacing));
 	}
+	mTextCache = std::shared_ptr<TextCache>(f->buildTextCache(text, Vector2f(0, 0), (mColor >> 8 << 8) | mOpacity, mSize.x(), mHorizontalAlignment, mLineSpacing));
 }
 
 void TextComponent::onColorChanged()
