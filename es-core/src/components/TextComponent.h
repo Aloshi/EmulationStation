@@ -49,7 +49,7 @@ protected:
 	std::shared_ptr<Font> mFont;
 
 private:
-	std::string calculateExtent();
+	std::string calculateExtent(bool allow_wrapping);
 
 	void onColorChanged();
 

@@ -153,16 +153,24 @@ void TextComponent::render(const Transform4x4f& parentTrans)
 	}
 }
 
-std::string TextComponent::calculateExtent()
+std::string TextComponent::calculateExtent(bool allow_wrapping)
 {
 	std::string text = mUppercase ? Utils::String::toUpper(mText) : mText;
 	if(mAutoCalcExtent.x())
 	{
 		mSize = mFont->sizeText(text, mLineSpacing);
-	}else if(mAutoCalcExtent.y())
+	}else if(mAutoCalcExtent.y() || allow_wrapping)
+		// usually a textcomponent wraps only when x > 0 and y == 0 in size (see TextComponent.h).
+		// The extra flag allow_wrapping does wrapping if an textcomponent has x > 0 and y > height of
+		// one line (calculated by fontsize and line spacing).
+		// Some themes rely on this wrap functionality while having an fixed y (y>0) in <size/>.
 	{
 		text = mFont->wrapText(text, getSize().x());
-		mSize.y() = mFont->sizeText(text, mLineSpacing).y();
+		if (mAutoCalcExtent.y()) {
+			// only resize when y was 0 before
+			// otherwise leave y value as defined before (i.e. theme value)
+			mSize.y() = mFont->sizeText(text, mLineSpacing).y();
+		}
 	}
 	return text;
 }
@@ -176,7 +184,7 @@ void TextComponent::onTextChanged()
 	}
 
 	std::shared_ptr<Font> f = mFont;
-	std::string text = calculateExtent();
+	std::string text = calculateExtent(mSize.y() > f->getHeight(mLineSpacing));
 	const bool oneLiner = mSize.y() > 0 && mSize.y() <= f->getHeight(mLineSpacing);
 
 	if(oneLiner)
