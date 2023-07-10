@@ -604,12 +604,12 @@ float Font::getNewlineStartOffset(const std::string& text, const unsigned int& c
 			return 0;
 		case ALIGN_CENTER:
 			{
-				unsigned int endChar = (unsigned int)text.find('\n', charStart);
+				size_t endChar = text.find('\n', charStart);
 				return (xLen - sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x()) / 2.0f;
 			}
 		case ALIGN_RIGHT:
 			{
-				unsigned int endChar = (unsigned int)text.find('\n', charStart);
+				size_t endChar = text.find('\n', charStart);
 				return xLen - (sizeText(text.substr(charStart, endChar != std::string::npos ? endChar - charStart : endChar)).x());
 			}
 		default:

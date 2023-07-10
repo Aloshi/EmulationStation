@@ -31,7 +31,7 @@ protected:
 	using IList<TextListData, T>::mSize;
 	using IList<TextListData, T>::mCursor;
 	using IList<TextListData, T>::mViewportTop;
-	using IList<TextListData, T>::Entry;
+	using IList<TextListData, T>::mEntry;
 
 public:
 	using IList<TextListData, T>::size;
@@ -82,8 +82,8 @@ public:
 	inline void setLineSpacing(float lineSpacing) { mLineSpacing = lineSpacing; }
 
 protected:
-	virtual void onScroll(int /*amt*/) { if(!mScrollSound.empty()) Sound::get(mScrollSound)->play(); }
-	virtual void onCursorChanged(const CursorState& state);
+	virtual void onScroll(int /*amt*/) override { if(!mScrollSound.empty()) Sound::get(mScrollSound)->play(); }
+	virtual void onCursorChanged(const CursorState& state) override;
 
 private:
 	int mMarqueeOffset;

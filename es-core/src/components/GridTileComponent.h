@@ -22,7 +22,7 @@ public:
 	GridTileComponent(Window* window);
 
 	void render(const Transform4x4f& parentTrans) override;
-	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties);
+	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
 	// Made this a static function because the ImageGridComponent need to know the default tile max size
 	// to calculate the grid dimension before it instantiate the GridTileComponents
@@ -41,7 +41,7 @@ public:
 
 	Vector3f getBackgroundPosition();
 
-	virtual void update(int deltaTime);
+	virtual void update(int deltaTime) override;
 
 	std::shared_ptr<TextureResource> getTexture();
 

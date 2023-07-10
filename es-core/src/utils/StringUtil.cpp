@@ -22,23 +22,23 @@ namespace Utils
 			else if((c & 0xE0) == 0xC0) // 110xxxxx, two byte character
 			{
 				// 110xxxxx 10xxxxxx
-				result = ((_string[_cursor++] & 0x1F) <<  6) |
-						 ((_string[_cursor++] & 0x3F)      );
+				result  = (_string[_cursor++] & 0x1F) <<  6;
+				result |= (_string[_cursor++] & 0x3F);
 			}
 			else if((c & 0xF0) == 0xE0) // 1110xxxx, three byte character
 			{
 				// 1110xxxx 10xxxxxx 10xxxxxx
-				result = ((_string[_cursor++] & 0x0F) << 12) |
-						 ((_string[_cursor++] & 0x3F) <<  6) |
-						 ((_string[_cursor++] & 0x3F)      );
+				result  = (_string[_cursor++] & 0x0F) << 12;
+				result |= (_string[_cursor++] & 0x3F) <<  6;
+				result |= (_string[_cursor++] & 0x3F);
 			}
 			else if((c & 0xF8) == 0xF0) // 11110xxx, four byte character
 			{
 				// 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-				result = ((_string[_cursor++] & 0x07) << 18) |
-						 ((_string[_cursor++] & 0x3F) << 12) |
-						 ((_string[_cursor++] & 0x3F) <<  6) |
-						 ((_string[_cursor++] & 0x3F)      );
+				result  = (_string[_cursor++] & 0x07) << 18;
+				result |= (_string[_cursor++] & 0x3F) << 12;
+				result |= (_string[_cursor++] & 0x3F) <<  6;
+				result |= (_string[_cursor++] & 0x3F);
 			}
 			else
 			{

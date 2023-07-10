@@ -40,7 +40,7 @@ protected:
 	using IList<ImageGridData, T>::getTransform;
 	using IList<ImageGridData, T>::mSize;
 	using IList<ImageGridData, T>::mCursor;
-	using IList<ImageGridData, T>::Entry;
+	using IList<ImageGridData, T>::mEntry;
 	using IList<ImageGridData, T>::mWindow;
 
 public:
@@ -305,7 +305,9 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 			std::string path = elem->get<std::string>("gameImage");
 
 			if (!ResourceManager::getInstance()->fileExists(path))
+			{
 				LOG(LogWarning) << "Could not replace default game image, check path: " << path;
+			}
 			else
 			{
 				std::string oldDefaultGameTexture = mDefaultGameTexture;
@@ -326,7 +328,9 @@ void ImageGridComponent<T>::applyTheme(const std::shared_ptr<ThemeData>& theme, 
 			std::string path = elem->get<std::string>("folderImage");
 
 			if (!ResourceManager::getInstance()->fileExists(path))
+			{
 				LOG(LogWarning) << "Could not replace default folder image, check path: " << path;
+			}
 			else
 			{
 				std::string oldDefaultFolderTexture = mDefaultFolderTexture;

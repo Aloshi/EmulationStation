@@ -171,6 +171,9 @@ std::string FileFilterIndex::getIndexableKey(FileData* game, FilterIndexType typ
 			key = Utils::String::toUpper(game->metadata.get("kidgame"));
 			break;
 		}
+		default:
+			LOG(LogWarning) << "Unknown Filter type:" << type;
+			break;
 	}
 	key = Utils::String::trim(key);
 	if (key.empty() || (type == RATINGS_FILTER && key == "0 STARS")) {

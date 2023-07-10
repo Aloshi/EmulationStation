@@ -85,5 +85,10 @@ void processQuitMode()
 		touch("/tmp/es-shutdown");
 		runShutdownCommand();
 		break;
+	default:
+		// No-op to prevent compiler warnings
+		// If we reach here, it is not a RESTART, REBOOT,
+		// or SHUTDOWN. Basically a normal exit.
+		break;
 	}
 }

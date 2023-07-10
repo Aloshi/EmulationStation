@@ -314,7 +314,7 @@ void SystemScreenSaver::backgroundIndexing()
 	std::vector<FileData*> files = all->getRootFolder()->getFilesRecursive(GAME);
 
 	const auto startTs = std::chrono::system_clock::now();
-	for (lastIndex; lastIndex < files.size(); lastIndex++)
+	for ( ; lastIndex < files.size(); lastIndex++)
 	{
 		if(mExit)
 			break;

@@ -23,14 +23,14 @@ endif(VLC_INCLUDE_DIR AND VLC_LIBRARIES)
 # in the FIND_PATH() and FIND_LIBRARY() calls
 if(NOT WIN32)
   find_package(PkgConfig)
-  pkg_check_modules(VLC libvlc>=1.0.0)
+  pkg_check_modules(VLC libvlc>=3.0.0)
   set(VLC_DEFINITIONS ${VLC_CFLAGS})
   set(VLC_LIBRARIES ${VLC_LDFLAGS})
 endif(NOT WIN32)
 
 # TODO add argument support to pass version on find_package
 include(MacroEnsureVersion)
-macro_ensure_version(1.0.0 ${VLC_VERSION} VLC_VERSION_OK)
+macro_ensure_version(3.0.0 ${VLC_VERSION} VLC_VERSION_OK)
 if(VLC_VERSION_OK)
   set(VLC_FOUND TRUE)
   message(STATUS "VLC library found")

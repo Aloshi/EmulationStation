@@ -5,8 +5,8 @@
 #include <sstream>
 
 #define LOG(level) \
-if(level > Log::getReportingLevel()) ; \
-else Log().get(level)
+if(level <= Log::getReportingLevel()) \
+        Log().get(level)
 
 enum LogLevel { LogError, LogWarning, LogInfo, LogDebug };
 

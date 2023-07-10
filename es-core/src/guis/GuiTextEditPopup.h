@@ -15,8 +15,8 @@ public:
 	GuiTextEditPopup(Window* window, const std::string& title, const std::string& initValue,
 		const std::function<void(const std::string&)>& okCallback, bool multiLine, const char* acceptBtnText = "OK");
 
-	bool input(InputConfig* config, Input input);
-	void onSizeChanged();
+	bool input(InputConfig* config, Input input) override;
+	void onSizeChanged() override;
 	std::vector<HelpPrompt> getHelpPrompts() override;
 
 private:

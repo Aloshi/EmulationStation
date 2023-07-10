@@ -58,6 +58,8 @@ public:
 	};
 
 protected:
+	struct Entry mEntry;
+
 	int mCursor;
 	int mViewportTop;
 

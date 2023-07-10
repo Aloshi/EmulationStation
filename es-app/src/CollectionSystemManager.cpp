@@ -737,6 +737,10 @@ void CollectionSystemManager::populateAutoCollection(CollectionSystemData* sysDa
 						// we may still want to add files we don't want in auto collections in "favorites"
 						include = (*gameIt)->metadata.get("favorite") == "true";
 						break;
+					default:
+						// No-op to prevent compiler warnings
+						// Getting here means that the file is not part of a pre-defined collection.
+						break;
 				}
 
 				if (include) {
