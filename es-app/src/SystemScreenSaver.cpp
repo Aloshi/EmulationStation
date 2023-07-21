@@ -511,6 +511,10 @@ void SystemScreenSaver::launchGame()
 {
 	if (mCurrentGame != NULL)
 	{
+		//Stop screensaver
+		mStopBackgroundAudio = true;
+		stopScreenSaver();
+
 		// launching Game
 		ViewController::get()->goToGameList(mCurrentGame->getSystem());
 		IGameListView* view = ViewController::get()->getGameListView(mCurrentGame->getSystem()).get();
