@@ -2,7 +2,7 @@
 
 #include "utils/FileSystemUtil.h"
 #include "Log.h"
-#include <pugixml/src/pugixml.hpp>
+#include <pugixml.hpp>
 
 MetaDataDecl gameDecls[] = {
 	// key,         type,                   default,            statistic,  name in GuiMetaDataEd,  prompt in GuiMetaDataEd

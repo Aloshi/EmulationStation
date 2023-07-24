@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include <pugixml/src/pugixml.hpp>
+#include <pugixml.hpp>
 
 class FileData;
 class FileFilterIndex;
