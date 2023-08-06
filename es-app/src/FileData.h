@@ -86,8 +86,8 @@ public:
 			: comparisonFunction(sortFunction), ascending(sortAscending), description(sortDescription) {}
 	};
 
-	void sort(ComparisonFunction& comparator, bool ascending = true);
 	void sort(const SortType& type);
+	std::string getSortDescription() { return mSortDesc; }
 	MetaDataList metadata;
 
 protected:
@@ -96,6 +96,7 @@ protected:
 	std::string mSystemName;
 
 private:
+	void sort(ComparisonFunction& comparator, bool ascending = true);
 	FileType mType;
 	std::string mPath;
 	SystemEnvironmentData* mEnvData;
@@ -103,6 +104,7 @@ private:
 	std::unordered_map<std::string,FileData*> mChildrenByFilename;
 	std::vector<FileData*> mChildren;
 	std::vector<FileData*> mFilteredChildren;
+	std::string mSortDesc;
 };
 
 class CollectionFileData : public FileData
