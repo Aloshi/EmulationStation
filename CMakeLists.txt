@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+# Note: Visual Studio 2022 generator requires CMake 3.21 or greater.
 
 option(GLES "Set to ON if targeting Embedded OpenGL" ${GLES})
 option(GL "Set to ON if targeting Desktop OpenGL" ${GL})
@@ -137,8 +138,16 @@ if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
     add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
     add_definitions(-DNOMINMAX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP") #multi-processor compilation
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP") #multi-processor compilation
+
+    # multi-processor compilation
+    # disable warning c4018 - signed/unsigned mismatch
+    # disable warning c4244 - conversion, possible loss of data
+    # disable warning c4996 - use of deprecated function/member/variable/typedef
+    # Use extended ASCII character set
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /wd4018 /wd4244 /wd4996 /source-charset:437")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP /wd4018 /wd4244 /wd4996 /source-charset:437")
+    set(CMAKE_EXE_LINKER_FLAGS "/SAFESEH:NO")
 
     # Set the start-up project to in VS to 'emulationstation'
     set(VS_STARTUP_PROJECT "emulationstation")
@@ -238,7 +247,12 @@ endif()
 
 if(MSVC)
     LIST(APPEND COMMON_LIBRARIES
+        Crypt32
+        Imm32
+        Setupapi
+        Version
         winmm
+        Wldap32
     )
 endif()
 
