@@ -70,7 +70,9 @@ endmacro(clear_if_changed)
 
 # Try to get some hints from pkg-config, if available
 macro(use_pkgconfig PREFIX PKGNAME)
-  find_package(PkgConfig)
+  if(NOT WIN32)
+    find_package(PkgConfig)
+  endif(NOT WIN32)
   if (PKG_CONFIG_FOUND)
     pkg_check_modules(${PREFIX} ${PKGNAME})
   endif ()
@@ -96,7 +98,7 @@ macro(get_debug_names PREFIX)
   endforeach(i)
 endmacro(get_debug_names)
 
-# Add the parent dir from DIR to VAR 
+# Add the parent dir from DIR to VAR
 macro(add_parent_dir VAR DIR)
   get_filename_component(${DIR}_TEMP "${${DIR}}/.." ABSOLUTE)
   set(${VAR} ${${VAR}} ${${DIR}_TEMP})
