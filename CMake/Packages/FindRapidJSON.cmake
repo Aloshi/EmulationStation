@@ -61,11 +61,11 @@ mark_as_advanced(RAPIDJSON_INCLUDE_DIRS)
 # handle the QUIETLY and REQUIRED arguments and set RAPIDJSON_FOUND to TRUE if
 # all listed variables are TRUE
 include("FindPackageHandleStandardArgs")
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Rapidjson
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(RapidJSON
   REQUIRED_VARS RAPIDJSON_INCLUDE_DIRS
-  FOUND_VAR Rapidjson_FOUND
+  FOUND_VAR RapidJSON_FOUND
 )
 
-if(Rapidjson_FOUND)
-    set(RAPIDJSON_FOUND ${Rapidjson_FOUND})
+if(RapidJSON_FOUND)
+    set(RAPIDJSON_FOUND ${RapidJSON_FOUND})
 endif()
