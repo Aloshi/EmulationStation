@@ -30,9 +30,12 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		char startChar = '!';
 		char endChar = '_';
 
+		bool outOfRange = false;
 		char curChar = (char)toupper(getGamelist()->getCursor()->getSortName()[0]);
-		if(curChar < startChar || curChar > endChar)
-			curChar = startChar;
+		if(curChar < startChar || curChar > endChar) {
+			// most likely 8 bit ASCII or Unicode (Prefix: 0xc2 or 0xe2) value
+			outOfRange = true;
+		}
 
 		mJumpToLetterList = std::make_shared<LetterList>(mWindow, "JUMP TO...", false);
 		for (char c = startChar; c <= endChar; c++)
@@ -44,7 +47,8 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 				char candidate = (char)toupper(file->getSortName()[0]);
 				if (c == candidate)
 				{
-					mJumpToLetterList->add(std::string(1, c), c, c == curChar);
+					mJumpToLetterList->add(std::string(1, c), c, (c == curChar) || outOfRange);
+					outOfRange = false; // only override selection on very first c == candidate match
 					break;
 				}
 			}
