@@ -6,16 +6,14 @@
 #include "PowerSaver.h"
 #include "Settings.h"
 #ifdef WIN32
- #include <basetsd.h>
- typedef SSIZE_T ssize_t;
+#include <basetsd.h>
+#include <codecvt>
+typedef SSIZE_T ssize_t;
+#else
+#include <unistd.h>
 #endif
 #include <vlc/vlc.h>
 #include <SDL_mutex.h>
-#include <unistd.h>
-
-#ifdef WIN32
-#include <codecvt>
-#endif
 
 libvlc_instance_t* VideoVlcComponent::mVLC = NULL;
 
