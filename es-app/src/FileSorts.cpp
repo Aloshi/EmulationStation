@@ -8,8 +8,8 @@ namespace FileSorts
 {
 
 	const FileData::SortType typesArr[] = {
-		FileData::SortType(&compareName, true, "filename, ascending"),
-		FileData::SortType(&compareName, false, "filename, descending"),
+		FileData::SortType(&compareName, true, "name, ascending"),
+		FileData::SortType(&compareName, false, "name, descending"),
 
 		FileData::SortType(&compareRating, true, "rating, ascending"),
 		FileData::SortType(&compareRating, false, "rating, descending"),

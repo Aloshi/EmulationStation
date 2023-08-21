@@ -28,7 +28,8 @@ GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector
 
 	mMetaDataDecl(mdd),
 	mMetaData(md),
-	mSavedCallback(saveCallback), mDeleteFunc(deleteFunc)
+	mSavedCallback(saveCallback),
+	mDeleteFunc(deleteFunc)
 {
 	addChild(&mBackground);
 	addChild(&mGrid);
