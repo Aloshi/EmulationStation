@@ -66,6 +66,8 @@ GuiSlideshowScreensaverOptions::GuiSlideshowScreensaverOptions(Window* window, c
 
 	// custom video filter
 	auto sss_video_filter = std::make_shared<TextComponent>(mWindow, "", Font::get(FONT_SIZE_SMALL), 0x777777FF);
+	// set y-size >0 on last TextComponent in menu to assure proper fit into available row height
+	sss_video_filter->setSize(Vector2f(0, Font::get(FONT_SIZE_SMALL)->getLetterHeight()));
 	addEditableTextComponent(row, "CUSTOM VIDEO FILTER", sss_video_filter, Settings::getInstance()->getString("SlideshowScreenSaverVideoFilter"));
 	addSaveFunc([sss_video_filter] {
 		Settings::getInstance()->setString("SlideshowScreenSaverVideoFilter", sss_video_filter->getValue());
