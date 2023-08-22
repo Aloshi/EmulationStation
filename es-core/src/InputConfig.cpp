@@ -2,7 +2,7 @@
 
 #include "Log.h"
 #include "utils/StringUtil.h"
-#include <pugixml/src/pugixml.hpp>
+#include <pugixml.hpp>
 
 //some util functions
 std::string inputTypeToString(InputType type)
