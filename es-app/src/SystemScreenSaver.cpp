@@ -160,7 +160,7 @@ void SystemScreenSaver::startScreenSaver()
 		if (!path.empty() && Utils::FileSystem::exists(path))
 		{
 			setVideoScreensaver(path);
-			if (mCurrentGame != NULL) 
+			if (mCurrentGame != NULL)
 			{
 				Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getPath(), mCurrentGame->getName(), "randomvideo");
 			}
@@ -212,7 +212,7 @@ void SystemScreenSaver::startScreenSaver()
 
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
-		if (mCurrentGame != NULL) 
+		if (mCurrentGame != NULL)
 		{
 			Scripting::fireEvent("screensaver-game-select", mCurrentGame->getSystem()->getName(), mCurrentGame->getFileName(), mCurrentGame->getName(), "slideshow");
 		}
@@ -257,7 +257,7 @@ void SystemScreenSaver::stopScreenSaver()
 void SystemScreenSaver::renderScreenSaver()
 {
 	std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
-	if (mVideoScreensaver && screensaver_behavior == "random video")
+	if (mVideoScreensaver && (screensaver_behavior == "random video" || screensaver_behavior == "slideshow"))
 	{
 		// Render black background
 		Renderer::setMatrix(Transform4x4f::Identity());
@@ -269,6 +269,13 @@ void SystemScreenSaver::renderScreenSaver()
 			Transform4x4f transform = Transform4x4f::Identity();
 			mVideoScreensaver->render(transform);
 		}
+
+		// Check if slideshow then loop background music
+		if (screensaver_behavior == "slideshow" && mBackgroundAudio && !mBackgroundAudio->isPlaying())
+		{
+			mBackgroundAudio->play();
+		}
+
 	}
 	else if (mImageScreensaver && screensaver_behavior == "slideshow")
 	{
