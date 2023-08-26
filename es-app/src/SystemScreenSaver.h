@@ -38,7 +38,7 @@ private:
 	std::vector<std::string> getCustomMediaFiles(const std::string &mediaDir);
 	std::vector<FileData*> getAllGamelistNodes();
 	void backgroundIndexing();
-
+	void setBackground();
 	void input(InputConfig* config, Input input);
 
 	enum STATE {
@@ -56,14 +56,14 @@ private:
 	float			mOpacity;
 	int			mTimer;
 	FileData*		mCurrentGame;
-	int 			mSwapTimeout;
+	int			mSwapTimeout;
 	std::shared_ptr<Sound>	mBackgroundAudio;
 	bool			mStopBackgroundAudio;
-	std::vector<FileData*> 		mAllFiles;
-	std::vector<std::string>	mCustomMediaFiles;
-	int 				mAllFilesSize;
-	std::thread*				mThread;
-	bool 						mExit;
+	std::vector<FileData*>	mAllFiles;
+	std::vector<std::string> mCustomMediaFiles;
+	int			mAllFilesSize;
+	std::thread*		mThread;
+	bool			mExit;
 };
 
 #endif // ES_APP_SYSTEM_SCREEN_SAVER_H

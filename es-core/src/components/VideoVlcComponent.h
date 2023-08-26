@@ -58,6 +58,7 @@ private:
 	// Handle looping the video. Must be called periodically
 	virtual void handleLooping() override;
 
+	void setMuteMode();
 	void setupContext();
 	void freeContext();
 
