@@ -105,7 +105,7 @@ void SystemData::populateFolder(FileData* folder)
 
 		//this is a little complicated because we allow a list of extensions to be defined (delimited with a space)
 		//we first get the extension of the file itself:
-		extension = Utils::String::toLower(Utils::FileSystem::getExtension(filePath));
+		extension = Utils::FileSystem::getExtension(filePath);
 
 		//fyi, folders *can* also match the extension and be added as games - this is mostly just to support higan
 		//see issue #75: https://github.com/Aloshi/EmulationStation/issues/75
@@ -187,7 +187,7 @@ SystemData* SystemData::loadSystem(pugi::xml_node system)
 
 	for (auto extension = list.cbegin(); extension != list.cend(); extension++)
 	{
-		std::string xt = Utils::String::toLower(*extension);
+		std::string xt = std::string(*extension);
 		if (std::find(extensions.begin(), extensions.end(), xt) == extensions.end())
 			extensions.push_back(xt);
 	}
