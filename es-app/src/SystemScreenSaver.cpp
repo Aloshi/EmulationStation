@@ -237,12 +237,13 @@ void SystemScreenSaver::stopScreenSaver()
 	delete mImageScreensaver;
 	mImageScreensaver = NULL;
 
-	// Exit the indexing thread
-	if (Settings::getInstance()->getBool("BackgroundIndexing"))
+	// Exit the indexing thread in case it's running. Check if thread still exists.
+	if (Settings::getInstance()->getBool("BackgroundIndexing") && mThread)
 	{
 		mExit = true;
 		mThread->join();
 		delete mThread;
+		mThread = NULL;
 	}
 
 	// we need this to loop through different videos
