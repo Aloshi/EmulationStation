@@ -513,6 +513,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file, int pressco
 					systemViewToUpdate->getIndex()->addToIndex(newGame);
 				}
 			}
+			sysData->setShuffledCacheDirty();
 			updateCollectionFolderMetadata(sysData);
 		}
 		else
