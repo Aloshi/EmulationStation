@@ -76,6 +76,7 @@ public:
 
 	FileFilterIndex* getIndex() { return mFilterIndex; };
 	void onMetaDataSavePoint();
+	void setShuffledCacheDirty();
 
 private:
 	static SystemData* loadSystem(pugi::xml_node system);

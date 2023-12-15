@@ -557,6 +557,11 @@ SystemData* SystemData::getRandomSystem()
 	return random_system;
 }
 
+void SystemData::setShuffledCacheDirty()
+{
+	mGamesShuffled.clear();
+}
+
 FileData* SystemData::getRandomGame()
 {
 	if (mGamesShuffled.empty())
