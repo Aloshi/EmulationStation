@@ -181,6 +181,10 @@ bool Window::inputDuringScreensaver(InputConfig* config, Input input)
 		{
 			mScreenSaver->launchGame();
 		}
+		else if (config->getMappedTo(input).size() == 0) {
+			// catch invalid inputs here to prevent screensaver from stopping
+			input_consumed = true;
+		}
 	}
 	return input_consumed;
 }
