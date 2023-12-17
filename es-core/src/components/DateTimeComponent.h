@@ -25,6 +25,9 @@ public:
 
 	virtual void applyTheme(const std::shared_ptr<ThemeData>& theme, const std::string& view, const std::string& element, unsigned int properties) override;
 
+	static std::string getDateformat() { return "%m/%d/%Y"; }
+	static std::string getDateformatTip() { return "MM/DD/YYYY"; }
+
 protected:
 	void onTextChanged() override;
 

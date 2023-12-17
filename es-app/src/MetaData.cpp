@@ -1,6 +1,7 @@
 #include "MetaData.h"
 
 #include "utils/FileSystemUtil.h"
+#include "utils/TimeUtil.h"
 #include "Log.h"
 #include <pugixml.hpp>
 
@@ -27,6 +28,12 @@ MetaDataDecl gameDecls[] = {
 };
 const std::vector<MetaDataDecl> gameMDD(gameDecls, gameDecls + sizeof(gameDecls) / sizeof(gameDecls[0]));
 
+const inline std::string blankDate() {
+	// blank date (1970-01-02) is used to render "" (see DateTimeComponent.cpp) for
+	// folder metadata when no date is provided (=default case)
+	return Utils::Time::timeToString(Utils::Time::BLANK_DATE, "%Y%m%d");
+}
+
 MetaDataDecl folderDecls[] = {
 	{"name",        MD_STRING,              "",                 false,      "name",                 "enter game name"},
 	{"sortname",    MD_STRING,              "",                 false,      "sortname",             "enter game sort name"},
@@ -35,12 +42,12 @@ MetaDataDecl folderDecls[] = {
 	{"thumbnail",   MD_PATH,                "",                 false,      "thumbnail",            "enter path to thumbnail"},
 	{"video",       MD_PATH,                "",                 false,      "video",                "enter path to video"},
 	{"marquee",     MD_PATH,                "",                 false,      "marquee",              "enter path to marquee"},
-	{"rating",      MD_RATING,              "0.000000",         false,      "rating",               "enter rating"},
-	{"releasedate", MD_DATE,                "not-a-date-time",  false,      "release date",         "enter release date"},
-	{"developer",   MD_STRING,              "unknown",          false,      "developer",            "enter game developer"},
-	{"publisher",   MD_STRING,              "unknown",          false,      "publisher",            "enter game publisher"},
-	{"genre",       MD_STRING,              "unknown",          false,      "genre",                "enter game genre"},
-	{"players",     MD_INT,                 "1",                false,      "players",              "enter number of players"}
+	{"rating",      MD_RATING,              "",                 false,      "rating",               "enter rating"},
+	{"releasedate", MD_DATE,                blankDate(),        true,       "release date",         "enter release date"},
+	{"developer",   MD_STRING,              "",                 false,      "developer",            "enter game developer"},
+	{"publisher",   MD_STRING,              "",                 false,      "publisher",            "enter game publisher"},
+	{"genre",       MD_STRING,              "",                 false,      "genre",                "enter game genre"},
+	{"players",     MD_INT,                 "",                 false,      "players",              "enter number of players"}
 };
 const std::vector<MetaDataDecl> folderMDD(folderDecls, folderDecls + sizeof(folderDecls) / sizeof(folderDecls[0]));
 

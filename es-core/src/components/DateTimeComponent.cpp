@@ -4,15 +4,17 @@
 #include "Log.h"
 #include "Settings.h"
 
+#include <ctime>
+
 DateTimeComponent::DateTimeComponent(Window* window) : TextComponent(window), mDisplayRelative(false)
 {
-	setFormat("%m/%d/%Y");
+	setFormat(getDateformat());
 }
 
 DateTimeComponent::DateTimeComponent(Window* window, const std::string& text, const std::shared_ptr<Font>& font, unsigned int color, Alignment align,
 	Vector3f pos, Vector2f size, unsigned int bgcolor) : TextComponent(window, text, font, color, align, pos, size, bgcolor), mDisplayRelative(false)
 {
-	setFormat("%m/%d/%Y");
+	setFormat(getDateformat());
 }
 
 void DateTimeComponent::setValue(const std::string& val)
@@ -47,9 +49,13 @@ void DateTimeComponent::onTextChanged()
 
 std::string DateTimeComponent::getDisplayString() const
 {
+	if(std::difftime(mTime.getTime(), Utils::Time::BLANK_DATE) == 0.0) {
+		return "";
+	}
+
 	if (mDisplayRelative) {
 		//relative time
-		if(mTime.getTime() == 0)
+		if(mTime.getTime() == Utils::Time::NOT_A_DATE_TIME)
 			return "never";
 
 		Utils::Time::DateTime now(Utils::Time::now());
@@ -69,7 +75,7 @@ std::string DateTimeComponent::getDisplayString() const
 		return std::string(buf);
 	}
 
-	if(mTime.getTime() == 0)
+	if(mTime.getTime() == Utils::Time::NOT_A_DATE_TIME)
 		return "unknown";
 
 	return Utils::Time::timeToString(mTime.getTime(), mFormat);

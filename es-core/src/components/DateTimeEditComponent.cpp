@@ -1,5 +1,6 @@
 #include "components/DateTimeEditComponent.h"
 
+#include "DateTimeComponent.h"
 #include "resources/Font.h"
 #include "utils/StringUtil.h"
 
@@ -196,17 +197,17 @@ std::string DateTimeEditComponent::getDisplayString(DisplayMode mode) const
 	switch(mode)
 	{
 	case DISP_DATE:
-		fmt = "%m/%d/%Y";
+		fmt = DateTimeComponent::getDateformat();
 		break;
 	case DISP_DATE_TIME:
-		if(mTime.getTime() == 0)
+		if(mTime.getTime() == Utils::Time::NOT_A_DATE_TIME)
 			return "unknown";
-		fmt = "%m/%d/%Y %H:%M:%S";
+		fmt = DateTimeComponent::getDateformat() + " %H:%M:%S";
 		break;
 	case DISP_RELATIVE_TO_NOW:
 		{
 			//relative time
-			if(mTime.getTime() == 0)
+			if(mTime.getTime() == Utils::Time::NOT_A_DATE_TIME)
 				return "never";
 
 			Utils::Time::DateTime now(Utils::Time::now());
