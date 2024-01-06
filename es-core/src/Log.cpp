@@ -53,6 +53,7 @@ void Log::flush()
 
 void Log::close()
 {
+	if(file == NULL) return;
 	fclose(file);
 	file = NULL;
 }
