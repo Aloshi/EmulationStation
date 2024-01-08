@@ -8,6 +8,7 @@
 
 #include <memory>
 
+class SystemData;
 class FileData;
 class Font;
 class GuiComponent;
@@ -23,15 +24,15 @@ class Window
 public:
 	class ScreenSaver {
 	public:
-		virtual void startScreenSaver() = 0;
-		virtual void stopScreenSaver() = 0;
+		virtual void startScreenSaver(SystemData* system=NULL) = 0;
+		virtual void stopScreenSaver(bool toResume=false) = 0;
 		virtual void nextMediaItem() = 0;
 		virtual void renderScreenSaver() = 0;
 		virtual bool allowSleep() = 0;
 		virtual void update(int deltaTime) = 0;
 		virtual bool isScreenSaverActive() = 0;
 		virtual FileData* getCurrentGame() = 0;
-		virtual void launchGame() = 0;
+		virtual void selectGame(bool launch) = 0;
 	};
 
 	class InfoPopup {
@@ -72,7 +73,7 @@ public:
 	void setInfoPopup(InfoPopup* infoPopup) { delete mInfoPopup; mInfoPopup = infoPopup; }
 	inline void stopInfoPopup() { if (mInfoPopup) mInfoPopup->stop(); };
 
-	void startScreenSaver();
+	void startScreenSaver(SystemData* system=NULL);
 	bool cancelScreenSaver();
 	void renderScreenSaver();
 

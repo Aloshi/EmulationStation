@@ -33,7 +33,8 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mOpacity(0.0f),
 	mTimer(0),
 	mCurrentGame(NULL),
-	mStopBackgroundAudio(true)
+	mStopBackgroundAudio(true),
+	mSystem(NULL)
 {
 	mWindow->setScreenSaver(this);
 	std::string path = getTitleFolder();
@@ -128,8 +129,9 @@ bool SystemScreenSaver::isFileVideo(std::string& path)
 	return pathFilter.find(pathExtension) != std::string::npos;
 }
 
-void SystemScreenSaver::startScreenSaver()
+void SystemScreenSaver::startScreenSaver(SystemData* system)
 {
+	mSystem = system;
 	// if set to index files in background, start thread
 	if (Settings::getInstance()->getBool("BackgroundIndexing"))
 	{
@@ -219,7 +221,7 @@ void SystemScreenSaver::startScreenSaver()
 	mCurrentGame = NULL;
 }
 
-void SystemScreenSaver::stopScreenSaver()
+void SystemScreenSaver::stopScreenSaver(bool toResume)
 {
 	if ((mBackgroundAudio) && (mStopBackgroundAudio))
 	{
@@ -236,6 +238,12 @@ void SystemScreenSaver::stopScreenSaver()
 	mVideoScreensaver = NULL;
 	delete mImageScreensaver;
 	mImageScreensaver = NULL;
+
+	// if we're not changing videos or images, let's delete the random list
+	if (!toResume) {
+		mAllFiles.clear();
+		mSystem = NULL;
+	}
 
 	// Exit the indexing thread in case it's running. Check if thread still exists.
 	if (Settings::getInstance()->getBool("BackgroundIndexing") && mThread)
@@ -321,10 +329,16 @@ void SystemScreenSaver::backgroundIndexing()
 	LOG(LogDebug) << "Indexed a total of " << lastIndex << " entries in " << std::chrono::duration_cast<std::chrono::milliseconds>(endTs - startTs).count() << " ms. Stopping.";
 }
 
+void SystemScreenSaver::getAllGamelistNodesForSystem(SystemData* system) {
+	std::vector<FileData*> subsysFiles {};
 
-std::vector<FileData*> SystemScreenSaver::getAllGamelistNodes()
+	FileData* rootFileData = system->getRootFolder();
+	subsysFiles = rootFileData->getFilesRecursive(FileType::GAME, true);
+	mAllFiles.insert(mAllFiles.end(), subsysFiles.begin(), subsysFiles.end());
+}
+
+void SystemScreenSaver::getAllGamelistNodes()
 {
-	std::vector<FileData*> allFiles {};
 	std::vector<FileData*> subsysFiles {};
 	for (std::vector<SystemData*>::const_iterator it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); ++it)
 	{
@@ -332,12 +346,8 @@ std::vector<FileData*> SystemScreenSaver::getAllGamelistNodes()
 		if (!(*it)->isGameSystem() || (*it)->isCollection())
 			continue;
 
-		FileData* rootFileData = (*it)->getRootFolder();
-		subsysFiles = rootFileData->getFilesRecursive(FileType::GAME, true);
-		allFiles.insert(allFiles.end(), subsysFiles.begin(), subsysFiles.end());
+		getAllGamelistNodesForSystem(*it);
 	}
-
-	return allFiles;
 }
 
 
@@ -348,7 +358,12 @@ void SystemScreenSaver::pickGameListNode(const char *nodeName, std::string& path
 	int missCtr = 0;
 	while (!found) {
 		if (mAllFiles.empty()) {
-			mAllFiles = getAllGamelistNodes();
+			if (mSystem) {
+				getAllGamelistNodesForSystem(mSystem);
+			}
+			else {
+				getAllGamelistNodes();
+			}
 			if (mAllFiles.empty()) { return; } // no games at all
 			mAllFilesSize = mAllFiles.size();
 			std::shuffle(std::begin(mAllFiles), std::end(mAllFiles), SystemData::sURNG);
@@ -375,8 +390,8 @@ void SystemScreenSaver::pickGameListNode(const char *nodeName, std::string& path
 
 	if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
 	{
-		auto systemName = mCurrentGame->getSystem()->getFullName();
-		writeSubtitle(mCurrentGame->getName().c_str(), systemName.c_str(),
+		auto systemName = mCurrentGame->getSourceFileData()->getSystem()->getFullName();
+		writeSubtitle(mCurrentGame->getSourceFileData()->getName().c_str(), systemName.c_str(),
 			(Settings::getInstance()->getString("ScreenSaverGameInfo") == "always"));
 	}
 }
@@ -491,8 +506,8 @@ void SystemScreenSaver::update(int deltaTime)
 
 void SystemScreenSaver::nextMediaItem() {
 	mStopBackgroundAudio = false;
-	stopScreenSaver();
-	startScreenSaver();
+	stopScreenSaver(true);
+	startScreenSaver(mSystem);
 	mState = STATE_SCREENSAVER_ACTIVE;
 }
 
@@ -501,7 +516,7 @@ FileData* SystemScreenSaver::getCurrentGame()
 	return mCurrentGame;
 }
 
-void SystemScreenSaver::launchGame()
+void SystemScreenSaver::selectGame(bool launch)
 {
 	if (mCurrentGame != NULL)
 	{
@@ -513,7 +528,8 @@ void SystemScreenSaver::launchGame()
 		ViewController::get()->goToGameList(mCurrentGame->getSystem());
 		IGameListView* view = ViewController::get()->getGameListView(mCurrentGame->getSystem()).get();
 		view->setCursor(mCurrentGame);
-		view->launch(mCurrentGame);
+		if (launch)
+			view->launch(mCurrentGame);
 	}
 }
 

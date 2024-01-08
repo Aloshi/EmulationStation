@@ -131,7 +131,7 @@ void Window::input(InputConfig* config, Input input)
 	}
 
 	mTimeSinceLastInput = 0;
-	if (cancelScreenSaver())
+	if (input.value != 0 && cancelScreenSaver())
 		return;
 
 	bool dbg_keyboard_key_press = Settings::getInstance()->getBool("Debug") && config->getDeviceId() == DEVICE_KEYBOARD && input.value;
@@ -163,11 +163,12 @@ bool Window::inputDuringScreensaver(InputConfig* config, Input input)
 
 	if (!mSleeping && (screensaver_type == "random video" || screensaver_type == "slideshow"))
 	{
-		bool is_select_input = config->isMappedLike("right", input) || config->isMappedTo("select", input);
+		bool is_next_input = config->isMappedLike("right", input) || config->isMappedTo("select", input);
 		bool is_start_input = config->isMappedTo("start", input);
+		bool is_select_game_input =  config->isMappedTo("a", input);
 		bool slideshow_custom_media = Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource");
 
-		if (is_select_input)
+		if (is_next_input)
 		{
 			if (input.value != 0) {
 				mScreenSaver->nextMediaItem();
@@ -177,9 +178,9 @@ bool Window::inputDuringScreensaver(InputConfig* config, Input input)
 			// avoid to disable screensaver
 			input_consumed = true;
 		}
-		else if (is_start_input && !slideshow_custom_media && input.value != 0)
+		else if ((is_start_input || is_select_game_input) && !slideshow_custom_media && input.value != 0)
 		{
-			mScreenSaver->launchGame();
+			mScreenSaver->selectGame(is_start_input);
 		}
 		else if (config->getMappedTo(input).size() == 0) {
 			// catch invalid inputs here to prevent screensaver from stopping
@@ -450,7 +451,7 @@ bool Window::isProcessing()
 	return count_if(mGuiStack.cbegin(), mGuiStack.cend(), [](GuiComponent* c) { return c->isProcessing(); }) > 0;
 }
 
-void Window::startScreenSaver()
+void Window::startScreenSaver(SystemData* system)
 {
 	if (mScreenSaver && !mRenderScreenSaver)
 	{
@@ -459,7 +460,7 @@ void Window::startScreenSaver()
 		for(auto i = mGuiStack.cbegin(); i != mGuiStack.cend(); i++)
 			(*i)->onScreenSaverActivate();
 
-		mScreenSaver->startScreenSaver();
+		mScreenSaver->startScreenSaver(system);
 		mRenderScreenSaver = true;
 	}
 }

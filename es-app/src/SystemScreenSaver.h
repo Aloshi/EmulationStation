@@ -16,8 +16,8 @@ public:
 	SystemScreenSaver(Window* window);
 	virtual ~SystemScreenSaver();
 
-	virtual void startScreenSaver();
-	virtual void stopScreenSaver();
+	virtual void startScreenSaver(SystemData* system=NULL);
+	virtual void stopScreenSaver(bool toResume=false);
 	virtual void nextMediaItem();
 	virtual void renderScreenSaver();
 	virtual bool allowSleep();
@@ -25,7 +25,7 @@ public:
 	virtual bool isScreenSaverActive();
 
 	virtual FileData* getCurrentGame();
-	virtual void launchGame();
+	virtual void selectGame(bool launch);
 
 private:
 	void pickGameListNode(const char *nodeName, std::string& path);
@@ -36,7 +36,8 @@ private:
 	void setImageScreensaver(std::string& path);
 	bool isFileVideo(std::string& path);
 	std::vector<std::string> getCustomMediaFiles(const std::string &mediaDir);
-	std::vector<FileData*> getAllGamelistNodes();
+	void getAllGamelistNodes();
+	void getAllGamelistNodesForSystem(SystemData* system);
 	void backgroundIndexing();
 	void setBackground();
 	void input(InputConfig* config, Input input);
@@ -52,6 +53,7 @@ private:
 	VideoComponent*		mVideoScreensaver;
 	ImageComponent*		mImageScreensaver;
 	Window*			mWindow;
+	SystemData*		mSystem;
 	STATE			mState;
 	float			mOpacity;
 	int			mTimer;
