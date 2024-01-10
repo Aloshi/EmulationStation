@@ -65,6 +65,8 @@ public:
 		VIDEO
 	};
 
+	ViewController::GameListViewType getGameListViewType();
+
 	struct State
 	{
 		ViewMode viewing;
