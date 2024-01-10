@@ -23,7 +23,6 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	ComponentListRow row;
 
 	// add launch system screensaver 
-
 	std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
 
 	if (screensaver_behavior == "random video" || (screensaver_behavior == "slideshow" && !Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource"))) {

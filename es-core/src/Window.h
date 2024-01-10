@@ -26,13 +26,13 @@ public:
 	public:
 		virtual void startScreenSaver(SystemData* system=NULL) = 0;
 		virtual void stopScreenSaver(bool toResume=false) = 0;
-		virtual void nextMediaItem() = 0;
 		virtual void renderScreenSaver() = 0;
 		virtual bool allowSleep() = 0;
 		virtual void update(int deltaTime) = 0;
 		virtual bool isScreenSaverActive() = 0;
 		virtual FileData* getCurrentGame() = 0;
 		virtual void selectGame(bool launch) = 0;
+		virtual bool inputDuringScreensaver(InputConfig* config, Input input) = 0;
 	};
 
 	class InfoPopup {
@@ -80,7 +80,6 @@ public:
 private:
 	void onSleep();
 	void onWake();
-	bool inputDuringScreensaver(InputConfig* config, Input input);
 
 	// Returns true if at least one component on the stack is processing
 	bool isProcessing();

@@ -117,8 +117,9 @@ void Window::textInput(const char* text)
 void Window::input(InputConfig* config, Input input)
 {
 	if (mScreenSaver && mScreenSaver->isScreenSaverActive() && Settings::getInstance()->getBool("ScreenSaverControls")
-		&& inputDuringScreensaver(config, input))
+		&& mScreenSaver->inputDuringScreensaver(config, input))
 	{
+		mTimeSinceLastInput = 0;
 		return;
 	}
 
@@ -154,40 +155,6 @@ void Window::input(InputConfig* config, Input input)
 	{
 		this->peekGui()->input(config, input); // this is where the majority of inputs will be consumed: the GuiComponent Stack
 	}
-}
-
-bool Window::inputDuringScreensaver(InputConfig* config, Input input)
-{
-	bool input_consumed = false;
-	std::string screensaver_type = Settings::getInstance()->getString("ScreenSaverBehavior");
-
-	if (!mSleeping && (screensaver_type == "random video" || screensaver_type == "slideshow"))
-	{
-		bool is_next_input = config->isMappedLike("right", input) || config->isMappedTo("select", input);
-		bool is_start_input = config->isMappedTo("start", input);
-		bool is_select_game_input =  config->isMappedTo("a", input);
-		bool slideshow_custom_media = Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource");
-
-		if (is_next_input)
-		{
-			if (input.value != 0) {
-				mScreenSaver->nextMediaItem();
-				// user input resets sleep time counter
-				mTimeSinceLastInput = 0;
-			}
-			// avoid to disable screensaver
-			input_consumed = true;
-		}
-		else if ((is_start_input || is_select_game_input) && !slideshow_custom_media && input.value != 0)
-		{
-			mScreenSaver->selectGame(is_start_input);
-		}
-		else if (config->getMappedTo(input).size() == 0) {
-			// catch invalid inputs here to prevent screensaver from stopping
-			input_consumed = true;
-		}
-	}
-	return input_consumed;
 }
 
 void Window::update(int deltaTime)
@@ -274,7 +241,7 @@ void Window::render()
 	// or not because it may perform a fade on transition
 	renderScreenSaver();
 
-	if(!mRenderScreenSaver && mInfoPopup)
+	if(mInfoPopup)
 	{
 		mInfoPopup->render(transform);
 	}

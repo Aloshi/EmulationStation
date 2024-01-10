@@ -18,7 +18,6 @@ public:
 
 	virtual void startScreenSaver(SystemData* system=NULL);
 	virtual void stopScreenSaver(bool toResume=false);
-	virtual void nextMediaItem();
 	virtual void renderScreenSaver();
 	virtual bool allowSleep();
 	virtual void update(int deltaTime);
@@ -26,11 +25,14 @@ public:
 
 	virtual FileData* getCurrentGame();
 	virtual void selectGame(bool launch);
+	virtual bool inputDuringScreensaver(InputConfig* config, Input input);
 
 private:
-	void pickGameListNode(const char *nodeName, std::string& path);
-	void pickRandomVideo(std::string& path);
-	void pickRandomGameListImage(std::string& path);
+	void changeMediaItem(bool next = true);
+	void pickGameListNode(const char *nodeName);
+	void prepareScreenSaverMedia(const char *nodeName, std::string& path);
+	void pickRandomVideo(std::string& path, bool keepSame = false);
+	void pickRandomGameListImage(std::string& path, bool keepSame = false);
 	void pickRandomCustomMedia(std::string& path);
 	void setVideoScreensaver(std::string& path);
 	void setImageScreensaver(std::string& path);
@@ -58,6 +60,7 @@ private:
 	float			mOpacity;
 	int			mTimer;
 	FileData*		mCurrentGame;
+	FileData*		mPreviousGame;
 	int			mSwapTimeout;
 	std::shared_ptr<Sound>	mBackgroundAudio;
 	bool			mStopBackgroundAudio;
