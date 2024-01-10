@@ -110,11 +110,11 @@ void RatingComponent::render(const Transform4x4f& parentTrans)
 	Transform4x4f trans = parentTrans * getTransform();
 	Renderer::setMatrix(trans);
 
-	mFilledTexture->bind();
-	Renderer::drawTriangleStrips(&mVertices[0], 4);
-
 	mUnfilledTexture->bind();
 	Renderer::drawTriangleStrips(&mVertices[4], 4);
+
+	mFilledTexture->bind();
+	Renderer::drawTriangleStrips(&mVertices[0], 4);
 
 	renderChildren(trans);
 }
