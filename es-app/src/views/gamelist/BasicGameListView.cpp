@@ -31,8 +31,15 @@ void BasicGameListView::onFileChanged(FileData* file, FileChangeType change)
 {
 	if(change == FILE_METADATA_CHANGED)
 	{
-		// might switch to a detailed view
-		ViewController::get()->reloadGameListView(this);
+		// might switch to a detailed view, 
+		// so, to avoid recreating the view when not needed, we check if we are on auto and 
+		// -- on basic (if we add details, might move to detailed)
+		// -- on detailed (if we add video, might upgrade to video)
+		// which are the only cases when an upgrade would happen, I believe?
+
+		if(ViewController::get()->getGameListViewType() == ViewController::AUTOMATIC && 
+			(this->getName() == "basic" || this->getName() == "detailed"))
+			ViewController::get()->reloadGameListView(this);
 		return;
 	}
 
