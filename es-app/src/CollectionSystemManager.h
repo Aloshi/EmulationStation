@@ -3,6 +3,7 @@
 #define ES_APP_COLLECTION_SYSTEM_MANAGER_H
 
 #include <map>
+#include <SDL_timer.h>
 #include <string>
 #include <vector>
 
@@ -71,7 +72,7 @@ public:
 	void exitEditMode();
 	inline bool isEditing() { return mIsEditingCustom; };
 	inline std::string getEditingCollection() { return mEditingCollection; };
-	bool toggleGameInCollection(FileData* file, int presscount);
+	bool toggleGameInCollection(FileData* file);
 
 	SystemData* getSystemToView(SystemData* sys);
 	void updateCollectionFolderMetadata(SystemData* sys);
@@ -88,6 +89,7 @@ private:
 	bool mIsEditingCustom;
 	std::string mEditingCollection;
 	CollectionSystemData* mEditingCollectionSystemData;
+	Uint32 mFirstPressMs = 0;
 
 	void initAutoCollectionSystems();
 	void initCustomCollectionSystems();
@@ -111,8 +113,11 @@ private:
 	bool includeFileInAutoCollections(FileData* file);
 
 	bool needDoublePress(int presscount);
+	int getPressCountInDuration();
 
 	SystemData* mCustomCollectionsBundle;
+
+	static const int DOUBLE_PRESS_DETECTION_DURATION = 1500; // millis
 };
 
 std::string getCustomCollectionConfigPath(std::string collectionName);

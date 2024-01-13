@@ -7,6 +7,7 @@
 #include "CollectionSystemManager.h"
 #include "utils/FileSystemUtil.h"
 #include "views/gamelist/IGameListView.h"
+#include "views/UIModeController.h"
 #include "views/ViewController.h"
 #include "FileData.h"
 #include "FileFilterIndex.h"
@@ -33,8 +34,11 @@ SystemScreenSaver::SystemScreenSaver(Window* window) :
 	mOpacity(0.0f),
 	mTimer(0),
 	mCurrentGame(NULL),
-	mStopBackgroundAudio(true)
+	mPreviousGame(NULL),
+	mStopBackgroundAudio(true),
+	mSystem(NULL)
 {
+	remove(getTitlePath().c_str());
 	mWindow->setScreenSaver(this);
 	std::string path = getTitleFolder();
 	if(!Utils::FileSystem::exists(path))
@@ -60,6 +64,51 @@ bool SystemScreenSaver::allowSleep()
 bool SystemScreenSaver::isScreenSaverActive()
 {
 	return (mState != STATE_INACTIVE);
+}
+
+bool SystemScreenSaver::inputDuringScreensaver(InputConfig* config, Input input)
+{
+	bool input_consumed = false;
+	std::string screensaver_type = Settings::getInstance()->getString("ScreenSaverBehavior");
+
+	if (!mWindow->isSleeping() && (screensaver_type == "random video" || screensaver_type == "slideshow"))
+	{
+		bool is_next_input = config->isMappedLike("right", input) || config->isMappedTo("select", input);
+		bool is_previous_input = config->isMappedLike("left", input);
+		bool is_favorite_input = config->isMappedLike("y", input);
+		bool is_start_input = config->isMappedTo("start", input);
+		bool is_select_game_input =  config->isMappedTo("a", input);
+		bool slideshow_custom_media = Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource");
+
+		if (input.value != 0) {
+			if (is_next_input)
+			{
+				changeMediaItem();
+				input_consumed = true;
+			}
+			else if (is_previous_input && mPreviousGame && input.value != 0 && (screensaver_type == "random video" || !slideshow_custom_media))
+			{
+				changeMediaItem(false);
+				input_consumed = true;
+			}
+			else if ((is_start_input || is_select_game_input) && (screensaver_type == "random video" || !slideshow_custom_media) && input.value != 0)
+			{
+				selectGame(is_start_input);
+			}
+			else if (is_favorite_input && !UIModeController::getInstance()->isUIModeKid())
+			{
+				if (mCurrentGame)
+				{
+					CollectionSystemManager::get()->toggleGameInCollection(mCurrentGame);
+				}
+				input_consumed = true;
+			}	
+		}
+		
+		// catch any valid screensaver or invalid inputs here to prevent screensaver from stopping
+		input_consumed = input_consumed || (config->getMappedTo(input).size() == 0);
+	}
+	return input_consumed;
 }
 
 void SystemScreenSaver::setVideoScreensaver(std::string& path)
@@ -128,8 +177,9 @@ bool SystemScreenSaver::isFileVideo(std::string& path)
 	return pathFilter.find(pathExtension) != std::string::npos;
 }
 
-void SystemScreenSaver::startScreenSaver()
+void SystemScreenSaver::startScreenSaver(SystemData* system)
 {
+	mSystem = system;
 	// if set to index files in background, start thread
 	if (Settings::getInstance()->getBool("BackgroundIndexing"))
 	{
@@ -149,7 +199,7 @@ void SystemScreenSaver::startScreenSaver()
 
 		// Load a random video
 		std::string path = "";
-		pickRandomVideo(path);
+		pickRandomVideo(path, mCurrentGame != NULL);
 
 		int retry = 200;
 		while(retry > 0 && ((path.empty() || !Utils::FileSystem::exists(path)) || mCurrentGame == NULL))
@@ -187,7 +237,8 @@ void SystemScreenSaver::startScreenSaver()
 		}
 		else
 		{
-			pickRandomGameListImage(path);
+			if (!mCurrentGame)
+				pickRandomGameListImage(path, mCurrentGame != NULL);
 		}
 
 		if (isFileVideo(path))
@@ -219,7 +270,7 @@ void SystemScreenSaver::startScreenSaver()
 	mCurrentGame = NULL;
 }
 
-void SystemScreenSaver::stopScreenSaver()
+void SystemScreenSaver::stopScreenSaver(bool toResume)
 {
 	if ((mBackgroundAudio) && (mStopBackgroundAudio))
 	{
@@ -236,6 +287,15 @@ void SystemScreenSaver::stopScreenSaver()
 	mVideoScreensaver = NULL;
 	delete mImageScreensaver;
 	mImageScreensaver = NULL;
+
+	if (!toResume) {
+		// if we're not changing videos or images, let's delete the random list
+		// and all the scrensaver session-related variables
+		mCurrentGame = NULL;
+		mPreviousGame = NULL;
+		mAllFiles.clear();
+		mSystem = NULL;
+	}
 
 	// Exit the indexing thread in case it's running. Check if thread still exists.
 	if (Settings::getInstance()->getBool("BackgroundIndexing") && mThread)
@@ -321,10 +381,15 @@ void SystemScreenSaver::backgroundIndexing()
 	LOG(LogDebug) << "Indexed a total of " << lastIndex << " entries in " << std::chrono::duration_cast<std::chrono::milliseconds>(endTs - startTs).count() << " ms. Stopping.";
 }
 
+void SystemScreenSaver::getAllGamelistNodesForSystem(SystemData* system) {
+	std::vector<FileData*> subsysFiles {};
+	FileData* rootFileData = system->getRootFolder();
+	subsysFiles = rootFileData->getFilesRecursive(FileType::GAME, true);
+	mAllFiles.insert(mAllFiles.end(), subsysFiles.begin(), subsysFiles.end());
+}
 
-std::vector<FileData*> SystemScreenSaver::getAllGamelistNodes()
+void SystemScreenSaver::getAllGamelistNodes()
 {
-	std::vector<FileData*> allFiles {};
 	std::vector<FileData*> subsysFiles {};
 	for (std::vector<SystemData*>::const_iterator it = SystemData::sSystemVector.cbegin(); it != SystemData::sSystemVector.cend(); ++it)
 	{
@@ -332,23 +397,23 @@ std::vector<FileData*> SystemScreenSaver::getAllGamelistNodes()
 		if (!(*it)->isGameSystem() || (*it)->isCollection())
 			continue;
 
-		FileData* rootFileData = (*it)->getRootFolder();
-		subsysFiles = rootFileData->getFilesRecursive(FileType::GAME, true);
-		allFiles.insert(allFiles.end(), subsysFiles.begin(), subsysFiles.end());
+		getAllGamelistNodesForSystem(*it);
 	}
-
-	return allFiles;
 }
 
-
-void SystemScreenSaver::pickGameListNode(const char *nodeName, std::string& path)
+void SystemScreenSaver::pickGameListNode(const char *nodeName)
 {
 	FileData *itf = nullptr;
 	bool found =  false;
 	int missCtr = 0;
 	while (!found) {
 		if (mAllFiles.empty()) {
-			mAllFiles = getAllGamelistNodes();
+			if (mSystem) {
+				getAllGamelistNodesForSystem(mSystem);
+			}
+			else {
+				getAllGamelistNodes();
+			}
 			if (mAllFiles.empty()) { return; } // no games at all
 			mAllFilesSize = mAllFiles.size();
 			std::shuffle(std::begin(mAllFiles), std::end(mAllFiles), SystemData::sURNG);
@@ -370,27 +435,35 @@ void SystemScreenSaver::pickGameListNode(const char *nodeName, std::string& path
 		}
 	}
 
-	path = (strcmp(nodeName, "video") == 0) ? itf->getVideoPath() : itf->getImagePath();
 	mCurrentGame = itf;
+}
 
-	if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
-	{
-		auto systemName = mCurrentGame->getSystem()->getFullName();
-		writeSubtitle(mCurrentGame->getName().c_str(), systemName.c_str(),
-			(Settings::getInstance()->getString("ScreenSaverGameInfo") == "always"));
+void SystemScreenSaver::prepareScreenSaverMedia(const char *nodeName, std::string& path)
+{
+	if (mCurrentGame) {
+		path = (strcmp(nodeName, "video") == 0) ? mCurrentGame->getVideoPath() : mCurrentGame->getImagePath();
+		if (Settings::getInstance()->getString("ScreenSaverGameInfo") != "never")
+		{
+			auto systemName = mCurrentGame->getSourceFileData()->getSystem()->getFullName();
+			writeSubtitle(mCurrentGame->getSourceFileData()->getName().c_str(), systemName.c_str(),
+				(Settings::getInstance()->getString("ScreenSaverGameInfo") == "always"));
+		}
 	}
 }
 
-void SystemScreenSaver::pickRandomVideo(std::string& path)
+
+void SystemScreenSaver::pickRandomVideo(std::string& path, bool keepSame)
 {
-	mCurrentGame = NULL;
-	pickGameListNode("video", path);
+	if (!keepSame)
+		pickGameListNode("video");
+	prepareScreenSaverMedia("video", path);
 }
 
-void SystemScreenSaver::pickRandomGameListImage(std::string& path)
+void SystemScreenSaver::pickRandomGameListImage(std::string& path, bool keepSame)
 {
-	mCurrentGame = NULL;
-	pickGameListNode("image", path);
+	if (!keepSame)
+		pickGameListNode("image");
+	prepareScreenSaverMedia("image", path);
 }
 
 void SystemScreenSaver::pickRandomCustomMedia(std::string& path)
@@ -478,7 +551,7 @@ void SystemScreenSaver::update(int deltaTime)
 		mTimer += deltaTime;
 		if (mTimer > mSwapTimeout)
 		{
-			nextMediaItem();
+			changeMediaItem();
 		}
 	}
 
@@ -489,10 +562,21 @@ void SystemScreenSaver::update(int deltaTime)
 		mImageScreensaver->update(deltaTime);
 }
 
-void SystemScreenSaver::nextMediaItem() {
+void SystemScreenSaver::changeMediaItem(bool next) {
+	if (!next) {
+		// swap entries
+		FileData* tmpGame = mCurrentGame;
+		mCurrentGame = mPreviousGame;
+		mPreviousGame = tmpGame;
+	}
+	else
+	{
+		mPreviousGame = mCurrentGame;
+		mCurrentGame = NULL;
+	}
 	mStopBackgroundAudio = false;
-	stopScreenSaver();
-	startScreenSaver();
+	stopScreenSaver(true);
+	startScreenSaver(mSystem);
 	mState = STATE_SCREENSAVER_ACTIVE;
 }
 
@@ -501,19 +585,21 @@ FileData* SystemScreenSaver::getCurrentGame()
 	return mCurrentGame;
 }
 
-void SystemScreenSaver::launchGame()
+void SystemScreenSaver::selectGame(bool launch)
 {
 	if (mCurrentGame != NULL)
 	{
 		//Stop screensaver
 		mStopBackgroundAudio = true;
+		FileData* gameToSelect = mCurrentGame;
 		stopScreenSaver();
 
 		// launching Game
-		ViewController::get()->goToGameList(mCurrentGame->getSystem());
-		IGameListView* view = ViewController::get()->getGameListView(mCurrentGame->getSystem()).get();
-		view->setCursor(mCurrentGame);
-		view->launch(mCurrentGame);
+		ViewController::get()->goToGameList(gameToSelect->getSystem());
+		IGameListView* view = ViewController::get()->getGameListView(gameToSelect->getSystem()).get();
+		view->setCursor(gameToSelect);
+		if (launch)
+			view->launch(gameToSelect);
 	}
 }
 

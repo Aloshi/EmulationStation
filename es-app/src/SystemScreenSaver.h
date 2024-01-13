@@ -16,27 +16,30 @@ public:
 	SystemScreenSaver(Window* window);
 	virtual ~SystemScreenSaver();
 
-	virtual void startScreenSaver();
-	virtual void stopScreenSaver();
-	virtual void nextMediaItem();
+	virtual void startScreenSaver(SystemData* system=NULL);
+	virtual void stopScreenSaver(bool toResume=false);
 	virtual void renderScreenSaver();
 	virtual bool allowSleep();
 	virtual void update(int deltaTime);
 	virtual bool isScreenSaverActive();
 
 	virtual FileData* getCurrentGame();
-	virtual void launchGame();
+	virtual void selectGame(bool launch);
+	virtual bool inputDuringScreensaver(InputConfig* config, Input input);
 
 private:
-	void pickGameListNode(const char *nodeName, std::string& path);
-	void pickRandomVideo(std::string& path);
-	void pickRandomGameListImage(std::string& path);
+	void changeMediaItem(bool next = true);
+	void pickGameListNode(const char *nodeName);
+	void prepareScreenSaverMedia(const char *nodeName, std::string& path);
+	void pickRandomVideo(std::string& path, bool keepSame = false);
+	void pickRandomGameListImage(std::string& path, bool keepSame = false);
 	void pickRandomCustomMedia(std::string& path);
 	void setVideoScreensaver(std::string& path);
 	void setImageScreensaver(std::string& path);
 	bool isFileVideo(std::string& path);
 	std::vector<std::string> getCustomMediaFiles(const std::string &mediaDir);
-	std::vector<FileData*> getAllGamelistNodes();
+	void getAllGamelistNodes();
+	void getAllGamelistNodesForSystem(SystemData* system);
 	void backgroundIndexing();
 	void setBackground();
 	void input(InputConfig* config, Input input);
@@ -52,10 +55,12 @@ private:
 	VideoComponent*		mVideoScreensaver;
 	ImageComponent*		mImageScreensaver;
 	Window*			mWindow;
+	SystemData*		mSystem;
 	STATE			mState;
 	float			mOpacity;
 	int			mTimer;
 	FileData*		mCurrentGame;
+	FileData*		mPreviousGame;
 	int			mSwapTimeout;
 	std::shared_ptr<Sound>	mBackgroundAudio;
 	bool			mStopBackgroundAudio;

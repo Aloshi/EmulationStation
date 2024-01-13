@@ -30,8 +30,6 @@ public:
 	virtual bool input(InputConfig* config, Input input) override;
 	virtual void launch(FileData* game) override = 0;
 
-	static const int DOUBLE_PRESS_DETECTION_DURATION = 1500; // millis
-
 protected:
 	static const int DESCRIPTION_SCROLL_DELAY = 5 * 1000; // five secs
 
@@ -49,7 +47,6 @@ protected:
 
 private:
 	int getPressCountInDuration();
-	Uint32 firstPressMs = 0;
 };
 
 #endif // ES_APP_VIEWS_GAME_LIST_ISIMPLE_GAME_LIST_VIEW_H

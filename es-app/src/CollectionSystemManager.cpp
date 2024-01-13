@@ -456,8 +456,18 @@ void CollectionSystemManager::exitEditMode()
 	mEditingCollectionSystemData->system->onMetaDataSavePoint();
 }
 
+int CollectionSystemManager::getPressCountInDuration() {
+	Uint32 now = SDL_GetTicks();
+	if (now - mFirstPressMs < DOUBLE_PRESS_DETECTION_DURATION) {
+		return 2;
+	} else {
+		mFirstPressMs = now;
+		return 1;
+	}
+}
+
 // adds or removes a game from a specific collection
-bool CollectionSystemManager::toggleGameInCollection(FileData* file, int presscount)
+bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 {
 	if (file->getType() == GAME)
 	{
@@ -483,7 +493,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file, int pressco
 			SystemData* systemViewToUpdate = getSystemToView(sysData);
 
 			if (found) {
-				if (needDoublePress(presscount)) {
+				if (needDoublePress(getPressCountInDuration())) {
 					return true;
 				}
 				adding = false;
@@ -527,7 +537,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file, int pressco
 			}
 			else
 			{
-				if (needDoublePress(presscount)) {
+				if (needDoublePress(getPressCountInDuration())) {
 					return true;
 				}
 				adding = false;
@@ -547,6 +557,7 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file, int pressco
 		{
 			s = new GuiInfoPopup(mWindow, "Removed '" + Utils::String::removeParenthesis(name) + "' from '" + Utils::String::toUpper(sysName) + "'", 4000);
 		}
+		
 		mWindow->setInfoPopup(s);
 		return true;
 	}
@@ -1061,7 +1072,7 @@ bool CollectionSystemManager::includeFileInAutoCollections(FileData* file)
 bool CollectionSystemManager::needDoublePress(int presscount) {
 	if (Settings::getInstance()->getBool("DoublePressRemovesFromFavs") && presscount < 2) {
 		GuiInfoPopup* toast = new GuiInfoPopup(mWindow, "Press again to remove from '" + Utils::String::toUpper(mEditingCollection)
-		+ "'", ISimpleGameListView::DOUBLE_PRESS_DETECTION_DURATION, 100, 200);
+		+ "'", DOUBLE_PRESS_DETECTION_DURATION, 100, 200);
 		mWindow->setInfoPopup(toast);
 		return true;
 	}
