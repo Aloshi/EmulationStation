@@ -68,8 +68,8 @@ public:
 	bool isThemeCustomCollectionCompatible(std::vector<std::string> stringVector);
 	std::string getValidNewCollectionName(std::string name, int index = 0);
 
-	void setEditMode(std::string collectionName);
-	void exitEditMode();
+	void setEditMode(std::string collectionName, bool quiet = false);
+	void exitEditMode(bool quiet = false);
 	inline bool isEditing() { return mIsEditingCustom; };
 	inline std::string getEditingCollection() { return mEditingCollection; };
 	bool toggleGameInCollection(FileData* file);

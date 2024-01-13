@@ -147,6 +147,7 @@ void SystemScreenSaver::setVideoScreensaver(std::string& path)
 	mVideoScreensaver->setScreensaverMode(true);
 	mVideoScreensaver->onShow();
 
+	setupScreenSaverEditingCollection();
 	PowerSaver::runningScreenSaver(true);
 	mTimer = 0;
 }
@@ -171,6 +172,7 @@ void SystemScreenSaver::setImageScreensaver(std::string& path)
 			mImageScreensaver->setMaxSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 		}
 
+		setupScreenSaverEditingCollection();
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
 }
@@ -183,6 +185,31 @@ bool SystemScreenSaver::isFileVideo(std::string& path)
 	std::string pathFilter = Settings::getInstance()->getString("SlideshowScreenSaverVideoFilter");
 	std::string pathExtension = path.substr(path.find_last_of("."));
 	return pathFilter.find(pathExtension) != std::string::npos;
+}
+
+void SystemScreenSaver::setupScreenSaverEditingCollection()
+{
+	std::string screensaverCollection = Settings::getInstance()->getString("DefaultScreenSaverCollection");
+	std::string currentEditingCollection = CollectionSystemManager::get()->getEditingCollection();
+
+	// check if we need to change the screensaver collection
+	if (screensaverCollection != "") {
+		// check if we're starting the screensaver
+		if (isScreenSaverActive())
+		{		
+			// we're entering the screensaver, backup the currently actively editing collection
+			mRegularEditingCollection = CollectionSystemManager::get()->getEditingCollection();
+			CollectionSystemManager::get()->setEditMode(screensaverCollection, true);
+		}
+		else
+		{
+			// we're exiting the screensaver, restore the currently actively editing collection
+			CollectionSystemManager::get()->exitEditMode(true);
+			if (mRegularEditingCollection != "Favorites")
+				CollectionSystemManager::get()->setEditMode(mRegularEditingCollection, true);
+			mRegularEditingCollection = "";
+		}
+	}
 }
 
 void SystemScreenSaver::startScreenSaver(SystemData* system)
@@ -312,6 +339,7 @@ void SystemScreenSaver::stopScreenSaver(bool toResume)
 
 	// we need this to loop through different videos
 	mState = STATE_INACTIVE;
+	setupScreenSaverEditingCollection();
 	PowerSaver::runningScreenSaver(false);
 }
 
