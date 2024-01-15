@@ -95,7 +95,7 @@ bool SystemScreenSaver::inputDuringScreensaver(InputConfig* config, Input input)
 			{
 				selectGame(is_start_input);
 			}
-			else if (is_favorite_input && !UIModeController::getInstance()->isUIModeKid())
+			else if (is_favorite_input && !UIModeController::getInstance()->isUIModeKid() && (screensaver_type == "random video" || !slideshow_custom_media))
 			{
 				if (mCurrentGame)
 				{
@@ -237,8 +237,7 @@ void SystemScreenSaver::startScreenSaver(SystemData* system)
 		}
 		else
 		{
-			if (!mCurrentGame)
-				pickRandomGameListImage(path, mCurrentGame != NULL);
+			pickRandomGameListImage(path, mCurrentGame != NULL);
 		}
 
 		if (isFileVideo(path))
