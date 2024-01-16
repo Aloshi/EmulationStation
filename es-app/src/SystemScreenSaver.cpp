@@ -271,6 +271,7 @@ void SystemScreenSaver::startScreenSaver(SystemData* system)
 
 void SystemScreenSaver::stopScreenSaver(bool toResume)
 {
+	remove(getTitlePath().c_str());
 	if ((mBackgroundAudio) && (mStopBackgroundAudio))
 	{
 		mBackgroundAudio->stop();
