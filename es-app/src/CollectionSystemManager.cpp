@@ -514,7 +514,11 @@ bool CollectionSystemManager::toggleGameInCollection(FileData* file)
 				CollectionFileData* newGame = new CollectionFileData(file, sysData);
 				rootFolder->addChild(newGame);
 				fileIndex->addToIndex(newGame);
-				ViewController::get()->getGameListView(systemViewToUpdate)->onFileChanged(newGame, FILE_METADATA_CHANGED);
+				// this is the biggest performance bottleneck for this process.
+				// this code has been here for 7 years, since this feature was added. 
+				// I might have been playing it safe back then, but it feels unnecessary, especially given following onFileChanged to sort
+				// Commenting this out for now.
+				//ViewController::get()->getGameListView(systemViewToUpdate)->onFileChanged(newGame, FILE_METADATA_CHANGED);
 				rootFolder->sort(getSortTypeFromString(mEditingCollectionSystemData->decl.defaultSort));
 				ViewController::get()->onFileChanged(systemViewToUpdate->getRootFolder(), FILE_SORTED);
 				// add to bundle index as well, if needed
