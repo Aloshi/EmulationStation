@@ -131,7 +131,7 @@ FileData* GridGameListView::getCursor()
 	return mGrid.getSelected();
 }
 
-void GridGameListView::setCursor(FileData* file)
+void GridGameListView::setCursor(FileData* file, bool refreshListCursorPos)
 {
 	if(!mGrid.setCursor(file) && (!file->isPlaceHolder()))
 	{

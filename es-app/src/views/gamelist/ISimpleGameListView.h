@@ -23,7 +23,7 @@ public:
 	virtual void onThemeChanged(const std::shared_ptr<ThemeData>& theme) override;
 
 	virtual FileData* getCursor() override = 0;
-	virtual void setCursor(FileData*) override = 0;
+	virtual void setCursor(FileData*, bool refreshListCursorPos = false) override = 0;
 	virtual int getViewportTop() override = 0;
 	virtual void setViewportTop(int index) override = 0;
 

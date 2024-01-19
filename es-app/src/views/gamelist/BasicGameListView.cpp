@@ -61,8 +61,11 @@ FileData* BasicGameListView::getCursor()
 	return mList.getSelected();
 }
 
-void BasicGameListView::setCursor(FileData* cursor)
+void BasicGameListView::setCursor(FileData* cursor, bool refreshListCursorPos)
 {
+	if (refreshListCursorPos)
+		setViewportTop(mList.REFRESH_LIST_CURSOR_POS);
+
 	if(!mList.setCursor(cursor) && (!cursor->isPlaceHolder()))
 	{
 		populateList(cursor->getParent()->getChildrenListToDisplay());

@@ -10,6 +10,7 @@
 #include "FileSorts.h"
 #include "GuiMetaDataEd.h"
 #include "SystemData.h"
+#include "components/TextListComponent.h"
 
 GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : GuiComponent(window),
 	mSystem(system), mMenu(window, "OPTIONS"), mFromPlaceholder(false), mFiltersChanged(false),
@@ -76,10 +77,13 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 			mMenu.addRow(row);
 		}
 
-		// add launch system screensaver 
+		// add launch system screensaver
 		std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
+		bool useGamelistMedia = screensaver_behavior == "random video" || (screensaver_behavior == "slideshow" && !Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource"));
+		bool rpConfigSelected = "retropie" == mSystem->getName();
+		bool collectionsSelected = mSystem->getName() == CollectionSystemManager::get()->getCustomCollectionsBundle()->getName();
 
-		if (screensaver_behavior == "random video" || (screensaver_behavior == "slideshow" && !Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource"))) {
+		if (!rpConfigSelected && useGamelistMedia && (!collectionsSelected || collectionsSelected && file->getType() == GAME)) {
 			row.elements.clear();
 			row.addElement(std::make_shared<TextComponent>(mWindow, "LAUNCH SYSTEM SCREENSAVER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 			row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::launchSystemScreenSaver, this));
@@ -157,8 +161,8 @@ GuiGamelistOptions::~GuiGamelistOptions()
 
 	if (mFiltersChanged || mMetadataChanged)
 	{
-		// put cursor in the middle if list longer than one display page
-		ViewController::get()->getGameListView(mSystem)->setViewportTop(-1);
+		// force refresh of cursor list position
+		ViewController::get()->getGameListView(mSystem)->setViewportTop(TextListComponent<FileData>::REFRESH_LIST_CURSOR_POS);
 		// re-display the elements for whatever new or renamed game is selected
 		ViewController::get()->reloadGameListView(mSystem);
 		if (mFiltersChanged) {
@@ -171,23 +175,19 @@ GuiGamelistOptions::~GuiGamelistOptions()
 bool GuiGamelistOptions::launchSystemScreenSaver()
 {
 	SystemData* system = mSystem;
-	std::string editingSystem = system->getName();
+	std::string systemName = system->getName();
 	// need to check if we're in a folder inside the collections bundle, to launch from there
-	if(editingSystem == CollectionSystemManager::get()->getCustomCollectionsBundle()->getName())
+	if(systemName == CollectionSystemManager::get()->getCustomCollectionsBundle()->getName())
 	{
-		FileData* file = getGamelist()->getCursor();
-		// do we have the cursor on a specific collection?
-		if (file->getType() == GAME)
-		{
-			// we are inside a specific collection. We want to launch for that one.
-			system = file->getSystem();
-		}
+		FileData* file = getGamelist()->getCursor(); // is GAME otherwise menuentry would have been hidden
+		// we are inside a specific collection. We want to launch for that one.
+		system = file->getSystem();
 	}
 	mWindow->startScreenSaver(system);
 	mWindow->renderScreenSaver();
 
 	delete this;
-	return true;	
+	return true;
 }
 
 void GuiGamelistOptions::openGamelistFilter()
@@ -236,7 +236,7 @@ void GuiGamelistOptions::openMetaDataEd()
 
 	std::function<void()> saveBtnFunc;
 	saveBtnFunc = [this, file] {
-		ViewController::get()->getGameListView(mSystem)->setViewportTop(-1);
+		ViewController::get()->getGameListView(mSystem)->setCursor(file, true);
 		mMetadataChanged = true;
 		ViewController::get()->getGameListView(file->getSystem())->onFileChanged(file, FILE_METADATA_CHANGED);
 	};

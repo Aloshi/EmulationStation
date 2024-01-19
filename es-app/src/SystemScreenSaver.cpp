@@ -1,4 +1,5 @@
 #include "SystemScreenSaver.h"
+#include "components/TextListComponent.h"
 
 #ifdef _OMX_
 #include "components/VideoPlayerComponent.h"
@@ -70,43 +71,50 @@ bool SystemScreenSaver::inputDuringScreensaver(InputConfig* config, Input input)
 {
 	bool input_consumed = false;
 	std::string screensaver_type = Settings::getInstance()->getString("ScreenSaverBehavior");
+	bool is_media_screensaver = screensaver_type == "random video" || screensaver_type == "slideshow";
 
-	if (!mWindow->isSleeping() && (screensaver_type == "random video" || screensaver_type == "slideshow"))
+	if (!mWindow->isSleeping() && is_media_screensaver)
 	{
+		// catch any valid screensaver or invalid inputs here to prevent screensaver from stopping
+		input_consumed = input_consumed || (config->getMappedTo(input).size() == 0);
+
 		bool is_next_input = config->isMappedLike("right", input) || config->isMappedTo("select", input);
 		bool is_previous_input = config->isMappedLike("left", input);
 		bool is_favorite_input = config->isMappedLike("y", input);
 		bool is_start_input = config->isMappedTo("start", input);
 		bool is_select_game_input =  config->isMappedTo("a", input);
-		bool slideshow_custom_media = Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource");
+		bool use_gamelistmedia = screensaver_type == "random video" || !Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource");
 
-		if (input.value != 0) {
+		// catch any valid screensaver or invalid inputs here to prevent screensaver from stopping
+		input_consumed = input_consumed || (config->getMappedTo(input).size() == 0);
+
+		if (input.value != 0)
+		{
 			if (is_next_input)
 			{
 				changeMediaItem();
 				input_consumed = true;
 			}
-			else if (is_previous_input && mPreviousGame && input.value != 0 && (screensaver_type == "random video" || !slideshow_custom_media))
+		    else if (use_gamelistmedia) 
 			{
-				changeMediaItem(false);
-				input_consumed = true;
-			}
-			else if ((is_start_input || is_select_game_input) && (screensaver_type == "random video" || !slideshow_custom_media) && input.value != 0)
-			{
-				selectGame(is_start_input);
-			}
-			else if (is_favorite_input && !UIModeController::getInstance()->isUIModeKid() && (screensaver_type == "random video" || !slideshow_custom_media))
-			{
-				if (mCurrentGame)
+				if (is_previous_input && mPreviousGame)
 				{
-					CollectionSystemManager::get()->toggleGameInCollection(mCurrentGame);
+					changeMediaItem(false);
+					input_consumed = true;
 				}
-				input_consumed = true;
-			}	
+				else if (is_start_input || is_select_game_input)
+				{
+					selectGame(is_start_input);
+					input_consumed = false;
+				}
+				else if (is_favorite_input && !UIModeController::getInstance()->isUIModeKid())
+				{
+					assert(mCurrentGame != NULL);
+					CollectionSystemManager::get()->toggleGameInCollection(mCurrentGame);
+					input_consumed = true;
+				}
+			}
 		}
-		
-		// catch any valid screensaver or invalid inputs here to prevent screensaver from stopping
-		input_consumed = input_consumed || (config->getMappedTo(input).size() == 0);
 	}
 	return input_consumed;
 }
@@ -241,13 +249,9 @@ void SystemScreenSaver::startScreenSaver(SystemData* system)
 		}
 
 		if (isFileVideo(path))
-		{
 			setVideoScreensaver(path);
-		}
 		else
-		{
 			setImageScreensaver(path);
-		}
 
 		std::string bg_audio_file = Settings::getInstance()->getString("SlideshowScreenSaverBackgroundAudioFile");
 		if (!mBackgroundAudio && bg_audio_file != "" && Utils::FileSystem::exists(bg_audio_file))
@@ -406,32 +410,34 @@ void SystemScreenSaver::pickGameListNode(const char *nodeName)
 	FileData *itf = nullptr;
 	bool found =  false;
 	int missCtr = 0;
-	while (!found) {
-		if (mAllFiles.empty()) {
-			if (mSystem) {
+	while (!found)
+	{
+		if (mAllFiles.empty())
+		{
+			if (mSystem)
 				getAllGamelistNodesForSystem(mSystem);
-			}
-			else {
+			else
 				getAllGamelistNodes();
-			}
+
 			if (mAllFiles.empty()) { return; } // no games at all
 			mAllFilesSize = mAllFiles.size();
 			std::shuffle(std::begin(mAllFiles), std::end(mAllFiles), SystemData::sURNG);
 		}
+
 		itf = mAllFiles.back();
 		mAllFiles.pop_back();
 		if ((strcmp(nodeName, "video") == 0 && itf->getVideoPath() != "") ||
 			(strcmp(nodeName, "image") == 0 && itf->getImagePath() != ""))
 		{
 			found = true;
-		} else {
+		}
+		else
+		{
 			missCtr++;
-			if (missCtr == mAllFilesSize) {
+			if (missCtr == mAllFilesSize)
 				// avoid looping forever when no candidate exist
 				// with image/video path set
 				return;
-			}
-
 		}
 	}
 
@@ -594,12 +600,18 @@ void SystemScreenSaver::selectGame(bool launch)
 		FileData* gameToSelect = mCurrentGame;
 		stopScreenSaver();
 
-		// launching Game
 		ViewController::get()->goToGameList(gameToSelect->getSystem());
 		IGameListView* view = ViewController::get()->getGameListView(gameToSelect->getSystem()).get();
-		view->setCursor(gameToSelect);
 		if (launch)
 			view->launch(gameToSelect);
+		else
+			// Flag true is set to re-calculate the cursor position on the visible gamelist section on screen.
+			// This flag is only to be set when there is no previous navigation state,
+			// i.e. when jumping to a game from the screensaver or launching a game.
+			// The latter case is covered in view->launch() ==> ViewController::launch().
+			// The former case must be flagged as below.
+			// see also: TextListComponent.REFRESH_LIST_CURSOR_POS and its usage for the 'true' flag
+			view->setCursor(gameToSelect, true);
 	}
 }
 
