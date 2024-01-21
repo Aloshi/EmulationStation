@@ -22,16 +22,6 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	mFromPlaceholder = file->isPlaceHolder();
 	ComponentListRow row;
 
-	// add launch system screensaver 
-	std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
-
-	if (screensaver_behavior == "random video" || (screensaver_behavior == "slideshow" && !Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource"))) {
-		row.elements.clear();
-		row.addElement(std::make_shared<TextComponent>(mWindow, "LAUNCH SYSTEM SCREENSAVER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
-		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::launchSystemScreenSaver, this));
-		mMenu.addRow(row);
-	}
-
 	if (!mFromPlaceholder) {
 		row.elements.clear();
 
@@ -83,6 +73,16 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 				}
 				return false;
 			};
+			mMenu.addRow(row);
+		}
+
+		// add launch system screensaver 
+		std::string screensaver_behavior = Settings::getInstance()->getString("ScreenSaverBehavior");
+
+		if (screensaver_behavior == "random video" || (screensaver_behavior == "slideshow" && !Settings::getInstance()->getBool("SlideshowScreenSaverCustomMediaSource"))) {
+			row.elements.clear();
+			row.addElement(std::make_shared<TextComponent>(mWindow, "LAUNCH SYSTEM SCREENSAVER", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+			row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::launchSystemScreenSaver, this));
 			mMenu.addRow(row);
 		}
 
@@ -184,6 +184,7 @@ bool GuiGamelistOptions::launchSystemScreenSaver()
 		}
 	}
 	mWindow->startScreenSaver(system);
+	mWindow->renderScreenSaver();
 
 	delete this;
 	return true;	

@@ -300,6 +300,10 @@ void VideoVlcComponent::startVideo()
 							}
 						}
 					}
+					else
+					{
+						remove(getTitlePath().c_str());
+					}
 					PowerSaver::pause();
 					setupContext();
 
