@@ -30,7 +30,10 @@ public:
 	inline const std::shared_ptr<ThemeData>& getTheme() const { return mTheme; }
 
 	virtual FileData* getCursor() = 0;
-	virtual void setCursor(FileData*) = 0;
+	// if flag is true then the cursor position on the visible gamelist section on screen is recalculated
+	// used only in list based views and only to be set true when there is no previous navigation to a game
+	// see also: TextListComponent.REFRESH_LIST_CURSOR_POS for the use 'true' flag
+	virtual void setCursor(FileData*, bool refreshListCursorPos = false) = 0;
 	virtual int getViewportTop() = 0;
 	virtual void setViewportTop(int index) = 0;
 
