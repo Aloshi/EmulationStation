@@ -424,7 +424,7 @@ std::string CollectionSystemManager::getValidNewCollectionName(std::string inNam
 	return name;
 }
 
-void CollectionSystemManager::setEditMode(std::string collectionName)
+void CollectionSystemManager::setEditMode(std::string collectionName, bool quiet)
 {
 	if (mCustomCollectionSystemsData.find(collectionName) == mCustomCollectionSystemsData.cend())
 	{
@@ -442,18 +442,24 @@ void CollectionSystemManager::setEditMode(std::string collectionName)
 	// if it's bundled, this needs to be the bundle system
 	mEditingCollectionSystemData = sysData;
 
-	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Editing the '" + Utils::String::toUpper(collectionName) + "' Collection. Add/remove games with Y.", 10000);
-	mWindow->setInfoPopup(s);
+	if (!quiet) {
+		GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Editing the '" + Utils::String::toUpper(collectionName) + "' Collection. Add/remove games with Y.", 10000);
+		mWindow->setInfoPopup(s);
+	}
 }
 
-void CollectionSystemManager::exitEditMode()
+void CollectionSystemManager::exitEditMode(bool quiet)
 {
-	GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Finished editing the '" + mEditingCollection + "' Collection.", 4000);
-	mWindow->setInfoPopup(s);
-	mIsEditingCustom = false;
-	mEditingCollection = "Favorites";
+	if (!quiet) {
+		GuiInfoPopup* s = new GuiInfoPopup(mWindow, "Finished editing the '" + mEditingCollection + "' Collection.", 4000);
+		mWindow->setInfoPopup(s);
+	}
+	if (mIsEditingCustom) {
+		mIsEditingCustom = false;
+		mEditingCollection = "Favorites";
 
-	mEditingCollectionSystemData->system->onMetaDataSavePoint();
+		mEditingCollectionSystemData->system->onMetaDataSavePoint();
+	}
 }
 
 int CollectionSystemManager::getPressCountInDuration() {

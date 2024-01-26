@@ -42,6 +42,7 @@ private:
 	void getAllGamelistNodesForSystem(SystemData* system);
 	void backgroundIndexing();
 	void setBackground();
+	void setupScreenSaverEditingCollection();
 	void input(InputConfig* config, Input input);
 
 	enum STATE {
@@ -69,6 +70,7 @@ private:
 	int			mAllFilesSize;
 	std::thread*		mThread;
 	bool			mExit;
+	std::string 		mRegularEditingCollection;
 };
 
 #endif // ES_APP_SYSTEM_SCREEN_SAVER_H
