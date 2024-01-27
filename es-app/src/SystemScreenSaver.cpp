@@ -147,7 +147,7 @@ void SystemScreenSaver::setVideoScreensaver(std::string& path)
 	mVideoScreensaver->setScreensaverMode(true);
 	mVideoScreensaver->onShow();
 
-	setupScreenSaverEditingCollection();
+	handleScreenSaverEditingCollection();
 	PowerSaver::runningScreenSaver(true);
 	mTimer = 0;
 }
@@ -172,7 +172,7 @@ void SystemScreenSaver::setImageScreensaver(std::string& path)
 			mImageScreensaver->setMaxSize((float)Renderer::getScreenWidth(), (float)Renderer::getScreenHeight());
 		}
 
-		setupScreenSaverEditingCollection();
+		handleScreenSaverEditingCollection();
 		PowerSaver::runningScreenSaver(true);
 		mTimer = 0;
 }
@@ -187,7 +187,7 @@ bool SystemScreenSaver::isFileVideo(std::string& path)
 	return pathFilter.find(pathExtension) != std::string::npos;
 }
 
-void SystemScreenSaver::setupScreenSaverEditingCollection()
+void SystemScreenSaver::handleScreenSaverEditingCollection()
 {
 	std::string screensaverCollection = Settings::getInstance()->getString("DefaultScreenSaverCollection");
 	std::string currentEditingCollection = CollectionSystemManager::get()->getEditingCollection();
@@ -339,7 +339,7 @@ void SystemScreenSaver::stopScreenSaver(bool toResume)
 
 	// we need this to loop through different videos
 	mState = STATE_INACTIVE;
-	setupScreenSaverEditingCollection();
+	handleScreenSaverEditingCollection();
 	PowerSaver::runningScreenSaver(false);
 }
 
