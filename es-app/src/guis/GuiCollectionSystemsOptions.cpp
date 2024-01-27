@@ -2,6 +2,7 @@
 
 #include "components/OptionListComponent.h"
 #include "components/SwitchComponent.h"
+#include "guis/GuiRandomCollectionOptions.h"
 #include "guis/GuiSettings.h"
 #include "guis/GuiTextEditPopup.h"
 #include "utils/StringUtil.h"
@@ -19,11 +20,12 @@ void GuiCollectionSystemsOptions::initializeMenu()
 	addChild(&mMenu);
 
 	// get collections
-
 	addSystemsToMenu();
 
-	// add "Create New Custom Collection from Theme"
+	// manage random collection
+	addEntry("RANDOM COLLECTION SETTINGS", 0x777777FF, true, [this] { openRandomCollectionSettings(); });
 
+	// add "Create New Custom Collection from Theme"
 	std::vector<std::string> unusedFolders = CollectionSystemManager::get()->getUnusedSystemsFromTheme();
 	if (unusedFolders.size() > 0)
 	{
@@ -133,7 +135,8 @@ void GuiCollectionSystemsOptions::addEntry(const char* name, unsigned int color,
 	mMenu.addRow(row);
 }
 
-void GuiCollectionSystemsOptions::createCollection(std::string inName) {
+void GuiCollectionSystemsOptions::createCollection(std::string inName) 
+{
 	std::string name = CollectionSystemManager::get()->getValidNewCollectionName(inName);
 	SystemData* newSys = CollectionSystemManager::get()->addNewCustomCollection(name);
 	customOptionList->add(name, name, true);
@@ -147,6 +150,11 @@ void GuiCollectionSystemsOptions::createCollection(std::string inName) {
 	while(window->peekGui() && window->peekGui() != ViewController::get())
 		delete window->peekGui();
 	return;
+}
+
+void GuiCollectionSystemsOptions::openRandomCollectionSettings() 
+{
+	mWindow->pushGui(new GuiRandomCollectionOptions(mWindow));
 }
 
 void GuiCollectionSystemsOptions::exitEditMode()

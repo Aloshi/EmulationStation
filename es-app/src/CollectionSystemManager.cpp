@@ -16,8 +16,34 @@
 #include <fstream>
 
 std::string myCollectionsName = "collections";
+std::string randomCollectionName = "random";
 
 #define LAST_PLAYED_MAX	50
+
+std::map<std::string, int> stringToRandomSettingsMap(std::string sourceStr) 
+{
+	std::map<std::string, int> results;
+	// we parse the comma-separated settings list in the format [system]:[setting]
+	std::vector<std::string> vectorSettings = Utils::String::delimitedStringToVector(sourceStr, ",", false);
+
+	// iterate the map
+	for(std::vector<std::string>::iterator it = vectorSettings.begin() ; it != vectorSettings.end() ; it++ )
+	{
+		if (!(*it).empty()) 
+		{
+			std::vector<std::string> systemSettings = Utils::String::delimitedStringToVector((*it), ":", false);
+			try 
+			{
+				results[systemSettings.at(0)] = std::stoi(systemSettings.at(1));
+			}
+			catch (std::exception& e)
+			{
+				LOG(LogError) << "Error parsing random collection settings: '" << (*it) << "' is in an invalid format.";
+			}
+		}
+	}
+	return results;
+}
 
 /* Handling the getting, initialization, deinitialization, saving and deletion of
  * a CollectionSystemManager Instance */
@@ -30,6 +56,7 @@ CollectionSystemManager::CollectionSystemManager(Window* window) : mWindow(windo
 		{ AUTO_ALL_GAMES,       "all",          "all games",         "name, ascending",          "auto-allgames",           false },
 		{ AUTO_LAST_PLAYED,     "recent",       "last played",       "last played, descending",  "auto-lastplayed",         false },
 		{ AUTO_FAVORITES,       "favorites",    "favorites",         "name, ascending",          "auto-favorites",          false },
+		{ AUTO_RANDOM,          randomCollectionName, "random",      "name, ascending",          "auto-random",             false },
 		{ CUSTOM_COLLECTION,    myCollectionsName,  "collections",   "name, ascending",          "custom-collections",      true }
 	};
 
@@ -59,6 +86,7 @@ CollectionSystemManager::CollectionSystemManager(Window* window) : mWindow(windo
 	mEditingCollection = "Favorites";
 	mEditingCollectionSystemData = NULL;
 	mCustomCollectionsBundle = NULL;
+	mRandomCollection = NULL;
 }
 
 CollectionSystemManager::~CollectionSystemManager()
@@ -171,7 +199,7 @@ void CollectionSystemManager::updateSystemsList()
 	// remove all Collection Systems
 	removeCollectionsFromDisplayedSystems();
 	// add custom enabled ones
-	addEnabledCollectionsToDisplayedSystems(&mCustomCollectionSystemsData);
+	addEnabledCollectionsToDisplayedSystems(&mCustomCollectionSystemsData, false);
 
 	if(Settings::getInstance()->getBool("SortAllSystems"))
 	{
@@ -201,16 +229,16 @@ void CollectionSystemManager::updateSystemsList()
 		SystemData::sSystemVector.push_back(mCustomCollectionsBundle);
 	}
 
-	// add auto enabled ones
-	addEnabledCollectionsToDisplayedSystems(&mAutoCollectionSystemsData);
+	// add auto enabled ones except random
+	addEnabledCollectionsToDisplayedSystems(&mAutoCollectionSystemsData, false);
+	// finally, add random
+	addEnabledCollectionsToDisplayedSystems(&mAutoCollectionSystemsData, true);
 
 	// create views for collections, before reload
 	for(auto sysIt = SystemData::sSystemVector.cbegin(); sysIt != SystemData::sSystemVector.cend(); sysIt++)
 	{
 		if ((*sysIt)->isCollection())
-		{
 			ViewController::get()->getGameListView((*sysIt));
-		}
 	}
 
 	// if we were editing a custom collection, and it's no longer enabled, exit edit mode
@@ -284,7 +312,7 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 		rootFolder->sort(getSortTypeFromString(mCollectionSystemDeclsIndex[name].defaultSort));
 		if (name == "recent")
 		{
-			trimCollectionCount(rootFolder, LAST_PLAYED_MAX);
+			trimCollectionCount(rootFolder, LAST_PLAYED_MAX, false);
 			ViewController::get()->onFileChanged(rootFolder, FILE_METADATA_CHANGED);
 		}
 		else
@@ -292,12 +320,16 @@ void CollectionSystemManager::updateCollectionSystem(FileData* file, CollectionS
 	}
 }
 
-void CollectionSystemManager::trimCollectionCount(FileData* rootFolder, int limit)
+void CollectionSystemManager::trimCollectionCount(FileData* rootFolder, int limit, bool shuffle)
 {
 	SystemData* curSys = rootFolder->getSystem();
 	while ((int)rootFolder->getChildrenListToDisplay().size() > limit)
 	{
-		CollectionFileData* gameToRemove = (CollectionFileData*)rootFolder->getChildrenListToDisplay().back();
+		std::vector<FileData*> games = rootFolder->getFilesRecursive(GAME, true);
+		if (shuffle)
+			std::shuffle(games.begin(), games.end(), SystemData::sURNG);
+
+		CollectionFileData* gameToRemove = (CollectionFileData*)games.back();
 		ViewController::get()->getGameListView(curSys).get()->remove(gameToRemove, false, false);
 	}
 	ViewController::get()->onFileChanged(rootFolder, FILE_REMOVED);
@@ -593,8 +625,48 @@ SystemData* CollectionSystemManager::getSystemToView(SystemData* sys)
 	return systemToView;
 }
 
+void CollectionSystemManager::recreateCollection(SystemData* sysData)
+{
+	CollectionSystemData* colSysData = &mAutoCollectionSystemsData[sysData->getName()];
+	if (!colSysData)
+		colSysData = &mCustomCollectionSystemsData[sysData->getName()];
+	if (!colSysData) {
+		LOG(LogDebug) << "Couldn't find collection: " << sysData->getName();
+		return;
+	}
+
+	CollectionSystemDecl sysDecl = colSysData->decl;
+	FileData* rootFolder = sysData->getRootFolder();
+	FileFilterIndex* index = sysData->getIndex();
+	const std::unordered_map<std::string, FileData*>& children = rootFolder->getChildrenByFilename();
+
+	sysData->getIndex()->resetIndex();
+	std::string name = sysData->getName();
+
+	SystemData* systemViewToUpdate = getSystemToView(sysData);
+
+	// while there are games there, remove them from the view and system
+	while(rootFolder->getChildrenByFilename().size() > 0)
+		ViewController::get()->getGameListView(systemViewToUpdate).get()->remove(rootFolder->getChildrenByFilename().begin()->second, false, false);
+	
+	colSysData->isPopulated = false;
+	if (sysDecl.isCustom)
+		populateCustomCollection(colSysData);
+	else
+		populateAutoCollection(colSysData);
+	
+	rootFolder->sort(getSortTypeFromString(colSysData->decl.defaultSort));
+	ViewController::get()->onFileChanged(systemViewToUpdate->getRootFolder(), FILE_SORTED);
+
+	// Workaround to force video to play
+	FileData* cursor = ViewController::get()->getGameListView(systemViewToUpdate)->getCursor();
+	ViewController::get()->getGameListView(systemViewToUpdate)->setCursor(cursor, true);
+
+
+}
+
 /* Handles loading a collection system, creating an empty one, and populating on demand */
-// loads Automatic Collection systems (All, Favorites, Last Played)
+// loads Automatic Collection systems (All, Favorites, Last Played, Random)
 void CollectionSystemManager::initAutoCollectionSystems()
 {
 	for(std::map<std::string, CollectionSystemDecl>::const_iterator it = mCollectionSystemDeclsIndex.cbegin() ; it != mCollectionSystemDeclsIndex.cend() ; it++ )
@@ -602,7 +674,9 @@ void CollectionSystemManager::initAutoCollectionSystems()
 		CollectionSystemDecl sysDecl = it->second;
 		if (!sysDecl.isCustom)
 		{
-			createNewCollectionEntry(sysDecl.name, sysDecl);
+			SystemData* newCol = createNewCollectionEntry(sysDecl.name, sysDecl);
+			if (sysDecl.type == AUTO_RANDOM)
+				mRandomCollection = newCol;
 		}
 	}
 }
@@ -736,6 +810,87 @@ SystemData* CollectionSystemManager::createNewCollectionEntry(std::string name, 
 	return newSys;
 }
 
+void CollectionSystemManager::addRandomGames(SystemData* newSys, SystemData* sourceSystem, FileData* rootFolder, 
+	FileFilterIndex* index, std::map<std::string, int> settingsValues, int defaultValue) 
+{
+	
+	int gamesForSourceSystem = defaultValue;
+	if (settingsValues.find(sourceSystem->getFullName()) != settingsValues.end()) 
+	{
+		// we won't add more than the max
+		gamesForSourceSystem = Math::min(RANDOM_SYSTEM_MAX, settingsValues[sourceSystem->getFullName()]);
+	}
+
+	// we do this to avoid trying to add more games than there are in the system
+	gamesForSourceSystem = Math::min(gamesForSourceSystem, sourceSystem->getRootFolder()->getFilesRecursive(GAME).size()); 
+	
+	int startCount = rootFolder->getFilesRecursive(GAME).size();
+	int endCount = startCount + gamesForSourceSystem;
+	int retryCount = 10;
+
+	for (int iterCount = startCount; iterCount < endCount; )
+	{
+		FileData* randomGame = sourceSystem->getRandomGame()->getSourceFileData();
+		CollectionFileData* newGame = new CollectionFileData(randomGame, newSys);
+		rootFolder->addChild(newGame);
+		index->addToIndex(newGame);
+		if (rootFolder->getFilesRecursive(GAME).size() > iterCount) 
+		{
+			// added game, proceed
+			iterCount++;
+			retryCount = 10;
+		}
+		else
+		{
+			// the game already exists in the collection, let's try again
+			LOG(LogDebug) << "Clash: " << newGame->getName() << " already exists. Deleting and trying again";
+			delete newGame;
+			retryCount--;
+			if (retryCount == 0) 
+			{
+				// we give up. Either we were very unlucky, or all the games in this system are already there.
+				LOG(LogDebug) << "Giving up retrying: game already exists. Deleting and moving on.";
+				return;
+			}
+		}
+	}
+}
+
+void CollectionSystemManager::populateRandomCollectionFromCollections(std::map<std::string, int> settingsValues) 
+{
+	CollectionSystemData* sysData = &mAutoCollectionSystemsData[randomCollectionName];
+	SystemData* newSys = sysData->system;
+	CollectionSystemDecl sysDecl = sysData->decl;
+	FileData* rootFolder = newSys->getRootFolder();
+	FileFilterIndex* index = newSys->getIndex();
+
+	// iterate the auto collections map
+	for(std::map<std::string, CollectionSystemData>::iterator it = mAutoCollectionSystemsData.begin() ; it != mAutoCollectionSystemsData.end() ; it++ )
+	{
+		// we can't add games from the random collection to the random collection
+		if (it->second.decl.type != AUTO_RANDOM) 
+		{
+			// collections might not be populated
+			if (!it->second.isPopulated) 
+				populateAutoCollection(&(it->second));
+
+			if (it->second.isPopulated)
+				addRandomGames(newSys, it->second.system, rootFolder, index, settingsValues, DEFAULT_RANDOM_COLLECTIONS_GAMES);
+		}
+	}
+	
+	// iterate the custom collections map
+	for(std::map<std::string, CollectionSystemData>::iterator it = mCustomCollectionSystemsData.begin() ; it != mCustomCollectionSystemsData.end() ; it++ )
+	{
+		// collections might not be populated
+		if (!it->second.isPopulated) 
+			populateCustomCollection(&(it->second));
+		
+		if (it->second.isPopulated) 
+			addRandomGames(newSys, it->second.system, rootFolder, index, settingsValues, DEFAULT_RANDOM_COLLECTIONS_GAMES);
+	}
+}
+
 // populates an Automatic Collection System
 void CollectionSystemManager::populateAutoCollection(CollectionSystemData* sysData)
 {
@@ -743,39 +898,76 @@ void CollectionSystemManager::populateAutoCollection(CollectionSystemData* sysDa
 	CollectionSystemDecl sysDecl = sysData->decl;
 	FileData* rootFolder = newSys->getRootFolder();
 	FileFilterIndex* index = newSys->getIndex();
+
+	std::map<std::string, int> settingsValues;
+	if (sysDecl.type == AUTO_RANDOM) 
+	{
+		std::string randomSystems = Settings::getInstance()->getString("RandomCollectionSystems");
+		std::string randomCollections = Settings::getInstance()->getString("RandomCollectionSystemsAuto") + "," +
+			Settings::getInstance()->getString("RandomCollectionSystemsCustom");
+		settingsValues = stringToRandomSettingsMap(randomSystems + "," + randomCollections);
+	}
+	// Only iterate through game systems, not collections yet
 	for(auto sysIt = SystemData::sSystemVector.cbegin(); sysIt != SystemData::sSystemVector.cend(); sysIt++)
 	{
 		// we won't iterate all collections
-		if ((*sysIt)->isGameSystem() && !(*sysIt)->isCollection()) {
-			std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(GAME);
-			for(auto gameIt = files.cbegin(); gameIt != files.cend(); gameIt++)
+		if ((*sysIt)->isGameSystem() && !(*sysIt)->isCollection())
+		{
+			if (sysDecl.type == AUTO_RANDOM)
 			{
-				bool include = includeFileInAutoCollections((*gameIt));
-				switch(sysDecl.type) {
-					case AUTO_LAST_PLAYED:
-						include = include && (*gameIt)->metadata.get("playcount") > "0";
-						break;
-					case AUTO_FAVORITES:
-						// we may still want to add files we don't want in auto collections in "favorites"
-						include = (*gameIt)->metadata.get("favorite") == "true";
-						break;
-					default:
-						// No-op to prevent compiler warnings
-						// Getting here means that the file is not part of a pre-defined collection.
-						break;
-				}
+				addRandomGames(newSys, (*sysIt), rootFolder, index, settingsValues, DEFAULT_RANDOM_SYSTEM_GAMES);
+			}
+			else
+			{
+				std::vector<FileData*> files = (*sysIt)->getRootFolder()->getFilesRecursive(GAME);
 
-				if (include) {
-					CollectionFileData* newGame = new CollectionFileData(*gameIt, newSys);
-					rootFolder->addChild(newGame);
-					index->addToIndex(newGame);
+				for(auto gameIt = files.cbegin(); gameIt != files.cend(); gameIt++)
+				{
+					bool include = includeFileInAutoCollections((*gameIt));
+					switch(sysDecl.type) {
+						case AUTO_LAST_PLAYED:
+							include = include && (*gameIt)->metadata.get("playcount") > "0";
+							break;
+						case AUTO_FAVORITES:
+							// we may still want to add files we don't want in auto collections in "favorites"
+							include = (*gameIt)->metadata.get("favorite") == "true";
+							break;
+						case AUTO_ALL_GAMES:
+							break;
+						case AUTO_RANDOM:
+						default:
+							// No-op to prevent compiler warnings
+							// Getting here means that the file is not part of a pre-defined collection.
+							include = false;
+							break;
+					}
+
+					if (include) 
+					{
+						CollectionFileData* newGame = new CollectionFileData(*gameIt, newSys);
+						rootFolder->addChild(newGame);
+						index->addToIndex(newGame);
+					}
 				}
 			}
 		}
 	}
+
+
+	int trimValue = LAST_PLAYED_MAX;
+	std::string trimRandom = Settings::getInstance()->getString("RandomCollectionMaxItems");
+	if (!trimRandom.empty() && sysDecl.type == AUTO_RANDOM)
+		trimValue = std::stoi(trimRandom);
+		
+	// here we finish populating the Random collection based on other Collections
+	if (sysDecl.type == AUTO_RANDOM)
+		populateRandomCollectionFromCollections(settingsValues);
+
+	// sort before optional trimming
 	rootFolder->sort(getSortTypeFromString(sysDecl.defaultSort));
-	if (sysDecl.type == AUTO_LAST_PLAYED)
-		trimCollectionCount(rootFolder, LAST_PLAYED_MAX);
+	if (sysData->isEnabled && (sysDecl.type == AUTO_LAST_PLAYED || (sysDecl.type == AUTO_RANDOM && !trimRandom.empty())))
+		trimCollectionCount(rootFolder, trimValue, sysDecl.type == AUTO_RANDOM);
+
 	sysData->isPopulated = true;
 }
 
@@ -783,7 +975,6 @@ void CollectionSystemManager::populateAutoCollection(CollectionSystemData* sysDa
 void CollectionSystemManager::populateCustomCollection(CollectionSystemData* sysData)
 {
 	SystemData* newSys = sysData->system;
-	sysData->isPopulated = true;
 	CollectionSystemDecl sysDecl = sysData->decl;
 	std::string path = getCustomCollectionConfigPath(newSys->getName());
 
@@ -804,11 +995,11 @@ void CollectionSystemManager::populateCustomCollection(CollectionSystemData* sys
 	std::unordered_map<std::string,FileData*> allFilesMap = getAllGamesCollection()->getRootFolder()->getChildrenByFilename();
 
 	// iterate list of files in config file
-
 	for(std::string gameKey; getline(input, gameKey); )
 	{
 		std::unordered_map<std::string,FileData*>::const_iterator it = allFilesMap.find(gameKey);
-		if (it != allFilesMap.cend()) {
+		if (it != allFilesMap.cend()) 
+		{
 			CollectionFileData* newGame = new CollectionFileData(it->second, newSys);
 			rootFolder->addChild(newGame);
 			index->addToIndex(newGame);
@@ -820,6 +1011,7 @@ void CollectionSystemManager::populateCustomCollection(CollectionSystemData* sys
 	}
 	rootFolder->sort(getSortTypeFromString(sysDecl.defaultSort));
 	updateCollectionFolderMetadata(newSys);
+	sysData->isPopulated = true;
 }
 
 /* Handle System View removal and insertion of Collections */
@@ -855,37 +1047,39 @@ void CollectionSystemManager::removeCollectionsFromDisplayedSystems()
 	}
 }
 
-void CollectionSystemManager::addEnabledCollectionsToDisplayedSystems(std::map<std::string, CollectionSystemData>* colSystemData)
+// The "random" collection relies on all other collections to have been initialized, so we defer its processing
+void CollectionSystemManager::addEnabledCollectionsToDisplayedSystems(std::map<std::string, CollectionSystemData>* colSystemData, bool processRandom)
 {
 	// add auto enabled ones
 	for(std::map<std::string, CollectionSystemData>::iterator it = colSystemData->begin() ; it != colSystemData->end() ; it++ )
 	{
-		if(it->second.isEnabled)
+
+		if ((!processRandom && it->second.decl.type != AUTO_RANDOM) || (processRandom && it->second.decl.type == AUTO_RANDOM))
 		{
-			// check if populated, otherwise populate
-			if (!it->second.isPopulated)
+			if(it->second.isEnabled)
 			{
-				if(it->second.decl.isCustom)
+				// check if populated, otherwise populate
+				if (!it->second.isPopulated)
 				{
-					populateCustomCollection(&(it->second));
+					if(it->second.decl.isCustom)
+						populateCustomCollection(&(it->second));
+					else 
+						populateAutoCollection(&(it->second));	
+				}
+				
+				// check if it has its own view
+				if(!it->second.decl.isCustom || themeFolderExists(it->first) || !Settings::getInstance()->getBool("UseCustomCollectionsSystem"))
+				{
+					// exists theme folder, or we chose not to bundle it under the custom-collections system
+					// so we need to create a view
+					SystemData::sSystemVector.push_back(it->second.system);
 				}
 				else
 				{
-					populateAutoCollection(&(it->second));
+					FileData* newSysRootFolder = it->second.system->getRootFolder();
+					mCustomCollectionsBundle->getRootFolder()->addChild(newSysRootFolder);
+					mCustomCollectionsBundle->getIndex()->importIndex(it->second.system->getIndex());
 				}
-			}
-			// check if it has its own view
-			if(!it->second.decl.isCustom || themeFolderExists(it->first) || !Settings::getInstance()->getBool("UseCustomCollectionsSystem"))
-			{
-				// exists theme folder, or we chose not to bundle it under the custom-collections system
-				// so we need to create a view
-				SystemData::sSystemVector.push_back(it->second.system);
-			}
-			else
-			{
-				FileData* newSysRootFolder = it->second.system->getRootFolder();
-				mCustomCollectionsBundle->getRootFolder()->addChild(newSysRootFolder);
-				mCustomCollectionsBundle->getIndex()->importIndex(it->second.system->getIndex());
 			}
 		}
 	}
@@ -1080,7 +1274,8 @@ bool CollectionSystemManager::includeFileInAutoCollections(FileData* file)
 
 
 bool CollectionSystemManager::needDoublePress(int presscount) {
-	if (Settings::getInstance()->getBool("DoublePressRemovesFromFavs") && presscount < 2) {
+	if (Settings::getInstance()->getBool("DoublePressRemovesFromFavs") && presscount < 2) 
+	{
 		GuiInfoPopup* toast = new GuiInfoPopup(mWindow, "Press again to remove from '" + Utils::String::toUpper(mEditingCollection)
 		+ "'", DOUBLE_PRESS_DETECTION_DURATION, 100, 200);
 		mWindow->setInfoPopup(toast);
