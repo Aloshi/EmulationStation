@@ -129,18 +129,18 @@ c:\src>.\vcpkg\vcpkg install rapidjson:x86-windows-static-md
 * Using the example shown below, configure environment variables to point to the libraries that were installed in the above steps. Please note that the below example intentionally uses forward slashes for compatibility with CMake.
 
 ```batchfile
-C:\src\EmulationStation>set VCPKG="C:/src/vcpkg/installed/x86-windows-static-md"
-C:\src\EmulationStation>set NUGET="C:/src/EmulationStation/nuget"
-C:\src\EmulationStation>set FREETYPE_DIR="%VCPKG%"
-C:\src\EmulationStation>set FREEIMAGE_HOME="%VCPKG%"
-C:\src\EmulationStation>set VLC_HOME="%NUGET%/VideoLAN.LibVLC.Windows/build/x86"
-C:\src\EmulationStation>set RAPIDJSON_INCLUDE_DIRS="%VCPKG%/include"
-C:\src\EmulationStation>set CURL_INCLUDE_DIR="%VCPKG%/include"
-C:\src\EmulationStation>set SDL2_INCLUDE_DIR="%VCPKG%/include/SDL2"
-C:\src\EmulationStation>set VLC_INCLUDE_DIR="%VLC_HOME%/include"
-C:\src\EmulationStation>set CURL_LIBRARY="%VCPKG%/lib/*.lib"
-C:\src\EmulationStation>set SDL2_LIBRARY="%VCPKG%/lib/manual-link/SDL2main.lib"
-C:\src\EmulationStation>set VLC_LIBRARIES="%VLC_HOME%/libvlc*.lib"
+C:\src\EmulationStation>set VCPKG=C:/src/vcpkg/installed/x86-windows-static-md
+C:\src\EmulationStation>set NUGET=C:/src/EmulationStation/nuget
+C:\src\EmulationStation>set FREETYPE_DIR=%VCPKG%
+C:\src\EmulationStation>set FREEIMAGE_HOME=%VCPKG%
+C:\src\EmulationStation>set VLC_HOME=%NUGET%/VideoLAN.LibVLC.Windows/build/x86
+C:\src\EmulationStation>set RAPIDJSON_INCLUDE_DIRS=%VCPKG%/include
+C:\src\EmulationStation>set CURL_INCLUDE_DIR=%VCPKG%/include
+C:\src\EmulationStation>set SDL2_INCLUDE_DIR=%VCPKG%/include/SDL2
+C:\src\EmulationStation>set VLC_INCLUDE_DIR=%VLC_HOME%/include
+C:\src\EmulationStation>set CURL_LIBRARY=%VCPKG%/lib/*.lib
+C:\src\EmulationStation>set SDL2_LIBRARY=%VCPKG%/lib/manual-link/SDL2main.lib
+C:\src\EmulationStation>set VLC_LIBRARIES=%VLC_HOME%/libvlc*.lib
 C:\src\EmulationStation>set VLC_VERSION=3.0.11
 ```
 
