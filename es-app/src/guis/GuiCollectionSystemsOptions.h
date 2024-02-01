@@ -26,6 +26,7 @@ private:
 	void updateSettings(std::string newAutoSettings, std::string newCustomSettings);
 	void createCollection(std::string inName);
 	void exitEditMode();
+	void openRandomCollectionSettings();
 	std::shared_ptr< OptionListComponent<std::string> > autoOptionList;
 	std::shared_ptr< OptionListComponent<std::string> > customOptionList;
 	std::shared_ptr< OptionListComponent<std::string> > defaultScreenSaverCollection;

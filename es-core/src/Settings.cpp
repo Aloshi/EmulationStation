@@ -139,6 +139,10 @@ void Settings::setDefaults()
 	mStringMap["VlcScreenSaverResolution"] = "original";
 	// Audio out device for Video playback using OMX player.
 	mStringMap["OMXAudioDev"] = "both";
+	mStringMap["RandomCollectionMaxItems"] = "";
+	mStringMap["RandomCollectionSystemsAuto"] = "";
+	mStringMap["RandomCollectionSystemsCustom"] = "";
+	mStringMap["RandomCollectionSystems"] = "";
 	mStringMap["CollectionSystemsAuto"] = "";
 	mStringMap["CollectionSystemsCustom"] = "";
 	mStringMap["DefaultScreenSaverCollection"] = "";

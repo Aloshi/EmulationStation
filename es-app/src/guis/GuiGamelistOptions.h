@@ -25,6 +25,7 @@ private:
 	bool launchSystemScreenSaver();
 	void openMetaDataEd();
 	void startEditMode();
+	void recreateCollection();
 	void exitEditMode();
 	void jumpToLetter();
 

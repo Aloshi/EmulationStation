@@ -132,6 +132,14 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 		mMenu.addRow(row);
 	}
 
+	if(UIModeController::getInstance()->isUIModeFull() && system == CollectionSystemManager::get()->getRandomCollection())
+	{
+		row.elements.clear();
+		row.addElement(std::make_shared<TextComponent>(mWindow, "GET NEW RANDOM GAMES", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::recreateCollection, this));
+		mMenu.addRow(row);
+	}
+
 	if (UIModeController::getInstance()->isUIModeFull() && !mFromPlaceholder && !(mSystem->isCollection() && file->getType() == FOLDER))
 	{
 		row.elements.clear();
@@ -195,6 +203,12 @@ void GuiGamelistOptions::openGamelistFilter()
 	mFiltersChanged = true;
 	GuiGamelistFilter* ggf = new GuiGamelistFilter(mWindow, mSystem);
 	mWindow->pushGui(ggf);
+}
+
+void GuiGamelistOptions::recreateCollection()
+{
+	CollectionSystemManager::get()->recreateCollection(mSystem);
+	delete this;
 }
 
 void GuiGamelistOptions::startEditMode()

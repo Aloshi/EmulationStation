@@ -11,12 +11,18 @@ class FileData;
 class SystemData;
 class Window;
 struct SystemEnvironmentData;
+class FileFilterIndex;
+
+#define RANDOM_SYSTEM_MAX 5
+#define DEFAULT_RANDOM_SYSTEM_GAMES 1
+#define DEFAULT_RANDOM_COLLECTIONS_GAMES 0
 
 enum CollectionSystemType
 {
 	AUTO_ALL_GAMES,
 	AUTO_LAST_PLAYED,
 	AUTO_FAVORITES,
+	AUTO_RANDOM,
 	CUSTOM_COLLECTION
 };
 
@@ -39,6 +45,8 @@ struct CollectionSystemData
 	bool needsSave;
 };
 
+std::map<std::string, int> stringToRandomSettingsMap(std::string sourceStr);
+
 class CollectionSystemManager
 {
 public:
@@ -57,10 +65,12 @@ public:
 	void refreshCollectionSystems(FileData* file);
 	void updateCollectionSystem(FileData* file, CollectionSystemData sysData);
 	void deleteCollectionFiles(FileData* file);
+	void recreateCollection(SystemData* sysData);
 
 	inline std::map<std::string, CollectionSystemData> getAutoCollectionSystems() { return mAutoCollectionSystemsData; };
 	inline std::map<std::string, CollectionSystemData> getCustomCollectionSystems() { return mCustomCollectionSystemsData; };
 	inline SystemData* getCustomCollectionsBundle() { return mCustomCollectionsBundle; };
+	inline SystemData* getRandomCollection() { return mRandomCollection; };
 	std::vector<std::string> getUnusedSystemsFromTheme();
 	SystemData* addNewCustomCollection(std::string name);
 
@@ -79,6 +89,8 @@ public:
 
 	SystemData* getAllGamesCollection();
 
+	void trimCollectionCount(FileData* rootFolder, int limit, bool shuffle);
+
 private:
 	static CollectionSystemManager* sInstance;
 	SystemEnvironmentData* mCollectionEnvData;
@@ -96,17 +108,18 @@ private:
 	SystemData* createNewCollectionEntry(std::string name, CollectionSystemDecl sysDecl, bool index = true);
 	void populateAutoCollection(CollectionSystemData* sysData);
 	void populateCustomCollection(CollectionSystemData* sysData);
+	void addRandomGames(SystemData* newSys, SystemData* sourceSystem, FileData* rootFolder, FileFilterIndex* index,
+		std::map<std::string, int> settingsValues, int defaultValue);
+	void populateRandomCollectionFromCollections(std::map<std::string, int> settingsValues);
 
 	void removeCollectionsFromDisplayedSystems();
-	void addEnabledCollectionsToDisplayedSystems(std::map<std::string, CollectionSystemData>* colSystemData);
+	void addEnabledCollectionsToDisplayedSystems(std::map<std::string, CollectionSystemData>* colSystemData, bool processRandom);
 
 	std::vector<std::string> getSystemsFromConfig();
 	std::vector<std::string> getSystemsFromTheme();
 	std::vector<std::string> getCollectionsFromConfigFolder();
 	std::vector<std::string> getCollectionThemeFolders(bool custom);
 	std::vector<std::string> getUserCollectionThemeFolders();
-
-	void trimCollectionCount(FileData* rootFolder, int limit);
 
 	bool themeFolderExists(std::string folder);
 
@@ -116,6 +129,7 @@ private:
 	int getPressCountInDuration();
 
 	SystemData* mCustomCollectionsBundle;
+	SystemData* mRandomCollection;
 
 	static const int DOUBLE_PRESS_DETECTION_DURATION = 1500; // millis
 };
