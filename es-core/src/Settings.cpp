@@ -143,6 +143,7 @@ void Settings::setDefaults()
 	mStringMap["RandomCollectionSystemsAuto"] = "";
 	mStringMap["RandomCollectionSystemsCustom"] = "";
 	mStringMap["RandomCollectionSystems"] = "";
+	mStringMap["RandomCollectionExclusionCollection"] = "";
 	mStringMap["CollectionSystemsAuto"] = "";
 	mStringMap["CollectionSystemsCustom"] = "";
 	mStringMap["DefaultScreenSaverCollection"] = "";
