@@ -23,7 +23,7 @@ void GuiCollectionSystemsOptions::initializeMenu()
 	addSystemsToMenu();
 
 	// manage random collection
-	addEntry("RANDOM COLLECTION SETTINGS", 0x777777FF, true, [this] { openRandomCollectionSettings(); });
+	addEntry("RANDOM GAME COLL. SETTINGS", 0x777777FF, true, [this] { openRandomCollectionSettings(); });
 
 	// add "Create New Custom Collection from Theme"
 	std::vector<std::string> unusedFolders = CollectionSystemManager::get()->getUnusedSystemsFromTheme();

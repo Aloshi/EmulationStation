@@ -47,6 +47,7 @@ private:
 	std::vector< SystemGames> autoCollectionLists;
 	std::vector< SystemGames> systemLists;
 	std::shared_ptr< OptionListComponent<std::string> > trimRandom;
+	std::shared_ptr< OptionListComponent<std::string> > exclusionCollection;
 	MenuComponent mMenu;
 	SystemData* mSystem;
 };

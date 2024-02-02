@@ -627,11 +627,20 @@ SystemData* CollectionSystemManager::getSystemToView(SystemData* sys)
 
 void CollectionSystemManager::recreateCollection(SystemData* sysData)
 {
-	CollectionSystemData* colSysData = &mAutoCollectionSystemsData[sysData->getName()];
-	if (!colSysData)
+	CollectionSystemData* colSysData;
+	if (mAutoCollectionSystemsData.find(sysData->getName()) != mAutoCollectionSystemsData.end()) 
+	{
+		// it's an auto collection
+		colSysData = &mAutoCollectionSystemsData[sysData->getName()];
+	}
+	else if (mCustomCollectionSystemsData.find(sysData->getName()) != mCustomCollectionSystemsData.end()) 
+	{
+		// it's a custom collection
 		colSysData = &mCustomCollectionSystemsData[sysData->getName()];
-	if (!colSysData) {
-		LOG(LogDebug) << "Couldn't find collection: " << sysData->getName();
+	}
+	else 
+	{
+		LOG(LogDebug) << "Couldn't find collection to recreate in either custom or auto collections: " << sysData->getName();
 		return;
 	}
 
@@ -821,6 +830,20 @@ void CollectionSystemManager::addRandomGames(SystemData* newSys, SystemData* sou
 		gamesForSourceSystem = Math::min(RANDOM_SYSTEM_MAX, settingsValues[sourceSystem->getFullName()]);
 	}
 
+	// load exclusion collection
+	std::unordered_map<std::string,FileData*> exclusionMap;
+	std::string exclusionCollection = Settings::getInstance()->getString("RandomCollectionExclusionCollection");
+	auto sysDataIt = mCustomCollectionSystemsData.find(exclusionCollection);
+
+	if (!exclusionCollection.empty() && sysDataIt != mCustomCollectionSystemsData.end()) {
+		if (!sysDataIt->second.isPopulated) {
+			populateCustomCollection(&(sysDataIt->second));
+		}
+
+		exclusionMap = mCustomCollectionSystemsData[exclusionCollection].system->getRootFolder()->getChildrenByFilename();
+
+	}
+
 	// we do this to avoid trying to add more games than there are in the system
 	gamesForSourceSystem = Math::min(gamesForSourceSystem, sourceSystem->getRootFolder()->getFilesRecursive(GAME).size()); 
 	
@@ -831,9 +854,16 @@ void CollectionSystemManager::addRandomGames(SystemData* newSys, SystemData* sou
 	for (int iterCount = startCount; iterCount < endCount; )
 	{
 		FileData* randomGame = sourceSystem->getRandomGame()->getSourceFileData();
-		CollectionFileData* newGame = new CollectionFileData(randomGame, newSys);
-		rootFolder->addChild(newGame);
-		index->addToIndex(newGame);
+		CollectionFileData* newGame = NULL;
+
+		if(exclusionMap.find(randomGame->getFullPath()) == exclusionMap.end())
+		{
+			// Not in the exclusion collection
+			newGame = new CollectionFileData(randomGame, newSys);
+			rootFolder->addChild(newGame);
+			index->addToIndex(newGame);
+		}
+		
 		if (rootFolder->getFilesRecursive(GAME).size() > iterCount) 
 		{
 			// added game, proceed
@@ -843,13 +873,13 @@ void CollectionSystemManager::addRandomGames(SystemData* newSys, SystemData* sou
 		else
 		{
 			// the game already exists in the collection, let's try again
-			LOG(LogDebug) << "Clash: " << newGame->getName() << " already exists. Deleting and trying again";
+			LOG(LogDebug) << "Clash: " << randomGame->getName() << " already exists or in exclusion list. Deleting and trying again";
 			delete newGame;
 			retryCount--;
 			if (retryCount == 0) 
 			{
 				// we give up. Either we were very unlucky, or all the games in this system are already there.
-				LOG(LogDebug) << "Giving up retrying: game already exists. Deleting and moving on.";
+				LOG(LogDebug) << "Giving up retrying: cannot add this game. Deleting and moving on.";
 				return;
 			}
 		}
