@@ -42,7 +42,7 @@ private:
 	void getAllGamelistNodesForSystem(SystemData* system);
 	void backgroundIndexing();
 	void setBackground();
-	void setupScreenSaverEditingCollection();
+	void handleScreenSaverEditingCollection();
 	void input(InputConfig* config, Input input);
 
 	enum STATE {
