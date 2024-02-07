@@ -143,7 +143,10 @@ GuiGamelistOptions::GuiGamelistOptions(Window* window, SystemData* system) : Gui
 	if (UIModeController::getInstance()->isUIModeFull() && !mFromPlaceholder && !(mSystem->isCollection() && file->getType() == FOLDER))
 	{
 		row.elements.clear();
-		row.addElement(std::make_shared<TextComponent>(mWindow, "EDIT THIS GAME'S METADATA", Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
+		std::string lblTxt = std::string("EDIT THIS ");
+		lblTxt += std::string((file->getType() == FOLDER ? "FOLDER" : "GAME"));
+		lblTxt += std::string("'S METADATA");
+		row.addElement(std::make_shared<TextComponent>(mWindow, lblTxt, Font::get(FONT_SIZE_MEDIUM), 0x777777FF), true);
 		row.addElement(makeArrow(mWindow), false);
 		row.makeAcceptInputHandler(std::bind(&GuiGamelistOptions::openMetaDataEd, this));
 		mMenu.addRow(row);
