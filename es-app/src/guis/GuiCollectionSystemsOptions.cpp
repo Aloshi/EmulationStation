@@ -23,7 +23,7 @@ void GuiCollectionSystemsOptions::initializeMenu()
 	addSystemsToMenu();
 
 	// manage random collection
-	addEntry("RANDOM GAME COLL. SETTINGS", 0x777777FF, true, [this] { openRandomCollectionSettings(); });
+	addEntry("RANDOM GAME COLLECTION SETTINGS", 0x777777FF, true, [this] { openRandomCollectionSettings(); });
 
 	// add "Create New Custom Collection from Theme"
 	std::vector<std::string> unusedFolders = CollectionSystemManager::get()->getUnusedSystemsFromTheme();
@@ -135,7 +135,7 @@ void GuiCollectionSystemsOptions::addEntry(const char* name, unsigned int color,
 	mMenu.addRow(row);
 }
 
-void GuiCollectionSystemsOptions::createCollection(std::string inName) 
+void GuiCollectionSystemsOptions::createCollection(std::string inName)
 {
 	std::string name = CollectionSystemManager::get()->getValidNewCollectionName(inName);
 	SystemData* newSys = CollectionSystemManager::get()->addNewCustomCollection(name);
@@ -152,7 +152,7 @@ void GuiCollectionSystemsOptions::createCollection(std::string inName)
 	return;
 }
 
-void GuiCollectionSystemsOptions::openRandomCollectionSettings() 
+void GuiCollectionSystemsOptions::openRandomCollectionSettings()
 {
 	mWindow->pushGui(new GuiRandomCollectionOptions(mWindow));
 }
