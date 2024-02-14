@@ -1,5 +1,6 @@
 #include "guis/GuiMetaDataEd.h"
 
+#include <stdlib.h>
 #include "components/ButtonComponent.h"
 #include "components/ComponentList.h"
 #include "components/DateTimeComponent.h"
@@ -19,6 +20,7 @@
 #include "FileFilterIndex.h"
 #include "SystemData.h"
 #include "Window.h"
+#include "Log.h"
 
 GuiMetaDataEd::GuiMetaDataEd(Window* window, MetaDataList* md, const std::vector<MetaDataDecl>& mdd, ScraperSearchParams scraperParams,
 	const std::string& /*header*/, std::function<void()> saveCallback, std::function<void()> deleteFunc) : GuiComponent(window),
@@ -267,19 +269,48 @@ void GuiMetaDataEd::close(bool closeAllWindows)
 	}
 }
 
-bool GuiMetaDataEd::hasChanges() 
+bool GuiMetaDataEd::hasChanges()
 {
 	assert(mMetaDataDecl.size() >= mEditors.size());
 	// find out if the user made any changes
 	int edIdx = 0;
 	for(auto &mdd : mMetaDataDecl)
 	{
-		if(!mdd.isStatistic && mMetaData->get(mdd.key) != mEditors.at(edIdx++)->getValue())
-			return true;
+		if(!mdd.isStatistic)
+		{
+			std::string gamelistVal = mMetaData->get(mdd.key);
+			std::string editorVal = mEditors.at(edIdx++)->getValue();
+			if (mdd.key == "rating")
+			{
+				// needed to catch "0", "0.0" or ".<d>" (and "1.0") from gamelist string rating
+				// getValue() of RatingComponent returns "0" for floats 0, 0.0; "0.<d>" for .<d>
+				// and "1" for float 1.0
+				// convert to float and compare to avoid false "Save Changes" prompt
+				bool ok;
+				if (to_float(gamelistVal, ok) != to_float(editorVal, ok))
+					return true;
+			}
+			else
+			{
+				// string compare
+				if (gamelistVal != editorVal)
+					return true;
+			}
+		}
 	}
 	return false;
 }
 
+float GuiMetaDataEd::to_float(const std::string& str, bool& ok)
+{
+	errno = 0;
+	char* end = nullptr;
+	float f = std::strtof(str.c_str(), &end);
+	ok = !str.empty() && !*end && errno == 0;
+	if (!ok)
+		LOG(LogWarning) << "Conversion of input string '" << str << "' to float failed or is incomplete. Return value: " << f;
+	return f;
+}
 
 bool GuiMetaDataEd::input(InputConfig* config, Input input)
 {

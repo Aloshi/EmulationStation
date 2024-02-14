@@ -8,6 +8,7 @@
 #include "GuiComponent.h"
 #include "MetaData.h"
 
+
 class ComponentList;
 class TextComponent;
 
@@ -26,7 +27,8 @@ private:
 	void fetch();
 	void fetchDone(const ScraperSearchResult& result);
 	void close(bool closeAllWindows);
-	bool hasChanges(); 
+	bool hasChanges();
+	float to_float(const std::string& str, bool& ok);
 
 	NinePatchComponent mBackground;
 	ComponentGrid mGrid;
