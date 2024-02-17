@@ -29,6 +29,8 @@ sudo dnf install SDL2-devel freeimage-devel freetype-devel curl-devel \
   vlc-devel rapidjson-devel
 ```
 
+ Optionaly, `pugixml` can be installed and used (Debian package: `libpugixml-dev`, Fedora/SuSE package: `pugixml-devel`), but EmulationStation can use its own included copy if not found.
+ 
 **Note**: this repository uses a git submodule - to checkout the source and all submodules, use
 
 ```bash
