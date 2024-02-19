@@ -56,8 +56,12 @@ FileData* findOrCreateFile(SystemData* system, const std::string& path, FileType
 
 			FileData* file = new FileData(type, path, system->getSystemEnvData(), system);
 
-			// skipping arcade assets from gamelist
-			if(!file->isArcadeAsset())
+			// skipping arcade assets from gamelist and add only to filesystem
+			// (fs) folders, i.e. entriess in gamelist with <folder/> and not to
+			// fs-folders which are marked as <game/> in gamelist. NB:
+			// treeNode's type (=parent) is determined by the element in the
+			// gamelist and not by the fs-type.
+			if(!file->isArcadeAsset() && treeNode->getType() == FOLDER)
 			{
 				treeNode->addChild(file);
 			}
@@ -74,7 +78,14 @@ FileData* findOrCreateFile(SystemData* system, const std::string& path, FileType
 				LOG(LogWarning) << "gameList: folder " << absFolder << " absent on fs, no FileData object created. Do remove leftover in gamelist.xml to remediate this warning.";
 				return NULL;
 			}
-
+			// discard constellations like scummvm/game.svm/game.svm as
+			// scummvm/game.svm/ is a GAME and not a FOLDER
+			if (treeNode->getType() == GAME)
+			{
+				std::string absFolder = Utils::FileSystem::getAbsolutePath(pathSegment, systemPath);
+				LOG(LogWarning) << "gameList: trying to add game '" << absFolder << "' to a parent <game/> entry is invalid, no FileData object created. Do remove nested <game/> in gamelist.xml to remediate this warning.";
+				return NULL;
+			}
 			// create folder filedata object
 			std::string absPath = Utils::FileSystem::resolveRelativePath(treeNode->getPath() + "/" + pathSegment, systemPath, false, true);
 			FileData* folder = new FileData(FOLDER, absPath, system->getSystemEnvData(), system);
