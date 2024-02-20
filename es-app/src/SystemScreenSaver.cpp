@@ -205,7 +205,7 @@ void SystemScreenSaver::handleScreenSaverEditingCollection()
 		{
 			// we're exiting the screensaver, restore the currently actively editing collection
 			CollectionSystemManager::get()->exitEditMode(true);
-			if (mRegularEditingCollection != "Favorites")
+			if (mRegularEditingCollection != "Favorites" && mRegularEditingCollection != "")
 				CollectionSystemManager::get()->setEditMode(mRegularEditingCollection, true);
 			mRegularEditingCollection = "";
 		}
