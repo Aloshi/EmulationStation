@@ -77,7 +77,13 @@ HttpReq::HttpReq(const std::string& url)
 	}
 
 	//set curl restrict redirect protocols
+	//starting with 7.85.0, CURLOPT_REDIR_PROTOCOLS is deprecated
+	// and CURLOPT_REDIR_PROTOCOLS_STR should be used instead
+#if CURL_AT_LEAST_VERSION(7,85,0)
+	err = curl_easy_setopt(mHandle, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
+#else
 	err = curl_easy_setopt(mHandle, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+#endif
 	if(err != CURLE_OK)
 	{
 		mStatus = REQ_IO_ERROR;
