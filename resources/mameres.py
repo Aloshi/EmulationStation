@@ -15,7 +15,7 @@ Format notes:
 
 """
 from xml.sax.saxutils import escape
-from datetime import datetime
+from datetime import datetime,timezone
 import xml.etree.ElementTree as et
 import sys
 import os
@@ -77,7 +77,7 @@ for dat in sys.argv[1:]:
             games[name] = desc
 
 print(f"Found {len(games)} games, {len(sorted(set(bioses)))} BIOSes and {len(sorted(set(devices)))} devices")
-ident_info = f"<!-- Generated on {datetime.utcnow().strftime('%F')}, from {', '.join(files)} -->"
+ident_info = f"<!-- Generated on {datetime.now(timezone.utc).strftime('%F')}, from {', '.join(files)} -->"
 
 if len(games) > 0:
     with open('mamenames.xml', 'w') as f:

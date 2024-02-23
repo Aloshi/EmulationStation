@@ -1,4 +1,4 @@
-<!-- Generated on 2022-02-11, from MAME 0.240 (Arcade).dat, fbneo.dat, mame2003-plus.xml -->
+<!-- Generated on 2024-02-22, from MAME 0.262 (arcade).dat, fbneo.dat, mame2003-plus.xml -->
 <bios>3dobios</bios>
 <bios>acpsx</bios>
 <bios>airlbios</bios>
@@ -9,6 +9,7 @@
 <bios>ar_bios</bios>
 <bios>aristmk5</bios>
 <bios>aristmk6</bios>
+<bios>aristmk7</bios>
 <bios>atarisy1</bios>
 <bios>awbios</bios>
 <bios>bubsys</bios>
@@ -47,6 +48,7 @@
 <bios>konamigx</bios>
 <bios>konendev</bios>
 <bios>kpython</bios>
+<bios>kpython2</bios>
 <bios>kviper</bios>
 <bios>lindbios</bios>
 <bios>mac2bios</bios>
@@ -67,6 +69,7 @@
 <bios>nss</bios>
 <bios>pgm</bios>
 <bios>playch10</bios>
+<bios>pumpitup</bios>
 <bios>recel</bios>
 <bios>sammymdl</bios>
 <bios>segasp</bios>
