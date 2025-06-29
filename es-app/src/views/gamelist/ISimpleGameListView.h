@@ -4,6 +4,7 @@
 
 #include "components/TextComponent.h"
 #include "components/ImageComponent.h"
+#include <stack>
 
 class ISimpleGameListView : public IGameListView
 {
