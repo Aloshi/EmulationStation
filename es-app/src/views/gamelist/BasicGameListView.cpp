@@ -6,6 +6,8 @@
 #include "SystemData.h"
 #include "Settings.h"
 
+#include <stack>
+
 BasicGameListView::BasicGameListView(Window* window, FileData* root)
 	: ISimpleGameListView(window, root), mList(window)
 {
