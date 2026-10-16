@@ -255,6 +255,7 @@ void VideoPlayerComponent::stopVideo()
 {
 	mIsPlaying = false;
 	mStartDelayed = false;
+	mPlayingVideoPath = "";
 
 	// Stop the player process
 	if (mPlayerPid != -1)
