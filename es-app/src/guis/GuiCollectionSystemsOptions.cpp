@@ -12,6 +12,7 @@
 #include "views/ViewController.h"
 #include "CollectionSystemManager.h"
 #include "Window.h"
+#include "SystemData.h"
 
 GuiCollectionSystemsOptions::GuiCollectionSystemsOptions(Window* window) : GuiComponent(window), mMenu(window, "GAME COLLECTION SETTINGS")
 {
@@ -93,11 +94,14 @@ void GuiCollectionSystemsOptions::initializeMenu()
 	toggleSystemNameInCollections->setState(Settings::getInstance()->getBool("CollectionShowSystemInfo"));
 	mMenu.addWithLabel("SHOW SYSTEM NAME IN COLLECTIONS", toggleSystemNameInCollections);
 
+	toggleParenthesisInCollections = std::make_shared<SwitchComponent>(mWindow);
+	toggleParenthesisInCollections->setState(Settings::getInstance()->getBool("CollectionsShowParenthesisData"));
+	mMenu.addWithLabel("SHOW PARENTHESIS IN COLLECTIONS", toggleParenthesisInCollections);
+
 	// double press to remove from favorites
 	doublePressToRemoveFavs = std::make_shared<SwitchComponent>(mWindow);
 	doublePressToRemoveFavs->setState(Settings::getInstance()->getBool("DoublePressRemovesFromFavs"));
 	mMenu.addWithLabel("PRESS (Y) TWICE TO REMOVE FROM FAVS./COLL.", doublePressToRemoveFavs);
-
 
 	// Add option to select default collection for screensaver
 	defaultScreenSaverCollection = std::make_shared< OptionListComponent<std::string> >(mWindow, "ADD/REMOVE GAMES WHILE SCREENSAVER TO", false);
@@ -216,6 +220,8 @@ void GuiCollectionSystemsOptions::applySettings()
 	bool prevBundle = Settings::getInstance()->getBool("UseCustomCollectionsSystem");
 	bool prevShow = Settings::getInstance()->getBool("CollectionShowSystemInfo");
 	bool outShow = toggleSystemNameInCollections->getState();
+	bool prevParenthesis = Settings::getInstance()->getBool("CollectionsShowParenthesisData");
+	bool outParenthesis = toggleParenthesisInCollections->getState();
 
 	// check if custom collection is still enabled for 'collection during screensaver'.
 	// if not set 'collection during screensaver' to "" which renders as <DEFAULT>
@@ -240,9 +246,10 @@ void GuiCollectionSystemsOptions::applySettings()
 
 	Settings::getInstance()->setString("DefaultScreenSaverCollection", enabledCollectionName);
 	Settings::getInstance()->setBool("DoublePressRemovesFromFavs", doublePressToRemoveFavs->getState());
+	Settings::getInstance()->setBool("CollectionsShowParenthesisData", outParenthesis);
 
 	bool needRefreshCollectionSettings = prevAuto != outAuto || prevCustom != outCustom || outSort != prevSort || outBundle != prevBundle
-		|| prevShow != outShow;
+		|| prevShow != outShow || prevParenthesis != outParenthesis;
 
 	if (needRefreshCollectionSettings)
 	{
@@ -262,11 +269,28 @@ void GuiCollectionSystemsOptions::updateSettings(std::string newAutoSettings, st
 	Settings::getInstance()->setBool("SortAllSystems", sortAllSystemsSwitch->getState());
 	Settings::getInstance()->setBool("UseCustomCollectionsSystem", bundleCustomCollections->getState());
 	Settings::getInstance()->setBool("CollectionShowSystemInfo", toggleSystemNameInCollections->getState());
+	Settings::getInstance()->setBool("CollectionsShowParenthesisData", toggleParenthesisInCollections->getState());
 
 	Settings::getInstance()->saveFile();
 
 	CollectionSystemManager::get()->loadEnabledListFromSettings();
 	CollectionSystemManager::get()->updateSystemsList();
+
+	// Invalidating all collections cache after the changes
+	for (auto sysIt = SystemData::sSystemVector.begin(); sysIt != SystemData::sSystemVector.end(); ++sysIt)
+	{
+    	SystemData* system = *sysIt;
+
+	    if (system->isCollection())
+    	{
+        	for (auto fileIt = system->getRootFolder()->getChildren().begin(); fileIt != system->getRootFolder()->getChildren().end(); ++fileIt)
+        	{
+            	CollectionFileData* collectionFile = dynamic_cast<CollectionFileData*>(*fileIt);
+            	if (collectionFile != nullptr) collectionFile->refreshMetadata();
+        	}
+    	}
+	}
+
 	ViewController::get()->goToStart();
 	ViewController::get()->reloadAll();
 }

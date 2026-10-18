@@ -157,6 +157,8 @@ void Settings::setDefaults()
 	mBoolMap["UseCustomCollectionsSystem"] = true;
 	mBoolMap["BackgroundIndexing"] = false;
 
+	mBoolMap["CollectionsShowParenthesisData"] = false;
+
 	mBoolMap["LocalArt"] = false;
 
 	// Audio out device for volume control
